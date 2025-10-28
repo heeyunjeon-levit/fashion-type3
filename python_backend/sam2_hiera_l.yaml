@@ -1,0 +1,18 @@
+model:
+  _target_: sam2.modeling.sam2.SAM2
+  pixel_mean: [123.675, 116.28, 103.53]
+  pixel_std: [58.395, 57.12, 57.375]
+  model_cfg: sam2_hiera_large.yaml
+  num_classes: 1
+  checkpoint: sam2_hiera_large.pt
+  encoder_embed_dim: 1024
+  encoder_depth: 24
+  encoder_num_heads: 16
+  encoder_global_attn_indexes: [5, 11, 17, 23]
+  window_size: 14
+  use_rel_pos: true
+  rel_pos_zero_init: true
+  window_block_indexes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+  residual_block_indexes: [2, 5, 8, 11, 14, 17, 20, 23]
+  use_abs_pos: true
+  global_attn_indexes: [5, 11, 17, 23]

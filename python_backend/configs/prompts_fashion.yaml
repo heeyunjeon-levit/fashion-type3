@@ -1,0 +1,85 @@
+# Expanded fashion prompts organized by category
+tops:
+  - t-shirt
+  - tee
+  - polo
+  - shirt
+  - blouse
+  - camisole
+  - tank top
+  - crop top
+  - cardigan
+  - sweater
+  - knit top
+  - hoodie
+  - sweatshirt
+  - rugby shirt
+  - jersey
+outerwear:
+  - blazer
+  - suit jacket
+  - trench coat
+  - overcoat
+  - coat
+  - peacoat
+  - puffer
+  - down jacket
+  - parka
+  - varsity jacket
+  - bomber jacket
+  - denim jacket
+  - leather jacket
+dresses_sets:
+  - dress
+  - sundress
+  - slip dress
+  - sheath dress
+  - sweater dress
+  - jumpsuit
+  - romper
+  - co-ord set
+bottoms:
+  - pants
+  - trousers
+  - jeans
+  - wide-leg pants
+  - straight-leg jeans
+  - cargo pants
+  - leggings
+  - shorts
+  - skirt
+  - mini skirt
+  - midi skirt
+  - maxi skirt
+shoes:
+  - shoes
+  - sneakers
+  - running shoes
+  - loafers
+  - derby shoes
+  - oxford shoes
+  - mary-jane
+  - heels
+  - pumps
+  - slingbacks
+  - mules
+  - ankle boots
+  - boots
+  - knee-high boots
+  - sandals
+bags_accessories:
+  - bag
+  - handbag
+  - tote
+  - shoulder bag
+  - crossbody bag
+  - hobo bag
+  - bucket bag
+  - clutch
+  - backpack
+  - belt
+  - scarf
+  - hat
+  - cap
+  - beanie
+  - beret
