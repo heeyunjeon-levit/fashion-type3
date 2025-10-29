@@ -60,3 +60,6 @@ python_backend/data/weights/*.pth
 .env
 .env*
 *.env
+.env
+.env*
+*.env
