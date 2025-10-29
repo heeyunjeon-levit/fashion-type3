@@ -57,3 +57,6 @@ python_backend/out_optimized/
 python_backend/data/weights/*.pt
 python_backend/data/weights/*.pth
 
+.env
+.env*
+*.env
