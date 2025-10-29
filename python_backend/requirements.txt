@@ -6,23 +6,23 @@ pydantic==2.5.0
 python-dotenv==1.0.0
 boto3>=1.28.0
 
-# Core dependencies
-torch>=2.2.0
-torchvision>=0.17.0
-opencv-python>=4.9.0.80
-numpy>=1.26.0
-Pillow>=10.3.0
-pandas>=2.2.2
-PyYAML>=6.0.1
-requests>=2.31.0
+# Core dependencies - CPU-only for faster deployment
+torch==2.2.0
+torchvision==0.17.0
+opencv-python-headless==4.9.0.80
+numpy==1.26.4
+Pillow==10.3.0
+pandas==2.2.2
+PyYAML==6.0.1
+requests==2.31.0
 
 # Detection (open-vocab) via Transformers OWL-ViT
-transformers>=4.41.0
+transformers==4.41.0
 # SAM (Segment Anything, classic)
 segment-anything==1.0
 # YOLO (baseline, person detector)
-ultralytics>=8.2.0
+ultralytics==8.2.0
 
 # Grounding DINO
-groundingdino-pytorch>=0.1.2
-timm>=0.9.12
+groundingdino-pytorch==0.1.2
+timm==0.9.12
