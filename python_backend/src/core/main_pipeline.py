@@ -26,9 +26,16 @@ import os
 groundingdino_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'GroundingDINO')
 sys.path.append(groundingdino_path)
 
-from GroundingDINO.groundingdino.util.inference import load_model, load_image as gd_load_image, predict as gd_predict
-from GroundingDINO.groundingdino.util.utils import clean_state_dict
-from GroundingDINO.groundingdino.util.box_ops import box_cxcywh_to_xyxy
+try:
+    # Try to import from installed groundingdino package (Modal, pip install)
+    from groundingdino.util.inference import load_model, load_image as gd_load_image, predict as gd_predict
+    from groundingdino.util.utils import clean_state_dict
+    from groundingdino.util.box_ops import box_cxcywh_to_xyxy
+except ImportError:
+    # Fall back to local GroundingDINO directory (local development)
+    from GroundingDINO.groundingdino.util.inference import load_model, load_image as gd_load_image, predict as gd_predict
+    from GroundingDINO.groundingdino.util.utils import clean_state_dict
+    from GroundingDINO.groundingdino.util.box_ops import box_cxcywh_to_xyxy
 
 # SAM-2 imports
 from sam2.build_sam import build_sam2
