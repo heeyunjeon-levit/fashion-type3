@@ -16,9 +16,9 @@ backend_dir = Path(__file__).parent
 model_volume = modal.Volume.from_name("fashion-model-weights", create_if_missing=True)
 
 # Define the image WITHOUT model weights (much lighter and faster to build)
-# Version: GPU-v2 (CUDA 11.8 + T4 GPU)
+# Following Modal's official PyTorch example: https://modal.com/docs/examples/torch_profiling
 image = (
-    modal.Image.debian_slim(python_version="3.10")
+    modal.Image.debian_slim(python_version="3.11")  # Python 3.11 like Modal's example
     .apt_install(
         "git", 
         "wget", 
@@ -29,8 +29,13 @@ image = (
         "build-essential",
         "python3-dev",
     )
-    .run_commands("echo 'GPU build v5 - FIXED: matching CUDA builds for torch+torchvision'")  # Force rebuild
-    # Install basic Python dependencies first
+    # Install PyTorch using Modal's recommended approach (simple pip_install, no explicit wheels)
+    .pip_install(
+        "torch==2.5.1",  # Match Modal's example version
+        "torchvision",   # Let it match torch automatically
+        "numpy==2.1.3",  # Match Modal's example
+    )
+    # Install basic Python dependencies
     .pip_install(
         "fastapi==0.104.1",
         "uvicorn==0.24.0",
@@ -39,22 +44,6 @@ image = (
         "python-dotenv==1.0.0",
         "requests==2.31.0",
     )
-    # Clean any accidental prior installs
-    .run_commands([
-        "python -m pip uninstall -y torch torchvision torchaudio || true",
-        "python -m pip install --upgrade pip"
-    ])
-    # Install EXACT wheels for Python 3.10 (cp310) + cu121
-    # This bypasses pip's version resolution to ensure correct ABI match
-    .pip_install(
-        "https://download.pytorch.org/whl/cu121/torch-2.4.1%2Bcu121-cp310-cp310-linux_x86_64.whl",
-        "https://download.pytorch.org/whl/cu121/torchvision-0.19.1%2Bcu121-cp310-cp310-linux_x86_64.whl",
-        "https://download.pytorch.org/whl/cu121/torchaudio-2.4.1%2Bcu121-cp310-cp310-linux_x86_64.whl",
-    )
-    # Verify ABI at build time (fail fast if wrong)
-    .run_commands([
-        'python -c "import sys, torch, torchvision; print(\\"py:\\", sys.version); print(\\"torch:\\", torch.__version__, \\"cuda:\\", torch.version.cuda); print(\\"torchvision:\\", torchvision.__version__); from torchvision import _C; import torchvision.ops as ops; ops.nms(torch.rand(5,4), torch.rand(5), 0.5); print(\\"✅ OK: torchvision._C loaded and ops.nms works\\")"'
-    ])
     # Install ML/Vision dependencies (let torch/vision dictate numpy/pillow versions)
     .pip_install(
         "opencv-python-headless==4.9.0.80",
@@ -158,11 +147,27 @@ def ensure_models_in_volume():
     model_volume.commit()
     print("✅ Models cached to volume and will be reused on next cold start!")
 
+# Test function to verify PyTorch/torchvision works
+@app.function(image=image, gpu="T4")
+def test_torchvision():
+    import torch, torchvision
+    print(f"torch: {torch.__version__}, cuda: {torch.version.cuda}, available: {torch.cuda.is_available()}")
+    print(f"torchvision: {torchvision.__version__}")
+    try:
+        from torchvision import _C
+        import torchvision.ops as ops
+        ops.nms(torch.rand(5,4), torch.rand(5), 0.5)
+        print("✅ SUCCESS: torchvision._C works!")
+        return True
+    except Exception as e:
+        print(f"❌ FAIL: {e}")
+        return False
+
 # Deploy the FastAPI app with volume mounted
 # Note: USE_SAM2 environment variable defaults to "false" in crop_api.py for speed
 @app.function(
     image=image,
-    gpu="T4",  # GPU with explicit wheel URLs (fixes PyInit__C)
+    gpu="T4",  # GPU with Modal's recommended PyTorch setup
     memory=16384,  # 16GB for ML models
     timeout=600,
     volumes={"/cache": model_volume},  # Mount volume at /cache
