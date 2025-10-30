@@ -39,16 +39,25 @@ image = (
         "python-dotenv==1.0.0",
         "requests==2.31.0",
     )
-    # CPU-only PyTorch (GPU has unfixable _C errors on Modal)
+    # Clean any accidental prior installs
+    .run_commands([
+        "python -m pip uninstall -y torch torchvision torchaudio || true",
+        "python -m pip install --upgrade pip"
+    ])
+    # Install EXACT wheels for Python 3.10 (cp310) + cu121
+    # This bypasses pip's version resolution to ensure correct ABI match
     .pip_install(
-        "torch==2.3.1",
-        "torchvision==0.18.1",
+        "https://download.pytorch.org/whl/cu121/torch-2.4.1%2Bcu121-cp310-cp310-linux_x86_64.whl",
+        "https://download.pytorch.org/whl/cu121/torchvision-0.19.1%2Bcu121-cp310-cp310-linux_x86_64.whl",
+        "https://download.pytorch.org/whl/cu121/torchaudio-2.4.1%2Bcu121-cp310-cp310-linux_x86_64.whl",
     )
-    # Install ML/Vision dependencies
+    # Verify ABI at build time (fail fast if wrong)
+    .run_commands([
+        'python -c "import sys, torch, torchvision; print(\\"py:\\", sys.version); print(\\"torch:\\", torch.__version__, \\"cuda:\\", torch.version.cuda); print(\\"torchvision:\\", torchvision.__version__); from torchvision import _C; import torchvision.ops as ops; ops.nms(torch.rand(5,4), torch.rand(5), 0.5); print(\\"✅ OK: torchvision._C loaded and ops.nms works\\")"'
+    ])
+    # Install ML/Vision dependencies (let torch/vision dictate numpy/pillow versions)
     .pip_install(
         "opencv-python-headless==4.9.0.80",
-        "numpy==1.26.4",
-        "Pillow==10.3.0",
         "pandas==2.2.2",
         "PyYAML==6.0.1",
         "transformers==4.41.0",
@@ -153,7 +162,7 @@ def ensure_models_in_volume():
 # Note: USE_SAM2 environment variable defaults to "false" in crop_api.py for speed
 @app.function(
     image=image,
-    cpu=2,  # CPU-only (GPU has unfixable PyTorch _C errors)
+    gpu="T4",  # GPU with explicit wheel URLs (fixes PyInit__C)
     memory=16384,  # 16GB for ML models
     timeout=600,
     volumes={"/cache": model_volume},  # Mount volume at /cache
