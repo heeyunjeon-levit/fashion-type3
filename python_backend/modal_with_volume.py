@@ -157,7 +157,7 @@ def ensure_models_in_volume():
     secrets=[modal.Secret.from_name("fashion-api-keys")],
 )
 @modal.asgi_app()
-def fastapi_app():
+def fastapi_app_v2():
     """
     Load and return the FastAPI app
     Models are loaded from persistent volume for faster cold starts
