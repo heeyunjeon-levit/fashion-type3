@@ -1,0 +1,25 @@
+name: Keep Modal Backend Warm
+
+on:
+  schedule:
+    # Run every 5 minutes to prevent cold starts
+    - cron: '*/5 * * * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  ping-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Modal Backend
+        run: |
+          echo "🔄 Pinging Modal backend to keep it warm..."
+          response=$(curl -s -o /dev/null -w "%{http_code}" https://heeyunjeon-levit--fashion-crop-api-fastapi-app.modal.run/)
+          echo "✅ Backend responded with status: $response"
+          echo "⏰ Pinged at: $(date -u)"
+          
+          if [ "$response" = "200" ]; then
+            echo "✅ Backend is healthy and warm!"
+          else
+            echo "⚠️  Unexpected response code: $response"
+          fi
+
