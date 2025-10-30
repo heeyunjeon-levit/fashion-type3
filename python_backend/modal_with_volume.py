@@ -22,11 +22,14 @@ image = (
     .apt_install(
         "git", 
         "wget", 
+        "curl",
+        "ffmpeg",
+        "libgl1",
+        "libglib2.0-0",
         "build-essential",
-        "libgl1-mesa-glx",  # OpenGL library for OpenCV
-        "libglib2.0-0",     # GLib library
+        "python3-dev",
     )
-    .run_commands("echo 'CPU build v4 - reverting GPU due to PyTorch issues'")  # Force rebuild
+    .run_commands("echo 'GPU build v5 - FIXED: matching CUDA builds for torch+torchvision'")  # Force rebuild
     # Install basic Python dependencies first
     .pip_install(
         "fastapi==0.104.1",
@@ -36,11 +39,13 @@ image = (
         "python-dotenv==1.0.0",
         "requests==2.31.0",
     )
-    # Install CPU-only PyTorch (GPU was causing C++ extension issues)
+    # Install PyTorch + TorchVision with MATCHING CUDA 12.1 builds (this is the fix!)
     .pip_install(
-        "torch==2.2.0",
-        "torchvision==0.17.0",
+        "torch==2.4.1+cu121",
+        "torchvision==0.19.1+cu121",
+        extra_index_url="https://download.pytorch.org/whl/cu121"
     )
+    # Note: Can't test _C at build time (no GPU), but runtime will verify it works
     # Install ML/Vision dependencies
     .pip_install(
         "opencv-python-headless==4.9.0.80",
@@ -150,7 +155,7 @@ def ensure_models_in_volume():
 # Note: USE_SAM2 environment variable defaults to "false" in crop_api.py for speed
 @app.function(
     image=image,
-    cpu=2,  # Back to CPU - GPU causing PyTorch C++ extension issues
+    gpu="T4",  # GPU now works with matching CUDA builds!
     memory=16384,  # 16GB for ML models
     timeout=600,
     volumes={"/cache": model_volume},  # Mount volume at /cache
