@@ -34,10 +34,10 @@ image = (
         "python-dotenv==1.0.0",
         "requests==2.31.0",
     )
-    # Install PyTorch
-    .pip_install(
-        "torch==2.2.0",
-        "torchvision==0.17.0",
+    # Install PyTorch with CUDA 11.8 support for T4 GPU
+    # Note: Using CUDA 11.8 for broader GPU compatibility
+    .run_commands(
+        "pip install torch==2.2.0 torchvision==0.17.0 --index-url https://download.pytorch.org/whl/cu118"
     )
     # Install ML/Vision dependencies
     .pip_install(
@@ -54,10 +54,11 @@ image = (
         "openai>=1.0.0",
         "boto3>=1.28.0",
     )
-    # Install SAM-2 from GitHub
+    # Install SAM-2 from GitHub (without upgrading PyTorch)
     .run_commands(
         "cd /tmp && git clone https://github.com/facebookresearch/segment-anything-2.git",
-        "cd /tmp/segment-anything-2 && pip install -e .",
+        "cd /tmp/segment-anything-2 && pip install -e . --no-deps",
+        "pip install hydra-core>=1.3.2 iopath>=0.1.10 tqdm>=4.66.1",
     )
     # Install GroundingDINO from GitHub with all dependencies
     .run_commands(
