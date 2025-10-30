@@ -7,7 +7,7 @@ import os
 from pathlib import Path
 
 # Create Modal app
-app = modal.App("fashion-crop-api")
+app = modal.App("fashion-crop-api-gpu")
 
 # Get the backend directory
 backend_dir = Path(__file__).parent
@@ -16,6 +16,7 @@ backend_dir = Path(__file__).parent
 model_volume = modal.Volume.from_name("fashion-model-weights", create_if_missing=True)
 
 # Define the image WITHOUT model weights (much lighter and faster to build)
+# Version: GPU-v2 (CUDA 11.8 + T4 GPU)
 image = (
     modal.Image.debian_slim(python_version="3.10")
     .apt_install(
