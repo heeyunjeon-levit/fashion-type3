@@ -162,7 +162,8 @@ class OptimizedFashionCropPipeline:
                  gd_box_thresh: float = 0.2, 
                  gd_text_thresh: float = 0.2, 
                  output_dir: str = "./out_optimized",
-                 iou_threshold: float = 0.5):
+                 iou_threshold: float = 0.5,
+                 use_sam2: bool = True):
         """
         Initialize the optimized pipeline
         
@@ -183,6 +184,7 @@ class OptimizedFashionCropPipeline:
         self.gd_text_thresh = gd_text_thresh
         self.output_dir = output_dir
         self.iou_threshold = iou_threshold
+        self.use_sam2 = use_sam2
         
         # Initialize GPT-4o analyzer
         if not GPT4O_AVAILABLE:
@@ -198,13 +200,17 @@ class OptimizedFashionCropPipeline:
         else:
             raise ValueError("Provide Grounding DINO config and weights paths.")
         
-        # Initialize SAM-2
-        print("🔄 Loading SAM-2 model...")
-        # SAM-2 expects just the filename, not the full path
-        sam2_config_name = os.path.basename(sam2_config)
-        sam2_checkpoint_abs = os.path.abspath(sam2_checkpoint)
-        self.sam2_predictor = SAM2ImagePredictor(build_sam2(sam2_config_name, sam2_checkpoint_abs, device=device))
-        print("✅ SAM-2 model loaded")
+        # Initialize SAM-2 (optional)
+        if self.use_sam2:
+            print("🔄 Loading SAM-2 model...")
+            # SAM-2 expects just the filename, not the full path
+            sam2_config_name = os.path.basename(sam2_config)
+            sam2_checkpoint_abs = os.path.abspath(sam2_checkpoint)
+            self.sam2_predictor = SAM2ImagePredictor(build_sam2(sam2_config_name, sam2_checkpoint_abs, device=device))
+            print("✅ SAM-2 model loaded")
+        else:
+            print("⚡ Skipping SAM-2 initialization (using bounding boxes only for speed)")
+            self.sam2_predictor = None
         
         # Create output directories
         self.crops_dir = os.path.join(output_dir, "crops")
@@ -677,7 +683,7 @@ class OptimizedFashionCropPipeline:
         return " . ".join(missing_items)
     
     def _process_with_sam2(self, pil_img: Image.Image, detections: List[Dict], image_stem: str) -> Dict:
-        """Process detections with SAM-2 and apply quality filtering"""
+        """Process detections with SAM-2 (or bounding boxes only) and apply quality filtering"""
         real_crops = 0
         filtered_items = []
         
@@ -718,82 +724,106 @@ class OptimizedFashionCropPipeline:
             bbox = box_cxcywh_to_xyxy(bbox) * torch.tensor([W, H, W, H])
             bbox = clip_box(bbox.tolist(), W, H)
             
-            # Run SAM-2
-            self.sam2_predictor.set_image(pil_img)
-            masks, scores, logits_sam2 = self.sam2_predictor.predict(
-                point_coords=None,
-                point_labels=None,
-                box=bbox,
-                multimask_output=True,
-            )
-            
-            # Select best mask
-            best_mask = None
-            best_score = 0
-            best_logit = 0
-            
-            for mask, score, logit_sam2 in zip(masks, scores, logits_sam2):
-                if score > best_score:
-                    best_score = score
-                    best_logit = float(logit_sam2.max())  # Convert to scalar
-                    best_mask = mask
-            
-            if best_mask is not None:
-                # Convert mask to crop box
-                mask_bbox = mask_to_bbox(best_mask)
-                if mask_bbox:
-                    # Add margin
-                    x1, y1, x2, y2 = mask_bbox
-                    margin_ratio = 0.05
-                    margin_x = (x2 - x1) * margin_ratio
-                    margin_y = (y2 - y1) * margin_ratio
-                    
-                    crop_box = [
-                        max(0, x1 - margin_x),
-                        max(0, y1 - margin_y),
-                        min(W, x2 + margin_x),
-                        min(H, y2 + margin_y)
-                    ]
-                    
-                    # Quality validation
-                    crop_area = (crop_box[2] - crop_box[0]) * (crop_box[3] - crop_box[1])
-                    total_area = W * H
-                    crop_ratio = crop_area / total_area
-                    
-                    if crop_ratio > self.min_crop_ratio and best_logit > self.min_confidence:
-                        # Save real crop
-                        clean_phrase = phrase.replace(' ', '_').replace('-', '_')
-                        output_path = os.path.join(self.crops_dir, f"{image_stem}_item{i+1}_{clean_phrase}_crop.jpg")
-                        save_crop(pil_img, crop_box, output_path)
-                        print(f"✅ Generated crop for '{expected_item}': {clean_phrase}")
-                        real_crops += 1
-                    else:
-                        # If high confidence but too small, expand box and keep as last resort
-                        if crop_ratio <= self.min_crop_ratio and best_logit > (self.min_confidence + 0.1):
-                            expand = 0.10
-                            ex = (crop_box[2] - crop_box[0]) * expand
-                            ey = (crop_box[3] - crop_box[1]) * expand
-                            expanded_box = [
-                                max(0, crop_box[0] - ex),
-                                max(0, crop_box[1] - ey),
-                                min(W, crop_box[2] + ex),
-                                min(H, crop_box[3] + ey)
-                            ]
+            # Process based on use_sam2 flag
+            if self.use_sam2:
+                # Run SAM-2 for pixel-perfect segmentation
+                self.sam2_predictor.set_image(pil_img)
+                masks, scores, logits_sam2 = self.sam2_predictor.predict(
+                    point_coords=None,
+                    point_labels=None,
+                    box=bbox,
+                    multimask_output=True,
+                )
+                
+                # Select best mask
+                best_mask = None
+                best_score = 0
+                best_logit = 0
+                
+                for mask, score, logit_sam2 in zip(masks, scores, logits_sam2):
+                    if score > best_score:
+                        best_score = score
+                        best_logit = float(logit_sam2.max())  # Convert to scalar
+                        best_mask = mask
+                
+                if best_mask is not None:
+                    # Convert mask to crop box
+                    mask_bbox = mask_to_bbox(best_mask)
+                    if mask_bbox:
+                        # Add margin
+                        x1, y1, x2, y2 = mask_bbox
+                        margin_ratio = 0.05
+                        margin_x = (x2 - x1) * margin_ratio
+                        margin_y = (y2 - y1) * margin_ratio
+                        
+                        crop_box = [
+                            max(0, x1 - margin_x),
+                            max(0, y1 - margin_y),
+                            min(W, x2 + margin_x),
+                            min(H, y2 + margin_y)
+                        ]
+                        
+                        # Quality validation
+                        crop_area = (crop_box[2] - crop_box[0]) * (crop_box[3] - crop_box[1])
+                        total_area = W * H
+                        crop_ratio = crop_area / total_area
+                        
+                        if crop_ratio > self.min_crop_ratio and best_logit > self.min_confidence:
+                            # Save real crop
                             clean_phrase = phrase.replace(' ', '_').replace('-', '_')
                             output_path = os.path.join(self.crops_dir, f"{image_stem}_item{i+1}_{clean_phrase}_crop.jpg")
-                            save_crop(pil_img, expanded_box, output_path)
-                            print(f"🛟 Kept small high-conf crop by expanding box: {clean_phrase} (ratio: {crop_ratio:.3f}, conf: {best_logit:.3f})")
+                            save_crop(pil_img, crop_box, output_path)
+                            print(f"✅ Generated crop for '{expected_item}': {clean_phrase}")
                             real_crops += 1
-                            continue
-                        # Add to filtered items
-                        filtered_items.append({
-                            'item': expected_item,
-                            'phrase': phrase,
-                            'reason': f"too_small" if crop_ratio <= self.min_crop_ratio else f"low_confidence",
-                            'crop_box': crop_box,
-                            'mask': best_mask
-                        })
-                        print(f"⚠️ Rejected low-quality detection: {phrase.replace(' ', '_')} (ratio: {crop_ratio:.3f}, conf: {best_logit:.3f})")
+                        else:
+                            # If high confidence but too small, expand box and keep as last resort
+                            if crop_ratio <= self.min_crop_ratio and best_logit > (self.min_confidence + 0.1):
+                                expand = 0.10
+                                ex = (crop_box[2] - crop_box[0]) * expand
+                                ey = (crop_box[3] - crop_box[1]) * expand
+                                expanded_box = [
+                                    max(0, crop_box[0] - ex),
+                                    max(0, crop_box[1] - ey),
+                                    min(W, crop_box[2] + ex),
+                                    min(H, crop_box[3] + ey)
+                                ]
+                                clean_phrase = phrase.replace(' ', '_').replace('-', '_')
+                                output_path = os.path.join(self.crops_dir, f"{image_stem}_item{i+1}_{clean_phrase}_crop.jpg")
+                                save_crop(pil_img, expanded_box, output_path)
+                                print(f"🛟 Kept small high-conf crop by expanding box: {clean_phrase} (ratio: {crop_ratio:.3f}, conf: {best_logit:.3f})")
+                                real_crops += 1
+                                continue
+                            # Add to filtered items
+                            filtered_items.append({
+                                'item': expected_item,
+                                'phrase': phrase,
+                                'reason': f"too_small" if crop_ratio <= self.min_crop_ratio else f"low_confidence",
+                                'crop_box': crop_box,
+                                'mask': best_mask
+                            })
+                            print(f"⚠️ Rejected low-quality detection: {phrase.replace(' ', '_')} (ratio: {crop_ratio:.3f}, conf: {best_logit:.3f})")
+            else:
+                # Bounding box only mode (skip SAM-2)
+                print(f"⚡ Using bounding box only (no SAM-2 segmentation)")
+                # Add small margin to bbox
+                x1, y1, x2, y2 = bbox
+                margin_ratio = 0.05
+                margin_x = (x2 - x1) * margin_ratio
+                margin_y = (y2 - y1) * margin_ratio
+                
+                crop_box = [
+                    max(0, x1 - margin_x),
+                    max(0, y1 - margin_y),
+                    min(W, x2 + margin_x),
+                    min(H, y2 + margin_y)
+                ]
+                
+                # Save crop directly from bounding box
+                clean_phrase = phrase.replace(' ', '_').replace('-', '_')
+                output_path = os.path.join(self.crops_dir, f"{image_stem}_item{i+1}_{clean_phrase}_crop.jpg")
+                save_crop(pil_img, crop_box, output_path)
+                print(f"✅ Generated bbox crop for '{expected_item}': {clean_phrase}")
+                real_crops += 1
         
         return {
             'real_crops': real_crops,

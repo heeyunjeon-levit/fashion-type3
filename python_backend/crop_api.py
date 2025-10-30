@@ -69,6 +69,10 @@ def get_cropper():
         sam2_config = "sam2_hiera_l.yaml"
         sam2_weights = "data/weights/sam2_hiera_large.pt"
         
+        # Check environment variable to enable/disable SAM-2
+        use_sam2 = os.getenv("USE_SAM2", "false").lower() == "true"
+        print(f"⚙️  USE_SAM2 = {use_sam2}")
+        
         # Check if files exist, otherwise return None
         if not os.path.exists(config_path):
             print(f"⚠️ Config not found: {config_path}")
@@ -79,7 +83,8 @@ def get_cropper():
                 gd_config=config_path,
                 gd_weights=weights_path,
                 sam2_config=sam2_config,
-                sam2_checkpoint=sam2_weights
+                sam2_checkpoint=sam2_weights,
+                use_sam2=use_sam2
             )
             print("✅ CustomItemCropper initialized")
         except Exception as e:

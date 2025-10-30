@@ -144,6 +144,7 @@ def ensure_models_in_volume():
     print("✅ Models cached to volume and will be reused on next cold start!")
 
 # Deploy the FastAPI app with volume mounted
+# Note: USE_SAM2 environment variable defaults to "false" in crop_api.py for speed
 @app.function(
     image=image,
     cpu=2,

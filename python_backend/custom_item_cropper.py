@@ -21,13 +21,15 @@ class CustomItemCropper:
                  gd_config: str = "configs/GroundingDINO_SwinT_OGC.py",
                  gd_weights: str = "data/weights/groundingdino_swint_ogc.pth",
                  sam2_config: str = "sam2_hiera_l.yaml",
-                 sam2_checkpoint: str = "data/weights/sam2_hiera_large.pt"):
+                 sam2_checkpoint: str = "data/weights/sam2_hiera_large.pt",
+                 use_sam2: bool = True):
         
         self.pipeline = OptimizedFashionCropPipeline(
             gd_config=gd_config,
             gd_weights=gd_weights,
             sam2_config=sam2_config,
-            sam2_checkpoint=sam2_checkpoint
+            sam2_checkpoint=sam2_checkpoint,
+            use_sam2=use_sam2
         )
         
         self.gpt4o_analyzer = GPT4OFashionAnalyzer()
