@@ -39,12 +39,11 @@ image = (
         "python-dotenv==1.0.0",
         "requests==2.31.0",
     )
-    # Install CPU-only PyTorch (GPU has unfixable _C errors on Modal)
+    # CPU-only PyTorch (GPU has unfixable _C errors on Modal)
     .pip_install(
         "torch==2.3.1",
         "torchvision==0.18.1",
     )
-    # Note: CPU-only to avoid persistent _C errors with GPU builds
     # Install ML/Vision dependencies
     .pip_install(
         "opencv-python-headless==4.9.0.80",
