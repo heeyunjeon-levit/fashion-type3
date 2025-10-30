@@ -83,6 +83,11 @@ def get_cropper():
             import torch
             device = "cuda" if torch.cuda.is_available() else "cpu"
             print(f"⚙️  Using device: {device}")
+            if device == "cuda":
+                print(f"🎮 GPU: {torch.cuda.get_device_name(0)}")
+                print(f"🎮 CUDA version: {torch.version.cuda}")
+            else:
+                print("⚠️  WARNING: GPU not available, using CPU")
             
             _cropper_instance = CustomItemCropper(
                 gd_config=config_path,

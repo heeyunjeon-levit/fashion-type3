@@ -26,7 +26,7 @@ image = (
         "libgl1-mesa-glx",  # OpenGL library for OpenCV
         "libglib2.0-0",     # GLib library
     )
-    .run_commands("echo 'GPU build v2 - forcing cache invalidation'")  # Force rebuild
+    .run_commands("echo 'GPU build v3 - CUDA 12.1 for Modal T4'")  # Force rebuild
     # Install basic Python dependencies first
     .pip_install(
         "fastapi==0.104.1",
@@ -36,10 +36,10 @@ image = (
         "python-dotenv==1.0.0",
         "requests==2.31.0",
     )
-    # Install PyTorch with CUDA 11.8 support for T4 GPU
-    # Note: Using CUDA 11.8 for broader GPU compatibility
+    # Install PyTorch with CUDA 12.1 support for Modal's T4 GPU
+    # Modal uses CUDA 12.x, not 11.8
     .run_commands(
-        "pip install torch==2.2.0 torchvision==0.17.0 --index-url https://download.pytorch.org/whl/cu118"
+        "pip install torch==2.2.0 torchvision==0.17.0 --index-url https://download.pytorch.org/whl/cu121"
     )
     # Install ML/Vision dependencies
     .pip_install(
