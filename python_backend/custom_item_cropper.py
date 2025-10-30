@@ -84,7 +84,12 @@ class CustomItemCropper:
         
         prompt = f"""Look at this fashion image and identify these specific items: {items_str}
 
-CRITICAL: Look at the ACTUAL GARMENTS visible. DO NOT imagine or infer garment types that aren't clearly visible in the image.
+🎯 FOCUS RULE: Analyze ONLY the MAIN PERSON in the image (the largest, clearest person in the foreground).
+   - FOCUS ON: The primary person wearing the clothes
+   - IGNORE: Background people, mannequins, displays, posters, or clothing items not worn by the main person
+   - If the main person doesn't have {items_str}, return an empty list for those items
+
+CRITICAL: Look at the ACTUAL GARMENTS visible ON THE MAIN PERSON ONLY. DO NOT imagine or infer garment types that aren't clearly visible in the image.
 
 IMPORTANT: Your description will be used to crop the garment for detailed visual matching. The crop needs to capture ALL identifying details:
 - Specific patterns, textures, and unique features
