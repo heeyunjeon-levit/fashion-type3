@@ -1,0 +1,32 @@
+# FastAPI server
+fastapi==0.104.1
+uvicorn==0.24.0
+python-multipart==0.0.6
+pydantic==2.5.0
+python-dotenv==1.0.0
+boto3>=1.28.0
+
+# PyTorch with CUDA (GPU-enabled)
+# Hugging Face Spaces typically uses CUDA 11.8 or 12.1
+# Install from PyPI - it will auto-detect GPU
+torch>=2.5.1
+torchvision>=0.20.1
+opencv-python-headless==4.9.0.80
+numpy>=1.26.4,<3
+Pillow>=10.3.0
+pandas==2.2.2
+PyYAML==6.0.1
+requests==2.31.0
+
+# Detection (open-vocab) via Transformers OWL-ViT
+transformers==4.41.0
+# SAM (Segment Anything, classic)
+segment-anything==1.0
+# YOLO (baseline, person detector)
+ultralytics==8.2.0
+
+# Additional dependencies
+timm==0.9.12
+supabase==2.10.0
+openai>=1.0.0
+
