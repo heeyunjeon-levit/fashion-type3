@@ -1,34 +1,34 @@
 {
-  "timestamp": "2025-10-30T06:00:43.537Z",
+  "timestamp": "2025-10-30T06:10:56.595Z",
   "timings": {
     "total": {
-      "start": 1761803908288,
-      "end": 1761804043537,
-      "duration": "135.25"
+      "start": 1761804522528,
+      "end": 1761804656594,
+      "duration": "134.07"
     },
     "upload": {
-      "start": 1761803908448,
-      "end": 1761803910216,
+      "start": 1761804522591,
+      "end": 1761804524364,
       "duration": "1.77"
     },
     "crop": {
-      "start": 1761803910217,
-      "end": 1761804005218,
-      "duration": "95.00",
+      "start": 1761804524365,
+      "end": 1761804639506,
+      "duration": "115.14",
       "cold_start": true
     },
     "search": {
-      "start": 1761804005218,
-      "end": 1761804043536,
-      "duration": "38.32",
+      "start": 1761804639508,
+      "end": 1761804656593,
+      "duration": "17.09",
       "num_items": 2
     },
     "display": {}
   },
   "performance": {
     "uploadPercent": 1.3,
-    "cropPercent": 70.2,
-    "searchPercent": 28.3
+    "cropPercent": 85.9,
+    "searchPercent": 12.7
   },
   "optimizations": {
     "volumeCaching": false,

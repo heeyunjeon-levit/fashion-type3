@@ -101,18 +101,22 @@ def crop_image_from_url(image_url: str, categories: List[str], count: int = 1) -
     Returns:
         URL of the cropped image (uploaded to imgbb, or original if failed)
     """
+    start_time = time.time()
     print(f"📥 Processing image from URL: {image_url}")
     print(f"📋 Categories: {categories}")
     print(f"📊 Requested count: {count}")
     
     # Check if cropper is available
+    t0 = time.time()
     cropper = get_cropper()
     if cropper is None:
         print("⚠️ Cropper not available, returning original URL")
         return image_url
+    print(f"⏱️  Cropper init: {time.time() - t0:.2f}s")
     
     # Download image to temporary file
     try:
+        t0 = time.time()
         print("⬇️ Downloading image...")
         response = requests.get(image_url, timeout=30)
         response.raise_for_status()
@@ -124,6 +128,7 @@ def crop_image_from_url(image_url: str, categories: List[str], count: int = 1) -
             f.write(response.content)
         
         print(f"✅ Image saved to: {temp_path}")
+        print(f"⏱️  Download: {time.time() - t0:.2f}s")
         
         # Convert categories to simple generic terms for GPT-4o
         category_map = {
@@ -154,7 +159,9 @@ def crop_image_from_url(image_url: str, categories: List[str], count: int = 1) -
         print(f"📁 Output directory: {output_dir}")
         
         # Process the image with the custom items
+        t0 = time.time()
         custom_items_map = {os.path.basename(temp_path): item_descriptions}
+        print(f"⏱️  Starting crop processing...")
         result = cropper.process_batch_with_custom_items(
             image_dir=os.path.dirname(temp_path),
             custom_items_map=custom_items_map,
@@ -162,6 +169,7 @@ def crop_image_from_url(image_url: str, categories: List[str], count: int = 1) -
         )
         
         print(f"✅ Crop result: {result}")
+        print(f"⏱️  Crop processing: {time.time() - t0:.2f}s")
         
         # Find all cropped images
         crops_dir = os.path.join(output_dir, "crops")
@@ -186,6 +194,7 @@ def crop_image_from_url(image_url: str, categories: List[str], count: int = 1) -
 
             if crops:
                 # Upload all cropped images (limited to count)
+                t0 = time.time()
                 for crop_filename in crops:
                     cropped_path = os.path.join(crops_dir, crop_filename)
                     print(f"📤 Uploading cropped image: {crop_filename}")
@@ -197,6 +206,8 @@ def crop_image_from_url(image_url: str, categories: List[str], count: int = 1) -
                     cropped_url = upload_image_to_imgbb(cropped_bytes)
                     cropped_urls.append(cropped_url)
                     print(f"✅ Uploaded to: {cropped_url}")
+                
+                print(f"⏱️  Upload crops: {time.time() - t0:.2f}s")
 
                 # Cleanup
                 if os.path.exists(temp_path):
@@ -204,6 +215,8 @@ def crop_image_from_url(image_url: str, categories: List[str], count: int = 1) -
                 if os.path.exists(output_dir):
                     shutil.rmtree(output_dir)
 
+                print(f"⏱️  TOTAL CROP TIME: {time.time() - start_time:.2f}s")
+                
                 # Return array of URLs for multiple crops, or single URL for backward compatibility
                 if len(cropped_urls) > 1:
                     return {"croppedImageUrls": cropped_urls}
