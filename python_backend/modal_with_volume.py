@@ -26,7 +26,7 @@ image = (
         "libgl1-mesa-glx",  # OpenGL library for OpenCV
         "libglib2.0-0",     # GLib library
     )
-    .run_commands("echo 'GPU build v3 - CUDA 12.1 for Modal T4'")  # Force rebuild
+    .run_commands("echo 'CPU build v4 - reverting GPU due to PyTorch issues'")  # Force rebuild
     # Install basic Python dependencies first
     .pip_install(
         "fastapi==0.104.1",
@@ -36,10 +36,10 @@ image = (
         "python-dotenv==1.0.0",
         "requests==2.31.0",
     )
-    # Install PyTorch with CUDA 12.1 support for Modal's T4 GPU
-    # Modal uses CUDA 12.x, not 11.8
-    .run_commands(
-        "pip install torch==2.2.0 torchvision==0.17.0 --index-url https://download.pytorch.org/whl/cu121"
+    # Install CPU-only PyTorch (GPU was causing C++ extension issues)
+    .pip_install(
+        "torch==2.2.0",
+        "torchvision==0.17.0",
     )
     # Install ML/Vision dependencies
     .pip_install(
@@ -150,7 +150,7 @@ def ensure_models_in_volume():
 # Note: USE_SAM2 environment variable defaults to "false" in crop_api.py for speed
 @app.function(
     image=image,
-    gpu="T4",  # Add GPU for 2-3x speedup on GroundingDINO (GroundingDINO: 15s → 3-5s)
+    cpu=2,  # Back to CPU - GPU causing PyTorch C++ extension issues
     memory=16384,  # 16GB for ML models
     timeout=600,
     volumes={"/cache": model_volume},  # Mount volume at /cache
