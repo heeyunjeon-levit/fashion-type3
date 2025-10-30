@@ -147,7 +147,7 @@ def ensure_models_in_volume():
 # Note: USE_SAM2 environment variable defaults to "false" in crop_api.py for speed
 @app.function(
     image=image,
-    cpu=2,
+    gpu="T4",  # Add GPU for 2-3x speedup on GroundingDINO (GroundingDINO: 15s → 3-5s)
     memory=16384,  # 16GB for ML models
     timeout=600,
     volumes={"/cache": model_volume},  # Mount volume at /cache

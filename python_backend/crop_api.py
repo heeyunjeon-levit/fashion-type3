@@ -79,12 +79,18 @@ def get_cropper():
             return None
             
         try:
+            # Check if GPU is available
+            import torch
+            device = "cuda" if torch.cuda.is_available() else "cpu"
+            print(f"⚙️  Using device: {device}")
+            
             _cropper_instance = CustomItemCropper(
                 gd_config=config_path,
                 gd_weights=weights_path,
                 sam2_config=sam2_config,
                 sam2_checkpoint=sam2_weights,
-                use_sam2=use_sam2
+                use_sam2=use_sam2,
+                device=device
             )
             print("✅ CustomItemCropper initialized")
         except Exception as e:
