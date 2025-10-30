@@ -96,12 +96,14 @@ export async function POST(request: NextRequest) {
       }
     }
     
-    // Search each cropped image entry separately (handles tops, tops_1, tops_2, ...)
+    // Search each cropped image entry in parallel (handles tops, tops_1, tops_2, ...)
     const croppedEntries = Object.entries(croppedImages || {}) as [string, string][]
-    for (const [resultKey, croppedImageUrl] of croppedEntries) {
+    
+    // Process all cropped images in parallel for maximum speed
+    const searchPromises = croppedEntries.map(async ([resultKey, croppedImageUrl]) => {
       if (!croppedImageUrl) {
         console.log(`⚠️ No cropped image for ${resultKey}`)
-        continue
+        return { resultKey, results: null }
       }
 
       const categoryKey = resultKey.split('_')[0] // base category without instance suffix
@@ -179,7 +181,7 @@ export async function POST(request: NextRequest) {
         
         if (organicResults.length === 0) {
           console.log(`⚠️ No Serper results for ${resultKey} after aggregating 3 runs`)
-          continue
+          return { resultKey, results: null }
         }
         
         console.log(`📋 Using top ${organicResults.length} results for ${resultKey}`)
@@ -287,8 +289,8 @@ Return JSON: {"${resultKey}": ["https://url1.com/product1", "https://url2.com/pr
             }
           })
           
-          allResults[resultKey] = linksWithThumbnails
           console.log(`✅ Found ${validLinks.length} link(s) for ${resultKey}:`, validLinks.slice(0, 3))
+          return { resultKey, results: linksWithThumbnails }
         } else {
           // Fallback: take top 3 organic results directly
           const fallback = organicResults
@@ -300,14 +302,26 @@ Return JSON: {"${resultKey}": ["https://url1.com/product1", "https://url2.com/pr
               title: item.title || null,
             }))
           if (fallback.length > 0) {
-            allResults[resultKey] = fallback
-            console.log(`🛟 Fallback used for ${resultKey} with ${fallback.length} link(s)`) 
+            console.log(`🛟 Fallback used for ${resultKey} with ${fallback.length} link(s)`)
+            return { resultKey, results: fallback }
           } else {
             console.log(`⚠️ No valid link for ${resultKey}`)
+            return { resultKey, results: null }
           }
         }
       } catch (error) {
         console.error(`❌ Error searching for ${resultKey}:`, error)
+        return { resultKey, results: null }
+      }
+    })
+
+    // Wait for all searches to complete in parallel
+    const searchResults = await Promise.all(searchPromises)
+    
+    // Aggregate results
+    for (const { resultKey, results } of searchResults) {
+      if (results) {
+        allResults[resultKey] = results
       }
     }
 
