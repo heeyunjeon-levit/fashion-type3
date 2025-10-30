@@ -1,0 +1,30 @@
+{
+  "timestamp": "2025-10-30T06:48:36.778Z",
+  "testImage": "/Users/levit/Desktop/photos/008ae8fd9128-IMG_7570.jpeg",
+  "sam2": {
+    "cropTime": 63.19,
+    "searchTime": 23.34,
+    "totalTime": 86.53,
+    "products": [
+      "https://zigzag.kr/catalog/products/100730398",
+      "https://m.minimalmood.co.kr/product/detail.html?product_no=2634",
+      "https://zigzag.kr/catalog/products/165342915"
+    ]
+  },
+  "bbox": {
+    "cropTime": 40.88,
+    "searchTime": 15.18,
+    "totalTime": 56.06,
+    "products": [
+      "https://en.beidelli.com/product/same-day-shipping-madelinen-fabric-fruit-summer-linen-ribbed-cardigan/4156/",
+      "https://m.classic-blanc.com/product/detail.html?product_no=5127",
+      "https://m.2fyou.co.kr/product/나인-슬림핏-골지-가디건-4color/3238/"
+    ]
+  },
+  "comparison": {
+    "cropSpeedup": 35.3,
+    "totalSpeedup": 35.2,
+    "similarity": 0,
+    "matchingProducts": 0
+  }
+}

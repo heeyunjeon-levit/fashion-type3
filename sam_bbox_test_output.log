@@ -1,0 +1,87 @@
+
+🧪 SAM-2 vs Bounding Box Comparison Test
+
+Testing search accuracy with both methods
+
+============================================================
+
+✅ Next.js dev server is running
+
+⏱️  Starting comparison test...
+
+📤 Uploading test image...
+✅ Image uploaded: https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/p...
+
+═══════════════════════════════════════════════════════════
+TEST 1: WITH SAM-2 (Current Default)
+═══════════════════════════════════════════════════════════
+
+🎨 Testing with SAM-2 (pixel-perfect segmentation)
+
+✅ Cropping completed in 63.19s
+✅ Search completed in 23.34s
+
+📊 SAM-2 Results:
+   Crop time: 63.19s
+   Search time: 23.34s
+   Total: 86.53s
+   Products found: 3
+
+⏳ Waiting 5 seconds before bbox test...
+
+═══════════════════════════════════════════════════════════
+TEST 2: BOUNDING BOX ONLY (Fast Mode)
+═══════════════════════════════════════════════════════════
+
+⚡ Testing with Bounding Box Only (fast mode)
+
+✅ Cropping completed in 40.88s
+✅ Search completed in 15.18s
+
+📊 Bounding Box Results:
+   Crop time: 40.88s
+   Search time: 15.18s
+   Total: 56.06s
+   Products found: 3
+
+============================================================
+📊 COMPARISON RESULTS
+============================================================
+
+⏱️  TIMING:
+   SAM-2 crop:    63.19s
+   Bbox crop:     40.88s
+   Speedup:       35.3% faster! 🚀
+
+   SAM-2 total:   86.53s
+   Bbox total:    56.06s
+   Speedup:       35.2% faster! 🚀
+
+🔍 SEARCH QUALITY:
+   SAM-2 products:    3
+   Bbox products:     3
+
+   Matching products: 0/3
+   Similarity:        0.0%
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+❌ VERDICT: Significant quality loss with bounding boxes
+   Not recommended - 100% accuracy drop.
+
+🔗 PRODUCT COMPARISON:
+
+SAM-2 Products:
+   1. ❌ https://zigzag.kr/catalog/products/100730398...
+   2. ❌ https://m.minimalmood.co.kr/product/detail.html?product_no=2634...
+   3. ❌ https://zigzag.kr/catalog/products/165342915...
+
+Bbox Products:
+   1. 🆕 https://en.beidelli.com/product/same-day-shipping-madelinen-fabric-fruit-summer-...
+   2. 🆕 https://m.classic-blanc.com/product/detail.html?product_no=5127...
+   3. 🆕 https://m.2fyou.co.kr/product/나인-슬림핏-골지-가디건-4color/3238/...
+
+============================================================
+
+📄 Detailed report saved to: sam_vs_bbox_comparison.json
+
