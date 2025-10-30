@@ -26,6 +26,7 @@ image = (
         "libgl1-mesa-glx",  # OpenGL library for OpenCV
         "libglib2.0-0",     # GLib library
     )
+    .run_commands("echo 'GPU build v2 - forcing cache invalidation'")  # Force rebuild
     # Install basic Python dependencies first
     .pip_install(
         "fastapi==0.104.1",
