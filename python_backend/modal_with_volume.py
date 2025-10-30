@@ -6,8 +6,8 @@ import modal
 import os
 from pathlib import Path
 
-# Create Modal app
-app = modal.App("fashion-crop-api-gpu")
+# Create Modal app (changed name to force complete rebuild and avoid caching)
+app = modal.App("fashion-crop-gpu-v2")
 
 # Get the backend directory
 backend_dir = Path(__file__).parent
@@ -39,13 +39,13 @@ image = (
         "python-dotenv==1.0.0",
         "requests==2.31.0",
     )
-    # Install PyTorch + TorchVision with MATCHING CUDA 12.1 builds (this is the fix!)
+    # Install PyTorch + TorchVision with MATCHING CUDA 12.1 builds (trying 2.3.x for stability)
     .pip_install(
-        "torch==2.4.1+cu121",
-        "torchvision==0.19.1+cu121",
+        "torch==2.3.1+cu121",
+        "torchvision==0.18.1+cu121",
         extra_index_url="https://download.pytorch.org/whl/cu121"
     )
-    # Note: Can't test _C at build time (no GPU), but runtime will verify it works
+    # Note: 2.3.x pair may be more stable than 2.4.x
     # Install ML/Vision dependencies
     .pip_install(
         "opencv-python-headless==4.9.0.80",
@@ -162,7 +162,7 @@ def ensure_models_in_volume():
     secrets=[modal.Secret.from_name("fashion-api-keys")],
 )
 @modal.asgi_app()
-def fastapi_app_v3():
+def fastapi_app_v2():
     """
     Load and return the FastAPI app
     Models are loaded from persistent volume for faster cold starts
