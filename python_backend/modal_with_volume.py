@@ -39,13 +39,12 @@ image = (
         "python-dotenv==1.0.0",
         "requests==2.31.0",
     )
-    # Install PyTorch + TorchVision with MATCHING CUDA 12.1 builds (trying 2.3.x for stability)
+    # Install CPU-only PyTorch (GPU has unfixable _C errors on Modal)
     .pip_install(
-        "torch==2.3.1+cu121",
-        "torchvision==0.18.1+cu121",
-        extra_index_url="https://download.pytorch.org/whl/cu121"
+        "torch==2.3.1",
+        "torchvision==0.18.1",
     )
-    # Note: 2.3.x pair may be more stable than 2.4.x
+    # Note: CPU-only to avoid persistent _C errors with GPU builds
     # Install ML/Vision dependencies
     .pip_install(
         "opencv-python-headless==4.9.0.80",
@@ -155,7 +154,7 @@ def ensure_models_in_volume():
 # Note: USE_SAM2 environment variable defaults to "false" in crop_api.py for speed
 @app.function(
     image=image,
-    gpu="T4",  # GPU now works with matching CUDA builds!
+    cpu=2,  # CPU-only (GPU has unfixable PyTorch _C errors)
     memory=16384,  # 16GB for ML models
     timeout=600,
     volumes={"/cache": model_volume},  # Mount volume at /cache
