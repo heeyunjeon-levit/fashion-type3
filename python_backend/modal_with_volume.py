@@ -173,7 +173,7 @@ def test_torchvision():
     timeout=600,
     volumes={"/cache": model_volume},  # Mount volume at /cache
     secrets=[modal.Secret.from_name("fashion-api-keys")],
-    scaledown_window=300,  # Keep container warm for 5 minutes
+    scaledown_window=600,  # Keep container warm for 10 minutes (aligned with GitHub Actions ping every 5 min)
 )
 @modal.concurrent(max_inputs=10)  # Allow up to 10 concurrent requests
 @modal.asgi_app()
