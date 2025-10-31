@@ -34,14 +34,14 @@ export async function POST(request: NextRequest) {
 
     console.log('✅ Conversion successful, output size:', outputBuffer.length)
 
-    // Convert buffer to base64 for transmission
-    const base64 = outputBuffer.toString('base64')
-
-    // Return as data URL
-    return NextResponse.json({
-      success: true,
-      dataUrl: `data:image/jpeg;base64,${base64}`,
-      size: outputBuffer.length,
+    // Return the JPEG file directly as a blob
+    return new NextResponse(outputBuffer, {
+      status: 200,
+      headers: {
+        'Content-Type': 'image/jpeg',
+        'Content-Length': outputBuffer.length.toString(),
+        'Content-Disposition': `inline; filename="${file.name.replace(/\.heic$/i, '')}.jpg"`,
+      },
     })
   } catch (error) {
     console.error('❌ HEIC conversion error:', error)

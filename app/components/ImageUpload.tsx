@@ -40,23 +40,26 @@ export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
           body: formData,
         })
 
-        const data = await response.json()
-
-        if (!data.success) {
-          throw new Error(data.error || 'Conversion failed')
+        if (!response.ok) {
+          // Try to get error message from JSON response
+          try {
+            const errorData = await response.json()
+            throw new Error(errorData.error || 'Conversion failed')
+          } catch {
+            throw new Error(`Conversion failed with status ${response.status}`)
+          }
         }
 
         console.log('✅ HEIC converted to JPEG successfully')
 
-        // Convert data URL back to File object
-        const base64Response = await fetch(data.dataUrl)
-        const blob = await base64Response.blob()
+        // Get the converted JPEG as a blob
+        const blob = await response.blob()
         
         const originalName = file.name.replace(/\.heic$/i, '').replace(/\.heif$/i, '')
         processedFile = new File([blob], `${originalName}.jpg`, { type: 'image/jpeg' })
         
-        // Use the data URL for preview
-        previewUrl = data.dataUrl
+        // Create object URL for preview
+        previewUrl = URL.createObjectURL(blob)
 
       } catch (error) {
         console.error('❌ Error converting HEIC:', error)
