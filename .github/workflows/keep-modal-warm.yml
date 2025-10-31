@@ -13,7 +13,7 @@ jobs:
       - name: Ping Modal Backend
         run: |
           echo "🔄 Pinging Modal backend to keep it warm..."
-          response=$(curl -s -o /dev/null -w "%{http_code}" https://heeyunjeon-levit--fashion-crop-api-fastapi-app.modal.run/)
+          response=$(curl -s -o /dev/null -w "%{http_code}" https://heeyunjeon-levit--fashion-crop-api-cpu-fastapi-app-v2.modal.run/)
           echo "✅ Backend responded with status: $response"
           echo "⏰ Pinged at: $(date -u)"
           
