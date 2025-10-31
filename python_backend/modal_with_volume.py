@@ -173,7 +173,9 @@ def test_torchvision():
     timeout=600,
     volumes={"/cache": model_volume},  # Mount volume at /cache
     secrets=[modal.Secret.from_name("fashion-api-keys")],
+    scaledown_window=300,  # Keep container warm for 5 minutes
 )
+@modal.concurrent(max_inputs=10)  # Allow up to 10 concurrent requests
 @modal.asgi_app()
 def fastapi_app_v2():
     """
