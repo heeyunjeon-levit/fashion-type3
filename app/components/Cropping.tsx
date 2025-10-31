@@ -111,7 +111,7 @@ export default function Cropping({ imageUrl, categories, onCropped }: CroppingPr
   return (
     <div className="max-w-2xl mx-auto mt-8">
       <h1 className="text-4xl font-bold text-gray-800 mb-8 text-center">
-        Detecting Items
+        아이템 감지 중
       </h1>
 
       <div className="bg-white rounded-2xl shadow-xl p-8">
@@ -120,8 +120,8 @@ export default function Cropping({ imageUrl, categories, onCropped }: CroppingPr
           <div className="flex justify-between items-center mb-2">
             <span className="text-sm font-medium text-gray-600">
               {isCropping 
-                ? `Processing all items...` 
-                : 'Complete!'}
+                ? `전체 아이템 처리 중...` 
+                : '완료!'}
             </span>
             <span className="text-sm text-gray-500">
               {Object.keys(croppedImages).length} / {categories.length}
@@ -147,7 +147,7 @@ export default function Cropping({ imageUrl, categories, onCropped }: CroppingPr
                 </p>
                 <img 
                   src={url} 
-                  alt={`Cropped ${cat}`}
+                  alt={`${cat} 크롭됨`}
                   className="w-full rounded"
                 />
               </div>
@@ -160,7 +160,7 @@ export default function Cropping({ imageUrl, categories, onCropped }: CroppingPr
             <div className="flex flex-col items-center justify-center space-y-4">
               <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-indigo-600"></div>
               <p className="text-gray-600">
-                Detecting fashion items...
+                패션 아이템 감지 중...
               </p>
             </div>
           </div>
@@ -169,7 +169,7 @@ export default function Cropping({ imageUrl, categories, onCropped }: CroppingPr
         {/* Show all detected items summary */}
         {Object.keys(croppedImages).length > 0 && (
           <div className="mt-6">
-            <h3 className="text-lg font-semibold text-gray-700 mb-3">Detected:</h3>
+            <h3 className="text-lg font-semibold text-gray-700 mb-3">감지된 아이템:</h3>
             <div className="grid grid-cols-3 gap-2">
               {Object.keys(croppedImages).map((cat) => {
                 const categoryKey = cat.split('_')[0]

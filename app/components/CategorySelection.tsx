@@ -78,10 +78,10 @@ export default function CategorySelection({
   return (
     <div className="max-w-2xl mx-auto mt-8">
       <h1 className="text-4xl font-bold text-gray-800 mb-2 text-center">
-        Necessary Item Selection
+        아이템 선택
       </h1>
       <p className="text-gray-600 text-center mb-8">
-        Click to select, then use +/- to adjust quantity
+        클릭하여 선택 후 +/- 버튼으로 수량 조정
       </p>
 
       <div className="bg-white rounded-2xl shadow-xl p-8">
@@ -161,14 +161,14 @@ export default function CategorySelection({
             onClick={onBack}
             className="flex-1 bg-gray-100 text-gray-700 py-4 rounded-lg font-semibold hover:bg-gray-200 transition-colors"
           >
-            Back
+            뒤로가기
           </button>
           <button
             onClick={handleContinue}
             disabled={totalCount === 0}
             className="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 rounded-lg font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Search ({totalCount})
+            검색 ({totalCount})
           </button>
         </div>
       </div>

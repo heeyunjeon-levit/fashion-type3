@@ -22,7 +22,7 @@ export default function Results({ results, isLoading, croppedImages, onReset }: 
         <div className="bg-white rounded-2xl shadow-xl p-12">
           <div className="flex flex-col items-center justify-center space-y-4">
             <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-indigo-600"></div>
-            <p className="text-gray-600 text-lg">Searching for products...</p>
+            <p className="text-gray-600 text-lg">제품 검색 중...</p>
           </div>
         </div>
       </div>
@@ -41,14 +41,14 @@ export default function Results({ results, isLoading, croppedImages, onReset }: 
   return (
     <div className="max-w-2xl mx-auto mt-8">
       <h1 className="text-4xl font-bold text-gray-800 mb-8 text-center">
-        Results
+        검색 결과
       </h1>
 
       <div className="bg-white rounded-2xl shadow-xl p-8">
         {Object.keys(results).length === 0 ? (
           <div className="text-center py-12">
             <p className="text-gray-600 text-lg">
-              No results found. Please try a different image.
+              결과를 찾을 수 없습니다. 다른 이미지로 시도해보세요.
             </p>
           </div>
         ) : (
@@ -56,7 +56,7 @@ export default function Results({ results, isLoading, croppedImages, onReset }: 
             {/* Show all cropped images if available */}
         {croppedImages && Object.keys(croppedImages).length > 0 && (
                       <div className="border-2 border-gray-200 rounded-lg p-4 bg-gray-50">
-                        <p className="text-sm font-medium text-gray-700 mb-3">Detected Items:</p>
+                        <p className="text-sm font-medium text-gray-700 mb-3">감지된 아이템:</p>
                         <div className="flex flex-wrap gap-3 justify-center">
                           {Object.entries(croppedImages).map(([category, imgUrl]) => {
                             // Handle duplicate categories (e.g., "tops", "tops_1", "tops_2")
@@ -112,7 +112,7 @@ export default function Results({ results, isLoading, croppedImages, onReset }: 
                       ) : (
                         <div className="flex flex-col items-center justify-center h-full p-2">
                           <span className="text-xs text-gray-600 font-medium mb-2 text-center">
-                            Option {index + 1}
+                            옵션 {index + 1}
                           </span>
                           <span className="text-sm text-gray-800 font-semibold text-center mb-3">
                             {new URL(option.link).hostname}
@@ -150,7 +150,7 @@ export default function Results({ results, isLoading, croppedImages, onReset }: 
           onClick={onReset}
           className="mt-8 w-full bg-gray-100 text-gray-700 py-4 rounded-lg font-semibold hover:bg-gray-200 transition-colors"
         >
-          Start Over
+          처음부터 다시하기
         </button>
       </div>
     </div>

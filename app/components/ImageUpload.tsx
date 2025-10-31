@@ -163,7 +163,7 @@ export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
   return (
     <div className="max-w-2xl mx-auto mt-8">
       <h1 className="text-4xl font-bold text-gray-800 mb-8 text-center">
-        Image Search
+        이미지 검색
       </h1>
       
       <div className="bg-white rounded-2xl shadow-xl p-8">
@@ -171,13 +171,13 @@ export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
           {isConverting ? (
             <div className="space-y-4">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
-              <p className="text-gray-600">Converting HEIC to JPEG...</p>
+              <p className="text-gray-600">HEIC를 JPEG로 변환하는 중...</p>
             </div>
           ) : preview ? (
             <div className="space-y-4">
               <img
                 src={preview}
-                alt="Preview"
+                alt="미리보기"
                 className="max-h-64 mx-auto rounded-lg shadow-md"
               />
               <button
@@ -190,7 +190,7 @@ export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
                 }}
                 className="text-gray-600 hover:text-gray-800 underline"
               >
-                Change Image
+                이미지 변경
               </button>
             </div>
           ) : (
@@ -208,12 +208,12 @@ export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
                   strokeLinejoin="round"
                 />
               </svg>
-              <p className="text-gray-600">Upload an image to get started</p>
+              <p className="text-gray-600">이미지를 업로드하여 시작하세요</p>
               <button
                 onClick={() => fileInputRef.current?.click()}
                 className="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition-colors font-medium"
               >
-                Select Image
+                이미지 선택
               </button>
             </div>
           )}
@@ -230,10 +230,10 @@ export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
         {image && (
           <button
             onClick={handleUpload}
-            disabled={isUploading}
+            disabled={isUploading || isConverting}
             className="mt-6 w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 rounded-lg font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isUploading ? 'Uploading...' : 'Continue'}
+            {isUploading ? '업로드 중...' : '계속하기'}
           </button>
         )}
       </div>
