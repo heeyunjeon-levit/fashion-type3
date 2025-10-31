@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef } from 'react'
+import imageCompression from 'browser-image-compression'
 
 interface ImageUploadProps {
   onImageUploaded: (imageUrl: string) => void
@@ -112,9 +113,29 @@ export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
         size: image.size,
       })
 
+      let fileToUpload = image
+
+      // Compress image if it's larger than 4MB (Vercel limit is 4.5MB)
+      if (image.size > 4 * 1024 * 1024) {
+        console.log('🗜️ Compressing large image...')
+        try {
+          const compressed = await imageCompression(image, {
+            maxSizeMB: 3.5, // Target 3.5MB to have buffer
+            maxWidthOrHeight: 2048, // Max dimension
+            useWebWorker: true,
+            fileType: 'image/jpeg',
+          })
+          console.log(`✅ Compressed: ${image.size} → ${compressed.size} bytes`)
+          fileToUpload = compressed
+        } catch (compressionError) {
+          console.error('⚠️ Compression failed, uploading original:', compressionError)
+          // Continue with original file
+        }
+      }
+
       // Create FormData to send the file
       const formData = new FormData()
-      formData.append('file', image)
+      formData.append('file', fileToUpload)
 
       const response = await fetch('/api/upload', {
         method: 'POST',
