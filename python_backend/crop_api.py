@@ -27,10 +27,11 @@ def upload_image_to_supabase(image_bytes: bytes) -> str:
     from supabase import create_client
 
     supabase_url = os.getenv("SUPABASE_URL")
-    supabase_key = os.getenv("SUPABASE_ANON_KEY")
+    # Try both possible key names
+    supabase_key = os.getenv("SUPABASE_KEY") or os.getenv("SUPABASE_ANON_KEY")
 
     if not supabase_url or not supabase_key:
-        raise ValueError("SUPABASE_URL and SUPABASE_ANON_KEY must be set")
+        raise ValueError("SUPABASE_URL and SUPABASE_KEY (or SUPABASE_ANON_KEY) must be set")
 
     supabase = create_client(supabase_url, supabase_key)
 
@@ -296,11 +297,11 @@ def crop_image_from_url(image_url: str, categories: List[str], count: int = 1) -
                     cropped_path = os.path.join(crops_dir, crop_filename)
                     print(f"📤 Uploading cropped image: {crop_filename}")
 
-                    # Upload to Supabase/imgbb
+                    # Upload to Supabase
                     with open(cropped_path, 'rb') as f:
                         cropped_bytes = f.read()
 
-                    cropped_url = upload_image_to_imgbb(cropped_bytes)
+                    cropped_url = upload_image_to_supabase(cropped_bytes)
                     cropped_urls.append(cropped_url)
                     print(f"✅ Uploaded to: {cropped_url}")
                 
