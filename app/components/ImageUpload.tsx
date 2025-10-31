@@ -24,32 +24,44 @@ export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
                    file.name.toLowerCase().endsWith('.heif')
 
     let processedFile = file
+    let previewUrl = ''
 
     if (isHEIC) {
       setIsConverting(true)
       try {
-        console.log('🔄 Converting HEIC to JPEG...')
+        console.log('🔄 Converting HEIC to JPEG via server...')
         
-        // Dynamically import heic2any only when needed (client-side only)
-        const heic2any = (await import('heic2any')).default
-        
-        // Convert HEIC to JPEG
-        const convertedBlob = await heic2any({
-          blob: file,
-          toType: 'image/jpeg',
-          quality: 0.9
+        // Send to server for conversion
+        const formData = new FormData()
+        formData.append('file', file)
+
+        const response = await fetch('/api/convert-heic', {
+          method: 'POST',
+          body: formData,
         })
 
-        // heic2any might return an array of blobs for multi-page HEICs
-        const finalBlob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob
+        const data = await response.json()
 
-        // Create a new File object from the blob
-        const originalName = file.name.replace(/\.heic$/i, '').replace(/\.heif$/i, '')
-        processedFile = new File([finalBlob], `${originalName}.jpg`, { type: 'image/jpeg' })
+        if (!data.success) {
+          throw new Error(data.error || 'Conversion failed')
+        }
+
         console.log('✅ HEIC converted to JPEG successfully')
+
+        // Convert data URL back to File object
+        const base64Response = await fetch(data.dataUrl)
+        const blob = await base64Response.blob()
+        
+        const originalName = file.name.replace(/\.heic$/i, '').replace(/\.heif$/i, '')
+        processedFile = new File([blob], `${originalName}.jpg`, { type: 'image/jpeg' })
+        
+        // Use the data URL for preview
+        previewUrl = data.dataUrl
+
       } catch (error) {
         console.error('❌ Error converting HEIC:', error)
-        alert('Failed to convert HEIC image. Please try a different format.')
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+        alert(`Failed to convert HEIC image: ${errorMessage}`)
         setIsConverting(false)
         return
       } finally {
@@ -57,13 +69,19 @@ export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
       }
     }
 
-    // Set the processed file and generate preview
+    // Set the processed file
     setImage(processedFile)
-    const reader = new FileReader()
-    reader.onloadend = () => {
-      setPreview(reader.result as string)
+
+    // Generate preview
+    if (previewUrl) {
+      setPreview(previewUrl)
+    } else {
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setPreview(reader.result as string)
+      }
+      reader.readAsDataURL(processedFile)
     }
-    reader.readAsDataURL(processedFile)
   }
 
   const handleUpload = async () => {
