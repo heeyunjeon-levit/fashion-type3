@@ -1,5 +1,6 @@
 """
 API wrapper for FastAPI server to crop images from URLs.
+Supports both Roboflow Inference API (GPU) and local cropper (CPU/GPU)
 """
 
 import os
@@ -9,7 +10,6 @@ import tempfile
 import base64
 from typing import List
 from pathlib import Path
-from custom_item_cropper import CustomItemCropper
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -17,6 +17,9 @@ load_dotenv()
 
 # Initialize the cropper (will be lazy-loaded)
 _cropper_instance = None
+_use_roboflow = os.getenv("USE_ROBOFLOW", "false").lower() == "true"
+
+print(f"⚙️  Cropper mode: {'Roboflow API' if _use_roboflow else 'Local'}")
 
 def upload_image_to_supabase(image_bytes: bytes) -> str:
     """Upload image to Supabase storage and return URL"""
@@ -62,7 +65,20 @@ def get_cropper():
     """Get or create the cropper instance (lazy loading)"""
     global _cropper_instance
     if _cropper_instance is None:
-        print("🔧 Initializing CustomItemCropper...")
+        if _use_roboflow:
+            print("🔧 Initializing RoboflowItemCropper...")
+            from roboflow_cropper import RoboflowItemCropper
+            api_key = os.getenv("ROBOFLOW_API_KEY")
+            if not api_key:
+                print("❌ ROBOFLOW_API_KEY not set!")
+                return None
+            _cropper_instance = RoboflowItemCropper(api_key=api_key)
+            print("✅ Roboflow cropper ready")
+            return _cropper_instance
+        
+        print("🔧 Initializing CustomItemCropper (local)...")
+        from custom_item_cropper import CustomItemCropper
+        
         # Use default paths (adjust these based on your setup)
         config_path = "configs/GroundingDINO_SwinT_OGC.py"
         weights_path = "data/weights/groundingdino_swint_ogc.pth"
