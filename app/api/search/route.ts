@@ -204,26 +204,36 @@ export async function POST(request: NextRequest) {
 
 The original cropped image shows: ${searchTerms.join(', ')}
 
+🚨 CRITICAL CATEGORY FILTER:
+- You are searching for: ${categoryLabels[categoryKey]}
+- ONLY return products that match this exact category type
+- ${categoryKey === 'tops' ? '❌ EXCLUDE: pants, shorts, skirts, dresses, shoes, bags, accessories' : ''}
+- ${categoryKey === 'bottoms' ? '❌ EXCLUDE: shirts, jackets, hoodies, sweaters, dresses, shoes, bags, accessories' : ''}
+- ${categoryKey === 'shoes' ? '❌ EXCLUDE: clothing items, bags, accessories' : ''}
+- ${categoryKey === 'bag' ? '❌ EXCLUDE: clothing items, shoes, accessories (except bags)' : ''}
+- ${categoryKey === 'accessory' ? '❌ EXCLUDE: clothing items, shoes, bags' : ''}
+- ${categoryKey === 'dress' ? '❌ EXCLUDE: shirts, pants, shorts, shoes, bags, accessories' : ''}
+
 CRITICAL SELECTION RULES (in order of priority):
-1. VISUAL MATCH FIRST: Look for titles/descriptions that mention similar style, color, or item type
-2. Accept ANY e-commerce/product website regardless of brand recognition
-3. Accept unknown brands, boutique stores, international sites
-4. Accept: Amazon, Zara, H&M, Nordstrom, Uniqlo, Musinsa, YesStyle, SHEIN, Etsy, Depop, Poshmark, vintage stores, Korean fashion sites, ANY online retailer
-5. ONLY ignore: Instagram, Pinterest, Facebook, Google Images, image CDNs, non-product pages
+1. CATEGORY MATCH FIRST: Must be the correct garment type (${categorySearchTerms[categoryKey]?.join(' OR ')})
+2. ITEM TYPE MATCH: Title must mention the correct type (NOT a different category)
+3. VISUAL MATCH: Look for titles/descriptions that mention similar style, color, material
+4. Accept ANY e-commerce/product website regardless of brand recognition
+5. Accept unknown brands, boutique stores, international sites
+6. Accept: Amazon, Zara, H&M, Nordstrom, Uniqlo, Musinsa, YesStyle, SHEIN, Etsy, Depop, Poshmark, vintage stores, Korean fashion sites, ANY online retailer
+7. ONLY ignore: Instagram, Pinterest, Facebook, Google Images, image CDNs, non-product pages, WRONG GARMENT CATEGORIES
 
 SELECTION PROCESS:
 - These results are aggregated from 3 cropped image API runs + full image search for better coverage
-- Full image search catches exact matches for all item types in the photo
-- Scan all results and identify the TOP 3 products that BEST VISUALLY MATCH the cropped image
-- Prioritize products where the title mentions similar style/color/material
-- Example: If searching for "red sweatshirt", prefer "red sweatshirt" over "gray hoodie"
-- Example: If searching for "blue jeans", prefer "blue denim pants" over "black trousers"
+- Scan all results and identify the TOP 3 products that match BOTH category AND visual appearance
+- FIRST filter by correct category, THEN match by color/style
+- Example for bottoms: "blue shorts" ✅, "blue hoodie" ❌ (wrong category)
+- Example for tops: "red sweatshirt" ✅, "red skirt" ❌ (wrong category)
 - Prefer actual product pages over homepages, category pages, or general listings
-- Return MULTIPLE links (2-3) to give users backup options in case some items are sold out
 
 Matching criteria (in order):
-1. Title mentions the SAME COLOR as the cropped image
-2. Title mentions the SAME ITEM TYPE (sweatshirt, jeans, boots, etc.)
+1. ✅ MUST be correct category: ${categorySearchTerms[categoryKey]?.join(', ')}
+2. Title mentions the SAME COLOR as the cropped image
 3. Title mentions similar STYLE (vintage, casual, formal, etc.)
 4. Links directly to a product detail page (not category/homepage)
 
