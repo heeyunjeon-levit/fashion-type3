@@ -163,7 +163,7 @@ export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
   return (
     <div className="max-w-2xl mx-auto mt-8">
       <h1 className="text-4xl font-bold text-gray-800 mb-8 text-center">
-        이미지 검색
+        이미지에서 원하시는 옷 찾아드려요!
       </h1>
       
       <div className="bg-white rounded-2xl shadow-xl p-8">
