@@ -43,7 +43,14 @@ export default function Cropping({ imageUrl, categories, onCropped }: CroppingPr
       console.log('📊 Category counts:', categoryCounts)
 
       // Process each unique category type
-      const PYTHON_CROPPER_URL = process.env.NEXT_PUBLIC_PYTHON_CROPPER_URL || 'http://localhost:8000'
+      // Support multiple backends: CPU (stable) and GPU/Roboflow (testing)
+      const cpuBackend = process.env.NEXT_PUBLIC_PYTHON_CROPPER_URL || 'http://localhost:8000'
+      const gpuBackend = process.env.NEXT_PUBLIC_PYTHON_CROPPER_URL_GPU || cpuBackend
+      const useGpu = process.env.NEXT_PUBLIC_USE_GPU_BACKEND === 'true'
+      
+      const PYTHON_CROPPER_URL = useGpu ? gpuBackend : cpuBackend
+      
+      console.log(`🖥️  Using ${useGpu ? 'GPU (Roboflow)' : 'CPU'} backend: ${PYTHON_CROPPER_URL}`)
       
       const cropPromises = Object.entries(categoryCounts).map(async ([category, count]) => {
         console.log(`🔄 Cropping ${category} ×${count}...`)

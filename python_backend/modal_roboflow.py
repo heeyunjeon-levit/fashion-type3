@@ -40,10 +40,9 @@ image = (
     cpu=1.0,  # Lightweight - just API calls
     memory=512,  # Minimal memory needed
     secrets=[
-        modal.Secret.from_name("fashion-api-keys"),  # OpenAI, Supabase
-        modal.Secret.from_name("fashion-roboflow-keys"),  # Roboflow API key
+        modal.Secret.from_name("fashion-api-keys"),  # OpenAI, Supabase, Roboflow (all in one)
     ],
-    keep_warm=1,  # Keep 1 container warm to avoid cold starts
+    min_containers=1,  # Keep 1 container warm to avoid cold starts
 )
 @modal.asgi_app()
 def fastapi_app():
