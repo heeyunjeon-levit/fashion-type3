@@ -11,6 +11,11 @@ export async function POST(request: NextRequest) {
     }
 
     console.log('📤 Uploading to Supabase storage...')
+    console.log('📝 File details:', {
+      name: file.name,
+      type: file.type,
+      size: file.size,
+    })
 
     // Initialize Supabase client
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
@@ -21,21 +26,34 @@ export async function POST(request: NextRequest) {
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
 
-    // Generate unique filename
+    console.log('📦 Buffer size:', buffer.length)
+
+    // Generate unique filename - ensure .jpg extension for converted HEIC files
     const timestamp = Date.now()
-    const filename = `upload_${timestamp}_${file.name}`
+    let filename = `upload_${timestamp}_${file.name}`
+    
+    // If file type is JPEG but name doesn't end with jpg/jpeg, fix the extension
+    if (file.type === 'image/jpeg' && !file.name.match(/\.(jpg|jpeg)$/i)) {
+      filename = `upload_${timestamp}_${file.name.replace(/\.[^.]+$/, '')}.jpg`
+    }
+
+    console.log('📁 Filename:', filename)
 
     // Upload to Supabase storage
     const { data, error } = await supabase.storage
       .from('images')
       .upload(filename, buffer, {
-        contentType: file.type,
+        contentType: file.type || 'image/jpeg',
         upsert: false
       })
 
     if (error) {
       console.error('❌ Supabase upload failed:', error)
-      throw new Error('Supabase upload failed')
+      console.error('❌ Error details:', JSON.stringify(error, null, 2))
+      return NextResponse.json(
+        { error: `Supabase error: ${error.message || 'Unknown error'}` },
+        { status: 500 }
+      )
     }
 
     console.log('✅ Supabase upload successful')

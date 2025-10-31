@@ -71,6 +71,12 @@ export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
 
     setIsUploading(true)
     try {
+      console.log('📤 Starting upload...', {
+        name: image.name,
+        type: image.type,
+        size: image.size,
+      })
+
       // Create FormData to send the file
       const formData = new FormData()
       formData.append('file', image)
@@ -80,15 +86,19 @@ export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
         body: formData,
       })
 
+      const data = await response.json()
+
       if (!response.ok) {
-        throw new Error('Upload failed')
+        console.error('❌ Upload failed:', data)
+        throw new Error(data.error || 'Upload failed')
       }
 
-      const data = await response.json()
+      console.log('✅ Upload successful:', data.imageUrl)
       onImageUploaded(data.imageUrl)
     } catch (error) {
       console.error('Error uploading image:', error)
-      alert('Failed to upload image. Please try again.')
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+      alert(`Failed to upload image: ${errorMessage}`)
     } finally {
       setIsUploading(false)
     }
