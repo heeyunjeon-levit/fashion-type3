@@ -67,11 +67,17 @@ async def crop_image(request: CropRequest):
         Cropped image URL
     """
     try:
-        print(f"📥 Received crop request:")
+        print(f"\n{'='*80}")
+        print(f"📥 CROP REQUEST RECEIVED")
         print(f"   Image URL: {request.imageUrl}")
         print(f"   Categories: {request.categories}")
+        print(f"   Count: {request.count}")
+        print(f"   CROPPER_AVAILABLE: {CROPPER_AVAILABLE}")
+        print(f"   crop_image_from_url: {crop_image_from_url}")
+        print(f"{'='*80}\n")
         
         if CROPPER_AVAILABLE and crop_image_from_url:
+            print("✅ Cropper available, calling crop_image_from_url...")
             # Call the actual cropper
             result = crop_image_from_url(
                 image_url=request.imageUrl,
@@ -87,7 +93,8 @@ async def crop_image(request: CropRequest):
                 return CropResponse(croppedImageUrl=result)
         else:
             # Mock mode - return original URL
-            print("⚠️ Mock mode: returning original URL")
+            print(f"⚠️ MOCK MODE: CROPPER_AVAILABLE={CROPPER_AVAILABLE}, crop_image_from_url={crop_image_from_url}")
+            print("⚠️ Returning original URL")
             return CropResponse(croppedImageUrl=request.imageUrl)
             
     except Exception as e:

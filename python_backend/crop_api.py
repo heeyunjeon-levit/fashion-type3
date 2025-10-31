@@ -18,6 +18,7 @@ load_dotenv()
 # Initialize the cropper (will be lazy-loaded)
 _cropper_instance = None
 _use_roboflow = os.getenv("USE_ROBOFLOW", "false").lower() == "true"
+CPU_FALLBACK_URL = os.getenv("CPU_FALLBACK_URL")
 
 print(f"⚙️  Cropper mode: {'Roboflow API' if _use_roboflow else 'Local'}")
 
@@ -56,10 +57,55 @@ def upload_image_to_supabase(image_bytes: bytes) -> str:
     except Exception as e:
         raise Exception(f"Failed to upload image to Supabase: {str(e)}")
 
-# Backward compatibility
 def upload_image_to_imgbb(image_bytes: bytes) -> str:
-    """Deprecated: Use upload_image_to_supabase instead"""
-    return upload_image_to_supabase(image_bytes)
+    """Upload image to ImgBB and return URL"""
+    api_key = os.getenv("IMGBB_API_KEY")
+    
+    if not api_key:
+        raise ValueError("IMGBB_API_KEY must be set")
+    
+    # Convert bytes to base64
+    image_base64 = base64.b64encode(image_bytes).decode('utf-8')
+    
+    # Upload to ImgBB
+    url = "https://api.imgbb.com/1/upload"
+    payload = {
+        "key": api_key,
+        "image": image_base64
+    }
+    
+    response = requests.post(url, data=payload)
+    response.raise_for_status()
+    
+    data = response.json()
+    if data.get("success"):
+        return data["data"]["url"]
+    else:
+        raise Exception(f"ImgBB upload failed: {data}")
+
+
+def _fallback_to_cpu(image_url: str, categories: List[str], count: int):
+    """Invoke CPU cropper backend when Roboflow returns no detections"""
+    if not CPU_FALLBACK_URL:
+        print("⚠️ CPU fallback URL not configured; skipping fallback")
+        return None
+
+    try:
+        fallback_endpoint = CPU_FALLBACK_URL.rstrip('/') + '/crop'
+        payload = {
+            "imageUrl": image_url,
+            "categories": categories,
+            "count": count
+        }
+        print(f"🔁 Invoking CPU fallback at {fallback_endpoint} ...")
+        response = requests.post(fallback_endpoint, json=payload, timeout=60)
+        response.raise_for_status()
+        data = response.json()
+        print(f"✅ CPU fallback succeeded: {data}")
+        return data
+    except Exception as e:
+        print(f"⚠️ CPU fallback failed: {e}")
+        return None
 
 def get_cropper():
     """Get or create the cropper instance (lazy loading)"""
@@ -67,14 +113,20 @@ def get_cropper():
     if _cropper_instance is None:
         if _use_roboflow:
             print("🔧 Initializing RoboflowItemCropper...")
-            from roboflow_cropper import RoboflowItemCropper
-            api_key = os.getenv("ROBOFLOW_API_KEY")
-            if not api_key:
-                print("❌ ROBOFLOW_API_KEY not set!")
+            try:
+                from roboflow_cropper import RoboflowItemCropper
+                api_key = os.getenv("ROBOFLOW_API_KEY")
+                if not api_key:
+                    print("❌ ROBOFLOW_API_KEY not set!")
+                    return None
+                _cropper_instance = RoboflowItemCropper(api_key=api_key)
+                print("✅ Roboflow cropper ready")
+                return _cropper_instance
+            except Exception as e:
+                print(f"❌ Failed to initialize Roboflow cropper: {e}")
+                import traceback
+                traceback.print_exc()
                 return None
-            _cropper_instance = RoboflowItemCropper(api_key=api_key)
-            print("✅ Roboflow cropper ready")
-            return _cropper_instance
         
         print("🔧 Initializing CustomItemCropper (local)...")
         from custom_item_cropper import CustomItemCropper
@@ -146,59 +198,72 @@ def crop_image_from_url(image_url: str, categories: List[str], count: int = 1) -
         return image_url
     print(f"⏱️  Cropper init: {time.time() - t0:.2f}s")
     
-    # Download image to temporary file
+    # Convert categories to simple generic terms for GPT-4o
+    category_map = {
+        "tops": "top",
+        "bottoms": "bottom",
+        "bag": "bag",
+        "shoes": "shoes",
+        "accessory": "accessory",
+        "dress": "dress"
+    }
+
+    # Generate item descriptions - if count > 1, create multiple instances
+    item_descriptions = []
+    for cat in categories:
+        base_term = category_map.get(cat, cat)
+        if count > 1:
+            # Create multiple instances of the same category
+            for i in range(count):
+                item_descriptions.append(f"{base_term}_{i+1}")
+        else:
+            item_descriptions.append(base_term)
+
+    print(f"🔍 Requesting categories: {item_descriptions}")
+    
+    # Use the cropper to process the image
+    import shutil
+    output_dir = tempfile.mkdtemp()
+    print(f"📁 Output directory: {output_dir}")
+    
+    # Process the image differently based on cropper type
+    temp_path = None  # Initialize to avoid UnboundLocalError
+    
     try:
         t0 = time.time()
-        print("⬇️ Downloading image...")
-        response = requests.get(image_url, timeout=30)
-        response.raise_for_status()
-        
-        # Save to temporary file  
-        os.makedirs(tempfile.gettempdir() + '/fashion_crop', exist_ok=True)
-        temp_path = os.path.join(tempfile.gettempdir(), 'fashion_crop', f'{hash(image_url)}.jpg')
-        with open(temp_path, 'wb') as f:
-            f.write(response.content)
-        
-        print(f"✅ Image saved to: {temp_path}")
-        print(f"⏱️  Download: {time.time() - t0:.2f}s")
-        
-        # Convert categories to simple generic terms for GPT-4o
-        category_map = {
-            "tops": "top",
-            "bottoms": "bottom",
-            "bag": "bag",
-            "shoes": "shoes",
-            "accessory": "accessory",
-            "dress": "dress"
-        }
-
-        # Generate item descriptions - if count > 1, create multiple instances
-        item_descriptions = []
-        for cat in categories:
-            base_term = category_map.get(cat, cat)
-            if count > 1:
-                # Create multiple instances of the same category
-                for i in range(count):
-                    item_descriptions.append(f"{base_term}_{i+1}")
-            else:
-                item_descriptions.append(base_term)
-
-        print(f"🔍 Requesting categories: {item_descriptions}")
-        
-        # Use the cropper to process the image
-        import shutil
-        output_dir = tempfile.mkdtemp()
-        print(f"📁 Output directory: {output_dir}")
-        
-        # Process the image with the custom items
-        t0 = time.time()
-        custom_items_map = {os.path.basename(temp_path): item_descriptions}
         print(f"⏱️  Starting crop processing...")
-        result = cropper.process_batch_with_custom_items(
-            image_dir=os.path.dirname(temp_path),
-            custom_items_map=custom_items_map,
-            output_dir=output_dir
-        )
+        
+        if _use_roboflow:
+            # Roboflow mode: use URL directly
+            print("🌐 Using Roboflow API with URL")
+            result = cropper.process_image_from_url(
+                image_url=image_url,
+                custom_items=item_descriptions,
+                output_dir=output_dir
+            )
+        else:
+            # Local mode: download first
+            t0_download = time.time()
+            print("⬇️ Downloading image...")
+            response = requests.get(image_url, timeout=30)
+            response.raise_for_status()
+            
+            # Save to temporary file  
+            os.makedirs(tempfile.gettempdir() + '/fashion_crop', exist_ok=True)
+            temp_path = os.path.join(tempfile.gettempdir(), 'fashion_crop', f'{hash(image_url)}.jpg')
+            with open(temp_path, 'wb') as f:
+                f.write(response.content)
+            
+            print(f"✅ Image saved to: {temp_path}")
+            print(f"⏱️  Download: {time.time() - t0_download:.2f}s")
+            
+            # Process with local cropper
+            custom_items_map = {os.path.basename(temp_path): item_descriptions}
+            result = cropper.process_batch_with_custom_items(
+                image_dir=os.path.dirname(temp_path),
+                custom_items_map=custom_items_map,
+                output_dir=output_dir
+            )
         
         print(f"✅ Crop result: {result}")
         print(f"⏱️  Crop processing: {time.time() - t0:.2f}s")
@@ -242,7 +307,7 @@ def crop_image_from_url(image_url: str, categories: List[str], count: int = 1) -
                 print(f"⏱️  Upload crops: {time.time() - t0:.2f}s")
 
                 # Cleanup
-                if os.path.exists(temp_path):
+                if temp_path and os.path.exists(temp_path):
                     os.unlink(temp_path)
                 if os.path.exists(output_dir):
                     shutil.rmtree(output_dir)
@@ -255,8 +320,17 @@ def crop_image_from_url(image_url: str, categories: List[str], count: int = 1) -
                 else:
                     return cropped_urls[0] if cropped_urls else image_url
 
-        print("⚠️ No crops found, returning original URL")
-        if os.path.exists(temp_path):
+        print("⚠️ No crops found")
+        if _use_roboflow:
+            fallback = _fallback_to_cpu(image_url, categories, count)
+            if fallback is not None:
+                if temp_path and os.path.exists(temp_path):
+                    os.unlink(temp_path)
+                if os.path.exists(output_dir):
+                    shutil.rmtree(output_dir)
+                return fallback
+        print("⚠️ Returning original URL")
+        if temp_path and os.path.exists(temp_path):
             os.unlink(temp_path)
         if os.path.exists(output_dir):
             shutil.rmtree(output_dir)
@@ -266,5 +340,9 @@ def crop_image_from_url(image_url: str, categories: List[str], count: int = 1) -
         print(f"❌ Error processing image: {e}")
         import traceback
         traceback.print_exc()
+        if _use_roboflow:
+            fallback = _fallback_to_cpu(image_url, categories, count)
+            if fallback is not None:
+                return fallback
         return image_url
 
