@@ -40,20 +40,34 @@ export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
           body: formData,
         })
 
+        console.log('📥 Conversion response status:', response.status)
+        console.log('📥 Response content-type:', response.headers.get('content-type'))
+
         if (!response.ok) {
           // Try to get error message from JSON response
-          try {
+          const contentType = response.headers.get('content-type')
+          if (contentType?.includes('application/json')) {
             const errorData = await response.json()
             throw new Error(errorData.error || 'Conversion failed')
-          } catch {
-            throw new Error(`Conversion failed with status ${response.status}`)
+          } else {
+            const errorText = await response.text()
+            console.error('❌ Non-JSON error response:', errorText.substring(0, 200))
+            throw new Error(`Server error: ${response.status}`)
           }
+        }
+
+        // Check if response is actually an image
+        const contentType = response.headers.get('content-type')
+        if (contentType !== 'image/jpeg') {
+          console.error('❌ Unexpected content type:', contentType)
+          throw new Error('Server returned invalid response type')
         }
 
         console.log('✅ HEIC converted to JPEG successfully')
 
         // Get the converted JPEG as a blob
         const blob = await response.blob()
+        console.log('📦 Converted blob size:', blob.size, 'type:', blob.type)
         
         const originalName = file.name.replace(/\.heic$/i, '').replace(/\.heif$/i, '')
         processedFile = new File([blob], `${originalName}.jpg`, { type: 'image/jpeg' })
