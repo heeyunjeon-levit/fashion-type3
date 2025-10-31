@@ -6,8 +6,8 @@ import modal
 import os
 from pathlib import Path
 
-# Create Modal app (changed name to force complete rebuild and avoid caching)
-app = modal.App("fashion-crop-gpu-v2")
+# Create Modal app - CPU mode (GPU has ABI issues)
+app = modal.App("fashion-crop-api-cpu")
 
 # Get the backend directory
 backend_dir = Path(__file__).parent
@@ -29,12 +29,13 @@ image = (
         "build-essential",
         "python3-dev",
     )
-    # Install PyTorch using Modal's recommended approach (simple pip_install, no explicit wheels)
+    # Install PyTorch CPU-only (GPU builds have ABI issues on Modal)
     .pip_install(
-        "torch==2.5.1",  # Match Modal's example version
-        "torchvision",   # Let it match torch automatically
-        "numpy==2.1.3",  # Match Modal's example
+        "torch==2.4.1+cpu",
+        "torchvision==0.19.1+cpu",
+        extra_options="--index-url https://download.pytorch.org/whl/cpu"
     )
+    .pip_install("numpy>=1.26,<2")
     # Install basic Python dependencies
     .pip_install(
         "fastapi==0.104.1",
@@ -148,7 +149,7 @@ def ensure_models_in_volume():
     print("✅ Models cached to volume and will be reused on next cold start!")
 
 # Test function to verify PyTorch/torchvision works
-@app.function(image=image, gpu="T4")
+@app.function(image=image, cpu=2.0)
 def test_torchvision():
     import torch, torchvision
     print(f"torch: {torch.__version__}, cuda: {torch.version.cuda}, available: {torch.cuda.is_available()}")
@@ -167,7 +168,7 @@ def test_torchvision():
 # Note: USE_SAM2 environment variable defaults to "false" in crop_api.py for speed
 @app.function(
     image=image,
-    gpu="T4",  # GPU with Modal's recommended PyTorch setup
+    cpu=2.0,  # CPU mode (GPU has ABI issues)
     memory=16384,  # 16GB for ML models
     timeout=600,
     volumes={"/cache": model_volume},  # Mount volume at /cache

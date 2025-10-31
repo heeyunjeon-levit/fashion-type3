@@ -40,12 +40,19 @@ ImportError: dynamic module does not define module export function (PyInit__C)
 
 ## 🎯 **Root Cause**
 
-Modal's Debian Slim base image has an **ABI incompatibility** with PyTorch's pre-compiled CUDA wheels. The `_C` module (TorchVision's C++ extension) fails to initialize with:
+Even after trying **Modal's official PyTorch setup** from their [torch_profiling example](https://modal.com/docs/examples/torch_profiling):
+- Python 3.11 ✅
+- `torch==2.5.1` ✅  
+- Simple `pip_install` (no explicit wheels) ✅
+
+**STILL GETS THE SAME ERROR**:
 ```
 ImportError: dynamic module does not define module export function (PyInit__C)
 ```
 
-This is a **platform-level issue**, not a configuration problem.
+**Key Finding**: Modal's example uses `torch` for profiling, but **doesn't actually test `torchvision.ops`** or import `_C`. Our code requires `torchvision.ops` because GroundingDINO depends on it.
+
+This is a **platform-level issue** with `torchvision._C` module on Modal, affecting all PyTorch/TorchVision versions tested.
 
 ## ✅ **Current Solution: CPU-Only**
 

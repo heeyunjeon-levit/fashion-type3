@@ -10,18 +10,60 @@ export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
   const [image, setImage] = useState<File | null>(null)
   const [preview, setPreview] = useState<string>('')
   const [isUploading, setIsUploading] = useState(false)
+  const [isConverting, setIsConverting] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-    if (file) {
-      setImage(file)
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        setPreview(reader.result as string)
+    if (!file) return
+
+    // Check if file is HEIC/HEIF format
+    const isHEIC = file.type === 'image/heic' || 
+                   file.type === 'image/heif' || 
+                   file.name.toLowerCase().endsWith('.heic') || 
+                   file.name.toLowerCase().endsWith('.heif')
+
+    let processedFile = file
+
+    if (isHEIC) {
+      setIsConverting(true)
+      try {
+        console.log('🔄 Converting HEIC to JPEG...')
+        
+        // Dynamically import heic2any only when needed (client-side only)
+        const heic2any = (await import('heic2any')).default
+        
+        // Convert HEIC to JPEG
+        const convertedBlob = await heic2any({
+          blob: file,
+          toType: 'image/jpeg',
+          quality: 0.9
+        })
+
+        // heic2any might return an array of blobs for multi-page HEICs
+        const finalBlob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob
+
+        // Create a new File object from the blob
+        const originalName = file.name.replace(/\.heic$/i, '').replace(/\.heif$/i, '')
+        processedFile = new File([finalBlob], `${originalName}.jpg`, { type: 'image/jpeg' })
+        console.log('✅ HEIC converted to JPEG successfully')
+      } catch (error) {
+        console.error('❌ Error converting HEIC:', error)
+        alert('Failed to convert HEIC image. Please try a different format.')
+        setIsConverting(false)
+        return
+      } finally {
+        setIsConverting(false)
       }
-      reader.readAsDataURL(file)
     }
+
+    // Set the processed file and generate preview
+    setImage(processedFile)
+    const reader = new FileReader()
+    reader.onloadend = () => {
+      setPreview(reader.result as string)
+    }
+    reader.readAsDataURL(processedFile)
   }
 
   const handleUpload = async () => {
@@ -60,7 +102,12 @@ export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
       
       <div className="bg-white rounded-2xl shadow-xl p-8">
         <div className="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center">
-          {preview ? (
+          {isConverting ? (
+            <div className="space-y-4">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
+              <p className="text-gray-600">Converting HEIC to JPEG...</p>
+            </div>
+          ) : preview ? (
             <div className="space-y-4">
               <img
                 src={preview}
