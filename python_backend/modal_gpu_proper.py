@@ -5,8 +5,8 @@ Following official GroundingDINO installation instructions strictly
 
 import modal
 
-# Create Modal app
-app = modal.App("fashion-crop-api-gpu-proper")
+# Create Modal app (separate from CPU backend)
+app = modal.App("fashion-crop-api-gpu-test")  # Different name = separate deployment
 
 # Create volume for model weights
 model_volume = modal.Volume.from_name("fashion-models-gpu-cache", create_if_missing=True)
