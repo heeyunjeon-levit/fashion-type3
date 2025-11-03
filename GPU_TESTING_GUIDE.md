@@ -6,17 +6,17 @@ You can now **easily test GPU** and **instantly switch back to CPU** with just o
 
 ---
 
-## 🏗️ Architecture
+## 🏗️ Architecture (Simplified!)
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                  Vercel Frontend                             │
 │                                                              │
-│  Environment Variables:                                     │
-│  - NEXT_PUBLIC_PYTHON_CROPPER_URL (CPU backend)            │
-│  - NEXT_PUBLIC_PYTHON_CROPPER_URL_GPU (GPU backend)        │
-│  - NEXT_PUBLIC_USE_GPU (true/false) ← SWITCH HERE!         │
+│  Environment Variable (just one!):                          │
+│  NEXT_PUBLIC_PYTHON_CROPPER_URL ← CHANGE THIS TO SWITCH!   │
 └──────────────────────┬──────────────────────────────────────┘
+                       │
+                       │ Points to one backend URL
                        │
         ┌──────────────┴──────────────┐
         │                             │
@@ -55,31 +55,26 @@ Web function: https://heeyunjeon-levit--fashion-crop-api-gpu-test-fastapi-app-gp
 
 ---
 
-### Step 2: Add GPU Backend URL to Vercel
+### Step 2: Save CPU Backend URL (for easy rollback)
 
-Go to: **Vercel → Project Settings → Environment Variables**
-
-Add this **new variable** (don't modify existing ones):
-
+**Current CPU URL** (save this somewhere):
 ```
-Name:  NEXT_PUBLIC_PYTHON_CROPPER_URL_GPU
-Value: https://heeyunjeon-levit--fashion-crop-api-gpu-test-fastapi-app-gpu.modal.run
+https://heeyunjeon-levit--fashion-crop-api-cpu-fastapi-app-v2.modal.run
 ```
-
-**Keep existing variables unchanged:**
-- ✅ `NEXT_PUBLIC_PYTHON_CROPPER_URL` (CPU backend) - KEEP AS IS
-- ✅ `NEXT_PUBLIC_USE_GPU` - Set to `false` (or leave unset)
 
 ---
 
 ### Step 3: Test GPU Backend
 
-#### Option A: Test via Environment Variable (Recommended)
+Go to: **Vercel → Project Settings → Environment Variables**
 
-Go to Vercel and **temporarily change** one variable:
+**Change** the existing variable:
 
 ```
-NEXT_PUBLIC_USE_GPU=true  ← Change from false to true
+Name:  NEXT_PUBLIC_PYTHON_CROPPER_URL
+Value: https://heeyunjeon-levit--fashion-crop-api-gpu-test-fastapi-app-gpu.modal.run
+       ^^^^^^^^
+       Change from cpu-v2 to gpu-test
 ```
 
 Then redeploy (or wait for auto-deploy).
@@ -91,10 +86,8 @@ Then redeploy (or wait for auto-deploy).
 ```bash
 cd /Users/levit/Desktop/mvp
 
-# Set environment variables
-export NEXT_PUBLIC_PYTHON_CROPPER_URL="https://heeyunjeon-levit--fashion-crop-api-cpu-fastapi-app-v2.modal.run"
-export NEXT_PUBLIC_PYTHON_CROPPER_URL_GPU="https://heeyunjeon-levit--fashion-crop-api-gpu-test-fastapi-app-gpu.modal.run"
-export NEXT_PUBLIC_USE_GPU="true"
+# Set GPU backend URL
+export NEXT_PUBLIC_PYTHON_CROPPER_URL="https://heeyunjeon-levit--fashion-crop-api-gpu-test-fastapi-app-gpu.modal.run"
 
 # Run locally
 npm run dev
@@ -108,8 +101,7 @@ Open browser console and check:
 
 ```
 ✅ Good signs:
-   Backend mode: GPU
-   Using URL: https://...gpu-test...
+   Using backend: https://...gpu-test...
    Crop time: ~15-20s (faster than CPU's ~30-40s)
    
 ❌ Bad signs:
@@ -127,22 +119,25 @@ Open browser console and check:
 **Go to Vercel → Environment Variables:**
 
 ```
-NEXT_PUBLIC_USE_GPU=false  ← Change from true to false
+Name:  NEXT_PUBLIC_PYTHON_CROPPER_URL
+Value: https://heeyunjeon-levit--fashion-crop-api-cpu-fastapi-app-v2.modal.run
+       ^^^^^^^^
+       Change back from gpu-test to cpu-v2
 ```
 
 **That's it!** Vercel will auto-redeploy and your app will use the CPU backend again.
 
-**No code changes needed!** ✅
+**Takes 30 seconds!** ✅
 
 ---
 
-## 📊 Comparison Matrix
+## 📊 Comparison Matrix (Simplified!)
 
-| Scenario | ENV Variable | Backend Used | URL |
-|----------|-------------|--------------|-----|
-| **Default (Current)** | `USE_GPU=false` or unset | CPU | `...cpu-fastapi-app-v2...` |
-| **Testing GPU** | `USE_GPU=true` | GPU | `...gpu-test-fastapi-app-gpu...` |
-| **GPU Failed, Switch Back** | `USE_GPU=false` | CPU | `...cpu-fastapi-app-v2...` |
+| Scenario | NEXT_PUBLIC_PYTHON_CROPPER_URL Value |
+|----------|--------------------------------------|
+| **Default (Current - CPU)** | `https://...cpu-fastapi-app-v2.modal.run` |
+| **Testing GPU** | `https://...gpu-test-fastapi-app-gpu.modal.run` |
+| **GPU Failed, Switch Back** | `https://...cpu-fastapi-app-v2.modal.run` |
 
 ---
 
@@ -219,30 +214,26 @@ Wait for auto-deploy (1-2 minutes)
 ✅ Back to stable CPU backend!
 ```
 
-### Complete Rollback
+### Stop GPU Backend (Optional)
 ```bash
-# Stop GPU backend entirely
+# If you're done testing, stop GPU to avoid costs
 modal app stop fashion-crop-api-gpu-test
-
-# Remove GPU env var from Vercel (optional)
-Delete: NEXT_PUBLIC_PYTHON_CROPPER_URL_GPU
-Delete: NEXT_PUBLIC_USE_GPU
 ```
 
 ---
 
-## 📝 Testing Checklist
+## 📝 Testing Checklist (Simplified!)
 
 - [ ] Deploy GPU backend (`modal deploy modal_gpu_proper.py`)
-- [ ] Copy GPU backend URL
-- [ ] Add `NEXT_PUBLIC_PYTHON_CROPPER_URL_GPU` to Vercel
+- [ ] Copy GPU backend URL from deploy output
+- [ ] Save current CPU URL somewhere safe
 - [ ] Test locally first (optional but recommended)
-- [ ] Set `NEXT_PUBLIC_USE_GPU=true` in Vercel
+- [ ] Change `NEXT_PUBLIC_PYTHON_CROPPER_URL` to GPU URL in Vercel
 - [ ] Test 1-2 images, verify crops work
-- [ ] Check browser console for "Backend mode: GPU"
+- [ ] Check browser console for "Using backend: ...gpu-test..."
 - [ ] Compare timing with CPU baseline
-- [ ] If good: Consider keeping GPU
-- [ ] If bad: Set `NEXT_PUBLIC_USE_GPU=false` (instant rollback!)
+- [ ] If good: Keep GPU URL
+- [ ] If bad: Change URL back to CPU (30 seconds!)
 
 ---
 
