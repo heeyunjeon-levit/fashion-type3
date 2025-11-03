@@ -35,20 +35,20 @@ image = (
     )
     # Set CUDA_HOME environment variable (CRITICAL!)
     .env({"CUDA_HOME": "/usr/local/cuda"})
-    # Install PyTorch with CUDA 11.8 FIRST (before anything else)
-    # Use 1.13.1 - the version GroundingDINO was originally developed with
+    # Install build tools and NumPy FIRST
     .pip_install(
         "wheel",
         "setuptools",
+        "numpy==1.24.3",  # NumPy 1.x for compatibility with older PyTorch/TorchVision
     )
+    # Install PyTorch 2.0.1 with CUDA 11.8 (compatible with Transformers and GroundingDINO)
     .pip_install(
-        "torch==1.13.1+cu117",
-        "torchvision==0.14.1+cu117",
-        extra_index_url="https://download.pytorch.org/whl/cu117"
+        "torch==2.0.1",
+        "torchvision==0.15.2",
+        extra_index_url="https://download.pytorch.org/whl/cu118"
     )
     # Install other dependencies
     .pip_install(
-        "numpy==1.26.4",
         "opencv-python-headless",
         "supervision==0.16.0",
         "pillow",
@@ -60,10 +60,9 @@ image = (
         "supabase",
         "requests",
     )
-    # Verify CUDA is available before compiling GroundingDINO
+    # Verify CUDA is available before compiling GroundingDINO (v2)
     .run_commands(
-        "which nvcc",  # Check if nvcc is available
-        "nvcc --version",  # Show CUDA version
+        "which nvcc && nvcc --version",  # Check nvcc and show CUDA version
     )
     # Clone GroundingDINO
     .run_commands(
@@ -74,16 +73,19 @@ image = (
     .run_commands(
         "export CUDA_HOME=/usr/local/cuda && echo 'CUDA_HOME is set to:' $CUDA_HOME && cd /root/GroundingDINO && python -m pip install -e .",
     )
+    # Fix NumPy version after GroundingDINO installation (it upgrades to 2.x)
+    .pip_install("numpy==1.24.3")
     # Download GroundingDINO weights
     .run_commands(
         "mkdir -p /root/GroundingDINO/weights",
         "cd /root/GroundingDINO/weights && wget -q https://github.com/IDEA-Research/GroundingDINO/releases/download/v0.1.0-alpha/groundingdino_swint_ogc.pth",
     )
-    # Verify CUDA and GroundingDINO are working
+    # Verify CUDA, NumPy, PyTorch, and GroundingDINO are working
     .run_commands(
+        "python -c 'import numpy; print(\"✅ NumPy version:\", numpy.__version__)'",
         "python -c 'import torch; print(\"✅ CUDA available:\", torch.cuda.is_available()); print(\"✅ CUDA version:\", torch.version.cuda); print(\"✅ PyTorch version:\", torch.__version__)'",
         "python -c 'import groundingdino; print(\"✅ GroundingDINO imported successfully\")'",
-        "echo '✅ Build timestamp: 2025-11-03-16:15-pytorch1.13'",  # Cache bust
+        "echo '✅ Build timestamp: 2025-11-03-17:05-verify-numpy'",  # Cache bust
     )
     # Add the backend code into the image (with updated GroundingDINO paths)
     .add_local_dir(backend_dir, "/root/python_backend")
