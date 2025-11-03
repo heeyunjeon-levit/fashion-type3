@@ -6,7 +6,7 @@ Following official GroundingDINO installation instructions strictly
 import modal
 
 # Create Modal app (separate from CPU backend)
-app = modal.App("fashion-crop-api-gpu-test")  # Different name = separate deployment
+app = modal.App("fashion-crop-api-gpu")  # Keep naming consistent with CPU version
 
 # Create volume for model weights
 model_volume = modal.Volume.from_name("fashion-models-gpu-cache", create_if_missing=True)
@@ -90,7 +90,7 @@ image = (
 )
 @modal.concurrent(max_inputs=10)
 @modal.asgi_app()
-def fastapi_app_gpu():
+def fastapi_app_v2():
     """
     Load and return the FastAPI app with GPU-accelerated GroundingDINO
     """
