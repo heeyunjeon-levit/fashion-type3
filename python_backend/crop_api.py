@@ -132,11 +132,19 @@ def get_cropper():
         print("🔧 Initializing CustomItemCropper (local)...")
         from custom_item_cropper import CustomItemCropper
         
-        # Use default paths (adjust these based on your setup)
-        config_path = "configs/GroundingDINO_SwinT_OGC.py"
-        weights_path = "data/weights/groundingdino_swint_ogc.pth"
-        sam2_config = "sam2_hiera_l.yaml"
-        sam2_weights = "data/weights/sam2_hiera_large.pt"
+        # Check if we're on Modal (GroundingDINO in /root) or local
+        if os.path.exists("/root/GroundingDINO"):
+            # Modal GPU deployment
+            config_path = "/root/GroundingDINO/groundingdino/config/GroundingDINO_SwinT_OGC.py"
+            weights_path = "/root/GroundingDINO/weights/groundingdino_swint_ogc.pth"
+            sam2_config = "sam2_hiera_l.yaml"
+            sam2_weights = "data/weights/sam2_hiera_large.pt"  # Not used in GPU
+        else:
+            # Local paths
+            config_path = "configs/GroundingDINO_SwinT_OGC.py"
+            weights_path = "data/weights/groundingdino_swint_ogc.pth"
+            sam2_config = "sam2_hiera_l.yaml"
+            sam2_weights = "data/weights/sam2_hiera_large.pt"
         
         # Check environment variable to enable/disable SAM-2
         use_sam2 = os.getenv("USE_SAM2", "false").lower() == "true"

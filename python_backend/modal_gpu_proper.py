@@ -4,12 +4,16 @@ Following official GroundingDINO installation instructions strictly
 """
 
 import modal
+from pathlib import Path
 
 # Create Modal app (separate from CPU backend)
 app = modal.App("fashion-crop-api-gpu")  # Keep naming consistent with CPU version
 
 # Create volume for model weights
 model_volume = modal.Volume.from_name("fashion-models-gpu-cache", create_if_missing=True)
+
+# Get the backend directory
+backend_dir = Path(__file__).parent
 
 # Build image with CUDA support and proper GroundingDINO compilation
 image = (
@@ -31,10 +35,15 @@ image = (
     )
     # Set CUDA_HOME environment variable (CRITICAL!)
     .env({"CUDA_HOME": "/usr/local/cuda"})
-    # Install PyTorch with CUDA 11.8 FIRST
+    # Install PyTorch with CUDA 11.8 FIRST (before anything else)
+    # Use 2.0.1 for better compatibility with GroundingDINO
     .pip_install(
-        "torch==2.1.2",
-        "torchvision==0.16.2",
+        "wheel",
+        "setuptools",
+    )
+    .pip_install(
+        "torch==2.0.1",
+        "torchvision==0.15.2",
         extra_index_url="https://download.pytorch.org/whl/cu118"
     )
     # Install other dependencies
@@ -51,31 +60,32 @@ image = (
         "supabase",
         "requests",
     )
-    # Clone and compile GroundingDINO from source (THE KEY STEP)
+    # Verify CUDA is available before compiling GroundingDINO
+    .run_commands(
+        "which nvcc",  # Check if nvcc is available
+        "nvcc --version",  # Show CUDA version
+    )
+    # Clone GroundingDINO
     .run_commands(
         "cd /root && git clone https://github.com/IDEA-Research/GroundingDINO.git",
-        "cd /root/GroundingDINO && pip install -e .",  # -e installs in editable mode, compiling C++ extensions
+    )
+    # Compile GroundingDINO from source (THE KEY STEP)
+    # CRITICAL: Export CUDA_HOME before compilation so it builds with CUDA support
+    .run_commands(
+        "export CUDA_HOME=/usr/local/cuda && echo 'CUDA_HOME is set to:' $CUDA_HOME && cd /root/GroundingDINO && python -m pip install -e .",
     )
     # Download GroundingDINO weights
     .run_commands(
         "mkdir -p /root/GroundingDINO/weights",
         "cd /root/GroundingDINO/weights && wget -q https://github.com/IDEA-Research/GroundingDINO/releases/download/v0.1.0-alpha/groundingdino_swint_ogc.pth",
     )
-    # Clone and install SAM-2 (optional, if you want segmentation)
+    # Verify CUDA and GroundingDINO are working
     .run_commands(
-        "cd /root && git clone https://github.com/facebookresearch/segment-anything-2.git sam2",
-        "cd /root/sam2 && pip install -e .",
+        "python -c 'import torch; print(\"✅ CUDA available:\", torch.cuda.is_available()); print(\"✅ CUDA version:\", torch.version.cuda); print(\"✅ PyTorch version:\", torch.__version__)'",
+        "python -c 'import groundingdino; print(\"✅ GroundingDINO imported successfully\")'"
     )
-    # Download SAM-2 weights
-    .run_commands(
-        "mkdir -p /root/sam2/checkpoints",
-        "cd /root/sam2/checkpoints && wget -q https://dl.fbaipublicfiles.com/segment_anything_2/092824/sam2_hiera_large.pt",
-    )
-    # Verify CUDA is available
-    .run_commands(
-        "python -c 'import torch; print(\"CUDA available:\", torch.cuda.is_available()); print(\"CUDA version:\", torch.version.cuda)'",
-        "python -c 'import groundingdino; print(\"GroundingDINO imported successfully\")'"
-    )
+    # Add the backend code into the image
+    .add_local_dir(backend_dir, "/root/python_backend")
 )
 
 @app.function(
@@ -97,12 +107,13 @@ def fastapi_app_v2():
     import sys
     import os
     
-    # Set Python path to include GroundingDINO
+    # Set Python path to include GroundingDINO and backend code
     sys.path.insert(0, "/root/GroundingDINO")
+    sys.path.insert(0, "/root/python_backend")
     sys.path.insert(0, "/root")
     
-    # Set working directory
-    os.chdir("/root")
+    # Set working directory to backend
+    os.chdir("/root/python_backend")
     
     print("\n🚀 Starting Fashion Crop API with GPU...")
     
@@ -122,7 +133,7 @@ def fastapi_app_v2():
         print(f"❌ GroundingDINO import failed: {e}")
     
     # Set environment variables for the cropper
-    os.environ["USE_SAM2"] = "false"  # Can set to "true" if you want segmentation
+    os.environ["USE_SAM2"] = "false"  # No SAM2 in GPU backend
     
     print("✅ Fashion Crop API ready!\n")
     
