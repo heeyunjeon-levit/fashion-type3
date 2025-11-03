@@ -37,9 +37,14 @@ except ImportError:
     from GroundingDINO.groundingdino.util.utils import clean_state_dict
     from GroundingDINO.groundingdino.util.box_ops import box_cxcywh_to_xyxy
 
-# SAM-2 imports
-from sam2.build_sam import build_sam2
-from sam2.sam2_image_predictor import SAM2ImagePredictor
+# SAM-2 imports (conditional - only if SAM2 is available)
+try:
+    from sam2.build_sam import build_sam2
+    from sam2.sam2_image_predictor import SAM2ImagePredictor
+    SAM2_AVAILABLE = True
+except ImportError:
+    print("⚠️ SAM2 not available, will use bounding boxes only")
+    SAM2_AVAILABLE = False
 
 # GPT-4o imports
 try:
@@ -202,12 +207,17 @@ class OptimizedFashionCropPipeline:
         
         # Initialize SAM-2 (optional)
         if self.use_sam2:
-            print("🔄 Loading SAM-2 model...")
-            # SAM-2 expects just the filename, not the full path
-            sam2_config_name = os.path.basename(sam2_config)
-            sam2_checkpoint_abs = os.path.abspath(sam2_checkpoint)
-            self.sam2_predictor = SAM2ImagePredictor(build_sam2(sam2_config_name, sam2_checkpoint_abs, device=device))
-            print("✅ SAM-2 model loaded")
+            if not SAM2_AVAILABLE:
+                print("⚠️ SAM-2 requested but not available, falling back to bounding boxes")
+                self.sam2_predictor = None
+                self.use_sam2 = False
+            else:
+                print("🔄 Loading SAM-2 model...")
+                # SAM-2 expects just the filename, not the full path
+                sam2_config_name = os.path.basename(sam2_config)
+                sam2_checkpoint_abs = os.path.abspath(sam2_checkpoint)
+                self.sam2_predictor = SAM2ImagePredictor(build_sam2(sam2_config_name, sam2_checkpoint_abs, device=device))
+                print("✅ SAM-2 model loaded")
         else:
             print("⚡ Skipping SAM-2 initialization (using bounding boxes only for speed)")
             self.sam2_predictor = None

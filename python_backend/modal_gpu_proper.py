@@ -36,15 +36,15 @@ image = (
     # Set CUDA_HOME environment variable (CRITICAL!)
     .env({"CUDA_HOME": "/usr/local/cuda"})
     # Install PyTorch with CUDA 11.8 FIRST (before anything else)
-    # Use 2.0.1 for better compatibility with GroundingDINO
+    # Use 1.13.1 - the version GroundingDINO was originally developed with
     .pip_install(
         "wheel",
         "setuptools",
     )
     .pip_install(
-        "torch==2.0.1",
-        "torchvision==0.15.2",
-        extra_index_url="https://download.pytorch.org/whl/cu118"
+        "torch==1.13.1+cu117",
+        "torchvision==0.14.1+cu117",
+        extra_index_url="https://download.pytorch.org/whl/cu117"
     )
     # Install other dependencies
     .pip_install(
@@ -82,9 +82,10 @@ image = (
     # Verify CUDA and GroundingDINO are working
     .run_commands(
         "python -c 'import torch; print(\"✅ CUDA available:\", torch.cuda.is_available()); print(\"✅ CUDA version:\", torch.version.cuda); print(\"✅ PyTorch version:\", torch.__version__)'",
-        "python -c 'import groundingdino; print(\"✅ GroundingDINO imported successfully\")'"
+        "python -c 'import groundingdino; print(\"✅ GroundingDINO imported successfully\")'",
+        "echo '✅ Build timestamp: 2025-11-03-16:15-pytorch1.13'",  # Cache bust
     )
-    # Add the backend code into the image
+    # Add the backend code into the image (with updated GroundingDINO paths)
     .add_local_dir(backend_dir, "/root/python_backend")
 )
 
