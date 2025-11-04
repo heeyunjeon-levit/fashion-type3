@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 
 interface CroppingProps {
   imageUrl: string
+  imageFile: File
   categories: string[]
   onCropped: (croppedImages: Record<string, string>) => void
 }
@@ -17,7 +18,7 @@ const categoryLabels: Record<string, string> = {
   dress: '드레스',
 }
 
-export default function Cropping({ imageUrl, categories, onCropped }: CroppingProps) {
+export default function Cropping({ imageUrl, imageFile, categories, onCropped }: CroppingProps) {
   const [croppedImages, setCroppedImages] = useState<Record<string, string>>({})
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isCropping, setIsCropping] = useState(false)
@@ -45,9 +46,37 @@ export default function Cropping({ imageUrl, categories, onCropped }: CroppingPr
       // Process each unique category type
       // Single backend URL - switch between CPU and GPU by changing this URL in Vercel
       const PYTHON_CROPPER_URL = (process.env.NEXT_PUBLIC_PYTHON_CROPPER_URL || 'http://localhost:8000').replace(/\/+$/, '')
+      const USE_BASE64 = process.env.NEXT_PUBLIC_USE_BASE64 === 'true'
       
       console.log(`🔗 Using backend: ${PYTHON_CROPPER_URL}`)
+      console.log(`📦 Base64 mode: ${USE_BASE64}`)
       
+      // Prepare request body based on mode
+      let requestBody: any = {
+        categories: [] as string[],
+        count: 0
+      }
+
+      if (USE_BASE64) {
+        // GPU mode: Convert image File to base64 (bypasses DNS issues)
+        const fileToBase64 = (file: File): Promise<string> => {
+          return new Promise((resolve, reject) => {
+            const reader = new FileReader()
+            reader.readAsDataURL(file)
+            reader.onload = () => resolve(reader.result as string)
+            reader.onerror = error => reject(error)
+          })
+        }
+
+        const imageBase64 = await fileToBase64(imageFile)
+        console.log(`📦 Image converted to base64 (${(imageBase64.length / 1024).toFixed(2)} KB)`)
+        requestBody.imageBase64 = imageBase64
+      } else {
+        // CPU mode: Use URL directly (faster, smaller payload)
+        console.log(`🔗 Using image URL: ${imageUrl}`)
+        requestBody.imageUrl = imageUrl
+      }
+
       const cropPromises = Object.entries(categoryCounts).map(async ([category, count]) => {
         console.log(`🔄 Cropping ${category} ×${count}...`)
 
@@ -56,7 +85,7 @@ export default function Cropping({ imageUrl, categories, onCropped }: CroppingPr
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              imageUrl,
+              ...requestBody,
               categories: [category],
               count: count, // Tell backend how many instances to find
             }),

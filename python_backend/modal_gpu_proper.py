@@ -41,16 +41,16 @@ image = (
         "setuptools",
         "numpy==1.24.3",  # NumPy 1.x for compatibility with older PyTorch/TorchVision
     )
-    # Install PyTorch 2.1.2 with CUDA 11.8 (compatible with Transformers and GroundingDINO)
-    .pip_install(
-        "torch==2.1.2",
-        "torchvision==0.16.2",
-        extra_index_url="https://download.pytorch.org/whl/cu118"
+    # Install GroundingDINO FIRST following official instructions: https://github.com/IDEA-Research/GroundingDINO
+    # This ensures PyTorch and extensions are compiled together with matching versions
+    .run_commands(
+        "cd /root && git clone https://github.com/IDEA-Research/GroundingDINO.git && "
+        "cd /root/GroundingDINO && "
+        "pip install -e ."
     )
-    # Install other dependencies
+    # Now install our app dependencies (after GroundingDINO has set up PyTorch)
     .pip_install(
         "opencv-python-headless",
-        "supervision==0.16.0",
         "pillow",
         "fastapi",
         "pydantic",
@@ -60,19 +60,6 @@ image = (
         "supabase",
         "requests",
         "httpx",  # Better DNS handling than requests
-    )
-    # Verify CUDA is available before compiling GroundingDINO (v2)
-    .run_commands(
-        "which nvcc && nvcc --version",  # Check nvcc and show CUDA version
-    )
-    # Install GroundingDINO following official instructions: https://github.com/IDEA-Research/GroundingDINO
-    # Step 1: Clone repo
-    # Step 2: cd GroundingDINO/
-    # Step 3: pip install -e .
-    .run_commands(
-        "cd /root && git clone https://github.com/IDEA-Research/GroundingDINO.git && "
-        "cd /root/GroundingDINO && "
-        "pip install -e ."
     )
     # Download GroundingDINO weights
     .run_commands(
@@ -86,7 +73,7 @@ image = (
         "python -c 'import groundingdino; print(\"✅ GroundingDINO imported successfully\")'",
         "cat /etc/resolv.conf",  # Check DNS configuration
         "nslookup google.com || echo 'DNS test failed'",  # Test DNS resolution
-        "echo '✅ Build timestamp: 2025-11-03-19:10-official-install'",  # Cache bust
+        "echo '✅ Build timestamp: 2025-11-03-19:20-groundingdino-first'",  # Cache bust
     )
     # Add the backend code into the image (with updated GroundingDINO paths)
     .add_local_dir(backend_dir, "/root/python_backend")
