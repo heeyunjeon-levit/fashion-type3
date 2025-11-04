@@ -217,7 +217,7 @@ export async function POST(request: NextRequest) {
             else if (desc.includes('blazer')) specificSubType = 'blazer'
             else if (desc.includes('vest')) specificSubType = 'vest'
             
-            const topsExclusions = {
+            const topsExclusions: Record<string, string> = {
               'jacket/coat': 'shirts, blouses, sweaters, hoodies, cardigans, t-shirts, tanks',
               'shirt/blouse': 'jackets, coats, sweaters, hoodies, cardigans (button-up shirts only)',
               'sweater/knit': 'jackets, coats, shirts, blouses, hoodies (pullover sweaters only)',
@@ -226,7 +226,7 @@ export async function POST(request: NextRequest) {
               'blazer': 'jackets, coats, shirts, sweaters, hoodies, cardigans (structured blazers only)',
               'vest': 'jackets, coats, shirts, sweaters, hoodies, cardigans (sleeveless vests only)'
             }
-            if (specificSubType) subTypeExclusion = `- ⚠️ CRITICAL: You are searching for ${specificSubType} ONLY. ❌ EXCLUDE: ${topsExclusions[specificSubType]}`
+            if (specificSubType && topsExclusions[specificSubType]) subTypeExclusion = `- ⚠️ CRITICAL: You are searching for ${specificSubType} ONLY. ❌ EXCLUDE: ${topsExclusions[specificSubType]}`
           }
           
           // BOTTOMS sub-types
@@ -236,13 +236,13 @@ export async function POST(request: NextRequest) {
             else if (desc.includes('jean')) specificSubType = 'jeans'
             else if (desc.includes('pant') || desc.includes('trouser') || desc.includes('slack')) specificSubType = 'pants/trousers'
             
-            const bottomsExclusions = {
+            const bottomsExclusions: Record<string, string> = {
               'skirt': 'pants, jeans, shorts, trousers, slacks (skirts only, NOT pants)',
               'shorts': 'pants, jeans, skirts, trousers, slacks (shorts only, NOT long pants)',
               'jeans': 'skirts, shorts, dress pants, slacks (denim jeans only)',
               'pants/trousers': 'skirts, shorts (full-length pants only, NOT shorts or skirts)'
             }
-            if (specificSubType) subTypeExclusion = `- ⚠️ CRITICAL: You are searching for ${specificSubType} ONLY. ❌ EXCLUDE: ${bottomsExclusions[specificSubType]}`
+            if (specificSubType && bottomsExclusions[specificSubType]) subTypeExclusion = `- ⚠️ CRITICAL: You are searching for ${specificSubType} ONLY. ❌ EXCLUDE: ${bottomsExclusions[specificSubType]}`
           }
           
           // SHOES sub-types
@@ -255,7 +255,7 @@ export async function POST(request: NextRequest) {
             else if (desc.includes('loafer') || desc.includes('moccasin')) specificSubType = 'loafers'
             else if (desc.includes('oxford') || desc.includes('derby')) specificSubType = 'oxfords'
             
-            const shoesExclusions = {
+            const shoesExclusions: Record<string, string> = {
               'boots': 'sneakers, sandals, heels, flats, loafers (boots only, NOT low-top shoes)',
               'sneakers': 'boots, sandals, heels, flats, dress shoes (sneakers/trainers only)',
               'sandals': 'boots, sneakers, heels, flats, closed-toe shoes (open-toe sandals only)',
@@ -264,7 +264,7 @@ export async function POST(request: NextRequest) {
               'loafers': 'boots, sneakers, sandals, heels (slip-on loafers only)',
               'oxfords': 'boots, sneakers, sandals, heels (lace-up oxfords only)'
             }
-            if (specificSubType) subTypeExclusion = `- ⚠️ CRITICAL: You are searching for ${specificSubType} ONLY. ❌ EXCLUDE: ${shoesExclusions[specificSubType]}`
+            if (specificSubType && shoesExclusions[specificSubType]) subTypeExclusion = `- ⚠️ CRITICAL: You are searching for ${specificSubType} ONLY. ❌ EXCLUDE: ${shoesExclusions[specificSubType]}`
           }
           
           // BAGS sub-types
@@ -275,14 +275,14 @@ export async function POST(request: NextRequest) {
             else if (desc.includes('crossbody') || desc.includes('shoulder')) specificSubType = 'shoulder/crossbody bag'
             else if (desc.includes('handbag') || desc.includes('purse')) specificSubType = 'handbag'
             
-            const bagsExclusions = {
+            const bagsExclusions: Record<string, string> = {
               'backpack': 'totes, clutches, handbags, purses, shoulder bags (backpacks only)',
               'tote bag': 'backpacks, clutches, handbags, shoulder bags (large tote bags only)',
               'clutch': 'backpacks, totes, handbags, shoulder bags (small clutches only)',
               'shoulder/crossbody bag': 'backpacks, totes, clutches (shoulder/crossbody bags only)',
               'handbag': 'backpacks, totes, clutches (structured handbags only)'
             }
-            if (specificSubType) subTypeExclusion = `- ⚠️ CRITICAL: You are searching for ${specificSubType} ONLY. ❌ EXCLUDE: ${bagsExclusions[specificSubType]}`
+            if (specificSubType && bagsExclusions[specificSubType]) subTypeExclusion = `- ⚠️ CRITICAL: You are searching for ${specificSubType} ONLY. ❌ EXCLUDE: ${bagsExclusions[specificSubType]}`
           }
           
           // ACCESSORIES sub-types
@@ -297,7 +297,7 @@ export async function POST(request: NextRequest) {
             else if (desc.includes('scarf')) specificSubType = 'scarf'
             else if (desc.includes('sunglasses') || desc.includes('glasses')) specificSubType = 'eyewear'
             
-            const accessoryExclusions = {
+            const accessoryExclusions: Record<string, string> = {
               'ring': 'necklaces, earrings, bracelets, watches, hats, belts, scarves, sunglasses',
               'necklace': 'rings, earrings, bracelets, watches, hats, belts, scarves, sunglasses',
               'earrings': 'rings, necklaces, bracelets, watches, hats, belts, scarves, sunglasses',
@@ -308,7 +308,7 @@ export async function POST(request: NextRequest) {
               'scarf': 'rings, necklaces, earrings, bracelets, watches, hats, belts, sunglasses',
               'eyewear': 'rings, necklaces, earrings, bracelets, watches, hats, belts, scarves'
             }
-            if (specificSubType) subTypeExclusion = `- ⚠️ CRITICAL: You are searching for ${specificSubType} ONLY. ❌ EXCLUDE: ${accessoryExclusions[specificSubType]}, clothing, shoes, bags`
+            if (specificSubType && accessoryExclusions[specificSubType]) subTypeExclusion = `- ⚠️ CRITICAL: You are searching for ${specificSubType} ONLY. ❌ EXCLUDE: ${accessoryExclusions[specificSubType]}, clothing, shoes, bags`
           }
         }
         
