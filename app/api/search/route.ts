@@ -312,6 +312,100 @@ export async function POST(request: NextRequest) {
           }
         }
         
+        // PRE-FILTER: Remove wrong sub-types BEFORE sending to GPT (faster & better quality)
+        const getExcludedKeywords = (subType: string | null): string[] => {
+          if (!subType) return []
+          
+          const exclusionMap: Record<string, string[]> = {
+            // ACCESSORIES
+            'ring': ['necklace', 'earring', 'bracelet', 'watch', 'belt', 'scarf', 'hat', 'cap', 'beanie', 'sunglasses', 'glasses'],
+            'necklace': ['ring', 'earring', 'bracelet', 'watch', 'belt', 'scarf', 'hat', 'cap', 'beanie', 'sunglasses', 'glasses'],
+            'earrings': ['ring', 'necklace', 'bracelet', 'watch', 'belt', 'scarf', 'hat', 'cap', 'beanie', 'sunglasses', 'glasses'],
+            'bracelet': ['ring', 'necklace', 'earring', 'watch', 'belt', 'scarf', 'hat', 'cap', 'beanie', 'sunglasses', 'glasses'],
+            'watch': ['ring', 'necklace', 'earring', 'bracelet', 'belt', 'scarf', 'hat', 'cap', 'beanie', 'sunglasses', 'glasses'],
+            'headwear': ['ring', 'necklace', 'earring', 'bracelet', 'watch', 'belt', 'scarf', 'sunglasses', 'glasses'],
+            'belt': ['ring', 'necklace', 'earring', 'bracelet', 'watch', 'scarf', 'hat', 'cap', 'beanie', 'sunglasses', 'glasses'],
+            'scarf': ['ring', 'necklace', 'earring', 'bracelet', 'watch', 'belt', 'hat', 'cap', 'beanie', 'sunglasses', 'glasses'],
+            'eyewear': ['ring', 'necklace', 'earring', 'bracelet', 'watch', 'belt', 'scarf', 'hat', 'cap', 'beanie'],
+            
+            // TOPS
+            'jacket/coat': ['shirt', 'blouse', 'sweater', 'pullover', 'hoodie', 'sweatshirt', 't-shirt', 'tank'],
+            'shirt/blouse': ['jacket', 'coat', 'sweater', 'pullover', 'hoodie', 'sweatshirt'],
+            'sweater/knit': ['jacket', 'coat', 'shirt', 'blouse', 'hoodie', 'sweatshirt'],
+            'hoodie/sweatshirt': ['jacket', 'coat', 'shirt', 'blouse', 'sweater', 'pullover', 'blazer'],
+            'cardigan': ['jacket', 'coat', 'shirt', 'blouse', 'sweater', 'pullover', 'hoodie', 'sweatshirt', 'blazer'],
+            'blazer': ['jacket', 'coat', 'shirt', 'blouse', 'sweater', 'pullover', 'hoodie', 'sweatshirt'],
+            'vest': ['jacket', 'coat', 'shirt', 'blouse', 'sweater', 'pullover', 'hoodie', 'sweatshirt'],
+            
+            // BOTTOMS
+            'skirt': ['pant', 'trouser', 'jean', 'short', 'slack'],
+            'shorts': ['pant', 'trouser', 'jean', 'skirt', 'slack'],
+            'jeans': ['skirt', 'short'],
+            'pants/trousers': ['skirt', 'short'],
+            
+            // SHOES
+            'boots': ['sneaker', 'trainer', 'sandal', 'heel', 'pump', 'flat', 'loafer', 'oxford'],
+            'sneakers': ['boot', 'sandal', 'heel', 'pump', 'flat', 'loafer', 'oxford'],
+            'sandals': ['boot', 'sneaker', 'trainer', 'heel', 'pump', 'flat', 'loafer', 'oxford'],
+            'heels/pumps': ['boot', 'sneaker', 'trainer', 'sandal', 'flat', 'loafer', 'oxford'],
+            'flats': ['boot', 'sneaker', 'trainer', 'sandal', 'heel', 'pump', 'loafer', 'oxford'],
+            'loafers': ['boot', 'sneaker', 'trainer', 'sandal', 'heel', 'pump', 'flat', 'oxford'],
+            'oxfords': ['boot', 'sneaker', 'trainer', 'sandal', 'heel', 'pump', 'flat', 'loafer'],
+            
+            // BAGS
+            'backpack': ['tote', 'clutch', 'handbag', 'purse', 'shoulder', 'crossbody'],
+            'tote bag': ['backpack', 'clutch', 'handbag', 'purse'],
+            'clutch': ['backpack', 'tote', 'handbag', 'purse', 'shoulder', 'crossbody'],
+            'shoulder/crossbody bag': ['backpack', 'tote', 'clutch'],
+            'handbag': ['backpack', 'tote', 'clutch']
+          }
+          
+          return exclusionMap[subType] || []
+        }
+        
+        const excludedKeywords = getExcludedKeywords(specificSubType)
+        
+        // Filter organicResults BEFORE GPT to save time and improve quality
+        let filteredResults = organicResults
+        if (excludedKeywords.length > 0) {
+          console.log(`🔍 Pre-filtering with sub-type: ${specificSubType}, excluding: ${excludedKeywords.join(', ')}`)
+          
+          filteredResults = organicResults.filter((item: any) => {
+            const title = item?.title?.toLowerCase() || ''
+            const url = item?.link?.toLowerCase() || ''
+            
+            // Check title for excluded keywords
+            if (title) {
+              const hasExcludedInTitle = excludedKeywords.some(keyword => title.includes(keyword))
+              if (hasExcludedInTitle) {
+                console.log(`🚫 Pre-filtered (title): "${item.title?.substring(0, 50)}..."`)
+                return false
+              }
+            }
+            
+            // Check URL path for excluded keywords
+            const hasExcludedInUrl = excludedKeywords.some(keyword => {
+              const pluralKeyword = keyword.endsWith('s') ? keyword : keyword + 's'
+              return url.includes(`/${keyword}/`) || 
+                     url.includes(`/${pluralKeyword}/`) ||
+                     url.includes(`-${keyword}-`) ||
+                     url.includes(`-${pluralKeyword}-`)
+            })
+            
+            if (hasExcludedInUrl) {
+              console.log(`🚫 Pre-filtered (URL): ${item.link?.substring(0, 60)}...`)
+              return false
+            }
+            
+            return true
+          })
+          
+          console.log(`✅ Pre-filter complete: ${organicResults.length} → ${filteredResults.length} results (removed ${organicResults.length - filteredResults.length} wrong sub-types)`)
+        }
+        
+        // Use filtered results for GPT analysis
+        const resultsForGPT = filteredResults
+        
         const prompt = `You are analyzing aggregated image search results from multiple runs for ${categoryLabels[categoryKey]}.
 
 The original cropped image shows: ${searchTerms.join(', ')}
@@ -364,8 +458,8 @@ AVALIABILITY NOTES:
 - Try to include at least one link from a major retailer (Amazon, Nordstrom, etc.) if available
 - It's okay to include vintage/individual seller links - users can try them and move to the next option if unavailable
 
-Search results (scan all ${organicResults.length} for best matches):
-${JSON.stringify(organicResults, null, 2)}
+Search results (scan all ${resultsForGPT.length} for best matches):
+${JSON.stringify(resultsForGPT, null, 2)}
 
 **VALIDATION PROCESS (follow strictly):**
 For EACH result you consider:
@@ -420,61 +514,7 @@ Return JSON: {"${resultKey}": ["https://url1.com/product1", "https://url2.com/pr
           'images.google.com', 'google.com/images'
         ]
         
-        // Build list of keywords to EXCLUDE from titles based on sub-type
-        const getExcludedKeywords = (subType: string | null, category: string): string[] => {
-          if (!subType) return []
-          
-          const exclusionMap: Record<string, string[]> = {
-            // ACCESSORIES
-            'ring': ['necklace', 'earring', 'bracelet', 'watch', 'belt', 'scarf', 'hat', 'cap', 'beanie', 'sunglasses', 'glasses'],
-            'necklace': ['ring', 'earring', 'bracelet', 'watch', 'belt', 'scarf', 'hat', 'cap', 'beanie', 'sunglasses', 'glasses'],
-            'earrings': ['ring', 'necklace', 'bracelet', 'watch', 'belt', 'scarf', 'hat', 'cap', 'beanie', 'sunglasses', 'glasses'],
-            'bracelet': ['ring', 'necklace', 'earring', 'watch', 'belt', 'scarf', 'hat', 'cap', 'beanie', 'sunglasses', 'glasses'],
-            'watch': ['ring', 'necklace', 'earring', 'bracelet', 'belt', 'scarf', 'hat', 'cap', 'beanie', 'sunglasses', 'glasses'],
-            'headwear': ['ring', 'necklace', 'earring', 'bracelet', 'watch', 'belt', 'scarf', 'sunglasses', 'glasses'],
-            'belt': ['ring', 'necklace', 'earring', 'bracelet', 'watch', 'scarf', 'hat', 'cap', 'beanie', 'sunglasses', 'glasses'],
-            'scarf': ['ring', 'necklace', 'earring', 'bracelet', 'watch', 'belt', 'hat', 'cap', 'beanie', 'sunglasses', 'glasses'],
-            'eyewear': ['ring', 'necklace', 'earring', 'bracelet', 'watch', 'belt', 'scarf', 'hat', 'cap', 'beanie'],
-            
-            // TOPS
-            'jacket/coat': ['shirt', 'blouse', 'sweater', 'pullover', 'hoodie', 'sweatshirt', 't-shirt', 'tank'],
-            'shirt/blouse': ['jacket', 'coat', 'sweater', 'pullover', 'hoodie', 'sweatshirt'],
-            'sweater/knit': ['jacket', 'coat', 'shirt', 'blouse', 'hoodie', 'sweatshirt'],
-            'hoodie/sweatshirt': ['jacket', 'coat', 'shirt', 'blouse', 'sweater', 'pullover', 'blazer'],
-            'cardigan': ['jacket', 'coat', 'shirt', 'blouse', 'sweater', 'pullover', 'hoodie', 'sweatshirt', 'blazer'],
-            'blazer': ['jacket', 'coat', 'shirt', 'blouse', 'sweater', 'pullover', 'hoodie', 'sweatshirt'],
-            'vest': ['jacket', 'coat', 'shirt', 'blouse', 'sweater', 'pullover', 'hoodie', 'sweatshirt'],
-            
-            // BOTTOMS
-            'skirt': ['pant', 'trouser', 'jean', 'short', 'slack'],
-            'shorts': ['pant', 'trouser', 'jean', 'skirt', 'slack'],
-            'jeans': ['skirt', 'short'],
-            'pants/trousers': ['skirt', 'short'],
-            
-            // SHOES
-            'boots': ['sneaker', 'trainer', 'sandal', 'heel', 'pump', 'flat', 'loafer', 'oxford'],
-            'sneakers': ['boot', 'sandal', 'heel', 'pump', 'flat', 'loafer', 'oxford'],
-            'sandals': ['boot', 'sneaker', 'trainer', 'heel', 'pump', 'flat', 'loafer', 'oxford'],
-            'heels/pumps': ['boot', 'sneaker', 'trainer', 'sandal', 'flat', 'loafer', 'oxford'],
-            'flats': ['boot', 'sneaker', 'trainer', 'sandal', 'heel', 'pump', 'loafer', 'oxford'],
-            'loafers': ['boot', 'sneaker', 'trainer', 'sandal', 'heel', 'pump', 'flat', 'oxford'],
-            'oxfords': ['boot', 'sneaker', 'trainer', 'sandal', 'heel', 'pump', 'flat', 'loafer'],
-            
-            // BAGS
-            'backpack': ['tote', 'clutch', 'handbag', 'purse', 'shoulder', 'crossbody'],
-            'tote bag': ['backpack', 'clutch', 'handbag', 'purse'],
-            'clutch': ['backpack', 'tote', 'handbag', 'purse', 'shoulder', 'crossbody'],
-            'shoulder/crossbody bag': ['backpack', 'tote', 'clutch'],
-            'handbag': ['backpack', 'tote', 'clutch']
-          }
-          
-          return exclusionMap[subType] || []
-        }
-        
-        const excludedKeywords = getExcludedKeywords(specificSubType, categoryKey)
-        console.log(`🔍 Sub-type filter: ${specificSubType || 'none'}, excluding keywords: ${excludedKeywords.join(', ')}`)
-        
-        // Filter to only valid HTTP links AND exclude blocked domains AND wrong sub-types
+        // POST-FILTER: Final safety check after GPT (backup layer)
         const validLinks = links.filter((link: any) => {
           if (typeof link !== 'string' || !link.startsWith('http')) return false
           
@@ -487,35 +527,12 @@ Return JSON: {"${resultKey}": ["https://url1.com/product1", "https://url2.com/pr
             return false
           }
           
-          // Check title AND URL for excluded keywords (sub-type filtering)
-          const resultItem = organicResults.find((item: any) => item.link === link)
-          const title = resultItem?.title?.toLowerCase() || ''
-          const urlPath = link.toLowerCase()
-          
-          if (excludedKeywords.length > 0) {
-            // Check title first
-            if (title) {
-              const hasExcludedInTitle = excludedKeywords.some(keyword => title.includes(keyword))
-              if (hasExcludedInTitle) {
-                console.log(`🚫 Blocked wrong sub-type (title): "${resultItem?.title?.substring(0, 60)}..." (contains excluded keyword)`)
-                return false
-              }
-            }
-            
-            // Also check URL path (e.g., fred.com/necklaces/... for ring search)
-            const hasExcludedInUrl = excludedKeywords.some(keyword => {
-              // Add plural forms too (ring -> rings, necklace -> necklaces)
-              const pluralKeyword = keyword.endsWith('s') ? keyword : keyword + 's'
-              return urlPath.includes(`/${keyword}/`) || 
-                     urlPath.includes(`/${pluralKeyword}/`) ||
-                     urlPath.includes(`-${keyword}-`) ||
-                     urlPath.includes(`-${pluralKeyword}-`)
-            })
-            
-            if (hasExcludedInUrl) {
-              console.log(`🚫 Blocked wrong sub-type (URL): ${link.substring(0, 80)}... (URL path contains excluded keyword)`)
-              return false
-            }
+          // Post-filter check (backup - most filtering already done pre-GPT)
+          // Only catches items if GPT somehow selected a filtered-out result
+          const resultItem = resultsForGPT.find((item: any) => item.link === link)
+          if (!resultItem) {
+            console.log(`🚫 Post-filter: Link not in filtered results: ${link.substring(0, 60)}...`)
+            return false
           }
           
           return true
