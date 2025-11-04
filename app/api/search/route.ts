@@ -487,14 +487,33 @@ Return JSON: {"${resultKey}": ["https://url1.com/product1", "https://url2.com/pr
             return false
           }
           
-          // Check title for excluded keywords (sub-type filtering)
+          // Check title AND URL for excluded keywords (sub-type filtering)
           const resultItem = organicResults.find((item: any) => item.link === link)
           const title = resultItem?.title?.toLowerCase() || ''
+          const urlPath = link.toLowerCase()
           
-          if (excludedKeywords.length > 0 && title) {
-            const hasExcludedKeyword = excludedKeywords.some(keyword => title.includes(keyword))
-            if (hasExcludedKeyword) {
-              console.log(`🚫 Blocked wrong sub-type: "${resultItem?.title?.substring(0, 60)}..." (contains excluded keyword)`)
+          if (excludedKeywords.length > 0) {
+            // Check title first
+            if (title) {
+              const hasExcludedInTitle = excludedKeywords.some(keyword => title.includes(keyword))
+              if (hasExcludedInTitle) {
+                console.log(`🚫 Blocked wrong sub-type (title): "${resultItem?.title?.substring(0, 60)}..." (contains excluded keyword)`)
+                return false
+              }
+            }
+            
+            // Also check URL path (e.g., fred.com/necklaces/... for ring search)
+            const hasExcludedInUrl = excludedKeywords.some(keyword => {
+              // Add plural forms too (ring -> rings, necklace -> necklaces)
+              const pluralKeyword = keyword.endsWith('s') ? keyword : keyword + 's'
+              return urlPath.includes(`/${keyword}/`) || 
+                     urlPath.includes(`/${pluralKeyword}/`) ||
+                     urlPath.includes(`-${keyword}-`) ||
+                     urlPath.includes(`-${pluralKeyword}-`)
+            })
+            
+            if (hasExcludedInUrl) {
+              console.log(`🚫 Blocked wrong sub-type (URL): ${link.substring(0, 80)}... (URL path contains excluded keyword)`)
               return false
             }
           }
