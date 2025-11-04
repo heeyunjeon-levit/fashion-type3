@@ -38,10 +38,35 @@ def upload_image_to_supabase(image_bytes: bytes, original_filename: str = None) 
     # Generate unique filename (preserve item description if provided)
     timestamp = int(time.time() * 1000)
     if original_filename:
-        # Extract item description from original filename (e.g., "accessories_gold_ring_crop0.jpg")
-        # and add timestamp: "accessories_gold_ring_1762249134443.jpg"
-        base_name = original_filename.replace('_crop0', '').replace('_crop1', '').replace('_crop2', '').replace('.jpg', '')
-        filename = f"{base_name}_{timestamp}.jpg"
+        # Extract item description from original filename
+        # Format: "{image_stem}_item{i}_accessories_crop.jpg" → "accessories_{timestamp}.jpg"
+        # Remove image stem (hash), item number, and _crop suffix
+        base_name = original_filename.replace('.jpg', '').replace('.jpeg', '')
+        
+        # Remove _crop, _crop0, _crop1, etc.
+        import re
+        base_name = re.sub(r'_crop\d*$', '', base_name)
+        
+        # Extract just the item description (last meaningful part after item number)
+        # Example: "-2164299677621518953_item1_accessories" → "accessories"
+        parts = base_name.split('_')
+        
+        # Find where item description starts (after item{N})
+        description_parts = []
+        found_item_marker = False
+        for part in parts:
+            if re.match(r'^item\d+$', part):
+                found_item_marker = True
+                continue
+            if found_item_marker:
+                description_parts.append(part)
+        
+        if description_parts:
+            clean_description = '_'.join(description_parts)
+            filename = f"accessories_{clean_description}_{timestamp}.jpg"
+        else:
+            # Fallback if parsing fails
+            filename = f"crop_{timestamp}.jpg"
     else:
         filename = f"crop_{timestamp}.jpg"
 
