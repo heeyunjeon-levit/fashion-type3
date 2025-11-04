@@ -187,10 +187,11 @@ export async function POST(request: NextRequest) {
         console.log(`📋 Using top ${organicResults.length} results for ${resultKey}`)
 
         // Extract specific item description from cropped image filename or use generic terms
-        // The cropped image filename contains the item description (e.g., "white_ribbed_cardigan")
+        // Format: "accessories_gold_ring_1762251435336.jpg"
+        // Extract: "gold ring" (between category and timestamp)
         const croppedImageFilename = croppedImageUrl.split('/').pop() || ''
         const itemDescription = croppedImageFilename.includes('_') 
-          ? croppedImageFilename.split('_').slice(1, -2).join(' ') // Extract item description from filename
+          ? croppedImageFilename.split('_').slice(1, -1).join(' ').replace('.jpg', '').replace('.jpeg', '') // Extract everything between category and timestamp
           : null
         
         console.log(`🎯 Detected item: ${itemDescription || 'generic terms'}`)
