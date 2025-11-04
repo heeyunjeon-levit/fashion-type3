@@ -22,7 +22,7 @@ CPU_FALLBACK_URL = os.getenv("CPU_FALLBACK_URL")
 
 print(f"⚙️  Cropper mode: {'Roboflow API' if _use_roboflow else 'Local'}")
 
-def upload_image_to_supabase(image_bytes: bytes) -> str:
+def upload_image_to_supabase(image_bytes: bytes, original_filename: str = None) -> str:
     """Upload image to Supabase storage and return URL"""
     from supabase import create_client
 
@@ -35,9 +35,15 @@ def upload_image_to_supabase(image_bytes: bytes) -> str:
 
     supabase = create_client(supabase_url, supabase_key)
 
-    # Generate unique filename
+    # Generate unique filename (preserve item description if provided)
     timestamp = int(time.time() * 1000)
-    filename = f"crop_{timestamp}.jpg"
+    if original_filename:
+        # Extract item description from original filename (e.g., "accessories_gold_ring_crop0.jpg")
+        # and add timestamp: "accessories_gold_ring_1762249134443.jpg"
+        base_name = original_filename.replace('_crop0', '').replace('_crop1', '').replace('_crop2', '').replace('.jpg', '')
+        filename = f"{base_name}_{timestamp}.jpg"
+    else:
+        filename = f"crop_{timestamp}.jpg"
 
     # Upload to Supabase storage
     try:
@@ -325,11 +331,11 @@ def crop_image_from_url(image_url: str = None, image_base64: str = None, categor
                     cropped_path = os.path.join(crops_dir, crop_filename)
                     print(f"📤 Uploading cropped image: {crop_filename}")
 
-                    # Upload to Supabase
+                    # Upload to Supabase (preserve original descriptive filename)
                     with open(cropped_path, 'rb') as f:
                         cropped_bytes = f.read()
 
-                    cropped_url = upload_image_to_supabase(cropped_bytes)
+                    cropped_url = upload_image_to_supabase(cropped_bytes, original_filename=crop_filename)
                     cropped_urls.append(cropped_url)
                     print(f"✅ Uploaded to: {cropped_url}")
                 
