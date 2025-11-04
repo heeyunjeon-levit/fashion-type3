@@ -317,12 +317,17 @@ export async function POST(request: NextRequest) {
           if (!subType) return []
           
           const exclusionMap: Record<string, string[]> = {
-            // ACCESSORIES
-            'ring': ['necklace', 'earring', 'bracelet', 'watch', 'belt', 'scarf', 'hat', 'cap', 'beanie', 'sunglasses', 'glasses'],
-            'necklace': ['ring', 'earring', 'bracelet', 'watch', 'belt', 'scarf', 'hat', 'cap', 'beanie', 'sunglasses', 'glasses'],
-            'earrings': ['ring', 'necklace', 'bracelet', 'watch', 'belt', 'scarf', 'hat', 'cap', 'beanie', 'sunglasses', 'glasses'],
-            'bracelet': ['ring', 'necklace', 'earring', 'watch', 'belt', 'scarf', 'hat', 'cap', 'beanie', 'sunglasses', 'glasses'],
-            'watch': ['ring', 'necklace', 'earring', 'bracelet', 'belt', 'scarf', 'hat', 'cap', 'beanie', 'sunglasses', 'glasses'],
+            // ACCESSORIES (English + Korean for international sites)
+            'ring': ['necklace', 'earring', 'bracelet', 'watch', 'belt', 'scarf', 'hat', 'cap', 'beanie', 'sunglasses', 'glasses',
+                     '목걸이', '귀걸이', '브레이슬릿', '팔찌', '시계', '벨트', '스카프', '모자', '선글라스'],  // Korean
+            'necklace': ['ring', 'earring', 'bracelet', 'watch', 'belt', 'scarf', 'hat', 'cap', 'beanie', 'sunglasses', 'glasses',
+                         '반지', '귀걸이', '브레이슬릿', '팔찌', '시계', '벨트', '스카프', '모자', '선글라스'],
+            'earrings': ['ring', 'necklace', 'bracelet', 'watch', 'belt', 'scarf', 'hat', 'cap', 'beanie', 'sunglasses', 'glasses',
+                         '반지', '목걸이', '브레이슬릿', '팔찌', '시계', '벨트', '스카프', '모자', '선글라스'],
+            'bracelet': ['ring', 'necklace', 'earring', 'watch', 'belt', 'scarf', 'hat', 'cap', 'beanie', 'sunglasses', 'glasses',
+                         '반지', '목걸이', '귀걸이', '시계', '벨트', '스카프', '모자', '선글라스'],
+            'watch': ['ring', 'necklace', 'earring', 'bracelet', 'belt', 'scarf', 'hat', 'cap', 'beanie', 'sunglasses', 'glasses',
+                      '반지', '목걸이', '귀걸이', '브레이슬릿', '팔찌', '벨트', '스카프', '모자', '선글라스'],
             'headwear': ['ring', 'necklace', 'earring', 'bracelet', 'watch', 'belt', 'scarf', 'sunglasses', 'glasses'],
             'belt': ['ring', 'necklace', 'earring', 'bracelet', 'watch', 'scarf', 'hat', 'cap', 'beanie', 'sunglasses', 'glasses'],
             'scarf': ['ring', 'necklace', 'earring', 'bracelet', 'watch', 'belt', 'hat', 'cap', 'beanie', 'sunglasses', 'glasses'],
@@ -383,13 +388,19 @@ export async function POST(request: NextRequest) {
               }
             }
             
-            // Check URL path for excluded keywords
+            // Check URL path for excluded keywords (handles both English and Korean)
             const hasExcludedInUrl = excludedKeywords.some(keyword => {
-              const pluralKeyword = keyword.endsWith('s') ? keyword : keyword + 's'
-              return url.includes(`/${keyword}/`) || 
-                     url.includes(`/${pluralKeyword}/`) ||
-                     url.includes(`-${keyword}-`) ||
-                     url.includes(`-${pluralKeyword}-`)
+              // For English keywords, check plural forms
+              if (/^[a-zA-Z]+$/.test(keyword)) {
+                const pluralKeyword = keyword.endsWith('s') ? keyword : keyword + 's'
+                return url.includes(`/${keyword}/`) || 
+                       url.includes(`/${pluralKeyword}/`) ||
+                       url.includes(`-${keyword}-`) ||
+                       url.includes(`-${pluralKeyword}-`)
+              } else {
+                // For non-English (Korean, etc.), check exact matches in URL
+                return url.includes(keyword)
+              }
             })
             
             if (hasExcludedInUrl) {
