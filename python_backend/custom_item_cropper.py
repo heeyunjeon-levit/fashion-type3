@@ -88,14 +88,20 @@ class CustomItemCropper:
         
         prompt = f"""Look at this fashion image and identify these specific items: {items_str}
 
-🎯 FOCUS RULE: Analyze ONLY the MAIN PERSON in the image (the largest, clearest person in the foreground).
-   - FOCUS ON: The primary person wearing the clothes
-   - IGNORE: Background people, mannequins, displays, posters, or clothing items not worn by the main person
-   - If the main person doesn't have {items_str}, return an empty list for those items
+🎯 FOCUS RULE: Analyze ONLY the MAIN PERSON or MAIN ITEM in the image (the largest, clearest subject in the foreground).
+   - FOCUS ON: The primary person/item in the image
+   - IGNORE: Background people, mannequins, displays, posters, or items not the main subject
+   - If the main subject doesn't have {items_str}, return an empty list for those items
 
-CRITICAL: Look at the ACTUAL GARMENTS visible ON THE MAIN PERSON ONLY. DO NOT imagine or infer garment types that aren't clearly visible in the image.
+⚠️ CRITICAL FOR ACCESSORIES (rings, necklaces, earrings, bracelets, watches, bags, etc.):
+   - NEVER use generic terms like "accessory", "jewelry", "bag"
+   - ALWAYS identify the SPECIFIC TYPE: "gold ring", "silver necklace", "leather backpack", etc.
+   - Include material, color, and distinguishing features
+   - Examples: "gold ring with diamonds", "silver chain necklace", "black leather backpack"
 
-IMPORTANT: Your description will be used to crop the garment for detailed visual matching. The crop needs to capture ALL identifying details:
+CRITICAL: Look at the ACTUAL ITEMS visible in the image. DO NOT imagine or infer items that aren't clearly visible.
+
+IMPORTANT: Your description will be used to crop the item for detailed visual matching. The crop needs to capture ALL identifying details:
 - Specific patterns, textures, and unique features
 - All design elements (buttons, zippers, pockets, seams, stitching)
 - Complete visible details that make this item searchable and matchable
