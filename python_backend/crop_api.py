@@ -182,13 +182,12 @@ def get_cropper():
     return _cropper_instance
 
 
-def crop_image_from_url(image_url: str = None, image_base64: str = None, categories: List[str] = None, count: int = 1) -> str:
+def crop_image_from_url(image_url: str, categories: List[str], count: int = 1) -> str:
     """
-    Crop image from URL or base64 based on categories.
+    Crop image from URL based on categories.
     
     Args:
-        image_url: Public URL of the image (optional if image_base64 provided)
-        image_base64: Base64 encoded image (optional if image_url provided)
+        image_url: Public URL of the image
         categories: List of categories like ["tops", "bottoms", "shoes"]
         count: Number of instances to find for this category
         
@@ -196,12 +195,7 @@ def crop_image_from_url(image_url: str = None, image_base64: str = None, categor
         URL of the cropped image (uploaded to imgbb, or original if failed)
     """
     start_time = time.time()
-    
-    # Validate input
-    if not image_url and not image_base64:
-        raise ValueError("Either image_url or image_base64 must be provided")
-    
-    print(f"📥 Processing image from {'URL' if image_url else 'base64'}: {image_url if image_url else '[base64 data]'}")
+    print(f"📥 Processing image from URL: {image_url}")
     print(f"📋 Categories: {categories}")
     print(f"📊 Requested count: {count}")
     
@@ -209,8 +203,8 @@ def crop_image_from_url(image_url: str = None, image_base64: str = None, categor
     t0 = time.time()
     cropper = get_cropper()
     if cropper is None:
-        print("⚠️ Cropper not available, returning original URL or None")
-        return image_url if image_url else None
+        print("⚠️ Cropper not available, returning original URL")
+        return image_url
     print(f"⏱️  Cropper init: {time.time() - t0:.2f}s")
     
     # Convert categories to simple generic terms for GPT-4o
@@ -250,8 +244,6 @@ def crop_image_from_url(image_url: str = None, image_base64: str = None, categor
         
         if _use_roboflow:
             # Roboflow mode: use URL directly
-            if image_base64:
-                raise ValueError("Roboflow mode only supports URLs, not base64")
             print("🌐 Using Roboflow API with URL")
             result = cropper.process_image_from_url(
                 image_url=image_url,
@@ -259,43 +251,17 @@ def crop_image_from_url(image_url: str = None, image_base64: str = None, categor
                 output_dir=output_dir
             )
         else:
-            # Local mode: download or decode first
+            # Local mode: download first
             t0_download = time.time()
-            
-            if image_base64:
-                # Base64 mode - decode directly (bypasses DNS issues!)
-                print("🔓 Decoding base64 image...")
-                try:
-                    # Remove data URL prefix if present (e.g., "data:image/jpeg;base64,")
-                    if ',' in image_base64:
-                        image_base64 = image_base64.split(',')[1]
-                    image_content = base64.b64decode(image_base64)
-                    print(f"✅ Decoded base64 ({len(image_content)} bytes)")
-                except Exception as e:
-                    raise ValueError(f"Failed to decode base64 image: {e}")
-            else:
-                # URL mode - download with DNS workaround
-                print("⬇️ Downloading image from URL...")
-                import httpx
-                try:
-                    # Try httpx first (has better DNS handling)
-                    with httpx.Client(timeout=60.0, follow_redirects=True) as client:
-                        response_httpx = client.get(image_url)
-                        response_httpx.raise_for_status()
-                        image_content = response_httpx.content
-                    print(f"✅ Downloaded with httpx ({len(image_content)} bytes)")
-                except Exception as e:
-                    print(f"⚠️ httpx failed: {e}")
-                    print("🔄 Falling back to requests...")
-                    response = requests.get(image_url, timeout=60)
-                    response.raise_for_status()
-                    image_content = response.content
+            print("⬇️ Downloading image...")
+            response = requests.get(image_url, timeout=30)
+            response.raise_for_status()
             
             # Save to temporary file  
             os.makedirs(tempfile.gettempdir() + '/fashion_crop', exist_ok=True)
-            temp_path = os.path.join(tempfile.gettempdir(), 'fashion_crop', f'{hash(image_url if image_url else image_base64[:100])}.jpg')
+            temp_path = os.path.join(tempfile.gettempdir(), 'fashion_crop', f'{hash(image_url)}.jpg')
             with open(temp_path, 'wb') as f:
-                f.write(image_content)
+                f.write(response.content)
             
             print(f"✅ Image saved to: {temp_path}")
             print(f"⏱️  Download: {time.time() - t0_download:.2f}s")

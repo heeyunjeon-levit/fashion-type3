@@ -79,8 +79,11 @@ image = (
     .run_commands(
         "cd /root && git clone https://github.com/IDEA-Research/GroundingDINO.git && "
         "cd /root/GroundingDINO && "
-        "export CUDA_HOME=/usr/local/cuda && echo 'CUDA_HOME is set to:' $CUDA_HOME && "
-        "python -m pip install -e . --no-deps",  # Install without upgrading deps
+        "export CUDA_HOME=/usr/local/cuda && "
+        "export TORCH_CUDA_ARCH_LIST='7.5' && "  # T4 GPU compute capability
+        "echo 'CUDA_HOME:' $CUDA_HOME && "
+        "echo 'TORCH_CUDA_ARCH_LIST:' $TORCH_CUDA_ARCH_LIST && "
+        "python -m pip install -v -e . --no-deps 2>&1 | tail -50",  # Verbose install, show last 50 lines
     )
     # Fix NumPy version after GroundingDINO installation (it upgrades to 2.x)
     .pip_install("numpy==1.24.3")
@@ -96,7 +99,7 @@ image = (
         "python -c 'import groundingdino; print(\"✅ GroundingDINO imported successfully\")'",
         "cat /etc/resolv.conf",  # Check DNS configuration
         "nslookup google.com || echo 'DNS test failed'",  # Test DNS resolution
-        "echo '✅ Build timestamp: 2025-11-03-18:40-base64-support'",  # Cache bust
+        "echo '✅ Build timestamp: 2025-11-03-19:00-torch-arch-list'",  # Cache bust
     )
     # Add the backend code into the image (with updated GroundingDINO paths)
     .add_local_dir(backend_dir, "/root/python_backend")

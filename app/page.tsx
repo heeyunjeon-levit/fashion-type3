@@ -9,15 +9,13 @@ import Results from './components/Results'
 export default function Home() {
   const [currentStep, setCurrentStep] = useState<'upload' | 'category' | 'cropping' | 'results'>('upload')
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string>('')
-  const [uploadedImageFile, setUploadedImageFile] = useState<File | null>(null)
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
   const [croppedImages, setCroppedImages] = useState<Record<string, string>>({})
   const [results, setResults] = useState<Record<string, Array<{ link: string; thumbnail: string | null; title: string | null }>>>({})
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleImageUploaded = (imageUrl: string, imageFile: File) => {
+  const handleImageUploaded = (imageUrl: string) => {
     setUploadedImageUrl(imageUrl)
-    setUploadedImageFile(imageFile)
     setCurrentStep('category')
   }
 
@@ -76,10 +74,9 @@ export default function Home() {
             onBack={() => setCurrentStep('upload')}
           />
         )}
-        {currentStep === 'cropping' && uploadedImageFile && (
+        {currentStep === 'cropping' && (
           <Cropping
             imageUrl={uploadedImageUrl}
-            imageFile={uploadedImageFile}
             categories={selectedCategories}
             onCropped={handleCropped}
           />
