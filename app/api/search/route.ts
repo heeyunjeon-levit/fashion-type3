@@ -52,8 +52,8 @@ export async function POST(request: NextRequest) {
     if (originalImageUrl) {
       console.log('\n🔍 Doing full image search for all item types...')
       try {
-        const fullImagePromises = Array.from({ length: 2 }, (_, i) => {
-          console.log(`   Full image run ${i + 1}/2...`)
+        const fullImagePromises = Array.from({ length: 1 }, (_, i) => {
+          console.log(`   Full image search...`)
           return fetch('https://google.serper.dev/lens', {
             method: 'POST',
             headers: {
@@ -108,13 +108,13 @@ export async function POST(request: NextRequest) {
 
       const categoryKey = resultKey.split('_')[0] // base category without instance suffix
       
-      console.log(`\n🔍 Searching for ${resultKey} (2 runs for speed & accuracy)...`)
+      console.log(`\n🔍 Searching for ${resultKey}...`)
       console.log(`   📸 Cropped image URL: ${croppedImageUrl}`)
       
       try {
-        // Call Serper Lens 2 times and aggregate results for good coverage with faster speed
-        const serperCallPromises = Array.from({ length: 2 }, (_, i) => {
-          console.log(`   Run ${i + 1}/2...`)
+        // Call Serper Lens once for maximum speed
+        const serperCallPromises = Array.from({ length: 1 }, (_, i) => {
+          console.log(`   Cropped image search...`)
           return fetch('https://google.serper.dev/lens', {
             method: 'POST',
             headers: {
@@ -131,16 +131,16 @@ export async function POST(request: NextRequest) {
 
         const serperResponses = await Promise.all(serperCallPromises)
         
-        // Aggregate results from all 2 runs
+        // Get results
         const allOrganicResults: any[] = []
         for (let i = 0; i < serperResponses.length; i++) {
           if (!serperResponses[i].ok) {
             const errorText = await serperResponses[i].text()
-            console.log(`   ❌ Run ${i + 1} failed:`, errorText.substring(0, 200))
+            console.log(`   ❌ Cropped image search failed:`, errorText.substring(0, 200))
             continue
           }
           const serperData = await serperResponses[i].json()
-          console.log(`   ✅ Run ${i + 1} returned ${serperData.organic?.length || 0} results`)
+          console.log(`   ✅ Cropped image search returned ${serperData.organic?.length || 0} results`)
           
           if (serperData.organic) {
             allOrganicResults.push(...serperData.organic)
@@ -180,7 +180,7 @@ export async function POST(request: NextRequest) {
         const organicResults = uniqueCombinedResults.slice(0, 15) // Keep top 15 for faster GPT analysis
         
         if (organicResults.length === 0) {
-          console.log(`⚠️ No Serper results for ${resultKey} after aggregating 2 runs`)
+          console.log(`⚠️ No Serper results for ${resultKey}`)
           return { resultKey, results: null }
         }
         
@@ -224,7 +224,7 @@ CRITICAL SELECTION RULES (in order of priority):
 7. ONLY ignore: Instagram, Pinterest, Facebook, Google Images, image CDNs, non-product pages, WRONG GARMENT CATEGORIES
 
 SELECTION PROCESS:
-- These results are aggregated from 2 cropped image API runs + full image search for better coverage
+- These results combine cropped image search + full image search for comprehensive coverage
 - Scan all results and identify the TOP 3 products that match BOTH category AND visual appearance
 - FIRST filter by correct category, THEN match by color/style
 - Example for bottoms: "blue shorts" ✅, "blue hoodie" ❌ (wrong category)
