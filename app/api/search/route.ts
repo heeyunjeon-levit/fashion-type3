@@ -200,6 +200,38 @@ export async function POST(request: NextRequest) {
           ? [itemDescription, ...(categorySearchTerms[categoryKey] || [categoryKey])]
           : (categorySearchTerms[categoryKey] || [categoryKey])
         
+        // For accessories, determine specific sub-type to filter correctly
+        let specificAccessoryType = null
+        if (categoryKey === 'accessory' && itemDescription) {
+          const desc = itemDescription.toLowerCase()
+          if (desc.includes('ring')) specificAccessoryType = 'ring'
+          else if (desc.includes('necklace')) specificAccessoryType = 'necklace'
+          else if (desc.includes('earring')) specificAccessoryType = 'earrings'
+          else if (desc.includes('bracelet')) specificAccessoryType = 'bracelet'
+          else if (desc.includes('watch')) specificAccessoryType = 'watch'
+          else if (desc.includes('hat') || desc.includes('cap') || desc.includes('beanie')) specificAccessoryType = 'headwear'
+          else if (desc.includes('belt')) specificAccessoryType = 'belt'
+          else if (desc.includes('scarf')) specificAccessoryType = 'scarf'
+          else if (desc.includes('sunglasses') || desc.includes('glasses')) specificAccessoryType = 'eyewear'
+        }
+        
+        // Build specific exclusion for accessories
+        let accessoryExclusion = ''
+        if (categoryKey === 'accessory' && specificAccessoryType) {
+          const accessoryTypes = {
+            'ring': 'necklaces, earrings, bracelets, watches, hats, belts, scarves, sunglasses',
+            'necklace': 'rings, earrings, bracelets, watches, hats, belts, scarves, sunglasses',
+            'earrings': 'rings, necklaces, bracelets, watches, hats, belts, scarves, sunglasses',
+            'bracelet': 'rings, necklaces, earrings, watches, hats, belts, scarves, sunglasses',
+            'watch': 'rings, necklaces, earrings, bracelets, hats, belts, scarves, sunglasses',
+            'headwear': 'rings, necklaces, earrings, bracelets, watches, belts, scarves, sunglasses',
+            'belt': 'rings, necklaces, earrings, bracelets, watches, hats, scarves, sunglasses',
+            'scarf': 'rings, necklaces, earrings, bracelets, watches, hats, belts, sunglasses',
+            'eyewear': 'rings, necklaces, earrings, bracelets, watches, hats, belts, scarves'
+          }
+          accessoryExclusion = `- ⚠️ CRITICAL: You are searching for ${specificAccessoryType} ONLY. ❌ EXCLUDE: ${accessoryTypes[specificAccessoryType]}, clothing, shoes, bags`
+        }
+        
         const prompt = `You are analyzing aggregated image search results from multiple runs for ${categoryLabels[categoryKey]}.
 
 The original cropped image shows: ${searchTerms.join(', ')}
@@ -211,7 +243,8 @@ The original cropped image shows: ${searchTerms.join(', ')}
 - ${categoryKey === 'bottoms' ? '❌ EXCLUDE: shirts, jackets, hoodies, sweaters, dresses, shoes, bags, accessories' : ''}
 - ${categoryKey === 'shoes' ? '❌ EXCLUDE: clothing items, bags, accessories' : ''}
 - ${categoryKey === 'bag' ? '❌ EXCLUDE: clothing items, shoes, accessories (except bags)' : ''}
-- ${categoryKey === 'accessory' ? '❌ EXCLUDE: clothing items, shoes, bags' : ''}
+- ${categoryKey === 'accessory' && !specificAccessoryType ? '❌ EXCLUDE: clothing items, shoes, bags' : ''}
+- ${accessoryExclusion}
 - ${categoryKey === 'dress' ? '❌ EXCLUDE: shirts, pants, shorts, shoes, bags, accessories' : ''}
 
 CRITICAL SELECTION RULES (in order of priority):
@@ -235,9 +268,9 @@ SELECTION PROCESS:
 
 TITLE VALIDATION RULES (CRITICAL):
 1. ✅ READ the "title" field carefully - it tells you what the product actually is
-2. ✅ VERIFY the title mentions the CORRECT CATEGORY (${categorySearchTerms[categoryKey]?.join(' OR ')})
+2. ✅ VERIFY the title mentions the CORRECT${specificAccessoryType ? ` ${specificAccessoryType.toUpperCase()}` : ' CATEGORY'} (${searchTerms[0]})
 3. ✅ CHECK the title mentions matching COLOR/STYLE details
-4. ❌ REJECT if title describes wrong category (even if link looks good)
+4. ❌ REJECT if title describes wrong${specificAccessoryType ? ` accessory type (e.g., ${specificAccessoryType} search should NOT return necklaces)` : ' category'} (even if link looks good)
 5. ❌ REJECT if title is generic ("Shop now", "Homepage", "Category")
 
 Matching criteria (in order):
