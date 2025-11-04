@@ -226,17 +226,25 @@ CRITICAL SELECTION RULES (in order of priority):
 
 SELECTION PROCESS:
 - These results are aggregated from 2 cropped image runs + 2 full image runs for better coverage
-- Scan all results and identify the TOP 3 products that match BOTH category AND visual appearance
-- FIRST filter by correct category, THEN match by color/style
+- Each result has: "link", "title", "thumbnail" fields
+- **CRITICAL: You MUST read and validate the "title" field for EVERY result before selecting it**
+- The "title" describes what the link actually shows - use it to verify accuracy
 - Example for bottoms: "blue shorts" ✅, "blue hoodie" ❌ (wrong category)
 - Example for tops: "red sweatshirt" ✅, "red skirt" ❌ (wrong category)
 - Prefer actual product pages over homepages, category pages, or general listings
 
+TITLE VALIDATION RULES (CRITICAL):
+1. ✅ READ the "title" field carefully - it tells you what the product actually is
+2. ✅ VERIFY the title mentions the CORRECT CATEGORY (${categorySearchTerms[categoryKey]?.join(' OR ')})
+3. ✅ CHECK the title mentions matching COLOR/STYLE details
+4. ❌ REJECT if title describes wrong category (even if link looks good)
+5. ❌ REJECT if title is generic ("Shop now", "Homepage", "Category")
+
 Matching criteria (in order):
-1. ✅ MUST be correct category: ${categorySearchTerms[categoryKey]?.join(', ')}
-2. Title mentions the SAME COLOR as the cropped image
-3. Title mentions similar STYLE (vintage, casual, formal, etc.)
-4. Links directly to a product detail page (not category/homepage)
+1. ✅ Title MUST mention correct category: ${categorySearchTerms[categoryKey]?.join(', ')}
+2. ✅ Title MUST mention SAME COLOR as the cropped image  
+3. ✅ Title SHOULD mention similar STYLE (vintage, casual, formal, etc.)
+4. ✅ Link goes to a product detail page (not category/homepage)
 
 AVALIABILITY NOTES:
 - Products from Etsy, Depop, Poshmark, Mercari are from individual sellers and may be sold out
@@ -246,11 +254,20 @@ AVALIABILITY NOTES:
 Search results (scan all ${organicResults.length} for best matches):
 ${JSON.stringify(organicResults, null, 2)}
 
-Find the TOP 3 BEST MATCHES based on visual similarity and return them.
+**VALIDATION PROCESS (follow strictly):**
+For EACH result you consider:
+1. 📖 READ the "title" field first
+2. ✅ CHECK: Does title mention the correct category? (${categorySearchTerms[categoryKey]?.join('/')})
+3. ✅ CHECK: Does title mention matching color/style?
+4. ✅ CHECK: Is it a specific product (not "Shop", "Category", "Homepage")?
+5. ❌ SKIP if title doesn't match - even if thumbnail looks good
+6. ✅ SELECT only if title validation passes
+
+Find the TOP 3 BEST MATCHES where the TITLE accurately describes a matching product.
 Prioritize variety: include different retailers/stores when possible to give users multiple purchasing options.
 
-🚫 IMPORTANT: Return ONLY actual e-commerce product links. If you find fewer than 3 valid product links, return only what you found (1 or 2 links is fine). 
-NEVER include social media (TikTok, Instagram, YouTube, Pinterest), blogs, or non-product sites just to reach 3 results.
+🚫 IMPORTANT: Return ONLY links where the TITLE confirms it's a matching product. If you find fewer than 3 valid matches, return only what you found (1 or 2 links is fine). 
+NEVER include links where the title doesn't match, even if the thumbnail looks similar.
 
 Return JSON: {"${resultKey}": ["https://url1.com/product1", "https://url2.com/product2"]} (1-3 links) or {"${resultKey}": []} if NO valid product links exist.`
 
