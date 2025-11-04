@@ -52,8 +52,8 @@ export async function POST(request: NextRequest) {
     if (originalImageUrl) {
       console.log('\n🔍 Doing full image search for all item types...')
       try {
-        const fullImagePromises = Array.from({ length: 2 }, (_, i) => {
-          console.log(`   Full image run ${i + 1}/2...`)
+        const fullImagePromises = Array.from({ length: 3 }, (_, i) => {
+          console.log(`   Full image run ${i + 1}/3...`)
           return fetch('https://google.serper.dev/lens', {
             method: 'POST',
             headers: {
@@ -73,11 +73,11 @@ export async function POST(request: NextRequest) {
         const allFullImageResults: any[] = []
         for (let i = 0; i < fullImageResponses.length; i++) {
           if (!fullImageResponses[i].ok) {
-            console.log(`   ❌ Full image run ${i + 1} failed`)
+            console.log(`   ❌ Full image run ${i + 1}/3 failed`)
             continue
           }
           const fullImageData = await fullImageResponses[i].json()
-          console.log(`   ✅ Full image run ${i + 1} returned ${fullImageData.organic?.length || 0} results`)
+          console.log(`   ✅ Full image run ${i + 1}/3 returned ${fullImageData.organic?.length || 0} results`)
           
           if (fullImageData.organic) {
             allFullImageResults.push(...fullImageData.organic)
@@ -108,13 +108,13 @@ export async function POST(request: NextRequest) {
 
       const categoryKey = resultKey.split('_')[0] // base category without instance suffix
       
-      console.log(`\n🔍 Searching for ${resultKey} (2 runs for better coverage)...`)
+      console.log(`\n🔍 Searching for ${resultKey} (3 runs for best coverage)...`)
       console.log(`   📸 Cropped image URL: ${croppedImageUrl}`)
       
       try {
-        // Call Serper Lens 2 times for better result coverage
-        const serperCallPromises = Array.from({ length: 2 }, (_, i) => {
-          console.log(`   Run ${i + 1}/2...`)
+        // Call Serper Lens 3 times for best result coverage
+        const serperCallPromises = Array.from({ length: 3 }, (_, i) => {
+          console.log(`   Run ${i + 1}/3...`)
           return fetch('https://google.serper.dev/lens', {
             method: 'POST',
             headers: {
@@ -131,16 +131,16 @@ export async function POST(request: NextRequest) {
 
         const serperResponses = await Promise.all(serperCallPromises)
         
-        // Aggregate results from 2 runs
+        // Aggregate results from 3 runs
         const allOrganicResults: any[] = []
         for (let i = 0; i < serperResponses.length; i++) {
           if (!serperResponses[i].ok) {
             const errorText = await serperResponses[i].text()
-            console.log(`   ❌ Run ${i + 1} failed:`, errorText.substring(0, 200))
+            console.log(`   ❌ Run ${i + 1}/3 failed:`, errorText.substring(0, 200))
             continue
           }
           const serperData = await serperResponses[i].json()
-          console.log(`   ✅ Run ${i + 1} returned ${serperData.organic?.length || 0} results`)
+          console.log(`   ✅ Run ${i + 1}/3 returned ${serperData.organic?.length || 0} results`)
           
           if (serperData.organic) {
             allOrganicResults.push(...serperData.organic)
@@ -177,10 +177,10 @@ export async function POST(request: NextRequest) {
         
         console.log(`📊 Combined (cropped + full image): ${uniqueCombinedResults.length} unique results`)
         
-        const organicResults = uniqueCombinedResults.slice(0, 15) // Keep top 15 for faster GPT analysis
+        const organicResults = uniqueCombinedResults.slice(0, 30) // Keep top 30 for best GPT analysis
         
         if (organicResults.length === 0) {
-          console.log(`⚠️ No Serper results for ${resultKey} after 2 runs`)
+          console.log(`⚠️ No Serper results for ${resultKey} after 3 runs`)
           return { resultKey, results: null }
         }
         
@@ -225,7 +225,7 @@ CRITICAL SELECTION RULES (in order of priority):
 8. If you cannot find 3 VALID PRODUCT LINKS, return fewer than 3. NEVER include non-product sites just to fill the quota.
 
 SELECTION PROCESS:
-- These results are aggregated from 2 cropped image runs + 2 full image runs for better coverage
+- These results are aggregated from 3 cropped image runs + 3 full image runs for maximum coverage
 - Each result has: "link", "title", "thumbnail" fields
 - **CRITICAL: You MUST read and validate the "title" field for EVERY result before selecting it**
 - The "title" describes what the link actually shows - use it to verify accuracy
@@ -273,7 +273,7 @@ Return JSON: {"${resultKey}": ["https://url1.com/product1", "https://url2.com/pr
 
         const openai = getOpenAIClient()
         const completion = await openai.chat.completions.create({
-          model: 'gpt-4o',  // Use GPT-4o for better instruction following (mini was ignoring filters)
+          model: 'gpt-4-turbo-preview',  // Original model - best quality
           messages: [
             {
               role: 'system',
