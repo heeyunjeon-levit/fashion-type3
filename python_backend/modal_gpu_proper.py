@@ -65,28 +65,15 @@ image = (
     .run_commands(
         "which nvcc && nvcc --version",  # Check nvcc and show CUDA version
     )
-    # Install GroundingDINO dependencies with compatible versions BEFORE compiling
-    .pip_install(
-        "transformers==4.35.2",  # Pin to version compatible with PyTorch 2.1.2
-        "timm==0.9.12",  # Pin timm version
-        "addict",
-        "yapf",
-        "pycocotools",
-    )
-    # Clone and compile GroundingDINO from source (THE KEY STEP)
-    # CRITICAL: Export CUDA_HOME before compilation so it builds with CUDA support
-    # Must be done in single step to ensure directory exists
+    # Install GroundingDINO following official instructions: https://github.com/IDEA-Research/GroundingDINO
+    # Step 1: Clone repo
+    # Step 2: cd GroundingDINO/
+    # Step 3: pip install -e .
     .run_commands(
         "cd /root && git clone https://github.com/IDEA-Research/GroundingDINO.git && "
         "cd /root/GroundingDINO && "
-        "export CUDA_HOME=/usr/local/cuda && "
-        "export TORCH_CUDA_ARCH_LIST='7.5' && "  # T4 GPU compute capability
-        "echo 'CUDA_HOME:' $CUDA_HOME && "
-        "echo 'TORCH_CUDA_ARCH_LIST:' $TORCH_CUDA_ARCH_LIST && "
-        "python -m pip install -v -e . --no-deps 2>&1 | tail -50",  # Verbose install, show last 50 lines
+        "pip install -e ."
     )
-    # Fix NumPy version after GroundingDINO installation (it upgrades to 2.x)
-    .pip_install("numpy==1.24.3")
     # Download GroundingDINO weights
     .run_commands(
         "mkdir -p /root/GroundingDINO/weights",
@@ -99,7 +86,7 @@ image = (
         "python -c 'import groundingdino; print(\"✅ GroundingDINO imported successfully\")'",
         "cat /etc/resolv.conf",  # Check DNS configuration
         "nslookup google.com || echo 'DNS test failed'",  # Test DNS resolution
-        "echo '✅ Build timestamp: 2025-11-03-19:00-torch-arch-list'",  # Cache bust
+        "echo '✅ Build timestamp: 2025-11-03-19:10-official-install'",  # Cache bust
     )
     # Add the backend code into the image (with updated GroundingDINO paths)
     .add_local_dir(backend_dir, "/root/python_backend")
