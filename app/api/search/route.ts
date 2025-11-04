@@ -420,7 +420,61 @@ Return JSON: {"${resultKey}": ["https://url1.com/product1", "https://url2.com/pr
           'images.google.com', 'google.com/images'
         ]
         
-        // Filter to only valid HTTP links AND exclude blocked domains
+        // Build list of keywords to EXCLUDE from titles based on sub-type
+        const getExcludedKeywords = (subType: string | null, category: string): string[] => {
+          if (!subType) return []
+          
+          const exclusionMap: Record<string, string[]> = {
+            // ACCESSORIES
+            'ring': ['necklace', 'earring', 'bracelet', 'watch', 'belt', 'scarf', 'hat', 'cap', 'beanie', 'sunglasses', 'glasses'],
+            'necklace': ['ring', 'earring', 'bracelet', 'watch', 'belt', 'scarf', 'hat', 'cap', 'beanie', 'sunglasses', 'glasses'],
+            'earrings': ['ring', 'necklace', 'bracelet', 'watch', 'belt', 'scarf', 'hat', 'cap', 'beanie', 'sunglasses', 'glasses'],
+            'bracelet': ['ring', 'necklace', 'earring', 'watch', 'belt', 'scarf', 'hat', 'cap', 'beanie', 'sunglasses', 'glasses'],
+            'watch': ['ring', 'necklace', 'earring', 'bracelet', 'belt', 'scarf', 'hat', 'cap', 'beanie', 'sunglasses', 'glasses'],
+            'headwear': ['ring', 'necklace', 'earring', 'bracelet', 'watch', 'belt', 'scarf', 'sunglasses', 'glasses'],
+            'belt': ['ring', 'necklace', 'earring', 'bracelet', 'watch', 'scarf', 'hat', 'cap', 'beanie', 'sunglasses', 'glasses'],
+            'scarf': ['ring', 'necklace', 'earring', 'bracelet', 'watch', 'belt', 'hat', 'cap', 'beanie', 'sunglasses', 'glasses'],
+            'eyewear': ['ring', 'necklace', 'earring', 'bracelet', 'watch', 'belt', 'scarf', 'hat', 'cap', 'beanie'],
+            
+            // TOPS
+            'jacket/coat': ['shirt', 'blouse', 'sweater', 'pullover', 'hoodie', 'sweatshirt', 't-shirt', 'tank'],
+            'shirt/blouse': ['jacket', 'coat', 'sweater', 'pullover', 'hoodie', 'sweatshirt'],
+            'sweater/knit': ['jacket', 'coat', 'shirt', 'blouse', 'hoodie', 'sweatshirt'],
+            'hoodie/sweatshirt': ['jacket', 'coat', 'shirt', 'blouse', 'sweater', 'pullover', 'blazer'],
+            'cardigan': ['jacket', 'coat', 'shirt', 'blouse', 'sweater', 'pullover', 'hoodie', 'sweatshirt', 'blazer'],
+            'blazer': ['jacket', 'coat', 'shirt', 'blouse', 'sweater', 'pullover', 'hoodie', 'sweatshirt'],
+            'vest': ['jacket', 'coat', 'shirt', 'blouse', 'sweater', 'pullover', 'hoodie', 'sweatshirt'],
+            
+            // BOTTOMS
+            'skirt': ['pant', 'trouser', 'jean', 'short', 'slack'],
+            'shorts': ['pant', 'trouser', 'jean', 'skirt', 'slack'],
+            'jeans': ['skirt', 'short'],
+            'pants/trousers': ['skirt', 'short'],
+            
+            // SHOES
+            'boots': ['sneaker', 'trainer', 'sandal', 'heel', 'pump', 'flat', 'loafer', 'oxford'],
+            'sneakers': ['boot', 'sandal', 'heel', 'pump', 'flat', 'loafer', 'oxford'],
+            'sandals': ['boot', 'sneaker', 'trainer', 'heel', 'pump', 'flat', 'loafer', 'oxford'],
+            'heels/pumps': ['boot', 'sneaker', 'trainer', 'sandal', 'flat', 'loafer', 'oxford'],
+            'flats': ['boot', 'sneaker', 'trainer', 'sandal', 'heel', 'pump', 'loafer', 'oxford'],
+            'loafers': ['boot', 'sneaker', 'trainer', 'sandal', 'heel', 'pump', 'flat', 'oxford'],
+            'oxfords': ['boot', 'sneaker', 'trainer', 'sandal', 'heel', 'pump', 'flat', 'loafer'],
+            
+            // BAGS
+            'backpack': ['tote', 'clutch', 'handbag', 'purse', 'shoulder', 'crossbody'],
+            'tote bag': ['backpack', 'clutch', 'handbag', 'purse'],
+            'clutch': ['backpack', 'tote', 'handbag', 'purse', 'shoulder', 'crossbody'],
+            'shoulder/crossbody bag': ['backpack', 'tote', 'clutch'],
+            'handbag': ['backpack', 'tote', 'clutch']
+          }
+          
+          return exclusionMap[subType] || []
+        }
+        
+        const excludedKeywords = getExcludedKeywords(specificSubType, categoryKey)
+        console.log(`🔍 Sub-type filter: ${specificSubType || 'none'}, excluding keywords: ${excludedKeywords.join(', ')}`)
+        
+        // Filter to only valid HTTP links AND exclude blocked domains AND wrong sub-types
         const validLinks = links.filter((link: any) => {
           if (typeof link !== 'string' || !link.startsWith('http')) return false
           
@@ -431,6 +485,18 @@ Return JSON: {"${resultKey}": ["https://url1.com/product1", "https://url2.com/pr
           if (isBlocked) {
             console.log(`🚫 Blocked social media link: ${link.substring(0, 50)}...`)
             return false
+          }
+          
+          // Check title for excluded keywords (sub-type filtering)
+          const resultItem = organicResults.find((item: any) => item.link === link)
+          const title = resultItem?.title?.toLowerCase() || ''
+          
+          if (excludedKeywords.length > 0 && title) {
+            const hasExcludedKeyword = excludedKeywords.some(keyword => title.includes(keyword))
+            if (hasExcludedKeyword) {
+              console.log(`🚫 Blocked wrong sub-type: "${resultItem?.title?.substring(0, 60)}..." (contains excluded keyword)`)
+              return false
+            }
           }
           
           return true
