@@ -299,8 +299,29 @@ Return JSON: {"${resultKey}": ["https://url1.com/product1", "https://url2.com/pr
           links = links && typeof links === 'string' && links.startsWith('http') ? [links] : []
         }
         
-        // Filter to only valid HTTP links
-        const validLinks = links.filter((link: any) => typeof link === 'string' && link.startsWith('http'))
+        // Blocked domains - social media and non-product sites
+        const blockedDomains = [
+          'instagram.com', 'tiktok.com', 'youtube.com', 'youtu.be',
+          'pinterest.com', 'facebook.com', 'twitter.com', 'x.com',
+          'reddit.com', 'tumblr.com', 'snapchat.com',
+          'images.google.com', 'google.com/images'
+        ]
+        
+        // Filter to only valid HTTP links AND exclude blocked domains
+        const validLinks = links.filter((link: any) => {
+          if (typeof link !== 'string' || !link.startsWith('http')) return false
+          
+          // Check if link contains any blocked domain
+          const linkLower = link.toLowerCase()
+          const isBlocked = blockedDomains.some(domain => linkLower.includes(domain))
+          
+          if (isBlocked) {
+            console.log(`🚫 Blocked social media link: ${link.substring(0, 50)}...`)
+            return false
+          }
+          
+          return true
+        })
         
         if (validLinks.length > 0) {
           // Debug: Check first organic result structure
