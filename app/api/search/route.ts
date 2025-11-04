@@ -221,7 +221,8 @@ CRITICAL SELECTION RULES (in order of priority):
 4. Accept ANY e-commerce/product website regardless of brand recognition
 5. Accept unknown brands, boutique stores, international sites
 6. Accept: Amazon, Zara, H&M, Nordstrom, Uniqlo, Musinsa, YesStyle, SHEIN, Etsy, Depop, Poshmark, vintage stores, Korean fashion sites, ANY online retailer
-7. ONLY ignore: Instagram, Pinterest, Facebook, Google Images, image CDNs, non-product pages, WRONG GARMENT CATEGORIES
+7. 🚫 REJECT these sites (NOT product pages): Instagram, TikTok, YouTube, Pinterest, Facebook, Twitter/X, Reddit, Google Images, image CDNs, blogs, news sites, wikis, non-product pages
+8. If you cannot find 3 VALID PRODUCT LINKS, return fewer than 3. NEVER include non-product sites just to fill the quota.
 
 SELECTION PROCESS:
 - These results are aggregated from 2 cropped image runs + 2 full image runs for better coverage
@@ -247,7 +248,11 @@ ${JSON.stringify(organicResults, null, 2)}
 
 Find the TOP 3 BEST MATCHES based on visual similarity and return them.
 Prioritize variety: include different retailers/stores when possible to give users multiple purchasing options.
-Return JSON: {"${resultKey}": ["https://url1.com/product1", "https://url2.com/product2", "https://url3.com/product3"]} or {"${resultKey}": []} if NO product links exist.`
+
+🚫 IMPORTANT: Return ONLY actual e-commerce product links. If you find fewer than 3 valid product links, return only what you found (1 or 2 links is fine). 
+NEVER include social media (TikTok, Instagram, YouTube, Pinterest), blogs, or non-product sites just to reach 3 results.
+
+Return JSON: {"${resultKey}": ["https://url1.com/product1", "https://url2.com/product2"]} (1-3 links) or {"${resultKey}": []} if NO valid product links exist.`
 
         const openai = getOpenAIClient()
         const completion = await openai.chat.completions.create({

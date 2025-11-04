@@ -164,8 +164,8 @@ class OptimizedFashionCropPipeline:
                  api_key: Optional[str] = None, 
                  gd_config: Optional[str] = "GroundingDINO/groundingdino/config/GroundingDINO_SwinT_OGC.py", 
                  gd_weights: Optional[str] = "data/weights/groundingdino_swint_ogc.pth", 
-                 gd_box_thresh: float = 0.2, 
-                 gd_text_thresh: float = 0.2, 
+                 gd_box_thresh: float = 0.15,  # Lowered from 0.2 to catch more items (especially in screenshots)
+                 gd_text_thresh: float = 0.15,  # Lowered from 0.2 to catch more items
                  output_dir: str = "./out_optimized",
                  iou_threshold: float = 0.5,
                  use_sam2: bool = True):
