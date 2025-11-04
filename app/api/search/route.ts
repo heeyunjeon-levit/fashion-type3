@@ -73,11 +73,11 @@ export async function POST(request: NextRequest) {
         const allFullImageResults: any[] = []
         for (let i = 0; i < fullImageResponses.length; i++) {
           if (!fullImageResponses[i].ok) {
-            console.log(`   ❌ Full image run ${i + 1} failed`)
+            console.log(`   ❌ Full image search failed`)
             continue
           }
           const fullImageData = await fullImageResponses[i].json()
-          console.log(`   ✅ Full image run ${i + 1} returned ${fullImageData.organic?.length || 0} results`)
+          console.log(`   ✅ Full image search returned ${fullImageData.organic?.length || 0} results`)
           
           if (fullImageData.organic) {
             allFullImageResults.push(...fullImageData.organic)
