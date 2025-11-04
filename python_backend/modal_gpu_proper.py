@@ -41,10 +41,10 @@ image = (
         "setuptools",
         "numpy==1.24.3",  # NumPy 1.x for compatibility with older PyTorch/TorchVision
     )
-    # Install PyTorch 2.0.1 with CUDA 11.8 (compatible with Transformers and GroundingDINO)
+    # Install PyTorch 2.1.2 with CUDA 11.8 (compatible with Transformers and GroundingDINO)
     .pip_install(
-        "torch==2.0.1",
-        "torchvision==0.15.2",
+        "torch==2.1.2",
+        "torchvision==0.16.2",
         extra_index_url="https://download.pytorch.org/whl/cu118"
     )
     # Install other dependencies
@@ -59,19 +59,28 @@ image = (
         "python-dotenv",
         "supabase",
         "requests",
+        "httpx",  # Better DNS handling than requests
     )
     # Verify CUDA is available before compiling GroundingDINO (v2)
     .run_commands(
         "which nvcc && nvcc --version",  # Check nvcc and show CUDA version
     )
-    # Clone GroundingDINO
-    .run_commands(
-        "cd /root && git clone https://github.com/IDEA-Research/GroundingDINO.git",
+    # Install GroundingDINO dependencies with compatible versions BEFORE compiling
+    .pip_install(
+        "transformers==4.35.2",  # Pin to version compatible with PyTorch 2.1.2
+        "timm==0.9.12",  # Pin timm version
+        "addict",
+        "yapf",
+        "pycocotools",
     )
-    # Compile GroundingDINO from source (THE KEY STEP)
+    # Clone and compile GroundingDINO from source (THE KEY STEP)
     # CRITICAL: Export CUDA_HOME before compilation so it builds with CUDA support
+    # Must be done in single step to ensure directory exists
     .run_commands(
-        "export CUDA_HOME=/usr/local/cuda && echo 'CUDA_HOME is set to:' $CUDA_HOME && cd /root/GroundingDINO && python -m pip install -e .",
+        "cd /root && git clone https://github.com/IDEA-Research/GroundingDINO.git && "
+        "cd /root/GroundingDINO && "
+        "export CUDA_HOME=/usr/local/cuda && echo 'CUDA_HOME is set to:' $CUDA_HOME && "
+        "python -m pip install -e . --no-deps",  # Install without upgrading deps
     )
     # Fix NumPy version after GroundingDINO installation (it upgrades to 2.x)
     .pip_install("numpy==1.24.3")
@@ -85,7 +94,9 @@ image = (
         "python -c 'import numpy; print(\"✅ NumPy version:\", numpy.__version__)'",
         "python -c 'import torch; print(\"✅ CUDA available:\", torch.cuda.is_available()); print(\"✅ CUDA version:\", torch.version.cuda); print(\"✅ PyTorch version:\", torch.__version__)'",
         "python -c 'import groundingdino; print(\"✅ GroundingDINO imported successfully\")'",
-        "echo '✅ Build timestamp: 2025-11-03-17:05-verify-numpy'",  # Cache bust
+        "cat /etc/resolv.conf",  # Check DNS configuration
+        "nslookup google.com || echo 'DNS test failed'",  # Test DNS resolution
+        "echo '✅ Build timestamp: 2025-11-03-18:40-base64-support'",  # Cache bust
     )
     # Add the backend code into the image (with updated GroundingDINO paths)
     .add_local_dir(backend_dir, "/root/python_backend")
@@ -99,7 +110,7 @@ image = (
     timeout=600,
     volumes={"/cache": model_volume},
     secrets=[modal.Secret.from_name("fashion-api-keys")],
-    scaledown_window=600,
+    scaledown_window=60,  # Temporarily 1 min for testing
 )
 @modal.concurrent(max_inputs=10)
 @modal.asgi_app()

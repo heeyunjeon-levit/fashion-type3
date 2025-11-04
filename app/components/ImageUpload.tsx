@@ -4,7 +4,7 @@ import { useState, useRef } from 'react'
 import imageCompression from 'browser-image-compression'
 
 interface ImageUploadProps {
-  onImageUploaded: (imageUrl: string) => void
+  onImageUploaded: (imageUrl: string, imageFile: File) => void
 }
 
 export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
@@ -150,7 +150,8 @@ export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
       }
 
       console.log('✅ Upload successful:', data.imageUrl)
-      onImageUploaded(data.imageUrl)
+      // Pass both URL (for display) and File (for base64 encoding in Cropping)
+      onImageUploaded(data.imageUrl, finalImageToUpload)
     } catch (error) {
       console.error('Error uploading image:', error)
       const errorMessage = error instanceof Error ? error.message : 'Unknown error'

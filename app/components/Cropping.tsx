@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 
 interface CroppingProps {
   imageUrl: string
+  imageFile: File
   categories: string[]
   onCropped: (croppedImages: Record<string, string>) => void
 }
@@ -17,7 +18,7 @@ const categoryLabels: Record<string, string> = {
   dress: '드레스',
 }
 
-export default function Cropping({ imageUrl, categories, onCropped }: CroppingProps) {
+export default function Cropping({ imageUrl, imageFile, categories, onCropped }: CroppingProps) {
   const [croppedImages, setCroppedImages] = useState<Record<string, string>>({})
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isCropping, setIsCropping] = useState(false)
@@ -48,6 +49,19 @@ export default function Cropping({ imageUrl, categories, onCropped }: CroppingPr
       
       console.log(`🔗 Using backend: ${PYTHON_CROPPER_URL}`)
       
+      // Convert image File to base64
+      const fileToBase64 = (file: File): Promise<string> => {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader()
+          reader.readAsDataURL(file)
+          reader.onload = () => resolve(reader.result as string)
+          reader.onerror = error => reject(error)
+        })
+      }
+
+      const imageBase64 = await fileToBase64(imageFile)
+      console.log(`📦 Image converted to base64 (${(imageBase64.length / 1024).toFixed(2)} KB)`)
+
       const cropPromises = Object.entries(categoryCounts).map(async ([category, count]) => {
         console.log(`🔄 Cropping ${category} ×${count}...`)
 
@@ -56,7 +70,7 @@ export default function Cropping({ imageUrl, categories, onCropped }: CroppingPr
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              imageUrl,
+              imageBase64,  // Send base64 instead of URL (bypasses DNS!)
               categories: [category],
               count: count, // Tell backend how many instances to find
             }),
