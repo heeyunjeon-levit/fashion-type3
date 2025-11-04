@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 
 interface CroppingProps {
   imageUrl: string
-  imageFile: File
+  imageFile?: File  // Optional - not needed when using backend cropper
   categories: string[]
   onCropped: (croppedImages: Record<string, string>) => void
 }
@@ -57,7 +57,7 @@ export default function Cropping({ imageUrl, imageFile, categories, onCropped }:
         count: 0
       }
 
-      if (USE_BASE64) {
+      if (USE_BASE64 && imageFile) {
         // GPU mode: Convert image File to base64 (bypasses DNS issues)
         const fileToBase64 = (file: File): Promise<string> => {
           return new Promise((resolve, reject) => {
@@ -72,7 +72,7 @@ export default function Cropping({ imageUrl, imageFile, categories, onCropped }:
         console.log(`📦 Image converted to base64 (${(imageBase64.length / 1024).toFixed(2)} KB)`)
         requestBody.imageBase64 = imageBase64
       } else {
-        // CPU mode: Use URL directly (faster, smaller payload)
+        // Use URL directly (works with both CPU and GPU backends)
         console.log(`🔗 Using image URL: ${imageUrl}`)
         requestBody.imageUrl = imageUrl
       }
