@@ -200,36 +200,116 @@ export async function POST(request: NextRequest) {
           ? [itemDescription, ...(categorySearchTerms[categoryKey] || [categoryKey])]
           : (categorySearchTerms[categoryKey] || [categoryKey])
         
-        // For accessories, determine specific sub-type to filter correctly
-        let specificAccessoryType = null
-        if (categoryKey === 'accessory' && itemDescription) {
-          const desc = itemDescription.toLowerCase()
-          if (desc.includes('ring')) specificAccessoryType = 'ring'
-          else if (desc.includes('necklace')) specificAccessoryType = 'necklace'
-          else if (desc.includes('earring')) specificAccessoryType = 'earrings'
-          else if (desc.includes('bracelet')) specificAccessoryType = 'bracelet'
-          else if (desc.includes('watch')) specificAccessoryType = 'watch'
-          else if (desc.includes('hat') || desc.includes('cap') || desc.includes('beanie')) specificAccessoryType = 'headwear'
-          else if (desc.includes('belt')) specificAccessoryType = 'belt'
-          else if (desc.includes('scarf')) specificAccessoryType = 'scarf'
-          else if (desc.includes('sunglasses') || desc.includes('glasses')) specificAccessoryType = 'eyewear'
-        }
+        // Determine specific sub-type for ALL categories to filter correctly
+        let specificSubType = null
+        let subTypeExclusion = ''
         
-        // Build specific exclusion for accessories
-        let accessoryExclusion = ''
-        if (categoryKey === 'accessory' && specificAccessoryType) {
-          const accessoryTypes = {
-            'ring': 'necklaces, earrings, bracelets, watches, hats, belts, scarves, sunglasses',
-            'necklace': 'rings, earrings, bracelets, watches, hats, belts, scarves, sunglasses',
-            'earrings': 'rings, necklaces, bracelets, watches, hats, belts, scarves, sunglasses',
-            'bracelet': 'rings, necklaces, earrings, watches, hats, belts, scarves, sunglasses',
-            'watch': 'rings, necklaces, earrings, bracelets, hats, belts, scarves, sunglasses',
-            'headwear': 'rings, necklaces, earrings, bracelets, watches, belts, scarves, sunglasses',
-            'belt': 'rings, necklaces, earrings, bracelets, watches, hats, scarves, sunglasses',
-            'scarf': 'rings, necklaces, earrings, bracelets, watches, hats, belts, sunglasses',
-            'eyewear': 'rings, necklaces, earrings, bracelets, watches, hats, belts, scarves'
+        if (itemDescription) {
+          const desc = itemDescription.toLowerCase()
+          
+          // TOPS sub-types
+          if (categoryKey === 'tops') {
+            if (desc.includes('jacket') || desc.includes('coat')) specificSubType = 'jacket/coat'
+            else if (desc.includes('shirt') || desc.includes('blouse')) specificSubType = 'shirt/blouse'
+            else if (desc.includes('sweater') || desc.includes('pullover') || desc.includes('knit')) specificSubType = 'sweater/knit'
+            else if (desc.includes('hoodie') || desc.includes('sweatshirt')) specificSubType = 'hoodie/sweatshirt'
+            else if (desc.includes('cardigan')) specificSubType = 'cardigan'
+            else if (desc.includes('blazer')) specificSubType = 'blazer'
+            else if (desc.includes('vest')) specificSubType = 'vest'
+            
+            const topsExclusions = {
+              'jacket/coat': 'shirts, blouses, sweaters, hoodies, cardigans, t-shirts, tanks',
+              'shirt/blouse': 'jackets, coats, sweaters, hoodies, cardigans (button-up shirts only)',
+              'sweater/knit': 'jackets, coats, shirts, blouses, hoodies (pullover sweaters only)',
+              'hoodie/sweatshirt': 'jackets, coats, shirts, sweaters, cardigans, blazers',
+              'cardigan': 'jackets, coats, shirts, sweaters, hoodies, blazers (open-front cardigans only)',
+              'blazer': 'jackets, coats, shirts, sweaters, hoodies, cardigans (structured blazers only)',
+              'vest': 'jackets, coats, shirts, sweaters, hoodies, cardigans (sleeveless vests only)'
+            }
+            if (specificSubType) subTypeExclusion = `- ⚠️ CRITICAL: You are searching for ${specificSubType} ONLY. ❌ EXCLUDE: ${topsExclusions[specificSubType]}`
           }
-          accessoryExclusion = `- ⚠️ CRITICAL: You are searching for ${specificAccessoryType} ONLY. ❌ EXCLUDE: ${accessoryTypes[specificAccessoryType]}, clothing, shoes, bags`
+          
+          // BOTTOMS sub-types
+          else if (categoryKey === 'bottoms') {
+            if (desc.includes('skirt')) specificSubType = 'skirt'
+            else if (desc.includes('short')) specificSubType = 'shorts'
+            else if (desc.includes('jean')) specificSubType = 'jeans'
+            else if (desc.includes('pant') || desc.includes('trouser') || desc.includes('slack')) specificSubType = 'pants/trousers'
+            
+            const bottomsExclusions = {
+              'skirt': 'pants, jeans, shorts, trousers, slacks (skirts only, NOT pants)',
+              'shorts': 'pants, jeans, skirts, trousers, slacks (shorts only, NOT long pants)',
+              'jeans': 'skirts, shorts, dress pants, slacks (denim jeans only)',
+              'pants/trousers': 'skirts, shorts (full-length pants only, NOT shorts or skirts)'
+            }
+            if (specificSubType) subTypeExclusion = `- ⚠️ CRITICAL: You are searching for ${specificSubType} ONLY. ❌ EXCLUDE: ${bottomsExclusions[specificSubType]}`
+          }
+          
+          // SHOES sub-types
+          else if (categoryKey === 'shoes') {
+            if (desc.includes('boot')) specificSubType = 'boots'
+            else if (desc.includes('sneaker') || desc.includes('trainer')) specificSubType = 'sneakers'
+            else if (desc.includes('sandal')) specificSubType = 'sandals'
+            else if (desc.includes('heel') || desc.includes('pump')) specificSubType = 'heels/pumps'
+            else if (desc.includes('flat') || desc.includes('ballet')) specificSubType = 'flats'
+            else if (desc.includes('loafer') || desc.includes('moccasin')) specificSubType = 'loafers'
+            else if (desc.includes('oxford') || desc.includes('derby')) specificSubType = 'oxfords'
+            
+            const shoesExclusions = {
+              'boots': 'sneakers, sandals, heels, flats, loafers (boots only, NOT low-top shoes)',
+              'sneakers': 'boots, sandals, heels, flats, dress shoes (sneakers/trainers only)',
+              'sandals': 'boots, sneakers, heels, flats, closed-toe shoes (open-toe sandals only)',
+              'heels/pumps': 'boots, sneakers, sandals, flats (high heels/pumps only)',
+              'flats': 'boots, sneakers, heels, sandals (flat shoes only, NO heels)',
+              'loafers': 'boots, sneakers, sandals, heels (slip-on loafers only)',
+              'oxfords': 'boots, sneakers, sandals, heels (lace-up oxfords only)'
+            }
+            if (specificSubType) subTypeExclusion = `- ⚠️ CRITICAL: You are searching for ${specificSubType} ONLY. ❌ EXCLUDE: ${shoesExclusions[specificSubType]}`
+          }
+          
+          // BAGS sub-types
+          else if (categoryKey === 'bag') {
+            if (desc.includes('backpack')) specificSubType = 'backpack'
+            else if (desc.includes('tote')) specificSubType = 'tote bag'
+            else if (desc.includes('clutch')) specificSubType = 'clutch'
+            else if (desc.includes('crossbody') || desc.includes('shoulder')) specificSubType = 'shoulder/crossbody bag'
+            else if (desc.includes('handbag') || desc.includes('purse')) specificSubType = 'handbag'
+            
+            const bagsExclusions = {
+              'backpack': 'totes, clutches, handbags, purses, shoulder bags (backpacks only)',
+              'tote bag': 'backpacks, clutches, handbags, shoulder bags (large tote bags only)',
+              'clutch': 'backpacks, totes, handbags, shoulder bags (small clutches only)',
+              'shoulder/crossbody bag': 'backpacks, totes, clutches (shoulder/crossbody bags only)',
+              'handbag': 'backpacks, totes, clutches (structured handbags only)'
+            }
+            if (specificSubType) subTypeExclusion = `- ⚠️ CRITICAL: You are searching for ${specificSubType} ONLY. ❌ EXCLUDE: ${bagsExclusions[specificSubType]}`
+          }
+          
+          // ACCESSORIES sub-types
+          else if (categoryKey === 'accessory') {
+            if (desc.includes('ring')) specificSubType = 'ring'
+            else if (desc.includes('necklace')) specificSubType = 'necklace'
+            else if (desc.includes('earring')) specificSubType = 'earrings'
+            else if (desc.includes('bracelet')) specificSubType = 'bracelet'
+            else if (desc.includes('watch')) specificSubType = 'watch'
+            else if (desc.includes('hat') || desc.includes('cap') || desc.includes('beanie')) specificSubType = 'headwear'
+            else if (desc.includes('belt')) specificSubType = 'belt'
+            else if (desc.includes('scarf')) specificSubType = 'scarf'
+            else if (desc.includes('sunglasses') || desc.includes('glasses')) specificSubType = 'eyewear'
+            
+            const accessoryExclusions = {
+              'ring': 'necklaces, earrings, bracelets, watches, hats, belts, scarves, sunglasses',
+              'necklace': 'rings, earrings, bracelets, watches, hats, belts, scarves, sunglasses',
+              'earrings': 'rings, necklaces, bracelets, watches, hats, belts, scarves, sunglasses',
+              'bracelet': 'rings, necklaces, earrings, watches, hats, belts, scarves, sunglasses',
+              'watch': 'rings, necklaces, earrings, bracelets, hats, belts, scarves, sunglasses',
+              'headwear': 'rings, necklaces, earrings, bracelets, watches, belts, scarves, sunglasses',
+              'belt': 'rings, necklaces, earrings, bracelets, watches, hats, scarves, sunglasses',
+              'scarf': 'rings, necklaces, earrings, bracelets, watches, hats, belts, sunglasses',
+              'eyewear': 'rings, necklaces, earrings, bracelets, watches, hats, belts, scarves'
+            }
+            if (specificSubType) subTypeExclusion = `- ⚠️ CRITICAL: You are searching for ${specificSubType} ONLY. ❌ EXCLUDE: ${accessoryExclusions[specificSubType]}, clothing, shoes, bags`
+          }
         }
         
         const prompt = `You are analyzing aggregated image search results from multiple runs for ${categoryLabels[categoryKey]}.
@@ -239,12 +319,12 @@ The original cropped image shows: ${searchTerms.join(', ')}
 🚨 CRITICAL CATEGORY FILTER:
 - You are searching for: ${categoryLabels[categoryKey]}
 - ONLY return products that match this exact category type
-- ${categoryKey === 'tops' ? '❌ EXCLUDE: pants, shorts, skirts, dresses, shoes, bags, accessories' : ''}
-- ${categoryKey === 'bottoms' ? '❌ EXCLUDE: shirts, jackets, hoodies, sweaters, dresses, shoes, bags, accessories' : ''}
-- ${categoryKey === 'shoes' ? '❌ EXCLUDE: clothing items, bags, accessories' : ''}
-- ${categoryKey === 'bag' ? '❌ EXCLUDE: clothing items, shoes, accessories (except bags)' : ''}
-- ${categoryKey === 'accessory' && !specificAccessoryType ? '❌ EXCLUDE: clothing items, shoes, bags' : ''}
-- ${accessoryExclusion}
+${subTypeExclusion ? subTypeExclusion : ''}
+- ${categoryKey === 'tops' && !specificSubType ? '❌ EXCLUDE: pants, shorts, skirts, dresses, shoes, bags, accessories' : ''}
+- ${categoryKey === 'bottoms' && !specificSubType ? '❌ EXCLUDE: shirts, jackets, hoodies, sweaters, dresses, shoes, bags, accessories' : ''}
+- ${categoryKey === 'shoes' && !specificSubType ? '❌ EXCLUDE: clothing items, bags, accessories' : ''}
+- ${categoryKey === 'bag' && !specificSubType ? '❌ EXCLUDE: clothing items, shoes, accessories (except bags)' : ''}
+- ${categoryKey === 'accessory' && !specificSubType ? '❌ EXCLUDE: clothing items, shoes, bags' : ''}
 - ${categoryKey === 'dress' ? '❌ EXCLUDE: shirts, pants, shorts, shoes, bags, accessories' : ''}
 
 CRITICAL SELECTION RULES (in order of priority):
@@ -268,9 +348,9 @@ SELECTION PROCESS:
 
 TITLE VALIDATION RULES (CRITICAL):
 1. ✅ READ the "title" field carefully - it tells you what the product actually is
-2. ✅ VERIFY the title mentions the CORRECT${specificAccessoryType ? ` ${specificAccessoryType.toUpperCase()}` : ' CATEGORY'} (${searchTerms[0]})
+2. ✅ VERIFY the title mentions the CORRECT${specificSubType ? ` ${specificSubType.toUpperCase()}` : ' CATEGORY'} (${searchTerms[0]})
 3. ✅ CHECK the title mentions matching COLOR/STYLE details
-4. ❌ REJECT if title describes wrong${specificAccessoryType ? ` accessory type (e.g., ${specificAccessoryType} search should NOT return necklaces)` : ' category'} (even if link looks good)
+4. ❌ REJECT if title describes wrong${specificSubType ? ` item type (e.g., ${specificSubType} search should NOT return other types)` : ' category'} (even if link looks good)
 5. ❌ REJECT if title is generic ("Shop now", "Homepage", "Category")
 
 Matching criteria (in order):
