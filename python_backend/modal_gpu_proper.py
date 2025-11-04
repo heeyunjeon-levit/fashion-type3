@@ -73,7 +73,7 @@ image = (
         "python -c 'import groundingdino; print(\"✅ GroundingDINO imported successfully\")'",
         "cat /etc/resolv.conf",  # Check DNS configuration
         "nslookup google.com || echo 'DNS test failed'",  # Test DNS resolution
-        "echo '✅ Build timestamp: 2025-11-03-19:20-groundingdino-first'",  # Cache bust
+        "echo '✅ Build timestamp: 2025-11-03-19:35-with-optional-fields'",  # Cache bust
     )
     # Add the backend code into the image (with updated GroundingDINO paths)
     .add_local_dir(backend_dir, "/root/python_backend")

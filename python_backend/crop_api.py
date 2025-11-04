@@ -182,9 +182,9 @@ def get_cropper():
     return _cropper_instance
 
 
-def crop_image_from_url(image_url: str, categories: List[str], count: int = 1) -> str:
+def crop_image_from_url(image_url: str = None, image_base64: str = None, categories: List[str] = None, count: int = 1) -> str:
     """
-    Crop image from URL based on categories.
+    Crop image from URL or base64 based on categories.
     
     Args:
         image_url: Public URL of the image
@@ -195,7 +195,12 @@ def crop_image_from_url(image_url: str, categories: List[str], count: int = 1) -
         URL of the cropped image (uploaded to imgbb, or original if failed)
     """
     start_time = time.time()
-    print(f"📥 Processing image from URL: {image_url}")
+    
+    # Validate input
+    if not image_url and not image_base64:
+        raise ValueError("Either image_url or image_base64 must be provided")
+    
+    print(f"📥 Processing image from {'URL' if image_url else 'base64'}: {image_url if image_url else '[base64 data]'}")
     print(f"📋 Categories: {categories}")
     print(f"📊 Requested count: {count}")
     
@@ -203,8 +208,8 @@ def crop_image_from_url(image_url: str, categories: List[str], count: int = 1) -
     t0 = time.time()
     cropper = get_cropper()
     if cropper is None:
-        print("⚠️ Cropper not available, returning original URL")
-        return image_url
+        print("⚠️ Cropper not available, returning original URL or None")
+        return image_url if image_url else None
     print(f"⏱️  Cropper init: {time.time() - t0:.2f}s")
     
     # Convert categories to simple generic terms for GPT-4o
@@ -251,17 +256,32 @@ def crop_image_from_url(image_url: str, categories: List[str], count: int = 1) -
                 output_dir=output_dir
             )
         else:
-            # Local mode: download first
+            # Local mode: download or decode first
             t0_download = time.time()
-            print("⬇️ Downloading image...")
-            response = requests.get(image_url, timeout=30)
-            response.raise_for_status()
+            
+            if image_base64:
+                # Base64 mode - decode directly (bypasses DNS issues!)
+                print("🔓 Decoding base64 image...")
+                try:
+                    # Remove data URL prefix if present (e.g., "data:image/jpeg;base64,")
+                    if ',' in image_base64:
+                        image_base64 = image_base64.split(',')[1]
+                    image_content = base64.b64decode(image_base64)
+                    print(f"✅ Decoded base64 ({len(image_content)} bytes)")
+                except Exception as e:
+                    raise ValueError(f"Failed to decode base64 image: {e}")
+            else:
+                # URL mode - download
+                print("⬇️ Downloading image from URL...")
+                response = requests.get(image_url, timeout=30)
+                response.raise_for_status()
+                image_content = response.content
             
             # Save to temporary file  
             os.makedirs(tempfile.gettempdir() + '/fashion_crop', exist_ok=True)
-            temp_path = os.path.join(tempfile.gettempdir(), 'fashion_crop', f'{hash(image_url)}.jpg')
+            temp_path = os.path.join(tempfile.gettempdir(), 'fashion_crop', f'{hash(image_url if image_url else image_base64[:100])}.jpg')
             with open(temp_path, 'wb') as f:
-                f.write(response.content)
+                f.write(image_content)
             
             print(f"✅ Image saved to: {temp_path}")
             print(f"⏱️  Download: {time.time() - t0_download:.2f}s")

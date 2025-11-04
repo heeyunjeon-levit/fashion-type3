@@ -36,7 +36,8 @@ app.add_middleware(
 
 
 class CropRequest(BaseModel):
-    imageUrl: str
+    imageUrl: Optional[str] = None  # URL to image (optional if imageBase64 provided)
+    imageBase64: Optional[str] = None  # Base64 encoded image (optional if imageUrl provided)
     categories: List[str]
     count: int = 1  # Number of instances to find
 
@@ -67,9 +68,13 @@ async def crop_image(request: CropRequest):
         Cropped image URL
     """
     try:
+        # Validate input
+        if not request.imageUrl and not request.imageBase64:
+            raise ValueError("Either imageUrl or imageBase64 must be provided")
+        
         print(f"\n{'='*80}")
         print(f"📥 CROP REQUEST RECEIVED")
-        print(f"   Image URL: {request.imageUrl}")
+        print(f"   Image URL: {request.imageUrl if request.imageUrl else '[base64 provided]'}")
         print(f"   Categories: {request.categories}")
         print(f"   Count: {request.count}")
         print(f"   CROPPER_AVAILABLE: {CROPPER_AVAILABLE}")
@@ -78,9 +83,10 @@ async def crop_image(request: CropRequest):
         
         if CROPPER_AVAILABLE and crop_image_from_url:
             print("✅ Cropper available, calling crop_image_from_url...")
-            # Call the actual cropper
+            # Call the actual cropper (handles both URL and base64)
             result = crop_image_from_url(
                 image_url=request.imageUrl,
+                image_base64=request.imageBase64,
                 categories=request.categories,
                 count=request.count
             )
