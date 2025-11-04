@@ -273,7 +273,7 @@ Return JSON: {"${resultKey}": ["https://url1.com/product1", "https://url2.com/pr
 
         const openai = getOpenAIClient()
         const completion = await openai.chat.completions.create({
-          model: 'gpt-4o-mini',  // Fast & efficient for structured extraction (was: gpt-4-turbo-preview)
+          model: 'gpt-4o',  // Use GPT-4o for better instruction following (mini was ignoring filters)
           messages: [
             {
               role: 'system',
