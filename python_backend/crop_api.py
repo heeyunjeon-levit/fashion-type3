@@ -132,11 +132,11 @@ def get_cropper():
         print("🔧 Initializing CustomItemCropper (local)...")
         from custom_item_cropper import CustomItemCropper
         
-        # Check if we're on Modal (GroundingDINO in /root) or local
-        if os.path.exists("/root/GroundingDINO"):
-            # Modal GPU deployment
-            config_path = "/root/GroundingDINO/groundingdino/config/GroundingDINO_SwinT_OGC.py"
-            weights_path = "/root/GroundingDINO/weights/groundingdino_swint_ogc.pth"
+        # Check if we're on Modal (GroundingDINO in /opt) or local
+        if os.path.exists("/opt/GroundingDINO"):
+            # Modal GPU deployment (new path using official PyTorch image)
+            config_path = "/opt/GroundingDINO/groundingdino/config/GroundingDINO_SwinT_OGC.py"
+            weights_path = "/opt/GroundingDINO/weights/groundingdino_swint_ogc.pth"
             sam2_config = "sam2_hiera_l.yaml"
             sam2_weights = "data/weights/sam2_hiera_large.pt"  # Not used in GPU
         else:
