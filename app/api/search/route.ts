@@ -566,6 +566,14 @@ Return JSON: {"${resultKey}": ["https://url1.com/product1", "https://url2.com/pr
           'images.google.com', 'google.com/images'
         ]
         
+        // Problematic URL patterns (geo-restricted, frequently broken links)
+        const problematicPatterns = [
+          '/sq/', '/al/', '/xk/',  // Albania/Kosovo region codes (often geo-restricted)
+          '/rs/', '/ba/', '/mk/',  // Serbia/Bosnia/Macedonia (geo-restricted)
+          '/test/', '/staging/', '/dev.',  // Test/staging environments
+          'localhost', '127.0.0.1',  // Local development
+        ]
+        
         // POST-FILTER: Final safety check after GPT (backup layer)
         const validLinks = links.filter((link: any) => {
           if (typeof link !== 'string' || !link.startsWith('http')) return false
