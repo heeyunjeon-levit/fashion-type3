@@ -1,0 +1,35 @@
+[
+  {
+    "filename": "0173bf6501b1-IMG_6324.png",
+    "phone": "'+821077992291",
+    "requested_categories": "상의, 하의",
+    "status": "success",
+    "upload_time": "1.46",
+    "crop_time": "56.41",
+    "search_time": "16.45",
+    "total_time": "74.32",
+    "cropped_urls": {
+      "tops": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/4943890150012931135_item1_white_shorts_crop_1762255776390.jpg?"
+    },
+    "search_results": {
+      "tops": [
+        {
+          "link": "https://twitter.com/mina777777777/status/1033952273892687872",
+          "thumbnail": "https://pbs.twimg.com/profile_images/1010038844547186690/fu-kUG7t_400x400.jpg",
+          "title": "미나 on X: \"핫팬츠 딱맞아서 여유 1도없이 붙는거 입을때 허벅지 안쪽살 튀어나오는거 난 괜찮은데 은근 신경 쓰인다 뺄 생각 1도 없는데😅😢\" / X"
+        },
+        {
+          "link": "https://in.pinterest.com/eli26el/comfrt-product-focused-inspo/",
+          "thumbnail": "https://i.pinimg.com/236x/50/2e/a9/502ea9660d52f925a61caf61325ae8b2.jpg",
+          "title": "38 Comfrt product focused inspo ideas to save today | clothing photography, socks photoshoot, socks photography and more"
+        },
+        {
+          "link": "https://blog.naver.com/autumnchoi53/221996300379?viewType=pc",
+          "thumbnail": "https://mblogthumb-phinf.pstatic.net/MjAyMDA2MTBfMjIw/MDAxNTkxNzcyOTYyNjc0.cANa_63LHlw2fw__8O03rintyLVgKid53HxDMZfJj9kg.P3tseY3jFS3gIpUIpamvMKYPXG_Ul-eFYuLVCOfDsVog.JPEG.autumnchoi53/IMG_6265.jpg?type=w800",
+          "title": "레이저제모 금액과 레이저제모 화상 : 네이버 블로그"
+        }
+      ]
+    },
+    "errors": []
+  }
+]

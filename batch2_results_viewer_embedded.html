@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batch2 Test Results Viewer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+        }
+        
+        header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .stat-card {
+            background: rgba(255,255,255,0.2);
+            padding: 15px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        
+        .filters {
+            padding: 20px 30px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .filter-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        
+        .filter-btn {
+            padding: 8px 16px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .filter-btn.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .filter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+        
+        .search-box {
+            flex: 1;
+            min-width: 300px;
+            padding: 10px 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        
+        .search-box:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .results-container {
+            padding: 30px;
+        }
+        
+        .result-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+        
+        .result-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        
+        .result-card.failed {
+            border-color: #dc3545;
+            background: #fff5f5;
+        }
+        
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .result-title {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .filename {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 8px;
+            word-break: break-all;
+        }
+        
+        .metadata {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            font-size: 14px;
+            color: #718096;
+        }
+        
+        .metadata-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .status-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-failed {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .timing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 12px;
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .timing-item {
+            text-align: center;
+        }
+        
+        .timing-label {
+            font-size: 11px;
+            color: #718096;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+        
+        .timing-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2d3748;
+        }
+        
+        .images-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+        
+        .images-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .image-container {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            border: 2px solid #e9ecef;
+        }
+        
+        .image-container.original {
+            border-color: #667eea;
+            grid-column: 1 / -1;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .image-label {
+            font-size: 12px;
+            color: #718096;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .image-label.original {
+            color: #667eea;
+        }
+        
+        .preview-image {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: contain;
+            border-radius: 6px;
+            background: #f8f9fa;
+            cursor: pointer;
+        }
+        
+        .preview-image:hover {
+            opacity: 0.9;
+        }
+        
+        .links-section {
+            margin-top: 20px;
+        }
+        
+        .category-results {
+            margin-bottom: 20px;
+        }
+        
+        .category-header {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        .link-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            gap: 12px;
+        }
+        
+        .link-thumbnail {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 6px;
+            flex-shrink: 0;
+            background: #e9ecef;
+        }
+        
+        .link-content {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .link-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: #2d3748;
+            margin-bottom: 4px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .link-url {
+            font-size: 12px;
+            color: #667eea;
+            text-decoration: none;
+            word-break: break-all;
+            display: block;
+        }
+        
+        .link-url:hover {
+            text-decoration: underline;
+        }
+        
+        .no-results {
+            padding: 20px;
+            text-align: center;
+            color: #718096;
+            font-style: italic;
+        }
+        
+        .error-message {
+            padding: 15px;
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            color: #856404;
+            margin-top: 15px;
+        }
+        
+        /* Modal for full-size image */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .result-header {
+                flex-direction: column;
+            }
+            
+            .timing-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .images-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 Batch2 Test Results</h1>
+            <p id="subtitle">Loading results...</p>
+            <div class="stats-grid" id="stats-grid"></div>
+        </header>
+        
+        <div class="filters">
+            <div class="filter-group">
+                <span style="font-weight: 600; color: #495057;">Status:</span>
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="success">Success</button>
+                <button class="filter-btn" data-filter="failed">Failed</button>
+            </div>
+            <input type="text" class="search-box" id="search-box" placeholder="🔍 Search by filename or phone number...">
+        </div>
+        
+        <div class="results-container" id="results-container"></div>
+    </div>
+    
+    <div class="modal" id="imageModal">
+        <span class="modal-close" onclick="closeModal()">&times;</span>
+        <img class="modal-content" id="modalImage">
+    </div>
+    
+    <script>
+        const EMBEDDED_DATA = [{"filename":"0173bf6501b1-IMG_6324.png","phone":"'+821077992291","requested_categories":"상의, 하의","status":"success","upload_time":"1.64","crop_time":"35.97","search_time":"35.72","total_time":"73.34","cropped_urls":{"tops":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_red_knit_zip___up_hoodie_1762275950704.jpg?"},"search_results":{"tops":[{"link":"https://www.chicfox.co.kr/m/product.html?branduid=513292&search=&xcode=001&mcode=001&scode=&special=2&GfDT=bm56W1g=","thumbnail":"https://chicfox.cdn.smart-img.com/jjin/2025/0804/01/n800_02.jpg","title":"시크폭스 - [FRANCAIS][보풀제로] 하프집업 후드 니트_53KN737"},{"link":"https://www.chicfox.co.kr/m/product.html?branduid=513292&search=&xcode=001&mcode=001&scode=&special=6&GfDT=bmt1W10=","thumbnail":"https://chicfox.cdn.smart-img.com/jjin/2025/0804/01/n_t_05.jpg","title":"시크폭스 - [FRANCAIS][보풀제로] 하프집업 후드 니트_53KN737"},{"link":"https://zigzag.kr/catalog/products/117981003","thumbnail":"https://cf.product-image.s.zigzag.kr/original/c/16/591/465/165914654-6134351118373133250.gif?width=400&height=400&quality=80&format=jpeg","title":"시크폭스 김준호X김지민의 밸런스 압박스타킹 양말형 (1세트)"}]},"errors":[]},{"filename":"105101ae8a5c-Screenshot_20250914_140059_Samsung_Internet.png","phone":"'+821042870706","requested_categories":"전체 코디, Other: 기억용","status":"success","upload_time":"1.37","crop_time":"110.06","search_time":"22.34","total_time":"133.77","cropped_urls":{"tops":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_blue_knit_shorts_1762276100362.jpg?"},"search_results":{"tops":[{"link":"https://lilletoni.com/en/products/plait-cardigan-carlo-in-grey-melange-copy-1","thumbnail":"https://lilletoni.com/cdn/shop/files/Maxbajou2.jpg?v=1738915604&width=2048","title":"Cable knit cardigan ''Carlo'' in bajou"},{"link":"https://sofiawithlove.com.au/products/sofia-ribbed-knit-two-piece-set-blue","thumbnail":"https://sofiawithlove.com.au/cdn/shop/products/image_12e2884b-491e-41d0-98be-1ba8f1d6b0d1_2048x.jpg?v=1684929183","title":"Sofia Ribbed Knit Two Piece Set - Blue – SOFIA WITH LOVE"},{"link":"https://www.wedoble.com/en/shoulder-straps-shortie_p70295.html","thumbnail":"https://1416034355.rsc.cdn77.org/temp/1724254639_2e684dafc6bda8f51e74765dae402a55.jpg","title":"Shoulder straps shortie knitted in wool | DEAR BUNNY IN THE ..."}]},"errors":[]},{"filename":"13048e56c7e6-Screenshot_20250818_190819_Naver_Cafe.jpg","phone":"'+821074946970","requested_categories":"상의","status":"success","upload_time":"1.14","crop_time":"24.05","search_time":"19.52","total_time":"44.71","cropped_urls":{"tops":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_black_short_sleeve_top_1762276149933.jpg?"},"search_results":{"tops":[{"link":"https://www.amazon.com/Adrianna-Papell-Womens-Solid-Halter/dp/B0CLVX3LGP","thumbnail":"https://m.media-amazon.com/images/I/31s59rQD6BL.__AC_SR166,182___.jpg","title":"Adrianna Papell Women's Solid Knit Halter Twist Neck TOP, Black at Amazon Women's Clothing store"},{"link":"https://www.coupang.com/vp/products/7993957004","thumbnail":"https://image6.coupangcdn.com/image/vendor_inventory/d923/0de02f2d0382445be913b4da0dc1224b297e7a26900428e4637c7c1777e9.jpeg","title":"여름 배색 카라 클리식 기본 얇은 니트 반팔 티셔츠 - 스웨터/니트 | 쿠팡"},{"link":"https://www.amazon.ca/Verdusa-Womens-Colorblock-Contrast-Collar/dp/B08TT96DMQ","thumbnail":"https://m.media-amazon.com/images/I/711Ec6BX31L._AC_AC_SY350_QL65_.jpg","title":"Verdusa Women's Colorblock Contrast Polo Collar Short Sleeve Blouse Shirt Top, Black and White, Small : Amazon.ca: Clothing, Shoes & Accessories"}]},"errors":[]},{"filename":"161d724e75d0-IMG_7213.png","phone":"'+821029795315","requested_categories":"상의","status":"success","upload_time":"1.00","crop_time":"28.63","search_time":"39.88","total_time":"69.52","cropped_urls":{"tops":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_olive_green_bomber_jacket_1762276200988.jpg?"},"search_results":{"tops":[{"link":"https://www.zara.com/kr/ko/라이트웨이트-코튼-점퍼-p03918900.html","thumbnail":"https://static.zara.net/assets/public/7920/158e/9a314fdea44b/2d7d8c6947b8/03918900505-e1/03918900505-e1.jpg?ts=1755600124143","title":"라이트웨이트 코튼 점퍼 - 카키 | ZARA South Korea / 대한민국"},{"link":"https://m.en.obscura-store.com/product/short-mods-parka-mud-brown/8417/","thumbnail":"https://m.en.obscura-store.com/web/product/big/202503/fa058c924a7817e20155453d1c655ceb.jpg","title":"Short Mods Parka - Mud Brown - obscura"},{"link":"https://en.hatchingroom.com/product/short-mods-parka-khaki/2923/","thumbnail":"https://en.hatchingroom.com/web/product/big/202503/506c34cda1a46ac20cc86e4da3a0195c.jpg","title":"Short Mods Parka Khaki - HATCHINGROOM"}]},"errors":[]},{"filename":"1f315d41bcd5-IMG_2050.png","phone":"'+821026307327","requested_categories":"상의, 가방","status":"success","upload_time":"2.08","crop_time":"38.48","search_time":"30.01","total_time":"70.58","cropped_urls":{"tops":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_pink_wool_cardigan_1762276283534.jpg?"},"search_results":{"tops":[{"link":"https://rimirimi.co.kr/product/뽀송-앙고라-브이넥-가디건/2045","thumbnail":"https://shop-phinf.pstatic.net/20240222_139/1708589377396NO9qI_JPEG/P20240221_160008532_3C23946E-5029-4AD3-8C6F-D1CF7D64C832.jpg","title":"뽀송 앙고라 브이넥 가디건 - 리미리미"},{"link":"https://www.daangn.com/kr/buy-sell/앙고라-핑크-가디건-139pp1qxf9mq/","thumbnail":"https://img.kr.gcp-karroter.net/origin/article/202505/1746148074698bbe3fe7385bee3673a8a2b429469f7eb4e33e0c2cadb37478dd4448d7e3c38240.jpg?f=webp&q=95&s=1440x1440&t=inside","title":"앙고라 핑크 가디건 | 여성의류 | 당근 중고거래"}]},"errors":[]},{"filename":"2328bd465b25-Screenshot_20250922_175917_Instagram.jpg","phone":"'+821050251565","requested_categories":"전체 코디","status":"success","upload_time":"1.39","crop_time":"36.65","search_time":"25.17","total_time":"63.20","cropped_urls":{"tops":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_sleeve_pajama_top_1762276353400.jpg?"},"search_results":{"tops":[{"link":"https://www.wconcept.co.kr/Product/307391838","thumbnail":"https://ggolggap10.openhost.cafe24.com/web/product/detail/2025/fall/W25FSU01/iv/m_8.jpg","title":"로토토베베]페스티벌마일드셋업 아이보리"},{"link":"https://www.sinsay.com/sq/en/disney-sweat-set-8560m-04x","thumbnail":"https://static.sinsay.com/media/catalog/product/cache/1200/a4e40ebdc3e371adff845072e1c73f37/8/5/8560M-04X-020-1-510743_7.jpg","title":"Disney sweat set Color lavender - SINSAY - 8560M-04X"},{"link":"https://www.amazon.com/Childrens-Place-Toddler-Zip-Front-Footless/dp/B0CR6MGHK3","thumbnail":"https://m.media-amazon.com/images/I/71kYFFFSIXL.jpg_BO30,255,255,255_UF900,850_SR1910,1000,0,C_QL100_.jpg","title":"The Children's Place Baby Girls' and Toddler Snug Fit 100% Cotton Short Sleeve Zip-Front One Piece Footless Pajama"}]},"errors":[]},{"filename":"25a07f7412b0-Screenshot_20250425_205335_NAVER.jpg","phone":"'+821055394006","requested_categories":"전체 코디","status":"success","upload_time":"1.55","crop_time":"54.91","search_time":"26.60","total_time":"83.07","cropped_urls":{"tops":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_gray_sleeveless_dress_1762276436892.jpg?"},"search_results":{"tops":[{"link":"https://www.fabianafilippi.com/en-nl/ready-to-wear/shirts/cool-wool-shirt-melange-rock-CAD265F429D62000008179.html","thumbnail":"https://www.fabianafilippi.com/dw/image/v2/BGDG_PRD/on/demandware.static/-/Sites-47/default/dwb7e805ea/images/zoom/CAD265F429D6200000_8179_4.jpg?strip=false","title":"Cool wool shirt, melange rock for Women | Fabiana Filippi®"},{"link":"https://www.wconcept.co.kr/Product/307508147","thumbnail":"https://product-image.wconcept.co.kr/productimg/image/img0/47/307508147_add1_UO58494.jpg?thumbnail=60x80","title":"리이]RACOON WOOL HALF SLEEVE TOP GRAY"},{"link":"https://shop.mango.com/gm/en/p/women/tops/knitwear/perkins-neck-top_17045818","thumbnail":"https://shop.mango.com/assets/rcs/pics/static/T1/fotos/outfit/S/17045818_92-99999999_01.jpg?imwidth=2048&imdensity=1&ts=1755522330786","title":"Perkins-neck top - Women | MANGO Gambia"}]},"errors":[]},{"filename":"25e73fbfc872-캡처.JPG","phone":"'+821073624251","requested_categories":"상의, 하의","status":"failed","upload_time":0,"crop_time":0,"search_time":0,"total_time":"0.46","cropped_urls":{},"search_results":{},"errors":["Upload failed: {\"statusCode\":\"400\",\"error\":\"InvalidKey\",\"message\":\"Invalid key: batch_test_1762276466911_25e73fbfc872-캡처.JPG\"}"]},{"filename":"2701146d3bd8-Screenshot_20250922_180545_NAVER.jpg","phone":"'+821045528334","requested_categories":"전체 코디, 상의, 하의","status":"success","upload_time":"0.98","crop_time":"76.03","search_time":"23.82","total_time":"100.83","cropped_urls":{"tops":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_black_high_waist_skirt_1762276545320.jpg?"},"search_results":{"tops":[{"link":"https://m.mixxo.com/product/오픈카라-링클프리-블라우스miwble920a/8574/","thumbnail":"https://cafe24img.poxo.com/mixxo/web/product/extra/big/202407/1cd8bb7434e09df1d395d0fda91db410.jpg","title":"오픈카라 링클프리 블라우스_MIWBLE920A | 미쏘 (MIXXO)"},{"link":"https://m.pureda.co.kr/product/detail.html?product_no=20079","thumbnail":"https://m.pureda.co.kr/web/upload/NNEditor/20221006/mobile/8dd20f1d481061235813e5ed06ad9603_1665026146.jpg","title":"코니 아가일 니트 조끼 - 퓨어다"}]},"errors":[]},{"filename":"283b1eba8622-Screenshot_20250726_191930_Threads.jpg","phone":"'+821092214865","requested_categories":"전체 코디","status":"success","upload_time":"1.37","crop_time":"80.86","search_time":"17.42","total_time":"99.65","cropped_urls":{"tops":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_white_pearl_necklace_1762276653485.jpg?"},"search_results":{"tops":[{"link":"https://www.amazon.com/-/he/IDOKAWA-פנינים-גדילים-מרובים-לתחפושת/dp/B0BK193XFR","thumbnail":"https://m.media-amazon.com/images/I/71wzQHqk4eL.jpg","title":"Amazon.com: IDOKAWA שרשרת שכבות של מעטפת פנינים מדומה עגולה 8 מ\"מ לנשים, שרשרת ארוכה עדינה עם גדילים מרובים למסיבה, תכשיטי וינטג' לתחפושת, מתכת, פנינה מלאכותית : ביגוד, נעליים ותכשיטים"},{"link":"https://www.ebay.com/itm/295881895483","thumbnail":"https://i.ebayimg.com/images/g/rdgAAOSwj7dk23Zm/s-l1200.jpg","title":"Vintage Graduated Faux Pearl Necklace - 16\" With Pearl Box Clasp | eBay"},{"link":"https://www.reddit.com/r/jewelry/comments/xp3rka/is_this_pearl_necklace_worth_anything/","thumbnail":"https://i.redd.it/afkb6b0vabq91.jpg","title":"Is this pearl necklace worth anything? : r/jewelry"}]},"errors":[]},{"filename":"2e934d4bb76e-Screenshot_20250901_185501_Coupang.jpg","phone":"'+821028784258","requested_categories":"전체 코디","status":"success","upload_time":"1.18","crop_time":"105.70","search_time":"39.02","total_time":"145.90","cropped_urls":{"tops":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_brown_beaded_bracelet_1762276778872.jpg?"},"search_results":{"tops":[{"link":"https://www.amazon.com/Natural-Decoration-Accessories-Jewelry-Finding/dp/B07TW31JMP","thumbnail":"https://m.media-amazon.com/images/I/71lrMb6jjjL._AC_UF350,350_QL80_.jpg","title":"Amazon.com: 200pcs Natural Wooden Beads Round Ball Spacer Beads Decoration Accessories for Jewelry Making Finding Charms(12mm) : Arts, Crafts & Sewing"},{"link":"https://www.ebay.com/itm/388233286371","thumbnail":"https://i.ebayimg.com/images/g/U1YAAOSw16pn954y/s-l400.jpg","title":"Grade A Natural Wood Prayer Beads Men Woman Couple Bracelet Fashion Jewelry | eBay"},{"link":"https://www.etsy.com/listing/4340412329/bodhi-bead-seed-bracelet-handmade-barrel","thumbnail":"https://i.etsystatic.com/60335762/r/il/20fb19/7047084398/il_fullxfull.7047084398_ouj9.jpg","title":"Bodhi Bead Seed Bracelet Handmade – Barrel Beads Coffee | Cute Fidget & Spiritual Jewelry | Anxiety Relief Bracelet | Natural Seed Beads - Etsy"}]},"errors":[]},{"filename":"32523f31267f-6ecd960eb98673cc917c6722be8347fa.jpg","phone":"'+821044911649","requested_categories":"전체 코디","status":"success","upload_time":"1.08","crop_time":"111.69","search_time":"11.38","total_time":"124.16","cropped_urls":{"tops":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_white_sleeveless_lace_top_1762276933403.jpg?"},"search_results":{"tops":[{"link":"https://www2.hm.com/en_ie/productpage.1283253001.html","thumbnail":"https://image.hm.com/assets/hm/69/33/693346a57c912ac8b8e99a73029cd260466c6127.jpg?imwidth=768","title":"Embroidered shift dress - Cream - Ladies | H&M IE"},{"link":"https://www.shopmotf.com/product/MESH-FLORAL-ELEGANT-BACKLESS-BOW-TIE-DRESS-11339344032613184","thumbnail":"http://img.ltwebstatic.com/v4/j/pi/2025/06/17/57/17501489400ed4942fd2254b14708ac36d2e5484e8.jpg","title":"MESH FLORAL ELEGANT BACKLESS BOW TIE DRESS｜Motf"},{"link":"https://comma-jane.co.kr/product/당일출고-레이스-펀칭-자수-민소매-소네-롱-원피스/14305/","thumbnail":"https://comma-jane.co.kr/web/product/extra/small/202405/5b89c3483fe33d5e7e2fcc91ecec91b3.jpg","title":"당일출고)-레이스 펀칭 자수 민소매 소네 롱 원피스 - 콤마제인"}]},"errors":[]},{"filename":"328e2d651da5-Screenshot_20250922_190837_Samsung_Internet.jpg","phone":"'+821082413444","requested_categories":"신발","status":"success","upload_time":"1.56","crop_time":"27.89","search_time":"37.65","total_time":"67.11","cropped_urls":{"shoes":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_leather_sneakers_1762276974171.jpg?"},"search_results":{"shoes":[{"link":"https://www.temu.com/kr/womens-retro-aesthetic-sneakers-light-blue-white-low-top-lace-up-running-shoes-with-pvc-sole-fabric-lining-and-comfortable-insole-for-casual-training-and-everyday-wear--shoes-retro-style-shoes-durable-pvc-sole-g-601100597848951.html","thumbnail":"https://img.kwcdn.com/product/fancy/1074522c-7a2d-47ee-ab75-929d9b41570f.jpg?imageMogr2/auto-orient|imageView2/2/w/800/q/70/format/webp","title":"여성용 레트로 아세틱 스니커즈 라이트 블루 화이트 로우 탑 ..."},{"link":"https://jernn.com/products/caydence-sneaker","thumbnail":"https://jernn.com/cdn/shop/files/MEITU_20250305_191238103-Photoroom_5_bd46bc7d-58d7-49c9-80be-d7720350badb_2048x.jpg?v=1753023869","title":"Caydence Sneaker – Jernn International"},{"link":"https://www.amazon.in/Irsoe-Sneaker-Lightweight-Walking-Running/dp/B08Y6TYSPW","thumbnail":"https://m.media-amazon.com/images/I/81QT8A3B3uL._UY1000_.jpg","title":"Buy Irsoe Women's Latest Style Casual Sneaker Lightweight ..."}]},"errors":[]},{"filename":"3296eb6c6532-Screenshot_20250922_171448_G.jpg","phone":"'+821049255952","requested_categories":"신발","status":"success","upload_time":"1.03","crop_time":"19.37","search_time":"32.16","total_time":"52.56","cropped_urls":{"shoes":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762277017042_3296eb6c6532-Screenshot_20250922_171448_G.jpg"},"search_results":{"shoes":[{"link":"https://www.aliexpress.com/item/1005009341719875.html","thumbnail":"https://ae01.alicdn.com/kf/S2ad92b5c2ccb45c7930636458ba1f1dcR.jpg","title":"Women's cotton slippers for home use new winter snow boots, indoor warmth plush thick sole comfortable slippers versatile - AliExpress"},{"link":"https://www.coupang.com/vp/products/8481933328","thumbnail":"https://image.coupangcdn.com/image/vendor_inventory/0310/8234f7e6f81724a6005fbde9e92c1e9413187d8a3dc3cd358f89e9113255.jpg","title":"겨울 패딩화 미끄럼 방지 패딩 여성 패딩화 털신발 기모 웜업 운동화 방한화 - 부츠 | 쿠팡"},{"link":"https://www.aliexpress.com/item/1005007957269246.html","thumbnail":"https://ae01.alicdn.com/kf/S167f10060ee94695b0f3a100e33be100p.jpg_640x640q90.jpg","title":"Faux Fur Long Plush Ankle Boots Women Thick Bottom Non-Slip ..."}]},"errors":[]},{"filename":"3e360f04f634-IMG_8106.png","phone":"'+821062454501","requested_categories":"가방","status":"success","upload_time":"0.96","crop_time":"21.91","search_time":"12.71","total_time":"35.58","cropped_urls":{"bags":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_bags_1762277093261.jpg?"},"search_results":{"bags":[{"link":"https://www.amazon.com/Compression-Multifunctional-Waterproof-Expandable-Anti-Theft/dp/B0DXF49PGK","thumbnail":"https://m.media-amazon.com/images/I/61+NKINFyFL._UY1000_.jpg","title":"Amazon.com: Aeropack Backpack, 60L Aeropack Zoom Vacuum Compression Backpack, Multifunctional Waterproof Expandable Anti-Theft Backpack for Travel (Black-1.0, With Air Pump): Clothing, Shoes & Jewelry"},{"link":"https://www.amazon.com/JEUXDOS-Vacuum-Backpack-Expandable-Compression/dp/B0D736XRW6","thumbnail":"https://m.media-amazon.com/images/I/71qhi7wcL1L._AC_UY1000_.jpg","title":"Amazon.com: JEUXDOS Vacuum Backpack for Travel, 60L Expandable Vacuum Compression Bag with Electric Vacuum Pump, Water Resistant and Anti Theft, Space Saver Bags for Travel Camping (Black) : Home & Kitchen"},{"link":"https://www.walmart.com/browse/sports-outdoors/hiking-gear/4125_546956_4128_1523811?povid=HDL_OutdoorAdventure_Hub_Hiking&page=2&affinityOverride=default","thumbnail":"https://i5.walmartimages.com/seo/Vacuum-Backpack-for-Travel-Water-Resistant-Kabaqoo-60L-Expandable-Vacuum-Compression-Bag-with-Electric-Vacuum-Pump-TSA-Lock-Wet-Dry-Separation_4d668e99-27db-4692-b319-ed38ddd502e7.166464feadee193412db63557d4b0cfb.jpeg?odnHeight=320&odnWidth=320&odnBg=FFFFFF","title":"Hiking Gear in Camping Gear - Walmart.com"}]},"errors":[]},{"filename":"3f6b085455d6-Screenshot_20250922_191824_Samsung_Internet.jpg","phone":"'+821025403605","requested_categories":"상의","status":"success","upload_time":"1.68","crop_time":"22.95","search_time":"28.05","total_time":"52.68","cropped_urls":{"tops":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_white_floral_print_blouse_1762277132186.jpg?"},"search_results":{"tops":[{"link":"https://zigzag.kr/catalog/products/165705505","thumbnail":"https://cf.product-image.s.zigzag.kr/original/d/2025/9/10/34107_202509101310230438_71447.jpeg?width=720&height=720&quality=80&format=jpeg","title":"앳마크 ATMARK (77까지)숏플라워패턴블라우스_AA56BL010G"},{"link":"https://www.temu.com/om-en/vintage-floral-print-blouse-for-women-polyester-crew-neck-long-sleeve-shirt-casual-loose--woven-lightweight-adult-shirting-for--g-601099828629106.html","thumbnail":"https://img.kwcdn.com/product/temu-avi/image-crop/6991bf80-6e33-4cc7-a4cd-4c4fe4360eda.jpg","title":"vintage floral print blouse women polyester crew neck long ..."},{"link":"https://www.etmall.com.tw/i/100001608685","thumbnail":"https://img.alicdn.com/imgextra/i1/1770529298/O1CN01z8bueq2IYXQvWdcFg_!!1770529298.jpg","title":"法式別致甜美寬松疊穿上衣設計感森系小眾全棉碎花襯衫漂亮小衫女 ..."}]},"errors":[]},{"filename":"41932fac32a3-Screenshot_20250923_095819.jpg","phone":"'+821047219368","requested_categories":"가방, 악세사리","status":"success","upload_time":"1.54","crop_time":"39.97","search_time":"23.87","total_time":"65.38","cropped_urls":{"bags":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_bags_accessories_1762277203603.jpg?"},"search_results":{"bags":[{"link":"https://m.gsshop.com/prd/prd.gs?prdid=1092203425&mseq=421964","thumbnail":"https://asset.m-gs.kr/prod/1092203425/1/550","title":"제이셀라 투웨이 가죽 하프 토트백+키링 - GS SHOP"},{"link":"https://kr.dhgate.com/video/1077228987.html","thumbnail":"https://img4.dhresource.com/webp/m/0x0/f3/albu/ys/g/22/af0fc1b1-3cde-4477-84a1-7649af3a56f1.jpg","title":"구구오 디자이너 가방 고급 가방 Yuezi 가방 여성 2025 새로운 ..."},{"link":"https://www.elandmall.co.kr/i/item?itemNo=2310678096&lowerVendNo=LV23002669","thumbnail":"https://item.elandrs.com/r/image/item/2023-10-19/c3ce459f-c778-4e89-bb55-62682bb0ce56.jpg?w=750&h=&q=100","title":"스위스 몽크로스 여성 BEST 토트백 WT68360 IV 아이보리 [동아수성점]- 이랜드몰"}]},"errors":[]},{"filename":"4803132f0957-Screenshot_20250922_175941_NAVER.jpg","phone":"'+821093243240","requested_categories":"하의","status":"success","upload_time":"0.92","crop_time":"24.55","search_time":"20.31","total_time":"45.78","cropped_urls":{"bottoms":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_beige_high_waist_wide___leg_trousers_1762277255607.jpg?"},"search_results":{"bottoms":[{"link":"https://www.amazon.com/Palazzo-Business-Trousers-Straight-Pockets/dp/B0DRZ113LW","thumbnail":"https://m.media-amazon.com/images/I/71hm9gYVMiL._UY350_.jpg","title":"Women's High Waist Casual Wide Leg Palazzo Pants Business Work Trousers Long Straight Suit Pants Flowy Trousers with Pockets (Apricot,S) at Amazon Women's Clothing store"},{"link":"https://www.sezane.com/us-en/product/rodriguo-trousers/mottled-ecru","thumbnail":"https://media.sezane.com/image/upload/c_fill,d_placeholder_dark.png,fl_progressive:semi,h_816,q_auto:best,w_582/eqrkiuuk4jb99oqgdgzw.jpg","title":"Rodriguo Trousers - Mottled Ecru - Recycled cotton - Sézane"},{"link":"https://www.next.us/en/style/su611094/f59861","thumbnail":"https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/F59861s.jpg?im=Resize,width=180","title":"Buy Friends Like These Neutral Petite Premium Elastic Back Tailored Wide Leg Trousers from Next USA"}]},"errors":[]},{"filename":"49192c7d398f-Screenshot_20250713_131433_Coupang.jpg","phone":"'+821068587333","requested_categories":"하의","status":"success","upload_time":"1.20","crop_time":"24.27","search_time":"23.56","total_time":"49.03","cropped_urls":{"bottoms":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_white_patterned_maxi_skirt_1762277303016.jpg?"},"search_results":{"bottoms":[{"link":"https://www.macys.com/shop/product/cece-womens-floral-print-a-line-midi-skirt?ID=22182695","thumbnail":"https://photos-us.bazaarvoice.com/photo/2/cGhvdG86bWFjeXM/e56b029a-40aa-5c3e-a132-76e7e8846f7f","title":"CeCe Women's Floral-Print A-Line Midi Skirt - Macy's"},{"link":"https://www.inheritco.com/products/gia-floral-print-midi-skirt","thumbnail":"https://www.inheritco.com/cdn/shop/files/gia-floral-print-midi-skirt-ff-skirts-32485824364631.jpg?v=1729911713&width=1946","title":"Gia Floral Print Midi Skirt - FINAL SALE – Inherit Co."},{"link":"https://shop.mango.com/mv/en/p/teen/skirts/long/long-floral-skirt_17084077","thumbnail":"https://shop.mango.com/assets/rcs/pics/static/T1/fotos/S/17084077_99.jpg?ts=1750671332937&imwidth=1024&imdensity=1","title":"Long floral skirt | MANGO Maldives"}]},"errors":[]},{"filename":"4a0d3c3e5bf6-Screenshot_20250922_180348_Instagram.jpg","phone":"'+821085660830","requested_categories":"상의","status":"success","upload_time":"0.94","crop_time":"25.81","search_time":"33.71","total_time":"60.46","cropped_urls":{"tops":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_knit_sweater_1762277354968.jpg?"},"search_results":{"tops":[{"link":"https://www.amazon.com/Fashion-Striped-Sweater-Vintage-Pullovers/dp/B0BJZ2RPTM","thumbnail":"https://images-na.ssl-images-amazon.com/images/I/91EW7-AHUZL._AC_UL600_SR600,600_.jpg","title":"Women Fashion Striped Sweater Vintage Casual High Neck Female Pullovers Tops Picture Color S at Amazon Women's Clothing store"},{"link":"https://www2.hm.com/ko_kr/productpage.1250177001.html","thumbnail":"https://image.hm.com/assets/hm/c7/63/c7635728d31be4922097035a21fc6d6073050be8.jpg?imwidth=1260","title":"포인텔 니트 스웨터 - 베이지/스트라이프 - 여성 | H&M KR"},{"link":"https://jane.com/store/threadedpear/quinn-stripe-zip-up-collar-sweater","thumbnail":"https://images.jane.com/sellers/threadedpear/product-images/quinn-stripe-zip-up-collar-sweater_QuinnStripeSweater-Blue-L.jpg?preset=xlarge","title":"Quinn Stripe Zip Up Collar Sweater | Jane.com"}]},"errors":[]},{"filename":"4aaa14222152-Screenshot_20250922_183517.jpg","phone":"'+821020171080","requested_categories":"전체 코디, 상의, 하의","status":"success","upload_time":"1.33","crop_time":"57.28","search_time":"12.37","total_time":"70.98","cropped_urls":{"tops":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_beige_open_toe_sandals_1762277450083.jpg?"},"search_results":{"tops":[{"link":"https://www.vestiairecollective.com/women-accessories/hats/burberry/camel-wool-burberry-hat-49492509.shtml","thumbnail":"https://images.vestiairecollective.com/images/resized/w=1024,h=1024,q=75,f=auto,/produit/49492509-1_2.jpg","title":"Wool hat Burberry Camel size S International in Wool - 49492509"},{"link":"https://www.llbean.com/llb/shop/127229?page=llbean-rechargeable-led-pathfinder-beanie-camoflauge-mens","thumbnail":"https://cdni.llbean.net/is/image/wim/518154_51140_41?hei=126&wid=110","title":"Men's L.L.Bean Rechargeable LED Pathfinder Beanie, Camoflauge"},{"link":"https://www.ebay.com/itm/266621469257","thumbnail":"https://i.ebayimg.com/images/g/CZoAAOSwiLdlpysl/s-l1200.jpg","title":"NEW Realtree Steel Toe Brewing Camouflage Strapback Hat Cap St. Louis Park, MN | eBay"}]},"errors":[]},{"filename":"4ac1bfd760eb-IMG_2627.jpeg","phone":"'+821053532147","requested_categories":"전체 코디","status":"success","upload_time":"1.70","crop_time":"49.25","search_time":"19.76","total_time":"70.71","cropped_urls":{"tops":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_long_sleeve_blouse_1762277503666.jpg?"},"search_results":{"tops":[{"link":"https://www.rihoas.com/products/brown-lantern-sleeve-shirred-shirt","thumbnail":"https://www.rihoas.com/cdn/shop/files/women_s-woven-polyester-shirts-brown-tops-h8uh4i_650x.jpg?v=1755759378","title":"Brown Lantern Sleeve Shirred Shirt & Reviews - Brown - Tops | RIHOAS"},{"link":"https://www.amazon.com/Womens-Surplice-Lantern-Sleeve-Cropped/dp/B0D22QQB16","thumbnail":"https://m.media-amazon.com/images/I/81DUrvwrbDL._AC_UY1000_.jpg","title":"EsEiCo Women's Surplice Neck Lantern Sleeve Ruched Waist Blouse Top Cropped T Shirt Blouse for Women Chocolate Brown, X-Small at Amazon Women's Clothing store"},{"link":"https://www.zalando.fr/next-shirred-v-neck-regular-fit-blouse-brown-nx321e2ao-o11.html","thumbnail":"https://img01.ztat.net/article/spp-media-p1/37065fd2cbb343299159f9beec2dbaa2/b959bbeb2f9d4dd98ea0111772fb9e58.jpg?imwidth=1800","title":"Next SHIRRED V-NECK LONG SLEEVE - REGULAR FIT - Blouse - brown/marron - ZALANDO.FR"}]},"errors":[]},{"filename":"4bc11921eb53-1757574448248.jpg","phone":"'+821050509794","requested_categories":"전체 코디, 상의, 하의, 신발, 가방, 악세사리","status":"success","upload_time":"1.32","crop_time":"58.87","search_time":"42.92","total_time":"103.11","cropped_urls":{"tops":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_gray_track_pants_1762277596028.jpg?"},"search_results":{"tops":[{"link":"https://www.kfriday.net/bunjang/men-fashion/365173046","thumbnail":"https://media.bunjang.co.kr/product/365173046_2_1761459178_w900.jpg?crop=0","title":"CGP 24시 바람막이 풀오버 회색 | Buy from Bunjang via Kfriday Proxy"},{"link":"https://www.ocokorea.com/shop/goods/product_view.do?pid=325328","thumbnail":"https://www.ocokorea.com//upload/images/product/325/325328/Product_1704962860732.png","title":"LOON X ORD]LOONEY TUNE RACING JERSEY (CHARCOAL) - OCO, 브랜드 편집샵 오씨오"},{"link":"https://global.musinsa.com/th/goods/3174981","thumbnail":"https://image.msscdn.net/thumbnails/images/goods_img/20230323/3174981/3174981_17234524579851_big.jpg","title":"MUSINSA | Codegraphy Synthetic fiber color sports crew ..."}]},"errors":[]},{"filename":"5497fec0d69a-Screenshot_20250922_150426_4910.jpg","phone":"'+821050367681","requested_categories":"하의","status":"success","upload_time":"1.13","crop_time":"26.31","search_time":"46.22","total_time":"73.66","cropped_urls":{"bottoms":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_beige_wide___leg_pleated_pants_1762277669507.jpg?"},"search_results":{"bottoms":[{"link":"https://m.aubenine.com/product/fw-오버-와이드-코튼-pants/3801","thumbnail":"https://m.aubenine.com/web/upload/NNEditor/20250826/EC98A4EBB28420EC9980EC9DB4EB939C20EBA994EC9DB8_0003_KakaoTalk_20250826_133603110_10.jpg.jpg","title":"FW 오버 와이드 코튼 pants - 오브나인"},{"link":"https://m.addsore.com/product/코튼-원턱-와이드-팬츠/752/","thumbnail":"https://cafe24.poxo.com/ec01/hwhddhks123/UVTjSep0dwP4/wX7AtHyXDBuy5Nu7TUOB7DGxxdQCd/gWFNfUfwbVli/wRgI9O6/vu6xQYpPxthk4zKyXf29wA==/_/web/upload/NNEditor/20231021/d190c2d371de420d5144c8c4d450186c.jpg","title":"코튼 원턱 와이드 팬츠 - 애드솔"},{"link":"https://global.musinsa.com/au/goods/5433802","thumbnail":"https://image.msscdn.net/thumbnails/global_images/goods_img/20250910/5433802/5433802_17585381993976_big.jpg","title":"MUSINSA | P.IN.O 958 Two Tuck Wide Cotton Pants - Tan Beige"}]},"errors":[]},{"filename":"55b5d0929662-Screenshot_20250725_092504_Toss.jpg","phone":"'+821047583685","requested_categories":"전체 코디, 상의, 신발","status":"success","upload_time":"1.23","crop_time":"47.09","search_time":"33.58","total_time":"81.91","cropped_urls":{"tops":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_white_lace_1762277765996.jpg?"},"search_results":{"tops":[{"link":"https://zigzag.kr/catalog/products/139357952","thumbnail":"https://cf.product-image.s.zigzag.kr/original/d/2025/3/23/32758_202503232328040027_88874.gif?width=720&height=720&quality=80&format=jpeg","title":"우물 [💙주문폭주/5종세트💙] 프릴 화이트 시스루 무압박 여름 ..."},{"link":"https://zigzag.kr/catalog/products/148086014","thumbnail":"https://cf.product-image.s.zigzag.kr/original/d/2024/9/10/35571_202409101348530768_44469.jpeg?width=720&height=720&quality=80&format=jpeg","title":"디에프 여성 레이스 프릴 망사 시스루 삭스 러블리 섹시 중목 ..."},{"link":"https://m.gmarket.co.kr/n/search?keyword=시스루세트&jaehuid=200002660&s=8&kvt=1&ss=m20&k=0&p=2","thumbnail":"https://gdimg.gmarket.co.kr/4544137890/still/280?ver=1758485548","title":"G마켓 - 시스루세트 검색결과"}]},"errors":[]},{"filename":"5758d665a52c-IMG_1026.png","phone":"'+821032859552","requested_categories":"전체 코디, 신발","status":"success","upload_time":"1.58","crop_time":"63.65","search_time":"22.27","total_time":"87.50","cropped_urls":{"tops":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_dark_gray_wide___leg_pants_1762277866685.jpg?"},"search_results":{"tops":[{"link":"https://m.bunjang.co.kr/products/303240689","thumbnail":"https://media.bunjang.co.kr/product/303240689_1_1732897832_w180.jpg","title":"아디다스 구매해요 그레이 데님 팬츠 져지파이어버드희귀대장한정빈티지 | 브랜드 중고거래 플랫폼, 번개장터"},{"link":"https://www.adidas.co.kr/adilenium-denim/KF8543.html","thumbnail":"https://assets.adidas.com/images/w_600,f_auto,q_auto/a7d2b884d880462baf8973d3d07b10cd_faec/ADILENIUM_DENIM_Black_KF8543_db23_hover_model.jpg","title":"아디다스 ADILENIUM DENIM - Black | adidas South Korea"},{"link":"https://zigzag.kr/catalog/products/149651752","thumbnail":"https://cf.product-image.s.zigzag.kr/original/d/2024/10/13/19691_202410130039070535_99061.jpeg?width=400&height=400&quality=80&format=webp","title":"스타일폭스 삼선 트랙 청바지 남여공용 (P515) 와이드 트랙 데님 팬츠"}]},"errors":[]},{"filename":"586f488fffd3-IMG_3345.png","phone":"'+821040041882","requested_categories":"전체 코디","status":"success","upload_time":"1.66","crop_time":"48.70","search_time":"21.68","total_time":"72.04","cropped_urls":{"tops":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_white_striped_button___up_shirt_1762277940940.jpg?"},"search_results":{"tops":[{"link":"https://store.zigzag.kr/catalog/products/156880561","thumbnail":"https://cf.product-image.s.zigzag.kr/original/d/2025/1/20/47702_202501202337350479_15077.jpeg?width=400&height=400&quality=80&format=webp","title":"다와 곱창밴드증정✨고퀄리티 스트라이프 긴팔 파자마 세트 고급스러운 홈웨어 가을 겨울 우정 시밀러룩 잠옷 3color"},{"link":"https://www.wishbucket.io/items/2518006","thumbnail":"https://www.wishbucket.io/_next/image?url=https://d2gfz7wkiigkmv.cloudfront.net/pickin/2/1/2/nnmsF4ORRH6d93ZWOA0z5w&w=1080&q=75","title":"앤쥬르디 오렌지당일/ (3color) 라벨 스트라이프 홈웨어세트 빅 ..."},{"link":"https://www.instagram.com/p/DOIQDQxgVt_/","thumbnail":"https://lookaside.instagram.com/seo/google_widget/crawler/?media_id=3713288470723133093","title":"집수니가 기분 좋아지는 방법🤫🍊🍀 (집에 오면 샤워하고 무조건 ..."}]},"errors":[]},{"filename":"5da33aca7dd9-Screenshot_20250922_182701.jpg","phone":"'+821030083551","requested_categories":"전체 코디","status":"success","upload_time":"1.43","crop_time":"67.45","search_time":"34.26","total_time":"103.15","cropped_urls":{"tops":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_black_long_sleeve_trench_coat_gray_long_sleeve_trench_coat_1762278033953.jpg?"},"search_results":{"tops":[{"link":"https://fallcent.com/product/?product_id=6081832887&item_id=11278464694","thumbnail":"https://thumbnail.coupangcdn.com/thumbnails/remote/492x492ex/image/retail/images/2021/09/15/18/4/b94f663d-02f1-44c7-89a1-5d418d30cd17.jpg","title":"메이첼 후드 스트링 캐주얼 야상 트렌치 코트 00215' 최저가 ..."},{"link":"https://zigzag.kr/catalog/products/131280185","thumbnail":"https://cf.product-image.s.zigzag.kr/original/d/2023/11/9/36948_202311091629570538_11256.jpeg?width=720&height=720&quality=80&format=jpeg","title":"카이마니 [무료배송/남녀공용] 롱 코튼 후드 바람막이 야상 자켓"},{"link":"https://www.kolonmall.com/Brands/133020162537/Product/K1674118870880071NA01","thumbnail":"https://images.kolonmall.com/Prod_Img/10003273/2022/LZ1/K1674118870880071NA01_LZ1.jpg","title":"ANNE KLEIN] [앤클라인]스트링 후드 트렌치코트 N3S007"}]},"errors":[]},{"filename":"619f731ee58c-Screenshot_20250704_223306_NAVER.jpg","phone":"'+821071864099","requested_categories":"상의","status":"success","upload_time":"1.19","crop_time":"23.61","search_time":"38.74","total_time":"63.54","cropped_urls":{"tops":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_gray_short_sleeve_jacket_1762278094634.jpg?"},"search_results":{"tops":[{"link":"https://www.elandmall.co.kr/i/item?itemNo=2308458140&lowerVendNo=LV23000959","thumbnail":"https://item.elandrs.com/r/image/item/2023-08-14/1e439805-73dd-4908-989a-9e5097be7c4f.jpg","title":"포켓 반팔 트위드 자켓 RREWJK050- 이랜드몰"},{"link":"https://m.gsshop.com/prd/prd.gs?prdid=1081992763&arm=--U&brandid=6933&rank=20&mseq=430661&gsid=cateshop-mresult","thumbnail":"https://asset.m-gs.kr/prod/1081992763/1/550","title":"ab.f.z] 노카라 포켓 트위드 반팔 자켓 (AFX2ZJ01A) - GS SHOP"},{"link":"https://stylelatte.co.kr/outer/?idx=2062","thumbnail":"https://cdn.imweb.me/thumbnail/20230801/8964bd4e0bcc3.jpg","title":"썸머 트위드 재킷 노카라 스퀘어넥 진주버튼 슬림 반팔 정장 ..."}]},"errors":[]},{"filename":"6a381c97b5d6-Screenshot_20250816_160634_Instagram.jpg","phone":"'+821030043044","requested_categories":"하의","status":"success","upload_time":"1.26","crop_time":"29.35","search_time":"41.58","total_time":"72.19","cropped_urls":{"bottoms":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_blue_wide___leg_high_waist_denim_pants_1762278166620.jpg?"},"search_results":{"bottoms":[{"link":"https://www.musinsa.com/products/3740378","thumbnail":"https://image.msscdn.net/images/goods_img/20231130/3740378/3740378_17013437605950_500.jpg","title":"피그먼트(PIGMENT) 기모턱 데님팬츠(PBCW-WDPW002) - 사이즈 & 후기 | 무신사"},{"link":"https://m.en.attrangs.com/product/belt-set-cooling-denim-body-flattering-demure-two-tuck-denim-wide-pant/85127/","thumbnail":"https://cafe24img.poxo.com/attrangs/web/product/big/202505/11d7df8e40b2a2ee74d05b733de4fa73.jpg","title":"Belt Set / Cooling Denim / Body-Flattering) Demure Two-Tuck Denim Wide Pants ps5221 | ATTRANGS: Shop Korean fashion clothing, bags, shoes and accessories for women"}]},"errors":[]},{"filename":"6fa0262df24a-JPEG_20250718_102427_7836027581844906401.jpg","phone":"'+821033288128","requested_categories":"상의","status":"success","upload_time":"1.47","crop_time":"38.23","search_time":"23.89","total_time":"63.59","cropped_urls":{"tops":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_top_1762278248752.jpg?"},"search_results":{"tops":[{"link":"https://www.idus.com/v2/product/d7f463ae-977d-4bdb-9c0d-add6191104e3","thumbnail":"https://image.idus.com/image/files/9d7213ea4a924157b77056831e69ed35.jpg","title":"만월 벨벳 헤어밴드 | 아이디어스"},{"link":"https://ko.aliexpress.com/item/1005004753294335.html","thumbnail":"https://ae01.alicdn.com/kf/Sfc8d2ca618f44b3db12497aaa726bb1fA.jpg","title":"스타일리스트 커팅 케이프 실리콘 헤어 염색 숄, 방수 목 칼라 ..."},{"link":"https://m.bunjang.co.kr/products/182108012","thumbnail":"https://media.bunjang.co.kr/product/182108012_5_1648138693_w360.jpg","title":"아이유머리띠.차화연머리띠.큐빅헤어밴드.새상품 | 브랜드 중고 ..."}]},"errors":[]},{"filename":"71b2f5f94309-IMG_7944.png","phone":"'+821028268211","requested_categories":"가방","status":"success","upload_time":"1.41","crop_time":"27.24","search_time":"40.87","total_time":"69.52","cropped_urls":{"bags":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_bags_1762278303930.jpg?"},"search_results":{"bags":[{"link":"https://www.mandarinaduck.co.kr/goods/goods_view.php?goodsNo=1000000001","thumbnail":"https://godomall.speedycdn.net/1bb90785ec18f2d35a0ade911637cae0/goods/1000000001/image/detail/1000000001_detail_085.jpg","title":"만다리나덕 공식 온라인 스토어"},{"link":"https://www.mandarinaduck.co.kr/goods/goods_view.php?goodsNo=1000002036","thumbnail":"https://mandartr1985.cdn-nhncommerce.com/data/goods/24/02/05/1000002036/1000002036_detail_144.jpg","title":"만다리나덕 공식 온라인 스토어"},{"link":"https://web.joongna.com/product/9275670","thumbnail":"https://img2.joongna.com/mobile/Original/2018/05/08/D20180508120508_9275670_37054_0.jpg","title":"만다리나덕 노마드 백팩 팜니다 | 중고나라 - 안심되는 중고거래"}]},"errors":[]},{"filename":"778fd0f281ea-Screenshot_20250922_151442_CJ.jpg","phone":"'+821028402822","requested_categories":"None","status":"success","upload_time":"1.12","crop_time":"14.32","search_time":"9.18","total_time":"24.62","cropped_urls":{"undefined":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762278348450_778fd0f281ea-Screenshot_20250922_151442_CJ.jpg"},"search_results":{"undefined":[{"link":"https://m.lotteimall.com/goods/viewGoodsDetail.lotte?goods_no=12861176","thumbnail":"https://ca.lotteimall.com/S/image.lotteimall.com/image/entp_image/006812/desc/12861176[20250801144053].jpg?sh=1280&imw=780&ol=4&sq=4&v=250801054054","title":"상품상세 - 롯데홈쇼핑"},{"link":"https://m.lotteimall.com/goods/viewGoodsDetail.lotte?goods_no=12871514&rccode=mo_r_detail4","thumbnail":"https://ca.lotteimall.com/S/image.lotteimall.com/image/entp_image/021338/desc/12871514[20250926191200].jpg?sh=1280&imw=780&ol=4&sq=2&v=250926101200","title":"상품상세 - 롯데홈쇼핑"},{"link":"http://m.lotteimall.com/coop/affilGate.lotte?chl_no=133153&returnUrl=/goods/viewGoodsDetail.lotte?goods_no=1550595005","thumbnail":"https://ca.lotteimall.com/S/image.hnsmall.com/images/htmleditor/926/linefit_4_TOP1636444051140.jpg?sh=1280&imw=780&ol=4&sq=2&v=211109073719","title":"상품상세 - 롯데홈쇼핑"}]},"errors":[]},{"filename":"78d89468a8ef-Screenshot_20250922_175653_Gallery.jpg","phone":"'+821024459377","requested_categories":"신발, 악세사리","status":"success","upload_time":"1.88","crop_time":"30.52","search_time":"21.30","total_time":"53.70","cropped_urls":{"shoes":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762278375073_78d89468a8ef-Screenshot_20250922_175653_Gallery.jpg"},"search_results":{"shoes":[{"link":"https://www.amazon.ca/New-Balance-MCRUZKN2-MCRUZV2/dp/B07DXBWGW9","thumbnail":"https://m.media-amazon.com/images/I/713mn67rtzL._AC_UY900_.jpg","title":"New Balance Men's 530 Sneaker, Moonbeam (121), 11.5 : Amazon.ca: Clothing, Shoes & Accessories"},{"link":"https://www.coupang.com/vp/products/8234860399","thumbnail":"https://thumbnail.coupangcdn.com/thumbnails/remote/230x230ex/image/vendor_inventory/831f/4ab39068c6197ac486a0d6ef992b839bbf5b0e5369e45aaffbdec0dd7d9e.jpg","title":"뉴발란스 530 아이보리 크림 베이지 - 해외직구 | 쿠팡"},{"link":"https://www.elandmall.co.kr/i/item?itemNo=2401933024&lowerVendNo=LV24006768","thumbnail":"https://item.elandrs.com/r/image/oa/2024-01-22/3fb3d018-c69d-4515-9da6-b3d62c589a29.jpg?w=750&h=&q=100","title":"뉴발란스] 530 남여공용 운동화 MR530NW- 이랜드몰"}]},"errors":[]},{"filename":"7d4dd34d1a8d-Screenshot_20250817_210643_Grip.jpg","phone":"'+821094078571","requested_categories":"전체 코디, 하의","status":"success","upload_time":"0.58","crop_time":"100.99","search_time":"24.33","total_time":"125.89","cropped_urls":{"tops":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_gray_athletic_sneakers_1762278531150.jpg?"},"search_results":{"tops":[{"link":"https://www.amazon.com/ZFBBD-Fashion-Lace-up-Platform-Sneakers/dp/B0DBM2R9KR","thumbnail":"https://m.media-amazon.com/images/I/71PMiF6NbQL.jpg","title":"Amazon.com: ZFBBD Fashion Lace-up Platform Sneakers for Women - Thick Bottom Casual Mesh Sports Shoes, Comfortable Sneaker.,Black-37 : Clothing, Shoes & Jewelry"},{"link":"https://poshmark.com/listing/Dior-B30-grey-67b1353282dceb6803e7a81e","thumbnail":"https://di2ponv0v5otw.cloudfront.net/posts/2025/02/15/67b1353282dceb6803e7a81e/m_67b1353a0e51722dee57b6dc.jpg","title":"Dior | Shoes | Dior B3 Grey | Poshmark"},{"link":"https://m.blog.naver.com/PostView.naver?blogId=leatherchange&logNo=223362065599","thumbnail":"https://mblogthumb-phinf.pstatic.net/MjAyNDAyMTNfMzcg/MDAxNzA3ODE2NzQwMTAx.krz19onlHZIlOyR6lx78GdHCaqP9C2u_5c58U9JHQxEg.s8ZaIhKy6ioBVnugk8s_pFvI9Cxf-Hhu7ihuC2dUe5Eg.JPEG.leatherchange/KakaoTalk_20240206_162229217.jpg?type=w800","title":"올해 유행할 디올 B30 운동화 신발 밑창보강 후기 :) 티안나게 나만 오래신는법! : 네이버 블로그"}]},"errors":[]},{"filename":"7d53b298a560-IMG_8862.png","phone":"'+821067873578","requested_categories":"하의","status":"success","upload_time":"1.68","crop_time":"31.43","search_time":"23.78","total_time":"56.89","cropped_urls":{"bottoms":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_light_blue_high_waist_wide_leg_jeans_1762278590424.jpg?"},"search_results":{"bottoms":[{"link":"https://www2.hm.com/en_us/productpage.1297530003.html","thumbnail":"https://image.hm.com/assets/hm/2a/a5/2aa596c4eff521c60a2474d4fd85f1ae9764695b.jpg?imwidth=768","title":"Wide High Jeans - Light denim blue - Ladies | H&M US"},{"link":"https://www.zalando.co.uk/gap-stride-salter-relaxed-fit-jeans-light-indigo-gp021n0gg-k11.html","thumbnail":"https://img01.ztat.net/article/spp-media-p1/9fccef520b1e4e4ab2324be6b33e4861/c2b077cceda644938fcacc101c9bd91f.jpg?imwidth=1800","title":"GAP STRIDE SALTER - Wide Leg - light indigo/light blue - Zalando.co.uk"},{"link":"https://www.mytheresa.com/euro/en/women/the-row-eglitta-mid-rise-wide-leg-jeans-blue-p00741441","thumbnail":"https://www.mytheresa.com/media/356/402/30/c3/P00741441_b2.jpg","title":"Eglitta mid-rise wide-leg jeans in blue - The Row | Mytheresa"}]},"errors":[]},{"filename":"804e907728fc-Screenshot_20250922_153924_KakaoTalk.jpg","phone":"'+821040775877","requested_categories":"상의, 하의","status":"success","upload_time":"1.16","crop_time":"44.54","search_time":"25.30","total_time":"71.00","cropped_urls":{"tops":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_abstract_pattern_shorts_1762278662063.jpg?"},"search_results":{"tops":[{"link":"https://www.coupang.com/vp/products/7410718226","thumbnail":"https://thumbnail.coupangcdn.com/thumbnails/remote/492x492ex/image/retail/images/2023/06/19/14/7/6e79270e-dfec-4388-a1b7-3b4b051d11ae.jpg","title":"아레나 에이드 선수 원피스 테크백 수영복 A3BL1CO61 - 원피스 수영복 | 쿠팡"},{"link":"https://m.lotteimall.com/goods/viewGoodsDetail.lotte?goods_no=2281801980&rccode=mo_r_detail5&t=1744790184934","thumbnail":"https://image2.lotteimall.com/goods/68/19/80/2281801968_1.jpg/dims/resizemc/280x280/optimize","title":"상품상세 - 롯데홈쇼핑"},{"link":"https://m.ssfshop.com/ARENA/GQRX23052535509/good?utag=ref_ptn:40997","thumbnail":"https://multi-sports.co.kr/arena/arena_new/2023/A3BL1CO61PNK/product0.jpg","title":"ARENA-에이드 선수 원피스 테크백 A3BL1CO61PNK│삼성물산 온라인몰 SSF Shop"}]},"errors":[]},{"filename":"8837d550aade-Screenshot_20250726_104132_NAVER.jpg","phone":"'+821021709567","requested_categories":"악세사리","status":"success","upload_time":"1.37","crop_time":"22.63","search_time":"40.34","total_time":"64.33","cropped_urls":{"accessories":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_accessories_1762278713788.jpg?"},"search_results":{"accessories":[{"link":"https://www.feelway.com/tobe/page/luxuryknowledge/luxuryknowledge_view.php?ask_no=763700&cafe_mkt=seo","thumbnail":"http://img000d.feelway.com/201805/ask-05091154838z.jpg","title":"진품가품] 티파니(TIFFANY & Co) / 주얼리 - 티파니앤코 목걸이 ..."},{"link":"https://blog.naver.com/PostView.naver?blogId=y1111jung&logNo=221485764276&categoryNo=82&parentCategoryNo=0","thumbnail":"https://mblogthumb-phinf.pstatic.net/MjAxOTAzMTBfMjIg/MDAxNTUyMjI1MTUwNDEy.45yTaKf5UMmMayqWnx_cWYUNZYKuJYAJ8F8LtbOlxpQg.gcKzi29WG4faRY57oxtVUDmJV7mvsJfv4t_Nn2jqOXMg.PNG.y1111jung/SE-d765ebe4-ca79-481a-be73-ee4342ecefb4.png?type=w800","title":"화이트데이 쥬얼리 선물 여자쥬얼리 쇼핑몰 루루골드 은반지 득템! : 네이버 블로그"},{"link":"https://www.temu.com/kr/1-2pcs-leaf-shaped-drain-sponge-drain-rack-shower-soap-holder-box-bathroom-shower-suction-cup-soap-holder-dish-storage-tray-g-601099525480338.html","thumbnail":"https://img.kwcdn.com/product/open/2023-09-06/1693978811006-7323f68f8b484ace9a773fa6c4c6f8ad-goods.jpeg?imageMogr2/auto-orient|imageView2/2/w/800/q/70/format/webp","title":"1/2개 잎 모양 배수 스펀지 드레인 랙 샤워 비누 홀더 박스 욕실 샤워 흡착컵 비누 홀더 접시 보관 트레이 - Temu Republic of Korea"}]},"errors":[]},{"filename":"88ace8481ee2-Screenshot_20250922_210139_NAVER.jpg","phone":"'+821040054796","requested_categories":"전체 코디","status":"success","upload_time":"1.09","crop_time":"64.29","search_time":"26.13","total_time":"91.52","cropped_urls":{"tops":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_blue_knit_sleeveless_v___neck_vest_1762278820501.jpg?"},"search_results":{"tops":[{"link":"https://www.amazon.com/Cashmere-Female-Sleeveless-Sweater-Paragraph/dp/B0CCJSHPZM","thumbnail":"https://m.media-amazon.com/images/I/51BK-wv6ZgL._AC_UY1000_.jpg","title":"Women Cashmere Knit Vest Female Loose Sleeve Sleeveless Sweater Short Paragraph Vest Soft and Warm Blue L at Amazon Women's Clothing store"},{"link":"https://br-m.shopcider.com/goods/solid-blue-knitted-vest","thumbnail":"https://img1.shopcider.com/product/1629443778000-bf6ae2.jpg?x-oss-process=image/resize,w_1050,m_lfit/quality,Q_60/interlace,1","title":"Solid Blue Knitted Vest - Cider"},{"link":"https://www.amazon.com/UMJIGF-Cashmere-Sweater-Sleeveless-Pullover/dp/B0DNLM9QHQ","thumbnail":"https://m.media-amazon.com/images/I/614aNZ43mIL.jpg","title":"Amazon.com: UMJIGF Women Cashmere Sweater Vest Casual Loose Knitted V-Neck Sleeveless Pullover Sweater,Blue-L : Clothing, Shoes & Jewelry"}]},"errors":[]},{"filename":"8938b9049c01-Screenshot_20220428_201704.png","phone":"'+821092063599","requested_categories":"상의","status":"success","upload_time":"1.41","crop_time":"27.88","search_time":"24.65","total_time":"53.94","cropped_urls":{"tops":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762278850433_8938b9049c01-Screenshot_20220428_201704.png"},"search_results":{"tops":[{"link":"https://www.ebay.com/itm/225678758092","thumbnail":"https://i.ebayimg.com/images/g/1FQAAOSwIm5kttpJ/s-l1200.jpg","title":"NEW Coach 1941 Peach Peasant Blouse Top 0 2 Women Peach Ruffle Chiffon Palm Tree | eBay"},{"link":"https://www.coupang.com/vp/products/7867908592","thumbnail":"https://thumbnail.coupangcdn.com/thumbnails/remote/300x300ex/image/retail/images/273444112367091-e22a3ece-3d82-4f48-9d69-325387e5ca53.jpg","title":"장원영 착용] 로라로라 여성용 BUTTON SLIM 가디건 - 카디건 | 쿠팡"},{"link":"https://www.anthropologie.com/shop/maeve-long-sleeve-ruffled-sheer-blouse","thumbnail":"https://images.urbndata.com/is/image/Anthropologie/4110916210358_266_c2?$a15-pdp-detail-shotDATA_PLACEHOLDERfit=constrain&qlt=80&wid=100","title":"Maeve Long-Sleeve Ruffled Sheer Blouse | Anthropologie"}]},"errors":[]},{"filename":"8c7cd01bb236-Screenshot_20250922_180000.jpg","phone":"'+821047963655","requested_categories":"상의","status":"success","upload_time":"0.78","crop_time":"25.84","search_time":"33.51","total_time":"60.13","cropped_urls":{"tops":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_ribbed_short_sleeve_v___neck_top_1762278931351.jpg?"},"search_results":{"tops":[{"link":"https://www.temu.com/kr/여성용-우아한-v넥-상의-슬림핏-반팔-스트레치-및-통기성이-뛰어난-봄-여름-가을용-캐주얼-착용-v넥-상의-스트레치-g-601100261361314.html","thumbnail":"https://img.kwcdn.com/product/Fancyalgo/VirtualModelMatting/932d0457bbaabb0adbf5c5de684c2a05.jpg?imageMogr2/auto-orient|imageView2/2/w/800/q/70/format/webp","title":"여성용 우아한 v넥 상의 슬림핏 반팔 스트레치 및 통기성이 뛰어난 봄/여름/가을용 캐주얼 착용|v넥 상의|스 - Temu Republic of Korea"},{"link":"https://www.walmart.com/ip/Women-s-Summer-Sweater-Short-Sleeve-V-Neck-Breathable-Cotton-Pullover-Soft-Lightweight-Knit-Blouse-Dark-Blue-S/15554609351?classType=undefined","thumbnail":"https://i5.walmartimages.com/seo/Women-s-Summer-Sweater-Short-Sleeve-V-Neck-Breathable-Cotton-Pullover-Soft-Lightweight-Knit-Blouse-Dark-Blue-S_bd5dc146-47ae-4661-852a-c3c80c1a57e6.c4997882d4ad4b8ce45c04cdf0b9983b.jpeg?odnHeight=768&odnWidth=768&odnBg=FFFFFF","title":"Women's Summer Sweater Short Sleeve V-Neck Breathable Cotton Pullover Soft Lightweight Knit Blouse Dark Blue S - Walmart.com"},{"link":"https://www.amazon.com/Sweater-Short-Sleeved-Striped-Pullover-Knitted/dp/B0CX91T6FV","thumbnail":"https://m.media-amazon.com/images/I/61u74LcV1wL._AC_UY350_.jpg","title":"Women's Sweater Short-Sleeved V-Neck Striped Sweater Korean Style Pullover Thin Knitted Top 3 Base Shirt Beige at Amazon Women's Clothing store"}]},"errors":[]},{"filename":"8d7c9f358b9e-1758535513099.jpg","phone":"'+821054357490","requested_categories":"전체 코디","status":"success","upload_time":"1.04","crop_time":"53.45","search_time":"36.45","total_time":"90.95","cropped_urls":{"tops":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_beige_jacket_1762279020951.jpg?"},"search_results":{"tops":[{"link":"https://www2.hm.com/en_us/productpage.1262905002.html","thumbnail":"https://image.hm.com/assets/hm/13/b8/13b8b74fe5f0ffc3758ba54f98ecec6bb1a5b650.jpg?imwidth=1260","title":"Pocket-Detail Jacket - Beige - Ladies | H&M US"},{"link":"https://www2.hm.com/en_us/productpage.1273201001.html","thumbnail":"https://image.hm.com/assets/hm/51/bf/51bf4cad0cbb9f5602fc05126e74dc73a86f3d1d.jpg","title":"Twill Jacket with Collar - Beige - Ladies | H&M US"},{"link":"https://www.musinsa.com/products/5338076","thumbnail":"https://image.msscdn.net/images/goods_img/20250819/5338076/5338076_17556486286356_500.jpg","title":"올리브 데 올리브(OLIVE DES OLIVE) 플랫 카라 스웨이드 싱글자켓 OL5AJ8010 - 사이즈 & 후기 | 무신사"}]},"errors":[]},{"filename":"9bb44927ad8d-Screenshot_20250922_234724.jpg","phone":"'+821045681195","requested_categories":"상의","status":"success","upload_time":"1.17","crop_time":"29.89","search_time":"29.84","total_time":"60.90","cropped_urls":{"tops":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_white_crochet_vest_1762279090535.jpg?"},"search_results":{"tops":[{"link":"https://zigzag.kr/catalog/products/121230985","thumbnail":"https://cf.product-image.s.zigzag.kr/original/d/2023/3/10/13854_202303100550110322_26497.jpeg","title":"짜루마켓 크로셰 아가일 뜨개 펀칭 브이넥 베스트"},{"link":"https://www.magaseek.com/commodity/STTM1825D/MA7918EW000106/","thumbnail":"https://sc3.locondo.jp/contents/commodity_image/MA/MA7918EW000106_12_l.jpg","title":"マガジンデモードオンジェナ MAGASIN DE MODE Onjna クロシェ ..."},{"link":"https://ziezmariukc.lt/94722755354179d600000","thumbnail":"https://static.mercdn.net/item/detail/orig/photos/m57703596067_1.jpg?1756299738","title":"ベスト ジレ 羽織り レース かぎ針編み ナチュラル ベージュ 韓国 綿"}]},"errors":[]},{"filename":"9ef78d715dda-IMG_6710.jpeg","phone":"'+821033098429","requested_categories":"상의","status":"success","upload_time":"1.14","crop_time":"33.28","search_time":"27.08","total_time":"61.51","cropped_urls":{"tops":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_white_plaid_button___up_shirt_1762279156644.jpg?"},"search_results":{"tops":[{"link":"https://global.musinsa.com/th/goods/4943981","thumbnail":"https://lazyz.diskn.com/product/01_Cloth/top/25ss/Loose_Fit_Classic_Check_Shirt/Loose_Fit_Classic_Check_Shirt_1_01.jpg","title":"MUSINSA | LAZYZ Loose fit classic check shirt (5 colors)"},{"link":"https://www.29cm.co.kr/products/3170648","thumbnail":"https://lazyz.diskn.com/product/01_Cloth/top/25ss/Loose_Fit_Classic_Check_Shirt/Loose_Fit_Classic_Check_Shirt_2_07.jpg","title":"Loose Fit Classic Check Shirt (5color) - 감도 깊은 취향 셀렉트샵 29CM"},{"link":"https://www.29cm.co.kr/products/3084138","thumbnail":"https://img.29cm.co.kr/next-product/2025/02/26/edb4d53a355140aeba9572e53c42cd1e_20250226213446.jpg?width=700&format=webp","title":"Unisex Check Shirt (Black) - 감도 깊은 취향 셀렉트샵 29CM"}]},"errors":[]},{"filename":"a1ba14c536c4-Screenshot_20250922_180802_NAVER.jpg","phone":"'+821026514334","requested_categories":"상의","status":"success","upload_time":"0.70","crop_time":"28.22","search_time":"17.97","total_time":"46.89","cropped_urls":{"tops":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_white_long_sleeve_sweatshirt_1762279215426.jpg?"},"search_results":{"tops":[{"link":"https://www.musinsa.com/products/3875622","thumbnail":"https://image.msscdn.net/images/goods_img/20240216/3875622/3875622_17080486065633_500.jpg","title":"말본 골프(MALBON GOLF) 말본 모크넥 미들 레이어 WHITE (MAN) - 사이즈 & 후기 | 무신사"},{"link":"https://www.ebay.com/itm/197007463103","thumbnail":"https://i.ebayimg.com/images/g/~bMAAOSwtftnqe6i/s-l1200.png","title":"Malbon Golf] Mockneck Mid Layer WHITE (MAN) | eBay"},{"link":"https://m.ssfshop.com/MALBON-GOLF/GQ6425021071796/good?utag=ref_ptn:40997","thumbnail":"https://malbongolf.wisacdn.com/MALBON/design/product_page/25SS/M5121PTL04/WHT/07_MB_M5121PTL04_WHT_detail.jpg","title":"MALBON GOLF-말본 모크넥 미드 레이어 WHITE (MAN)│삼성물산 온라인몰 SSF Shop"}]},"errors":[]},{"filename":"a258cdf96d3c-IMG_1391.png","phone":"'+821096490803","requested_categories":"상의, 하의","status":"success","upload_time":"1.74","crop_time":"29.60","search_time":"21.75","total_time":"53.09","cropped_urls":{"tops":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_beige_wide___leg_trousers_1762279266587.jpg?"},"search_results":{"tops":[{"link":"https://m.spao.com/article/리뷰게시판/4/395860/","thumbnail":"https://m.spao.com/web/product/tiny/202408/4e8f9782a5a2e30892e5d7a8adf8cd79.jpg","title":"완전여름용이에요.두깨감보통이라고해서 샀는데 내년여름에입어야할듯요 리뷰게시판 - 스파오닷컴"},{"link":"https://www.zara.com/us/en/zw-collection-flowy-pleated-pants-p07149062.html","thumbnail":"https://static.zara.net/assets/public/a916/6289/16094e4b9458/6d90359f1f40/07149062712-e1/07149062712-e1.jpg?ts=1749552397185","title":"ZW COLLECTION FLOWY PLEATED PANTS - Ecru | ZARA United States"},{"link":"https://www2.hm.com/en_us/productpage.1176512003.html","thumbnail":"https://image.hm.com/assets/hm/07/65/0765253b4effaa875ceaa1b4d5ab45da35937b35.jpg","title":"Wide-leg Pants - Light beige - Ladies | H&M US"}]},"errors":[]},{"filename":"a31be7275ec0-Screenshot_20250923_080311_TikTok_Lite.jpg","phone":"'+821028522097","requested_categories":"전체 코디","status":"success","upload_time":"0.96","crop_time":"72.62","search_time":"31.53","total_time":"105.11","cropped_urls":{"tops":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_light_blue_short_sleeve_zip___up_jacket_1762279364105.jpg?"},"search_results":{"tops":[{"link":"https://www.wconcept.co.kr/Product/305887547","thumbnail":"https://product-image.wconcept.co.kr/productimg/image/img9/47/305887547_WN55733.jpg","title":"르누쿠]반집업 우븐 바람막이 (스카이블루)"},{"link":"https://www.elandmall.co.kr/i/item?itemNo=2305193900&lowerVendNo=LV19016501","thumbnail":"https://item.elandrs.com/r/image/item/2023-05-17/0068c23e-8696-4821-9577-3c1b4f7fbff5.jpg?w=750&h=&q=100","title":"카라 집업 숏 점퍼/394050_평촌점- 이랜드몰"},{"link":"https://www.aliexpress.com/i/1005009228676216.html","thumbnail":"https://ae01.alicdn.com/kf/Sb8af2fdfc3cc46438f9f01766fc70ba7Y.jpg","title":"Light Blue Summer Thin round Neck Denim Short Sleeve Jacket Women Slim Short Size Small Open Cardigan Top Crew Neck Vest - AliExpress"}]},"errors":[]},{"filename":"a5036bab7d0d-Screenshot_20250922_180026_Grip.jpg","phone":"'+821026922659","requested_categories":"전체 코디","status":"success","upload_time":"1.07","crop_time":"84.27","search_time":"33.49","total_time":"118.83","cropped_urls":{"tops":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_light_gray_long_sleeve_henley_shirt_1762279482946.jpg?"},"search_results":{"tops":[{"link":"https://www.hiver.co.kr/products/74273256","thumbnail":"https://image.brandi.co.kr/cproduct/2022/07/04/SB000000000066747977_1656898838_image5_S.webp","title":"남자 헨리넥 긴팔티 오버핏 트임 여름 단추 티셔츠 (2컬러) 척도"},{"link":"https://m.lcod.kr/product/detail.html?product_no=2490&cate_no=24&display_group=1","thumbnail":"https://m.lcod.kr/web/upload/NNEditor/20250929/0109b7879111e999c24104b02dae8dc2.jpg","title":"피그먼트 더블 헨리넥 크롭 긴팔티 - 엘코드"},{"link":"https://4910.kr/goods/43066867","thumbnail":"https://d3ha2047wt6x28.cloudfront.net/sHypt5AAuqc/pr:GOODS_DETAIL/czM6Ly9hYmx5LWltYWdlLWxlZ2FjeS9kYXRhL2dvb2RzLzVmZjkwODEzNDVkM2U3NTQwMzAyOGVmYTI0ZDg4MmYwLmpwZw","title":"앨빈클로 3버튼 헨리넥 무지 긴팔티 AVT944 (3 COLOR) - 4910 ..."}]},"errors":[]},{"filename":"b24107c638d7-Screenshot_20250718_023259_11st.jpg","phone":"'+821093574104","requested_categories":"전체 코디, 상의, 하의","status":"success","upload_time":"1.39","crop_time":"127.34","search_time":"32.36","total_time":"161.09","cropped_urls":{"tops":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_black_high_waist_mini_skirt_1762279647473.jpg?"},"search_results":{"tops":[{"link":"https://www.farfetch.com/uz/shopping/women/self-portrait-cropped-sweater-item-24566479.aspx","thumbnail":"https://cdn-images.farfetch-contents.com/24/56/64/79/24566479_54917491_600.jpg","title":"Self-Portrait Cropped Sweater | Black | FARFETCH UZ"},{"link":"https://www.trenbe.com/product/++121705020","thumbnail":"https://image-cdn.trenbe.com/product-images/1734584857906_7d4cb01320a6d4b41a40f8f88d16556b_3.jpeg","title":"앨리스앤드올리비아(Alice + Olivia) | [P13]앨리스앤올리비아 CL000553719B072 여성 캐주얼자켓 블레이저 후드자켓 재킷 봄버 보머 ALICE+OLIVIA CLAIRA SHORT JACKET | 트렌비"}]},"errors":[]},{"filename":"b49a396ce4d2-Screenshot_20250923_161107.jpg","phone":"'+821093222506","requested_categories":"상의","status":"success","upload_time":"1.13","crop_time":"27.46","search_time":"27.21","total_time":"55.80","cropped_urls":{"tops":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_black_oversized_hooded_pullover_1762279709843.jpg?"},"search_results":{"tops":[{"link":"https://zigzag.kr/catalog/products/122527915","thumbnail":"https://cf.product-image.s.zigzag.kr/original/c/12/252/791/122527915-8200875326925774788.jpeg?width=400&height=400&quality=80&format=webp","title":"뮬리안 [베이지만 당일발송]사선 집업 바람막이 후드 점퍼"},{"link":"https://www.ebay.com/itm/406166894819","thumbnail":"https://cf.cjdropshipping.com/quick/product/eb614cac-8dc9-436a-89fb-ce909873f627.jpg","title":"Thin Breathable Classic Style Outdoor Jacket Coat | eBay"},{"link":"https://m.flr.co.kr/product/detail.html?product_no=1613&cate_no=0&display_group=3","thumbnail":"https://ecimg.cafe24img.com/pg1201b65245302075/florall/web/product/big/20250304/2e95105cb44f076fe54b9639d60fa8c0.gif","title":"w1165루시사선윈드자켓 - 플로럴"}]},"errors":[]},{"filename":"b49a396ce4d2-Screenshot_20250923_161107.jpg","phone":"","requested_categories":"상의","status":"success","upload_time":"1.46","crop_time":"25.07","search_time":"18.46","total_time":"45.00","cropped_urls":{"tops":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_black_oversized_hooded_jacket_1762279765976.jpg?"},"search_results":{"tops":[{"link":"https://www.temu.com/es/chaqueta-con-capucha-impermeable-para-mujer-color-negro---con-bolsillos-cuello-largo-con-cremallera-ideal-para--verano-y--capa-versatil-moda-estacional--elegante-bolsillos-funcionales-g-601101083276473.html","thumbnail":"https://img.kwcdn.com/product/fancy/f1721925-da1c-4f53-bf8a-43768b24fb85.jpg?imageMogr2/auto-orient|imageView2/2/w/800/q/70/format/webp","title":"chaqueta capucha impermeable mujer color negro - Temu Spain"},{"link":"https://www.aliexpress.com/item/1005007218887147.html","thumbnail":"https://ae01.alicdn.com/kf/S16ff3bc403fa4e1f870fb8cfdeadcabb9.jpg","title":"Autumn Jackets Men Fashion in Outerwears Solid Casual Clothing Windbreaker Coats Aviator Jacket for Men Waterproof Hiking Top - AliExpress"},{"link":"https://www.coupang.com/vp/products/8035441099?itemId=22480493865&vendorItemId=89522945922","thumbnail":"https://thumbnail.coupangcdn.com/thumbnails/remote/492x492ex/image/vendor_inventory/346b/bddfaaf18a844046fcb5bda93803314ca91e5cb55ddc1144b3b67aeb411c.jpg","title":"바람막이 아노락 빈티지 아메리칸 야외 후드 재킷 여성 방수 등산 홍대 연남동 의류 큰옷 - 등산의류 | 쿠팡"}]},"errors":[]},{"filename":"b5e7f9ef0dd7-BandPhoto_2024_11_29_16_50_11_1.jpg","phone":"'+821025223894","requested_categories":"전체 코디","status":"success","upload_time":"0.27","crop_time":"93.66","search_time":"31.67","total_time":"125.60","cropped_urls":{"tops":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_brown_plaid_high_waist_maxi_skirt_1762279880288.jpg?"},"search_results":{"tops":[{"link":"https://www.amazon.com/Fashion-Woolen-Waisted-Elegant-Pockets/dp/B0BSH7DCJF","thumbnail":"https://m.media-amazon.com/images/I/61cbzgKxBcL._AC_AC_SY350_QL65_.jpg","title":"Fashion Woolen Plaid Long Skirt for Women High Waisted Elegant Skirt Casual A-line Skirts with Pockets (Dark Blue, M) : Clothing, Shoes & Jewelry - Amazon.com"},{"link":"https://www.amazon.com/-/es/cuadros-elástica-acampanadas-plisadas-invierno/dp/B09L4RJTTW","thumbnail":"https://m.media-amazon.com/images/S/aplus-media-library-service-media/e53f1f4a-8b02-4e35-a540-cd7ea85ea508.__CR0,0,1600,1600_PT0_SX300_V1___.jpg","title":"Amazon.com: TEERFU Faldas de lana a cuadros para mujer, cintura alta elástica, acampanadas, plisadas, tartán, para invierno y otoño, Azul : Ropa, Zapatos y Joyería"},{"link":"https://www.amazon.com/Womens-Plaid-Skirt-line-Pockets/dp/B0D6YRQF7L","thumbnail":"https://m.media-amazon.com/images/I/61XcWMIb9cL._AC_UY1000_.jpg","title":"Amazon.com: Women's Long Plaid Skirt Wool A-line Maxi Skirt with Pockets (US, Alpha, Medium, Regular, Regular, Dark Blue) : Clothing, Shoes & Jewelry"}]},"errors":[]},{"filename":"b9b9f65c55a1-d18cfbb172e84a7e9d792400291d500a.webp","phone":"'+821039467620","requested_categories":"상의","status":"success","upload_time":"0.94","crop_time":"26.21","search_time":"31.44","total_time":"58.59","cropped_urls":{"tops":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_light_blue_zip___up_track_jacket_1762279940832.jpg?"},"search_results":{"tops":[{"link":"https://kream.co.kr/products/248344","thumbnail":"https://kream-phinf.pstatic.net/MjAyNTA3MzFfMjAx/MDAxNzUzOTE3MTQ4Mjc2.i8ijQc2wlMB8bdqR5NuLnpd5prz-mchUEI9fbbDEmgYg.Fg0JruPA2C0rB7hsoEyb9TwFOVIKzPcgIyEqddNbQtcg.PNG/a_fc4b08ef5541468facb28c4967f5d7ed.png?type=m","title":"W) 아디다스 오리지널스 베켄바우어 트랙 탑 클라우드 화이트 ..."},{"link":"https://web.croket.co.kr/seller/product/67e4bfbdd069bbb5dee251b9","thumbnail":"https://img.croketglobal.net/item/thumbnail/442501d1-687c-4fb4-922f-a9b23416aac6.webp","title":"아디다스 여성 클래식 베켄바우어 스카이블루 트랙 저지 집업 자켓 | 크로켓"},{"link":"https://www.courir.com/en/p/adidas-originals-jacket-fz-beckenbauer-1600533.html","thumbnail":"https://www.courir.com/on/demandware.static/-/Sites-master-catalog-courir/default/dwebf05c5d/images/hi-res/001600533_101.jpg","title":"ADIDAS ORIGINALS JACKET FZ BECKENBAUER BLUE ..."}]},"errors":[]},{"filename":"bfbd50518d72-20250922_164832.jpg","phone":"'+821057498283","requested_categories":"가방","status":"success","upload_time":"1.69","crop_time":"24.57","search_time":"28.37","total_time":"54.63","cropped_urls":{"bags":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_bags_1762279999244.jpg?"},"search_results":{"bags":[{"link":"https://prod.danawa.com/info/?pcode=52251980","thumbnail":"https://img.danawa.com/prod_img/500000/931/475/img/63475931_1.jpg?shrink=360:360&_v=20240821071609","title":"롱샴 르 플리아쥬 오리지널 S 스몰 탑핸들 핸드백 토트백 : 다나와 가격비교"},{"link":"https://www.ssg.com/search.ssg?query=중년여성가방","thumbnail":"https://sitem.ssgcdn.com/36/38/19/item/1000728193836_i1_300.jpg","title":"중년여성가방 - 추천•인기 상품, SSG.COM"},{"link":"https://prod.danawa.com/info/?pcode=14281076","thumbnail":"https://img.danawa.com/prod_img/500000/076/281/img/14281076_1.jpg?_v=20210525174619&shrink=360:360","title":"LF 헤지스ACC 나일론 혼방 퍼피로고 크로스 겸용 토트백 HIBA1F920BK : 다나와 가격비교"}]},"errors":[]},{"filename":"cdd7fa01d222-Screenshot_20250917_205011.jpg","phone":"'+821049452288","requested_categories":"상의","status":"success","upload_time":"1.68","crop_time":"27.19","search_time":"29.44","total_time":"58.31","cropped_urls":{"tops":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_black_cardigan_1762280059702.jpg?"},"search_results":{"tops":[{"link":"https://www.lowprice.kr/product/외윤상의/405/display/2/","thumbnail":"https://ecimg.cafe24img.com/pg2221b03644447035/lowprice2025/web/product/big/20251020/267f019817746e5908da9da78d6a5720.jpg","title":"Lowprice | 세련된 딥 네이비 니트"},{"link":"https://www.elandmall.co.kr/i/item?itemNo=2506968615&chnl_no=GSW","thumbnail":"https://item.elandrs.com/r/image/oa/2025-06-24/89a035ea-e93b-4caf-8540-ed772810dfdf.jpg","title":"화세 레이어드체크카라티셔츠_HB5MTS008C- 이랜드몰"},{"link":"https://www.instagram.com/p/DQB3xEHEV7A/","thumbnail":"https://lookaside.instagram.com/seo/google_widget/crawler/?media_id=3747521620383703719","title":"소포트 가디건🤎 소장코디!! . #맘룩#소포트가디건#가디건맛집 ..."}]},"errors":[]},{"filename":"d5e9df725d2b-IMG_1407.png","phone":"","requested_categories":"전체 코디","status":"success","upload_time":"1.58","crop_time":"45.35","search_time":"33.91","total_time":"80.84","cropped_urls":{"tops":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_black_mini_dress_1762280138389.jpg?"},"search_results":{"tops":[{"link":"https://www.wconcept.co.kr/Product/306924728","thumbnail":"https://vikiven00.imglink.kr/2025vikiven/swimwear/250420VIKINI VENDER_02_118.jpg","title":"비키니밴더]벨리아 셔링 플레어 모노키니 - Black"},{"link":"https://www.coupang.com/vp/products/9115411973","thumbnail":"https://thumbnail.coupangcdn.com/thumbnails/remote/300x300ex/image/rs_quotation_api/dmrprxnh/bc7ebf65081a4043a27a48f238303609.jpg","title":"실크 소매 비치웨어 프릴 수영복 여성스러운 퍼프 우아한 kon+53569KO - 비키니 | 쿠팡"},{"link":"https://www.farfetch.com/az/shopping/women/designer-elena-velez/dresses-1/items.aspx","thumbnail":"https://cdn-images.farfetch-contents.com/31/78/34/72/31783472_61444773_300.jpg","title":"Elena Velez Dresses for Women - Shop on FARFETCH"}]},"errors":[]},{"filename":"da6ad8533762-Screenshot_20250922_232217_NAVER.jpg","phone":"","requested_categories":"신발","status":"success","upload_time":"1.06","crop_time":"26.70","search_time":"43.29","total_time":"71.05","cropped_urls":{"shoes":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_silver_nike_air_max_sneakers_1762280202038.jpg?"},"search_results":{"shoes":[{"link":"https://www.nike.sa/en/air-max-portal-se-womens-shoes/NKHM0256-001.html","thumbnail":"https://www.nike.sa/dw/image/v2/BDVB_PRD/on/demandware.static/-/Sites-akeneo-master-catalog/default/dw2ee8a3ca/nk/4e5/4/1/1/0/7/4e541107_7c99_4921_a373_7c1b6b57b614.png?sw=210&sh=210&sm=fit","title":"Buy Nike Air Max Portal SE Women's Shoes - Metallic Silver/Phantom/White/Black @ Nike Saudi"},{"link":"https://www.macys.com/shop/product/nike-womens-air-max-portal-se-casual-sneakers-from-finish-line?ID=18790411","thumbnail":"https://slimages.macysassets.com/is/image/MCY/products/9/optimized/31487349_fpx.tif","title":"Nike Women's Air Max Portal SE Casual Sneakers from Finish Line - Macy's"},{"link":"https://www.hibbett.com/nike-air-max-portal-se-metallic-silver-phantom-white-black-womens-shoe/A3508.html","thumbnail":"https://photos-us.bazaarvoice.com/photo/2/cGhvdG86bmlrZS10dXJudG8/acb77db2-8345-58cc-8484-b3667d4ca920","title":"Nike Air Max Portal SE \"Metallic SIlver/Phantom/White/Black\" Women's Shoe"}]},"errors":[]},{"filename":"e0a6a6f8c6d9-IMG_2880.png","phone":"'+821029461255","requested_categories":"가방","status":"success","upload_time":"1.63","crop_time":"26.21","search_time":"11.37","total_time":"39.22","cropped_urls":{"bags":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_bags_1762280274711.jpg?"},"search_results":{"bags":[{"link":"https://www.aliexpress.com/i/1005008571104570.html","thumbnail":"https://ae01.alicdn.com/kf/Sb87c2f0c6e94463f9ef7723f5128bfccw.jpg_960x960.jpg","title":"Casual Large Capaci Women's oulder Bag 2025 New Sle Trendy Tote Bag Pure Color Soft Fabric Commute Faionable Bag - AliExpress"},{"link":"https://www.aliexpress.com/item/1005007353717610.html","thumbnail":"https://ae01.alicdn.com/kf/Se0faac3a9c8243a5bbfc5532eddc8fbbo.jpg","title":"1 Piece Large Capacity Tote Bag fashion Shoulder Canvas Bag Work Commuting Bucket Bag - AliExpress"},{"link":"https://www.coupang.com/vp/products/8083291919","thumbnail":"https://thumbnail.coupangcdn.com/thumbnails/remote/492x492ex/image/vendor_inventory/a149/a5f6cacb645aefbb34e93c2fb22f6937257edb76746723d10d6edf07fca2.png","title":"디씨즈잇 나일론 보부상가방 데일리숄더백 - 숄더백 | 쿠팡"}]},"errors":[]},{"filename":"e41378176432-1758535620408.jpg","phone":"'+821054357490","requested_categories":"전체 코디, 상의, 하의","status":"success","upload_time":"1.19","crop_time":"134.07","search_time":"36.55","total_time":"171.81","cropped_urls":{"tops":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_navy_blue_satin_midi_skirt_1762280423384.jpg?"},"search_results":{"tops":[{"link":"https://www.celine.com/en-hk/celine-shop-women/handbags/more-lines/medium-ava-triomphe-bag-in-triomphe-canvas-and-calfskin-114492BZJ.04LU.html","thumbnail":"https://www.celine.com/on/demandware.static/-/Sites-masterCatalog/default/dw721f97de/images/large/114492BZJ.04LU_1_FW23_W.jpg","title":"MEDIUM AVA TRIOMPHE BAG IN Triomphe Canvas and calfskin - TAN | CELINE"},{"link":"https://www.balaan.co.kr/products/62878959","thumbnail":"https://i.balaan.io/images/56/56ef01/56ef01d2921cbbd0707e4681a40828cbeeffb8f5d4068e2d8dc6c0388e993979.jpg","title":"발란｜BALAAN"},{"link":"https://www.tiktok.com/discover/미디엄-아바-트리옹프백","thumbnail":"https://www.tiktok.com/api/img/?itemId=7549213165708446984&location=0&aid=1988","title":"미디엄 아바 트리옹프백 | TikTok"}]},"errors":[]},{"filename":"e6295ef3470a-Screenshot_20250919_154111_BAND.jpg","phone":"'+821087632442","requested_categories":"상의, Other: 어느 사이트인지 잊어버리지않으려고","status":"success","upload_time":"1.44","crop_time":"35.64","search_time":"29.80","total_time":"66.88","cropped_urls":{"tops":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_white_short_sleeve_top_1762280499513.jpg?"},"search_results":{"tops":[{"link":"https://www.myntra.com/tops/here26now/herenow-animal-print-top/37078181/buy","thumbnail":"https://assets.myntassets.com/w_412,q_30,dpr_3,fl_progressive,f_webp/assets/images/2025/SEPTEMBER/19/ebAHR6n4_532d23c435594212bfd6d3a019da3fe9.jpg","title":"Buy HERE&NOW Animal Print Top - Tops for Women 37078181 | Myntra"},{"link":"https://www.coupang.com/vp/products/7613996968?itemId=20172090160&vendorItemId=85341110938&sourceType=brandstore_sdp_consolidate_reco","thumbnail":"https://thumbnail10.coupangcdn.com/thumbnails/remote/492x492ex/image/vendor_inventory/8b1f/1e356bdfb05e7488faef34863f7fb20fcb8d8dc7262ba1bbb96cc7af7ff0.png","title":"라운드 반팔 스케치 라인 캐릭터 반팔 니트 티 5컬러 - 스웨터 ..."},{"link":"https://www.etsy.com/listing/1523958401/1999-altered-boma-cho-top-silkscreen","thumbnail":"https://i.etsystatic.com/36259781/r/il/4324c6/5092348384/il_fullxfull.5092348384_55bc.jpg","title":"1999 Altered Boma Cho Top Silkscreen Print Upcycled Vintage ..."}]},"errors":[]},{"filename":"f27447ab3dc8-IMG_5945.jpeg","phone":"'+821064954952","requested_categories":"상의, 하의, 신발","status":"success","upload_time":"1.27","crop_time":"71.88","search_time":"23.45","total_time":"96.61","cropped_urls":{"tops":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_gold_chain_necklace_1762280604197.jpg?"},"search_results":{"tops":[{"link":"https://ezavision.com/products/gold-canum-necklace","thumbnail":"http://ezavision.com/cdn/shop/products/gold-canum-necklace-ezavision-754964.jpg?v=1700741671","title":"EzaVision - Gold Canum Necklace £36.99"},{"link":"https://julryshulry.com/products/chic-allure-elvy-neckchain","thumbnail":"https://julryshulry.com/cdn/shop/files/DSC4117.jpg?v=1736937272&width=1500","title":"Chic Allure Elvy Neckchain"},{"link":"https://www.ubuy.et/en/product/Y2PP8ATK-baoli-jewelry-set-18k-gold-multi-clover-zircon-strands-earring-necklace","thumbnail":"https://images-na.ssl-images-amazon.com/images/I/41s4qGN2LkL.jpg","title":"Baoli Jewelry set 18k Gold Multi Clover Zircon Ethiopia | Ubuy"}]},"errors":[]},{"filename":"f42961b2b2e3-Screenshot_20220901_194953_Facebook.jpg","phone":"'+821088560333","requested_categories":"전체 코디","status":"success","upload_time":"1.58","crop_time":"90.54","search_time":"27.33","total_time":"119.44","cropped_urls":{"tops":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_layered_pearl_necklaces_1762280721375.jpg?"},"search_results":{"tops":[{"link":"https://zigzag.kr/catalog/products/101029936","thumbnail":"https://cf.product-image.s.zigzag.kr/original/c/10/102/993/101029936-1614225992644.gif?width=720&height=720&quality=80&format=jpeg","title":"롤업 롱 레이어드 진주 목걸이"},{"link":"https://www.instagram.com/p/Cp6wYV2vAbl/","thumbnail":"https://lookaside.instagram.com/seo/google_widget/crawler/?media_id=3060971670240935052","title":"이아인 Ahin MOMOLAND | 2023 Fashion week @metrocity.korea ..."},{"link":"https://roll-up.kr/product/롱-레이어드-진주-목걸이/3612/","thumbnail":"https://m.roll-up.kr/web/product/big/20191210/1137f30b5ba84468d2ef307b99fd042f.gif","title":"롱 레이어드 진주 목걸이 - 롤업"}]},"errors":[]},{"filename":"f6fdf09d8932-Screenshot_20250831_162024_TikTok_Lite.jpg","phone":"'+821072431565","requested_categories":"전체 코디, 상의","status":"success","upload_time":"1.30","crop_time":"31.04","search_time":"12.46","total_time":"44.80","cropped_urls":{"tops":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_black_long_sleeve_sweater_1762280782026.jpg?"},"search_results":{"tops":[{"link":"https://en.beidelli.com/product/same-day-shipping-madeyerifit-cotton-candy-rib-round-long-sleeved-knit/4342/","thumbnail":"https://cafe24img.poxo.com/eb970604/web/upload/NNEditor/20241218/8b89e848219ab7dbb2761077fa1461bb.jpg","title":"Beidelli"}]},"errors":[]},{"filename":"f7229be919f1-화면_캡처_2025_09_23_094910.jpg","phone":"'+821033785887","requested_categories":"전체 코디","status":"failed","upload_time":0,"crop_time":0,"search_time":0,"total_time":"0.42","cropped_urls":{},"search_results":{},"errors":["Upload failed: {\"statusCode\":\"400\",\"error\":\"InvalidKey\",\"message\":\"Invalid key: batch_test_1762280799508_f7229be919f1-화면_캡처_2025_09_23_094910.jpg\"}"]},{"filename":"fe0e1606c93b-Screenshot_20250827_004006_NAVER.jpg","phone":"'+821082289231","requested_categories":"전체 코디, 신발","status":"success","upload_time":"0.68","crop_time":"42.09","search_time":"21.87","total_time":"64.64","cropped_urls":{"tops":"https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_black_leather_strappy_sandals_1762280842728.jpg?"},"search_results":{"tops":[{"link":"https://www.pikolinos.com/hu-en/formentera-w8q-0803.html?dwvar_8445442368776_color=BLACK","thumbnail":"https://www.pikolinos.com/on/demandware.static/-/Sites-master-catalog-pikolinos/default/dwf8c9a8a6/images/products/W8Q/0803/61-W8Q-0803_000_Pikolinos_FORMENTERA_BLACK_list.jpg","title":"Women's Roman sandals FORMENTERA W8Q-0803 | Outlet PIKOLINOS"},{"link":"https://www.pikolinos.com/us-en/formentera-w8q-0803.html?dwvar_8445442368998_color=BRANDY","thumbnail":"https://www.pikolinos.com/on/demandware.static/-/Sites-master-catalog-pikolinos/default/dwd8651aa8/images/products/W8Q/0803/20-W8Q-0803_000_Pikolinos_FORMENTERA_BLACK_full.jpg","title":"Women's Roman sandals FORMENTERA W8Q-0803 | Outlet PIKOLINOS"},{"link":"https://www.amazon.com.be/-/en/Pikolinos-Algar-W0x_v19-Womens-Sandals/dp/B08RWVVYZQ","thumbnail":"https://images-eu.ssl-images-amazon.com/images/I/41Q8uLY7I8L._AC_UL600_SR600,600_.jpg","title":"Pikolinos Algar W0x_v19 Women's Open Toe Sandals, Black : Amazon.com.be: Fashion"}]},"errors":[]}];
+    </script>
+    <script>
+        let allResults = [];
+        let currentFilter = 'all';
+        
+        function loadResults() {
+            allResults = EMBEDDED_DATA;
+            if (!allResults || allResults.length === 0) {
+                document.getElementById('results-container').innerHTML = 
+                    '<div class="no-results">❌ No results data found.</div>';
+                return;
+            }
+            displayStats();
+            displayResults();
+        }
+        
+        function displayStats() {
+            const successful = allResults.filter(r => r.status === 'success').length;
+            const failed = allResults.filter(r => r.status === 'failed').length;
+            const avgTime = (allResults.reduce((sum, r) => sum + parseFloat(r.total_time || 0), 0) / allResults.length).toFixed(2);
+            const avgCropTime = (allResults.reduce((sum, r) => sum + parseFloat(r.crop_time || 0), 0) / allResults.length).toFixed(2);
+            const avgSearchTime = (allResults.reduce((sum, r) => sum + parseFloat(r.search_time || 0), 0) / allResults.length).toFixed(2);
+            
+            const totalLinks = allResults.reduce((sum, r) => {
+                if (r.search_results) {
+                    return sum + Object.values(r.search_results).reduce((s, links) => s + (links?.length || 0), 0);
+                }
+                return sum;
+            }, 0);
+            
+            document.getElementById('subtitle').textContent = 
+                `Testing ${allResults.length} images from batch2 folder`;
+            
+            document.getElementById('stats-grid').innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-label">Total Images</div>
+                    <div class="stat-value">${allResults.length}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">✅ Successful</div>
+                    <div class="stat-value">${successful}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">❌ Failed</div>
+                    <div class="stat-value">${failed}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Avg Total Time</div>
+                    <div class="stat-value">${avgTime}s</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Avg Crop Time</div>
+                    <div class="stat-value">${avgCropTime}s</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Avg Search Time</div>
+                    <div class="stat-value">${avgSearchTime}s</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Total Links Found</div>
+                    <div class="stat-value">${totalLinks}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Success Rate</div>
+                    <div class="stat-value">${((successful / allResults.length) * 100).toFixed(1)}%</div>
+                </div>
+            `;
+        }
+        
+        function openModal(imgSrc) {
+            document.getElementById('imageModal').classList.add('active');
+            document.getElementById('modalImage').src = imgSrc;
+        }
+        
+        function closeModal() {
+            document.getElementById('imageModal').classList.remove('active');
+        }
+        
+        function displayResults() {
+            const searchTerm = document.getElementById('search-box').value.toLowerCase();
+            
+            let filtered = allResults.filter(result => {
+                if (currentFilter !== 'all' && result.status !== currentFilter) return false;
+                if (searchTerm) {
+                    const matchFilename = result.filename.toLowerCase().includes(searchTerm);
+                    const matchPhone = result.phone?.toLowerCase().includes(searchTerm);
+                    return matchFilename || matchPhone;
+                }
+                return true;
+            });
+            
+            const container = document.getElementById('results-container');
+            
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="no-results">No results found matching your filters.</div>';
+                return;
+            }
+            
+            container.innerHTML = filtered.map((result, index) => {
+                const statusClass = result.status === 'success' ? 'status-success' : 'status-failed';
+                const cardClass = result.status === 'failed' ? 'failed' : '';
+                
+                // Build images section
+                let imagesHTML = '';
+                if (result.original_image_url || (result.cropped_urls && Object.keys(result.cropped_urls).length > 0)) {
+                    let imageCards = '';
+                    
+                    // Original image first (if available)
+                    if (result.original_image_url) {
+                        imageCards += `
+                            <div class="image-container original">
+                                <div class="image-label original">📸 Original Image</div>
+                                <img src="${result.original_image_url}" class="preview-image" alt="Original" onclick="openModal('${result.original_image_url}')" onerror="this.parentElement.style.display='none'">
+                            </div>
+                        `;
+                    }
+                    
+                    // Cropped images
+                    if (result.cropped_urls && Object.keys(result.cropped_urls).length > 0) {
+                        imageCards += Object.entries(result.cropped_urls).map(([category, url]) => `
+                            <div class="image-container">
+                                <div class="image-label">✂️ Cropped: ${category}</div>
+                                <img src="${url}" class="preview-image" alt="Cropped ${category}" onclick="openModal('${url}')" onerror="this.parentElement.style.display='none'">
+                            </div>
+                        `).join('');
+                    }
+                    
+                    imagesHTML = `
+                        <div class="images-section">
+                            <div class="images-grid">
+                                ${imageCards}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                // Build links section
+                let linksHTML = '';
+                if (result.search_results && Object.keys(result.search_results).length > 0) {
+                    linksHTML = '<div class="links-section">';
+                    for (const [category, links] of Object.entries(result.search_results)) {
+                        if (links && links.length > 0) {
+                            linksHTML += `
+                                <div class="category-results">
+                                    <div class="category-header">📦 ${category} (${links.length} links)</div>
+                                    ${links.map(link => {
+                                        const linkUrl = typeof link === 'string' ? link : (link.link || link.url);
+                                        const linkTitle = typeof link === 'object' ? link.title : '';
+                                        const linkThumbnail = typeof link === 'object' ? link.thumbnail : '';
+                                        
+                                        return `
+                                            <div class="link-item">
+                                                ${linkThumbnail ? `<img src="${linkThumbnail}" class="link-thumbnail" alt="thumbnail" onerror="this.style.display='none'">` : ''}
+                                                <div class="link-content">
+                                                    ${linkTitle ? `<div class="link-title">${linkTitle}</div>` : ''}
+                                                    <a href="${linkUrl}" target="_blank" class="link-url">${linkUrl}</a>
+                                                </div>
+                                            </div>
+                                        `;
+                                    }).join('')}
+                                </div>
+                            `;
+                        }
+                    }
+                    linksHTML += '</div>';
+                } else if (result.status === 'success') {
+                    linksHTML = '<div class="no-results">No product links found</div>';
+                }
+                
+                let errorHTML = '';
+                if (result.errors && result.errors.length > 0) {
+                    errorHTML = `<div class="error-message"><strong>Error:</strong> ${result.errors.join(', ')}</div>`;
+                }
+                
+                return `
+                    <div class="result-card ${cardClass}">
+                        <div class="result-header">
+                            <div class="result-title">
+                                <div class="filename">${index + 1}. ${result.filename}</div>
+                                <div class="metadata">
+                                    ${result.phone ? `<div class="metadata-item">📞 ${result.phone}</div>` : ''}
+                                    <div class="metadata-item">🎯 ${result.requested_categories}</div>
+                                </div>
+                            </div>
+                            <span class="status-badge ${statusClass}">${result.status}</span>
+                        </div>
+                        
+                        ${result.status === 'success' ? `
+                            <div class="timing-grid">
+                                <div class="timing-item">
+                                    <div class="timing-label">Upload</div>
+                                    <div class="timing-value">${result.upload_time}s</div>
+                                </div>
+                                <div class="timing-item">
+                                    <div class="timing-label">Crop</div>
+                                    <div class="timing-value">${result.crop_time}s</div>
+                                </div>
+                                <div class="timing-item">
+                                    <div class="timing-label">Search</div>
+                                    <div class="timing-value">${result.search_time}s</div>
+                                </div>
+                                <div class="timing-item">
+                                    <div class="timing-label">Total</div>
+                                    <div class="timing-value">${result.total_time}s</div>
+                                </div>
+                            </div>
+                        ` : ''}
+                        
+                        ${imagesHTML}
+                        ${linksHTML}
+                        ${errorHTML}
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                currentFilter = e.target.dataset.filter;
+                displayResults();
+            });
+        });
+        
+        document.getElementById('search-box').addEventListener('input', displayResults);
+        
+        // Close modal on click outside
+        document.getElementById('imageModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+        
+        loadResults();
+    </script>
+</body>
+</html>

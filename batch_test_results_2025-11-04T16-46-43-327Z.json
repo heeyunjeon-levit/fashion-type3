@@ -1,0 +1,35 @@
+[
+  {
+    "filename": "0173bf6501b1-IMG_6324.png",
+    "phone": "'+821077992291",
+    "requested_categories": "상의, 하의",
+    "status": "success",
+    "upload_time": "1.33",
+    "crop_time": "104.68",
+    "search_time": "31.47",
+    "total_time": "137.49",
+    "cropped_urls": {
+      "tops": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/2384648579485590533_item1_white_shorts_crop_1762274771367.jpg?"
+    },
+    "search_results": {
+      "tops": [
+        {
+          "link": "https://ko.aliexpress.com/item/1005005008110856.html",
+          "thumbnail": "https://ae01.alicdn.com/kf/S81f7f5b7de8346819cb01928bdcdd996N.jpg",
+          "title": "다기능 야외 러닝 가방 사이클링 손목 밴드 지갑, 안전한 보관 ..."
+        },
+        {
+          "link": "https://blog.naver.com/rimi222/220960824184?viewType=pc",
+          "thumbnail": "https://mblogthumb-phinf.pstatic.net/MjAxNzAzMTdfMTkz/MDAxNDg5NzYwOTI1NDQy.lA7D8MMevAI3FE2lOh_f2rR7-67kcs5IWQ9wiazRgjQg.NxxPFIEpxbYGqt0U5IBHn2bcPfl0h7XnHs-PbEuxzHog.JPEG.rimi222/IMG_0005.JPG?type=w420",
+          "title": "키모니 손목밴드 KSA508 긴손목밴드로 손목부상 방지해요 ..."
+        },
+        {
+          "link": "https://www.depop.com/products/clarabay-super-cute-red-dress-fits/",
+          "thumbnail": "https://media-photos.depop.com/b0/9127473/849998242_641a7f973fee423cb779955cc1a8234e/P0.jpg",
+          "title": "Super cute red dress. Fits really nicely and is very... | Depop"
+        }
+      ]
+    },
+    "errors": []
+  }
+]
