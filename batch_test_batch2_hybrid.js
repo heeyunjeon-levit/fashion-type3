@@ -112,18 +112,49 @@ async function uploadToSupabase(imagePath) {
 }
 
 // Crop image (SEQUENTIAL - Modal bottleneck)
-async function cropImage(imageUrl, categories) {
-  const response = await fetch(`${BACKEND_URL}/crop`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ imageUrl, categories })
-  })
+async function cropImage(imageUrl, categories, retryCount = 0) {
+  const maxRetries = 2
   
-  if (!response.ok) {
-    throw new Error(`${response.status}: ${await response.text()}`)
+  try {
+    // Create AbortController for timeout (5 minutes max)
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 300000) // 5 minutes
+    
+    const response = await fetch(`${BACKEND_URL}/crop`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ imageUrl, categories }),
+      signal: controller.signal
+    })
+    
+    clearTimeout(timeoutId)
+    
+    if (!response.ok) {
+      const errorText = await response.text()
+      
+      // Retry on 408 timeout errors
+      if (response.status === 408 && retryCount < maxRetries) {
+        console.log(`   ⚠️  408 timeout, retrying (${retryCount + 1}/${maxRetries})...`)
+        await new Promise(resolve => setTimeout(resolve, 3000)) // Wait 3 seconds
+        return await cropImage(imageUrl, categories, retryCount + 1)
+      }
+      
+      throw new Error(`${response.status}: ${errorText}`)
+    }
+    
+    return await response.json()
+  } catch (error) {
+    // Retry on network errors (ECONNRESET, etc.)
+    if (error.name === 'AbortError') {
+      if (retryCount < maxRetries) {
+        console.log(`   ⚠️  Request timeout, retrying (${retryCount + 1}/${maxRetries})...`)
+        await new Promise(resolve => setTimeout(resolve, 3000))
+        return await cropImage(imageUrl, categories, retryCount + 1)
+      }
+      throw new Error('Request timeout after retries')
+    }
+    throw error
   }
-  
-  return await response.json()
 }
 
 // Search for products (can be parallelized)
@@ -180,6 +211,8 @@ async function processImage(task, index, total) {
     total_time: 0,
     error: null,
     cropped_items: 0,
+    original_image_url: null,
+    cropped_image_urls: {},
     search_results: {},
     source_counts: null
   }
@@ -195,20 +228,56 @@ async function processImage(task, index, total) {
       throw new Error(`Upload failed: ${task.error}`)
     }
     
+    // Save original image URL
+    result.original_image_url = task.imageUrl
+    
     // Crop (SEQUENTIAL - bottleneck)
     const t1 = Date.now()
     const cropData = await cropImage(task.imageUrl, result.requested_categories_en)
     result.crop_time = ((Date.now() - t1) / 1000).toFixed(2)
     
-    // Build crops object
+    // Build crops object and save cropped URLs
     const crops = {}
     if (cropData.croppedImageUrl) {
       crops[result.requested_categories_en[0]] = cropData.croppedImageUrl
+      result.cropped_image_urls[result.requested_categories_en[0]] = cropData.croppedImageUrl
       result.cropped_items = 1
     } else if (cropData.croppedImageUrls) {
+      // Parse filename to determine actual category (don't trust array order!)
+      const categoryKeywords = {
+        'tops': ['shirt', 'blouse', 'top', 'tee', 'sweater', 'hoodie', 'jacket', 'cardigan', 'vest'],
+        'bottoms': ['pants', 'jeans', 'skirt', 'shorts', 'trousers', 'leggings'],
+        'dress': ['dress', 'gown'],
+        'shoes': ['shoe', 'sneaker', 'boot', 'sandal', 'heel', 'loafer'],
+        'bags': ['bag', 'purse', 'backpack', 'tote', 'clutch', 'handbag'],
+        'accessories': ['necklace', 'bracelet', 'earring', 'watch', 'hat', 'scarf', 'belt', 'sunglasses', 'ring']
+      }
+      
       cropData.croppedImageUrls.forEach((url, idx) => {
-        const category = result.requested_categories_en[idx] || `item${idx + 1}`
+        // Extract filename from URL
+        const filename = url.split('/').pop().split('?')[0].toLowerCase()
+        
+        // Try to match filename keywords to requested categories
+        let matchedCategory = null
+        for (const requestedCat of result.requested_categories_en) {
+          const keywords = categoryKeywords[requestedCat] || [requestedCat]
+          if (keywords.some(keyword => filename.includes(keyword))) {
+            matchedCategory = requestedCat
+            break
+          }
+        }
+        
+        // Fallback to array index if no match found
+        const category = matchedCategory || result.requested_categories_en[idx] || `item${idx + 1}`
+        
+        if (matchedCategory) {
+          console.log(`   🎯 Matched '${filename}' → '${category}'`)
+        } else {
+          console.log(`   ⚠️  No match for '${filename}', using index → '${category}'`)
+        }
+        
         crops[category] = url
+        result.cropped_image_urls[category] = url
       })
       result.cropped_items = cropData.croppedImageUrls.length
     }
