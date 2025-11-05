@@ -201,6 +201,8 @@ export async function POST(request: NextRequest) {
           ? [itemDescription, ...(categorySearchTerms[categoryKey] || [categoryKey])]
           : (categorySearchTerms[categoryKey] || [categoryKey])
         
+        console.log(`🎯 Search terms for GPT: ${searchTerms.join(', ')}`)
+        
         // Determine specific sub-type for ALL categories to filter correctly
         let specificSubType = null
         let subTypeExclusion = ''
@@ -448,6 +450,7 @@ export async function POST(request: NextRequest) {
         const prompt = `You are analyzing aggregated image search results from multiple runs for ${categoryLabels[categoryKey]}.
 
 The original cropped image shows: ${searchTerms.join(', ')}
+${itemDescription ? `\n🎯 **SPECIFIC ITEM DESCRIPTION: "${itemDescription}"**\nYou MUST find products that match THIS SPECIFIC DESCRIPTION, not just the general category.` : ''}
 
 🚨 CRITICAL CATEGORY FILTER:
 - You are searching for: ${categoryLabels[categoryKey]}
@@ -482,15 +485,22 @@ SELECTION PROCESS:
 TITLE VALIDATION RULES (CRITICAL):
 1. ✅ READ the "title" field carefully - it tells you what the product actually is
 2. ✅ VERIFY the title mentions the CORRECT${specificSubType ? ` ${specificSubType.toUpperCase()}` : ' CATEGORY'} (${searchTerms[0]})
-3. ✅ CHECK the title mentions matching COLOR/STYLE details
-4. ❌ REJECT if title describes wrong${specificSubType ? ` item type (e.g., ${specificSubType} search should NOT return other types)` : ' category'} (even if link looks good)
-5. ❌ REJECT if title is generic ("Shop now", "Homepage", "Category")
+${itemDescription ? `3. ✅ **CRITICAL: Title MUST match the specific description "${itemDescription}"** - Not just the category!
+   - Example: For "red knit hoodie", REJECT "압박스타킹" (socks), REJECT jackets, REJECT cardigans
+   - Example: For "black short sleeve top", REJECT "halter neck" (different neckline), REJECT "long sleeve"
+   - Match the KEY DESCRIPTIVE WORDS: color, material, type, style, neckline, sleeve length, etc.` : ''}
+4. ✅ CHECK the title mentions matching COLOR/STYLE details
+5. ❌ REJECT if title describes wrong${specificSubType ? ` item type (e.g., ${specificSubType} search should NOT return other types)` : ' category'} (even if link looks good)
+6. ❌ REJECT if title is generic ("Shop now", "Homepage", "Category")
+7. ❌ REJECT if title describes completely different item attributes (wrong neckline, wrong sleeve, wrong material)
 
 Matching criteria (in order):
 1. ✅ Title MUST mention correct category: ${categorySearchTerms[categoryKey]?.join(', ')}
-2. ✅ Title MUST mention SAME COLOR as the cropped image  
-3. ✅ Title SHOULD mention similar STYLE (vintage, casual, formal, etc.)
-4. ✅ Link goes to a product detail page (not category/homepage)
+${itemDescription ? `2. ✅ **Title MUST match specific description "${itemDescription}"** (not just category)` : ''}
+3. ✅ Title MUST mention SAME COLOR as the cropped image  
+4. ✅ Title SHOULD mention similar STYLE (vintage, casual, formal, etc.)
+5. ✅ Title SHOULD match SPECIFIC ATTRIBUTES (neckline, sleeve length, material, etc.)
+6. ✅ Link goes to a product detail page (not category/homepage)
 
 AVALIABILITY NOTES:
 - Products from Etsy, Depop, Poshmark, Mercari are from individual sellers and may be sold out
@@ -572,6 +582,45 @@ Return JSON: {"${resultKey}": ["https://url1.com/product1", "https://url2.com/pr
           if (!resultItem) {
             console.log(`🚫 Post-filter: Link not in filtered results: ${link.substring(0, 60)}...`)
             return false
+          }
+          
+          // ADDITIONAL VALIDATION: Check if title matches the specific item description
+          // This catches cases where GPT might have missed specific attribute mismatches
+          if (itemDescription && resultItem.title) {
+            const title = resultItem.title.toLowerCase()
+            const description = itemDescription.toLowerCase()
+            
+            // Extract key descriptive words from the description (color, material, type, etc.)
+            const descWords = description.split(/[\s_]+/).filter(word => word.length > 2)
+            
+            // Check for critical attribute mismatches
+            const criticalMismatches = [
+              // Sleeve length mismatches
+              { desc: ['short sleeve', 'short-sleeve'], exclude: ['long sleeve', 'long-sleeve', 'longsleeve'] },
+              { desc: ['long sleeve', 'long-sleeve', 'longsleeve'], exclude: ['short sleeve', 'short-sleeve', 'shortsleeve'] },
+              { desc: ['sleeveless'], exclude: ['long sleeve', 'short sleeve', 'sleeved'] },
+              
+              // Neckline mismatches
+              { desc: ['collar', 'collared'], exclude: ['halter', 'v-neck', 'vneck', 'crew neck', 'crewneck'] },
+              { desc: ['halter'], exclude: ['collar', 'v-neck', 'vneck', 'crew neck', 'crewneck'] },
+              { desc: ['v-neck', 'vneck'], exclude: ['collar', 'halter', 'crew neck', 'crewneck'] },
+              
+              // Completely wrong item types
+              { desc: ['hoodie', 'hooded'], exclude: ['cardigan', 'blazer', 'vest', 'socks', '양말', '스타킹', 'stockings'] },
+              { desc: ['jacket', 'coat'], exclude: ['shirt', 'blouse', 'sweater', 'hoodie', 'socks', '양말'] },
+              { desc: ['sweater', 'knit'], exclude: ['jacket', 'coat', 'blazer', 'socks', '양말', '스타킹'] }
+            ]
+            
+            for (const mismatch of criticalMismatches) {
+              const hasDescAttribute = mismatch.desc.some(attr => description.includes(attr))
+              if (hasDescAttribute) {
+                const hasExcludedAttribute = mismatch.exclude.some(attr => title.includes(attr))
+                if (hasExcludedAttribute) {
+                  console.log(`🚫 Post-filter: Title attribute mismatch for "${itemDescription}": "${resultItem.title?.substring(0, 80)}..."`)
+                  return false
+                }
+              }
+            }
           }
           
           return true
