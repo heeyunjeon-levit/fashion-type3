@@ -31,7 +31,8 @@ const CATEGORY_MAP = {
   '하의': 'bottoms',
   '신발': 'shoes',
   '가방': 'bags',
-  '악세사리': 'accessories'
+  '악세사리': 'accessories',
+  '드레스': 'dress'
 }
 
 // Parse CSV (handles quoted values)
@@ -258,7 +259,15 @@ async function testImage(filename, categories, phone, batchDir) {
     
     if (searchResult.results) {
       result.search_results = searchResult.results
-      console.log(`✅ Search completed in ${result.search_time}s`)
+      
+      // Track result sources (GPT vs Fallback)
+      if (searchResult.meta?.sourceCounts) {
+        result.source_counts = searchResult.meta.sourceCounts
+        console.log(`✅ Search completed in ${result.search_time}s`)
+        console.log(`   📈 Sources: GPT=${searchResult.meta.sourceCounts.gpt}, Fallback=${searchResult.meta.sourceCounts.fallback}`)
+      } else {
+        console.log(`✅ Search completed in ${result.search_time}s`)
+      }
       
       // Display results
       for (const [category, links] of Object.entries(searchResult.results)) {
@@ -362,6 +371,28 @@ async function main() {
   console.log(`   Crop: ${avgCropTime}s`)
   console.log(`   Search: ${avgSearchTime}s`)
   console.log(`   Total: ${avgTotalTime}s`)
+  
+  // Calculate aggregate source statistics
+  const totalSourceCounts = { gpt: 0, fallback: 0, none: 0, error: 0 }
+  results.forEach(r => {
+    if (r.source_counts) {
+      totalSourceCounts.gpt += r.source_counts.gpt || 0
+      totalSourceCounts.fallback += r.source_counts.fallback || 0
+      totalSourceCounts.none += r.source_counts.none || 0
+      totalSourceCounts.error += r.source_counts.error || 0
+    }
+  })
+  
+  const totalSources = totalSourceCounts.gpt + totalSourceCounts.fallback + totalSourceCounts.none + totalSourceCounts.error
+  if (totalSources > 0) {
+    const gptPercent = ((totalSourceCounts.gpt / totalSources) * 100).toFixed(1)
+    const fallbackPercent = ((totalSourceCounts.fallback / totalSources) * 100).toFixed(1)
+    console.log(`\n📈 Result Source Statistics:`)
+    console.log(`   GPT Selected: ${totalSourceCounts.gpt} (${gptPercent}%)`)
+    console.log(`   Fallback Used: ${totalSourceCounts.fallback} (${fallbackPercent}%)`)
+    console.log(`   No Results: ${totalSourceCounts.none}`)
+    console.log(`   Errors: ${totalSourceCounts.error}`)
+  }
   
   // Save results
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-')

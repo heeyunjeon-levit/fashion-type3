@@ -482,53 +482,61 @@ SELECTION PROCESS:
 - Example for tops: "red sweatshirt" ✅, "red skirt" ❌ (wrong category)
 - Prefer actual product pages over homepages, category pages, or general listings
 
-TITLE VALIDATION RULES (CRITICAL):
+TITLE VALIDATION RULES (RELAXED - prioritize category match):
 1. ✅ READ the "title" field carefully - it tells you what the product actually is
 2. ✅ VERIFY the title mentions the CORRECT${specificSubType ? ` ${specificSubType.toUpperCase()}` : ' CATEGORY'} (${searchTerms[0]})
-${itemDescription ? `3. ✅ **CRITICAL: Title MUST match the specific description "${itemDescription}"** - Not just the category!
-   - Example: For "red knit hoodie", REJECT "압박스타킹" (socks), REJECT jackets, REJECT cardigans
-   - Example: For "black short sleeve top", REJECT "halter neck" (different neckline), REJECT "long sleeve"
-   - Match the KEY DESCRIPTIVE WORDS: color, material, type, style, neckline, sleeve length, etc.` : ''}
-4. ✅ CHECK the title mentions matching COLOR/STYLE details
-5. ❌ REJECT if title describes wrong${specificSubType ? ` item type (e.g., ${specificSubType} search should NOT return other types)` : ' category'} (even if link looks good)
-6. ❌ REJECT if title is generic ("Shop now", "Homepage", "Category")
-7. ❌ REJECT if title describes completely different item attributes (wrong neckline, wrong sleeve, wrong material)
+${itemDescription ? `3. ✅ **Title SHOULD be similar to "${itemDescription}"** (close enough is fine!)
+   - Accept similar colors: "black" ≈ "dark blue" ≈ "navy", "white" ≈ "cream" ≈ "beige"
+   - Accept variations: "shirt" ≈ "blouse" ≈ "top", "hoodie" ≈ "sweatshirt"
+   - ONLY reject if completely wrong item (e.g., socks for hoodie, skirt for top)
+   - Be forgiving with Korean text - titles may be translated or use different terms` : ''}
+4. ✅ PREFER titles with matching/similar COLOR (but don't require exact match)
+5. ❌ ONLY REJECT if completely wrong${specificSubType ? ` item type (e.g., socks when searching for ${specificSubType})` : ' category'} 
+6. ❌ REJECT if title is generic ("Shop now", "Homepage", "Category", "Collection")
+7. ✅ Accept different styles/attributes as long as category is correct
 
-Matching criteria (in order):
-1. ✅ Title MUST mention correct category: ${categorySearchTerms[categoryKey]?.join(', ')}
-${itemDescription ? `2. ✅ **Title MUST match specific description "${itemDescription}"** (not just category)` : ''}
-3. ✅ Title MUST mention SAME COLOR as the cropped image  
-4. ✅ Title SHOULD mention similar STYLE (vintage, casual, formal, etc.)
-5. ✅ Title SHOULD match SPECIFIC ATTRIBUTES (neckline, sleeve length, material, etc.)
-6. ✅ Link goes to a product detail page (not category/homepage)
+Matching criteria (prioritize in order, but be forgiving):
+1. ✅ MUST: Title mentions correct category: ${categorySearchTerms[categoryKey]?.join(', ')}
+${itemDescription ? `2. ✅ PREFER: Title similar to "${itemDescription}" (but accept variations)` : ''}
+3. ✅ PREFER: Title mentions similar/close color (exact match not required)
+4. ✅ NICE TO HAVE: Similar STYLE (vintage, casual, formal, etc.)
+5. ✅ NICE TO HAVE: Similar ATTRIBUTES (neckline, sleeve length, material, etc.)
+6. ✅ MUST: Link goes to a product detail page (not category/homepage)
+
+**IMPORTANT: Return your BEST 3-5 options even if not perfect matches. Empty array ONLY if no valid product links exist.**
 
 AVAILABILITY & ACCESSIBILITY NOTES:
 - Products from Etsy, Depop, Poshmark, Mercari are from individual sellers and may be sold out
 - **PREFER globally accessible major retailers**: Amazon, Zara, H&M, Nordstrom, ASOS, Uniqlo, Mango, etc.
 - **AVOID region-specific sites** that may be geo-restricted (e.g., .sq, .al domains or /sq/, /al/ paths)
 - Try to include at least one link from a major international retailer if available
-- It's okay to include Korean sites (Musinsa, Zigzag, Coupang) - these are accessible globally
+- Prioritize to include Korean sites (Musinsa, Zigzag, Coupang) - these are accessible globally
 - Users prefer links they can actually access and purchase from
 
 Search results (scan all ${resultsForGPT.length} for best matches):
 ${JSON.stringify(resultsForGPT, null, 2)}
 
-**VALIDATION PROCESS (follow strictly):**
+**VALIDATION PROCESS (be forgiving and flexible):**
 For EACH result you consider:
 1. 📖 READ the "title" field first
 2. ✅ CHECK: Does title mention the correct category? (${categorySearchTerms[categoryKey]?.join('/')})
-3. ✅ CHECK: Does title mention matching color/style?
+3. ✅ PREFER: Title mentions similar color/style (but accept close variations)
 4. ✅ CHECK: Is it a specific product (not "Shop", "Category", "Homepage")?
-5. ❌ SKIP if title doesn't match - even if thumbnail looks good
-6. ✅ SELECT only if title validation passes
+5. ✅ SELECT if category matches and it's a reasonable match (don't be too strict!)
 
-Find the TOP 3 BEST MATCHES where the TITLE accurately describes a matching product.
-Prioritize variety: include different retailers/stores when possible to give users multiple purchasing options.
+Find the TOP 3-5 BEST AVAILABLE MATCHES. Prioritize:
+- Category accuracy (must match)
+- Similar color/style (prefer but don't require exact)
+- Product variety (different retailers when possible)
+- Accessibility (prefer major retailers)
 
-🚫 IMPORTANT: Return ONLY links where the TITLE confirms it's a matching product. If you find fewer than 3 valid matches, return only what you found (1 or 2 links is fine). 
-NEVER include links where the title doesn't match, even if the thumbnail looks similar.
+✅ IMPORTANT: Return your BEST 3-5 options even if not perfect. 
+- Accept close color matches (navy ≈ black, cream ≈ white)
+- Accept style variations within the same category
+- Be forgiving with Korean titles (translation may vary)
+- Only return [] if literally NO valid product links exist in the results
 
-Return JSON: {"${resultKey}": ["https://url1.com/product1", "https://url2.com/product2"]} (1-3 links) or {"${resultKey}": []} if NO valid product links exist.`
+Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links preferred) or {"${resultKey}": []} ONLY if zero valid products found.`
 
         const openai = getOpenAIClient()
         const completion = await openai.chat.completions.create({
@@ -560,10 +568,21 @@ Return JSON: {"${resultKey}": ["https://url1.com/product1", "https://url2.com/pr
         
         // Blocked domains - social media and non-product sites
         const blockedDomains = [
-          'instagram.com', 'tiktok.com', 'youtube.com', 'youtu.be',
-          'pinterest.com', 'facebook.com', 'twitter.com', 'x.com',
-          'reddit.com', 'tumblr.com', 'snapchat.com',
-          'images.google.com', 'google.com/images'
+          // Social media platforms
+          'instagram.com', 'www.instagram.com', 'ig.me', 'instagr.am',
+          'tiktok.com', 'www.tiktok.com', 'vt.tiktok.com',
+          'youtube.com', 'youtu.be', 'www.youtube.com', 'm.youtube.com',
+          'pinterest.com', 'www.pinterest.com', 'pin.it',
+          'facebook.com', 'www.facebook.com', 'fb.com', 'fb.me', 'm.facebook.com',
+          'twitter.com', 'x.com', 'www.twitter.com', 't.co',
+          'reddit.com', 'www.reddit.com', 'redd.it',
+          'tumblr.com', 'www.tumblr.com',
+          'snapchat.com', 'www.snapchat.com',
+          'threads.net', 'www.threads.net',  // Meta's Threads
+          'weibo.com', 'weibo.cn',  // Chinese social media
+          // Image search engines (not product pages)
+          'images.google.com', 'google.com/images', 'www.google.com/images',
+          'yandex.com/images', 'images.search.yahoo.com'
         ]
         
         // Problematic URL patterns (geo-restricted, frequently broken links)
@@ -584,6 +603,34 @@ Return JSON: {"${resultKey}": ["https://url1.com/product1", "https://url2.com/pr
           
           if (isBlocked) {
             console.log(`🚫 Blocked social media link: ${link.substring(0, 50)}...`)
+            return false
+          }
+          
+          // Filter out category/search/listing pages (not actual products)
+          // Be precise to avoid false positives on actual product pages with query params
+          const isCategoryPage = 
+            // Search pages
+            linkLower.includes('/search?') ||
+            linkLower.includes('/search.') ||
+            linkLower.includes('/search_') ||
+            linkLower.includes('/searchresult') ||
+            linkLower.includes('search-result') ||
+            // List/category pages
+            linkLower.includes('/list?') ||
+            linkLower.includes('/list.') ||
+            linkLower.includes('/category?') ||
+            linkLower.includes('/category/') && !linkLower.match(/\/category\/[^\/]+\/product/) || // Allow /category/xyz/product/123
+            linkLower.includes('/shop/list') ||
+            // Query parameters that indicate search/listing (but not product params)
+            linkLower.match(/[?&]query=/i) ||
+            linkLower.match(/[?&]keyword=/i) ||
+            linkLower.match(/[?&]q=/i) && !linkLower.includes('/product') || // Allow /product?q=... but not /search?q=...
+            // Collection/product listing endpoints (but allow specific products)
+            linkLower.match(/\/products\?/i) && !linkLower.match(/\/products\/[^?]+\?/) || // Block /products? but allow /products/123?
+            linkLower.match(/\/collections\?/i) && !linkLower.match(/\/collections\/[^?]+\/products/)  // Block /collections? but allow /collections/xyz/products/123
+          
+          if (isCategoryPage) {
+            console.log(`🚫 Blocked category/search page: ${link.substring(0, 60)}...`)
             return false
           }
           
@@ -664,11 +711,47 @@ Return JSON: {"${resultKey}": ["https://url1.com/product1", "https://url2.com/pr
           })
           
           console.log(`✅ Found ${validLinks.length} link(s) for ${resultKey}:`, validLinks.slice(0, 3))
-          return { resultKey, results: linksWithThumbnails }
+          return { resultKey, results: linksWithThumbnails, source: 'gpt' }
         } else {
-          // Fallback: take top 3 organic results directly
+          // Fallback: take top 3 organic results directly (with filtering)
           const fallback = organicResults
-            .filter((item: any) => typeof item?.link === 'string' && item.link.startsWith('http'))
+            .filter((item: any) => {
+              if (typeof item?.link !== 'string' || !item.link.startsWith('http')) return false
+              
+              const linkLower = item.link.toLowerCase()
+              
+              // Filter out social media
+              const isSocialMedia = blockedDomains.some(domain => linkLower.includes(domain))
+              if (isSocialMedia) {
+                console.log(`🛟 Fallback: Blocked social media: ${item.link.substring(0, 60)}...`)
+                return false
+              }
+              
+              // Filter out category/search pages
+              const isCategoryPage = 
+                linkLower.includes('/search?') ||
+                linkLower.includes('/search.') ||
+                linkLower.includes('/search_') ||
+                linkLower.includes('/searchresult') ||
+                linkLower.includes('search-result') ||
+                linkLower.includes('/list?') ||
+                linkLower.includes('/list.') ||
+                linkLower.includes('/category?') ||
+                linkLower.includes('/category/') && !linkLower.match(/\/category\/[^\/]+\/product/) ||
+                linkLower.includes('/shop/list') ||
+                linkLower.match(/[?&]query=/i) ||
+                linkLower.match(/[?&]keyword=/i) ||
+                linkLower.match(/[?&]q=/i) && !linkLower.includes('/product') ||
+                linkLower.match(/\/products\?/i) && !linkLower.match(/\/products\/[^?]+\?/) ||
+                linkLower.match(/\/collections\?/i) && !linkLower.match(/\/collections\/[^?]+\/products/)
+              
+              if (isCategoryPage) {
+                console.log(`🛟 Fallback: Blocked category page: ${item.link.substring(0, 60)}...`)
+                return false
+              }
+              
+              return true
+            })
             .slice(0, 3)
             .map((item: any) => ({
               link: item.link,
@@ -677,30 +760,36 @@ Return JSON: {"${resultKey}": ["https://url1.com/product1", "https://url2.com/pr
             }))
           if (fallback.length > 0) {
             console.log(`🛟 Fallback used for ${resultKey} with ${fallback.length} link(s)`)
-            return { resultKey, results: fallback }
+            return { resultKey, results: fallback, source: 'fallback' }
           } else {
             console.log(`⚠️ No valid link for ${resultKey}`)
-            return { resultKey, results: null }
+            return { resultKey, results: null, source: 'none' }
           }
         }
       } catch (error) {
         console.error(`❌ Error searching for ${resultKey}:`, error)
-        return { resultKey, results: null }
+        return { resultKey, results: null, source: 'error' }
       }
     })
 
     // Wait for all searches to complete in parallel
     const searchResults = await Promise.all(searchPromises)
     
-    // Aggregate results
-    for (const { resultKey, results } of searchResults) {
+    // Aggregate results and track sources
+    const sourceCounts = { gpt: 0, fallback: 0, none: 0, error: 0 }
+    for (const { resultKey, results, source } of searchResults) {
       if (results) {
         allResults[resultKey] = results
+      }
+      // Track source statistics
+      if (source) {
+        sourceCounts[source as keyof typeof sourceCounts]++
       }
     }
 
     console.log('\n📊 Final results:', Object.keys(allResults))
-    return NextResponse.json({ results: allResults })
+    console.log(`📈 Result sources: GPT=${sourceCounts.gpt}, Fallback=${sourceCounts.fallback}, None=${sourceCounts.none}, Error=${sourceCounts.error}`)
+    return NextResponse.json({ results: allResults, meta: { sourceCounts } })
   } catch (error) {
     console.error('❌ Search error:', error)
     return NextResponse.json(
