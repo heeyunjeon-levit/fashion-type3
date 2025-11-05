@@ -502,10 +502,13 @@ ${itemDescription ? `2. ✅ **Title MUST match specific description "${itemDescr
 5. ✅ Title SHOULD match SPECIFIC ATTRIBUTES (neckline, sleeve length, material, etc.)
 6. ✅ Link goes to a product detail page (not category/homepage)
 
-AVALIABILITY NOTES:
+AVAILABILITY & ACCESSIBILITY NOTES:
 - Products from Etsy, Depop, Poshmark, Mercari are from individual sellers and may be sold out
-- Try to include at least one link from a major retailer (Amazon, Nordstrom, etc.) if available
-- It's okay to include vintage/individual seller links - users can try them and move to the next option if unavailable
+- **PREFER globally accessible major retailers**: Amazon, Zara, H&M, Nordstrom, ASOS, Uniqlo, Mango, etc.
+- **AVOID region-specific sites** that may be geo-restricted (e.g., .sq, .al domains or /sq/, /al/ paths)
+- Try to include at least one link from a major international retailer if available
+- It's okay to include Korean sites (Musinsa, Zigzag, Coupang) - these are accessible globally
+- Users prefer links they can actually access and purchase from
 
 Search results (scan all ${resultsForGPT.length} for best matches):
 ${JSON.stringify(resultsForGPT, null, 2)}
@@ -573,6 +576,13 @@ Return JSON: {"${resultKey}": ["https://url1.com/product1", "https://url2.com/pr
           
           if (isBlocked) {
             console.log(`🚫 Blocked social media link: ${link.substring(0, 50)}...`)
+            return false
+          }
+          
+          // Check for problematic URL patterns (geo-restricted, broken links)
+          const hasProblematicPattern = problematicPatterns.some(pattern => linkLower.includes(pattern))
+          if (hasProblematicPattern) {
+            console.log(`🚫 Blocked geo-restricted/problematic link: ${link.substring(0, 60)}...`)
             return false
           }
           
