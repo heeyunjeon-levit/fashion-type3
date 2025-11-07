@@ -128,12 +128,8 @@ export default function Home() {
             <div className="bg-white rounded-2xl shadow-xl p-12">
               <div className="text-center space-y-6">
                 <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-indigo-600 mx-auto"></div>
-                <h2 className="text-2xl font-bold text-gray-800">AI 분석 및 자르기 중...</h2>
-                <p className="text-gray-600">이미지에서 아이템을 찾고 자르는 중이에요</p>
-                <div className="space-y-2 text-sm text-gray-500">
-                  <p>• GPT-4o가 패션 아이템을 감지합니다</p>
-                  <p>• GroundingDINO가 아이템을 정확히 찾아 자릅니다</p>
-                </div>
+                <h2 className="text-2xl font-bold text-gray-800">AI 분석중...</h2>
+                <p className="text-gray-600">이미지에서 아이템을 찾고 있어요</p>
               </div>
             </div>
           </div>
