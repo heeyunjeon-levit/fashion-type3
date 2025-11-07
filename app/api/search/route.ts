@@ -482,28 +482,30 @@ SELECTION PROCESS:
 - Example for tops: "red sweatshirt" ✅, "red skirt" ❌ (wrong category)
 - Prefer actual product pages over homepages, category pages, or general listings
 
-TITLE VALIDATION RULES (RELAXED - prioritize category match):
+TITLE VALIDATION RULES (STRICT - prioritize quality):
 1. ✅ READ the "title" field carefully - it tells you what the product actually is
 2. ✅ VERIFY the title mentions the CORRECT${specificSubType ? ` ${specificSubType.toUpperCase()}` : ' CATEGORY'} (${searchTerms[0]})
-${itemDescription ? `3. ✅ **Title SHOULD be similar to "${itemDescription}"** (close enough is fine!)
-   - Accept similar colors: "black" ≈ "dark blue" ≈ "navy", "white" ≈ "cream" ≈ "beige"
-   - Accept variations: "shirt" ≈ "blouse" ≈ "top", "hoodie" ≈ "sweatshirt"
-   - ONLY reject if completely wrong item (e.g., socks for hoodie, skirt for top)
-   - Be forgiving with Korean text - titles may be translated or use different terms` : ''}
-4. ✅ PREFER titles with matching/similar COLOR (but don't require exact match)
-5. ❌ ONLY REJECT if completely wrong${specificSubType ? ` item type (e.g., socks when searching for ${specificSubType})` : ' category'} 
+${itemDescription ? `3. 🎯 **Title MUST closely match "${itemDescription}"**
+   - Color match is IMPORTANT: "black" ≠ "blue", "white" ≠ "beige" (exact or very close)
+   - Item type match is CRITICAL: exact type preferred (shirt = shirt, hoodie = hoodie)
+   - Style/material should be similar when mentioned
+   - REJECT if colors don't match (unless item description didn't specify color)
+   - For Korean text: be precise with category, flexible with style descriptions` : ''}
+4. ✅ STRONGLY PREFER titles with MATCHING COLOR (reject if clearly different color)
+5. ❌ REJECT if wrong${specificSubType ? ` item type (e.g., wrong ${specificSubType})` : ' category'} 
 6. ❌ REJECT if title is generic ("Shop now", "Homepage", "Category", "Collection")
-7. ✅ Accept different styles/attributes as long as category is correct
+7. ❌ REJECT if significantly different style (formal vs casual, vintage vs modern)
 
-Matching criteria (prioritize in order, but be forgiving):
+Matching criteria (strict priority order):
 1. ✅ MUST: Title mentions correct category: ${categorySearchTerms[categoryKey]?.join(', ')}
-${itemDescription ? `2. ✅ PREFER: Title similar to "${itemDescription}" (but accept variations)` : ''}
-3. ✅ PREFER: Title mentions similar/close color (exact match not required)
-4. ✅ NICE TO HAVE: Similar STYLE (vintage, casual, formal, etc.)
-5. ✅ NICE TO HAVE: Similar ATTRIBUTES (neckline, sleeve length, material, etc.)
+${itemDescription ? `2. ✅ MUST: Title closely matches "${itemDescription}" (strict match)` : ''}
+3. ✅ MUST: Title mentions matching or very similar color
+4. ✅ PREFER: Title mentions similar STYLE (vintage, casual, formal, etc.)
+5. ✅ PREFER: Title mentions similar ATTRIBUTES (neckline, sleeve length, material, etc.)
 6. ✅ MUST: Link goes to a product detail page (not category/homepage)
+7. ✅ PREFER: Reputable retailers and brands (luxury brands, major retailers preferred)
 
-**IMPORTANT: Return your BEST 3-5 options even if not perfect matches. Empty array ONLY if no valid product links exist.**
+**IMPORTANT: Return your BEST 3-5 HIGH-QUALITY matches ONLY. Quality over quantity. Empty array if no good matches exist.**
 
 AVAILABILITY & ACCESSIBILITY NOTES:
 - Products from Etsy, Depop, Poshmark, Mercari are from individual sellers and may be sold out

@@ -28,13 +28,26 @@ export async function POST(request: NextRequest) {
 
     console.log('📦 Buffer size:', buffer.length)
 
-    // Generate unique filename - ensure .jpg extension for converted HEIC files
+    // Generate unique filename - sanitize to remove non-ASCII characters (Korean, etc.)
     const timestamp = Date.now()
-    let filename = `upload_${timestamp}_${file.name}`
+    
+    // Sanitize filename: remove all non-ASCII characters, keep only alphanumeric, dots, hyphens, underscores
+    const sanitizedName = file.name
+      .normalize('NFD') // Normalize Unicode
+      .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
+      .replace(/[^\x00-\x7F]/g, '') // Remove non-ASCII (Korean, Chinese, etc.)
+      .replace(/[^a-zA-Z0-9._-]/g, '_') // Replace remaining invalid chars with underscore
+      .replace(/_{2,}/g, '_') // Replace multiple underscores with single
+      .trim()
+    
+    // Fallback if sanitization removed everything
+    const baseName = sanitizedName || 'image'
+    
+    let filename = `upload_${timestamp}_${baseName}`
     
     // If file type is JPEG but name doesn't end with jpg/jpeg, fix the extension
-    if (file.type === 'image/jpeg' && !file.name.match(/\.(jpg|jpeg)$/i)) {
-      filename = `upload_${timestamp}_${file.name.replace(/\.[^.]+$/, '')}.jpg`
+    if (file.type === 'image/jpeg' && !filename.match(/\.(jpg|jpeg)$/i)) {
+      filename = `upload_${timestamp}_${baseName.replace(/\.[^.]+$/, '')}.jpg`
     }
 
     console.log('📁 Filename:', filename)
