@@ -167,12 +167,7 @@ export default function Home() {
             <div className="bg-white rounded-2xl shadow-xl p-12">
               <div className="text-center space-y-6">
                 <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-purple-600 mx-auto"></div>
-                <h2 className="text-2xl font-bold text-gray-800">검색 중...</h2>
-                <p className="text-gray-600">선택한 {selectedItems.length}개 아이템을 검색하고 있어요</p>
-                <div className="space-y-2 text-sm text-gray-500">
-                  <p>• 각 아이템마다 3회 검색으로 최상의 결과 찾기</p>
-                  <p>• GPT-4가 가장 유사한 상품을 선별합니다</p>
-                </div>
+                <h2 className="text-2xl font-bold text-gray-800">AI가 요청하신 상품을 찾고 있어요</h2>
               </div>
             </div>
           </div>
