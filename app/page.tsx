@@ -125,11 +125,28 @@ export default function Home() {
         )}
         {currentStep === 'analyzing' && (
           <div className="max-w-2xl mx-auto mt-8">
-            <div className="bg-white rounded-2xl shadow-xl p-12">
+            <div className="bg-white rounded-2xl shadow-xl p-8">
               <div className="text-center space-y-6">
-                <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-indigo-600 mx-auto"></div>
-                <h2 className="text-2xl font-bold text-gray-800">AI 분석중...</h2>
-                <p className="text-gray-600">이미지에서 아이템을 찾고 있어요</p>
+                {/* Image with animated gradient border (iPhone AI style) */}
+                <div className="relative inline-block">
+                  {/* Animated gradient border */}
+                  <div className="absolute -inset-1 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 rounded-2xl blur-sm opacity-75 animate-gradient-rotate"></div>
+                  
+                  {/* Image container */}
+                  <div className="relative bg-white rounded-2xl p-2">
+                    <img
+                      src={uploadedImageUrl}
+                      alt="Analyzing"
+                      className="w-full h-96 object-contain rounded-xl"
+                    />
+                  </div>
+                </div>
+
+                {/* Text */}
+                <div className="space-y-2">
+                  <h2 className="text-2xl font-bold text-gray-800">AI 분석중...</h2>
+                  <p className="text-gray-600">이미지에서 아이템을 찾고 있어요</p>
+                </div>
               </div>
             </div>
           </div>
