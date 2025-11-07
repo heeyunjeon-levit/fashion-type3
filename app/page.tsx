@@ -128,12 +128,15 @@ export default function Home() {
             <div className="bg-white rounded-2xl shadow-xl p-8">
               <div className="text-center space-y-6">
                 {/* Image with animated gradient border (iPhone AI style) */}
-                <div className="relative inline-block">
-                  {/* Animated gradient border */}
-                  <div className="absolute -inset-1 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 rounded-2xl blur-sm opacity-75 animate-gradient-rotate"></div>
+                <div className="relative inline-block overflow-hidden rounded-2xl">
+                  {/* Animated gradient rectangle (larger than container) */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 animate-gradient-rotate"></div>
+                  
+                  {/* White mask rectangles to create border effect */}
+                  <div className="absolute inset-[3px] bg-white rounded-2xl"></div>
                   
                   {/* Image container */}
-                  <div className="relative bg-white rounded-2xl p-2">
+                  <div className="relative bg-white rounded-2xl p-2 m-[3px]">
                     <img
                       src={uploadedImageUrl}
                       alt="Analyzing"
