@@ -255,69 +255,99 @@
         /* Products */
         .products {
             margin-top: 20px;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 10px;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
         }
         .product-category {
-            margin-bottom: 20px;
+            margin-bottom: 40px;
         }
         .category-title {
-            font-weight: 600;
+            font-weight: 700;
             color: #667eea;
-            margin-bottom: 12px;
-            font-size: 1em;
-            text-transform: capitalize;
+            margin-bottom: 25px;
+            font-size: 2em;
+            text-transform: uppercase;
             display: flex;
             align-items: center;
             gap: 8px;
         }
         .result-count {
-            background: #667eea;
-            color: white;
-            padding: 3px 10px;
-            border-radius: 12px;
-            font-size: 0.8em;
+            color: #667eea;
+            font-size: 0.5em;
+            font-weight: 700;
+            text-transform: lowercase;
         }
-        .product-link {
-            display: flex;
-            gap: 12px;
-            padding: 12px;
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+        .product-card {
             background: white;
             border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            text-decoration: none;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+        }
+        .product-card:hover {
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            transform: translateY(-4px);
+        }
+        .product-thumbnail {
+            width: 100%;
+            aspect-ratio: 4 / 3;
+            object-fit: cover;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        .product-info { 
+            padding: 16px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .product-title {
+            font-size: 0.85em;
+            line-height: 1.4;
+            margin-bottom: 12px;
             color: #333;
+            font-weight: 400;
+            flex-grow: 1;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            min-height: 2.8em;
+        }
+        .product-link {
+            display: block;
+            text-align: center;
+            background: #667eea;
+            color: white;
+            padding: 10px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9em;
             transition: all 0.3s;
         }
         .product-link:hover {
-            border-color: #667eea;
-            transform: translateX(5px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+            background: #5568d3;
         }
-        .product-thumbnail {
-            width: 70px;
-            height: 70px;
-            object-fit: cover;
-            border-radius: 6px;
-            flex-shrink: 0;
-            border: 2px solid #dee2e6;
+        @media (max-width: 1200px) {
+            .product-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
-        .product-info { 
-            flex: 1; 
-            min-width: 0;
-        }
-        .product-title {
-            font-size: 0.9em;
-            line-height: 1.4;
-            margin-bottom: 5px;
-            font-weight: 500;
-        }
-        .product-domain {
-            font-size: 0.8em;
-            color: #667eea;
-            font-weight: 600;
+        @media (max-width: 768px) {
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
         }
         
         /* Modal for full-size images */
@@ -430,7 +460,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_sweatshirt_hoodie_1762364327353.jpg?')">
@@ -516,7 +546,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (2)</div>
+                                <div class="section-label">✂️ Cropped Images (2):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_cream_polka_dot_vest_blue_knit_bonnet_1762364447072.jpg?')">
@@ -602,7 +632,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_black_short_sleeve_top_1762364505589.jpg?')">
@@ -688,7 +718,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_sweatshirt_1762364566863.jpg?')">
@@ -774,7 +804,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (2)</div>
+                                <div class="section-label">✂️ Cropped Images (2):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_white_layered_ruffle_blouse_1762364727328.jpg?')">
@@ -873,7 +903,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_sleeve_pajama_top_1762364791983.jpg?')">
@@ -951,7 +981,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_gray_short_sleeve_maxi_dress_1762364858463.jpg?')">
@@ -1037,7 +1067,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (2)</div>
+                                <div class="section-label">✂️ Cropped Images (2):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_black_long_sleeve_midi_dress_1762364928519.jpg?')">
@@ -1160,7 +1190,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (2)</div>
+                                <div class="section-label">✂️ Cropped Images (2):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_black_high_waist_skirt_1762365045244.jpg?')">
@@ -1275,7 +1305,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (2)</div>
+                                <div class="section-label">✂️ Cropped Images (2):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_white_pearl_necklace_1762365196685.jpg?')">
@@ -1398,7 +1428,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_accessories_1762365287239.jpg?')">
@@ -1607,7 +1637,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_shoes_1762365482198.jpg?')">
@@ -1693,7 +1723,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_shoes_1762365538297.jpg?')">
@@ -1771,7 +1801,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_bags_1762365601019.jpg?')">
@@ -1857,7 +1887,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_sweatshirtie_1762365660171.jpg?')">
@@ -1943,7 +1973,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_bags_1762365718480.jpg?')">
@@ -2029,7 +2059,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_bottom_1762365776230.jpg?')">
@@ -2115,7 +2145,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_bottom_1762365862078.jpg?')">
@@ -2201,7 +2231,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762364274601_4a0d3c3e5bf6-Screenshot_20250922_180348_Instagram.jpg')">
@@ -2287,7 +2317,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762364276688_4aaa14222152-Screenshot_20250922_183517.jpg')">
@@ -2373,7 +2403,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_sweatshirt_hoodie_1762366025618.jpg?')">
@@ -2443,7 +2473,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762364276691_4bc11921eb53-1757574448248.jpg')">
@@ -2529,7 +2559,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_bottom_1762366130261.jpg?')">
@@ -2615,7 +2645,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_shoes_1762366183347.jpg?')">
@@ -2808,7 +2838,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762364276698_586f488fffd3-IMG_3345.png')">
@@ -2894,7 +2924,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762364276700_5da33aca7dd9-Screenshot_20250922_182701.jpg')">
@@ -2980,7 +3010,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_sweatshirt_hoodie_1762366461723.jpg?')">
@@ -3066,7 +3096,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_bottom_1762366520358.jpg?')">
@@ -3152,7 +3182,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_top_1762366601291.jpg?')">
@@ -3222,7 +3252,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_bags_1762366715722.jpg?')">
@@ -3308,7 +3338,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_hoodie_1762366773206.jpg?')">
@@ -3362,7 +3392,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_shoes_1762366819030.jpg?')">
@@ -3448,7 +3478,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (2)</div>
+                                <div class="section-label">✂️ Cropped Images (2):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_sweatshirt_1762366911442.jpg?')">
@@ -3534,7 +3564,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_bottom_1762366977909.jpg?')">
@@ -3620,7 +3650,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_hoodie_1762367029678.jpg?')">
@@ -3706,7 +3736,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_accessories_1762367079227.jpg?')">
@@ -3792,7 +3822,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762364278971_88ace8481ee2-Screenshot_20250922_210139_NAVER.jpg')">
@@ -3878,7 +3908,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762364278972_8938b9049c01-Screenshot_20220428_201704.png')">
@@ -3956,7 +3986,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_top_1762367226943.jpg?')">
@@ -4042,7 +4072,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_sweatshirt_hoodie_1762367283168.jpg?')">
@@ -4128,7 +4158,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762364280926_9bb44927ad8d-Screenshot_20250922_234724.jpg')">
@@ -4206,7 +4236,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_sweatshirt_1762367386913.jpg?')">
@@ -4284,7 +4314,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762364280932_a1ba14c536c4-Screenshot_20250922_180802_NAVER.jpg')">
@@ -4370,7 +4400,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_bottom_1762367492392.jpg?')">
@@ -4456,7 +4486,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762364280935_a31be7275ec0-Screenshot_20250923_080311_TikTok_Lite.jpg')">
@@ -4657,7 +4687,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762364280938_b24107c638d7-Screenshot_20250718_023259_11st.jpg')">
@@ -4735,7 +4765,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762364280939_b49a396ce4d2-Screenshot_20250923_161107.jpg')">
@@ -4821,7 +4851,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762364282634_b5e7f9ef0dd7-BandPhoto_2024_11_29_16_50_11_1.jpg')">
@@ -4907,7 +4937,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_sweatshirt_hoodie_1762367850413.jpg?')">
@@ -4993,7 +5023,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_bags_1762367878860.jpg?')">
@@ -5079,7 +5109,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_sweatshirt_hoodie_1762367924029.jpg?')">
@@ -5165,7 +5195,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762364282642_d5e9df725d2b-IMG_1407.png')">
@@ -5251,7 +5281,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_shoes_1762367995256.jpg?')">
@@ -5337,7 +5367,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_bags_1762368028795.jpg?')">
@@ -5423,7 +5453,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762364282649_e41378176432-1758535620408.jpg')">
@@ -5509,7 +5539,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_sweatshirt_hoodie_1762368115040.jpg?')">
@@ -5587,7 +5617,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762364282652_f27447ab3dc8-IMG_5945.jpeg')">
@@ -5673,7 +5703,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762364284658_f42961b2b2e3-Screenshot_20220901_194953_Facebook.jpg')">
@@ -5759,7 +5789,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_sweatshirt_hoodie_1762368229184.jpg?')">
@@ -5845,7 +5875,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762364284663_f7229be919f1-_2025_09_23_094910.jpg')">
@@ -5931,7 +5961,7 @@
                             </div>
                             
                             <div class="cropped-section">
-                                <div class="section-label">Cropped Items (1)</div>
+                                <div class="section-label">✂️ Cropped Images (1):</div>
                                 <div class="cropped-grid">
                                     
                                         <div class="cropped-item" onclick="openModal('https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_shoes_1762368323284.jpg?')">
@@ -6060,6 +6090,53 @@
         // Close modal on Escape key
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') closeModal();
+        });
+        
+        // Transform product layout to grid cards on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.product-category').forEach(category => {
+                // Update category title format
+                const title = category.querySelector('.category-title');
+                const count = category.querySelector('.result-count');
+                if (title && count) {
+                    const categoryName = title.textContent.trim().split('\n')[0].trim().toUpperCase();
+                    const countText = count.textContent.trim();
+                    title.innerHTML = `${categoryName} <span class="result-count">(${countText} products)</span>`;
+                }
+                
+                // Get all product links
+                const productLinks = Array.from(category.querySelectorAll('.product-link'));
+                
+                if (productLinks.length > 0) {
+                    // Create grid container
+                    const grid = document.createElement('div');
+                    grid.className = 'product-grid';
+                    
+                    // Transform each link into a card
+                    productLinks.forEach(link => {
+                        const card = document.createElement('div');
+                        card.className = 'product-card';
+                        
+                        const img = link.querySelector('.product-thumbnail');
+                        const titleEl = link.querySelector('.product-title');
+                        const href = link.href;
+                        
+                        card.innerHTML = `
+                            <img src="${img?.src || ''}" class="product-thumbnail" alt="Product" onerror="this.style.display='none'">
+                            <div class="product-info">
+                                <div class="product-title">${titleEl?.textContent || 'Product'}</div>
+                                <a href="${href}" target="_blank" class="product-link">View Product →</a>
+                            </div>
+                        `;
+                        
+                        grid.appendChild(card);
+                        link.remove();
+                    });
+                    
+                    // Add grid after title
+                    title.parentElement.appendChild(grid);
+                }
+            });
         });
     </script>
 </body>
