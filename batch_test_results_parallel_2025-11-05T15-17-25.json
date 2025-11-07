@@ -1,0 +1,1340 @@
+[
+  {
+    "index": 1,
+    "filename": "0173bf6501b1-IMG_6324.png",
+    "phone": "'+821077992291",
+    "requested_categories_kr": [
+      "상의"
+    ],
+    "requested_categories_en": [
+      "tops"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "1.39",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 2,
+    "filename": "105101ae8a5c-Screenshot_20250914_140059_Samsung_Internet.png",
+    "phone": "'+821042870706",
+    "requested_categories_kr": [
+      "상의",
+      "악세사리"
+    ],
+    "requested_categories_en": [
+      "tops",
+      "accessories"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "1.70",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 3,
+    "filename": "13048e56c7e6-Screenshot_20250818_190819_Naver_Cafe.jpg",
+    "phone": "'+821074946970",
+    "requested_categories_kr": [
+      "상의"
+    ],
+    "requested_categories_en": [
+      "tops"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "1.01",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 4,
+    "filename": "161d724e75d0-IMG_7213.png",
+    "phone": "'+821029795315",
+    "requested_categories_kr": [
+      "상의"
+    ],
+    "requested_categories_en": [
+      "tops"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "1.50",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 5,
+    "filename": "1f315d41bcd5-IMG_2050.png",
+    "phone": "'+821026307327",
+    "requested_categories_kr": [
+      "상의",
+      "가방"
+    ],
+    "requested_categories_en": [
+      "tops",
+      "bags"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "1.03",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 6,
+    "filename": "2328bd465b25-Screenshot_20250922_175917_Instagram.jpg",
+    "phone": "'+821050251565",
+    "requested_categories_kr": [
+      "상의"
+    ],
+    "requested_categories_en": [
+      "tops"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.18",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 7,
+    "filename": "25a07f7412b0-Screenshot_20250425_205335_NAVER.jpg",
+    "phone": "'+821055394006",
+    "requested_categories_kr": [
+      "드레스"
+    ],
+    "requested_categories_en": [
+      "dress"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.34",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 8,
+    "filename": "25e73fbfc872-캡처.JPG",
+    "phone": "'+821073624251",
+    "requested_categories_kr": [
+      "드레스",
+      "가방"
+    ],
+    "requested_categories_en": [
+      "dress",
+      "bags"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.20",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 9,
+    "filename": "2701146d3bd8-Screenshot_20250922_180545_NAVER.jpg",
+    "phone": "'+821045528334",
+    "requested_categories_kr": [
+      "상의",
+      "하의"
+    ],
+    "requested_categories_en": [
+      "tops",
+      "bottoms"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.33",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 10,
+    "filename": "283b1eba8622-Screenshot_20250726_191930_Threads.jpg",
+    "phone": "'+821092214865",
+    "requested_categories_kr": [
+      "상의",
+      "악세사리"
+    ],
+    "requested_categories_en": [
+      "tops",
+      "accessories"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.25",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 11,
+    "filename": "2e934d4bb76e-Screenshot_20250901_185501_Coupang.jpg",
+    "phone": "'+821028784258",
+    "requested_categories_kr": [
+      "악세사리"
+    ],
+    "requested_categories_en": [
+      "accessories"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.44",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 12,
+    "filename": "32523f31267f-6ecd960eb98673cc917c6722be8347fa.jpg",
+    "phone": "'+821044911649",
+    "requested_categories_kr": [
+      "드레스",
+      "가방",
+      "신발"
+    ],
+    "requested_categories_en": [
+      "dress",
+      "bags",
+      "shoes"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.16",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 13,
+    "filename": "328e2d651da5-Screenshot_20250922_190837_Samsung_Internet.jpg",
+    "phone": "'+821082413444",
+    "requested_categories_kr": [
+      "신발"
+    ],
+    "requested_categories_en": [
+      "shoes"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.22",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 14,
+    "filename": "3296eb6c6532-Screenshot_20250922_171448_G.jpg",
+    "phone": "'+821049255952",
+    "requested_categories_kr": [
+      "신발"
+    ],
+    "requested_categories_en": [
+      "shoes"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.22",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 15,
+    "filename": "3e360f04f634-IMG_8106.png",
+    "phone": "'+821062454501",
+    "requested_categories_kr": [
+      "가방"
+    ],
+    "requested_categories_en": [
+      "bags"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.22",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 16,
+    "filename": "3f6b085455d6-Screenshot_20250922_191824_Samsung_Internet.jpg",
+    "phone": "'+821025403605",
+    "requested_categories_kr": [
+      "상의"
+    ],
+    "requested_categories_en": [
+      "tops"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.16",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 17,
+    "filename": "41932fac32a3-Screenshot_20250923_095819.jpg",
+    "phone": "'+821047219368",
+    "requested_categories_kr": [
+      "가방"
+    ],
+    "requested_categories_en": [
+      "bags"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.22",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 18,
+    "filename": "4803132f0957-Screenshot_20250922_175941_NAVER.jpg",
+    "phone": "'+821093243240",
+    "requested_categories_kr": [
+      "하의"
+    ],
+    "requested_categories_en": [
+      "bottoms"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.26",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 19,
+    "filename": "49192c7d398f-Screenshot_20250713_131433_Coupang.jpg",
+    "phone": "'+821068587333",
+    "requested_categories_kr": [
+      "하의"
+    ],
+    "requested_categories_en": [
+      "bottoms"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.28",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 20,
+    "filename": "4a0d3c3e5bf6-Screenshot_20250922_180348_Instagram.jpg",
+    "phone": "'+821085660830",
+    "requested_categories_kr": [
+      "상의"
+    ],
+    "requested_categories_en": [
+      "tops"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.36",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 21,
+    "filename": "4aaa14222152-Screenshot_20250922_183517.jpg",
+    "phone": "'+821020171080",
+    "requested_categories_kr": [
+      "상의",
+      "하의"
+    ],
+    "requested_categories_en": [
+      "tops",
+      "bottoms"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.19",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 22,
+    "filename": "4ac1bfd760eb-IMG_2627.jpeg",
+    "phone": "'+821053532147",
+    "requested_categories_kr": [
+      "상의"
+    ],
+    "requested_categories_en": [
+      "tops"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.19",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 23,
+    "filename": "4bc11921eb53-1757574448248.jpg",
+    "phone": "'+821050509794",
+    "requested_categories_kr": [
+      "상의"
+    ],
+    "requested_categories_en": [
+      "tops"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.77",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 24,
+    "filename": "5497fec0d69a-Screenshot_20250922_150426_4910.jpg",
+    "phone": "'+821050367681",
+    "requested_categories_kr": [
+      "하의"
+    ],
+    "requested_categories_en": [
+      "bottoms"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.37",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 25,
+    "filename": "55b5d0929662-Screenshot_20250725_092504_Toss.jpg",
+    "phone": "'+821047583685",
+    "requested_categories_kr": [
+      "신발"
+    ],
+    "requested_categories_en": [
+      "shoes"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.66",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 26,
+    "filename": "5758d665a52c-IMG_1026.png",
+    "phone": "'+821032859552",
+    "requested_categories_kr": [
+      "상의",
+      "하의",
+      "신발"
+    ],
+    "requested_categories_en": [
+      "tops",
+      "bottoms",
+      "shoes"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.40",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 27,
+    "filename": "586f488fffd3-IMG_3345.png",
+    "phone": "'+821040041882",
+    "requested_categories_kr": [
+      "상의",
+      "하의"
+    ],
+    "requested_categories_en": [
+      "tops",
+      "bottoms"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.92",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 28,
+    "filename": "5da33aca7dd9-Screenshot_20250922_182701.jpg",
+    "phone": "'+821030083551",
+    "requested_categories_kr": [
+      "상의",
+      "악세사리"
+    ],
+    "requested_categories_en": [
+      "tops",
+      "accessories"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.36",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 29,
+    "filename": "619f731ee58c-Screenshot_20250704_223306_NAVER.jpg",
+    "phone": "'+821071864099",
+    "requested_categories_kr": [
+      "상의"
+    ],
+    "requested_categories_en": [
+      "tops"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.38",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 30,
+    "filename": "6a381c97b5d6-Screenshot_20250816_160634_Instagram.jpg",
+    "phone": "'+821030043044",
+    "requested_categories_kr": [
+      "하의"
+    ],
+    "requested_categories_en": [
+      "bottoms"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.30",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 31,
+    "filename": "6fa0262df24a-JPEG_20250718_102427_7836027581844906401.jpg",
+    "phone": "'+821033288128",
+    "requested_categories_kr": [
+      "상의"
+    ],
+    "requested_categories_en": [
+      "tops"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.49",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 32,
+    "filename": "71b2f5f94309-IMG_7944.png",
+    "phone": "'+821028268211",
+    "requested_categories_kr": [
+      "가방"
+    ],
+    "requested_categories_en": [
+      "bags"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.67",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 33,
+    "filename": "778fd0f281ea-Screenshot_20250922_151442_CJ.jpg",
+    "phone": "'+821028402822",
+    "requested_categories_kr": [
+      "상의"
+    ],
+    "requested_categories_en": [
+      "tops"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.35",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 34,
+    "filename": "78d89468a8ef-Screenshot_20250922_175653_Gallery.jpg",
+    "phone": "'+821024459377",
+    "requested_categories_kr": [
+      "신발"
+    ],
+    "requested_categories_en": [
+      "shoes"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.39",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 35,
+    "filename": "7d4dd34d1a8d-Screenshot_20250817_210643_Grip.jpg",
+    "phone": "'+821094078571",
+    "requested_categories_kr": [
+      "상의",
+      "하의"
+    ],
+    "requested_categories_en": [
+      "tops",
+      "bottoms"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.35",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 36,
+    "filename": "7d53b298a560-IMG_8862.png",
+    "phone": "'+821067873578",
+    "requested_categories_kr": [
+      "하의"
+    ],
+    "requested_categories_en": [
+      "bottoms"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "1.34",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 37,
+    "filename": "804e907728fc-Screenshot_20250922_153924_KakaoTalk.jpg",
+    "phone": "'+821040775877",
+    "requested_categories_kr": [
+      "상의"
+    ],
+    "requested_categories_en": [
+      "tops"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "1.33",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 38,
+    "filename": "8837d550aade-Screenshot_20250726_104132_NAVER.jpg",
+    "phone": "'+821021709567",
+    "requested_categories_kr": [
+      "악세사리"
+    ],
+    "requested_categories_en": [
+      "accessories"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "1.33",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 39,
+    "filename": "88ace8481ee2-Screenshot_20250922_210139_NAVER.jpg",
+    "phone": "'+821040054796",
+    "requested_categories_kr": [
+      "상의",
+      "하의"
+    ],
+    "requested_categories_en": [
+      "tops",
+      "bottoms"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "1.33",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 40,
+    "filename": "8938b9049c01-Screenshot_20220428_201704.png",
+    "phone": "'+821092063599",
+    "requested_categories_kr": [
+      "상의"
+    ],
+    "requested_categories_en": [
+      "tops"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "1.33",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 41,
+    "filename": "8c7cd01bb236-Screenshot_20250922_180000.jpg",
+    "phone": "'+821047963655",
+    "requested_categories_kr": [
+      "상의"
+    ],
+    "requested_categories_en": [
+      "tops"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.33",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 42,
+    "filename": "8d7c9f358b9e-1758535513099.jpg",
+    "phone": "'+821054357490",
+    "requested_categories_kr": [
+      "상의"
+    ],
+    "requested_categories_en": [
+      "tops"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.15",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 43,
+    "filename": "9bb44927ad8d-Screenshot_20250922_234724.jpg",
+    "phone": "'+821045681195",
+    "requested_categories_kr": [
+      "상의"
+    ],
+    "requested_categories_en": [
+      "tops"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.20",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 44,
+    "filename": "9ef78d715dda-IMG_6710.jpeg",
+    "phone": "'+821033098429",
+    "requested_categories_kr": [
+      "상의"
+    ],
+    "requested_categories_en": [
+      "tops"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.22",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 45,
+    "filename": "a1ba14c536c4-Screenshot_20250922_180802_NAVER.jpg",
+    "phone": "'+821026514334",
+    "requested_categories_kr": [
+      "상의"
+    ],
+    "requested_categories_en": [
+      "tops"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.21",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 46,
+    "filename": "a258cdf96d3c-IMG_1391.png",
+    "phone": "'+821096490803",
+    "requested_categories_kr": [
+      "하의"
+    ],
+    "requested_categories_en": [
+      "bottoms"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.26",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 47,
+    "filename": "a31be7275ec0-Screenshot_20250923_080311_TikTok_Lite.jpg",
+    "phone": "'+821028522097",
+    "requested_categories_kr": [
+      "상의",
+      "하의",
+      "신발"
+    ],
+    "requested_categories_en": [
+      "tops",
+      "bottoms",
+      "shoes"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.21",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 48,
+    "filename": "a5036bab7d0d-Screenshot_20250922_180026_Grip.jpg",
+    "phone": "'+821026922659",
+    "requested_categories_kr": [
+      "상의",
+      "하의",
+      "신발"
+    ],
+    "requested_categories_en": [
+      "tops",
+      "bottoms",
+      "shoes"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.52",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 49,
+    "filename": "b24107c638d7-Screenshot_20250718_023259_11st.jpg",
+    "phone": "'+821093574104",
+    "requested_categories_kr": [
+      "상의",
+      "하의",
+      "신발"
+    ],
+    "requested_categories_en": [
+      "tops",
+      "bottoms",
+      "shoes"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.26",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 50,
+    "filename": "b49a396ce4d2-Screenshot_20250923_161107.jpg",
+    "phone": "'+821093222506",
+    "requested_categories_kr": [
+      "상의"
+    ],
+    "requested_categories_en": [
+      "tops"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.22",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 51,
+    "filename": "b5e7f9ef0dd7-BandPhoto_2024_11_29_16_50_11_1.jpg",
+    "phone": "'+821025223894",
+    "requested_categories_kr": [
+      "상의",
+      "하의",
+      "신발"
+    ],
+    "requested_categories_en": [
+      "tops",
+      "bottoms",
+      "shoes"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.20",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 52,
+    "filename": "b9b9f65c55a1-d18cfbb172e84a7e9d792400291d500a.webp",
+    "phone": "'+821039467620",
+    "requested_categories_kr": [
+      "상의"
+    ],
+    "requested_categories_en": [
+      "tops"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.19",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 53,
+    "filename": "bfbd50518d72-20250922_164832.jpg",
+    "phone": "'+821057498283",
+    "requested_categories_kr": [
+      "가방"
+    ],
+    "requested_categories_en": [
+      "bags"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.36",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 54,
+    "filename": "cdd7fa01d222-Screenshot_20250917_205011.jpg",
+    "phone": "'+821049452288",
+    "requested_categories_kr": [
+      "상의"
+    ],
+    "requested_categories_en": [
+      "tops"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.32",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 55,
+    "filename": "d5e9df725d2b-IMG_1407.png",
+    "phone": "",
+    "requested_categories_kr": [
+      "상의"
+    ],
+    "requested_categories_en": [
+      "tops"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.39",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 56,
+    "filename": "da6ad8533762-Screenshot_20250922_232217_NAVER.jpg",
+    "phone": "",
+    "requested_categories_kr": [
+      "신발"
+    ],
+    "requested_categories_en": [
+      "shoes"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.20",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 57,
+    "filename": "e0a6a6f8c6d9-IMG_2880.png",
+    "phone": "'+821029461255",
+    "requested_categories_kr": [
+      "가방"
+    ],
+    "requested_categories_en": [
+      "bags"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.29",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 58,
+    "filename": "e41378176432-1758535620408.jpg",
+    "phone": "'+821054357490",
+    "requested_categories_kr": [
+      "상의",
+      "하의",
+      "신발",
+      "가방"
+    ],
+    "requested_categories_en": [
+      "tops",
+      "bottoms",
+      "shoes",
+      "bags"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.27",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 59,
+    "filename": "e6295ef3470a-Screenshot_20250919_154111_BAND.jpg",
+    "phone": "'+821087632442",
+    "requested_categories_kr": [
+      "상의"
+    ],
+    "requested_categories_en": [
+      "tops"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.38",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 60,
+    "filename": "f27447ab3dc8-IMG_5945.jpeg",
+    "phone": "'+821064954952",
+    "requested_categories_kr": [
+      "상의",
+      "악세사리"
+    ],
+    "requested_categories_en": [
+      "tops",
+      "accessories"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.28",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 61,
+    "filename": "f42961b2b2e3-Screenshot_20220901_194953_Facebook.jpg",
+    "phone": "'+821088560333",
+    "requested_categories_kr": [
+      "상의",
+      "악세사리"
+    ],
+    "requested_categories_en": [
+      "tops",
+      "accessories"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.19",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 62,
+    "filename": "f6fdf09d8932-Screenshot_20250831_162024_TikTok_Lite.jpg",
+    "phone": "'+821072431565",
+    "requested_categories_kr": [
+      "상의"
+    ],
+    "requested_categories_en": [
+      "tops"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.66",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 63,
+    "filename": "f7229be919f1-화면_캡처_2025_09_23_094910.jpg",
+    "phone": "'+821033785887",
+    "requested_categories_kr": [
+      "상의",
+      "하의",
+      "신발"
+    ],
+    "requested_categories_en": [
+      "tops",
+      "bottoms",
+      "shoes"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.21",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  },
+  {
+    "index": 64,
+    "filename": "fe0e1606c93b-Screenshot_20250827_004006_NAVER.jpg",
+    "phone": "'+821082289231",
+    "requested_categories_kr": [
+      "신발"
+    ],
+    "requested_categories_en": [
+      "shoes"
+    ],
+    "status": "failed",
+    "upload_time": 0,
+    "crop_time": 0,
+    "search_time": 0,
+    "total_time": "0.32",
+    "error": "Upload failed: 400 {\"statusCode\":\"404\",\"error\":\"Bucket not found\",\"message\":\"Bucket not found\"}",
+    "cropped_items": 0,
+    "search_results": {},
+    "source_counts": null
+  }
+]

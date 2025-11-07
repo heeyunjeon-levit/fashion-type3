@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batch Results with Images - Sample</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container { max-width: 1400px; margin: 0 auto; }
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        h1 { color: #667eea; margin-bottom: 10px; font-size: 2.5em; }
+        .subtitle { color: #666; font-size: 1.1em; margin-bottom: 10px; }
+        .result-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        .result-title { font-weight: 600; color: #333; font-size: 1.1em; }
+        .status-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            background: #d4edda;
+            color: #155724;
+        }
+        .images-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        .images-grid {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+            margin-top: 15px;
+        }
+        .original-image-section {
+            text-align: center;
+        }
+        .section-title {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .original-image {
+            width: 100%;
+            max-width: 300px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border: 3px solid #667eea;
+        }
+        .cropped-images {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        .cropped-item {
+            text-align: center;
+        }
+        .cropped-label {
+            font-size: 0.85em;
+            color: #666;
+            margin-bottom: 8px;
+            font-weight: 500;
+            text-transform: capitalize;
+        }
+        .cropped-image {
+            width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: 2px solid #e0e0e0;
+        }
+        .timing-info {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        .timing-item { text-align: center; }
+        .timing-label {
+            font-size: 0.75em;
+            color: #666;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+        .timing-value {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #667eea;
+        }
+        .products {
+            margin-top: 20px;
+        }
+        .product-category {
+            margin-bottom: 20px;
+        }
+        .category-title {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1em;
+            text-transform: capitalize;
+        }
+        .product-link {
+            display: flex;
+            gap: 12px;
+            padding: 12px;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.2s;
+        }
+        .product-link:hover {
+            background: #f8f9fa;
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
+        .product-thumbnail {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 6px;
+            flex-shrink: 0;
+        }
+        .product-info { flex: 1; min-width: 0; }
+        .product-title {
+            font-size: 0.95em;
+            line-height: 1.4;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        .product-domain {
+            font-size: 0.8em;
+            color: #667eea;
+        }
+        .arrow { font-size: 1.5em; color: #667eea; margin: 0 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📸 Batch Results with Images</h1>
+            <div class="subtitle">
+                Sample showing original + cropped images + search results
+            </div>
+        </div>
+
+        
+            <div class="result-card">
+                <div class="result-header">
+                    <div class="result-title">[1] 25e73fbfc872-캡처.JPG</div>
+                    <span class="status-badge">success</span>
+                </div>
+                
+                <div class="images-section">
+                    <div class="section-title">🖼️  Image Processing Pipeline</div>
+                    <div class="images-grid">
+                        <div class="original-image-section">
+                            <div class="section-title">Original Image</div>
+                            <img src="https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762336645301_25e73fbfc872-.JPG" class="original-image" alt="Original" onerror="this.src='data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3C/svg%3E';this.alt='Image not available'">
+                        </div>
+                        
+                        <div>
+                            <div class="section-title">Cropped Items (2)</div>
+                            <div class="cropped-images">
+                                
+                                    <div class="cropped-item">
+                                        <div class="cropped-label">📦 dress</div>
+                                        <img src="https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_black_long_sleeve_midi_dress_1762346020896.jpg" class="cropped-image" alt="dress" onerror="this.src='data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3C/svg%3E';this.alt='Image not available'">
+                                    </div>
+                                
+                                    <div class="cropped-item">
+                                        <div class="cropped-label">📦 bags</div>
+                                        <img src="https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_black_leather_structured_handbag_1762346021496.jpg" class="cropped-image" alt="bags" onerror="this.src='data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3C/svg%3E';this.alt='Image not available'">
+                                    </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timing-info">
+                    <div class="timing-item">
+                        <div class="timing-label">Crop Time</div>
+                        <div class="timing-value">122.97s</div>
+                    </div>
+                    <div class="timing-item">
+                        <div class="timing-label">Search Time</div>
+                        <div class="timing-value">18.56s</div>
+                    </div>
+                    <div class="timing-item">
+                        <div class="timing-label">Total Time</div>
+                        <div class="timing-value">141.53s</div>
+                    </div>
+                </div>
+                
+                <div class="products">
+                    <div class="section-title">🔍 Search Results</div>
+                    
+                        <div class="product-category">
+                            <div class="category-title">📦 dress (1 results)</div>
+                            
+                                <a href="https://www.yesstyle.com/en/yilda-long-sleeve-midi-a-line-dress/info.html/pid.1072710136" target="_blank" class="product-link">
+                                    <img src="https://image.yesstyle.com/unsafe/fit-in/500x500/filters:quality(80)/images/entity/102/721/1027210136/image-1027210136-01.jpg" class="product-thumbnail" onerror="this.style.display='none'">
+                                    <div class="product-info">
+                                        <div class="product-title">Yilda - Long-Sleeve Midi A-Line Dress</div>
+                                        <div class="product-domain">www.yesstyle.com</div>
+                                    </div>
+                                </a>
+                            
+                        </div>
+                    
+                        <div class="product-category">
+                            <div class="category-title">📦 bags (1 results)</div>
+                            
+                                <a href="https://us.vestiairecollective.com/women-bags/handbags/hermes/black-leather-kelly-danse-hermes-handbag-33726445.shtml" target="_blank" class="product-link">
+                                    <img src="https://images.vestiairecollective.com/cdn-cgi/image/h=1000/produits/33726445-1_1.jpg" class="product-thumbnail" onerror="this.style.display='none'">
+                                    <div class="product-info">
+                                        <div class="product-title">Kelly danse leather crossbody bag Hermès</div>
+                                        <div class="product-domain">us.vestiairecollective.com</div>
+                                    </div>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+            </div>
+        
+    </div>
+</body>
+</html>

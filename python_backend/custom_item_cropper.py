@@ -20,17 +20,11 @@ class CustomItemCropper:
     def __init__(self, 
                  gd_config: str = "configs/GroundingDINO_SwinT_OGC.py",
                  gd_weights: str = "data/weights/groundingdino_swint_ogc.pth",
-                 sam2_config: str = "sam2_hiera_l.yaml",
-                 sam2_checkpoint: str = "data/weights/sam2_hiera_large.pt",
-                 use_sam2: bool = True,
                  device: str = "cpu"):
         
         self.pipeline = OptimizedFashionCropPipeline(
             gd_config=gd_config,
             gd_weights=gd_weights,
-            sam2_config=sam2_config,
-            sam2_checkpoint=sam2_checkpoint,
-            use_sam2=use_sam2,
             device=device
         )
         
@@ -155,22 +149,40 @@ INCORRECT (DO NOT USE):
 ❌ "shirt" or "jacket" → too generic, add details
 ❌ Imagining garment types based on context
 
-{'Provide descriptions for ALL requested items. Each description should be highly detailed (5-9 words) and capture EVERY visible identifying feature.' if len(custom_items) > 1 else 'Provide ONLY ONE HIGHLY DETAILED item description (5-9 words) that captures EVERY visible identifying feature.'}
+🚨 CRITICAL REQUIREMENT: You MUST provide descriptions for ALL {len(custom_items)} requested items.
+   - You were asked for: {items_str}
+   - You MUST return EXACTLY {len(custom_items)} items in your response
+   - Even if an item is small, subtle, or partially visible, you MUST include it
+   - Look carefully at the ENTIRE image - check all areas, not just the most obvious item
+   - Each description should be highly detailed (5-9 words) capturing EVERY visible identifying feature
+
+SEARCH STRATEGY FOR EACH ITEM:
+1. For "top/상의": Look at upper body - shirts, blouses, jackets, sweaters, dresses (upper part)
+2. For "bottom/하의": Look at lower body - pants, skirts, shorts
+3. For "shoes/신발": Look at feet - any visible footwear
+4. For "bag/가방": Look everywhere - handbags, backpacks, purses (held, worn, or nearby)
+5. For "accessories/악세사리": Look at neck, ears, wrists, head - jewelry, watches, sunglasses, hats
+6. For "dress/드레스": Look at full body - one-piece garments
+
+⚠️ DO NOT skip items just because they're less prominent than others!
+⚠️ EVERY requested item must be included in your response!
 
 Your description(s) should be SO DETAILED that it helps reverse image search find the best matches.
 
 Examples of very detailed descriptions:
 - "light gray ribbed long sleeve henley shirt with buttons and collar"
-- "blue striped button-down shirt with chest pocket and rolled sleeves"
+- "blue striped button-down shirt with chest pocket and rolled sleeves"  
 - "gray knit pullover sweater with collar and ribbed cuffs"
 - "black denim jacket with metal buttons and patch pockets"
 - "dark blue high waist straight leg jeans with belt loops and pockets"
+- "white pearl layered necklace with multiple strands"
+- "brown leather shoulder bag with gold chain strap"
 
-Respond with JSON:
+Respond with JSON containing EXACTLY {len(custom_items)} items:
 {{
     "total_items": {len(custom_items)},
     "items": [
-{f','.join([f'        {{"groundingdino_prompt": "detailed description of complete garment {i+1}", "description": "brief description of the actual garment {i+1}"}}' for i in range(len(custom_items))])}
+{f','.join([f'        {{"groundingdino_prompt": "detailed description of {korean_to_english.get(custom_items[i], custom_items[i])}", "description": "brief description of the {korean_to_english.get(custom_items[i], custom_items[i])}"}}' for i in range(len(custom_items))])}
     ]
 }}
 """

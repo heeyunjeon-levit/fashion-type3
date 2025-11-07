@@ -1,0 +1,72 @@
+import { NextRequest, NextResponse } from 'next/server'
+
+const BACKEND_URL = process.env.BACKEND_URL || 'https://heeyunjeon-levit--fashion-crop-api-gpu-fastapi-app-v2.modal.run'
+
+export interface DetectedItem {
+  category: string  // e.g., "tops", "bottoms", "bag"
+  groundingdino_prompt: string  // e.g., "gray shirt"
+  description: string  // Detailed description
+}
+
+export interface AnalyzeResponse {
+  items: DetectedItem[]
+  cached: boolean
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    const { imageUrl } = await request.json()
+
+    if (!imageUrl) {
+      return NextResponse.json(
+        { error: 'imageUrl is required' },
+        { status: 400 }
+      )
+    }
+
+    console.log('\n================================================================================')
+    console.log('=== ANALYZE REQUEST STARTED (GPT-only pre-analysis) ===')
+    console.log(`🖼️ Image URL: ${imageUrl}`)
+    console.log(`🎯 Backend: ${BACKEND_URL}`)
+    console.log('================================================================================\n')
+
+    // Call Python backend for GPT analysis
+    const analyzeStart = Date.now()
+    const backendResponse = await fetch(`${BACKEND_URL}/analyze`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        imageUrl
+      }),
+    })
+
+    if (!backendResponse.ok) {
+      const errorText = await backendResponse.text()
+      console.error('❌ Backend analysis failed:', errorText)
+      throw new Error(`Backend returned ${backendResponse.status}: ${errorText}`)
+    }
+
+    const result: AnalyzeResponse = await backendResponse.json()
+    const analyzeTime = ((Date.now() - analyzeStart) / 1000).toFixed(2)
+
+    console.log(`✅ Analysis complete in ${analyzeTime}s`)
+    console.log(`📊 Detected ${result.items.length} items:`)
+    result.items.forEach(item => {
+      console.log(`   - ${item.category}: ${item.groundingdino_prompt}`)
+    })
+    console.log(`💾 Cached: ${result.cached}`)
+    console.log('================================================================================\n')
+
+    return NextResponse.json(result)
+
+  } catch (error) {
+    console.error('❌ Analysis error:', error)
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : 'Analysis failed', items: [], cached: false },
+      { status: 500 }
+    )
+  }
+}
+

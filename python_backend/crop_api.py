@@ -150,8 +150,12 @@ def _fallback_to_cpu(image_url: str, categories: List[str], count: int):
 
 def get_cropper():
     """Get or create the cropper instance (lazy loading)"""
+    print("\n" + "="*80)
+    print("🔧 get_cropper() called")
+    print("="*80)
     global _cropper_instance
     if _cropper_instance is None:
+        print("⚙️  Cropper instance is None, initializing...")
         if _use_roboflow:
             print("🔧 Initializing RoboflowItemCropper...")
             try:
@@ -172,28 +176,37 @@ def get_cropper():
         print("🔧 Initializing CustomItemCropper (local)...")
         from custom_item_cropper import CustomItemCropper
         
-        # Check if we're on Modal (GroundingDINO in /opt) or local
-        if os.path.exists("/opt/GroundingDINO"):
-            # Modal GPU deployment (new path using official PyTorch image)
-            config_path = "/opt/GroundingDINO/groundingdino/config/GroundingDINO_SwinT_OGC.py"
-            weights_path = "/opt/GroundingDINO/weights/groundingdino_swint_ogc.pth"
-            sam2_config = "sam2_hiera_l.yaml"
-            sam2_weights = "data/weights/sam2_hiera_large.pt"  # Not used in GPU
+        # Check if we're on Modal or local
+        if os.path.exists("/root/configs"):
+            # Modal deployment (from modal_with_volume.py)
+            config_path = "/root/configs/GroundingDINO_SwinT_OGC.py"
+            weights_path = "/root/data/weights/groundingdino_swint_ogc.pth"
+            print(f"📍 Using Modal paths")
         else:
             # Local paths
             config_path = "configs/GroundingDINO_SwinT_OGC.py"
             weights_path = "data/weights/groundingdino_swint_ogc.pth"
-            sam2_config = "sam2_hiera_l.yaml"
-            sam2_weights = "data/weights/sam2_hiera_large.pt"
-        
-        # Check environment variable to enable/disable SAM-2
-        use_sam2 = os.getenv("USE_SAM2", "false").lower() == "true"
-        print(f"⚙️  USE_SAM2 = {use_sam2}")
+            print(f"📍 Using local paths")
         
         # Check if files exist, otherwise return None
         if not os.path.exists(config_path):
             print(f"⚠️ Config not found: {config_path}")
+            print(f"⚠️ Listing /root contents:")
+            if os.path.exists("/root"):
+                for item in os.listdir("/root"):
+                    print(f"   - {item}")
             return None
+        
+        if not os.path.exists(weights_path):
+            print(f"⚠️ Weights not found: {weights_path}")
+            print(f"⚠️ Listing /root/data contents:")
+            if os.path.exists("/root/data"):
+                for item in os.listdir("/root/data"):
+                    print(f"   - {item}")
+            return None
+        
+        print(f"✅ Found config: {config_path}")
+        print(f"✅ Found weights: {weights_path}")
             
         try:
             # Check if GPU is available
@@ -209,14 +222,13 @@ def get_cropper():
             _cropper_instance = CustomItemCropper(
                 gd_config=config_path,
                 gd_weights=weights_path,
-                sam2_config=sam2_config,
-                sam2_checkpoint=sam2_weights,
-                use_sam2=use_sam2,
                 device=device
             )
             print("✅ CustomItemCropper initialized")
         except Exception as e:
             print(f"❌ Failed to initialize cropper: {e}")
+            import traceback
+            traceback.print_exc()
             return None
     
     return _cropper_instance

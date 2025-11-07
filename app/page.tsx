@@ -6,17 +6,52 @@ import CategorySelection from './components/CategorySelection'
 import Cropping from './components/Cropping'
 import Results from './components/Results'
 
+export interface DetectedItem {
+  category: string
+  groundingdino_prompt: string
+  description: string
+}
+
 export default function Home() {
-  const [currentStep, setCurrentStep] = useState<'upload' | 'category' | 'cropping' | 'results'>('upload')
+  const [currentStep, setCurrentStep] = useState<'upload' | 'analyzing' | 'category' | 'cropping' | 'results'>('upload')
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string>('')
+  const [detectedItems, setDetectedItems] = useState<DetectedItem[]>([])
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
   const [croppedImages, setCroppedImages] = useState<Record<string, string>>({})
   const [results, setResults] = useState<Record<string, Array<{ link: string; thumbnail: string | null; title: string | null }>>>({})
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleImageUploaded = (imageUrl: string) => {
+  const handleImageUploaded = async (imageUrl: string) => {
     setUploadedImageUrl(imageUrl)
-    setCurrentStep('category')
+    setCurrentStep('analyzing')
+
+    try {
+      // Call GPT analysis in background immediately after upload
+      console.log('🚀 Starting pre-analysis...')
+      const analyzeResponse = await fetch('/api/analyze', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ imageUrl }),
+      })
+
+      const analyzeData = await analyzeResponse.json()
+      
+      if (analyzeData.items && analyzeData.items.length > 0) {
+        console.log(`✅ Pre-analysis complete: ${analyzeData.items.length} items detected`)
+        setDetectedItems(analyzeData.items)
+      } else {
+        console.log('⚠️ No items detected by GPT')
+        setDetectedItems([])
+      }
+    } catch (error) {
+      console.error('❌ Analysis error:', error)
+      // Continue anyway with empty detected items
+      setDetectedItems([])
+    } finally {
+      setCurrentStep('category')
+    }
   }
 
   const handleCategoriesSelected = (categories: string[]) => {
@@ -67,9 +102,21 @@ export default function Home() {
         {currentStep === 'upload' && (
           <ImageUpload onImageUploaded={handleImageUploaded} />
         )}
+        {currentStep === 'analyzing' && (
+          <div className="max-w-2xl mx-auto mt-8">
+            <div className="bg-white rounded-2xl shadow-xl p-12">
+              <div className="text-center space-y-6">
+                <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-indigo-600 mx-auto"></div>
+                <h2 className="text-2xl font-bold text-gray-800">AI 분석 중...</h2>
+                <p className="text-gray-600">이미지에서 아이템을 찾고 있어요</p>
+              </div>
+            </div>
+          </div>
+        )}
         {currentStep === 'category' && (
           <CategorySelection
             imageUrl={uploadedImageUrl}
+            detectedItems={detectedItems}
             onCategoriesSelected={handleCategoriesSelected}
             onBack={() => setCurrentStep('upload')}
           />

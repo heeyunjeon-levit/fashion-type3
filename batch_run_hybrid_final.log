@@ -1,0 +1,475 @@
+🔧 Configuration:
+- Supabase: https://ssfiahbvlzepvddglawo.supabase.co
+- Backend: https://heeyunjeon-levit--fashion-crop-api-cpu-fastapi-app-v2.modal.run
+- Search API: http://localhost:3000/api/search
+- Strategy: Parallel uploads, Sequential crops, Parallel searches
+- Upload batch: 10 at a time
+- Search concurrency: 3 at a time
+
+
+🚀 HYBRID BATCH TEST STARTING
+📄 CSV: /Users/levit/Desktop/batch2_matched_info.csv
+📁 Images: /Users/levit/Desktop/batch2
+
+📊 Found 64 images in CSV
+🎯 Processing 64 images
+
+================================================================================
+📤 PHASE 1: UPLOADING ALL IMAGES (PARALLEL)
+================================================================================
+
+📤 Uploading 10 images in parallel...
+(node:88625) ExperimentalWarning: The Fetch API is an experimental feature. This feature could change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+   ✅ [8/10] 25e73fbfc872-캡처.JPG
+   ✅ [6/10] 2328bd465b25-Screenshot_20250922_175917_Instagram.jpg
+   ✅ [3/10] 13048e56c7e6-Screenshot_20250818_190819_Naver_Cafe.jpg
+   ✅ [10/10] 283b1eba8622-Screenshot_20250726_191930_Threads.jpg
+   ✅ [2/10] 105101ae8a5c-Screenshot_20250914_140059_Samsung_Internet.png
+   ✅ [4/10] 161d724e75d0-IMG_7213.png
+   ✅ [1/10] 0173bf6501b1-IMG_6324.png
+   ✅ [9/10] 2701146d3bd8-Screenshot_20250922_180545_NAVER.jpg
+   ✅ [7/10] 25a07f7412b0-Screenshot_20250425_205335_NAVER.jpg
+   ✅ [5/10] 1f315d41bcd5-IMG_2050.png
+✅ Uploaded 10/10 images in 2.44s
+
+📤 Uploading 10 images in parallel...
+   ✅ [2/10] 32523f31267f-6ecd960eb98673cc917c6722be8347fa.jpg
+   ✅ [4/10] 3296eb6c6532-Screenshot_20250922_171448_G.jpg
+   ✅ [1/10] 2e934d4bb76e-Screenshot_20250901_185501_Coupang.jpg
+   ✅ [6/10] 3f6b085455d6-Screenshot_20250922_191824_Samsung_Internet.jpg
+   ✅ [3/10] 328e2d651da5-Screenshot_20250922_190837_Samsung_Internet.jpg
+   ✅ [7/10] 41932fac32a3-Screenshot_20250923_095819.jpg
+   ✅ [9/10] 49192c7d398f-Screenshot_20250713_131433_Coupang.jpg
+   ✅ [10/10] 4a0d3c3e5bf6-Screenshot_20250922_180348_Instagram.jpg
+   ✅ [5/10] 3e360f04f634-IMG_8106.png
+   ✅ [8/10] 4803132f0957-Screenshot_20250922_175941_NAVER.jpg
+✅ Uploaded 10/10 images in 1.10s
+
+📤 Uploading 10 images in parallel...
+   ✅ [2/10] 4ac1bfd760eb-IMG_2627.jpeg
+   ✅ [1/10] 4aaa14222152-Screenshot_20250922_183517.jpg
+   ✅ [10/10] 6a381c97b5d6-Screenshot_20250816_160634_Instagram.jpg
+   ✅ [5/10] 55b5d0929662-Screenshot_20250725_092504_Toss.jpg
+   ✅ [8/10] 5da33aca7dd9-Screenshot_20250922_182701.jpg
+   ✅ [9/10] 619f731ee58c-Screenshot_20250704_223306_NAVER.jpg
+   ✅ [4/10] 5497fec0d69a-Screenshot_20250922_150426_4910.jpg
+   ✅ [6/10] 5758d665a52c-IMG_1026.png
+   ✅ [7/10] 586f488fffd3-IMG_3345.png
+   ✅ [3/10] 4bc11921eb53-1757574448248.jpg
+✅ Uploaded 10/10 images in 1.26s
+
+📤 Uploading 10 images in parallel...
+   ✅ [8/10] 8837d550aade-Screenshot_20250726_104132_NAVER.jpg
+   ✅ [7/10] 804e907728fc-Screenshot_20250922_153924_KakaoTalk.jpg
+   ✅ [9/10] 88ace8481ee2-Screenshot_20250922_210139_NAVER.jpg
+   ✅ [10/10] 8938b9049c01-Screenshot_20220428_201704.png
+   ✅ [3/10] 778fd0f281ea-Screenshot_20250922_151442_CJ.jpg
+   ✅ [2/10] 71b2f5f94309-IMG_7944.png
+   ✅ [5/10] 7d4dd34d1a8d-Screenshot_20250817_210643_Grip.jpg
+   ✅ [6/10] 7d53b298a560-IMG_8862.png
+   ✅ [4/10] 78d89468a8ef-Screenshot_20250922_175653_Gallery.jpg
+   ✅ [1/10] 6fa0262df24a-JPEG_20250718_102427_7836027581844906401.jpg
+✅ Uploaded 10/10 images in 0.97s
+
+📤 Uploading 10 images in parallel...
+   ✅ [2/10] 8d7c9f358b9e-1758535513099.jpg
+   ✅ [1/10] 8c7cd01bb236-Screenshot_20250922_180000.jpg
+   ✅ [10/10] b49a396ce4d2-Screenshot_20250923_161107.jpg
+   ✅ [5/10] a1ba14c536c4-Screenshot_20250922_180802_NAVER.jpg
+   ✅ [3/10] 9bb44927ad8d-Screenshot_20250922_234724.jpg
+   ✅ [8/10] a5036bab7d0d-Screenshot_20250922_180026_Grip.jpg
+   ✅ [6/10] a258cdf96d3c-IMG_1391.png
+   ✅ [9/10] b24107c638d7-Screenshot_20250718_023259_11st.jpg
+   ✅ [7/10] a31be7275ec0-Screenshot_20250923_080311_TikTok_Lite.jpg
+   ✅ [4/10] 9ef78d715dda-IMG_6710.jpeg
+✅ Uploaded 10/10 images in 0.71s
+
+📤 Uploading 10 images in parallel...
+   ✅ [2/10] b9b9f65c55a1-d18cfbb172e84a7e9d792400291d500a.webp
+   ✅ [1/10] b5e7f9ef0dd7-BandPhoto_2024_11_29_16_50_11_1.jpg
+   ✅ [8/10] e41378176432-1758535620408.jpg
+   ✅ [6/10] da6ad8533762-Screenshot_20250922_232217_NAVER.jpg
+   ✅ [4/10] cdd7fa01d222-Screenshot_20250917_205011.jpg
+   ✅ [9/10] e6295ef3470a-Screenshot_20250919_154111_BAND.jpg
+   ✅ [10/10] f27447ab3dc8-IMG_5945.jpeg
+   ✅ [7/10] e0a6a6f8c6d9-IMG_2880.png
+   ✅ [3/10] bfbd50518d72-20250922_164832.jpg
+   ✅ [5/10] d5e9df725d2b-IMG_1407.png
+✅ Uploaded 10/10 images in 1.02s
+
+📤 Uploading 4 images in parallel...
+   ✅ [3/4] f7229be919f1-화면_캡처_2025_09_23_094910.jpg
+   ✅ [1/4] f42961b2b2e3-Screenshot_20220901_194953_Facebook.jpg
+   ✅ [4/4] fe0e1606c93b-Screenshot_20250827_004006_NAVER.jpg
+   ✅ [2/4] f6fdf09d8932-Screenshot_20250831_162024_TikTok_Lite.jpg
+✅ Uploaded 4/4 images in 0.72s
+
+✅ All uploads completed in 14.23s
+
+================================================================================
+✂️  PHASE 2: CROPPING + SEARCHING (SEQUENTIAL)
+================================================================================
+
+[1/64] ✂️  Cropping: 0173bf6501b1-IMG_6324.png
+   🎯 tops
+   ✅ Cropped 1 items in 43.56s
+   🔍 Searched in 22.50s (GPT=0, Fallback=1)
+
+[2/64] ✂️  Cropping: 105101ae8a5c-Screenshot_20250914_140059_Samsung_Internet.png
+   🎯 tops, accessories
+   ⚠️  No match for 'accessories_blue_knit_shorts_1762364445873.jpg', using index → 'tops'
+   🎯 Matched 'accessories_cream_polka_dot_vest_blue_knit_bonnet_1762364447072.jpg' → 'tops'
+   ✅ Cropped 2 items in 97.35s
+   🔍 Searched in 20.24s (GPT=0, Fallback=1)
+
+[3/64] ✂️  Cropping: 13048e56c7e6-Screenshot_20250818_190819_Naver_Cafe.jpg
+   🎯 tops
+   ✅ Cropped 1 items in 37.96s
+   🔍 Searched in 25.20s (GPT=1, Fallback=0)
+
+[4/64] ✂️  Cropping: 161d724e75d0-IMG_7213.png
+   🎯 tops
+   ✅ Cropped 1 items in 35.29s
+   🔍 Searched in 8.23s (GPT=0, Fallback=1)
+
+[5/64] ✂️  Cropping: 1f315d41bcd5-IMG_2050.png
+   🎯 tops, bags
+   🎯 Matched 'accessories_white_layered_ruffle_blouse_1762364727328.jpg' → 'tops'
+   🎯 Matched 'accessories_small_beige_leather_handbag_1762364729161.jpg' → 'bags'
+   ✅ Cropped 2 items in 154.76s
+   🔍 Searched in 15.11s (GPT=2, Fallback=0)
+
+[6/64] ✂️  Cropping: 2328bd465b25-Screenshot_20250922_175917_Instagram.jpg
+   🎯 tops
+   ✅ Cropped 1 items in 48.12s
+   🔍 Searched in 8.91s (GPT=1, Fallback=0)
+
+[7/64] ✂️  Cropping: 25a07f7412b0-Screenshot_20250425_205335_NAVER.jpg
+   🎯 dress
+   ✅ Cropped 1 items in 57.56s
+   🔍 Searched in 9.55s (GPT=1, Fallback=0)
+
+[8/64] ✂️  Cropping: 25e73fbfc872-캡처.JPG
+   🎯 dress, bags
+   🎯 Matched 'accessories_black_long_sleeve_midi_dress_1762364928519.jpg' → 'dress'
+   🎯 Matched 'accessories_black_leather_handbag_1762364928931.jpg' → 'bags'
+   ✅ Cropped 2 items in 60.31s
+   🔍 Searched in 17.50s (GPT=2, Fallback=0)
+
+[9/64] ✂️  Cropping: 2701146d3bd8-Screenshot_20250922_180545_NAVER.jpg
+   🎯 tops, bottoms
+   🎯 Matched 'accessories_black_high_waist_skirt_1762365045244.jpg' → 'bottoms'
+   🎯 Matched 'accessories_light_blue_pinstriped_button___down_shirt_1762365045879.jpg' → 'tops'
+   ✅ Cropped 2 items in 99.98s
+   🔍 Searched in 13.10s (GPT=2, Fallback=0)
+
+[10/64] ✂️  Cropping: 283b1eba8622-Screenshot_20250726_191930_Threads.jpg
+   🎯 tops, accessories
+   🎯 Matched 'accessories_white_pearl_necklace_1762365196685.jpg' → 'accessories'
+   🎯 Matched 'accessories_long_sleeve_button___up_shirt_1762365197815.jpg' → 'tops'
+   ✅ Cropped 2 items in 138.91s
+   🔍 Searched in 24.75s (GPT=2, Fallback=0)
+
+[11/64] ✂️  Cropping: 2e934d4bb76e-Screenshot_20250901_185501_Coupang.jpg
+   🎯 accessories
+   ✅ Cropped 1 items in 64.65s
+   🔍 Searched in 11.26s (GPT=0, Fallback=1)
+
+[12/64] ✂️  Cropping: 32523f31267f-6ecd960eb98673cc917c6722be8347fa.jpg
+   🎯 dress, bags, shoes
+   🎯 Matched 'accessories_brown_leather_shoulder_bag_1762365422424.jpg' → 'bags'
+   ⚠️  No match for 'accessories_white_sleeveless_lace_top_1762365423449.jpg', using index → 'bags'
+   ⚠️  No match for 'accessories_sweatshirt_shirt_white_sleeveless_lace_top_1762365424382.jpg', using index → 'shoes'
+   ✅ Cropped 3 items in 124.91s
+   🔍 Searched in 7.35s (GPT=0, Fallback=2)
+
+[13/64] ✂️  Cropping: 328e2d651da5-Screenshot_20250922_190837_Samsung_Internet.jpg
+   🎯 shoes
+   ✅ Cropped 1 items in 51.23s
+   🔍 Searched in 17.14s (GPT=1, Fallback=0)
+
+[14/64] ✂️  Cropping: 3296eb6c6532-Screenshot_20250922_171448_G.jpg
+   🎯 shoes
+   ✅ Cropped 1 items in 38.87s
+   🔍 Searched in 16.63s (GPT=1, Fallback=0)
+
+[15/64] ✂️  Cropping: 3e360f04f634-IMG_8106.png
+   🎯 bags
+   ✅ Cropped 1 items in 47.96s
+   🔍 Searched in 18.90s (GPT=1, Fallback=0)
+
+[16/64] ✂️  Cropping: 3f6b085455d6-Screenshot_20250922_191824_Samsung_Internet.jpg
+   🎯 tops
+   ✅ Cropped 1 items in 39.01s
+   🔍 Searched in 14.66s (GPT=0, Fallback=0)
+
+[17/64] ✂️  Cropping: 41932fac32a3-Screenshot_20250923_095819.jpg
+   🎯 bags
+   ✅ Cropped 1 items in 44.42s
+   🔍 Searched in 22.45s (GPT=0, Fallback=0)
+
+[18/64] ✂️  Cropping: 4803132f0957-Screenshot_20250922_175941_NAVER.jpg
+   🎯 bottoms
+   ✅ Cropped 1 items in 33.87s
+   🔍 Searched in 12.13s (GPT=0, Fallback=0)
+
+[19/64] ✂️  Cropping: 49192c7d398f-Screenshot_20250713_131433_Coupang.jpg
+   🎯 bottoms
+   ✅ Cropped 1 items in 74.41s
+   🔍 Searched in 11.88s (GPT=0, Fallback=0)
+
+[20/64] ✂️  Cropping: 4a0d3c3e5bf6-Screenshot_20250922_180348_Instagram.jpg
+   🎯 tops
+   ✅ Cropped 1 items in 46.59s
+   🔍 Searched in 7.38s (GPT=0, Fallback=0)
+
+[21/64] ✂️  Cropping: 4aaa14222152-Screenshot_20250922_183517.jpg
+   🎯 tops, bottoms
+   ✅ Cropped 1 items in 45.36s
+   🔍 Searched in 7.28s (GPT=0, Fallback=0)
+
+[22/64] ✂️  Cropping: 4ac1bfd760eb-IMG_2627.jpeg
+   🎯 tops
+   ✅ Cropped 1 items in 45.67s
+   🔍 Searched in 12.77s (GPT=0, Fallback=0)
+
+[23/64] ✂️  Cropping: 4bc11921eb53-1757574448248.jpg
+   🎯 tops
+   ✅ Cropped 1 items in 41.38s
+   🔍 Searched in 17.84s (GPT=0, Fallback=0)
+
+[24/64] ✂️  Cropping: 5497fec0d69a-Screenshot_20250922_150426_4910.jpg
+   🎯 bottoms
+   ✅ Cropped 1 items in 31.12s
+   🔍 Searched in 16.20s (GPT=0, Fallback=0)
+
+[25/64] ✂️  Cropping: 55b5d0929662-Screenshot_20250725_092504_Toss.jpg
+   🎯 shoes
+   ✅ Cropped 1 items in 37.66s
+   🔍 Searched in 12.21s (GPT=0, Fallback=0)
+
+[26/64] ✂️  Cropping: 5758d665a52c-IMG_1026.png
+   🎯 tops, bottoms, shoes
+   🎯 Matched 'accessories_sweatshirt_shirt_1762366289565.jpg' → 'tops'
+   🎯 Matched 'accessories_shoes_shoes_shoes_1762366291205.jpg' → 'shoes'
+   🎯 Matched 'accessories_hoodie_1762366291645.jpg' → 'tops'
+   ✅ Cropped 3 items in 96.13s
+   🔍 Searched in 17.85s (GPT=0, Fallback=0)
+
+[27/64] ✂️  Cropping: 586f488fffd3-IMG_3345.png
+   🎯 tops, bottoms
+   ✅ Cropped 1 items in 36.50s
+   🔍 Searched in 7.76s (GPT=0, Fallback=0)
+
+[28/64] ✂️  Cropping: 5da33aca7dd9-Screenshot_20250922_182701.jpg
+   🎯 tops, accessories
+   ✅ Cropped 1 items in 48.96s
+   🔍 Searched in 12.51s (GPT=0, Fallback=0)
+
+[29/64] ✂️  Cropping: 619f731ee58c-Screenshot_20250704_223306_NAVER.jpg
+   🎯 tops
+   ✅ Cropped 1 items in 46.48s
+   🔍 Searched in 18.55s (GPT=0, Fallback=0)
+
+[30/64] ✂️  Cropping: 6a381c97b5d6-Screenshot_20250816_160634_Instagram.jpg
+   🎯 bottoms
+   ✅ Cropped 1 items in 40.13s
+   🔍 Searched in 13.57s (GPT=0, Fallback=0)
+
+[31/64] ✂️  Cropping: 6fa0262df24a-JPEG_20250718_102427_7836027581844906401.jpg
+   🎯 tops
+   ✅ Cropped 1 items in 68.04s
+   🔍 Searched in 20.57s (GPT=0, Fallback=0)
+
+[32/64] ✂️  Cropping: 71b2f5f94309-IMG_7944.png
+   🎯 bags
+   ✅ Cropped 1 items in 92.93s
+   🔍 Searched in 12.79s (GPT=0, Fallback=0)
+
+[33/64] ✂️  Cropping: 778fd0f281ea-Screenshot_20250922_151442_CJ.jpg
+   🎯 tops
+   ✅ Cropped 1 items in 44.13s
+   🔍 Searched in 5.13s (GPT=0, Fallback=0)
+
+[34/64] ✂️  Cropping: 78d89468a8ef-Screenshot_20250922_175653_Gallery.jpg
+   🎯 shoes
+   ✅ Cropped 1 items in 41.63s
+   🔍 Searched in 17.30s (GPT=0, Fallback=0)
+
+[35/64] ✂️  Cropping: 7d4dd34d1a8d-Screenshot_20250817_210643_Grip.jpg
+   🎯 tops, bottoms
+   🎯 Matched 'accessories_sweatshirt_hoodie_1762366909723.jpg' → 'tops'
+   🎯 Matched 'accessories_sweatshirt_1762366911442.jpg' → 'tops'
+   ✅ Cropped 2 items in 74.64s
+   🔍 Searched in 7.15s (GPT=0, Fallback=0)
+
+[36/64] ✂️  Cropping: 7d53b298a560-IMG_8862.png
+   🎯 bottoms
+   ✅ Cropped 1 items in 59.44s
+   🔍 Searched in 21.44s (GPT=0, Fallback=0)
+
+[37/64] ✂️  Cropping: 804e907728fc-Screenshot_20250922_153924_KakaoTalk.jpg
+   🎯 tops
+   ✅ Cropped 1 items in 29.84s
+   🔍 Searched in 8.52s (GPT=0, Fallback=0)
+
+[38/64] ✂️  Cropping: 8837d550aade-Screenshot_20250726_104132_NAVER.jpg
+   🎯 accessories
+   ✅ Cropped 1 items in 40.83s
+   🔍 Searched in 5.86s (GPT=0, Fallback=0)
+
+[39/64] ✂️  Cropping: 88ace8481ee2-Screenshot_20250922_210139_NAVER.jpg
+   🎯 tops, bottoms
+   ✅ Cropped 1 items in 42.40s
+   🔍 Searched in 27.06s (GPT=0, Fallback=0)
+
+[40/64] ✂️  Cropping: 8938b9049c01-Screenshot_20220428_201704.png
+   🎯 tops
+   ✅ Cropped 1 items in 20.75s
+   🔍 Searched in 6.41s (GPT=0, Fallback=0)
+
+[41/64] ✂️  Cropping: 8c7cd01bb236-Screenshot_20250922_180000.jpg
+   🎯 tops
+   ✅ Cropped 1 items in 45.22s
+   🔍 Searched in 7.12s (GPT=0, Fallback=0)
+
+[42/64] ✂️  Cropping: 8d7c9f358b9e-1758535513099.jpg
+   🎯 tops
+   ✅ Cropped 1 items in 50.10s
+   🔍 Searched in 7.43s (GPT=0, Fallback=0)
+
+[43/64] ✂️  Cropping: 9bb44927ad8d-Screenshot_20250922_234724.jpg
+   🎯 tops
+   ✅ Cropped 1 items in 39.37s
+   🔍 Searched in 13.91s (GPT=0, Fallback=0)
+
+[44/64] ✂️  Cropping: 9ef78d715dda-IMG_6710.jpeg
+   🎯 tops
+   ✅ Cropped 1 items in 42.99s
+   🔍 Searched in 19.59s (GPT=0, Fallback=0)
+
+[45/64] ✂️  Cropping: a1ba14c536c4-Screenshot_20250922_180802_NAVER.jpg
+   🎯 tops
+   ✅ Cropped 1 items in 23.18s
+   🔍 Searched in 23.29s (GPT=0, Fallback=0)
+
+[46/64] ✂️  Cropping: a258cdf96d3c-IMG_1391.png
+   🎯 bottoms
+   ✅ Cropped 1 items in 39.03s
+   🔍 Searched in 7.28s (GPT=0, Fallback=0)
+
+[47/64] ✂️  Cropping: a31be7275ec0-Screenshot_20250923_080311_TikTok_Lite.jpg
+   🎯 tops, bottoms, shoes
+   ✅ Cropped 1 items in 45.43s
+   🔍 Searched in 6.86s (GPT=0, Fallback=0)
+
+[48/64] ✂️  Cropping: a5036bab7d0d-Screenshot_20250922_180026_Grip.jpg
+   🎯 tops, bottoms, shoes
+   🎯 Matched 'accessories_shoes_shoes_shoes_1762367697551.jpg' → 'shoes'
+   🎯 Matched 'accessories_sweatshirt_hoodie_1762367698740.jpg' → 'tops'
+   🎯 Matched 'accessories_sweatshirt_hoodie_shirt_1762367700106.jpg' → 'tops'
+   ✅ Cropped 3 items in 147.66s
+   🔍 Searched in 8.02s (GPT=0, Fallback=0)
+
+[49/64] ✂️  Cropping: b24107c638d7-Screenshot_20250718_023259_11st.jpg
+   🎯 tops, bottoms, shoes
+   ✅ Cropped 1 items in 32.57s
+   🔍 Searched in 20.24s (GPT=0, Fallback=0)
+
+[50/64] ✂️  Cropping: b49a396ce4d2-Screenshot_20250923_161107.jpg
+   🎯 tops
+   ✅ Cropped 1 items in 14.36s
+   🔍 Searched in 10.59s (GPT=0, Fallback=0)
+
+[51/64] ✂️  Cropping: b5e7f9ef0dd7-BandPhoto_2024_11_29_16_50_11_1.jpg
+   🎯 tops, bottoms, shoes
+   ✅ Cropped 1 items in 29.31s
+   🔍 Searched in 13.17s (GPT=0, Fallback=0)
+
+[52/64] ✂️  Cropping: b9b9f65c55a1-d18cfbb172e84a7e9d792400291d500a.webp
+   🎯 tops
+   ✅ Cropped 1 items in 22.60s
+   🔍 Searched in 6.24s (GPT=0, Fallback=0)
+
+[53/64] ✂️  Cropping: bfbd50518d72-20250922_164832.jpg
+   🎯 bags
+   ✅ Cropped 1 items in 23.76s
+   🔍 Searched in 16.36s (GPT=0, Fallback=0)
+
+[54/64] ✂️  Cropping: cdd7fa01d222-Screenshot_20250917_205011.jpg
+   🎯 tops
+   ✅ Cropped 1 items in 27.29s
+   🔍 Searched in 6.55s (GPT=0, Fallback=0)
+
+[55/64] ✂️  Cropping: d5e9df725d2b-IMG_1407.png
+   🎯 tops
+   ✅ Cropped 1 items in 20.71s
+   🔍 Searched in 18.05s (GPT=0, Fallback=0)
+
+[56/64] ✂️  Cropping: da6ad8533762-Screenshot_20250922_232217_NAVER.jpg
+   🎯 shoes
+   ✅ Cropped 1 items in 25.49s
+   🔍 Searched in 6.50s (GPT=0, Fallback=0)
+
+[57/64] ✂️  Cropping: e0a6a6f8c6d9-IMG_2880.png
+   🎯 bags
+   ✅ Cropped 1 items in 27.63s
+   🔍 Searched in 12.97s (GPT=0, Fallback=0)
+
+[58/64] ✂️  Cropping: e41378176432-1758535620408.jpg
+   🎯 tops, bottoms, shoes, bags
+   ✅ Cropped 1 items in 34.35s
+   🔍 Searched in 8.44s (GPT=0, Fallback=0)
+
+[59/64] ✂️  Cropping: e6295ef3470a-Screenshot_20250919_154111_BAND.jpg
+   🎯 tops
+   ✅ Cropped 1 items in 29.86s
+   🔍 Searched in 7.04s (GPT=0, Fallback=0)
+
+[60/64] ✂️  Cropping: f27447ab3dc8-IMG_5945.jpeg
+   🎯 tops, accessories
+   ✅ Cropped 1 items in 26.55s
+   🔍 Searched in 6.70s (GPT=0, Fallback=0)
+
+[61/64] ✂️  Cropping: f42961b2b2e3-Screenshot_20220901_194953_Facebook.jpg
+   🎯 tops, accessories
+   ✅ Cropped 1 items in 28.09s
+   🔍 Searched in 14.46s (GPT=0, Fallback=0)
+
+[62/64] ✂️  Cropping: f6fdf09d8932-Screenshot_20250831_162024_TikTok_Lite.jpg
+   🎯 tops
+   ✅ Cropped 1 items in 41.53s
+   🔍 Searched in 16.94s (GPT=0, Fallback=0)
+
+[63/64] ✂️  Cropping: f7229be919f1-화면_캡처_2025_09_23_094910.jpg
+   🎯 tops, bottoms, shoes
+   ✅ Cropped 1 items in 25.71s
+   🔍 Searched in 11.71s (GPT=0, Fallback=0)
+
+[64/64] ✂️  Cropping: fe0e1606c93b-Screenshot_20250827_004006_NAVER.jpg
+   🎯 shoes
+   ✅ Cropped 1 items in 30.68s
+   🔍 Searched in 7.35s (GPT=0, Fallback=0)
+
+================================================================================
+📊 HYBRID BATCH TEST SUMMARY
+================================================================================
+✅ Successful: 64/64
+❌ Failed: 0/64
+
+⏱️  Phase 1 (Uploads): 14.23s
+⏱️  Average Crop Time: 49.96s
+⏱️  Average Search Time: 13.29s
+
+⏱️  Total Time: 4061.96s (67.70 minutes)
+⚡ Time saved on uploads: ~82s
+
+📈 Result Source Statistics:
+   GPT Selected: 14 (20.0%)
+   Fallback Used: 6 (8.6%)
+   No Results: 0
+   Errors: 50
+
+💾 Results saved to: batch_test_results_hybrid_2025-11-05T18-45-33.json
+================================================================================

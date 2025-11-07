@@ -1,0 +1,2951 @@
+[
+  {
+    "filename": "0173bf6501b1-IMG_6324.png",
+    "phone": "'+821077992291",
+    "requested_categories": "상의",
+    "status": "failed",
+    "upload_time": "1.20",
+    "crop_time": "36.59",
+    "search_time": 0,
+    "total_time": "86.48",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762348922160_0173bf6501b1-IMG_6324.png",
+    "cropped_urls": {
+      "tops": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_sweatshirt_hoodie_1762348958182.jpg?"
+    },
+    "search_results": {},
+    "errors": [
+      "Search failed: {\"error\":\"Failed to process search\"}"
+    ]
+  },
+  {
+    "filename": "105101ae8a5c-Screenshot_20250914_140059_Samsung_Internet.png",
+    "phone": "'+821042870706",
+    "requested_categories": "상의, 악세사리",
+    "status": "failed",
+    "upload_time": "1.97",
+    "crop_time": "158.77",
+    "search_time": 0,
+    "total_time": "179.60",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762349010640_105101ae8a5c-Screenshot_20250914_140059_Samsung_Internet.png",
+    "cropped_urls": {
+      "tops": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_blue_knit_shorts_1762349169561.jpg?",
+      "accessories": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_vest_1762349170027.jpg?"
+    },
+    "search_results": {},
+    "errors": [
+      "Search failed: {\"error\":\"Failed to process search\"}"
+    ]
+  },
+  {
+    "filename": "13048e56c7e6-Screenshot_20250818_190819_Naver_Cafe.jpg",
+    "phone": "'+821074946970",
+    "requested_categories": "상의",
+    "status": "failed",
+    "upload_time": "2.17",
+    "crop_time": "28.54",
+    "search_time": 0,
+    "total_time": "50.97",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762349192240_13048e56c7e6-Screenshot_20250818_190819_Naver_Cafe.jpg",
+    "cropped_urls": {
+      "tops": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_hoodie_1762349222088.jpg?"
+    },
+    "search_results": {},
+    "errors": [
+      "Search failed: {\"error\":\"Failed to process search\"}"
+    ]
+  },
+  {
+    "filename": "161d724e75d0-IMG_7213.png",
+    "phone": "'+821029795315",
+    "requested_categories": "상의",
+    "status": "failed",
+    "upload_time": "0.98",
+    "crop_time": "34.77",
+    "search_time": 0,
+    "total_time": "65.19",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762349245211_161d724e75d0-IMG_7213.png",
+    "cropped_urls": {
+      "tops": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_sweatshirt_1762349279370.jpg?"
+    },
+    "search_results": {},
+    "errors": [
+      "Search failed: {\"error\":\"Failed to process search\"}"
+    ]
+  },
+  {
+    "filename": "1f315d41bcd5-IMG_2050.png",
+    "phone": "'+821026307327",
+    "requested_categories": "상의, 가방",
+    "status": "success",
+    "upload_time": "2.06",
+    "crop_time": "85.20",
+    "search_time": "46.03",
+    "total_time": "133.29",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762349312406_1f315d41bcd5-IMG_2050.png",
+    "cropped_urls": {
+      "tops": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_white_layered_ruffle_blouse_1762349396820.jpg?",
+      "bags": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_small_beige_leather_handbag_1762349398657.jpg?"
+    },
+    "search_results": {
+      "tops": [
+        {
+          "link": "https://zigzag.kr/catalog/products/157977623",
+          "thumbnail": "https://d2qe5g6jeya2bi.cloudfront.net/product/yrieyongpu/A00263/capture/all_29_0_ksRow.jpg?time=1739797753",
+          "title": "오늘도봄 [세일💕레이어드] 캉캉 프릴 나시 블라우스 민소매 ..."
+        },
+        {
+          "link": "https://ardormonday.com/product/앙고라💗파스텔-퓨어파스텔-라운드-크롭가디건-여자라운드가디건-니트가디건-앙고라가디건-러블리-파스텔톤-봄신상-하객룩-무지가디건-세/5574/",
+          "thumbnail": "https://ardormonday.com/web/product/big/202501/b8bdf0931b697b4c138b11474aa575f9.jpg",
+          "title": "앙고라💗파스텔] 퓨어파스텔 라운드 크롭가디건"
+        },
+        {
+          "link": "https://m.yuirmui.kr/product/miel-미엘-뉴-엘린-울-라쿤-폭스-라운드-숏-니트-가디건-4color/6260/",
+          "thumbnail": "https://m.yuirmui.kr/web/product/extra/big/20241204/0e5b274cac23f9bb950ddbc699eedb11.jpg",
+          "title": "miel 미엘 뉴 엘린 울 라쿤 폭스 라운드 숏 니트 가디건 4color ..."
+        }
+      ],
+      "bags": [
+        {
+          "link": "https://www.longchamp.com/us/en/products/handbag-s-L1621089P71.html",
+          "thumbnail": "https://www.longchamp.com/dw/image/v2/BCVX_PRD/on/demandware.static/-/Sites-LC-master-catalog/default/dw221c216b/images/DIS/L1621089P71_0.png?sw=800&sh=800&sm=fit",
+          "title": "Le Pliage Original S Handbag Paper - Recycled canvas | Longchamp US"
+        },
+        {
+          "link": "https://www.bloomingdales.com/shop/product/longchamp-le-pliage-original-mini-pouch-exclusive?ID=4923333",
+          "thumbnail": "https://photos-us.bazaarvoice.com/photo/2/cGhvdG86Ymxvb21pbmdkYWxlcw/10d18084-57cf-588e-a13d-ad717d4e2ad4",
+          "title": "Longchamp Le Pliage Original Mini Pouch - Exclusive | Bloomingdale's"
+        },
+        {
+          "link": "https://www.ebay.com/itm/357548124012",
+          "thumbnail": "https://i.ebayimg.com/images/g/GVAAAeSwa2JotIVG/s-l400.jpg",
+          "title": "Longchamp Le Pliage ENERGY Shoulder Handle Crossbody 2way bag Beige 10x8x5 EUC | eBay"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 2,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "2328bd465b25-Screenshot_20250922_175917_Instagram.jpg",
+    "phone": "'+821050251565",
+    "requested_categories": "상의",
+    "status": "success",
+    "upload_time": "0.76",
+    "crop_time": "95.37",
+    "search_time": "9.92",
+    "total_time": "106.06",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762349447700_2328bd465b25-Screenshot_20250922_175917_Instagram.jpg",
+    "cropped_urls": {
+      "tops": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_sleeve_henley_shirt_1762349542277.jpg?"
+    },
+    "search_results": {
+      "tops": [
+        {
+          "link": "https://www.musinsa.com/products/5366618",
+          "thumbnail": "https://image.msscdn.net/thumbnails/images/goods_img/20250826/5366618/5366618_17562747446059_big.jpg?w=390",
+          "title": "로토토베베(ROTOTOBEBE) 페스티벌마일드셋업 퍼플 - 사이즈 & 후기 | 무신사"
+        },
+        {
+          "link": "https://www.amazon.ae/Posh-Peanut-Country-Rose-Sleeve/dp/B0D344SBDB",
+          "thumbnail": "https://images-eu.ssl-images-amazon.com/images/I/712f1ntqGJL._AC_UL600_SR600,600_.jpg",
+          "title": "Posh Peanut Country Rose - Long Sleeve Basic Pajama - 5-6 years: Buy Online at Best Price in UAE - Amazon.ae"
+        },
+        {
+          "link": "https://www.amazon.com/Childrens-Place-Toddler-Zip-Front-Footless/dp/B0CR6MGHK3",
+          "thumbnail": "https://m.media-amazon.com/images/I/71kYFFFSIXL.jpg_BO30,255,255,255_UF900,850_SR1910,1000,0,C_QL100_.jpg",
+          "title": "The Children's Place Baby Girls' and Toddler Snug Fit 100% Cotton Short Sleeve Zip-Front One Piece Footless Pajama"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 1,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "25a07f7412b0-Screenshot_20250425_205335_NAVER.jpg",
+    "phone": "'+821055394006",
+    "requested_categories": "드레스",
+    "status": "success",
+    "upload_time": "1.35",
+    "crop_time": "147.71",
+    "search_time": "10.66",
+    "total_time": "159.72",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762349555759_25a07f7412b0-Screenshot_20250425_205335_NAVER.jpg",
+    "cropped_urls": {
+      "dress": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_gray_short_sleeve_maxi_dress_1762349699917.jpg?"
+    },
+    "search_results": {
+      "dress": [
+        {
+          "link": "https://www.aliexpress.com/item/1005008904169735.html",
+          "thumbnail": "https://ae01.alicdn.com/kf/Sa96482692d864459bc06af37a7543730K.jpg",
+          "title": "Spring Summer New ey ort Sve Women's Dr Design Sensation Slimming Waist High Waist A-Line Skirt Commute Sle"
+        },
+        {
+          "link": "https://naosumi.kr/product/모먼트-스트랩-원피스/185/",
+          "thumbnail": "https://ecimg.cafe24img.com/pg1806b62672759087/naosumi/web/upload/NNEditor/20250609/mobile/aae00ace7d9c35f3dbff079956c226dd_1749449001.jpg",
+          "title": "naosumi | 모먼트 스트랩 원피스, 편안한 매력"
+        },
+        {
+          "link": "https://www2.hm.com/en_gb/productpage.1304265001.html",
+          "thumbnail": "https://image.hm.com/assets/hm/aa/3f/aa3fbbee16340aa3177bea5f7deb491dd8707557.jpg?imwidth=2160",
+          "title": "Cap-sleeved jersey dress - Dark grey marl - Ladies | H&M GB"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 1,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "25e73fbfc872-캡처.JPG",
+    "phone": "'+821073624251",
+    "requested_categories": "드레스, 가방",
+    "status": "success",
+    "upload_time": "0.32",
+    "crop_time": "91.92",
+    "search_time": "15.81",
+    "total_time": "108.06",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762349717483_25e73fbfc872-.JPG",
+    "cropped_urls": {
+      "dress": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_black_long_sleeve_midi_dress_1762349808779.jpg?",
+      "bags": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_black_leather_handbag_1762349809192.jpg?"
+    },
+    "search_results": {
+      "dress": [
+        {
+          "link": "https://www.coupang.com/vp/products/8298752564?itemId=23938341242&vendorItemId=90960243135",
+          "thumbnail": "https://thumbnail.coupangcdn.com/thumbnails/remote/230x230ex/image/vendor_inventory/6758/c9ffe1730a18b358cde4393bf1d7563dcfe658c4347e0793a933510205e9.jpeg",
+          "title": "롱 원피스 연말파티룩 가을 겨울 원피스 하객룩 - 원피스 세트 | 쿠팡"
+        },
+        {
+          "link": "https://www.thecyclecircle.com/?h=77992104856205",
+          "thumbnail": "https://tshop.r10s.jp/dazzle-fashion/cabinet/dazzle5/jo-wn-3748_2.jpg",
+          "title": "ワンピース レディース 無地 Aライン ミモレ丈ワンピース 長袖 ポリエステル ラウンドネック 白 ホワイト 黒 ブラック 紺 ネイビー 緑 グリーン グレー エレガント 上品 通勤 楽天市場】ワンピース レディース エレガント ネイビー 紺 Aライン 長袖 ロング ロング ..."
+        },
+        {
+          "link": "https://www.aliexpress.com/i/4000181031774.html",
+          "thumbnail": "https://ae01.alicdn.com/kf/He9498e8f762f4d8e99c1c12caa62ca19b.jpg",
+          "title": "2021 new Korean ladies social collar simple dress female Zippers Full Regular Natural Stand Sheath Office Lady - AliExpress"
+        }
+      ],
+      "bags": [
+        {
+          "link": "https://s3.dualstack.us-east-1.amazonaws.com/equzuqaribob/prod.html?toqk3kdtwmkt-",
+          "thumbnail": "https://ae01.alicdn.com/kf/Scef67542bb444559b6d015e337911550I.jpg_120x120.jpg_.webp",
+          "title": "여성용 포켓 싱글 브레스티드 패치워크 스웨터, 긴팔 캐주얼 O-넥 카디건, 한국 패션 뜨게, 2024 겨울 - AliExpress"
+        },
+        {
+          "link": "https://www.dhgate.com/goods/981022440.html",
+          "thumbnail": "https://img4.dhresource.com/webp/m/0x0/f3/albu/km/z/30/08860fab-12bf-475a-8295-b8a259e7950a.jpg",
+          "title": "Genuine Leather Fashion Casual Womens Large Capacity Crossbody Bag from Dhgate Totes - price 334.72"
+        },
+        {
+          "link": "https://es.aliexpress.com/item/1005008237295374.html",
+          "thumbnail": "https://ae01.alicdn.com/kf/S70c7dab800d64d48b8755684e89471d2c.jpg",
+          "title": "Top corto y grueso con capucha de piel de visón de imitación ecológico para mujer, chaqueta de piel holgada nueva para otoño e invierno - AliExpress"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 2,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "2701146d3bd8-Screenshot_20250922_180545_NAVER.jpg",
+    "phone": "'+821045528334",
+    "requested_categories": "상의, 하의",
+    "status": "success",
+    "upload_time": "0.77",
+    "crop_time": "103.59",
+    "search_time": "22.79",
+    "total_time": "127.15",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762349827549_2701146d3bd8-Screenshot_20250922_180545_NAVER.jpg",
+    "cropped_urls": {
+      "tops": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_black_high_waist_skirt_1762349929140.jpg?",
+      "bottoms": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_striped_button___down_shirt_1762349930326.jpg?"
+    },
+    "search_results": {
+      "tops": [
+        {
+          "link": "https://www.amazon.com/Casual-Womens-Skirt-Stretch-Ladies/dp/B0DXW2C3LX",
+          "thumbnail": "https://m.media-amazon.com/images/I/71SPwP7qH3L._UY1000_.jpg",
+          "title": "Amazon.com: Casual Women's Skirt High Stretch Ladies Black Casual High Waist Split Hem Skirt for Women : Clothing, Shoes & Jewelry"
+        },
+        {
+          "link": "https://m.realiz.co.kr/product/zoom.html?product_no=1140",
+          "thumbnail": "https://shop-phinf.pstatic.net/20220210_110/1644422442706P9VQU_JPEG/SE-6fab056e-17f3-476d-bd2b-0a8aa4147fc4.jpg",
+          "title": "리얼리즈] 모던시크 데일리룩 리얼리즈"
+        },
+        {
+          "link": "https://m.common-unique.com/skin-skin94/product/detail.html?product_no=31159&cate_no=1&display_group=10",
+          "thumbnail": "https://common-unique.com/date/2025/0408/17/17bl-250408_08.jpg",
+          "title": "커먼유니크"
+        }
+      ],
+      "bottoms": [
+        {
+          "link": "https://www2.hm.com/en_us/productpage.0925212004.html",
+          "thumbnail": "https://image.hm.com/assets/hm/61/bc/61bc56fb2c9c8d795b68052fadae14be0ab7b47c.jpg?imwidth=768",
+          "title": "Oxford Shirt - Light blue - Ladies | H&M US"
+        },
+        {
+          "link": "https://www2.hm.com/ko_kr/ladies/shop-by-product/shirts-and-blouses.html?patterns=스트라이프&id=aa14",
+          "thumbnail": "https://image.hm.com/assets/hm/03/df/03df4765fb0daba2ebd433ec39e183126c83385e.jpg?imwidth=786",
+          "title": "여성 스트라이프 셔츠 & 블라우스 | 롱 슬리브 | H&M KR"
+        },
+        {
+          "link": "https://www.zara.com/kr/ko/뒷면-리본-크롭-셔츠-p04387810.html",
+          "thumbnail": "https://static.zara.net/assets/public/4eec/6d97/bae745e1913f/e43b9e08c339/04387810058-a1/04387810058-a1.jpg?ts=1756823161073",
+          "title": "뒷면 리본 크롭 셔츠 - 화이트 / 하늘색 | ZARA South Korea / 대한민국"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 2,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "283b1eba8622-Screenshot_20250726_191930_Threads.jpg",
+    "phone": "'+821092214865",
+    "requested_categories": "상의, 악세사리",
+    "status": "success",
+    "upload_time": "0.74",
+    "crop_time": "163.03",
+    "search_time": "26.52",
+    "total_time": "190.29",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762349956704_283b1eba8622-Screenshot_20250726_191930_Threads.jpg",
+    "cropped_urls": {
+      "tops": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_white_pearl_necklace_1762350117707.jpg?",
+      "accessories": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_long_sleeve_button___up_shirt_1762350118635.jpg?"
+    },
+    "search_results": {
+      "tops": [
+        {
+          "link": "https://m.bunjang.co.kr/products/224951276",
+          "thumbnail": "https://media.bunjang.co.kr/product/224951276_{cnt}_1734795185_w{res}.jpg",
+          "title": "고급 일본 담수 진주목걸이(실버) | 브랜드 중고거래 플랫폼 ..."
+        },
+        {
+          "link": "https://zigzag.kr/catalog/products/131083498",
+          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/c/13/108/349/131083498-3203465529850483011.jpeg",
+          "title": "수아베 클래식 진주 네크리스 (스와로브스키사 진주)"
+        },
+        {
+          "link": "https://m.bunjang.co.kr/products/288012265",
+          "thumbnail": "https://media.bunjang.co.kr/product/288012265_{cnt}_1725579988_w{res}.jpg",
+          "title": "진주 모양 목걸이 | 브랜드 중고거래 플랫폼, 번개장터"
+        }
+      ],
+      "accessories": [
+        {
+          "link": "https://www.ssg.com/item/itemView.ssg?itemId=1000344501602",
+          "thumbnail": "https://sitem.ssgcdn.com/02/16/50/item/1000344501602_i1_750.jpg",
+          "title": "카라넥루즈핏블라우스 (BM5E0BL54) - SSG.COM"
+        },
+        {
+          "link": "https://fashionbykakao.com/catalog/products/161495031",
+          "thumbnail": "https://img.sonyunara.com/files/goods/247031/1653639025_12.gif",
+          "title": "패션 바이 카카오 | [베이직/숏] 거즈 썸머 데일리 베이직 2타입 ..."
+        },
+        {
+          "link": "https://www.elandmall.co.kr/i/item?itemNo=2403112823&lowerVendNo=LV20023652",
+          "thumbnail": "https://item.elandrs.com/r/image/item/2024-03-22/2678f695-1dda-47d5-9902-05bb3cb3b73e.jpg?w=750&h=&q=100",
+          "title": "밸리걸] 니트끈 나시 세트 카라 셔츠 (121820) _NC평택점- 이랜드몰"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 2,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "2e934d4bb76e-Screenshot_20250901_185501_Coupang.jpg",
+    "phone": "'+821028784258",
+    "requested_categories": "악세사리",
+    "status": "success",
+    "upload_time": "1.36",
+    "crop_time": "46.26",
+    "search_time": "20.44",
+    "total_time": "68.07",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762350148992_2e934d4bb76e-Screenshot_20250901_185501_Coupang.jpg",
+    "cropped_urls": {
+      "accessories": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_accessories_1762350194780.jpg?"
+    },
+    "search_results": {
+      "accessories": [
+        {
+          "link": "https://www.aliexpress.com/item/1005008464788415.html",
+          "thumbnail": "https://ae01.alicdn.com/kf/S28eec9eda47b499b9683006bb74d6a14n.jpg?width=862&height=800&hash=1662",
+          "title": "Outdoor Sport Hiking Camping Visor Hat UV Protection Face Neck Cover Sun Protcet Cap Fishing cap men's and women's baseball cap - AliExpress"
+        },
+        {
+          "link": "https://www.amazon.com/2pcs-Summer-Women-Womens-Outdoor/dp/B0CSX5Q3Q5",
+          "thumbnail": "https://m.media-amazon.com/images/I/61kUA4ZyZOL._AC_UY350_.jpg",
+          "title": "Amazon.com: VANZACK Men's Women's Uv Protection Sun Hat Face Cover Mask for Outdoor Activities Fishing Hiking Beach Light Grey : Sports & Outdoors"
+        },
+        {
+          "link": "https://www.coupang.com/vp/products/7182835827",
+          "thumbnail": "https://thumbnail.coupangcdn.com/thumbnails/remote/230x230ex/image/vendor_inventory/565c/d55acb0a9f41aff1bafb96062208b82227598b25ab84f23a555bd355b867.jpg",
+          "title": "남자 작업 일 모자 여성 햇및 자외선 차단 썬캡 grey all*727eT - 아기띠 | 쿠팡"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 1,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "32523f31267f-6ecd960eb98673cc917c6722be8347fa.jpg",
+    "phone": "'+821044911649",
+    "requested_categories": "드레스, 가방, 신발",
+    "status": "success",
+    "upload_time": "0.37",
+    "crop_time": "107.38",
+    "search_time": "26.99",
+    "total_time": "134.74",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762350219065_32523f31267f-6ecd960eb98673cc917c6722be8347fa.jpg",
+    "cropped_urls": {
+      "dress": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_brown_leather_shoulder_bag_1762350323497.jpg?",
+      "bags": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_shirt_sleeveless_white_lace_top_1762350324822.jpg?",
+      "shoes": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_sleeveless_white_lace_top_1762350325753.jpg?"
+    },
+    "search_results": {
+      "dress": [
+        {
+          "link": "https://m.bunjang.co.kr/products/284987128",
+          "thumbnail": "https://media.bunjang.co.kr/product/186502420_1_1651240147_w180.jpg",
+          "title": "자라 플리츠 미니 스커트[새상품] | 브랜드 중고거래 플랫폼, 번개장터"
+        },
+        {
+          "link": "https://www.farfetch.com/th/shopping/women/the-row-sofia-1000-handbag-item-27678794.aspx",
+          "thumbnail": "https://cdn-images.farfetch-contents.com/27/67/87/94/27678794_57808590_1000.jpg",
+          "title": "The Row Sofia 10.00 Handbag | Brown | FARFETCH TH"
+        },
+        {
+          "link": "https://www.amazon.com/ADBGA645D-Crossbody-Genuine-Western-Leather/dp/B0DFS6RFQT",
+          "thumbnail": "https://images-na.ssl-images-amazon.com/images/I/514lKOHSnIL._AC_UL600_SR600,600_.jpg",
+          "title": "American Darling Cross Body I Hand Tooled Suede Genuine Leather Women Bag Western Handbag Purse |: Handbags: Amazon.com"
+        }
+      ],
+      "bags": [
+        {
+          "link": "https://www.aliexpress.com/item/1005009135467783.html",
+          "thumbnail": "https://ae01.alicdn.com/kf/S14d2d028f7a045d298537ae3b29487c9h.jpg",
+          "title": "Vintage Embroidered Hollow Out Dress Elegant Patchwork Pleated Midi Dresses Women Summer Sleeveless A-line Party Vestidos 362B - AliExpress"
+        },
+        {
+          "link": "https://www2.hm.com/en_ie/productpage.1283253001.html",
+          "thumbnail": "https://image.hm.com/assets/hm/69/33/693346a57c912ac8b8e99a73029cd260466c6127.jpg?imwidth=768",
+          "title": "Embroidered shift dress - Cream - Ladies | H&M IE"
+        },
+        {
+          "link": "https://www.shopmotf.com/product/MESH-FLORAL-ELEGANT-BACKLESS-BOW-TIE-DRESS-11339344032613184",
+          "thumbnail": "http://img.ltwebstatic.com/v4/j/pi/2025/06/17/57/17501489400ed4942fd2254b14708ac36d2e5484e8.jpg",
+          "title": "MESH FLORAL ELEGANT BACKLESS BOW TIE DRESS｜Motf"
+        }
+      ],
+      "shoes": [
+        {
+          "link": "https://www.shopmotf.com/product/MESH-FLORAL-ELEGANT-BACKLESS-BOW-TIE-DRESS-11339344032613184",
+          "thumbnail": "http://img.ltwebstatic.com/v4/j/pi/2025/06/17/57/17501489400ed4942fd2254b14708ac36d2e5484e8.jpg",
+          "title": "MESH FLORAL ELEGANT BACKLESS BOW TIE DRESS｜Motf"
+        },
+        {
+          "link": "https://comma-jane.co.kr/product/당일출고-레이스-펀칭-자수-민소매-소네-롱-원피스/14305/",
+          "thumbnail": "https://comma-jane.co.kr/web/product/extra/small/202405/5b89c3483fe33d5e7e2fcc91ecec91b3.jpg",
+          "title": "당일출고)-레이스 펀칭 자수 민소매 소네 롱 원피스 - 콤마제인"
+        },
+        {
+          "link": "https://www2.hm.com/en_us/productpage.1283253001.html",
+          "thumbnail": "https://image.hm.com/assets/hm/45/27/4527fe50a3b541926b7e9534fc34df443bd8bb78.jpg?imwidth=768",
+          "title": "Embroidered Shift Dress - Cream - Ladies | H&M US"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 3,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "328e2d651da5-Screenshot_20250922_190837_Samsung_Internet.jpg",
+    "phone": "'+821082413444",
+    "requested_categories": "신발",
+    "status": "success",
+    "upload_time": "1.13",
+    "crop_time": "51.00",
+    "search_time": "25.81",
+    "total_time": "77.94",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762350355804_328e2d651da5-Screenshot_20250922_190837_Samsung_Internet.jpg",
+    "cropped_urls": {
+      "shoes": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_shoes_1762350406503.jpg?"
+    },
+    "search_results": {
+      "shoes": [
+        {
+          "link": "https://www.daangn.com/kr/buy-sell/슈올즈-shoealls-기능성신발-3ouyg9surynz/",
+          "thumbnail": "https://img.kr.gcp-karroter.net/origin/article/202509/17579371855122a1ef2831deb70f43278558c4ba372a13580009dd54d8073689c18092a12b7f90.webp?f=webp&q=95&s=1440x1440&t=inside",
+          "title": "슈올즈 ShoeAlls 기능성신발 | 여성잡화 | 당근 중고거래"
+        },
+        {
+          "link": "https://www.daangn.com/kr/buy-sell/슈올즈-기능성운동화-ocsuqnahr75r/",
+          "thumbnail": "https://img.kr.gcp-karroter.net/origin/article/202509/17579905155632a1ef2831deb70f43278558c4ba372a13580009dd54d8073689c18092a12b7f90.webp?q=82&s=300x300&t=crop&f=webp",
+          "title": "슈올즈 기능성운동화 | 여성잡화 | 당근 중고거래"
+        },
+        {
+          "link": "https://m.blog.naver.com/disma_/222730887601",
+          "thumbnail": "https://mblogthumb-phinf.pstatic.net/MjAyMjA1MTNfNDUg/MDAxNjUyNDA1Nzg2NDY4.YRGhiSIVQc0HebowVa-bRyzjYie4vAhOnB1s_aCTcJ0g.TqjFfxciXdyOGxkIb0dH6-RnFAqAFezLn7692h7ENssg.JPEG.jrmichin/Screenshot＿20220513－103539＿NAVER.jpg?type=w800",
+          "title": "50대 엄마 운동화로 좋은 브랜드 추천해봅니다 : 네이버 블로그"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 1,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "3296eb6c6532-Screenshot_20250922_171448_G.jpg",
+    "phone": "'+821049255952",
+    "requested_categories": "신발",
+    "status": "success",
+    "upload_time": "0.71",
+    "crop_time": "79.19",
+    "search_time": "21.79",
+    "total_time": "101.70",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762350435749_3296eb6c6532-Screenshot_20250922_171448_G.jpg",
+    "cropped_urls": {
+      "shoes": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_shoes_1762350515010.jpg?"
+    },
+    "search_results": {
+      "shoes": [
+        {
+          "link": "https://www.musinsa.com/app/brand_event/views/chaakan/4456)",
+          "thumbnail": "https://image.msscdn.net/campaign_service/images/brand-event/2024/2f43ae1515af400a9d768cbeaf85d19e.jpg",
+          "title": "착한구두 입점 기념 이벤트 | 무신사"
+        },
+        {
+          "link": "https://www.ssg.com/item/itemView.ssg?itemId=1000619289994",
+          "thumbnail": "https://sitem.ssgcdn.com/94/99/28/item/1000619289994_i1_240.jpg",
+          "title": "호주 어그 24FW 오즈웨어 플랫폼 슬리퍼 엘라스틱 로고 울 ..."
+        },
+        {
+          "link": "https://m.the-clip.com/product/천연-소가죽고퀄-폼폼-폭신-리얼-레더-어그-슬리퍼-겨울-슬리퍼/6881/",
+          "thumbnail": "https://m.the-clip.com/web/product/extra/big/202301/e53646690b7fed720a0f9df26476ebb8.jpg",
+          "title": "더클립 - [천연 소가죽/고퀄] 폼폼 폭신 리얼 레더 어그 슬리퍼 ..."
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 1,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "3e360f04f634-IMG_8106.png",
+    "phone": "'+821062454501",
+    "requested_categories": "가방",
+    "status": "success",
+    "upload_time": "0.86",
+    "crop_time": "158.05",
+    "search_time": "33.11",
+    "total_time": "192.02",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762350539450_3e360f04f634-IMG_8106.png",
+    "cropped_urls": {
+      "bags": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_bags_1762350696781.jpg?"
+    },
+    "search_results": {
+      "bags": [
+        {
+          "link": "https://www.amazon.com/Palashop-Backpack-Expandable-Capacity-Compression/dp/B0DB19ZY73",
+          "thumbnail": "https://m.media-amazon.com/images/I/61MsHqqw0DL._UY1000_.jpg",
+          "title": "Amazon.com | Palashop Vacpack Backpack, Expandable Vacpack ..."
+        },
+        {
+          "link": "https://ko.aliexpress.com/item/1005009937006109.html",
+          "thumbnail": "https://ae01.alicdn.com/kf/Sa5c283969e9b47298f6e5e417fb8f382a.jpg",
+          "title": "여행용 백팩, 진공 압축 수하물 가방, 대용량 다기능 백팩, 출장 ..."
+        },
+        {
+          "link": "https://s3.dualstack.us-east-1.amazonaws.com/bodesunesiga/prod.html?tobk3b-o3dmhp",
+          "thumbnail": "https://ae01.alicdn.com/kf/S5c60a01b413f4fe99eacb42a09541466a.jpg",
+          "title": "대용량 확장형 출장 여행 백팩 진공 압축 방수 남성용 백팩 USB ..."
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 1,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "3f6b085455d6-Screenshot_20250922_191824_Samsung_Internet.jpg",
+    "phone": "'+821025403605",
+    "requested_categories": "상의",
+    "status": "success",
+    "upload_time": "1.06",
+    "crop_time": "60.54",
+    "search_time": "20.28",
+    "total_time": "81.89",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762350733474_3f6b085455d6-Screenshot_20250922_191824_Samsung_Internet.jpg",
+    "cropped_urls": {
+      "tops": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_sweatshirtie_1762350793293.jpg?"
+    },
+    "search_results": {
+      "tops": [
+        {
+          "link": "https://zigzag.kr/catalog/products/165705505",
+          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/d/2025/9/10/34107_202509101310230438_71447.jpeg?width=720&height=720&quality=80&format=jpeg",
+          "title": "앳마크 ATMARK (77까지)숏플라워패턴블라우스_AA56BL010G"
+        },
+        {
+          "link": "https://www.amazon.com/Allegra-Womens-Floral-Bishop-Sleeves/dp/B088B3PH59",
+          "thumbnail": "https://m.media-amazon.com/images/S/aplus-media/sc/1912cbe5-4a27-4cd8-a757-e6c8c91b6657.__CR0,0,970,600_PT0_SX970_V1___.jpg",
+          "title": "Allegra K Women's Floral Bishop Long Sleeves Round Neck Casual Blouse Top S White at Amazon Women's Clothing store"
+        },
+        {
+          "link": "https://item.rakuten.co.jp/beulah/25bl062535/",
+          "thumbnail": "https://image.rakuten.co.jp/beulah/cabinet/11296064/25bl06253507.jpg",
+          "title": "楽天市場】花柄シャツ レディース 長袖 ブラウス ラウンドネック トップス 春 夏 秋 大きいサイズ ゆったり 体型カバー 小柄 カジュアル 通勤 女性 大人 可愛い シンプル カジュアル 30代 40代 50代 : Beulah Fashion"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 1,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "41932fac32a3-Screenshot_20250923_095819.jpg",
+    "phone": "'+821047219368",
+    "requested_categories": "가방",
+    "status": "success",
+    "upload_time": "0.95",
+    "crop_time": "98.54",
+    "search_time": "12.64",
+    "total_time": "112.14",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762350817361_41932fac32a3-Screenshot_20250923_095819.jpg",
+    "cropped_urls": {
+      "bags": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_bags_1762350915568.jpg?"
+    },
+    "search_results": {
+      "bags": [
+        {
+          "link": "https://m.gsshop.com/section/brandSect/277511?lCate=1660580&mseq=406598",
+          "thumbnail": "https://asset.m-gs.kr/prod/1092203425/1/370",
+          "title": "제이셀라 - GS SHOP"
+        },
+        {
+          "link": "https://www.amazon.com/Cosmetic-Crocodile-Portable-Multifunctional-Organizer/dp/B0DCF4VGZ5",
+          "thumbnail": "https://images-na.ssl-images-amazon.com/images/I/61VHhOfODRL._AC_UL600_SR600,600_.jpg",
+          "title": "Amazon.com: Travel Cosmetic Bags bucket Makeup Bag, Brown Crocodile Pattern Women Portable Foldable Cases, Multifunctional Toiletry Bucket Bags Round Organizer Storage : Beauty & Personal Care"
+        },
+        {
+          "link": "https://www.coupang.com/vp/products/8688242611",
+          "thumbnail": "https://thumbnail.coupangcdn.com/thumbnails/remote/492x492ex/image/vendor_inventory/a342/e333150bea06051670167f414ed371e84e692554e1a4912ea295fcf43b7f.jpg",
+          "title": "여성 데일리 버킷백 겸 숄더백 크로스백 버킷 백 - 숄더백 | 쿠팡"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 1,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "4803132f0957-Screenshot_20250922_175941_NAVER.jpg",
+    "phone": "'+821093243240",
+    "requested_categories": "하의",
+    "status": "success",
+    "upload_time": "1.08",
+    "crop_time": "54.73",
+    "search_time": "9.80",
+    "total_time": "65.61",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762350931501_4803132f0957-Screenshot_20250922_175941_NAVER.jpg",
+    "cropped_urls": {
+      "bottoms": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_beige_high_waist_wide_leg_trousers_1762350986008.jpg?"
+    },
+    "search_results": {
+      "bottoms": [
+        {
+          "link": "https://www.zara.com/us/en/high-waisted-straight-leg-pants-p08318336.html",
+          "thumbnail": "https://static.zara.net/assets/public/6018/ff58/4a6041f69861/f9d3501aa0e3/08318336711-a1/08318336711-a1.jpg?ts=1753287572031",
+          "title": "HIGH-WAISTED STRAIGHT LEG PANTS - Sand | ZARA United States"
+        },
+        {
+          "link": "https://www.etsy.com/listing/1777841648/two-pleats-straight-leg-pants-sewing",
+          "thumbnail": "https://i.etsystatic.com/50267575/r/il/6ceb42/6306707990/il_300x300.6306707990_g95i.jpg",
+          "title": "Two Pleats Straight Leg Pants Sewing Pattern, Trousers Pattern, Double Pleat Pants, Pants Pattern, Easy Pants Pattern, XS-4XL - Etsy"
+        },
+        {
+          "link": "https://www.net-a-porter.com/en-om/shop/designer/loro-piana/clothing/pants/wide-leg",
+          "thumbnail": "https://www.net-a-porter.com/variants/images/46376663162891060/in/w358_q60.jpg",
+          "title": "Loro Piana Wide Leg for Women | NET-A-PORTER"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 1,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "49192c7d398f-Screenshot_20250713_131433_Coupang.jpg",
+    "phone": "'+821068587333",
+    "requested_categories": "하의",
+    "status": "success",
+    "upload_time": "1.84",
+    "crop_time": "75.70",
+    "search_time": "32.30",
+    "total_time": "109.83",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762350999114_49192c7d398f-Screenshot_20250713_131433_Coupang.jpg",
+    "cropped_urls": {
+      "bottoms": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_white_patterned_maxi_skirt_1762351075363.jpg?"
+    },
+    "search_results": {
+      "bottoms": [
+        {
+          "link": "https://www.amazon.com/PRETTYGARDEN-Spaghetti-Summer-Outfits-Vacation/dp/B0DX9MW39L",
+          "thumbnail": "https://m.media-amazon.com/images/I/71zbu2U55mL._AC_UY350_.jpg",
+          "title": "Amazon.com: PRETTYGARDEN Floral Summer Maxi Skirt Sets Women ..."
+        },
+        {
+          "link": "https://www.macys.com/shop/product/cece-womens-floral-print-a-line-midi-skirt?ID=22182695",
+          "thumbnail": "https://photos-us.bazaarvoice.com/photo/2/cGhvdG86bWFjeXM/e56b029a-40aa-5c3e-a132-76e7e8846f7f",
+          "title": "CeCe Women's Floral-Print A-Line Midi Skirt - Macy's"
+        },
+        {
+          "link": "https://store.zigzag.kr/catalog/products/155948697",
+          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/c/11/129/659/111296599-3196314744532901953.gif?width=400&height=400&quality=80&format=jpeg",
+          "title": "리리앤드 [[밍크]] 무지 카고 롱 스커트 (2 color)"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 1,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "4a0d3c3e5bf6-Screenshot_20250922_180348_Instagram.jpg",
+    "phone": "'+821085660830",
+    "requested_categories": "상의",
+    "status": "success",
+    "upload_time": "2.13",
+    "crop_time": "41.51",
+    "search_time": "18.86",
+    "total_time": "62.51",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762351110950_4a0d3c3e5bf6-Screenshot_20250922_180348_Instagram.jpg",
+    "cropped_urls": {
+      "tops": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_sweatshirt_hoodie_1762351152192.jpg?"
+    },
+    "search_results": {
+      "tops": [
+        {
+          "link": "https://m.shein.com/Plus-Size-Casual-Polo-Collar-Striped-Long-Sleeve-Pullover-Sweater-Winter-Fall-Autumn-p-103112411.html",
+          "thumbnail": "https://img.ltwebstatic.com/v4/j/pi/2025/06/20/d4/175040447684856ea0d37c1b3765b79a3d9c723343_thumbnail_405x552.jpg",
+          "title": "CosyJoli Plus Size Casual Polo Collar Striped Long Sleeve ..."
+        },
+        {
+          "link": "https://www.thehyundai.com/front/dpa/searchSectItem.thd?brndCd=M27578",
+          "thumbnail": "https://image.thehyundai.com/static/4/5/1/77/37/2237771543_0_480.jpg",
+          "title": "더현대닷컴 - 현대백화점 공식 온라인몰"
+        },
+        {
+          "link": "https://m.bunjang.co.kr/products/281372792",
+          "thumbnail": "https://media.bunjang.co.kr/product/281372792_3_1721888524_w360.jpg",
+          "title": "남성의류스트라이프 카라니트티 | 브랜드 중고거래 플랫폼, 번개장터"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 1,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "4aaa14222152-Screenshot_20250922_183517.jpg",
+    "phone": "'+821020171080",
+    "requested_categories": "상의, 하의",
+    "status": "success",
+    "upload_time": "1.22",
+    "crop_time": "111.37",
+    "search_time": "28.73",
+    "total_time": "141.32",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762351175458_4aaa14222152-Screenshot_20250922_183517.jpg",
+    "cropped_urls": {
+      "tops": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_high_waist_wide_leg_pants_1762351285001.jpg?",
+      "bottoms": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_white_long_sleeve_crop_top_1762351286702.jpg?"
+    },
+    "search_results": {
+      "tops": [
+        {
+          "link": "https://www.amazon.com/MOLERFO-Leopard-Aesthetic-Vintage-Oversize/dp/B0CZJJDH68",
+          "thumbnail": "https://m.media-amazon.com/images/I/61llbI7UxHL._AC_UY1000_.jpg",
+          "title": "MOLERFO Unisex Y2k Baggy Jeans Leopard Print Jeans for Women Men Aesthetic Pants Vintage Oversize Denim Pants Cargo Pants (Leopard Print,XXL) at Amazon Men's Clothing store"
+        },
+        {
+          "link": "https://www.nordstrom.com/s/good-standard-leopard-print-wide-leg-jeans-lucky-leopard-001-regular-plus/8451805",
+          "thumbnail": "https://n.nordstrommedia.com/it/a963a062-6ac4-4ec5-ace2-b467e87c4f7f.jpeg?trim=color&w=350&h=536",
+          "title": "Good American Good Standard Leopard Print Wide Leg Jeans | Nordstrom"
+        },
+        {
+          "link": "https://zigzag.kr/catalog/products/155491378",
+          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/c/15/549/137/155491378-7734539734415864480.gif",
+          "title": "바티아엘르 [주문폭주,UNISEX] 와일디 레오파드 벌룬 워싱 팬츠"
+        }
+      ],
+      "bottoms": [
+        {
+          "link": "https://m.bunjang.co.kr/products/242329883",
+          "thumbnail": "https://media.bunjang.co.kr/product/242329883_3_1723091621_w360.jpg",
+          "title": "플노팔 엠블럼 긴팔티 | 브랜드 중고거래 플랫폼, 번개장터"
+        },
+        {
+          "link": "https://m.lazybee.co.kr/board/free/read.html?board_no=4&no=254874",
+          "thumbnail": "https://m.lazybee.co.kr/file_data/exsnow/2019/11/20/7a748349f3e506a0a96e5844687429c3.jpg",
+          "title": "레이지비 구매후기"
+        },
+        {
+          "link": "https://m.newalrin.com/product/newalrin-emblem-long-sleeve-boat-neck-top/74/",
+          "thumbnail": "https://m.newalrin.com/web/product/extra/big/202310/8aa4966436b18e90ad7901c7ad4d2eac.jpg",
+          "title": "Newalrin Emblem Long sleeve Boat neck Top - 뉴얼린"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 2,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "4ac1bfd760eb-IMG_2627.jpeg",
+    "phone": "'+821053532147",
+    "requested_categories": "상의",
+    "status": "success",
+    "upload_time": "1.33",
+    "crop_time": "51.12",
+    "search_time": "19.37",
+    "total_time": "71.82",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762351318777_4ac1bfd760eb-IMG_2627.jpeg",
+    "cropped_urls": {
+      "tops": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_long_sleeve_blouse_1762351370153.jpg?"
+    },
+    "search_results": {
+      "tops": [
+        {
+          "link": "https://www.lotteon.com/m/product/LE1217862393",
+          "thumbnail": "https://contents.lotteon.com/itemimage/20251011190903/LE/12/17/86/23/93/_1/30/53/62/78/8/LE1217862393_1305362788_6.jpg/dims/resizef/720X720/format/webp/optimize",
+          "title": "페이지플린]브이넥 셔링 콩단추 블라우스 (F4CBL034) : 롯데ON"
+        },
+        {
+          "link": "https://monoatd.com/product/detail.html?product_no=8721",
+          "thumbnail": "https://monoatd.com/web/product/tiny/202509/7f2dfb35648b579364de0ee9e8b8e8aa.jpg",
+          "title": "모노앳디 - 디에브 스모크 셔링 블라우스"
+        },
+        {
+          "link": "https://s.zigzag.kr/sp_1lptirtc6kb",
+          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/d/2025/9/19/13730_202509191701500354_35791.jpeg?width=400&height=400&quality=80&format=webp",
+          "title": "키첼 추석맞이 스타일링"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 1,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "4bc11921eb53-1757574448248.jpg",
+    "phone": "'+821050509794",
+    "requested_categories": "상의",
+    "status": "success",
+    "upload_time": "1.78",
+    "crop_time": "38.62",
+    "search_time": "19.46",
+    "total_time": "59.86",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762351392598_4bc11921eb53-1757574448248.jpg",
+    "cropped_urls": {
+      "tops": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_gray_black_long_sleeve_sports_jersey_1762351430630.jpg?"
+    },
+    "search_results": {
+      "tops": [
+        {
+          "link": "https://www.musinsa.com/products/4794847",
+          "thumbnail": "https://pnfcorp1.jpg3.kr/comsonnot/img/CSOs-018/comsonnot_detail_mint_01.jpg",
+          "title": "꼼소넛(COMSONNOT) Nylon V-neck Jersey Set-Up (Mint) CSOs-018 ..."
+        },
+        {
+          "link": "https://www.coupang.com/vp/products/8612467644",
+          "thumbnail": "https://thumbnail.coupangcdn.com/thumbnails/remote/300x300ex/image/vendor_inventory/26aa/a2311895e1ce58d43a91fb02eb1dda1eb3c5a46c9ba243ef92323e057017.jpg",
+          "title": "맨하탄브리즈 사계절 남녀공용 피그먼트 코넬라이 맨투맨 ..."
+        },
+        {
+          "link": "https://m.ssfshop.com/public/search/imgsearch/GQDI24021641305/similarGoodslist",
+          "thumbnail": "https://img.ssfshop.com/cmd/LB_500x660/src/https://img.ssfshop.com/goods/ORBR/25/02/17/GR3D25021782054_0_ORGINL_20250217155306296.jpg",
+          "title": "GR3D25021782054_0_ORGINL_20250217155306296.jpg"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 1,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "5497fec0d69a-Screenshot_20250922_150426_4910.jpg",
+    "phone": "'+821050367681",
+    "requested_categories": "하의",
+    "status": "success",
+    "upload_time": "1.09",
+    "crop_time": "60.04",
+    "search_time": "20.45",
+    "total_time": "81.59",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762351454458_5497fec0d69a-Screenshot_20250922_150426_4910.jpg",
+    "cropped_urls": {
+      "bottoms": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_beige_wide___leg_pleated_pants_1762351514043.jpg?"
+    },
+    "search_results": {
+      "bottoms": [
+        {
+          "link": "https://mrjason.kr/product/2개구매할인국내제작-데끼-무지-니트-와플-머슬-긴팔티-부드러운-오버핏-쭉티-은은한-광택-고퀄리티/6395/display/1/",
+          "thumbnail": "https://mrjason.jpg2.kr/mrjason/2025/08/12/knit/beige1.jpg",
+          "title": "미스터제이슨"
+        },
+        {
+          "link": "https://zigzag.kr/catalog/products/166294922",
+          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/c/14/937/390/149373905-6065258543438624581.gif?width=400&height=400&quality=80&format=jpeg",
+          "title": "티이디여인천하 (코듀로이) 소유 디자이너 코듀로이 밴딩 와이드 팬츠 a224020"
+        },
+        {
+          "link": "https://zigzag.kr/catalog/products/148258981",
+          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/c/14/825/898/148258981-3709271124257810296.jpeg?width=400&height=400&quality=80&format=webp",
+          "title": "데일리쥬 아우토반 스티치 핀턱 코튼 와이드 팬츠(공용)"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 1,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "55b5d0929662-Screenshot_20250725_092504_Toss.jpg",
+    "phone": "'+821047583685",
+    "requested_categories": "신발",
+    "status": "success",
+    "upload_time": "0.72",
+    "crop_time": "92.99",
+    "search_time": "18.12",
+    "total_time": "111.83",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762351538050_55b5d0929662-Screenshot_20250725_092504_Toss.jpg",
+    "cropped_urls": {
+      "shoes": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_shoes_1762351629979.jpg?"
+    },
+    "search_results": {
+      "shoes": [
+        {
+          "link": "https://zigzag.kr/catalog/products/148086014",
+          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/d/2024/9/10/35571_202409101348530768_44469.jpeg",
+          "title": "디에프 여성 레이스 프릴 망사 시스루 삭스 러블리 섹시 중목 ..."
+        },
+        {
+          "link": "https://zigzag.kr/catalog/products/139357952",
+          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/d/2025/3/23/32758_202503232328040308_30042.jpeg?width=400&height=400&quality=80&format=webp",
+          "title": "우물 [💙주문폭주/5종세트💙] 프릴 화이트 시스루 무압박 여름 레이스 양말 루즈삭스"
+        },
+        {
+          "link": "https://fashionbykakao.com/catalog/products/139357952",
+          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/d/2025/3/23/32758_202503232328050868_28431.jpeg",
+          "title": "패션 바이 카카오 | [💙주문폭주/5종세트💙] 프릴 화이트 시스루 무압박 여름 레이스 양말 루즈삭스"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 1,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "5758d665a52c-IMG_1026.png",
+    "phone": "'+821032859552",
+    "requested_categories": "상의, 하의, 신발",
+    "status": "success",
+    "upload_time": "0.90",
+    "crop_time": "117.69",
+    "search_time": "19.50",
+    "total_time": "138.08",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762351651879_5758d665a52c-IMG_1026.png",
+    "cropped_urls": {
+      "tops": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_dark_gray_wide___leg_pants_1762351767348.jpg?",
+      "bottoms": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_gray_hoodie_1762351769010.jpg?",
+      "shoes": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_white_sneakers_1762351769907.jpg?"
+    },
+    "search_results": {
+      "tops": [
+        {
+          "link": "https://m.bunjang.co.kr/products/303240689",
+          "thumbnail": "https://media.bunjang.co.kr/product/303240689_1_1732897832_w180.jpg",
+          "title": "아디다스 구매해요 그레이 데님 팬츠 져지파이어버드희귀대장한정빈티지 | 브랜드 중고거래 플랫폼, 번개장터"
+        },
+        {
+          "link": "https://zigzag.kr/catalog/products/131697395",
+          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/d/2023/11/21/15888_202311211142360456_60739.jpeg?width=400&height=400&quality=80&format=webp",
+          "title": "홀리 [힙그자체/사계절템] 레일 로프 와이드 데님팬츠 트랙팬츠"
+        },
+        {
+          "link": "https://www.mytheresa.com/it/en/women/jw-anderson-mid-rise-wide-leg-jeans-grey-p01023414",
+          "thumbnail": "https://www.mytheresa.com/media/356/402/30/4c/P01023414_b2.jpg",
+          "title": "Mid-rise wide-leg jeans in grey - JW Anderson | Mytheresa"
+        }
+      ],
+      "bottoms": [
+        {
+          "link": "https://www.depop.com/products/josephineedala-jordan-basketball-shoes-jumpman-team",
+          "thumbnail": "https://media-photos.depop.com/b0/32122453/1151045084_136da21bae714c6bb9b27c25f5d93452/P8.jpg",
+          "title": "Jordan Basketball Shoes Jumpman Team 1 Light scuff... | Depop"
+        },
+        {
+          "link": "https://poshmark.com/listing/Adidas-Mens-Dark-Grey-Hoodie-6803151d9b21583459cdc28b",
+          "thumbnail": "https://di2ponv0v5otw.cloudfront.net/posts/2025/10/07/68e5c9368500121ffb8c1e13/s_68e5c94fff353aaf13242f82.jpg",
+          "title": "adidas | Shirts | Adidas Mens Dark Grey Hoodie | Poshmark"
+        },
+        {
+          "link": "https://apxofficialstore.com/product/adidas-unisex-hoodies-shmoofoil-logo-hoodie-gender-neutral-core-heather-gl9948/",
+          "thumbnail": "https://apxofficialstore.com/wp-content/uploads/2022/03/GL9948_01.jpg",
+          "title": "Adidas เสื้อฮู้ด Shmoofoil Logo Hoodie (Gender Neutral) | Core Heather ( GL9948 ) - APX OFFICIAL STORE"
+        }
+      ],
+      "shoes": [
+        {
+          "link": "https://www.farfetch.com/om/shopping/men/emporio-armani/loafers-2/items.aspx",
+          "thumbnail": "https://cdn-images.farfetch-contents.com/24/20/63/67/24206367_54277918_300.jpg",
+          "title": "Emporio Armani Loafers for Men - FARFETCH"
+        },
+        {
+          "link": "https://www.adidas.com/us/brushed-twill-oversized-firebird-track-pants/JW7331.html",
+          "thumbnail": "https://assets.adidas.com/images/w_600,f_auto,q_auto/ca2e1a0b2b35439584e60178137dceca_faec/Brushed_Twill_Oversized_Firebird_Track_Pants_Grey_JW7331_dbHM9.tiff.jpg",
+          "title": "adidas Brushed Twill Oversized Firebird Track Pants - Grey | Free Shipping with adiClub | adidas US"
+        },
+        {
+          "link": "https://www.threads.com/@lillimom_official/post/DN17dHc4hUt/매직절개데님팬츠-오픈완료-미친가격-ㅎㅎ-주문-빠릅입니다용-",
+          "thumbnail": "https://lookaside.fbsbx.com/lookaside/crawler/threads/DN17dHc4hUt/9/image.jpg",
+          "title": "매직절개데님팬츠 오픈완료!!! 미친가격 ㅎㅎ 주문 빠릅입니다용 :)"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 3,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "586f488fffd3-IMG_3345.png",
+    "phone": "'+821040041882",
+    "requested_categories": "상의, 하의",
+    "status": "success",
+    "upload_time": "1.59",
+    "crop_time": "158.92",
+    "search_time": "28.71",
+    "total_time": "189.22",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762351791958_586f488fffd3-IMG_3345.png",
+    "cropped_urls": {
+      "tops": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_white_striped_button___up_shirt_1762351947833.jpg?",
+      "bottoms": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_loose_pants_1762351949854.jpg?"
+    },
+    "search_results": {
+      "tops": [
+        {
+          "link": "https://store.zigzag.kr/catalog/products/156880561",
+          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/d/2025/1/20/47702_202501202337350479_15077.jpeg?width=400&height=400&quality=80&format=webp",
+          "title": "다와 곱창밴드증정✨고퀄리티 스트라이프 긴팔 파자마 세트 고급스러운 홈웨어 가을 겨울 우정 시밀러룩 잠옷 3color"
+        },
+        {
+          "link": "https://lalaholic.com/products/stripe-pajama-set",
+          "thumbnail": "http://lalaholic.com/cdn/shop/files/6cfe4d489d93a3eb587758e0578dc654.jpg?v=1713736681",
+          "title": "Women's Stripe Pajama Set – lalaholic"
+        },
+        {
+          "link": "https://www.wishbucket.io/items/1520583",
+          "thumbnail": "https://www.wishbucket.io/_next/image?url=https://d2gfz7wkiigkmv.cloudfront.net/pickin/2/1/2/-ImTg9tgRVqShCoVQIe9Rg&w=640&q=75",
+          "title": "스내피커들 Pink is The Plaisir Pajama Sets - 위시버킷"
+        }
+      ],
+      "bottoms": [
+        {
+          "link": "https://modernhouse.elandmall.co.kr/i/item?itemNo=2412630418&lowerVendNo=LV19018121",
+          "thumbnail": "https://item.elandrs.com/r/image/item-review/2025-04-29/28d9a16c-3f6d-480d-8e31-e63375fc117e.jpeg?w=682",
+          "title": "소프트워싱 리버시블 싱글 차렵이불 핑크스트라이프_CV0225018 ..."
+        },
+        {
+          "link": "https://m.blog.naver.com/story06001/221699849856",
+          "thumbnail": "https://mblogthumb-phinf.pstatic.net/MjAxOTEwMDRfMjEx/MDAxNTcwMTczMTQ0Mzc4.qMSAC-3m8tMpRxCwaEYDAqwUeit4w9xnrG5Gpn56zvsg.qeoxnxW-XKpMaCIOejKjY00OGZinapEQHGLiRY3Si_Ig.JPEG.story06001/IMG_3183.jpg?type=w800",
+          "title": "대전 미즈제일산후조리원 13박14일 후기 + 대전조리원추천 ..."
+        },
+        {
+          "link": "https://www.airbnb.com/rooms/1489693649483875975",
+          "thumbnail": "https://a0.muscache.com/im/pictures/hosting/Hosting-1489693649483875975/original/c06545b9-3831-4c06-bf6e-cd1e1b79be6b.jpeg",
+          "title": "Fogar in Soutelo de Montes - Airbnb"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 2,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "5da33aca7dd9-Screenshot_20250922_182701.jpg",
+    "phone": "'+821030083551",
+    "requested_categories": "상의, 악세사리",
+    "status": "success",
+    "upload_time": "1.27",
+    "crop_time": "106.20",
+    "search_time": "22.36",
+    "total_time": "129.82",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762351983178_5da33aca7dd9-Screenshot_20250922_182701.jpg",
+    "cropped_urls": {
+      "tops": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_black_long_trench_coat_gray_long_trench_coat_1762352087996.jpg?",
+      "accessories": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_silver_watch_silver_watch_1762352089529.jpg?"
+    },
+    "search_results": {
+      "tops": [
+        {
+          "link": "https://www.coupang.com/vp/products/6377243783",
+          "thumbnail": "https://thumbnail10.coupangcdn.com/thumbnails/remote/492x492ex/image/vendor_inventory/12a8/058e6b4239f4f1f2a6eaa5ad2cd99f90ed6b4a2d77c92d831b6b82cf196c.jpg",
+          "title": "스트링 여성 후드 점퍼 아우터 롱 야상 사파리 캐주얼 - 점퍼 | 쿠팡"
+        },
+        {
+          "link": "https://iippda.com/product/네밋-스트링-후드-야상-점퍼/6388",
+          "thumbnail": "https://m.iippda.com/web/product/extra/big/202308/6f4d38b3b3021e0707f70b461d65752b.jpg",
+          "title": "네밋 스트링 후드 야상 점퍼 - 이쁘다"
+        },
+        {
+          "link": "https://zigzag.kr/catalog/products/131280185",
+          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/d/2023/11/9/36948_202311091629570538_11256.jpeg?width=720&height=720&quality=80&format=jpeg",
+          "title": "카이마니 [무료배송/남녀공용] 롱 코튼 후드 바람막이 야상 자켓"
+        }
+      ],
+      "accessories": [
+        {
+          "link": "https://m.bunjang.co.kr/products/229224639",
+          "thumbnail": "https://media.bunjang.co.kr/product/229224639_2_1688707838_w360.jpg",
+          "title": "에센스 투타임 손목시계 | 브랜드 중고거래 플랫폼, 번개장터"
+        },
+        {
+          "link": "https://allegro.pl/kategoria/zegarki-19742?string=zegarek męski links london&szkielko=mineralne",
+          "thumbnail": "https://a.allegroimg.com/s360/1145bc/27d2de9448adba3a1880c1a59035/ZEGAREK-LINKS-OF-LONDON-MEN-S-METALLIC-6020-1153-REGENT-CHRONOGRAPH-Marka-bez-marki",
+          "title": "Zegarek Męski Links London w Zegarki (szkiełko mineralne) - Allegro.pl"
+        },
+        {
+          "link": "https://kr.bossgoo.com/product-detail/luxury-watch-packaging-box-paper-packing-56674848.html",
+          "thumbnail": "https://bsg-i.nbxc.com/product/85/42/2e/39b51172adf369d372710a6931.jpg",
+          "title": "명품 시계 포장 상자 종이 포장 선물 상자, Bossgoo.com의 고품질 명품 시계 포장 상자 종이 포장 선물 상자"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 2,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "619f731ee58c-Screenshot_20250704_223306_NAVER.jpg",
+    "phone": "'+821071864099",
+    "requested_categories": "상의",
+    "status": "success",
+    "upload_time": "1.21",
+    "crop_time": "176.15",
+    "search_time": "15.82",
+    "total_time": "193.18",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762352114998_619f731ee58c-Screenshot_20250704_223306_NAVER.jpg",
+    "cropped_urls": {
+      "tops": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_light_gray_short_sleeve_tweed_jacket_1762352290355.jpg?"
+    },
+    "search_results": {
+      "tops": [
+        {
+          "link": "https://m.lotteimall.com/goods/viewGoodsDetail.lotte?goods_no=3019789647",
+          "thumbnail": "https://image2.lotteimall.com/goods/47/96/78/3019789647_5.jpg/dims/resizemc/550x550/optimize",
+          "title": "상품상세 - 롯데홈쇼핑"
+        },
+        {
+          "link": "https://www.lalame.net/m/product.html?branduid=1158311",
+          "thumbnail": "http://www.lalame.net/shopimages/fakeblue/0080000013723.jpg",
+          "title": "써머 반팔 트위드 자켓 [블랙]]"
+        },
+        {
+          "link": "http://m.flit101.co.kr/article/review/4/6433/",
+          "thumbnail": "http://m.flit101.co.kr/file_data/danb1234/2021/06/29/e0623ebc88b2c139fe0879044b90cace.jpeg",
+          "title": "♡플릿101 상품 후기입니다♡ REVIEW - 플릿"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 1,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "6a381c97b5d6-Screenshot_20250816_160634_Instagram.jpg",
+    "phone": "'+821030043044",
+    "requested_categories": "하의",
+    "status": "success",
+    "upload_time": "0.77",
+    "crop_time": "83.34",
+    "search_time": "14.54",
+    "total_time": "98.65",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762352310184_6a381c97b5d6-Screenshot_20250816_160634_Instagram.jpg",
+    "cropped_urls": {
+      "bottoms": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_detailed_description_1762352392884.jpg?"
+    },
+    "search_results": {
+      "bottoms": [
+        {
+          "link": "https://www.amazon.com/Brihasory-Natural-Handle-Handbag-Vocation/dp/B0CWVCV4QC",
+          "thumbnail": "https://m.media-amazon.com/images/I/51jW5hHQmGL._SY300_PKmb-play-button-overlay_.jpg",
+          "title": "Brihasory Straw Beach Bags for Women, Natural Straw Purse Top Handle Handbag No Lining Woven Tote Bag for Summer Vocation(Original): Handbags: Amazon.com"
+        },
+        {
+          "link": "https://factory.jcrew.com/p/womens/categories/accessories/bags/straw-tote-bag/AX688",
+          "thumbnail": "https://www.jcrew.com/s7-img-facade/AX688_MG8008",
+          "title": "Straw Tote Bag For Women | Factory"
+        },
+        {
+          "link": "https://www.nordstrom.com/s/coastline-stripe-reversible-strapless-one-piece-swimsuit/8303267",
+          "thumbnail": "https://n.nordstrommedia.com/it/dee77c95-4f12-4246-bc60-ce755365d80d.jpeg?trim=color&width=185&height=185",
+          "title": "Tommy Bahama Coastline Stripe Reversible Strapless One-Piece Swimsuit | Nordstrom"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 1,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "6fa0262df24a-JPEG_20250718_102427_7836027581844906401.jpg",
+    "phone": "'+821033288128",
+    "requested_categories": "상의",
+    "status": "success",
+    "upload_time": "1.88",
+    "crop_time": "158.08",
+    "search_time": "15.00",
+    "total_time": "174.97",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762352410840_6fa0262df24a-JPEG_20250718_102427_7836027581844906401.jpg",
+    "cropped_urls": {
+      "tops": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_hoodie_detailed_description_1762352568862.jpg?"
+    },
+    "search_results": {
+      "tops": [
+        {
+          "link": "https://aneuf.co.kr/product/11-엔틱-진주-포인트-벨벳-머리핀/2338/",
+          "thumbnail": "https://cafe24.poxo.com/ec01/aneuf/UVTjSep0dwP4/wX7AtHyXGs47EhJiLRa7vPUeA4T5DANWNf09G98kPwL6sS0Asb13H1xeaZ0rvhGk/yE2biE9Q==/_/web/upload/NNEditor/20240107/9b9c3fa9777198392723c00b2b5d9cbe.jpg",
+          "title": "1+1] 엔틱 진주 포인트 벨벳 머리핀 - aneuf"
+        },
+        {
+          "link": "https://www.ssg.com/item/itemView.ssg?itemId=1000527820974",
+          "thumbnail": "https://sitem.ssgcdn.com/74/09/82/item/1000527820974_i1_750.jpg",
+          "title": "큐빅진주 벨벳 팔찌 - SSG.COM"
+        },
+        {
+          "link": "https://m.bunjang.co.kr/products/200805230",
+          "thumbnail": "https://media.bunjang.co.kr/product/200805230_5_1700316755_w360.jpg",
+          "title": "자켓 판매합니다 | 브랜드 중고거래 플랫폼, 번개장터"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 1,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "71b2f5f94309-IMG_7944.png",
+    "phone": "'+821028268211",
+    "requested_categories": "가방",
+    "status": "success",
+    "upload_time": "1.18",
+    "crop_time": "53.94",
+    "search_time": "28.26",
+    "total_time": "83.39",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762352587810_71b2f5f94309-IMG_7944.png",
+    "cropped_urls": {
+      "bags": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_bags_1762352641265.jpg?"
+    },
+    "search_results": {
+      "bags": [
+        {
+          "link": "https://ferragamo.department.ssg.com/item/itemView.ssg?itemId=1000052655066&siteNo=6009&salestrNo=1004&click=itemMidArea05",
+          "thumbnail": "https://sitem.ssgcdn.com/66/50/65/item/1000052655066_i1_500.jpg",
+          "title": "만다리나덕 백팩 NOMAD GNT01651 - 신세계백화점"
+        },
+        {
+          "link": "https://www.fmkorea.com/6618131048",
+          "thumbnail": "https://image.fmkorea.com/files/attach/new3/20240116/4477817/4386721449/6618131048/eccbfa73d0bc30542bd64f685bf63de2.png",
+          "title": "이 가방에 어울릴만한 키링 추천 부탁드려요 - 패션 - 에펨코리아"
+        },
+        {
+          "link": "https://www.ssg.com/item/itemView.ssg?itemId=0000005666511",
+          "thumbnail": "https://sitem.ssgcdn.com/11/65/66/item/0000005666511_i3_750.jpg",
+          "title": "만다리나덕 NOMAD GNT01651 - SSG.COM"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 1,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "778fd0f281ea-Screenshot_20250922_151442_CJ.jpg",
+    "phone": "'+821028402822",
+    "requested_categories": "상의",
+    "status": "success",
+    "upload_time": "1.09",
+    "crop_time": "42.73",
+    "search_time": "8.63",
+    "total_time": "52.45",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762352673201_778fd0f281ea-Screenshot_20250922_151442_CJ.jpg",
+    "cropped_urls": {
+      "tops": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_hoodie_1762352716490.jpg?"
+    },
+    "search_results": {},
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 0,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "78d89468a8ef-Screenshot_20250922_175653_Gallery.jpg",
+    "phone": "'+821024459377",
+    "requested_categories": "신발",
+    "status": "success",
+    "upload_time": "0.85",
+    "crop_time": "75.64",
+    "search_time": "29.14",
+    "total_time": "105.63",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762352727656_78d89468a8ef-Screenshot_20250922_175653_Gallery.jpg",
+    "cropped_urls": {
+      "shoes": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_leather_sneakers_1762352802131.jpg?"
+    },
+    "search_results": {
+      "shoes": [
+        {
+          "link": "https://top4running.com/p/new-balance-mr530-d-sneaker-1-798731-60-121",
+          "thumbnail": "https://i1.t4s.cz//products/798731-60-121/new-balance-mr530-281504-798731-60-121-960.webp",
+          "title": "Shoes New Balance MR530 - Top4Running.com"
+        },
+        {
+          "link": "https://www.newbalance.com/pd/530/U530V1-50942.html",
+          "thumbnail": "https://photos-us.bazaarvoice.com/photo/2/cGhvdG86bmV3YmFsYW5jZS1uYQ/46120453-0143-5363-9d3a-8e1b75a5b176",
+          "title": "530 - New Balance"
+        },
+        {
+          "link": "https://www.farfetch.com/id/shopping/men/new-balance-530-whitecastlerock-sneakers-item-23359922.aspx",
+          "thumbnail": "https://cdn-images.farfetch-contents.com/23/35/99/22/23359922_53394564_1000.jpg",
+          "title": "New Balance 530 \"White/Castlerock\" Sneakers | White | FARFETCH ID"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 1,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "7d4dd34d1a8d-Screenshot_20250817_210643_Grip.jpg",
+    "phone": "'+821094078571",
+    "requested_categories": "상의, 하의",
+    "status": "success",
+    "upload_time": "1.73",
+    "crop_time": "82.69",
+    "search_time": "27.20",
+    "total_time": "111.62",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762352835290_7d4dd34d1a8d-Screenshot_20250817_210643_Grip.jpg",
+    "cropped_urls": {
+      "tops": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_black_short_sleeve_t___shirt_black_short_sleeve_t___shirt_1762352916829.jpg?",
+      "bottoms": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_gray_wide___leg_pants_gray_wide___leg_pants_1762352918242.jpg?"
+    },
+    "search_results": {
+      "tops": [
+        {
+          "link": "https://www.tuhenmei.com/touxiang/nansheng/shuaige/index_3.html",
+          "thumbnail": "https://tu.tuhenmei.com/uploads/allimg/240605/1_060520424T460.jpg",
+          "title": "微信帅哥头像,帅哥QQ头像,抖音帅哥头像图片大全-第3页-图很美"
+        },
+        {
+          "link": "https://www.trenbe.com/product/++131368275",
+          "thumbnail": "https://image-cdn.trenbe.com/product-images/1743562466860_5c03d9ef2ee5ced4c9ed8f5fd3674b1b_7.jpeg",
+          "title": "나이키(Nike) | 나이키 조던 X 오프 화이트 숏슬리브 반팔 티셔츠 블랙 DM0062-010 | 트렌비"
+        },
+        {
+          "link": "https://zigzag.kr/catalog/products/123100640",
+          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/d/2023/4/25/16290_202304251533060153_35298.jpeg?width=400&height=400&quality=80&format=webp",
+          "title": "클로드모어 [남녀공용/오버핏/커플룩강추/백프린팅] 선셋 특양면 반팔티 3color"
+        }
+      ],
+      "bottoms": [
+        {
+          "link": "https://www.daangn.com/kr/buy-sell/8-9부-바지-r77xr4e96zx1/",
+          "thumbnail": "https://img.kr.gcp-karroter.net/origin/article/202510/5d0d0420df43b30c8cca3b676da9f7acb2e6ce4662cb3ea6dfcc4913346239a6_0.webp?f=webp&q=95&s=1440x1440&t=inside",
+          "title": "8.9부 바지 | 여성의류 | 당근 중고거래"
+        },
+        {
+          "link": "https://m.bunjang.co.kr/products/244789545",
+          "thumbnail": "https://media.bunjang.co.kr/product/244789545_1_1701400950_w360.jpg",
+          "title": "DKNY 울 팬츠 | 브랜드 중고거래 플랫폼, 번개장터"
+        },
+        {
+          "link": "https://www.elandmall.co.kr/i/item?itemNo=2502773389&lowerVendNo=LV23005523",
+          "thumbnail": "https://item.elandrs.com/r/image/item/2025-02-24/2401ff20-e25e-47f5-a2bc-a6ddf51ef173.jpg",
+          "title": "소이주니어 원턱 와이드 셋업 바지_25M0782GY_NC신구로점- 이랜드몰"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 2,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "7d53b298a560-IMG_8862.png",
+    "phone": "'+821067873578",
+    "requested_categories": "하의",
+    "status": "success",
+    "upload_time": "2.22",
+    "crop_time": "54.72",
+    "search_time": "13.77",
+    "total_time": "70.71",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762352948914_7d53b298a560-IMG_8862.png",
+    "cropped_urls": {
+      "bottoms": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_detailed_description_1762353003831.jpg?"
+    },
+    "search_results": {
+      "bottoms": [
+        {
+          "link": "https://www.uniqlo.com/ca/en/products/E476950-000",
+          "thumbnail": "https://image.uniqlo.com/UQ/ST3/ca/imagesgoods/469816/item/cagoods_64_469816_3x4.jpg?width=288",
+          "title": "WOMEN'S SUPIMA COTTON SHEER LONG T-SHIRT | SLEEVELESS | UNIQLO CA"
+        },
+        {
+          "link": "https://www.coolbe.com/en/products/6655839e81e5ec0106cd7ee5",
+          "thumbnail": "https://img.joomcdn.net/dc14db65d6b9d13e97bd292d5ec3534ba5feb5ff_768_1024.jpeg",
+          "title": "Uniqlo Japan Wide Straight Jeans – buy the best products in the Coolbe online store"
+        },
+        {
+          "link": "https://poshmark.ca/listing/Uniqlo-Womens-Ripped-Light-Blue-Jeans-24-Inches-fits-US-size-4-638152ab2ca3085362c1a562",
+          "thumbnail": "https://di2ponv0v5otw.cloudfront.net/posts/2025/10/25/68fd376f2981af85f4d43ddc/s_68fd37794a072ba0115b7d81.jpg",
+          "title": "Uniqlo | Jeans | Uniqlo Womens Ripped Light Blue Jeans 24 Inches Fits Us Size 4 | Poshmark"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 1,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "804e907728fc-Screenshot_20250922_153924_KakaoTalk.jpg",
+    "phone": "'+821040775877",
+    "requested_categories": "상의",
+    "status": "success",
+    "upload_time": "0.82",
+    "crop_time": "63.43",
+    "search_time": "10.20",
+    "total_time": "74.45",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762353021629_804e907728fc-Screenshot_20250922_153924_KakaoTalk.jpg",
+    "cropped_urls": {
+      "tops": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_light_blue_sleeveless_swimsuit_1762353084460.jpg?"
+    },
+    "search_results": {
+      "tops": [
+        {
+          "link": "https://blog.naver.com/openclose11_22/223210633929",
+          "thumbnail": "https://mblogthumb-phinf.pstatic.net/MjAyMzA5MTNfNDgg/MDAxNjk0NjAxMzE1NzY0.EUJtUT1KvgyKRynjtS5iJ4ezBUoUNIpFXEarBQKrHCcg.7YTkqCXrEnkBQ1uWlcka1oEIj25qE2wLksgulHx_HqIg.PNG.aockfl77/스크린샷(4)_-_복사본.png?type=w800",
+          "title": "9월13일 오수완, 오늘은 졸린과 함께 평영교정-수영복후기(졸린 아레나 루프루프 나이키) : 네이버 블로그"
+        },
+        {
+          "link": "https://www.musinsa.com/products/3323570",
+          "thumbnail": "https://image.msscdn.net/images/goods_img/20230525/3323570/3323570_16981066280910_500.jpg",
+          "title": "아레나(ARENA) 에이드 선수 원피스 테크백 A3BL1CO61LIM - 사이즈 & 후기 | 무신사"
+        },
+        {
+          "link": "https://m.blog.naver.com/rayharp/223118947834",
+          "thumbnail": "https://mblogthumb-phinf.pstatic.net/MjAyMzA2MDNfOTgg/MDAxNjg1NzE4NTQ5ODY3.5f7sG8SgLytO-HJFcfjt79VP-1o-KdrE79aZKYp3z4Qg.rQ1hHwkD-uBnuKSFMiW9M0JIhj9EFfNbj77WebLbUgUg.PNG.rayharp/image.png?type=w800",
+          "title": "엄마 원피스 수영복,여자실내수영복 브랜드 추천 : 네이버 블로그"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 1,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "8837d550aade-Screenshot_20250726_104132_NAVER.jpg",
+    "phone": "'+821021709567",
+    "requested_categories": "악세사리",
+    "status": "success",
+    "upload_time": "0.61",
+    "crop_time": "83.50",
+    "search_time": "26.54",
+    "total_time": "110.65",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762353098080_8837d550aade-Screenshot_20250726_104132_NAVER.jpg",
+    "cropped_urls": {
+      "accessories": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_accessories_1762353181044.jpg?"
+    },
+    "search_results": {
+      "accessories": [
+        {
+          "link": "https://freeship.co.kr/goods/content.asp?guid=26453011&cate=62452&sitecate=furniture&freeship_ep=google_ep",
+          "thumbnail": "https://ae01.alicdn.com/kf/S128759d14981413f93c45ed637467e604.jpg_960x960.jpg",
+          "title": "팽창식 연필 소품, 거대한 연필, 팽창식 연필 소품, 학교 파티 ..."
+        },
+        {
+          "link": "https://kr.dhgate.com/product/peach-shaped-folding-comb-with-mirror-portable/997383993.html",
+          "thumbnail": "https://img4.dhresource.com/webp/m/f3/albu/jc/y/29/eb63624b-bc81-42a0-b0d9-6eb2b37f4dcd.jpg",
+          "title": "DHgate 핫딜: 오늘의 특별 할인 상품을 확인하세요"
+        },
+        {
+          "link": "https://www.ebay.com/itm/296759230213",
+          "thumbnail": "https://i.ebayimg.com/images/g/r-EAAOSw7WplHMmF/s-l1200.png",
+          "title": "Chinese Hand-carved old jade Jadeite snuff bottle Decoration ..."
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 1,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "88ace8481ee2-Screenshot_20250922_210139_NAVER.jpg",
+    "phone": "'+821040054796",
+    "requested_categories": "상의, 하의",
+    "status": "success",
+    "upload_time": "0.66",
+    "crop_time": "151.54",
+    "search_time": "27.07",
+    "total_time": "179.28",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762353210733_88ace8481ee2-Screenshot_20250922_210139_NAVER.jpg",
+    "cropped_urls": {
+      "tops": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_sweatshirt_blue_knit_sleeveless_v___neck_vest_1762353358803.jpg?",
+      "bottoms": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_crew_neck_t___shirt_1762353360485.jpg?"
+    },
+    "search_results": {
+      "tops": [
+        {
+          "link": "https://www.wishbucket.io/items/1200092",
+          "thumbnail": "https://www.wishbucket.io/_next/image?url=https://d2gfz7wkiigkmv.cloudfront.net/pickin/2/1/2/aG_-jigBQDyofj9XHWAY0A&w=640&q=75",
+          "title": "아이엠미키 카라멜 체크니트조끼)체크무늬패턴/니트조끼/조끼니트/V조끼/체크패턴/브이넥조끼/배색/베스트/기본조끼/민소매조끼/니트베스트 - 위시버킷"
+        },
+        {
+          "link": "https://www.amazon.com/Cashmere-Female-Sleeveless-Sweater-Paragraph/dp/B0CCJSHPZM",
+          "thumbnail": "https://m.media-amazon.com/images/I/51BK-wv6ZgL._AC_UY1000_.jpg",
+          "title": "Women Cashmere Knit Vest Female Loose Sleeve Sleeveless Sweater Short Paragraph Vest Soft and Warm Blue L at Amazon Women's Clothing store"
+        },
+        {
+          "link": "https://m.gsshop.com/alia/aliaGate.gs?media=LJX&gourl=/prd/prd.gs?prdid=90907575",
+          "thumbnail": "https://asset.m-gs.kr/product/api/orgdesc/90907575/pagedesk/mxt/resource/EYUSVEr~sdEKJxr9m00pDGKxzZV~Vax3hUoaKE0htMEtKo0KNhFH4DPrbpl-gVuyfg665sX5gNy61I3QPY6pDPYVxMtyIUWMt-UjfAh3usQG8zzMwkOwNQUexAVhHrc2/dims/optimize",
+          "title": "레이츄 / 기본 브이넥 옆트임 루즈핏 니트 조끼 베스트 (7컬러) - GS SHOP"
+        }
+      ],
+      "bottoms": [
+        {
+          "link": "https://www.wishbucket.io/items/1200092",
+          "thumbnail": "https://www.wishbucket.io/_next/image?url=https://d2gfz7wkiigkmv.cloudfront.net/pickin/2/1/2/aG_-jigBQDyofj9XHWAY0A&w=640&q=75",
+          "title": "아이엠미키 카라멜 체크니트조끼)체크무늬패턴/니트조끼/조끼니트/V조끼/체크패턴/브이넥조끼/배색/베스트/기본조끼/민소매조끼/니트베스트 - 위시버킷"
+        },
+        {
+          "link": "https://www.amazon.com/Cashmere-Female-Sleeveless-Sweater-Paragraph/dp/B0CCJSHPZM",
+          "thumbnail": "https://m.media-amazon.com/images/I/51BK-wv6ZgL._AC_UY1000_.jpg",
+          "title": "Women Cashmere Knit Vest Female Loose Sleeve Sleeveless Sweater Short Paragraph Vest Soft and Warm Blue L at Amazon Women's Clothing store"
+        },
+        {
+          "link": "https://m.gsshop.com/alia/aliaGate.gs?media=LJX&gourl=/prd/prd.gs?prdid=90907575",
+          "thumbnail": "https://asset.m-gs.kr/product/api/orgdesc/90907575/pagedesk/mxt/resource/EYUSVEr~sdEKJxr9m00pDGKxzZV~Vax3hUoaKE0htMEtKo0KNhFH4DPrbpl-gVuyfg665sX5gNy61I3QPY6pDPYVxMtyIUWMt-UjfAh3usQG8zzMwkOwNQUexAVhHrc2/dims/optimize",
+          "title": "레이츄 / 기본 브이넥 옆트임 루즈핏 니트 조끼 베스트 (7컬러 ..."
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 2,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "8938b9049c01-Screenshot_20220428_201704.png",
+    "phone": "'+821092063599",
+    "requested_categories": "상의",
+    "status": "success",
+    "upload_time": "0.56",
+    "crop_time": "58.16",
+    "search_time": "24.26",
+    "total_time": "82.98",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762353392015_8938b9049c01-Screenshot_20220428_201704.png",
+    "cropped_urls": {
+      "tops": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_sweatshirt_hoodie_1762353448762.jpg?"
+    },
+    "search_results": {
+      "tops": [
+        {
+          "link": "https://www.ebay.com/itm/225678758092",
+          "thumbnail": "https://i.ebayimg.com/images/g/1FQAAOSwIm5kttpJ/s-l1200.jpg",
+          "title": "NEW Coach 1941 Peach Peasant Blouse Top 0 2 Women Peach Ruffle Chiffon Palm Tree | eBay"
+        },
+        {
+          "link": "https://www.ebay.com.hk/itm/373997009864",
+          "thumbnail": "https://i.ebayimg.com/images/g/s5IAAOSw-gpiQwdu/s-l400.jpg",
+          "title": "Mint Velvet Rudie chiffon high-neck ruffle blouse dusty pink UK10 - Barely worn | eBay"
+        },
+        {
+          "link": "https://m.bunjang.co.kr/products/166737122",
+          "thumbnail": "https://media.bunjang.co.kr/product/166736726_1_1633961698_w180.jpg",
+          "title": "플라이모델 케이블 터틀넥 니트 | 브랜드 중고거래 플랫폼, 번개장터"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 1,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "8c7cd01bb236-Screenshot_20250922_180000.jpg",
+    "phone": "'+821047963655",
+    "requested_categories": "상의",
+    "status": "success",
+    "upload_time": "0.76",
+    "crop_time": "40.23",
+    "search_time": "40.97",
+    "total_time": "81.96",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762353476995_8c7cd01bb236-Screenshot_20250922_180000.jpg",
+    "cropped_urls": {
+      "tops": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_sweatshirt_shirt_1762353516819.jpg?"
+    },
+    "search_results": {
+      "tops": [
+        {
+          "link": "https://www.temu.com/womens-light-pink-knit-short-sleeve-top-half-high-neck-loose-fit-viscose-ribbed-blouse-for-spring-summer-fall-casual-summer-wear-striped-pattern-top-viscose-fabric-g-601100388759003.html",
+          "thumbnail": "https://img.kwcdn.com/product/fancy/a78f9d1c-7644-46dd-888b-0c547a266e28.jpg?imageView2/2/w/500/q/60/format/webp",
+          "title": "womens light pink knit short sleeve top half high neck loose - Temu"
+        },
+        {
+          "link": "https://www.amazon.ca/Womens-Half-Sleeved-Sweater-Pullover-Lightweight/dp/B0DMFS7L1X",
+          "thumbnail": "https://m.media-amazon.com/images/I/61N11RqvP8L._AC_SY679_.jpg",
+          "title": "Women's Cotton Half-Sleeved V-Neck Knit Sweater Loose Knit Pullover Top Lightweight Knit Jumper, Red, Small : Amazon.ca: Clothing, Shoes & Accessories"
+        },
+        {
+          "link": "https://www.amazon.com/-/es/Suéter-verano-cuello-suéter-botones/dp/B0C7KM43HD",
+          "thumbnail": "https://m.media-amazon.com/images/I/61lp2bxb9uL._AC_UY350_.jpg",
+          "title": "Amazon.com: Suéter de verano para mujer, manga corta, cuello en V, a rayas, suéter sin botones, Gris oscuro9 : Ropa, Zapatos y Joyería"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 1,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "8d7c9f358b9e-1758535513099.jpg",
+    "phone": "'+821054357490",
+    "requested_categories": "상의",
+    "status": "success",
+    "upload_time": "0.64",
+    "crop_time": "103.17",
+    "search_time": "23.50",
+    "total_time": "127.31",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762353560958_8d7c9f358b9e-1758535513099.jpg",
+    "cropped_urls": {
+      "tops": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_beige_jacket_1762353663097.jpg?"
+    },
+    "search_results": {
+      "tops": [
+        {
+          "link": "https://drvintage.co.kr/product/drv-더블-브레스티드-피코트-국내-l-u217/20485/",
+          "thumbnail": "https://m.drvintage.co.kr/web/product/extra/big/202401/a0aeb2b552d5951e1b8b8cbbecb102b5.jpg",
+          "title": "drv 더블 브레스티드 피코트 (국내 L) U217 - 닥터빈티지"
+        },
+        {
+          "link": "https://fruitsfamily.com/product/3eq0o/mhl-cotton-beige-kacket",
+          "thumbnail": "https://image.production.fruitsfamily.com/public/product/resized@width1125/nQ_Cmjo0te-1757317291207-wd5cz2r78.jpeg",
+          "title": "MHL cotton beige kacket | 후루츠패밀리"
+        },
+        {
+          "link": "https://m.gsshop.com/prd/prdDesc.gs?prdid=1055654530",
+          "thumbnail": "https://cdn2.halfclub.com/cdn/product/A8513/P358856044/KakaoTalk_20240316_183630935_07_1192763676.jpg",
+          "title": "상품상세 - GS SHOP"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 1,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "9bb44927ad8d-Screenshot_20250922_234724.jpg",
+    "phone": "'+821045681195",
+    "requested_categories": "상의",
+    "status": "success",
+    "upload_time": "1.22",
+    "crop_time": "57.08",
+    "search_time": "35.13",
+    "total_time": "93.43",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762353690273_9bb44927ad8d-Screenshot_20250922_234724.jpg",
+    "cropped_urls": {
+      "tops": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_sweatshirt_hoodie_1762353746233.jpg?"
+    },
+    "search_results": {
+      "tops": [
+        {
+          "link": "https://s.1688.com/kq/-C8F0C0F6BAABB0E6C5AEC7EFD7B0.html",
+          "thumbnail": "https://cbu01.alicdn.com/img/ibank/O1CN01H0qkv028lgZNYTGh0_!!3919707973-0-cib.220x220.jpg",
+          "title": "瑞丽韩版女秋装】_瑞丽韩版女秋装品牌/图片/价格_瑞丽韩版女秋装 ..."
+        },
+        {
+          "link": "https://m.shoppinghow.kakao.com/m/search/q/여름 여성 레이스조끼",
+          "thumbnail": "https://shop3.daumcdn.net/thumb/R500x500/?fname=http://shop3.daumcdn.net/shophow/p/B5257249716.jpg?ut=20251014200046",
+          "title": "여름 여성 레이스조끼 - 검색결과 | 쇼핑하우"
+        },
+        {
+          "link": "https://m.wendysgallery.co.kr/product/웬디즈갤러리크로쉐-니트-조끼뜨개-휴가-여행-rkn132/5843/",
+          "thumbnail": "https://m.wendysgallery.co.kr/web/product/big/202506/2063890b867c941f79f12d01add96fcb.jpg",
+          "title": "웬디즈갤러리"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 1,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "9ef78d715dda-IMG_6710.jpeg",
+    "phone": "'+821033098429",
+    "requested_categories": "상의",
+    "status": "success",
+    "upload_time": "1.37",
+    "crop_time": "110.50",
+    "search_time": "18.54",
+    "total_time": "130.41",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762353785707_9ef78d715dda-IMG_6710.jpeg",
+    "cropped_urls": {
+      "tops": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_sweatshirt_1762353895563.jpg?"
+    },
+    "search_results": {
+      "tops": [
+        {
+          "link": "https://www.29cm.co.kr/products/3170648",
+          "thumbnail": "https://lazyz.diskn.com/product/01_Cloth/top/25ss/Loose_Fit_Classic_Check_Shirt/Loose_Fit_Classic_Check_Shirt_2_09.jpg",
+          "title": "Loose Fit Classic Check Shirt (5color) - 감도 깊은 취향 셀렉트샵 29CM"
+        },
+        {
+          "link": "https://kream.co.kr/products/486052",
+          "thumbnail": "https://kream-phinf.pstatic.net/MjAyNTA0MDFfMTIz/MDAxNzQzNDk3NzI1OTk4.BqkYiHNt6U46vEe1iVXliPtmKnXi_8prkSeikoXsUQYg.sbZyB14ITkPhnU9WNxGqaczJYeoY1jGAA9fPXwG10ecg.PNG/p_f513729d077e4dcea44207754cd95058.png",
+          "title": "레이지지 루즈핏 클래식 체크 셔츠 네이비 | LAZYZ | KREAM"
+        },
+        {
+          "link": "https://global.musinsa.com/jp/goods/4943981",
+          "thumbnail": "https://image.msscdn.net/thumbnails/images/goods_img/20250325/4943981/4943981_17500387604882_big.jpg",
+          "title": "MUSINSA公式 | LAZYZ Loose fit classic check shirt (5 colors)"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 1,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "a1ba14c536c4-Screenshot_20250922_180802_NAVER.jpg",
+    "phone": "'+821026514334",
+    "requested_categories": "상의",
+    "status": "success",
+    "upload_time": "0.95",
+    "crop_time": "61.77",
+    "search_time": "25.12",
+    "total_time": "87.84",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762353918116_a1ba14c536c4-Screenshot_20250922_180802_NAVER.jpg",
+    "cropped_urls": {
+      "tops": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_hoodie_1762353979367.jpg?"
+    },
+    "search_results": {
+      "tops": [
+        {
+          "link": "https://www.musinsa.com/products/3875622",
+          "thumbnail": "https://image.msscdn.net/images/goods_img/20240216/3875622/3875622_17080486065633_500.jpg",
+          "title": "말본 골프(MALBON GOLF) 말본 모크넥 미들 레이어 WHITE (MAN) - 사이즈 & 후기 | 무신사"
+        },
+        {
+          "link": "https://www.ebay.com/itm/297008538878",
+          "thumbnail": "https://i.ebayimg.com/images/g/JKUAAOSwcvxnrASk/s-l1200.jpg",
+          "title": "Genuine Malbon Golf Malbon Mockneck Mid Layer WHITE (MAN) | eBay"
+        },
+        {
+          "link": "https://m.ssfshop.com/MALBON-GOLF/GQ6425021071796/good?utag=ref_ptn:40997",
+          "thumbnail": "https://malbongolf.wisacdn.com/MALBON/design/product_page/25SS/M5121PTL04/WHT/07_MB_M5121PTL04_WHT_detail.jpg",
+          "title": "MALBON GOLF-말본 모크넥 미드 레이어 WHITE (MAN)│삼성물산 온라인몰 SSF Shop"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 1,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "a258cdf96d3c-IMG_1391.png",
+    "phone": "'+821096490803",
+    "requested_categories": "하의",
+    "status": "success",
+    "upload_time": "1.18",
+    "crop_time": "32.19",
+    "search_time": "21.53",
+    "total_time": "54.90",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762354007960_a258cdf96d3c-IMG_1391.png",
+    "cropped_urls": {
+      "bottoms": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_detailed_description_1762354040423.jpg?"
+    },
+    "search_results": {
+      "bottoms": [
+        {
+          "link": "https://spao.com/article/리뷰게시판/4/402138",
+          "thumbnail": "https://m.spao.com/web/product/tiny/202408/4e8f9782a5a2e30892e5d7a8adf8cd79.jpg",
+          "title": "정말 얇고 가벼워요. 여름바지로 딱이예요. 시원해서 자주입게 되네요 리뷰게시판 - 스파오닷컴"
+        },
+        {
+          "link": "https://www2.hm.com/en_asia3/productpage.0620223001.html",
+          "thumbnail": "https://image.hm.com/assets/hm/66/e2/66e233d6736ddbba9df19e8aa4ba9872ee88c1c2.jpg?imwidth=768",
+          "title": "Wide jeans - White - Ladies | H&M"
+        },
+        {
+          "link": "https://www.zara.com/us/en/zw-collection-flowy-pleated-pants-p07149062.html",
+          "thumbnail": "https://static.zara.net/assets/public/a916/6289/16094e4b9458/6d90359f1f40/07149062712-e1/07149062712-e1.jpg?ts=1749552397185",
+          "title": "ZW COLLECTION FLOWY PLEATED PANTS - Ecru | ZARA United States"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 1,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "a31be7275ec0-Screenshot_20250923_080311_TikTok_Lite.jpg",
+    "phone": "'+821028522097",
+    "requested_categories": "상의, 하의, 신발",
+    "status": "success",
+    "upload_time": "0.58",
+    "crop_time": "103.96",
+    "search_time": "29.25",
+    "total_time": "133.78",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762354064857_a31be7275ec0-Screenshot_20250923_080311_TikTok_Lite.jpg",
+    "cropped_urls": {
+      "tops": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_white_mini_skirt_1762354166937.jpg?",
+      "bottoms": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_beige_knee___high_rubber_boots_1762354167854.jpg?",
+      "shoes": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_light_blue_short_sleeve_zip___up_jacket_1762354168799.jpg?"
+    },
+    "search_results": {
+      "tops": [
+        {
+          "link": "https://m.bunjang.co.kr/products/262211894",
+          "thumbnail": "https://media.bunjang.co.kr/product/262211894_1_1714725554_w360.jpg",
+          "title": "스커트 | 브랜드 중고거래 플랫폼, 번개장터"
+        },
+        {
+          "link": "https://www.nordstrom.com/s/hatband-ruffle-rib-skirt/8078757",
+          "thumbnail": "https://n.nordstrommedia.com/it/3b633cca-16e9-44d5-9ddd-a4ebb8ff1d56.jpeg?trim=color&width=185&height=370",
+          "title": "Akris Hatband Ruffle Rib Skirt | Nordstrom"
+        },
+        {
+          "link": "https://fashionbykakao.com/catalog/products/158980301",
+          "thumbnail": "https://dabagirl.co.kr/web/product/extra/big/202503/6c03c46391d70cd9bfc3c0e8cc012155.jpg",
+          "title": "패션 바이 카카오 | 키치유미니스커트_D1SK"
+        }
+      ],
+      "bottoms": [
+        {
+          "link": "https://www.coupang.com/vp/products/8049099332",
+          "thumbnail": "https://thumbnail.coupangcdn.com/thumbnails/remote/292x292ex/image/vendor_inventory/61b7/6ded08d688dd365226a289165ece88e131c39b045c17696c2bc8e15ce0d8.jpg",
+          "title": "스티코 SEB-W90 초경량 미끄럼방지 여성 패션 롱 레인부츠 STICO - 레인부츠 | 쿠팡"
+        },
+        {
+          "link": "https://www.dhgate.com/goods/1008371079.html",
+          "thumbnail": "https://img4.dhresource.com/webp/m/260x260/f3/albu/ys/z/11/fdae02a7-197c-472c-9ceb-f6f6f965b255.jpg",
+          "title": "Womens Western Ankle Boots - Stylish Suede Velvet Pointed Toe Stiletto Short Boots for Small to Mid Calves - Hot Sale! from Dhgate Boots - price 34.98"
+        },
+        {
+          "link": "https://www.ebay.com.au/itm/136495943221",
+          "thumbnail": "https://i.ebayimg.com/images/g/vxEAAOSwv7VnYbMz/s-l1200.jpg",
+          "title": "Gucci Women's Double GG Brown Wellington Boots - Size 3UK/EU36 | eBay Australia"
+        }
+      ],
+      "shoes": [
+        {
+          "link": "https://www.amazon.com/Summer-Casual-Turndown-Stylish-Walking/dp/B0CB15TNJD",
+          "thumbnail": "https://m.media-amazon.com/images/I/613efcakFQS._AC_UY1000_.jpg",
+          "title": "Amazon.com: Summer Casual Denim Dress Womens Short Sleeve Turndown Collar V Neck Midi Dress Stylish Slim Fit Walking Go-Out Dress: Clothing, Shoes & Jewelry"
+        },
+        {
+          "link": "https://www.elandmall.co.kr/i/item?itemNo=2305193900&lowerVendNo=LV19016501",
+          "thumbnail": "https://item.elandrs.com/r/image/item/2023-05-17/0068c23e-8696-4821-9577-3c1b4f7fbff5.jpg?w=750&h=&q=100",
+          "title": "카라 집업 숏 점퍼/394050_평촌점- 이랜드몰"
+        },
+        {
+          "link": "https://www.cconma.com/product/P005001007-003424",
+          "thumbnail": "https://ws.cconma.com/upload2/product/400x350/2025/05/P005001007-003424-6818b3905c59a.jpeg",
+          "title": "깔끔한 카라 반팔 점퍼/3C | 메리제인 | 꽃피는아침마을"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 3,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "a5036bab7d0d-Screenshot_20250922_180026_Grip.jpg",
+    "phone": "'+821026922659",
+    "requested_categories": "상의, 하의, 신발",
+    "status": "success",
+    "upload_time": "3.04",
+    "crop_time": "74.67",
+    "search_time": "17.91",
+    "total_time": "95.62",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762354200645_a5036bab7d0d-Screenshot_20250922_180026_Grip.jpg",
+    "cropped_urls": {
+      "tops": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_black_high_waist_midi_skirt_1762354275944.jpg?",
+      "bottoms": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_light_gray_long_sleeve_henley_shirt_1762354277188.jpg?",
+      "shoes": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_white_mesh_slip___on_shoes_1762354277699.jpg?"
+    },
+    "search_results": {
+      "tops": [
+        {
+          "link": "https://zigzag.kr/catalog/products/148114700",
+          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/d/2024/9/10/46111_202409102258040940_66530.jpeg?width=400&height=400&quality=80&format=webp",
+          "title": "클로젯드영 헤이롱 A라인 스커트 바스락면 밴딩 빅사이즈 맘룩 플리츠 블랙 화이트 2color"
+        },
+        {
+          "link": "https://zigzag.kr/catalog/products/111613901",
+          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/c/11/161/390/111613901-4488690393590036258.jpeg",
+          "title": "꼬맹 타이노나일론플레어롱스커트(2color)"
+        },
+        {
+          "link": "https://www.amazon.com/Womens-Satin-Waisted-Skirts-Elastic/dp/B0D5MQQBS7",
+          "thumbnail": "https://m.media-amazon.com/images/I/61W3pF+xcuL._AC_UY350_.jpg",
+          "title": "Amazon.com: Women's Satin High Waisted Maxi Skirts Silky ..."
+        }
+      ],
+      "bottoms": [
+        {
+          "link": "https://forte7.com.br/products/15142857/",
+          "thumbnail": "https://di2ponv0v5otw.cloudfront.net/posts/2023/02/28/63fe1cf517fb4b045b3035c7/m_63fe1d018634cb696e23078e.jpg",
+          "title": "XIRENA SLEEVE BUTTON UP TOP"
+        },
+        {
+          "link": "https://www.nyaminyamifm.co.zw/?y=43221108604600&channel=2a2b08&from=info.php?id=1086046-142&name=acka+tulle+shirring+blouse+(+ivory+)",
+          "thumbnail": "https://img.fril.jp/img/692406725/l/2293636734.jpg?1718496470",
+          "title": "acka tulle shirring blouse ( ivory )（Amara | Mustard Cherie Kebaya with Enlacing Tulle Drape - Ivory Studio RTW）"
+        },
+        {
+          "link": "https://www.erand.ad/wp-login.php?products/26908350",
+          "thumbnail": "https://static.mercdn.net/item/detail/orig/photos/m57943794977_1.jpg?1747489185",
+          "title": "L´Appartement HENLEY SHORT TOP"
+        }
+      ],
+      "shoes": [
+        {
+          "link": "https://m.blog.naver.com/only-jjun/223121603235",
+          "thumbnail": "https://mblogthumb-phinf.pstatic.net/MjAyMzA2MDVfNDEg/MDAxNjg1OTcyMTYwNDEz.MfvUHQ7FPeg6PrUvtulVdzI3j4FFndA6oiB5-vYi8qwg.9CiigiO33kM8xfvZaJDo7B4nfbA5Nd5fW2-422ZfA1Yg.JPEG.only-jjun/SE-CBA4187E-9EA0-46A6-BC99-DC69AC25A33B.jpg?type=w800",
+          "title": "아기샌들 나이키 리틀리프트2 150 개봉기 140 사이즈랑 비교 : 네이버 블로그"
+        },
+        {
+          "link": "https://m.blog.naver.com/gkdl2242/223124302557",
+          "thumbnail": "https://mblogthumb-phinf.pstatic.net/MjAyMzA2MDlfMjIy/MDAxNjg2Mjc0NjkxOTUz.SMvl43gf2FQDTMHvpPnyyOucxnLfH5410IAm8xuIdNUg.5Ct0Uu-JJ2-FaSHyBtmDmVMdU-0pcIJPzF4k1kmspPUg.JPEG.gkdl2242/SE-BCC47A07-9171-4361-9D07-2E581EAA4CF5.jpg?type=w800",
+          "title": "아기 샌들 '나이키 리프트2 베이비' 140 150사이즈 비교 구매 후기 : 네이버 블로그"
+        },
+        {
+          "link": "https://blog.naver.com/tnscjs802/223102469435?viewType=pc",
+          "thumbnail": "https://mblogthumb-phinf.pstatic.net/MjAyMzA1MTVfMjA4/MDAxNjg0MTA1NTExMzY0.ctvipWwaav5liFSCttp0Hjjph7pzJu6mQDmHo7cb8f8g.cYmlR4tqcU6NPrI3GIzG58jQZV_JHtCSFI8VFcuViz4g.JPEG.tnscjs802/IMG_4474.JPG?type=w800",
+          "title": "나이키 에어리프트 - 엄마랑 아기랑 커플 신발로 추천🫶 : 네이버 블로그"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 3,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "b24107c638d7-Screenshot_20250718_023259_11st.jpg",
+    "phone": "'+821093574104",
+    "requested_categories": "상의, 하의, 신발",
+    "status": "success",
+    "upload_time": "0.45",
+    "crop_time": "69.17",
+    "search_time": "27.75",
+    "total_time": "97.38",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762354298266_b24107c638d7-Screenshot_20250718_023259_11st.jpg",
+    "cropped_urls": {
+      "tops": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_black_high_waist_mini_skirt_1762354365145.jpg?",
+      "bottoms": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_black_leather_1762354366321.jpg?",
+      "shoes": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_black_short_sleeve_button___up_shirt_1762354366816.jpg?"
+    },
+    "search_results": {
+      "tops": [
+        {
+          "link": "https://www.aritzia.com/us/en/product/betty-skirt/127342.html",
+          "thumbnail": "https://assets.aritzia.com/image/upload/c_crop,ar_1920:2623,g_south/q_auto,f_auto,dpr_auto/f25_a07_127342_22687_on_d",
+          "title": "Betty Skirt | Aritzia US"
+        },
+        {
+          "link": "https://www.zara.com/us/en/contrast-waistband-wrap-split-skirt-p01165223.html",
+          "thumbnail": "https://static.zara.net/assets/public/31ad/535a/78d449b589bc/f33d84be5db9/01165223800-e3/01165223800-e3.jpg?ts=1755101154139",
+          "title": "CONTRAST WAISTBAND WRAP SPLIT SKIRT - Black | ZARA United States"
+        },
+        {
+          "link": "https://www.macys.com/shop/womens/clothing/suits/Brand,Color_normal/KARL LAGERFELD PARIS,Black?id=67592",
+          "thumbnail": "https://slimages.macysassets.com/is/image/MCY/products/5/optimized/33612835_fpx.tif?qlt=80,0&resMode=sharp2&op_usm=1.75,0.3,2,0&fmt=jpeg&wid=342&hei=417",
+          "title": "KARL LAGERFELD PARIS Women's Black Suits & Suit Separates - Macy's"
+        }
+      ],
+      "bottoms": [
+        {
+          "link": "https://m.ssfshop.com/GENERAL-IDEA/GP2N25032673440/good?dspCtgryNo=&brandShopNo=&brndShopId=&leftBrandNM=&utag=ref_evt:special*108608$set:$dpos:5",
+          "thumbnail": "https://img.ssfshop.com/cmd/LB_750x1000/src/https://img.ssfshop.com/goods/ORBR/25/03/26/GP2N25032673440_1_THNAIL_ORGINL_20250327165944959.jpg",
+          "title": "GENERAL IDEA-WOMAN 텐셀 카라 레이어드 하프 가디건 [BLACK] / WBE2L04534│삼성물산 온라인몰 SSF Shop"
+        },
+        {
+          "link": "https://global.musinsa.com/sg/goods/4993212",
+          "thumbnail": "https://generalidea.speedgabia.com/goods/25SS/W/WBE2L04534/WBE2L04534BK_m03.jpg",
+          "title": "MUSINSA | GENERAL IDEA Tencel Collar Layered Half Cardigan [BLACK] / WBE2L04534"
+        },
+        {
+          "link": "https://www.a-ha.io/questions/430d879fb0a303cc9ec761be2c3b39df",
+          "thumbnail": "https://imgfast.a-ha.io/private/rs:fit:512:580/czM6Ly9haGEtbWVkaWEvYWhhLXFuYS9wb3N0cy91YUtOTjBBNjg2OHphUXN5RUQ3dTg=",
+          "title": "면접 복장 골라주세요 비즈니스캐주얼! ㅣ 궁금할 땐, 아하!"
+        }
+      ],
+      "shoes": [
+        {
+          "link": "https://www.kolonmall.com/GENERALIDEA/Product/K1744002611290043BK01",
+          "thumbnail": "https://images.kolonmall.com/Prod_Img/10002958/2025/LZ1/K1744002611290043BK01_LZ1.jpg",
+          "title": "GENERAL IDEA] [25SS]WOMAN 텐셀 카라 레이어드 하프 가디건 ..."
+        },
+        {
+          "link": "https://kream.co.kr/products/493399",
+          "thumbnail": "https://kream-phinf.pstatic.net/MjAyNTA3MzBfMTc3/MDAxNzUzODgwMzM4NDU4.hDn0i2dOS2ieXl37DQ8pWfSFb29VxBzcfixjLTSw7X8g.NvmnyZa0Imy3eEldUdKPdUJcO40VlE7EbBYt_LA95wkg.PNG/a_16c2beb02cb34aaeb807ee2ecd6a0b00.png",
+          "title": "제너럴아이디어 우먼 텐셀 카라 레이어드 하프 가디건 블랙 ..."
+        },
+        {
+          "link": "https://www.kolonmall.com/Brands/GENERALIDEA/Product/K1744002618785017BE01",
+          "thumbnail": "https://generalidea.speedgabia.com/goods/25SS/W/WBE2L04534/WBE2L04534BE_m10.jpg",
+          "title": "GENERAL IDEA] [25SS]WOMAN 텐셀 카라 레이어드 하프 가디건 ..."
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 3,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "b49a396ce4d2-Screenshot_20250923_161107.jpg",
+    "phone": "'+821093222506",
+    "requested_categories": "상의",
+    "status": "success",
+    "upload_time": "0.90",
+    "crop_time": "82.72",
+    "search_time": "9.97",
+    "total_time": "93.60",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762354397645_b49a396ce4d2-Screenshot_20250923_161107.jpg",
+    "cropped_urls": {
+      "tops": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_sweatshirtie_1762354480066.jpg?"
+    },
+    "search_results": {
+      "tops": [
+        {
+          "link": "https://infowave22.tistory.com/203",
+          "thumbnail": "https://thumbnail7.coupangcdn.com/thumbnails/remote/320x320ex/image/vendor_inventory/4c5b/4df18c95728a3277d1e36f00e050fc55b46e7e82a4972f33f5727cfc4c4d.jpg",
+          "title": "어반레이디 바람막이, 내돈내산 솔직 리뷰!"
+        },
+        {
+          "link": "https://www.coupang.com/vp/products/8360001387",
+          "thumbnail": "https://thumbnail.coupangcdn.com/thumbnails/remote/492x492ex/image/vendor_inventory/9a79/ed9c13b9a03993a7b9de70f4693f16921e94e56c758dc6f0ad87f302d1bb.jpg",
+          "title": "봄 바람막이 코디 여행 - 바람막이 | 쿠팡"
+        },
+        {
+          "link": "https://www.temu.com/nz/windbreaker-5010073962466-s.html?page=3",
+          "thumbnail": "https://img.kwcdn.com/product/fancy/2798c133-7342-4cd3-9130-7de0c0fd604e.jpg",
+          "title": "windbreaker sold on Temu New Zealand"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 1,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "b5e7f9ef0dd7-BandPhoto_2024_11_29_16_50_11_1.jpg",
+    "phone": "'+821025223894",
+    "requested_categories": "상의, 하의, 신발",
+    "status": "success",
+    "upload_time": "0.30",
+    "crop_time": "132.46",
+    "search_time": "20.72",
+    "total_time": "153.48",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762354493244_b5e7f9ef0dd7-BandPhoto_2024_11_29_16_50_11_1.jpg",
+    "cropped_urls": {
+      "tops": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_light_gray_ribbed_long_sleeve_top_1762354622752.jpg?",
+      "bottoms": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_black_leather_ankle_boots_1762354623741.jpg?",
+      "shoes": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_navy_plaid_high_waist_maxi_skirt_1762354624665.jpg?"
+    },
+    "search_results": {
+      "tops": [
+        {
+          "link": "https://www.zara.com/us/en/balloon-plaid-pants-zw-collection-p09573875.html",
+          "thumbnail": "https://static.zara.net/assets/public/2d4f/09bb/2bad4db290d8/b4fd81b9fb23/09573875400-e3/09573875400-e3.jpg?ts=1761652119074",
+          "title": "ZW COLLECTION PLAID BALLOON PANTS - Blue | ZARA United States"
+        },
+        {
+          "link": "https://habiaunavoz.com/?h=43418272011200",
+          "thumbnail": "https://i.ebayimg.com/images/g/iP8AAOSwxb1nYIll/s-l400.jpg",
+          "title": "Ralph Lauren Plaid Pleated Skirt RALPH LAUREN Chain Belt Plaid Mini Short Skirt Women Size"
+        },
+        {
+          "link": "https://www.zara.com/us/en/zw-collection-plaid-balloon-top-and-pants-set-pT9138033689.html",
+          "thumbnail": "https://static.zara.net/assets/public/7bf0/a925/7595470ebc78/79760c2a85c7/09573875400-015-a1/09573875400-015-a1.jpg?ts=1761642131231&w=744&f=auto",
+          "title": "ZW COLLECTION PLAID BALLOON TOP AND PANTS SET | ZARA United States"
+        }
+      ],
+      "bottoms": [
+        {
+          "link": "https://www.amazon.com/-/es/Diuniarza-Botines-cremallera-diamantes-imitación/dp/B0CLCXHCGK",
+          "thumbnail": "https://m.media-amazon.com/images/I/51nwPwbOcUL._UY300_.jpg",
+          "title": "Amazon.com: Diuniarza Botines de tacón alto para mujer ..."
+        },
+        {
+          "link": "https://faraone.shop/en/products/exe-tronchetti-donna-linda-pelle-sintetica-nero-257974090",
+          "thumbnail": "https://faraone.shop/cdn/shop/files/a25-exe-k2417-e332black-t96501p_2048x.jpg?v=1758197868",
+          "title": "EXE' women's trunks linda synthetic leather black"
+        },
+        {
+          "link": "https://www.amazon.com/Frankie-Hsu-Ladies-Platform-Bootie/dp/B0CG6T4MLF",
+          "thumbnail": "https://m.media-amazon.com/images/I/71c1aoWK6dL._AC_UY300_.jpg",
+          "title": "Amazon.com | Frankie Hsu Ladies Sexy Platform Wedge Bootie, Black High Heeled Ankle Boot, Cool Y2K Large Big Size US4-19 Unisex Shoes For Women Men | Ankle & Bootie"
+        }
+      ],
+      "shoes": [
+        {
+          "link": "https://www.amazon.com/-/he/301-388/dp/B09L4RJTTW",
+          "thumbnail": "https://m.media-amazon.com/images/I/714bDTpNrGL._UY1000_.jpg",
+          "title": "Amazon.com: TEERFU Womens Plaid Wool Skirts Elastic High Waist A-Line Pleated Tartan Winter Fall Long Skirts Blue : ביגוד, נעליים ותכשיטים"
+        },
+        {
+          "link": "https://www.amazon.com/Womens-Plaid-Skirt-line-Pockets/dp/B0D6YRQF7L",
+          "thumbnail": "https://m.media-amazon.com/images/I/41RHbTumxrL.jpg",
+          "title": "Amazon.com: Women's Long Plaid Skirt Wool A-line Maxi Skirt with Pockets (US, Alpha, Medium, Regular, Regular, Dark Blue) : Clothing, Shoes & Jewelry"
+        },
+        {
+          "link": "https://www.amazon.com/Womens-Woolen-Skirt-Thickened-Elastic/dp/B0CQCVFC75",
+          "thumbnail": "https://m.media-amazon.com/images/I/51Rp7ERrJRL._AC_UY1000_.jpg",
+          "title": "Amazon.com: Women's Long Woolen Skirt High Waist Basic Woolen Skirt Thickened Warm Elastic A-Line Skirt Gray (76CM) Mid S : Clothing, Shoes & Jewelry"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 3,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "b9b9f65c55a1-d18cfbb172e84a7e9d792400291d500a.webp",
+    "phone": "'+821039467620",
+    "requested_categories": "상의",
+    "status": "success",
+    "upload_time": "0.53",
+    "crop_time": "69.94",
+    "search_time": "9.78",
+    "total_time": "80.24",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762354648731_b9b9f65c55a1-d18cfbb172e84a7e9d792400291d500a.webp",
+    "cropped_urls": {
+      "tops": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_light_blue_zip___up_track_jacket_1762354717596.jpg?"
+    },
+    "search_results": {
+      "tops": [
+        {
+          "link": "https://www.iqueens.com/en/women-s-hoodies/399781-adidas-adicolor-beckenbauer-track-top-clear-sky.html",
+          "thumbnail": "https://static.qns.digital/img/p/2/9/7/6/5/1/4/2976514-full_product.jpg",
+          "title": "Women's Sweatshirts adidas Adicolor Beckenbauer Track Top Clear Sky | Queens"
+        },
+        {
+          "link": "https://kream.co.kr/products/636786?size=",
+          "thumbnail": "https://kream-phinf.pstatic.net/MjAyNTEwMTVfMTg1/MDAxNzYwNTA5NzgxODUz.4XaOKPdTZxOFKWF9d2FKCsoZpddDIpYQo073p8fENB0g.OHBiTKH13jpBdufOiCa-KVd7Y2qD_m3PU1CnhZTgLwog.PNG/a_5263951d59c04c5a924f8c64481e9c68.png?type=l",
+          "title": "아디다스 헤리티지 트랙 탑 애쉬 블루 블랙 - US 사이즈 | Adidas | KREAM"
+        },
+        {
+          "link": "https://www.adidas.com/us/adicolor-classics-sst-track-jacket/JY1291.html",
+          "thumbnail": "https://assets.adidas.com/images/w_600,f_auto,q_auto/74f7bd22f4e9430383ec97c1e129ff5d_faec/Adicolor_Classics_SST_Track_Jacket_Blue_JY1291_db21_model.jpg",
+          "title": "adidas Adicolor Classics SST Track Jacket - Blue | Free Shipping with adiClub | adidas US"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 1,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "bfbd50518d72-20250922_164832.jpg",
+    "phone": "'+821057498283",
+    "requested_categories": "가방",
+    "status": "success",
+    "upload_time": "1.67",
+    "crop_time": "43.02",
+    "search_time": "28.87",
+    "total_time": "73.57",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762354730970_bfbd50518d72-20250922_164832.jpg",
+    "cropped_urls": {
+      "bags": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_bags_1762354773237.jpg?"
+    },
+    "search_results": {
+      "bags": [
+        {
+          "link": "https://prod.danawa.com/info/?pcode=52251980",
+          "thumbnail": "https://img.danawa.com/prod_img/500000/931/475/img/63475931_1.jpg?shrink=360:360&_v=20240821071609",
+          "title": "롱샴 르 플리아쥬 오리지널 S 스몰 탑핸들 핸드백 토트백 : 다나와 가격비교"
+        },
+        {
+          "link": "https://www.hazzys.com/product.do?cmd=getProductDetail&PROD_CD=HIBA3E920BK",
+          "thumbnail": "https://nimg.lfmall.co.kr/file/product/prd/HI/2023/640/HIBA3E920BK_D2.jpg",
+          "title": "HAZZYSㅣ온라인 공식 플래그십 스토어"
+        },
+        {
+          "link": "https://www.coupang.com/vp/products/6762702404",
+          "thumbnail": "https://thumbnail10.coupangcdn.com/thumbnails/remote/492x492ex/image/vendor_inventory/2952/5c208a1c1101ff495d1375ea4ebe393bd403b9cb85332d168ba1727629d2.jpg",
+          "title": "헤지스 액세서리 22FW SAVER 품절대란 블랙 나일론 퍼피 로고 나일론 토트 겸 숄더백 M HIBA2F920BK - 숄더백 | 쿠팡"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 1,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "cdd7fa01d222-Screenshot_20250917_205011.jpg",
+    "phone": "'+821049452288",
+    "requested_categories": "상의",
+    "status": "success",
+    "upload_time": "1.47",
+    "crop_time": "84.17",
+    "search_time": "16.14",
+    "total_time": "101.78",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762354806538_cdd7fa01d222-Screenshot_20250917_205011.jpg",
+    "cropped_urls": {
+      "tops": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_sweatshirt_1762354890447.jpg?"
+    },
+    "search_results": {
+      "tops": [
+        {
+          "link": "https://www.lowprice.kr/product/외윤상의/405/display/1/{",
+          "thumbnail": "https://ecimg.cafe24img.com/pg2221b03644447035/lowprice2025/web/product/big/20251020/267f019817746e5908da9da78d6a5720.jpg",
+          "title": "외윤상의 - Lowprice"
+        },
+        {
+          "link": "https://www.elandmall.co.kr/i/item?itemNo=2506968615&chnl_no=GSW",
+          "thumbnail": "https://item.elandrs.com/r/image/oa/2025-06-24/89a035ea-e93b-4caf-8540-ed772810dfdf.jpg",
+          "title": "화세 레이어드체크카라티셔츠_HB5MTS008C- 이랜드몰"
+        },
+        {
+          "link": "https://www.coupang.com/vp/products/7110185710",
+          "thumbnail": "https://thumbnail9.coupangcdn.com/thumbnails/remote/492x492ex/image/vendor_inventory/1a06/50472bdfaccc40ad1d4a32cf519400dbebbb7532fd5628e181323fb570f0.jpg",
+          "title": "쩡이네) 봄신상 가디건 여성가디건 퍼피 강아지 가디건 - 카디건 | 쿠팡"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 1,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "d5e9df725d2b-IMG_1407.png",
+    "phone": "",
+    "requested_categories": "상의",
+    "status": "success",
+    "upload_time": "1.26",
+    "crop_time": "27.70",
+    "search_time": "25.40",
+    "total_time": "54.36",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762354910322_d5e9df725d2b-IMG_1407.png",
+    "cropped_urls": {
+      "tops": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_hoodie_1762354937353.jpg?"
+    },
+    "search_results": {
+      "tops": [
+        {
+          "link": "https://www.coupang.com/vp/products/9115411973",
+          "thumbnail": "https://thumbnail.coupangcdn.com/thumbnails/remote/300x300ex/image/rs_quotation_api/dmrprxnh/bc7ebf65081a4043a27a48f238303609.jpg",
+          "title": "실크 소매 비치웨어 프릴 수영복 여성스러운 퍼프 우아한 kon+53569KO - 비키니 | 쿠팡"
+        },
+        {
+          "link": "https://www.farfetch.com/lb/shopping/women/elena-velez-frilled-mini-dress-item-31783472.aspx",
+          "thumbnail": "https://cdn-images.farfetch-contents.com/31/78/34/72/31783472_61444773_1000.jpg",
+          "title": "Elena Velez Frilled Mini Dress | Blue | FARFETCH LB"
+        },
+        {
+          "link": "https://www.aliexpress.com/item/1005006165545071.html",
+          "thumbnail": "https://ae01.alicdn.com/kf/Se623c41b6aac449fbfbde86492b9ae6fo.jpg",
+          "title": "Women's Spaghetti Straps Pleated Mini Dress Sexy V-Neck Sleeveless Slim A-line Short Dresses Midnight Party Vestidos - AliExpress"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 1,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "da6ad8533762-Screenshot_20250922_232217_NAVER.jpg",
+    "phone": "",
+    "requested_categories": "신발",
+    "status": "success",
+    "upload_time": "0.43",
+    "crop_time": "22.21",
+    "search_time": "31.51",
+    "total_time": "54.15",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762354966680_da6ad8533762-Screenshot_20250922_232217_NAVER.jpg",
+    "cropped_urls": {
+      "shoes": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_shoes_1762354987913.jpg?"
+    },
+    "search_results": {
+      "shoes": [
+        {
+          "link": "https://www.nike.sa/en/air-max-portal-se-womens-shoes/NKHM0256-001.html",
+          "thumbnail": "https://www.nike.sa/dw/image/v2/BDVB_PRD/on/demandware.static/-/Sites-akeneo-master-catalog/default/dw2ee8a3ca/nk/4e5/4/1/1/0/7/4e541107_7c99_4921_a373_7c1b6b57b614.png?sw=210&sh=210&sm=fit",
+          "title": "Buy Nike Air Max Portal SE Women's Shoes - Metallic Silver/Phantom/White/Black @ Nike Saudi"
+        },
+        {
+          "link": "https://www.macys.com/shop/product/nike-womens-air-max-portal-se-casual-sneakers-from-finish-line?ID=18790411",
+          "thumbnail": "https://slimages.macysassets.com/is/image/MCY/products/9/optimized/31487349_fpx.tif",
+          "title": "Nike Women's Air Max Portal SE Casual Sneakers from Finish Line - Macy's"
+        },
+        {
+          "link": "https://www.asos.com/us/nike/nike-air-max-portal-sneakers-in-white-and-silver/prd/206957048",
+          "thumbnail": "https://images.asos-media.com/products/nike-air-max-portal-sneakers-in-white-and-silver/206957048-1-white?$n_640w$&wid=513&fit=constrain",
+          "title": "Nike Air Max Portal sneakers in white and silver | ASOS"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 1,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "e0a6a6f8c6d9-IMG_2880.png",
+    "phone": "'+821029461255",
+    "requested_categories": "가방",
+    "status": "success",
+    "upload_time": "2.09",
+    "crop_time": "25.80",
+    "search_time": "17.93",
+    "total_time": "45.83",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762355022831_e0a6a6f8c6d9-IMG_2880.png",
+    "cropped_urls": {
+      "bags": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_bags_1762355048707.jpg?"
+    },
+    "search_results": {
+      "bags": [
+        {
+          "link": "https://oprumedical.com/products/18962186",
+          "thumbnail": "https://auc-pctr.c.yimg.jp/i/auctions.c.yimg.jp/images.auctions.yahoo.co.jp/image/dr000/auc0105/user/2ff7576e39437005f48484cd5caf15285cf533734cf93b4805933f9894453fb2/i-img1196x1200-17476335354257kxynm329262.jpg",
+          "title": "ブラック ドロスト トートバッグ 大容量 ショルダーバッグ ..."
+        },
+        {
+          "link": "https://www.ssg.com/item/itemView.ssg?itemId=1000573737597",
+          "thumbnail": "https://sitem.ssgcdn.com/97/75/73/item/1000573737597_i4_750.jpg",
+          "title": "엘케이트 여성 숄더백 데일리백 스트링 포켓 캐주얼가방 HRZ422 ..."
+        },
+        {
+          "link": "https://m.shoemarker.co.kr/ASP/Product/ProductDetail.asp?ProductCode=46732&CZFlag=N",
+          "thumbnail": "https://contents.sixshop.com/uploadedFiles/14451/product/image_1743000294575.jpg",
+          "title": "슈마커 :: 즐거움을 신다"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 1,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "e41378176432-1758535620408.jpg",
+    "phone": "'+821054357490",
+    "requested_categories": "상의, 하의, 신발, 가방",
+    "status": "success",
+    "upload_time": "0.95",
+    "crop_time": "115.28",
+    "search_time": "28.55",
+    "total_time": "144.79",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762355070657_e41378176432-1758535620408.jpg",
+    "cropped_urls": {
+      "tops": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_navy_blue_satin_midi_skirt_1762355181955.jpg?",
+      "bottoms": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_brown_monogram_leather_handbag_1762355183683.jpg?",
+      "shoes": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_black_pointed_toe_flats_1762355184924.jpg?",
+      "bags": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_black_pointed_toe_flats_1762355185846.jpg?"
+    },
+    "search_results": {
+      "tops": [
+        {
+          "link": "https://www.celine.com/en-hk/celine-shop-women/handbags/more-lines/medium-ava-triomphe-bag-in-triomphe-canvas-and-calfskin-114492BZJ.04LU.html",
+          "thumbnail": "https://www.celine.com/on/demandware.static/-/Sites-masterCatalog/default/dw721f97de/images/large/114492BZJ.04LU_1_FW23_W.jpg",
+          "title": "MEDIUM AVA TRIOMPHE BAG IN Triomphe Canvas and calfskin - TAN | CELINE"
+        },
+        {
+          "link": "https://www.ebay.com/itm/388017585873",
+          "thumbnail": "https://i.ebayimg.com/thumbs/images/g/JpEAAeSw-hxnwzA8/s-l1200.jpg",
+          "title": "MEDIUM AVA TRIOMPHE BAG IN TRIOMPHE CANVAS AND CALFSKIN | eBay"
+        },
+        {
+          "link": "https://blog.naver.com/steroid0108/223422804884?viewType=pc",
+          "thumbnail": "https://mblogthumb-phinf.pstatic.net/MjAyNDA0MjBfNTkg/MDAxNzEzNTQxNzA2NzI4.YKppZM2L-2Ny0dtbRxyaenTjONJ3j2fFGalVvyzEJxsg.cEEGEs8scG0StdTa2vkfe2p9s-mROYjcxyKttvo38Uwg.JPEG/output_3628357074.jpg?type=w400",
+          "title": "일본 오사카] 오사카쇼핑후기_셀린느,롱샴,오니츠카타이거,판도라,유니클로,드럭스토어 구입 및 택스리펀,세관신고 : 네이버 블로그"
+        }
+      ],
+      "bottoms": [
+        {
+          "link": "https://www.celine.com/en-us/celine-women/handbags/more-lines/medium-ava-triomphe-bag-in-triomphe-canvas-and-calfskin-114492BZJ.04LU.html",
+          "thumbnail": "https://www.celine.com/p/cms/resource/blob/1653214/a5608c7d633149618a677e9180ebfa2a/sizeguide-114492bzj-04lu-data.jpg",
+          "title": "MEDIUM AVA TRIOMPHE BAG IN Triomphe Canvas and calfskin - TAN | CELINE"
+        },
+        {
+          "link": "https://www.trenbe.com/product/++133307488",
+          "thumbnail": "https://image-cdn.trenbe.com/product-images/1745206677722_1f63bcd092b55581723064d27bcb7f57_2.jpeg",
+          "title": "셀린느(Celine) | 트리오페 아바 로고 호보백 | 트렌비"
+        },
+        {
+          "link": "https://kream.co.kr/products/61949",
+          "thumbnail": "https://kream-phinf.pstatic.net/MjAyNTEwMjFfNzEg/MDAxNzYxMDM1MDI3NDY2._5DBJbKHbIx_Ox4n2_4pFFIkBO92liUYVoJ406RpkAIg.9zmZv1i8boUuzBF1KgSR7QMYfrQ1Zb3LbXsqBlqvKQog.PNG/p_c70c261e05ef491b94b87cc72061cc49.png?type=m",
+          "title": "셀린느 숄더백 탄 | Celine | KREAM"
+        }
+      ],
+      "shoes": [
+        {
+          "link": "https://www.coupang.com/vp/products/6342225636",
+          "thumbnail": "https://thumbnail.coupangcdn.com/thumbnails/remote/492x492ex/image/retail/images/2022/02/15/13/0/1e8e4dff-a3b6-4a4e-bdca-5d8de83a0929.jpg",
+          "title": "첫걸음 메이슨 큐빅 플랫슈즈 1cm - 단화/플랫 | 쿠팡"
+        },
+        {
+          "link": "https://www.valoisvintage-paris.com/fr/ballerines/7793-ballerines-hermes-laura-t-36-3000000000342.html",
+          "thumbnail": "https://www.valoisvintage-paris.com/42939-medium_default/ballerines-hermes-laura-t-36.jpg",
+          "title": "Ballerines HERMES Laura T 36"
+        }
+      ],
+      "bags": [
+        {
+          "link": "https://summerseoul.com/48/?idx=284",
+          "thumbnail": "https://cdn.imweb.me/thumbnail/20230223/857404224cbae.jpg",
+          "title": "Jewel 4cm mule < S23007 > 주얼 4cm 뮬 4컬러 4cm - 베이지 - 235 : 써머 서울 - 디자이너 슈즈"
+        },
+        {
+          "link": "https://www.ebay.com/itm/164945417746",
+          "thumbnail": "https://i.ebayimg.com/images/g/LBcAAOSwI1pg46I4/s-l400.jpg",
+          "title": "Prada Size 38.5 Black Leather Flat Comfort Shoe Women High Quality Made in Italy | eBay"
+        },
+        {
+          "link": "https://m.fromgabriela.co.kr/article/review/4/5063/",
+          "thumbnail": "https://m.fromgabriela.co.kr/file_data/fromgb911/2016/08/31/15749cef3ef6ae4a26aef6cdf3a46db5.jpg",
+          "title": "고급지네요~ REVIEW - 프롬가브리엘라"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 1,
+      "fallback": 3,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "e6295ef3470a-Screenshot_20250919_154111_BAND.jpg",
+    "phone": "'+821087632442",
+    "requested_categories": "상의",
+    "status": "success",
+    "upload_time": "1.86",
+    "crop_time": "27.59",
+    "search_time": "21.15",
+    "total_time": "50.60",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762355217448_e6295ef3470a-Screenshot_20250919_154111_BAND.jpg",
+    "cropped_urls": {
+      "tops": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_white_short_sleeve_top_1762355246218.jpg?"
+    },
+    "search_results": {
+      "tops": [
+        {
+          "link": "https://www.ajio.com/global-republic-typographic-print-top-with-short-sleeves/p/700026010020",
+          "thumbnail": "https://assets.ajio.com/medias/sys_master/root/20240530/8LOf/6658a81705ac7d77bb9114dd/-473Wx593H-700026010-white-MODEL.jpg",
+          "title": "Buy White Tops for Women by GLOBAL REPUBLIC Online | Ajio.com"
+        },
+        {
+          "link": "https://www.myntra.com/tops/here26now/herenow-animal-print-top/37078181/buy",
+          "thumbnail": "https://assets.myntassets.com/w_412,q_30,dpr_3,fl_progressive,f_webp/assets/images/2025/SEPTEMBER/19/ebAHR6n4_532d23c435594212bfd6d3a019da3fe9.jpg",
+          "title": "Buy HERE&NOW Animal Print Top - Tops for Women 37078181 | Myntra"
+        },
+        {
+          "link": "https://www.coupang.com/vp/products/7613996968?itemId=20172090160&vendorItemId=85341110938&sourceType=brandstore_sdp_consolidate_reco",
+          "thumbnail": "https://thumbnail10.coupangcdn.com/thumbnails/remote/492x492ex/image/vendor_inventory/8b1f/1e356bdfb05e7488faef34863f7fb20fcb8d8dc7262ba1bbb96cc7af7ff0.png",
+          "title": "라운드 반팔 스케치 라인 캐릭터 반팔 니트 티 5컬러 - 스웨터/니트 | 쿠팡"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 1,
+      "fallback": 0,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "f27447ab3dc8-IMG_5945.jpeg",
+    "phone": "'+821064954952",
+    "requested_categories": "상의, 악세사리",
+    "status": "success",
+    "upload_time": "1.18",
+    "crop_time": "81.36",
+    "search_time": "49.20",
+    "total_time": "131.74",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762355270049_f27447ab3dc8-IMG_5945.jpeg",
+    "cropped_urls": {
+      "tops": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_gold_chain_necklace_1762355349654.jpg?",
+      "accessories": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_black_high___waist_skirt_1762355351120.jpg?"
+    },
+    "search_results": {
+      "tops": [
+        {
+          "link": "https://www.1stdibs.com/jewelry/necklaces/pendant-necklaces/louis-vuitton-french-diamond-mother-pearl-18k-gold-blossom-sautoir-necklace/id-j_24929052/",
+          "thumbnail": "https://a.1stdibscdn.com/louis-vuitton-french-diamond-mother-of-pearl-18k-gold-blossom-sautoir-necklace-for-sale-picture-5/j_442/j_249290521734382654016/30110_1435709_master.jpeg?width=768",
+          "title": "Louis Vuitton French diamond mother of pearl 18k gold ..."
+        },
+        {
+          "link": "https://www.saksfifthavenue.com/product/saks-fifth-avenue-collection-14k-yellow-gold-mariner-station-necklace-0400019006909.html",
+          "thumbnail": "https://cdn.saksfifthavenue.com/is/image/saks/0400012581261_YELLOWGOLD?wid=900&hei=1200&qlt=95&resMode=sharp2&op_usm=0.9,1.0,8,0",
+          "title": "Saks Fifth Avenue Collection 14K Yellow Gold Mariner Station Necklace | Saks Fifth Avenue"
+        },
+        {
+          "link": "https://www.dhgate.com/goods/926591142.html",
+          "thumbnail": "https://img4.dhresource.com/webp/m/f3/albu/km/n/07/32f5b13a-e9dc-4fbb-81ca-1751c80d4a7f.jpg",
+          "title": "Luxury Womens Designer Bracelet - Fashionable Alphabet ..."
+        }
+      ],
+      "accessories": [
+        {
+          "link": "https://www.buyma.com/r/_LOUIS-VUITTON-ルイヴィトン/-C2101/?tag_ids=668",
+          "thumbnail": "https://cdn-images.buyma.com/imgdata/item/250427/0117989013/693981246/428.jpg",
+          "title": "レース Louis Vuitton(ルイヴィトン) トップス(レディース) - 海外通販のBUYMA"
+        },
+        {
+          "link": "https://us.louisvuitton.com/eng-us/products/mini-monogram-silk-evening-shirt-nvprod6130039v/1AGNAC",
+          "thumbnail": "https://us.louisvuitton.com/images/is/image/lv/1/PP_VP_L/louis-vuitton-mini-monogram-silk-evening-shirt--HTS9PWDIV001_PM1_Closeup view.jpg?impolicy=bgcolor&bgcolor=#f8f8f8",
+          "title": "Mini Monogram Silk Evening Shirt - Men - Ready-to-Wear | LOUIS VUITTON ®"
+        },
+        {
+          "link": "https://poshmark.com/listing/Louis-Vuitton-Elegant-White-Belted-Dress-683ea47f49e17b946cb15bf8",
+          "thumbnail": "https://di2ponv0v5otw.cloudfront.net/posts/2025/06/03/683ea47f49e17b946cb15bf8/s_wp_683ea4c33509d1a9993d3bd8.webp",
+          "title": "Louis Vuitton | Dresses | Louis Vuitton Elegant White Belted ..."
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 2,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "f42961b2b2e3-Screenshot_20220901_194953_Facebook.jpg",
+    "phone": "'+821088560333",
+    "requested_categories": "상의, 악세사리",
+    "status": "success",
+    "upload_time": "4.65",
+    "crop_time": "165.61",
+    "search_time": "25.18",
+    "total_time": "195.44",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762355403788_f42961b2b2e3-Screenshot_20220901_194953_Facebook.jpg",
+    "cropped_urls": {
+      "tops": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_layered_pearl_necklaces_1762355569715.jpg?",
+      "accessories": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_cream_leather_shoulder_bag_1762355571801.jpg?"
+    },
+    "search_results": {
+      "tops": [
+        {
+          "link": "https://www.amazon.com/Askana-Vintage-Fashion-Multi-Layer-Necklace/dp/B07VTRTMR1",
+          "thumbnail": "https://images-na.ssl-images-amazon.com/images/I/61cCi-WuFZL._AC_UL600_SR600,600_.jpg",
+          "title": "Amazon.com: Askana Fashion Imitation Faux Pearls Y-Type Necklace with Golden Link Details - for Women: Clothing, Shoes & Jewelry"
+        },
+        {
+          "link": "https://www.etsy.com/il-en/listing/4373836039/hand-beaded-pearl-multi-layer-body-chain",
+          "thumbnail": "https://i.etsystatic.com/23845268/r/il/678b84/7219552306/il_fullxfull.7219552306_f9ao.jpg",
+          "title": "Hand-beaded Pearl Multi-layer Body Chain Necklace: Bridal Wedding Jewelry - Etsy Israel"
+        },
+        {
+          "link": "https://www.aliexpress.com/item/1005008353371211.html",
+          "thumbnail": "https://ae01.alicdn.com/kf/S3933c3c70eaf4615ba78e98a0e25c1fdG.jpg",
+          "title": "Vintage Multilayer Pearl Choker Necklaces for Women Elegant Imitation Pearl Twisted Neck Chain Necklace Wedding Bride Jewelry - AliExpress"
+        }
+      ],
+      "accessories": [
+        {
+          "link": "https://www.coupang.com/vp/products/8161568844",
+          "thumbnail": "https://image.coupangcdn.com/image/vendor_inventory/f0eb/fa809a9783d1a2bded727154b74d6ffd97fef605a25ce398415d59dadda3.jpg",
+          "title": "눈물의여왕 14회 이미숙 모슬희 목걸이 진주 2줄 레이어드 패션 ..."
+        },
+        {
+          "link": "https://catstreet.kr/amp/product/detail.html?product_no=51728",
+          "thumbnail": "https://catstreet0.cafe24.com/web/product/2022/s/20220323103611_ys.jpg",
+          "title": "캣스트릿"
+        },
+        {
+          "link": "https://zigzag.kr/catalog/products/151494168",
+          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/d/2024/11/5/12440_202411051833330651_56474.jpeg",
+          "title": "비비아레이디 (무배) 로라 로즈 펄 카디건 (하이퀄리티,플라워 ..."
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 2,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "f6fdf09d8932-Screenshot_20250831_162024_TikTok_Lite.jpg",
+    "phone": "'+821072431565",
+    "requested_categories": "상의",
+    "status": "success",
+    "upload_time": "1.24",
+    "crop_time": "28.20",
+    "search_time": "25.04",
+    "total_time": "54.48",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762355601227_f6fdf09d8932-Screenshot_20250831_162024_TikTok_Lite.jpg",
+    "cropped_urls": {
+      "tops": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_sweatshirt_black_long_sleeve_top_1762355629263.jpg?"
+    },
+    "search_results": {
+      "tops": [
+        {
+          "link": "https://m.musebyrose.com/product/﻿kate-point-collar-shirt-black﻿/61/",
+          "thumbnail": "https://m.musebyrose.com/web/product/big/202304/633ebebe5bfec52600a306ee30f76f92.jpg",
+          "title": "뮤즈바이로즈 | KATE Point-Collar Shirt"
+        },
+        {
+          "link": "https://bylynn.shop/product/EWTSPI0300",
+          "thumbnail": "https://image.bylynn.shop/files/products/EWTSPI0300/157064/11-jKMxMHT8FA6aSwcUX1VN.jpg",
+          "title": "BYLYNNSHOP] 리즈 라운드넥 티셔츠"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 1,
+      "fallback": 0,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "f7229be919f1-화면_캡처_2025_09_23_094910.jpg",
+    "phone": "'+821033785887",
+    "requested_categories": "상의, 하의, 신발",
+    "status": "success",
+    "upload_time": "1.15",
+    "crop_time": "126.33",
+    "search_time": "23.83",
+    "total_time": "151.31",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762355657708_f7229be919f1-_2025_09_23_094910.jpg",
+    "cropped_urls": {
+      "tops": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_beige_pointed_toe_high_heel_shoes_1762355783583.jpg?",
+      "bottoms": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_pointed_toe_high_heel_shoes_1762355784198.jpg?",
+      "shoes": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_black_long_sleeve_blazer_1762355784618.jpg?"
+    },
+    "search_results": {
+      "tops": [
+        {
+          "link": "https://www.patreon.com/posts/bathing-beauty-114142734",
+          "thumbnail": "https://c10.patreonusercontent.com/4/patreon-media/p/post/114142734/98bfc3888cef4c578b99ec6cd1601cda/eyJiIjo3MCwidyI6MTA4MH0=/1.gif?token-hash=Jd50ADgiLuGS39netfXVD3703WZ7ICwZrbBedu7CJQA=",
+          "title": "Bathing Beauty (full uncensored): Admirer, Aficionado ..."
+        },
+        {
+          "link": "https://www.patreon.com/posts/kokoboleun-137858826?l=es",
+          "thumbnail": "https://c10.patreonusercontent.com/4/patreon-media/p/post/137858826/f5d6b7415f54429594a59a019a83ab44/eyJiIjo3MCwidyI6MTA4MH0=/1.JPG?token-hash=SlkVpKjRxJJvWTh8kYf2T939KY2-JmbVg9TMj1KneKc=",
+          "title": "코코볼은 배신하지 않습니다. | Patreon"
+        },
+        {
+          "link": "https://www.patreon.com/posts/0312-still-cut-66869794",
+          "thumbnail": "https://c10.patreonusercontent.com/4/patreon-media/p/post/66869794/35dadb1822ff48db94e253b9c89491c4/eyJiIjo3MCwidyI6MTA4MH0=/1.jpg?token-hash=Bv9enLGPGtAZd6_jQC1j6g8yRbo-HnQGj8NjLNEMs64=",
+          "title": "0312, still cut | Patreon"
+        }
+      ],
+      "bottoms": [
+        {
+          "link": "https://www.douyin.com/search/拉布拉多鼻子变粉了是什么原因",
+          "thumbnail": "https://p3-pc-sign.douyinpic.com/tos-cn-p-0015/29a215ef216d4df3bdafa3f91182417a_1677926898~tplv-tsj2vxp0zn-gaosi:40.jpeg?from=327834062&lk3s=138a59ce&x-expires=1793700000&x-signature=xo6UHQtpDAJgopMQIZs8VR0AF3w=",
+          "title": "拉布拉多鼻子变粉了是什么原因- 抖音"
+        },
+        {
+          "link": "https://www.patreon.com/posts/me-with-our-cats-117439035",
+          "thumbnail": "https://c10.patreonusercontent.com/4/patreon-media/p/post/117439035/242c827a4b0142c095162d56bf51cada/eyJiIjo3MCwidyI6MTA4MH0=/1.JPG?token-hash=4we7uIPlrTkcqG4QJCQBHpDzKt5v-2mAw8hS_XU1Dp0=",
+          "title": "Me with our cats 🐈 Part 2 | Patreon"
+        },
+        {
+          "link": "https://rent.men/male-escort-videos/play/115206",
+          "thumbnail": "https://videostream02.rent.men/public/videos/{0C9E6786-5DB2-1847-9C8E-1AB3A36E9971}/1736807702_3yEtJ7R8HJ/5.jpg",
+          "title": "scorpidom - Gay Porn Videos | Rent.Men"
+        }
+      ],
+      "shoes": [
+        {
+          "link": "https://za.shein.com/Women's-Solid-Color-Double-Breasted-Long-Sleeve-Top-And-Wide-Leg-Pants-Elegant-Suit,-Autumn-Fall-Cloth-For-Women-p-47820507.html",
+          "thumbnail": "https://img.ltwebstatic.com/images3_pi/2024/11/16/cb/17317236234ee6c3e6fb7e7cca5fba8c8295110980_thumbnail_405x552.jpg",
+          "title": "Elenzga Women's Solid Color Double-Breasted Long Sleeve Top And Wide Leg Pants Elegant Suit, Autumn Fall Cloth For Women | SHEIN South Africa"
+        },
+        {
+          "link": "https://www.asos.com/us/mango/mango-klumi-tailored-square-neck-jacket-pants-set-in-charcoal/grp/209808730",
+          "thumbnail": "https://images.asos-media.com/products/mango-klumi-tailored-square-neck-jacket-pants-set-in-charcoal/209507101-3",
+          "title": "Mango Klumi tailored square neck jacket & pants set in charcoal | ASOS"
+        },
+        {
+          "link": "https://thefoldlondon.com/product/clever-crepe-lexington-flared-trousers-black/?setCurrencyId=2",
+          "thumbnail": "https://cdn11.bigcommerce.com/s-vspt61dziw/images/stencil/3000x3000/products/1603/18462/TheFold_Clever_Crepe_Lexington_Flared_Trousers_Black_DT291_2509_2_v2__17060.1761558076.jpg?c=1",
+          "title": "Clever Crepe Lexington Flared Trousers Black - Welcome to the Fold LTD"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 0,
+      "fallback": 3,
+      "none": 0,
+      "error": 0
+    }
+  },
+  {
+    "filename": "fe0e1606c93b-Screenshot_20250827_004006_NAVER.jpg",
+    "phone": "'+821082289231",
+    "requested_categories": "신발",
+    "status": "success",
+    "upload_time": "0.53",
+    "crop_time": "73.14",
+    "search_time": "25.08",
+    "total_time": "98.74",
+    "original_image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762355811021_fe0e1606c93b-Screenshot_20250827_004006_NAVER.jpg",
+    "cropped_urls": {
+      "shoes": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_shoes_1762355883001.jpg?"
+    },
+    "search_results": {
+      "shoes": [
+        {
+          "link": "https://www.coupang.com/vp/products/6518654285",
+          "thumbnail": "https://thumbnail.coupangcdn.com/thumbnails/remote/230x230ex/image/retail/images/4621088630292871-5aec25f3-d715-4352-95bb-e28b83c5f681.jpg",
+          "title": "여성용 발목스트랩 피셔맨 위빙샌들 - 샌들 | 쿠팡"
+        },
+        {
+          "link": "https://www.eqlstore.com/product/GPR824071359401/detail",
+          "thumbnail": "https://cdn.eqlstore.com/goods/EQBR/24/07/13/GPR824071359401_2_ORGINL_1720853973488.jpg?RS=750",
+          "title": "한섬 EQL"
+        },
+        {
+          "link": "https://zigzag.kr/catalog/products/121717870",
+          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/d/2023/3/22/14630_202303221525160837_34476.jpeg?width=400&height=400&quality=80&format=webp",
+          "title": "슈징 발편한 소가죽 글래디에이터샌들힐"
+        }
+      ]
+    },
+    "errors": [],
+    "source_counts": {
+      "gpt": 1,
+      "fallback": 0,
+      "none": 0,
+      "error": 0
+    }
+  }
+]

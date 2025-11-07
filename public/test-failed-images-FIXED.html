@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fixed! Correct Category Labeling ✅</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container { max-width: 1400px; margin: 0 auto; }
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        h1 { 
+            color: #667eea; 
+            margin-bottom: 10px; 
+            font-size: 2.5em;
+        }
+        .success-badge {
+            display: inline-block;
+            background: #d4edda;
+            color: #155724;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            margin: 15px 0;
+            font-size: 1.2em;
+        }
+        .fix-badge {
+            display: inline-block;
+            background: #fff3cd;
+            color: #856404;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            margin: 15px 5px;
+            font-size: 1em;
+        }
+        .subtitle { 
+            color: #666; 
+            font-size: 1.1em; 
+            margin-top: 15px;
+            line-height: 1.8;
+        }
+        .result-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+        }
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        .result-title { 
+            font-weight: 600; 
+            color: #333; 
+            font-size: 1.2em;
+        }
+        .index-badge {
+            background: #667eea;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+        .status-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        /* Images Section */
+        .images-section {
+            margin: 25px 0;
+            padding: 25px;
+            background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+            border-radius: 12px;
+            border: 2px solid #dee2e6;
+        }
+        .section-title {
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .images-grid {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 25px;
+        }
+        .original-section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .original-label {
+            font-size: 0.85em;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .original-image {
+            width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            border: 3px solid #667eea;
+        }
+        .cropped-section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .cropped-label {
+            font-size: 0.85em;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .cropped-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 15px;
+        }
+        .cropped-item {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        .cropped-item:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+        .cropped-category {
+            font-size: 0.8em;
+            color: #667eea;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            background: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+        .cropped-image {
+            width: 100%;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            border: 2px solid #e0e0e0;
+        }
+        .filename-label {
+            font-size: 0.7em;
+            color: #6c757d;
+            margin-top: 5px;
+            word-break: break-all;
+            font-family: monospace;
+        }
+        
+        /* Timing Info */
+        .timing-info {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .timing-item { 
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        .timing-label {
+            font-size: 0.75em;
+            color: #6c757d;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .timing-value {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #667eea;
+        }
+        
+        /* Products Section */
+        .products {
+            margin-top: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        .product-category {
+            margin-bottom: 20px;
+        }
+        .category-title {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 12px;
+            font-size: 1.05em;
+            text-transform: capitalize;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .result-count {
+            background: #667eea;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.85em;
+        }
+        .product-link {
+            display: flex;
+            gap: 15px;
+            padding: 15px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .product-link:hover {
+            background: #f8f9fa;
+            border-color: #667eea;
+            transform: translateX(8px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+        .product-thumbnail {
+            width: 90px;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 8px;
+            flex-shrink: 0;
+            border: 2px solid #dee2e6;
+        }
+        .product-info { 
+            flex: 1; 
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .product-title {
+            font-size: 1em;
+            line-height: 1.5;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #212529;
+        }
+        .product-domain {
+            font-size: 0.85em;
+            color: #667eea;
+            font-weight: 600;
+        }
+        .source-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+        .source-gpt {
+            background: #d4edda;
+            color: #155724;
+        }
+        .source-fallback {
+            background: #fff3cd;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>✅ Category Labeling FIXED!</h1>
+            <div class="success-badge">✅ 3/3 Success (100%)</div>
+            <div class="fix-badge">🔧 Filename-Based Category Matching</div>
+            <div class="subtitle">
+                <strong>Problem:</strong> Backend returned crops in detection order (not requested order)<br>
+                <strong>Solution:</strong> Parse filenames to match crops to correct categories<br>
+                <br>
+                <strong>Before:</strong> "tops" → skirt ❌, "bottoms" → shirt ❌<br>
+                <strong>After:</strong> "tops" → shirt ✅, "bottoms" → skirt ✅
+            </div>
+        </div>
+
+        
+            <div class="result-card">
+                <div class="result-header">
+                    <div class="result-title">
+                        <span class="index-badge">#1</span>
+                        25e73fbfc872-캡처.JPG
+                    </div>
+                    <span class="status-badge">✅ Success</span>
+                </div>
+                
+                <div class="images-section">
+                    <div class="section-title">
+                        🖼️ Image Processing Pipeline (Categories Now Correct!)
+                    </div>
+                    <div class="images-grid">
+                        <div class="original-section">
+                            <div class="original-label">📸 Original Image</div>
+                            <img src="https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762363670649_25e73fbfc872-.JPG" class="original-image" alt="Original" onerror="this.style.opacity='0.3';this.alt='Image failed to load'">
+                        </div>
+                        
+                        <div class="cropped-section">
+                            <div class="cropped-label">✂️  Cropped Items (2) - Matched by Filename</div>
+                            <div class="cropped-grid">
+                                
+                                    <div class="cropped-item">
+                                        <div class="cropped-category">dress</div>
+                                        <img src="https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_black_long_sleeve_midi_dress_1762363717251.jpg?" class="cropped-image" alt="dress" onerror="this.style.opacity='0.3';this.alt='Failed'">
+                                        <div class="filename-label">black_long_sleeve_midi_dress_176236371...</div>
+                                    </div>
+                                
+                                    <div class="cropped-item">
+                                        <div class="cropped-category">bags</div>
+                                        <img src="https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_black_leather_structured_handbag_1762363718415.jpg?" class="cropped-image" alt="bags" onerror="this.style.opacity='0.3';this.alt='Failed'">
+                                        <div class="filename-label">black_leather_structured_handbag_17623...</div>
+                                    </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timing-info">
+                    <div class="timing-item">
+                        <div class="timing-label">⏱️  Crop Time</div>
+                        <div class="timing-value">47.49s</div>
+                    </div>
+                    <div class="timing-item">
+                        <div class="timing-label">🔍 Search Time</div>
+                        <div class="timing-value">29.82s</div>
+                    </div>
+                    <div class="timing-item">
+                        <div class="timing-label">⚡ Total Time</div>
+                        <div class="timing-value">78.57s</div>
+                    </div>
+                </div>
+                
+                <div class="products">
+                    <div class="section-title">🔍 Search Results (Now Matching Correct Categories!)</div>
+                    
+                        <div class="product-category">
+                            <div class="category-title">
+                                dress
+                                <span class="result-count">3 results</span>
+                            </div>
+                            
+                                <a href="https://www.yesstyle.com/en/yilda-long-sleeve-midi-a-line-dress/info.html/pid.1072710136" target="_blank" class="product-link">
+                                    <img src="https://d1flfk77wl2xk4.cloudfront.net/Assets/55/308/XL_p0103630855.jpg" class="product-thumbnail" onerror="this.style.display='none'">
+                                    <div class="product-info">
+                                        <div class="product-title">Yilda - Long-Sleeve Midi A-Line Dress | YesStyle</div>
+                                        <div class="product-domain">🌐 www.yesstyle.com</div>
+                                    </div>
+                                </a>
+                            
+                                <a href="https://www.dhgate.com/product/spring-3-4-sleeve-swing-dress-women-elegant/1009278425.html" target="_blank" class="product-link">
+                                    <img src="https://www.dhresource.com/webp/m/0x0/f2/albu/g21/M01/4E/FF/rBVaqmCkj02AJ7SqAAGAXrUHc-8714.jpg" class="product-thumbnail" onerror="this.style.display='none'">
+                                    <div class="product-info">
+                                        <div class="product-title">Lantern Sleeve Dress Womens Elegant A Line Midi Dress High ...</div>
+                                        <div class="product-domain">🌐 www.dhgate.com</div>
+                                    </div>
+                                </a>
+                            
+                                <a href="https://www.yesstyle.com/en/fuema-long-sleeve-mock-neck-midi-a-line-dress/info.html/pid.1098544950" target="_blank" class="product-link">
+                                    <img src="https://d1flfk77wl2xk4.cloudfront.net/Assets/97/307/XL_p0142430797.jpg" class="product-thumbnail" onerror="this.style.display='none'">
+                                    <div class="product-info">
+                                        <div class="product-title">Shinobu - Long-Sleeve Mock-Neck Midi A-Line Dress | YesStyle</div>
+                                        <div class="product-domain">🌐 www.yesstyle.com</div>
+                                    </div>
+                                </a>
+                            
+                        </div>
+                    
+                        <div class="product-category">
+                            <div class="category-title">
+                                bags
+                                <span class="result-count">3 results</span>
+                            </div>
+                            
+                                <a href="https://www.farfetch.com/il/shopping/women/hermes-pre-owned-2017-epsom-birkin-retourne-30-handbag-item-32305826.aspx" target="_blank" class="product-link">
+                                    <img src="https://cdn-images.farfetch-contents.com/32/30/58/26/32305826_62226714_600.jpg" class="product-thumbnail" onerror="this.style.display='none'">
+                                    <div class="product-info">
+                                        <div class="product-title">Hermès Pre-Owned 2017 Epsom Birkin Retourne 30 Handbag | Black | FARFETCH IL</div>
+                                        <div class="product-domain">🌐 www.farfetch.com</div>
+                                    </div>
+                                </a>
+                            
+                                <a href="https://www.vestiairecollective.com/women-bags/handbags/hermes/black-leather-kelly-28-hermes-handbag-44678679.shtml" target="_blank" class="product-link">
+                                    <img src="https://images.vestiairecollective.com/images/resized/w=1246,q=75,f=auto,/produit/black-leather-kelly-28-hermes-handbag-44678679-6_4.jpg" class="product-thumbnail" onerror="this.style.display='none'">
+                                    <div class="product-info">
+                                        <div class="product-title">Kelly 28 leather handbag Hermès Black in Leather - 44678679</div>
+                                        <div class="product-domain">🌐 www.vestiairecollective.com</div>
+                                    </div>
+                                </a>
+                            
+                                <a href="https://us.vestiairecollective.com/women-bags/handbags/hermes/black-leather-herbag-hermes-handbag-43161572.shtml" target="_blank" class="product-link">
+                                    <img src="https://images.vestiairecollective.com/images/resized/w=1246,q=75,f=auto,/produit/black-leather-herbag-hermes-handbag-43161572-2_2.jpg" class="product-thumbnail" onerror="this.style.display='none'">
+                                    <div class="product-info">
+                                        <div class="product-title">Herbag leather handbag Hermès Black in Leather - 43161572</div>
+                                        <div class="product-domain">🌐 us.vestiairecollective.com</div>
+                                    </div>
+                                </a>
+                            
+                        </div>
+                    
+                    
+                        <div style="margin-top: 15px; padding: 12px; background: white; border-radius: 8px; font-size: 0.9em;">
+                            <strong>📊 Result Sources:</strong>
+                            <span class="source-badge source-gpt">GPT: 2</span>
+                            <span class="source-badge source-fallback">Fallback: 0</span>
+                        </div>
+                    
+                </div>
+            </div>
+        
+            <div class="result-card">
+                <div class="result-header">
+                    <div class="result-title">
+                        <span class="index-badge">#2</span>
+                        2701146d3bd8-Screenshot_20250922_180545_NAVER.jpg
+                    </div>
+                    <span class="status-badge">✅ Success</span>
+                </div>
+                
+                <div class="images-section">
+                    <div class="section-title">
+                        🖼️ Image Processing Pipeline (Categories Now Correct!)
+                    </div>
+                    <div class="images-grid">
+                        <div class="original-section">
+                            <div class="original-label">📸 Original Image</div>
+                            <img src="https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762363749218_2701146d3bd8-Screenshot_20250922_180545_NAVER.jpg" class="original-image" alt="Original" onerror="this.style.opacity='0.3';this.alt='Image failed to load'">
+                        </div>
+                        
+                        <div class="cropped-section">
+                            <div class="cropped-label">✂️  Cropped Items (2) - Matched by Filename</div>
+                            <div class="cropped-grid">
+                                
+                                    <div class="cropped-item">
+                                        <div class="cropped-category">bottoms</div>
+                                        <img src="https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_black_high_waist_skirt_1762363889733.jpg?" class="cropped-image" alt="bottoms" onerror="this.style.opacity='0.3';this.alt='Failed'">
+                                        <div class="filename-label">black_high_waist_skirt_1762363889733.j...</div>
+                                    </div>
+                                
+                                    <div class="cropped-item">
+                                        <div class="cropped-category">tops</div>
+                                        <img src="https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_striped_button___down_shirt_1762363890962.jpg?" class="cropped-image" alt="tops" onerror="this.style.opacity='0.3';this.alt='Failed'">
+                                        <div class="filename-label">striped_button___down_shirt_1762363890...</div>
+                                    </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timing-info">
+                    <div class="timing-item">
+                        <div class="timing-label">⏱️  Crop Time</div>
+                        <div class="timing-value">142.21s</div>
+                    </div>
+                    <div class="timing-item">
+                        <div class="timing-label">🔍 Search Time</div>
+                        <div class="timing-value">12.71s</div>
+                    </div>
+                    <div class="timing-item">
+                        <div class="timing-label">⚡ Total Time</div>
+                        <div class="timing-value">155.95s</div>
+                    </div>
+                </div>
+                
+                <div class="products">
+                    <div class="section-title">🔍 Search Results (Now Matching Correct Categories!)</div>
+                    
+                        <div class="product-category">
+                            <div class="category-title">
+                                bottoms
+                                <span class="result-count">3 results</span>
+                            </div>
+                            
+                                <a href="https://www.amazon.com/Casual-Womens-Skirt-Stretch-Ladies/dp/B0DXW2C3LX" target="_blank" class="product-link">
+                                    <img src="https://m.media-amazon.com/images/I/71SPwP7qH3L._UY1000_.jpg" class="product-thumbnail" onerror="this.style.display='none'">
+                                    <div class="product-info">
+                                        <div class="product-title">Amazon.com: Casual Women's Skirt High Stretch Ladies Black Casual High Waist Split Hem Skirt for Women : Clothing, Shoes & Jewelry</div>
+                                        <div class="product-domain">🌐 www.amazon.com</div>
+                                    </div>
+                                </a>
+                            
+                                <a href="https://www.loewe.com/usa/en/women/womenswear/skirts/asymmetric-skirt-in-wool/S359Y08X90-1100.html" target="_blank" class="product-link">
+                                    <img src="https://www.loewe.com/on/demandware.static/-/Sites-Loewe_master/default/dwf81c94dd/images_rd/S359Y08X90/S359Y08X90-1100/S359Y08X90_1100_1F.jpg" class="product-thumbnail" onerror="this.style.display='none'">
+                                    <div class="product-info">
+                                        <div class="product-title">Asymmetric skirt in wool Black - LOEWE</div>
+                                        <div class="product-domain">🌐 www.loewe.com</div>
+                                    </div>
+                                </a>
+                            
+                                <a href="https://en.andyou.style/product/maili-a-line-skirt-black/2637/" target="_blank" class="product-link">
+                                    <img src="https://cafe24img.poxo.com/andyou88/web/product/extra/small/202410/e1ff38629d58a524ef8c0bb963595db9.jpg" class="product-thumbnail" onerror="this.style.display='none'">
+                                    <div class="product-info">
+                                        <div class="product-title">MAILI A-line skirt (Black) - AND YOU</div>
+                                        <div class="product-domain">🌐 en.andyou.style</div>
+                                    </div>
+                                </a>
+                            
+                        </div>
+                    
+                        <div class="product-category">
+                            <div class="category-title">
+                                tops
+                                <span class="result-count">3 results</span>
+                            </div>
+                            
+                                <a href="https://www2.hm.com/en_us/productpage.0925212004.html" target="_blank" class="product-link">
+                                    <img src="https://image.hm.com/assets/hm/61/bc/61bc56fb2c9c8d795b68052fadae14be0ab7b47c.jpg?imwidth=768" class="product-thumbnail" onerror="this.style.display='none'">
+                                    <div class="product-info">
+                                        <div class="product-title">Oxford Shirt - Light blue - Ladies | H&M US</div>
+                                        <div class="product-domain">🌐 www2.hm.com</div>
+                                    </div>
+                                </a>
+                            
+                                <a href="https://m.ririnco.com/product/봄데이트룩몸매부각x-44-120-디안츠-스트라이프-리본-루즈핏-셔츠-봄여름데일리룩데이트룩나들이룩출근룩빅사이즈120사이즈자체제작/26625/" target="_blank" class="product-link">
+                                    <img src="https://m.ririnco.com/web/product/big/202503/96409ef656d8415724a8f2a34db1a765.jpg" class="product-thumbnail" onerror="this.style.display='none'">
+                                    <div class="product-info">
+                                        <div class="product-title">봄데이트룩/몸매부각X] [44-120] 디안츠 스트라이프 리본 루즈핏 셔츠( 봄-여름-데일리룩-데이트룩-나들이룩-출근룩-빅사이즈-120사이즈-자체제작-스트라이프셔츠-리본셔츠-루즈핏셔츠 ) | 리리앤코</div>
+                                        <div class="product-domain">🌐 m.ririnco.com</div>
+                                    </div>
+                                </a>
+                            
+                                <a href="https://m.kimera-j.co.kr/product/스트라이프-얇은-여름-남방-셔츠-4color/5520/" target="_blank" class="product-link">
+                                    <img src="https://m.kimera-j.co.kr/web/product/extra/big/20230619/e6a9f194c056963ea30989679742c720.jpg" class="product-thumbnail" onerror="this.style.display='none'">
+                                    <div class="product-info">
+                                        <div class="product-title">스트라이프 얇은 여름 남방 셔츠 4color</div>
+                                        <div class="product-domain">🌐 m.kimera-j.co.kr</div>
+                                    </div>
+                                </a>
+                            
+                        </div>
+                    
+                    
+                        <div style="margin-top: 15px; padding: 12px; background: white; border-radius: 8px; font-size: 0.9em;">
+                            <strong>📊 Result Sources:</strong>
+                            <span class="source-badge source-gpt">GPT: 2</span>
+                            <span class="source-badge source-fallback">Fallback: 0</span>
+                        </div>
+                    
+                </div>
+            </div>
+        
+            <div class="result-card">
+                <div class="result-header">
+                    <div class="result-title">
+                        <span class="index-badge">#3</span>
+                        4aaa14222152-Screenshot_20250922_183517.jpg
+                    </div>
+                    <span class="status-badge">✅ Success</span>
+                </div>
+                
+                <div class="images-section">
+                    <div class="section-title">
+                        🖼️ Image Processing Pipeline (Categories Now Correct!)
+                    </div>
+                    <div class="images-grid">
+                        <div class="original-section">
+                            <div class="original-label">📸 Original Image</div>
+                            <img src="https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/batch_test_1762363905171_4aaa14222152-Screenshot_20250922_183517.jpg" class="original-image" alt="Original" onerror="this.style.opacity='0.3';this.alt='Image failed to load'">
+                        </div>
+                        
+                        <div class="cropped-section">
+                            <div class="cropped-label">✂️  Cropped Items (2) - Matched by Filename</div>
+                            <div class="cropped-grid">
+                                
+                                    <div class="cropped-item">
+                                        <div class="cropped-category">bottoms</div>
+                                        <img src="https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_high_waist_wide_leg_pants_1762363984540.jpg?" class="cropped-image" alt="bottoms" onerror="this.style.opacity='0.3';this.alt='Failed'">
+                                        <div class="filename-label">high_waist_wide_leg_pants_176236398454...</div>
+                                    </div>
+                                
+                                    <div class="cropped-item">
+                                        <div class="cropped-category">tops</div>
+                                        <img src="https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_white_long_sleeve_crop_top_1762363986355.jpg?" class="cropped-image" alt="tops" onerror="this.style.opacity='0.3';this.alt='Failed'">
+                                        <div class="filename-label">white_long_sleeve_crop_top_17623639863...</div>
+                                    </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timing-info">
+                    <div class="timing-item">
+                        <div class="timing-label">⏱️  Crop Time</div>
+                        <div class="timing-value">80.69s</div>
+                    </div>
+                    <div class="timing-item">
+                        <div class="timing-label">🔍 Search Time</div>
+                        <div class="timing-value">11.17s</div>
+                    </div>
+                    <div class="timing-item">
+                        <div class="timing-label">⚡ Total Time</div>
+                        <div class="timing-value">93.80s</div>
+                    </div>
+                </div>
+                
+                <div class="products">
+                    <div class="section-title">🔍 Search Results (Now Matching Correct Categories!)</div>
+                    
+                        <div class="product-category">
+                            <div class="category-title">
+                                bottoms
+                                <span class="result-count">3 results</span>
+                            </div>
+                            
+                                <a href="https://www.nordstrom.com/s/good-standard-leopard-print-wide-leg-jeans-lucky-leopard-001-regular-plus/8451805" target="_blank" class="product-link">
+                                    <img src="https://n.nordstrommedia.com/it/a963a062-6ac4-4ec5-ace2-b467e87c4f7f.jpeg?trim=color&w=350&h=536" class="product-thumbnail" onerror="this.style.display='none'">
+                                    <div class="product-info">
+                                        <div class="product-title">Good American Good Standard Leopard Print Wide Leg Jeans | Nordstrom</div>
+                                        <div class="product-domain">🌐 www.nordstrom.com</div>
+                                    </div>
+                                </a>
+                            
+                                <a href="https://www.yesstyle.com/en/2dawgs-high-waist-leopard-wide-leg-jeans/info.html/pid.1127267043" target="_blank" class="product-link">
+                                    <img src="https://d1flfk77wl2xk4.cloudfront.net/Assets/68/957/XL_p0205095768.jpg" class="product-thumbnail" onerror="this.style.display='none'">
+                                    <div class="product-info">
+                                        <div class="product-title">2DAWGS - High Waist Leopard Wide Leg Jeans | YesStyle</div>
+                                        <div class="product-domain">🌐 www.yesstyle.com</div>
+                                    </div>
+                                </a>
+                            
+                                <a href="https://www.amazon.com/Wfeynia-Leopard-Straight-Vintage-Streetwear/dp/B0D1GSX4XT" target="_blank" class="product-link">
+                                    <img src="https://m.media-amazon.com/images/I/71H4ECbJMnL._SY350_QL65_.jpg" class="product-thumbnail" onerror="this.style.display='none'">
+                                    <div class="product-info">
+                                        <div class="product-title">Wfeynia Women's Leopard Baggy Jeans Wide Straight Leg Pants Vintage Y2K Grunge Clothes Hiphop Streetwear Emo Clothes (Leopard, S) at Amazon Women's Jeans store</div>
+                                        <div class="product-domain">🌐 www.amazon.com</div>
+                                    </div>
+                                </a>
+                            
+                        </div>
+                    
+                        <div class="product-category">
+                            <div class="category-title">
+                                tops
+                                <span class="result-count">3 results</span>
+                            </div>
+                            
+                                <a href="https://www.brandi.co.kr/products/94759926" target="_blank" class="product-link">
+                                    <img src="https://image.brandi.co.kr/cproduct/2023/03/09/SB000000000087678575_1678353274_image4_M.webp" class="product-thumbnail" onerror="this.style.display='none'">
+                                    <div class="product-info">
+                                        <div class="product-title">엔설프린팅크롭긴팔티(2color)</div>
+                                        <div class="product-domain">🌐 www.brandi.co.kr</div>
+                                    </div>
+                                </a>
+                            
+                                <a href="https://ccortti.co.kr/product/섹시-크롭-배색-스포티-여리핏-t-3-color/22/" target="_blank" class="product-link">
+                                    <img src="https://ecimg.cafe24img.com/pg452b25569491054/tls10717/web/upload/NNEditor/20230904/mobile/3c2b636aff92b763190cd3e95690bee0_1693805471.jpg" class="product-thumbnail" onerror="this.style.display='none'">
+                                    <div class="product-info">
+                                        <div class="product-title">섹시 크롭 배색 스포티 여리핏 T- 3 COLOR - CCORTTI</div>
+                                        <div class="product-domain">🌐 ccortti.co.kr</div>
+                                    </div>
+                                </a>
+                            
+                                <a href="https://m.lovesome-one.com/product/핀즈-레이어드-배색-스트링-골지-크롭-티셔츠3차-재진행/12211/" target="_blank" class="product-link">
+                                    <img src="https://m.lovesome-one.com/web/product/extra/big/202402/213ee401dc9c0867bcbe70a56c742e3b.jpg" class="product-thumbnail" onerror="this.style.display='none'">
+                                    <div class="product-info">
+                                        <div class="product-title">핀즈 레이어드 배색 스트링 골지 크롭 티셔츠(3차 재진행) - 러브썸원</div>
+                                        <div class="product-domain">🌐 m.lovesome-one.com</div>
+                                    </div>
+                                </a>
+                            
+                        </div>
+                    
+                    
+                        <div style="margin-top: 15px; padding: 12px; background: white; border-radius: 8px; font-size: 0.9em;">
+                            <strong>📊 Result Sources:</strong>
+                            <span class="source-badge source-gpt">GPT: 2</span>
+                            <span class="source-badge source-fallback">Fallback: 0</span>
+                        </div>
+                    
+                </div>
+            </div>
+        
+    </div>
+</body>
+</html>

@@ -13,15 +13,25 @@ import sys
 # Add parent directory to path so we can import from src
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
-# Try to import the cropper, but handle gracefully if not available yet
+# Lazy initialization - don't initialize at import time
+# Modal secrets are only available when functions run, not at module import
 try:
-    from crop_api import crop_image_from_url, get_cropper
-    CROPPER_AVAILABLE = get_cropper() is not None
+    print("🔧 Importing crop_api module...")
+    from crop_api import crop_image_from_url, get_cropper, analyze_image_only
+    print("✅ crop_api module imported successfully")
+    CROPPER_AVAILABLE = None  # Will be initialized on first request
 except (ImportError, Exception) as e:
-    print(f"⚠️ Custom item cropper not available: {e}")
+    print(f"⚠️ Failed to import crop_api: {e}")
+    import traceback
+    traceback.print_exc()
     print("⚠️ Using mock mode (returns original URL)")
     CROPPER_AVAILABLE = False
     crop_image_from_url = None
+    get_cropper = None
+    analyze_image_only = None
+
+# Global variable to store cropper instance after lazy init
+_cropper_instance = None
 
 app = FastAPI(title="Fashion Crop API")
 
@@ -39,7 +49,7 @@ class CropRequest(BaseModel):
     imageUrl: Optional[str] = None  # URL to image (optional if imageBase64 provided)
     imageBase64: Optional[str] = None  # Base64 encoded image (optional if imageUrl provided)
     categories: List[str]
-    count: int = 1  # Number of instances to find
+    count: Optional[int] = None  # Number of instances to find (defaults to len(categories) if not specified)
 
 
 class CropResponse(BaseModel):
@@ -47,13 +57,109 @@ class CropResponse(BaseModel):
     croppedImageUrls: Optional[List[str]] = None
 
 
+class AnalyzeRequest(BaseModel):
+    imageUrl: str  # URL to uploaded image
+
+
+class DetectedItem(BaseModel):
+    category: str  # e.g., "tops", "bottoms", "bag"
+    groundingdino_prompt: str  # e.g., "gray shirt"
+    description: str  # Detailed description
+
+
+class AnalyzeResponse(BaseModel):
+    items: List[DetectedItem]
+    cached: bool  # Whether result was from cache
+
+
+def _lazy_init_cropper():
+    """Lazy initialize cropper on first request (when Modal secrets are available)"""
+    global _cropper_instance, CROPPER_AVAILABLE
+    
+    if CROPPER_AVAILABLE is None:  # First time initialization
+        try:
+            print("🔧 Lazy initializing cropper (secrets should now be available)...")
+            _cropper_instance = get_cropper()
+            CROPPER_AVAILABLE = _cropper_instance is not None
+            print(f"🔧 Cropper initialization: {'SUCCESS' if CROPPER_AVAILABLE else 'FAILED'}")
+        except Exception as e:
+            print(f"❌ Cropper initialization failed: {e}")
+            import traceback
+            traceback.print_exc()
+            CROPPER_AVAILABLE = False
+            _cropper_instance = None
+    
+    return CROPPER_AVAILABLE
+
 @app.get("/")
 async def root():
+    cropper_available = _lazy_init_cropper()
     return {
         "status": "online",
-        "cropper_available": CROPPER_AVAILABLE,
+        "cropper_available": cropper_available,
         "endpoint": "/crop"
     }
+
+@app.get("/debug")
+async def debug():
+    """Debug endpoint to check environment and errors"""
+    import os
+    
+    # Try to initialize and catch the error
+    error_info = None
+    try:
+        _lazy_init_cropper()
+    except Exception as e:
+        error_info = str(e)
+    
+    return {
+        "cropper_available": CROPPER_AVAILABLE,
+        "cropper_instance": _cropper_instance is not None,
+        "has_openai_key": "OPENAI_API_KEY" in os.environ,
+        "has_supabase_url": "NEXT_PUBLIC_SUPABASE_URL" in os.environ,
+        "error": error_info,
+        "python_path": sys.path[:5],
+        "cwd": os.getcwd()
+    }
+
+
+@app.post("/analyze", response_model=AnalyzeResponse)
+async def analyze_image(request: AnalyzeRequest):
+    """
+    Analyze image with GPT-4o only (no cropping).
+    This runs immediately after upload to pre-analyze the image.
+    Results are cached for later use by /crop endpoint.
+    
+    Args:
+        request: AnalyzeRequest with imageUrl
+        
+    Returns:
+        Detected items with categories
+    """
+    try:
+        # Lazy initialize cropper on first request
+        _lazy_init_cropper()
+        
+        print(f"\n{'='*80}")
+        print(f"🔍 ANALYZE REQUEST RECEIVED")
+        print(f"   Image URL: {request.imageUrl}")
+        print(f"   CROPPER_AVAILABLE: {CROPPER_AVAILABLE}")
+        print(f"{'='*80}\n")
+        
+        if CROPPER_AVAILABLE and analyze_image_only:
+            print("✅ Analyzing image with GPT-4o...")
+            result = analyze_image_only(request.imageUrl)
+            print(f"✅ Analysis complete: {len(result['items'])} items detected")
+            return AnalyzeResponse(**result)
+        else:
+            print(f"⚠️ MOCK MODE: analyze not available")
+            return AnalyzeResponse(items=[], cached=False)
+            
+    except Exception as e:
+        print(f"❌ Analysis error: {e}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @app.post("/crop", response_model=CropResponse)
@@ -68,15 +174,21 @@ async def crop_image(request: CropRequest):
         Cropped image URL
     """
     try:
+        # Lazy initialize cropper on first request
+        _lazy_init_cropper()
+        
         # Validate input
         if not request.imageUrl and not request.imageBase64:
             raise ValueError("Either imageUrl or imageBase64 must be provided")
+        
+        # Default count to number of categories if not specified
+        count = request.count if request.count is not None else len(request.categories)
         
         print(f"\n{'='*80}")
         print(f"📥 CROP REQUEST RECEIVED")
         print(f"   Image URL: {request.imageUrl if request.imageUrl else '[base64 provided]'}")
         print(f"   Categories: {request.categories}")
-        print(f"   Count: {request.count}")
+        print(f"   Count: {count} (requested: {request.count}, categories: {len(request.categories)})")
         print(f"   CROPPER_AVAILABLE: {CROPPER_AVAILABLE}")
         print(f"   crop_image_from_url: {crop_image_from_url}")
         print(f"{'='*80}\n")
@@ -88,7 +200,7 @@ async def crop_image(request: CropRequest):
                 image_url=request.imageUrl,
                 image_base64=request.imageBase64,
                 categories=request.categories,
-                count=request.count
+                count=count
             )
             print(f"✅ Cropped successfully: {result}")
             

@@ -15,7 +15,7 @@ if (fs.existsSync(envPath)) {
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
 const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-const BACKEND_URL = 'https://heeyunjeon-levit--fashion-crop-api-cpu-fastapi-app-v2.modal.run'
+const BACKEND_URL = 'https://heeyunjeon-levit--fashion-crop-api-gpu-fastapi-app-v2.modal.run'
 const SEARCH_API_URL = 'http://localhost:3000/api/search'
 
 // HYBRID PROCESSING SETTINGS

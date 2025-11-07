@@ -56,25 +56,40 @@ class GPT4OFashionAnalyzer:
         - Prioritize the main outfit pieces over small details
 
         For each item you identify, provide:
-        1. A simple, descriptive name (e.g., "black jacket", "white shirt", "blue jeans")
-        2. A brief description of the item
-        3. A clean prompt for object detection (just the item name, no location words)
+        1. A "groundingdino_prompt" - ULTRA-SIMPLE detection keyword (2-3 words max, just color + item type)
+        2. A "description" - Detailed description with style, fit, material, etc.
 
-        IMPORTANT RULES:
+        CRITICAL: groundingdino_prompt vs description
+        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        groundingdino_prompt: "gray shirt"        ← SIMPLE! Just color + type
+        description: "light gray long sleeve henley shirt with buttons and loose fit"  ← DETAILED!
+
+        groundingdino_prompt: "black skirt"       ← SIMPLE! Just color + type  
+        description: "black high waist midi skirt with pleats"  ← DETAILED!
+
+        groundingdino_prompt: "white shoes"       ← SIMPLE! Just color + type
+        description: "white mesh slip-on shoes with red striped socks"  ← DETAILED!
+
+        RULES FOR groundingdino_prompt (MUST FOLLOW):
+        - MAXIMUM 2-3 words: [color] + [basic item type]
+        - NO style details (no "loose", "fitted", "pleated", "buttons")
+        - NO materials (no "mesh", "cotton", "leather")
+        - NO fit/length (no "midi", "high-waist", "long sleeve")
+        - Just: "gray shirt", "black pants", "white shoes", "blue jacket"
+
+        IMPORTANT:
         - Only detect items that are clearly visible and noticeable
-        - Use simple, clean item names (2-3 words max)
         - Do NOT include location words like "worn", "on", "in", "with"
         - Do NOT include body parts like "hand", "leg", "torso"
-        - Focus on the most important pieces that define the outfit
         - Be conservative - better to miss small items than detect questionable ones
 
-        Respond with a JSON object containing:
+        Respond with a JSON object:
         {
             "total_items": number,
             "items": [
                 {
-                    "groundingdino_prompt": "simple item name",
-                    "description": "brief description"
+                    "groundingdino_prompt": "color item",  // 2-3 words only!
+                    "description": "detailed style description"
                 }
             ]
         }
@@ -133,7 +148,7 @@ class GPT4OFashionAnalyzer:
             return None
     
     def _validate_and_clean_prompts(self, result):
-        """Validate and clean groundingdino_prompt fields"""
+        """Validate and clean groundingdino_prompt fields - FORCE simplification"""
         if not result or 'items' not in result:
             return result
         
@@ -150,23 +165,66 @@ class GPT4OFashionAnalyzer:
             if 'groundingdino_prompt' not in item:
                 continue
             
-            prompt = item['groundingdino_prompt'].strip().lower()
+            # FORCE SIMPLIFY: Extract only first 2-3 words (color + item type)
+            # GPT-4o often ignores instructions, so we enforce it here
+            original = item['groundingdino_prompt']
             
-            # Basic cleaning
-            prompt = prompt.replace('worn', '').replace('on', '').replace('in', '').replace('with', '')
-            prompt = prompt.replace('the', '').replace('a', '').replace('an', '')
-            prompt = ' '.join(prompt.split())  # Remove extra spaces
+            # Hard stop words - ALWAYS break when we hit these
+            hard_stop_words = ['with', 'and', 'featuring', 'in', 'on']
             
-            # Limit to 3 words max
-            words = prompt.split()
-            if len(words) > 3:
-                prompt = ' '.join(words[:3])
+            # Detail descriptor words - stop if we already have 2+ words
+            detail_words = [
+                'style', 'design', 'fit',
+                'loose', 'tight', 'fitted', 'oversized', 'slim',
+                'button', 'buttons', 'buttoned', 'zipper', 'zip',
+                'cuffs', 'hem', 'pocket', 'pockets',
+                'strap', 'straps', 'laces', 'toe', 'heel'
+            ]
+            
+            # Split into words and keep only first 2-3 words before any detail words
+            words = original.lower().split()
+            simple_words = []
+            
+            # Strategy: Keep [color] [material] [item_type] (max 3 words)
+            # Stop at "with", "and", or detail descriptors
+            for i, word in enumerate(words[:6]):  # Check max first 6 words
+                # Hard stop words (always break immediately)
+                if word in hard_stop_words:
+                    print(f"   🛑 Hard stop at '{word}'")
+                    break
+                # Detail descriptors (break only if we already have 2+ words)
+                if word in detail_words and len(simple_words) >= 2:
+                    print(f"   🛑 Detail stop at '{word}' (have {len(simple_words)} words)")
+                    break
+                simple_words.append(word)
+                if len(simple_words) >= 3:  # Max 3 words
+                    break
+            
+            # Fallback: if we got nothing or just 1 word, take first 2 words
+            if len(simple_words) < 2 and len(words) >= 2:
+                simple_words = words[:2]
+            elif len(simple_words) == 0:
+                simple_words = [words[0]] if words else [original]
+            
+            simplified = ' '.join(simple_words)
+            
+            # If we simplified it, update and log
+            if simplified.lower() != original.lower():
+                print(f"🔧 Simplified prompt: '{original}' → '{simplified}'")
+            else:
+                print(f"✓ Prompt already simple: '{original}'")
+            
+            # Final cleanup: remove extra spaces and normalize case
+            simplified = simplified.strip().lower()
+            simplified = ' '.join(simplified.split())  # Remove extra spaces
             
             # Skip if too short or empty
-            if len(prompt) < 2:
+            if len(simplified) < 2:
+                print(f"⚠️ Skipping item with too-short prompt: '{simplified}'")
                 continue
             
-            item['groundingdino_prompt'] = prompt
+            # Save the final simplified prompt
+            item['groundingdino_prompt'] = simplified
             cleaned_items.append(item)
         
         result['items'] = cleaned_items

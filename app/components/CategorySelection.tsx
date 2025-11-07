@@ -1,21 +1,41 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { categories } from '../constants/categories'
+
+export interface DetectedItem {
+  category: string
+  groundingdino_prompt: string
+  description: string
+}
 
 interface CategorySelectionProps {
   imageUrl: string
+  detectedItems?: DetectedItem[]
   onCategoriesSelected: (categories: string[]) => void
   onBack: () => void
 }
 
 export default function CategorySelection({
   imageUrl,
+  detectedItems = [],
   onCategoriesSelected,
   onBack,
 }: CategorySelectionProps) {
   // Track category counts instead of simple selection
   const [categoryCounts, setCategoryCounts] = useState<Record<string, number>>({})
+
+  // Pre-select detected items on mount
+  useEffect(() => {
+    if (detectedItems.length > 0) {
+      const counts: Record<string, number> = {}
+      detectedItems.forEach(item => {
+        counts[item.category] = (counts[item.category] || 0) + 1
+      })
+      setCategoryCounts(counts)
+      console.log('✅ Pre-selected categories:', counts)
+    }
+  }, [detectedItems])
 
   const toggleCategory = (categoryId: string) => {
     setCategoryCounts((prev) => {
@@ -75,11 +95,23 @@ export default function CategorySelection({
     }
   }
 
+  // Check if category was AI-detected
+  const isAIDetected = (categoryId: string) => {
+    return detectedItems.some(item => item.category === categoryId)
+  }
+
   return (
     <div className="max-w-2xl mx-auto mt-8">
       <h1 className="text-4xl font-bold text-gray-800 mb-2 text-center">
         아이템 선택
       </h1>
+      {detectedItems.length > 0 && (
+        <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-3 mb-4 text-center">
+          <p className="text-indigo-700 font-medium">
+            🤖 AI가 {detectedItems.length}개의 아이템을 찾았어요!
+          </p>
+        </div>
+      )}
       <p className="text-gray-600 text-center mb-8">
         클릭하여 선택 후 +/- 버튼으로 수량 조정
       </p>
@@ -113,6 +145,11 @@ export default function CategorySelection({
                 <div className="flex items-center justify-between">
                   <span className="text-2xl font-medium text-gray-800 flex items-center gap-3">
                     {category.label}
+                    {isAIDetected(category.id) && (
+                      <span className="text-xs bg-indigo-600 text-white px-2 py-1 rounded-full font-medium">
+                        AI
+                      </span>
+                    )}
                     {isSelected && (
                       <span className="text-lg font-semibold text-indigo-600">
                         ×{count}
