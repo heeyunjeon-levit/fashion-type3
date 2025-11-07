@@ -92,10 +92,209 @@ def _clean_cache():
     if expired_keys:
         print(f"🧹 Cleaned {len(expired_keys)} expired cache entries")
 
+def analyze_and_crop_all(image_url: str) -> dict:
+    """
+    Run GPT-4o analysis + crop ALL detected items immediately.
+    This is called right after upload to show users what was found.
+    
+    Args:
+        image_url: Public URL of the uploaded image
+        
+    Returns:
+        Dict with detected items and their crops:
+        {
+            "items": [
+                {
+                    "category": "tops",
+                    "groundingdino_prompt": "gray shirt",
+                    "description": "light gray long sleeve shirt",
+                    "croppedImageUrl": "https://...crop.jpg",
+                    "confidence": 0.95
+                },
+                ...
+            ],
+            "cached": false
+        }
+    """
+    import requests
+    from io import BytesIO
+    from PIL import Image
+    
+    print(f"🔍 Analyzing and cropping image: {image_url}")
+    
+    # Check cache first for GPT result
+    _clean_cache()
+    cached_gpt_result = None
+    if image_url in _gpt_cache:
+        print(f"✅ Using cached GPT result for {image_url}")
+        cached_gpt_result = _gpt_cache[image_url]["result"]
+    
+    # Get cropper (for GPT analyzer access)
+    cropper = get_cropper()
+    if cropper is None:
+        print("❌ Cropper not available")
+        return {"items": [], "cached": False}
+    
+    # Download image
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+    }
+    response = requests.get(image_url, headers=headers, timeout=30)
+    response.raise_for_status()
+    
+    # Load image
+    image = Image.open(BytesIO(response.content)).convert("RGB")
+    image_width, image_height = image.size
+    print(f"✅ Image loaded: {image_width}x{image_height}")
+    
+    # Step 1: GPT analysis (or use cached)
+    if cached_gpt_result:
+        print("🚀 Using cached GPT result")
+        gpt_result = cached_gpt_result
+    else:
+        # Save temporarily for GPT analysis
+        with tempfile.NamedTemporaryFile(suffix='.jpg', delete=False) as tmp_file:
+            image.save(tmp_file.name, 'JPEG')
+            temp_image_path = tmp_file.name
+        
+        try:
+            print("🤖 Running GPT-4o analysis...")
+            gpt_result = cropper.gpt_analyzer.analyze_fashion_items(temp_image_path)
+        finally:
+            if os.path.exists(temp_image_path):
+                os.unlink(temp_image_path)
+    
+    if not gpt_result or 'items' not in gpt_result:
+        print("❌ GPT analysis failed")
+        return {"items": [], "cached": False}
+    
+    print(f"✅ GPT detected {len(gpt_result['items'])} items")
+    
+    # Step 2: Crop ALL detected items with GroundingDINO
+    print("✂️  Cropping all detected items...")
+    
+    cropped_items = []
+    output_dir = tempfile.mkdtemp()
+    
+    try:
+        for idx, item in enumerate(gpt_result['items']):
+            prompt = item['groundingdino_prompt']
+            description = item.get('description', '')
+            
+            print(f"   [{idx+1}/{len(gpt_result['items'])}] Cropping: '{prompt}'")
+            
+            # Prepare inputs for GroundingDINO
+            text_labels = [[prompt]]
+            inputs = cropper.processor(
+                images=image,
+                text=text_labels,
+                return_tensors="pt"
+            ).to(cropper.device)
+            
+            # Run inference
+            import torch
+            with torch.no_grad():
+                outputs = cropper.model(**inputs)
+            
+            # Post-process results
+            results = cropper.processor.post_process_grounded_object_detection(
+                outputs,
+                threshold=0.15,
+                text_threshold=0.15,
+                target_sizes=[(image_height, image_width)]
+            )
+            
+            if len(results) == 0 or len(results[0]["boxes"]) == 0:
+                print(f"   ⚠️  No detection for '{prompt}'")
+                continue
+            
+            # Use highest confidence detection
+            result = results[0]
+            best_idx = result["scores"].argmax()
+            box = result["boxes"][best_idx].tolist()
+            confidence = result["scores"][best_idx].item()
+            
+            print(f"   ✅ Detected with confidence {confidence:.3f}")
+            
+            # Add margin to bbox
+            x1, y1, x2, y2 = box
+            margin_ratio = 0.05
+            margin_x = (x2 - x1) * margin_ratio
+            margin_y = (y2 - y1) * margin_ratio
+            
+            crop_box = [
+                max(0, x1 - margin_x),
+                max(0, y1 - margin_y),
+                min(image_width, x2 + margin_x),
+                min(image_height, y2 + margin_y)
+            ]
+            
+            # Crop and save
+            cropped = image.crop(crop_box)
+            clean_prompt = prompt.replace(' ', '_').replace('-', '_')
+            output_path = os.path.join(output_dir, f"item{idx+1}_{clean_prompt}_crop.jpg")
+            cropped.save(output_path, 'JPEG', quality=95)
+            
+            # Upload to Supabase
+            with open(output_path, 'rb') as f:
+                cropped_bytes = f.read()
+            
+            cropped_url = upload_image_to_supabase(cropped_bytes, original_filename=f"item{idx+1}_{clean_prompt}_crop.jpg")
+            print(f"   💾 Uploaded: {cropped_url}")
+            
+            # Categorize item
+            category_keywords = {
+                'tops': ['shirt', 'blouse', 'sweater', 'top', 'tee', 'hoodie', 'jacket', 'cardigan', 'vest', 'coat'],
+                'bottoms': ['pants', 'jeans', 'skirt', 'shorts', 'trousers', 'leggings'],
+                'dress': ['dress', 'gown'],
+                'shoes': ['shoe', 'sneaker', 'boot', 'sandal', 'heel', 'loafer'],
+                'bag': ['bag', 'purse', 'backpack', 'tote', 'clutch', 'handbag'],
+                'accessory': ['necklace', 'bracelet', 'earring', 'watch', 'hat', 'scarf', 'belt', 'sunglasses', 'ring', 'jewelry']
+            }
+            
+            prompt_lower = prompt.lower()
+            desc_lower = description.lower()
+            matched_category = None
+            
+            for category, keywords in category_keywords.items():
+                if any(keyword in prompt_lower or keyword in desc_lower for keyword in keywords):
+                    matched_category = category
+                    break
+            
+            if matched_category:
+                cropped_items.append({
+                    "category": matched_category,
+                    "groundingdino_prompt": prompt,
+                    "description": description,
+                    "croppedImageUrl": cropped_url,
+                    "confidence": round(confidence, 3)
+                })
+                print(f"   ✅ {matched_category}: {prompt} (conf: {confidence:.3f})")
+        
+        print(f"🏆 Cropped {len(cropped_items)}/{len(gpt_result['items'])} items successfully")
+        
+    finally:
+        # Clean up temp directory
+        shutil.rmtree(output_dir, ignore_errors=True)
+    
+    # Cache the GPT result (not the crops, those are one-time)
+    if not cached_gpt_result:
+        _gpt_cache[image_url] = {
+            "result": gpt_result,
+            "items": cropped_items,  # Store categorized items
+            "timestamp": datetime.now()
+        }
+        print(f"💾 Cached GPT result for {image_url}")
+    
+    return {
+        "items": cropped_items,
+        "cached": bool(cached_gpt_result)
+    }
+
 def analyze_image_only(image_url: str) -> dict:
     """
     Run GPT-4o analysis only (no cropping) and cache the result.
-    This is called immediately after upload to pre-analyze the image.
+    DEPRECATED: Use analyze_and_crop_all() instead for better UX.
     
     Args:
         image_url: Public URL of the uploaded image

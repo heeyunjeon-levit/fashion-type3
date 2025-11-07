@@ -17,7 +17,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 # Modal secrets are only available when functions run, not at module import
 try:
     print("🔧 Importing crop_api module...")
-    from crop_api import crop_image_from_url, get_cropper, analyze_image_only
+    from crop_api import crop_image_from_url, get_cropper, analyze_image_only, analyze_and_crop_all
     print("✅ crop_api module imported successfully")
     CROPPER_AVAILABLE = None  # Will be initialized on first request
 except (ImportError, Exception) as e:
@@ -29,6 +29,7 @@ except (ImportError, Exception) as e:
     crop_image_from_url = None
     get_cropper = None
     analyze_image_only = None
+    analyze_and_crop_all = None
 
 # Global variable to store cropper instance after lazy init
 _cropper_instance = None
@@ -65,6 +66,8 @@ class DetectedItem(BaseModel):
     category: str  # e.g., "tops", "bottoms", "bag"
     groundingdino_prompt: str  # e.g., "gray shirt"
     description: str  # Detailed description
+    croppedImageUrl: Optional[str] = None  # URL to cropped image
+    confidence: Optional[float] = None  # Detection confidence (0-1)
 
 
 class AnalyzeResponse(BaseModel):
@@ -126,30 +129,30 @@ async def debug():
 @app.post("/analyze", response_model=AnalyzeResponse)
 async def analyze_image(request: AnalyzeRequest):
     """
-    Analyze image with GPT-4o only (no cropping).
-    This runs immediately after upload to pre-analyze the image.
-    Results are cached for later use by /crop endpoint.
+    Analyze image with GPT-4o AND crop all detected items.
+    This runs immediately after upload to show users what was found.
+    Results include cropped image URLs for visual selection.
     
     Args:
         request: AnalyzeRequest with imageUrl
         
     Returns:
-        Detected items with categories
+        Detected items with categories and cropped images
     """
     try:
         # Lazy initialize cropper on first request
         _lazy_init_cropper()
         
         print(f"\n{'='*80}")
-        print(f"🔍 ANALYZE REQUEST RECEIVED")
+        print(f"🔍 ANALYZE + CROP REQUEST RECEIVED")
         print(f"   Image URL: {request.imageUrl}")
         print(f"   CROPPER_AVAILABLE: {CROPPER_AVAILABLE}")
         print(f"{'='*80}\n")
         
-        if CROPPER_AVAILABLE and analyze_image_only:
-            print("✅ Analyzing image with GPT-4o...")
-            result = analyze_image_only(request.imageUrl)
-            print(f"✅ Analysis complete: {len(result['items'])} items detected")
+        if CROPPER_AVAILABLE and analyze_and_crop_all:
+            print("✅ Analyzing and cropping image...")
+            result = analyze_and_crop_all(request.imageUrl)
+            print(f"✅ Complete: {len(result['items'])} items detected and cropped")
             return AnalyzeResponse(**result)
         else:
             print(f"⚠️ MOCK MODE: analyze not available")

@@ -6,6 +6,8 @@ export interface DetectedItem {
   category: string  // e.g., "tops", "bottoms", "bag"
   groundingdino_prompt: string  // e.g., "gray shirt"
   description: string  // Detailed description
+  croppedImageUrl?: string  // URL to cropped image
+  confidence?: number  // Detection confidence (0-1)
 }
 
 export interface AnalyzeResponse {
@@ -25,7 +27,7 @@ export async function POST(request: NextRequest) {
     }
 
     console.log('\n================================================================================')
-    console.log('=== ANALYZE REQUEST STARTED (GPT-only pre-analysis) ===')
+    console.log('=== ANALYZE + CROP REQUEST STARTED (GPT + GroundingDINO) ===')
     console.log(`🖼️ Image URL: ${imageUrl}`)
     console.log(`🎯 Backend: ${BACKEND_URL}`)
     console.log('================================================================================\n')
