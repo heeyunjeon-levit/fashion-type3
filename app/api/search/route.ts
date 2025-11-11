@@ -74,8 +74,10 @@ export async function POST(request: NextRequest) {
             },
             body: JSON.stringify({
               url: originalImageUrl,
-              gl: 'kr',
-              hl: 'ko',
+              gl: 'kr',  // Korea region
+              hl: 'ko',  // Korean language
+              // Add shopping context to bias toward e-commerce
+              q: 'buy fashion clothes online shopping',
             }),
           })
         })
@@ -101,9 +103,25 @@ export async function POST(request: NextRequest) {
           }
         }
 
+        // EARLY FILTER: Remove non-shopping sites from full image results too
+        const nonShoppingSites = [
+          'theqoo.net', 'pann.nate.com', 'dcinside.com', 'fmkorea.com', 'clien.net',
+          'blog.naver.com', 'tistory.com', 'medium.com', 'blogger.com',
+          'youtube.com', 'youtu.be', 'soundcloud.com', 'spotify.com',
+          'naver.com/news', 'daum.net/news', 'wikipedia.org', 'namu.wiki'
+        ]
+        
+        const cleanedFullImageResults = allFullImageResults.filter((item: any) => {
+          if (!item?.link) return false
+          const linkLower = item.link.toLowerCase()
+          return !nonShoppingSites.some(domain => linkLower.includes(domain))
+        })
+        
+        console.log(`   🧹 Full image filtered: ${allFullImageResults.length} → ${cleanedFullImageResults.length} results`)
+
         // Deduplicate full image results
         fullImageResults = Array.from(
-          new Map(allFullImageResults.map(item => [item.link, item])).values()
+          new Map(cleanedFullImageResults.map(item => [item.link, item])).values()
         )
         const processingTime = (Date.now() - processingStart) / 1000
         timingData.processing_overhead_time += processingTime
@@ -134,6 +152,7 @@ export async function POST(request: NextRequest) {
       
       try {
         // Call Serper Lens 3 times for best result coverage
+        // Add shopping context to bias results toward e-commerce sites
         const serperCallPromises = Array.from({ length: 3 }, (_, i) => {
           console.log(`   Run ${i + 1}/3...`)
           return fetch('https://google.serper.dev/lens', {
@@ -144,8 +163,10 @@ export async function POST(request: NextRequest) {
             },
             body: JSON.stringify({
               url: croppedImageUrl,
-              gl: 'kr',
-              hl: 'ko',
+              gl: 'kr',  // Korea region
+              hl: 'ko',  // Korean language
+              // Add shopping context query to bias toward e-commerce results
+              q: `buy ${categoryKey} online shopping product`,
             }),
           })
         })
@@ -173,9 +194,38 @@ export async function POST(request: NextRequest) {
           }
         }
 
+        // EARLY FILTER: Remove non-shopping sites immediately after Serper
+        const nonShoppingSites = [
+          'theqoo.net', 'pann.nate.com', 'dcinside.com', 'fmkorea.com', 'clien.net',
+          'ppomppu.co.kr', 'bobaedream.co.kr', 'mlbpark.donga.com', 'ruliweb.com',
+          'instiz.net', 'ygosu.com', 'ilbe.com', 'todayhumor.co.kr',
+          'blog.naver.com', 'tistory.com', 'medium.com', 'blogger.com', 'wordpress.com',
+          'brunch.co.kr', 'velog.io', 'oopy.io',
+          'youtube.com', 'youtu.be', 'soundcloud.com', 'spotify.com', 'apple.com/music',
+          'vimeo.com', 'twitch.tv', 'tiktok.com',
+          'naver.com/news', 'daum.net/news', 'joins.com', 'chosun.com', 'donga.com',
+          'hankyung.com', 'mk.co.kr', 'sedaily.com', 'mt.co.kr', 'hani.co.kr',
+          'wikipedia.org', 'namu.wiki', 'wikiwand.com',
+          'quora.com', 'reddit.com', 'stackoverflow.com', 'kin.naver.com',
+          'drive.google.com', 'dropbox.com', 'mega.nz'
+        ]
+        
+        const cleanedResults = allOrganicResults.filter((item: any) => {
+          if (!item?.link) return false
+          const linkLower = item.link.toLowerCase()
+          const isNonShopping = nonShoppingSites.some(domain => linkLower.includes(domain))
+          if (isNonShopping) {
+            console.log(`   🗑️  Filtered non-shopping: ${item.link.substring(0, 50)}...`)
+            return false
+          }
+          return true
+        })
+        
+        console.log(`   🧹 Filtered: ${allOrganicResults.length} → ${cleanedResults.length} results (removed ${allOrganicResults.length - cleanedResults.length} non-shopping sites)`)
+
         // Deduplicate by URL and keep unique results from cropped image
         const uniqueCroppedResults = Array.from(
-          new Map(allOrganicResults.map(item => [item.link, item])).values()
+          new Map(cleanedResults.map(item => [item.link, item])).values()
         )
         
         console.log(`📊 Cropped image search: ${uniqueCroppedResults.length} unique results`)
