@@ -131,6 +131,9 @@ def analyze_and_crop_all(image_url: str) -> dict:
     total_start = time.time()
     gpt4o_time = 0
     dino_time = 0
+    download_time = 0
+    processing_time = 0
+    upload_time = 0
     
     # Check cache first for GPT result
     _clean_cache()
@@ -146,6 +149,7 @@ def analyze_and_crop_all(image_url: str) -> dict:
         return {"items": [], "cached": False}
     
     # Download image
+    download_start = time.time()
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
     }
@@ -154,8 +158,10 @@ def analyze_and_crop_all(image_url: str) -> dict:
     
     # Load image
     image = Image.open(BytesIO(response.content)).convert("RGB")
+    download_time = time.time() - download_start
+    
     image_width, image_height = image.size
-    print(f"✅ Image loaded: {image_width}x{image_height}")
+    print(f"✅ Image loaded: {image_width}x{image_height} (download: {download_time:.3f}s)")
     
     # Step 1: GPT analysis (or use cached)
     if cached_gpt_result:
@@ -233,7 +239,8 @@ def analyze_and_crop_all(image_url: str) -> dict:
             
             print(f"   ✅ Detected with confidence {confidence:.3f}")
             
-            # Add margin to bbox
+            # Add margin to bbox + crop (processing time)
+            process_start = time.time()
             x1, y1, x2, y2 = box
             margin_ratio = 0.05
             margin_x = (x2 - x1) * margin_ratio
@@ -252,11 +259,16 @@ def analyze_and_crop_all(image_url: str) -> dict:
             output_path = os.path.join(output_dir, f"item{idx+1}_{clean_prompt}_crop.jpg")
             cropped.save(output_path, 'JPEG', quality=95)
             
-            # Upload to Supabase
+            # Read cropped bytes
             with open(output_path, 'rb') as f:
                 cropped_bytes = f.read()
             
+            processing_time += time.time() - process_start
+            
+            # Upload to Supabase
+            upload_start = time.time()
             cropped_url = upload_image_to_supabase(cropped_bytes, original_filename=f"item{idx+1}_{clean_prompt}_crop.jpg")
+            upload_time += time.time() - upload_start
             print(f"   💾 Uploaded: {cropped_url}")
             
             # Categorize item
@@ -306,12 +318,19 @@ def analyze_and_crop_all(image_url: str) -> dict:
     # Calculate total time
     total_time = time.time() - total_start
     
+    # Calculate overhead (everything except GPT & DINO)
+    overhead_time = total_time - gpt4o_time - dino_time
+    
     # Print timing summary
     print(f"\n⏱️  TIMING SUMMARY:")
     print(f"   GPT-4o Vision API: {gpt4o_time:.2f}s")
     print(f"   GroundingDINO (total): {dino_time:.3f}s")
     if len(gpt_result['items']) > 0:
         print(f"   GroundingDINO (avg per item): {dino_time/len(gpt_result['items']):.3f}s")
+    print(f"   Image Download: {download_time:.3f}s")
+    print(f"   Image Processing: {processing_time:.3f}s")
+    print(f"   Supabase Uploads: {upload_time:.3f}s")
+    print(f"   Other Overhead: {(overhead_time - download_time - processing_time - upload_time):.3f}s")
     print(f"   Total processing: {total_time:.2f}s\n")
     
     return {
@@ -320,6 +339,10 @@ def analyze_and_crop_all(image_url: str) -> dict:
         "timing": {
             "gpt4o_seconds": round(gpt4o_time, 2),
             "groundingdino_seconds": round(dino_time, 3),
+            "download_seconds": round(download_time, 3),
+            "processing_seconds": round(processing_time, 3),
+            "upload_seconds": round(upload_time, 3),
+            "overhead_seconds": round(overhead_time - download_time - processing_time - upload_time, 3),
             "total_seconds": round(total_time, 2)
         }
     }

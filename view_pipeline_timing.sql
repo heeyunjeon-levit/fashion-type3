@@ -19,6 +19,10 @@ SELECT
   'Backend (GPT-4o + GroundingDINO)' as stage,
   (e1.event_data->>'gpt4o_seconds')::float as gpt4o_seconds,
   (e1.event_data->>'groundingdino_seconds')::float as groundingdino_seconds,
+  (e1.event_data->>'download_seconds')::float as download_seconds,
+  (e1.event_data->>'processing_seconds')::float as processing_seconds,
+  (e1.event_data->>'upload_seconds')::float as upload_seconds,
+  (e1.event_data->>'overhead_seconds')::float as overhead_seconds,
   (e1.event_data->>'total_seconds')::float as backend_total_seconds,
   NULL::float as serper_seconds,
   NULL::float as gpt4_turbo_seconds,
@@ -32,6 +36,10 @@ SELECT
   'Search API (Serper + GPT-4 Turbo)' as stage,
   NULL as gpt4o_seconds,
   NULL as groundingdino_seconds,
+  NULL as download_seconds,
+  NULL as processing_seconds,
+  NULL as upload_seconds,
+  NULL as overhead_seconds,
   NULL as backend_total_seconds,
   (e2.event_data->>'serper_seconds')::float as serper_seconds,
   (e2.event_data->>'gpt4_turbo_seconds')::float as gpt4_turbo_seconds,
@@ -181,4 +189,27 @@ FROM backend_timing b
 FULL OUTER JOIN search_timing s ON b.session_id = s.session_id
 ORDER BY COALESCE(b.created_at, s.created_at) DESC
 LIMIT 10;
+
+-- 7. Backend Timing Breakdown with Percentages (last 20)
+-- Shows exactly where time is spent in the backend pipeline
+SELECT 
+  session_id,
+  created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Seoul' as created_at_kst,
+  (event_data->>'gpt4o_seconds')::float as gpt4o_seconds,
+  (event_data->>'groundingdino_seconds')::float as dino_seconds,
+  (event_data->>'download_seconds')::float as download_seconds,
+  (event_data->>'processing_seconds')::float as processing_seconds,
+  (event_data->>'upload_seconds')::float as upload_seconds,
+  (event_data->>'overhead_seconds')::float as overhead_seconds,
+  (event_data->>'total_seconds')::float as total_seconds,
+  -- Percentages
+  ROUND(((event_data->>'gpt4o_seconds')::float / NULLIF((event_data->>'total_seconds')::float, 0) * 100)::numeric, 1) as gpt4o_pct,
+  ROUND(((event_data->>'groundingdino_seconds')::float / NULLIF((event_data->>'total_seconds')::float, 0) * 100)::numeric, 1) as dino_pct,
+  ROUND(((event_data->>'upload_seconds')::float / NULLIF((event_data->>'total_seconds')::float, 0) * 100)::numeric, 1) as upload_pct,
+  ROUND((((event_data->>'download_seconds')::float + (event_data->>'processing_seconds')::float + (event_data->>'overhead_seconds')::float) / NULLIF((event_data->>'total_seconds')::float, 0) * 100)::numeric, 1) as other_pct
+FROM events
+WHERE event_type = 'backend_timing'
+  AND event_data IS NOT NULL
+ORDER BY created_at DESC
+LIMIT 20;
 

@@ -66,6 +66,10 @@ export default function Home() {
           console.log('⏱️  Backend Timing:', {
             gpt4o: `${analyzeData.timing.gpt4o_seconds}s`,
             groundingdino: `${analyzeData.timing.groundingdino_seconds}s`,
+            download: `${analyzeData.timing.download_seconds}s`,
+            processing: `${analyzeData.timing.processing_seconds}s`,
+            upload: `${analyzeData.timing.upload_seconds}s`,
+            overhead: `${analyzeData.timing.overhead_seconds}s`,
             total: `${analyzeData.timing.total_seconds}s`
           })
         }
@@ -80,6 +84,10 @@ export default function Home() {
             await sessionManager.logEvent('backend_timing', {
               gpt4o_seconds: analyzeData.timing.gpt4o_seconds,
               groundingdino_seconds: analyzeData.timing.groundingdino_seconds,
+              download_seconds: analyzeData.timing.download_seconds,
+              processing_seconds: analyzeData.timing.processing_seconds,
+              upload_seconds: analyzeData.timing.upload_seconds,
+              overhead_seconds: analyzeData.timing.overhead_seconds,
               total_seconds: analyzeData.timing.total_seconds
             })
           }

@@ -70,9 +70,20 @@ class DetectedItem(BaseModel):
     confidence: Optional[float] = None  # Detection confidence (0-1)
 
 
+class TimingData(BaseModel):
+    gpt4o_seconds: float
+    groundingdino_seconds: float
+    download_seconds: float
+    processing_seconds: float
+    upload_seconds: float
+    overhead_seconds: float
+    total_seconds: float
+
+
 class AnalyzeResponse(BaseModel):
     items: List[DetectedItem]
     cached: bool  # Whether result was from cache
+    timing: Optional[TimingData] = None  # Backend timing data
 
 
 def _lazy_init_cropper():
