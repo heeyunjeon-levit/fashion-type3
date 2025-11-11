@@ -337,10 +337,10 @@ export default function ResultsBottomSheet({
             <div className="flex flex-col items-center justify-center py-16">
               <p className="text-gray-600 text-lg mb-4">결과를 찾을 수 없습니다</p>
               <button
-                onClick={onReset}
-                className="bg-gray-100 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-colors"
+                onClick={onBack || onReset}
+                className="bg-gray-100 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-colors active:scale-95"
               >
-                다시 시도하기
+                다시 선택하기
               </button>
             </div>
           ) : (
@@ -423,16 +423,16 @@ export default function ResultsBottomSheet({
 
         {/* Bottom action bar - only show when not at peek */}
         {sheetPosition !== 'peek' && (
-          <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 flex gap-3">
+          <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 flex gap-3 z-20">
             <button
-              onClick={onReset}
-              className="flex-1 bg-gray-100 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-200 transition-colors"
+              onClick={onBack || onReset}
+              className="flex-1 bg-gray-100 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-200 transition-colors active:scale-95"
             >
-              새로 시작
+              다시 선택
             </button>
             <button
               onClick={() => setSheetPosition(sheetPosition === 'full' ? 'half' : 'full')}
-              className="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg"
+              className="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg active:scale-95"
             >
               {sheetPosition === 'full' ? '접기' : '전체보기'}
             </button>
