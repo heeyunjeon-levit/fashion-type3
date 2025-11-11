@@ -127,12 +127,13 @@ export default function ResultsBottomSheet({
     }
   }
 
-  // Mouse events
+  // Mouse events - only for handle
   const handleMouseDown = (e: React.MouseEvent) => {
+    e.stopPropagation() // Prevent event from bubbling
     handleDragStart(e.clientY)
   }
 
-  const handleMouseMove = (e: React.MouseEvent) => {
+  const handleMouseMove = (e: MouseEvent) => {
     handleDragMove(e.clientY)
   }
 
@@ -140,20 +141,38 @@ export default function ResultsBottomSheet({
     handleDragEnd()
   }
 
-  // Touch events
+  // Touch events - only for handle
   const handleTouchStart = (e: React.TouchEvent) => {
-    e.preventDefault() // Prevent pull-to-refresh
+    e.stopPropagation() // Prevent event from bubbling
     handleDragStart(e.touches[0].clientY)
   }
 
-  const handleTouchMove = (e: React.TouchEvent) => {
-    e.preventDefault() // Prevent pull-to-refresh and scrolling
+  const handleTouchMove = (e: TouchEvent) => {
+    if (!isDragging) return
+    e.preventDefault() // Only prevent when actually dragging
     handleDragMove(e.touches[0].clientY)
   }
 
   const handleTouchEnd = () => {
     handleDragEnd()
   }
+
+  // Attach global mouse/touch listeners when dragging
+  useEffect(() => {
+    if (isDragging) {
+      window.addEventListener('mousemove', handleMouseMove)
+      window.addEventListener('mouseup', handleMouseUp)
+      window.addEventListener('touchmove', handleTouchMove, { passive: false })
+      window.addEventListener('touchend', handleTouchEnd)
+      
+      return () => {
+        window.removeEventListener('mousemove', handleMouseMove)
+        window.removeEventListener('mouseup', handleMouseUp)
+        window.removeEventListener('touchmove', handleTouchMove)
+        window.removeEventListener('touchend', handleTouchEnd)
+      }
+    }
+  }, [isDragging, currentY])
 
   // Prevent drag when scrolling content + prevent pull-to-refresh
   useEffect(() => {
@@ -284,14 +303,9 @@ export default function ResultsBottomSheet({
           filter: isBlurred ? 'blur(4px)' : 'none',
           pointerEvents: isBlurred ? 'none' : 'auto',
           transition: isDragging ? 'none' : 'top 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-          willChange: 'top',
-          touchAction: 'none' // Prevent pull-to-refresh on sheet
+          willChange: 'top'
+          // touchAction removed - allow scrolling inside
         }}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseUp}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
       >
         {/* Blur overlay for unpaid access */}
         {isBlurred && (
@@ -304,10 +318,10 @@ export default function ResultsBottomSheet({
           </div>
         )}
 
-        {/* Drag handle */}
+        {/* Drag handle - ONLY area that controls sheet position */}
         <div 
           className="flex justify-center pt-3 pb-2 cursor-grab active:cursor-grabbing"
-          style={{ touchAction: 'none' }} // Prevent pull-to-refresh on handle
+          style={{ touchAction: 'none', userSelect: 'none' }}
           onMouseDown={handleMouseDown}
           onTouchStart={handleTouchStart}
         >
