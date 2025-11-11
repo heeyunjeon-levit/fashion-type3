@@ -34,6 +34,16 @@ export default function Results({ results, isLoading, croppedImages, onReset, se
     }
   }, [])
 
+  // Debug logging
+  useEffect(() => {
+    console.log('🔍 Results Component State:', {
+      showPhoneModal,
+      phoneSubmitted,
+      hasSessionManager: !!sessionManager,
+      isReturningUser
+    })
+  }, [showPhoneModal, phoneSubmitted, sessionManager, isReturningUser])
+
   const handlePhoneSubmit = async (phoneNumber: string) => {
     if (!sessionManager) return
     
@@ -100,16 +110,6 @@ export default function Results({ results, isLoading, croppedImages, onReset, se
   }
 
   const totalCroppedImages = croppedImages ? Object.keys(croppedImages).length : 0
-
-  // Debug logging
-  useEffect(() => {
-    console.log('🔍 Results Component State:', {
-      showPhoneModal,
-      phoneSubmitted,
-      hasSessionManager: !!sessionManager,
-      isReturningUser
-    })
-  }, [showPhoneModal, phoneSubmitted, sessionManager, isReturningUser])
 
   return (
     <>

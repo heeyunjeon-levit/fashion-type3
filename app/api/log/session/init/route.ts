@@ -1,14 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY! // Use service role key for backend operations
-)
+function getSupabaseClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY || '' // Use service role key for backend operations
+  )
+}
 
 export async function POST(request: NextRequest) {
   try {
     const { sessionId, userId, phoneNumber } = await request.json()
+
+    const supabase = getSupabaseClient()
 
     // Check if session already exists
     const { data: existingSession } = await supabase
