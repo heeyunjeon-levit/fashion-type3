@@ -191,7 +191,7 @@ export default function ResultsBottomSheet({
     }
   }, [isDragging])
 
-  // Prevent pull-to-refresh globally on this page (but not on input fields or horizontal scrolls)
+  // Prevent pull-to-refresh globally on this page (but not on input fields, scrollable content, or horizontal scrolls)
   useEffect(() => {
     let touchStartY = 0
     let touchStartX = 0
@@ -202,10 +202,17 @@ export default function ResultsBottomSheet({
     }
 
     const preventPullToRefresh = (e: TouchEvent) => {
-      // Don't prevent if user is interacting with an input field
       const target = e.target as HTMLElement
+      
+      // Don't prevent if user is interacting with an input field
       if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
         return
+      }
+
+      // Don't prevent if user is inside the bottom sheet content area
+      const contentArea = document.querySelector('.overflow-y-auto')
+      if (contentArea && contentArea.contains(target)) {
+        return // Allow scrolling inside bottom sheet
       }
 
       // Check if this is a horizontal scroll
@@ -351,7 +358,14 @@ export default function ResultsBottomSheet({
         </div>
 
         {/* Content */}
-        <div className="overflow-y-auto h-full pb-24 px-4">
+        <div 
+          className="overflow-y-auto h-full pb-24 px-4"
+          style={{ 
+            touchAction: 'auto',
+            WebkitOverflowScrolling: 'touch',
+            overscrollBehavior: 'contain'
+          }}
+        >
           {Object.keys(results).length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16">
               <p className="text-gray-600 text-lg mb-4">결과를 찾을 수 없습니다</p>
@@ -394,7 +408,10 @@ export default function ResultsBottomSheet({
                     {/* Horizontal scroll for 3 products */}
                     <div 
                       className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-hide"
-                      style={{ touchAction: 'pan-x' }}
+                      style={{ 
+                        touchAction: 'auto',
+                        overscrollBehaviorX: 'contain'
+                      }}
                     >
                       {links.map((option, index) => (
                         <a
