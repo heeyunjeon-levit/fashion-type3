@@ -31,7 +31,10 @@ export default function ResultsBottomSheet({
   const [phoneSubmitted, setPhoneSubmitted] = useState(false)
   const [isReturningUser, setIsReturningUser] = useState(false)
   const [sessionManager, setSessionManager] = useState<any>(null)
-  const [sheetHeight, setSheetHeight] = useState<'half' | 'full'>('half')
+  const [sheetPosition, setSheetPosition] = useState<'peek' | 'half' | 'full'>('half')
+  const [dragStartY, setDragStartY] = useState(0)
+  const [currentY, setCurrentY] = useState(0)
+  const [isDragging, setIsDragging] = useState(false)
 
   // Initialize session manager
   useEffect(() => {
@@ -83,6 +86,85 @@ export default function ResultsBottomSheet({
     })
   }
 
+  // Drag handlers
+  const handleDragStart = (clientY: number) => {
+    setIsDragging(true)
+    setDragStartY(clientY)
+    setCurrentY(clientY)
+  }
+
+  const handleDragMove = (clientY: number) => {
+    if (!isDragging) return
+    setCurrentY(clientY)
+  }
+
+  const handleDragEnd = () => {
+    if (!isDragging) return
+    setIsDragging(false)
+
+    const deltaY = currentY - dragStartY
+    const threshold = 50 // minimum drag distance to trigger change
+
+    if (Math.abs(deltaY) < threshold) {
+      return // No change if drag too small
+    }
+
+    // Dragging down (positive deltaY)
+    if (deltaY > 0) {
+      if (sheetPosition === 'full') {
+        setSheetPosition('half')
+      } else if (sheetPosition === 'half') {
+        setSheetPosition('peek')
+      }
+    }
+    // Dragging up (negative deltaY)
+    else {
+      if (sheetPosition === 'peek') {
+        setSheetPosition('half')
+      } else if (sheetPosition === 'half') {
+        setSheetPosition('full')
+      }
+    }
+  }
+
+  // Mouse events
+  const handleMouseDown = (e: React.MouseEvent) => {
+    handleDragStart(e.clientY)
+  }
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    handleDragMove(e.clientY)
+  }
+
+  const handleMouseUp = () => {
+    handleDragEnd()
+  }
+
+  // Touch events
+  const handleTouchStart = (e: React.TouchEvent) => {
+    handleDragStart(e.touches[0].clientY)
+  }
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    handleDragMove(e.touches[0].clientY)
+  }
+
+  const handleTouchEnd = () => {
+    handleDragEnd()
+  }
+
+  // Prevent drag when scrolling content
+  useEffect(() => {
+    if (isDragging) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [isDragging])
+
   const categoryNames: Record<string, string> = {
     tops: '상의',
     bottoms: '하의',
@@ -93,6 +175,27 @@ export default function ResultsBottomSheet({
   }
 
   const isBlurred = !phoneSubmitted
+
+  // Calculate sheet height based on position and drag
+  const getSheetStyle = () => {
+    const positions = {
+      peek: '85vh',    // Show just a peek
+      half: '60vh',    // Half screen
+      full: '10vh',    // Almost full (leave space for status bar)
+    }
+
+    let topPosition = positions[sheetPosition]
+
+    // Apply drag offset while dragging
+    if (isDragging) {
+      const dragOffset = currentY - dragStartY
+      const currentTop = parseInt(positions[sheetPosition])
+      const newTop = Math.max(10, Math.min(85, currentTop + (dragOffset / window.innerHeight) * 100))
+      topPosition = `${newTop}vh`
+    }
+
+    return { top: topPosition }
+  }
 
   if (isLoading) {
     return (
@@ -117,14 +220,20 @@ export default function ResultsBottomSheet({
 
       {/* Background: Original Image */}
       <div 
-        className="fixed inset-0 bg-cover bg-center"
+        className="fixed inset-0 bg-cover bg-center bg-no-repeat"
         style={{ 
           backgroundImage: `url(${originalImageUrl})`,
-          filter: isBlurred ? 'blur(8px)' : 'none'
+          backgroundSize: 'cover',
+          filter: isBlurred ? 'blur(8px)' : 'blur(2px)'
         }}
       >
-        {/* Dark overlay */}
-        <div className="absolute inset-0 bg-black/40"></div>
+        {/* Dark overlay - lighter when sheet is down */}
+        <div 
+          className="absolute inset-0 bg-black transition-opacity duration-300"
+          style={{
+            opacity: sheetPosition === 'peek' ? 0.2 : 0.4
+          }}
+        ></div>
       </div>
 
       {/* Close button */}
@@ -139,13 +248,20 @@ export default function ResultsBottomSheet({
 
       {/* Bottom Sheet */}
       <div 
-        className={`fixed bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-2xl transition-all duration-300 z-30 ${
-          sheetHeight === 'full' ? 'top-20' : 'top-1/3'
-        }`}
+        className="fixed left-0 right-0 bg-white rounded-t-3xl shadow-2xl z-30"
         style={{ 
+          ...getSheetStyle(),
+          bottom: 0,
           filter: isBlurred ? 'blur(4px)' : 'none',
-          pointerEvents: isBlurred ? 'none' : 'auto'
+          pointerEvents: isBlurred ? 'none' : 'auto',
+          transition: isDragging ? 'none' : 'top 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          willChange: 'top'
         }}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
       >
         {/* Blur overlay for unpaid access */}
         {isBlurred && (
@@ -159,11 +275,12 @@ export default function ResultsBottomSheet({
         )}
 
         {/* Drag handle */}
-        <div className="flex justify-center pt-3 pb-2">
-          <button
-            onClick={() => setSheetHeight(sheetHeight === 'half' ? 'full' : 'half')}
-            className="w-12 h-1.5 bg-gray-300 rounded-full hover:bg-gray-400 transition-colors"
-          />
+        <div 
+          className="flex justify-center pt-3 pb-2 cursor-grab active:cursor-grabbing"
+          onMouseDown={handleMouseDown}
+          onTouchStart={handleTouchStart}
+        >
+          <div className="w-12 h-1.5 bg-gray-300 rounded-full" />
         </div>
 
         {/* Content */}
@@ -256,21 +373,32 @@ export default function ResultsBottomSheet({
           )}
         </div>
 
-        {/* Bottom action bar */}
-        <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 flex gap-3">
-          <button
-            onClick={onReset}
-            className="flex-1 bg-gray-100 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-200 transition-colors"
-          >
-            새로 시작
-          </button>
-          <button
-            onClick={() => setSheetHeight(sheetHeight === 'full' ? 'half' : 'full')}
-            className="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg"
-          >
-            {sheetHeight === 'full' ? '접기' : '전체보기'}
-          </button>
-        </div>
+        {/* Bottom action bar - only show when not at peek */}
+        {sheetPosition !== 'peek' && (
+          <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 flex gap-3">
+            <button
+              onClick={onReset}
+              className="flex-1 bg-gray-100 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-200 transition-colors"
+            >
+              새로 시작
+            </button>
+            <button
+              onClick={() => setSheetPosition(sheetPosition === 'full' ? 'half' : 'full')}
+              className="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg"
+            >
+              {sheetPosition === 'full' ? '접기' : '전체보기'}
+            </button>
+          </div>
+        )}
+
+        {/* Peek state hint */}
+        {sheetPosition === 'peek' && (
+          <div className="absolute bottom-4 left-0 right-0 flex justify-center pointer-events-none">
+            <div className="bg-indigo-600 text-white px-6 py-2 rounded-full text-sm font-semibold shadow-lg">
+              ↑ 위로 드래그하여 상품 보기
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Custom scrollbar hide */}
