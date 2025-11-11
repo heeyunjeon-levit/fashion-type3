@@ -125,11 +125,17 @@ export class SessionManager {
 
   // Log GPT analysis (Stage 1: Detection with GroundingDINO prompts)
   async logGPTAnalysis(analysisResult: any) {
-    console.log('📝 Logging GPT Analysis:', {
-      itemCount: analysisResult.items?.length || 0,
-      cached: analysisResult.cached,
-      sampleItem: analysisResult.items?.[0]
-    })
+    console.log('📝 Logging GPT Analysis:')
+    console.log(`   Items detected: ${analysisResult.items?.length || 0}`)
+    console.log(`   Cached: ${analysisResult.cached}`)
+    
+    // Show ALL detected items (not just first one)
+    if (analysisResult.items && analysisResult.items.length > 0) {
+      console.log('   Detected items:')
+      analysisResult.items.forEach((item: any, idx: number) => {
+        console.log(`   ${idx + 1}. ${item.category}: "${item.groundingdino_prompt}" - ${item.description}`)
+      })
+    }
     
     await this.logEvent('gpt_analysis', { 
       itemCount: analysisResult.items?.length || 0,
@@ -143,7 +149,7 @@ export class SessionManager {
       analyzed_at: new Date().toISOString(),
     })
     
-    console.log('✅ GPT Analysis logged to session')
+    console.log('✅ GPT Analysis logged to session (all items saved)')
   }
 
   // Log cropped images
