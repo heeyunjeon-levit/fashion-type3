@@ -214,8 +214,8 @@ WHERE event_type = 'backend_timing'
 ORDER BY created_at DESC
 LIMIT 20;
 
--- 8. Complete End-to-End Timing (Frontend Upload + Backend + Search)
--- Shows the COMPLETE user experience timing
+-- 8. Complete End-to-End Timing (Frontend Upload + Backend + Search) - DETAILED
+-- Shows the COMPLETE user experience timing with full breakdown
 WITH frontend_timing AS (
   SELECT 
     session_id,
@@ -240,6 +240,11 @@ backend_timing AS (
 search_timing AS (
   SELECT 
     session_id,
+    (event_data->>'full_image_search_seconds')::float as full_image_search,
+    (event_data->>'per_category_search_seconds')::float as per_category_search,
+    (event_data->>'gpt4_turbo_api_time_seconds')::float as gpt4_turbo_time,
+    (event_data->>'processing_overhead_seconds')::float as processing_overhead,
+    (event_data->>'other_overhead_seconds')::float as other_overhead,
     (event_data->>'wall_clock_seconds')::float as search_wall_clock,
     (event_data->>'total_seconds')::float as search_total,
     created_at
@@ -258,8 +263,13 @@ SELECT
   ROUND(COALESCE(b.processing_seconds, 0)::numeric, 3) as processing,
   ROUND(COALESCE(b.backend_upload_seconds, 0)::numeric, 3) as backend_upload,
   ROUND(COALESCE(b.backend_total, 0)::numeric, 2) as backend_total,
-  -- Search
-  ROUND(COALESCE(s.search_wall_clock, 0)::numeric, 2) as search,
+  -- Search stages (DETAILED)
+  ROUND(COALESCE(s.full_image_search, 0)::numeric, 2) as full_image_search,
+  ROUND(COALESCE(s.per_category_search, 0)::numeric, 2) as per_category_search,
+  ROUND(COALESCE(s.gpt4_turbo_time, 0)::numeric, 2) as gpt4_turbo,
+  ROUND(COALESCE(s.processing_overhead, 0)::numeric, 2) as search_processing,
+  ROUND(COALESCE(s.other_overhead, 0)::numeric, 2) as search_other,
+  ROUND(COALESCE(s.search_wall_clock, 0)::numeric, 2) as search_total,
   -- Complete end-to-end
   ROUND((COALESCE(f.frontend_upload_seconds, 0) + COALESCE(b.backend_total, 0) + COALESCE(s.search_wall_clock, 0))::numeric, 2) as end_to_end_total
 FROM frontend_timing f

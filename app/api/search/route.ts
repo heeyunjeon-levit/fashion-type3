@@ -49,6 +49,9 @@ export async function POST(request: NextRequest) {
     const timingData: Record<string, number> = {
       serper_total_api_time: 0,  // Accumulated time across all Serper calls
       gpt4_turbo_total_api_time: 0,  // Accumulated time across all GPT calls
+      full_image_search_time: 0,  // Full image search
+      per_category_search_time: 0,  // Per-category searches
+      processing_overhead_time: 0,  // Deduplication, merging, etc.
       serper_count: 0,
       gpt4_turbo_count: 0,
       search_wall_clock_start: Date.now()  // Actual elapsed time
@@ -80,8 +83,10 @@ export async function POST(request: NextRequest) {
         const fullImageStart = Date.now()
         const fullImageResponses = await Promise.all(fullImagePromises)
         const fullImageTime = (Date.now() - fullImageStart) / 1000
+        timingData.full_image_search_time = fullImageTime
         console.log(`   ⏱️  Full image Serper (3x parallel): ${fullImageTime.toFixed(2)}s`)
         
+        const processingStart = Date.now()
         const allFullImageResults: any[] = []
         for (let i = 0; i < fullImageResponses.length; i++) {
           if (!fullImageResponses[i].ok) {
@@ -100,8 +105,11 @@ export async function POST(request: NextRequest) {
         fullImageResults = Array.from(
           new Map(allFullImageResults.map(item => [item.link, item])).values()
         )
+        const processingTime = (Date.now() - processingStart) / 1000
+        timingData.processing_overhead_time += processingTime
         
         console.log(`📊 Full image search returned ${fullImageResults.length} unique results`)
+        console.log(`   ⏱️  Processing/deduplication: ${processingTime.toFixed(3)}s`)
       } catch (error) {
         console.error('❌ Error in full image search:', error)
         // Continue with cropped image search even if full image search fails
@@ -112,6 +120,7 @@ export async function POST(request: NextRequest) {
     const croppedEntries = Object.entries(croppedImages || {}) as [string, string][]
     
     // Process all cropped images in parallel for maximum speed
+    const categoriesStart = Date.now()
     const searchPromises = croppedEntries.map(async ([resultKey, croppedImageUrl]) => {
       if (!croppedImageUrl) {
         console.log(`⚠️ No cropped image for ${resultKey}`)
@@ -814,8 +823,11 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links preferred) or
 
     // Wait for all searches to complete in parallel
     const searchResults = await Promise.all(searchPromises)
+    timingData.per_category_search_time = (Date.now() - categoriesStart) / 1000
+    console.log(`⏱️  All category searches completed in: ${timingData.per_category_search_time.toFixed(2)}s (parallel)`)
     
     // Aggregate results and track sources
+    const aggregateStart = Date.now()
     const sourceCounts = { gpt: 0, fallback: 0, none: 0, error: 0 }
     for (const { resultKey, results, source } of searchResults) {
       if (results) {
@@ -827,20 +839,35 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links preferred) or
       }
     }
 
+    const aggregateTime = (Date.now() - aggregateStart) / 1000
+    timingData.processing_overhead_time += aggregateTime
+    console.log(`⏱️  Result aggregation took: ${aggregateTime.toFixed(3)}s`)
+    
     const requestTotalTime = (Date.now() - requestStartTime) / 1000
     const searchWallClockTime = (Date.now() - timingData.search_wall_clock_start) / 1000
     
     console.log('\n📊 Final results:', Object.keys(allResults))
     console.log(`📈 Result sources: GPT=${sourceCounts.gpt}, Fallback=${sourceCounts.fallback}, None=${sourceCounts.none}, Error=${sourceCounts.error}`)
     
-    // Timing summary with clarifications
-    console.log('\n⏱️  TIMING SUMMARY (Search API):')
-    console.log(`   ⏰ Wall-clock time (actual elapsed): ${searchWallClockTime.toFixed(2)}s`)
-    console.log(`   🔍 Serper API time (accumulated): ${timingData.serper_total_api_time.toFixed(2)}s across ${timingData.serper_count} categories`)
+    // Calculate overhead
+    const measuredTime = timingData.full_image_search_time + 
+                         timingData.per_category_search_time + 
+                         timingData.gpt4_turbo_total_api_time + 
+                         timingData.processing_overhead_time
+    const unmeasuredOverhead = searchWallClockTime - measuredTime
+    
+    // Timing summary with detailed breakdown
+    console.log('\n⏱️  TIMING SUMMARY (Search API) - Chronological:')
+    console.log(`   1️⃣  Full image search (3x Serper): ${timingData.full_image_search_time.toFixed(2)}s`)
+    console.log(`   2️⃣  Per-category searches (${timingData.serper_count}x parallel): ${timingData.per_category_search_time.toFixed(2)}s`)
+    console.log(`      → Serper API time (accumulated): ${timingData.serper_total_api_time.toFixed(2)}s`)
     console.log(`      → Avg per category: ${(timingData.serper_total_api_time / Math.max(timingData.serper_count, 1)).toFixed(2)}s`)
-    console.log(`   🤖 GPT-4 Turbo time (accumulated): ${timingData.gpt4_turbo_total_api_time.toFixed(2)}s across ${timingData.gpt4_turbo_count} categories`)
+    console.log(`   3️⃣  GPT-4 Turbo filtering (${timingData.gpt4_turbo_count}x): ${timingData.gpt4_turbo_total_api_time.toFixed(2)}s`)
     console.log(`      → Avg per category: ${(timingData.gpt4_turbo_total_api_time / Math.max(timingData.gpt4_turbo_count, 1)).toFixed(2)}s`)
-    console.log(`   📊 Categories processed: ${timingData.serper_count} in parallel`)
+    console.log(`   4️⃣  Processing overhead (parsing/dedup/merge): ${timingData.processing_overhead_time.toFixed(2)}s`)
+    console.log(`   5️⃣  Other overhead (network/etc): ${unmeasuredOverhead.toFixed(2)}s`)
+    console.log(`   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`)
+    console.log(`   ⏰ Wall-clock time (actual): ${searchWallClockTime.toFixed(2)}s`)
     console.log(`   ⏱️  Total request time: ${requestTotalTime.toFixed(2)}s\n`)
     
     return NextResponse.json({ 
@@ -849,14 +876,19 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links preferred) or
         sourceCounts,
         gptReasoning: gptReasoningData,  // Include GPT reasoning for each category
         timing: {
+          // Chronological breakdown
+          full_image_search_seconds: parseFloat(timingData.full_image_search_time.toFixed(2)),
+          per_category_search_seconds: parseFloat(timingData.per_category_search_time.toFixed(2)),
+          gpt4_turbo_api_time_seconds: parseFloat(timingData.gpt4_turbo_total_api_time.toFixed(2)),
+          processing_overhead_seconds: parseFloat(timingData.processing_overhead_time.toFixed(2)),
+          other_overhead_seconds: parseFloat((searchWallClockTime - (timingData.full_image_search_time + timingData.per_category_search_time + timingData.gpt4_turbo_total_api_time + timingData.processing_overhead_time)).toFixed(2)),
           // Wall-clock time (what user experiences)
           wall_clock_seconds: parseFloat(searchWallClockTime.toFixed(2)),
-          // Accumulated API times (total time if run sequentially)
+          // Accumulated API times (for reference)
           serper_api_time_seconds: parseFloat(timingData.serper_total_api_time.toFixed(2)),
           serper_count: timingData.serper_count,
-          gpt4_turbo_api_time_seconds: parseFloat(timingData.gpt4_turbo_total_api_time.toFixed(2)),
           gpt4_turbo_count: timingData.gpt4_turbo_count,
-          // Total request time (includes overhead)
+          // Total request time (includes everything)
           total_seconds: parseFloat(requestTotalTime.toFixed(2)),
           // Parallel efficiency
           categories_parallel: timingData.serper_count

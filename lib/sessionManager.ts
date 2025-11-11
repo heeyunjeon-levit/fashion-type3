@@ -190,15 +190,22 @@ export class SessionManager {
       })
     }
     
-    // Log timing data as a separate event
+    // Log detailed timing breakdown as a separate event
     if (meta.timing) {
       await this.logEvent('pipeline_timing', {
+        // Chronological breakdown
+        full_image_search_seconds: meta.timing.full_image_search_seconds,
+        per_category_search_seconds: meta.timing.per_category_search_seconds,
+        gpt4_turbo_api_time_seconds: meta.timing.gpt4_turbo_api_time_seconds,
+        processing_overhead_seconds: meta.timing.processing_overhead_seconds,
+        other_overhead_seconds: meta.timing.other_overhead_seconds,
+        // Summary
         wall_clock_seconds: meta.timing.wall_clock_seconds,
+        total_seconds: meta.timing.total_seconds,
+        // API details
         serper_api_time_seconds: meta.timing.serper_api_time_seconds,
         serper_count: meta.timing.serper_count,
-        gpt4_turbo_api_time_seconds: meta.timing.gpt4_turbo_api_time_seconds,
         gpt4_turbo_count: meta.timing.gpt4_turbo_count,
-        total_seconds: meta.timing.total_seconds,
         categories_parallel: meta.timing.categories_parallel
       })
     }
