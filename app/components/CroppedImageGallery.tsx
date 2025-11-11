@@ -105,7 +105,6 @@ export default function CroppedImageGallery({
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {detectedItems.map((item, idx) => {
                   const isSelected = selectedIndices.has(idx)
-                  const confidencePercent = item.confidence ? Math.round(item.confidence * 100) : null
 
                   return (
                     <button
@@ -141,15 +140,6 @@ export default function CroppedImageGallery({
                           )}
                         </div>
                       </div>
-
-                      {/* Confidence Badge */}
-                      {confidencePercent && (
-                        <div className="absolute top-2 right-2 z-10">
-                          <span className="bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full">
-                            {confidencePercent}%
-                          </span>
-                        </div>
-                      )}
 
                       {/* Cropped Image */}
                       <div className="aspect-square mb-3 overflow-hidden rounded-lg bg-gray-100 flex items-center justify-center">
