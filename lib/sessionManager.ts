@@ -177,13 +177,22 @@ export class SessionManager {
   }
 
   // Log search results with GPT reasoning
-  async logSearchResults(results: any, gptReasoning: any = {}) {
+  async logSearchResults(results: any, meta: any = {}) {
     await this.logEvent('search_completed', { 
       resultCount: Object.keys(results).length,
     })
+    
+    // Log GPT reasoning as a separate detailed event
+    if (meta.gptReasoning && Object.keys(meta.gptReasoning).length > 0) {
+      await this.logEvent('gpt_product_selection', {
+        reasoning: meta.gptReasoning,
+        sourceCounts: meta.sourceCounts,
+      })
+    }
+    
     await this.updateSession({
       search_results: results,
-      gpt_selection_reasoning: gptReasoning,
+      gpt_selection_reasoning: meta.gptReasoning || {},
       searched_at: new Date().toISOString(),
     })
   }

@@ -127,6 +127,11 @@ export default function Home() {
       // Log search results (with GPT reasoning from meta data)
       if (sessionManager) {
         await sessionManager.logSearchResults(data.results, data.meta || {})
+        
+        // Console log GPT reasoning for debugging
+        if (data.meta?.gptReasoning) {
+          console.log('🤖 GPT Product Selection Reasoning:', data.meta.gptReasoning)
+        }
       }
       
       setCurrentStep('results')

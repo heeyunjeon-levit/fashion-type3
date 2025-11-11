@@ -44,6 +44,7 @@ export async function POST(request: NextRequest) {
     }
 
     const allResults: Record<string, Array<{ link: string; thumbnail: string | null; title: string | null }>> = {}
+    const gptReasoningData: Record<string, any> = {}
     
     console.log(`🔍 Searching categories: ${categories.join(', ')}`)
     
@@ -556,6 +557,15 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links preferred) or
         const responseText = completion.choices[0].message.content || '{}'
         console.log(`📄 GPT response for ${resultKey}:`, responseText.substring(0, 200))
         
+        // Store GPT reasoning/response for this category
+        gptReasoningData[resultKey] = {
+          itemDescription,
+          searchTerms,
+          selectedLinks: [],
+          timestamp: new Date().toISOString(),
+          candidateCount: resultsForGPT.length
+        }
+        
         // Parse response
         const cleaned = responseText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim()
         const jsonMatch = cleaned.match(/\{[\s\S]*\}/)
@@ -712,6 +722,13 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links preferred) or
             }
           })
           
+          // Update reasoning data with selected links
+          gptReasoningData[resultKey].selectedLinks = linksWithThumbnails.map((item: any) => ({
+            link: item.link,
+            title: item.title
+          }))
+          gptReasoningData[resultKey].selectionCount = linksWithThumbnails.length
+          
           console.log(`✅ Found ${validLinks.length} link(s) for ${resultKey}:`, validLinks.slice(0, 3))
           return { resultKey, results: linksWithThumbnails, source: 'gpt' }
         } else {
@@ -791,7 +808,13 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links preferred) or
 
     console.log('\n📊 Final results:', Object.keys(allResults))
     console.log(`📈 Result sources: GPT=${sourceCounts.gpt}, Fallback=${sourceCounts.fallback}, None=${sourceCounts.none}, Error=${sourceCounts.error}`)
-    return NextResponse.json({ results: allResults, meta: { sourceCounts } })
+    return NextResponse.json({ 
+      results: allResults, 
+      meta: { 
+        sourceCounts,
+        gptReasoning: gptReasoningData  // Include GPT reasoning for each category
+      } 
+    })
   } catch (error) {
     console.error('❌ Search error:', error)
     return NextResponse.json(
