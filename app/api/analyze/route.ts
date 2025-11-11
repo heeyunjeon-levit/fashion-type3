@@ -16,6 +16,10 @@ export interface AnalyzeResponse {
   timing?: {
     gpt4o_seconds: number
     groundingdino_seconds: number
+    download_seconds: number
+    processing_seconds: number
+    upload_seconds: number
+    overhead_seconds: number
     total_seconds: number
   }
 }
@@ -70,6 +74,10 @@ export async function POST(request: NextRequest) {
       console.log('\n⏱️  BACKEND TIMING:')
       console.log(`   GPT-4o Vision: ${result.timing.gpt4o_seconds}s`)
       console.log(`   GroundingDINO: ${result.timing.groundingdino_seconds}s`)
+      console.log(`   Download: ${result.timing.download_seconds}s`)
+      console.log(`   Processing: ${result.timing.processing_seconds}s`)
+      console.log(`   Upload: ${result.timing.upload_seconds}s`)
+      console.log(`   Overhead: ${result.timing.overhead_seconds}s`)
       console.log(`   Total backend: ${result.timing.total_seconds}s`)
     }
     console.log('================================================================================\n')
