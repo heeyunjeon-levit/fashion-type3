@@ -71,9 +71,10 @@ class DetectedItem(BaseModel):
 
 
 class TimingData(BaseModel):
+    # Chronological order of pipeline operations:
+    download_seconds: float
     gpt4o_seconds: float
     groundingdino_seconds: float
-    download_seconds: float
     processing_seconds: float
     upload_seconds: float
     overhead_seconds: float

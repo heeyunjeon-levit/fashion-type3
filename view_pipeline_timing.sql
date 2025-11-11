@@ -13,13 +13,14 @@ ORDER BY created_at DESC
 LIMIT 10;
 
 -- 2. Complete timing view (backend + search API for same session)
+-- Backend fields in chronological order
 SELECT 
   e1.session_id,
   e1.created_at,
   'Backend (GPT-4o + GroundingDINO)' as stage,
+  (e1.event_data->>'download_seconds')::float as download_seconds,
   (e1.event_data->>'gpt4o_seconds')::float as gpt4o_seconds,
   (e1.event_data->>'groundingdino_seconds')::float as groundingdino_seconds,
-  (e1.event_data->>'download_seconds')::float as download_seconds,
   (e1.event_data->>'processing_seconds')::float as processing_seconds,
   (e1.event_data->>'upload_seconds')::float as upload_seconds,
   (e1.event_data->>'overhead_seconds')::float as overhead_seconds,
@@ -191,22 +192,22 @@ ORDER BY COALESCE(b.created_at, s.created_at) DESC
 LIMIT 10;
 
 -- 7. Backend Timing Breakdown with Percentages (last 20)
--- Shows exactly where time is spent in the backend pipeline
+-- Shows exactly where time is spent in the backend pipeline (chronological order)
 SELECT 
   session_id,
   created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Seoul' as created_at_kst,
+  -- Chronological order of operations:
+  (event_data->>'download_seconds')::float as download_seconds,
   (event_data->>'gpt4o_seconds')::float as gpt4o_seconds,
   (event_data->>'groundingdino_seconds')::float as dino_seconds,
-  (event_data->>'download_seconds')::float as download_seconds,
   (event_data->>'processing_seconds')::float as processing_seconds,
   (event_data->>'upload_seconds')::float as upload_seconds,
   (event_data->>'overhead_seconds')::float as overhead_seconds,
   (event_data->>'total_seconds')::float as total_seconds,
-  -- Percentages
+  -- Percentages (most expensive operations)
   ROUND(((event_data->>'gpt4o_seconds')::float / NULLIF((event_data->>'total_seconds')::float, 0) * 100)::numeric, 1) as gpt4o_pct,
   ROUND(((event_data->>'groundingdino_seconds')::float / NULLIF((event_data->>'total_seconds')::float, 0) * 100)::numeric, 1) as dino_pct,
-  ROUND(((event_data->>'upload_seconds')::float / NULLIF((event_data->>'total_seconds')::float, 0) * 100)::numeric, 1) as upload_pct,
-  ROUND((((event_data->>'download_seconds')::float + (event_data->>'processing_seconds')::float + (event_data->>'overhead_seconds')::float) / NULLIF((event_data->>'total_seconds')::float, 0) * 100)::numeric, 1) as other_pct
+  ROUND(((event_data->>'upload_seconds')::float / NULLIF((event_data->>'total_seconds')::float, 0) * 100)::numeric, 1) as upload_pct
 FROM events
 WHERE event_type = 'backend_timing'
   AND event_data IS NOT NULL

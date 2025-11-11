@@ -14,9 +14,10 @@ export interface AnalyzeResponse {
   items: DetectedItem[]
   cached: boolean
   timing?: {
+    // Chronological order of pipeline operations:
+    download_seconds: number
     gpt4o_seconds: number
     groundingdino_seconds: number
-    download_seconds: number
     processing_seconds: number
     upload_seconds: number
     overhead_seconds: number
@@ -69,16 +70,16 @@ export async function POST(request: NextRequest) {
     })
     console.log(`💾 Cached: ${result.cached}`)
     
-    // Log backend timing if available
+    // Log backend timing if available (chronological order)
     if (result.timing) {
-      console.log('\n⏱️  BACKEND TIMING:')
-      console.log(`   GPT-4o Vision: ${result.timing.gpt4o_seconds}s`)
-      console.log(`   GroundingDINO: ${result.timing.groundingdino_seconds}s`)
-      console.log(`   Download: ${result.timing.download_seconds}s`)
-      console.log(`   Processing: ${result.timing.processing_seconds}s`)
-      console.log(`   Upload: ${result.timing.upload_seconds}s`)
-      console.log(`   Overhead: ${result.timing.overhead_seconds}s`)
-      console.log(`   Total backend: ${result.timing.total_seconds}s`)
+      console.log('\n⏱️  BACKEND TIMING (chronological):')
+      console.log(`   1. Download image: ${result.timing.download_seconds}s`)
+      console.log(`   2. GPT-4o Vision: ${result.timing.gpt4o_seconds}s`)
+      console.log(`   3. GroundingDINO: ${result.timing.groundingdino_seconds}s`)
+      console.log(`   4. Image processing: ${result.timing.processing_seconds}s`)
+      console.log(`   5. Upload crops: ${result.timing.upload_seconds}s`)
+      console.log(`   6. Overhead: ${result.timing.overhead_seconds}s`)
+      console.log(`   → Total: ${result.timing.total_seconds}s`)
     }
     console.log('================================================================================\n')
 

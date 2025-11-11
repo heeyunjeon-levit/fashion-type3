@@ -321,25 +321,26 @@ def analyze_and_crop_all(image_url: str) -> dict:
     # Calculate overhead (everything except GPT & DINO)
     overhead_time = total_time - gpt4o_time - dino_time
     
-    # Print timing summary
-    print(f"\n⏱️  TIMING SUMMARY:")
-    print(f"   GPT-4o Vision API: {gpt4o_time:.2f}s")
-    print(f"   GroundingDINO (total): {dino_time:.3f}s")
+    # Print timing summary (chronological order)
+    print(f"\n⏱️  TIMING SUMMARY (chronological):")
+    print(f"   1. Image Download: {download_time:.3f}s")
+    print(f"   2. GPT-4o Vision API: {gpt4o_time:.2f}s")
+    print(f"   3. GroundingDINO (total): {dino_time:.3f}s")
     if len(gpt_result['items']) > 0:
-        print(f"   GroundingDINO (avg per item): {dino_time/len(gpt_result['items']):.3f}s")
-    print(f"   Image Download: {download_time:.3f}s")
-    print(f"   Image Processing: {processing_time:.3f}s")
-    print(f"   Supabase Uploads: {upload_time:.3f}s")
-    print(f"   Other Overhead: {(overhead_time - download_time - processing_time - upload_time):.3f}s")
-    print(f"   Total processing: {total_time:.2f}s\n")
+        print(f"      → GroundingDINO (avg per item): {dino_time/len(gpt_result['items']):.3f}s")
+    print(f"   4. Image Processing (crop/encode): {processing_time:.3f}s")
+    print(f"   5. Supabase Uploads: {upload_time:.3f}s")
+    print(f"   6. Other Overhead: {(overhead_time - download_time - processing_time - upload_time):.3f}s")
+    print(f"   → Total pipeline: {total_time:.2f}s\n")
     
     return {
         "items": cropped_items,
         "cached": bool(cached_gpt_result),
         "timing": {
+            # Chronological order of operations:
+            "download_seconds": round(download_time, 3),
             "gpt4o_seconds": round(gpt4o_time, 2),
             "groundingdino_seconds": round(dino_time, 3),
-            "download_seconds": round(download_time, 3),
             "processing_seconds": round(processing_time, 3),
             "upload_seconds": round(upload_time, 3),
             "overhead_seconds": round(overhead_time - download_time - processing_time - upload_time, 3),
