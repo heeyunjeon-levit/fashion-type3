@@ -253,7 +253,6 @@ export default function ResultsBottomSheet({
         style={{ 
           backgroundImage: `url(${originalImageUrl})`,
           backgroundSize: 'cover',
-          filter: isBlurred ? 'blur(8px)' : 'blur(2px)',
           touchAction: 'none' // Prevent pull-to-refresh on background
         }}
       >
