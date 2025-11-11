@@ -142,10 +142,12 @@ export default function ResultsBottomSheet({
 
   // Touch events
   const handleTouchStart = (e: React.TouchEvent) => {
+    e.preventDefault() // Prevent pull-to-refresh
     handleDragStart(e.touches[0].clientY)
   }
 
   const handleTouchMove = (e: React.TouchEvent) => {
+    e.preventDefault() // Prevent pull-to-refresh and scrolling
     handleDragMove(e.touches[0].clientY)
   }
 
@@ -153,17 +155,38 @@ export default function ResultsBottomSheet({
     handleDragEnd()
   }
 
-  // Prevent drag when scrolling content
+  // Prevent drag when scrolling content + prevent pull-to-refresh
   useEffect(() => {
     if (isDragging) {
       document.body.style.overflow = 'hidden'
+      document.body.style.overscrollBehavior = 'none' // Prevent pull-to-refresh
     } else {
       document.body.style.overflow = ''
+      document.body.style.overscrollBehavior = ''
     }
     return () => {
       document.body.style.overflow = ''
+      document.body.style.overscrollBehavior = ''
     }
   }, [isDragging])
+
+  // Prevent pull-to-refresh globally on this page
+  useEffect(() => {
+    const preventPullToRefresh = (e: TouchEvent) => {
+      // Only prevent if we're at the top of the page
+      if (window.scrollY === 0) {
+        e.preventDefault()
+      }
+    }
+
+    document.addEventListener('touchstart', preventPullToRefresh, { passive: false })
+    document.addEventListener('touchmove', preventPullToRefresh, { passive: false })
+
+    return () => {
+      document.removeEventListener('touchstart', preventPullToRefresh)
+      document.removeEventListener('touchmove', preventPullToRefresh)
+    }
+  }, [])
 
   const categoryNames: Record<string, string> = {
     tops: '상의',
@@ -224,7 +247,8 @@ export default function ResultsBottomSheet({
         style={{ 
           backgroundImage: `url(${originalImageUrl})`,
           backgroundSize: 'cover',
-          filter: isBlurred ? 'blur(8px)' : 'blur(2px)'
+          filter: isBlurred ? 'blur(8px)' : 'blur(2px)',
+          touchAction: 'none' // Prevent pull-to-refresh on background
         }}
       >
         {/* Dark overlay - lighter when sheet is down */}
@@ -255,7 +279,8 @@ export default function ResultsBottomSheet({
           filter: isBlurred ? 'blur(4px)' : 'none',
           pointerEvents: isBlurred ? 'none' : 'auto',
           transition: isDragging ? 'none' : 'top 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-          willChange: 'top'
+          willChange: 'top',
+          touchAction: 'none' // Prevent pull-to-refresh on sheet
         }}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
@@ -277,6 +302,7 @@ export default function ResultsBottomSheet({
         {/* Drag handle */}
         <div 
           className="flex justify-center pt-3 pb-2 cursor-grab active:cursor-grabbing"
+          style={{ touchAction: 'none' }} // Prevent pull-to-refresh on handle
           onMouseDown={handleMouseDown}
           onTouchStart={handleTouchStart}
         >
@@ -401,8 +427,14 @@ export default function ResultsBottomSheet({
         )}
       </div>
 
-      {/* Custom scrollbar hide */}
-      <style jsx>{`
+      {/* Global styles */}
+      <style jsx global>{`
+        /* Prevent pull-to-refresh globally on iOS */
+        html, body {
+          overscroll-behavior-y: none;
+        }
+        
+        /* Hide scrollbar */
         .scrollbar-hide::-webkit-scrollbar {
           display: none;
         }
