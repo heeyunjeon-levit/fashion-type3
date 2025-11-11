@@ -191,6 +191,17 @@ export default function Home() {
     setCurrentStep('gallery')
   }
 
+  const handleResearch = async () => {
+    // Re-run search with the same selected items
+    if (selectedItems.length === 0) {
+      console.warn('No items selected to research')
+      return
+    }
+    
+    console.log('🔄 Re-running search with same items...')
+    await handleItemsSelected(selectedItems)
+  }
+
   const handleReset = () => {
     setCurrentStep('upload')
     setUploadedImageUrl('')
@@ -271,6 +282,7 @@ export default function Home() {
             originalImageUrl={uploadedImageUrl}
             onReset={handleReset}
             onBack={handleBack}
+            onResearch={handleResearch}
             selectedItems={selectedItems}
           />
         )}

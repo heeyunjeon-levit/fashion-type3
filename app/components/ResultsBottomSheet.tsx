@@ -17,6 +17,7 @@ interface ResultsBottomSheetProps {
   originalImageUrl: string // Background image
   onReset: () => void
   onBack?: () => void // Go back to cropped images selection
+  onResearch?: () => void // Re-run search with same items
   selectedItems?: any[]
 }
 
@@ -27,6 +28,7 @@ export default function ResultsBottomSheet({
   originalImageUrl,
   onReset,
   onBack,
+  onResearch,
   selectedItems
 }: ResultsBottomSheetProps) {
   const [showPhoneModal, setShowPhoneModal] = useState(true)
@@ -380,10 +382,10 @@ export default function ResultsBottomSheet({
                   처음부터
                 </button>
                 <button
-                  onClick={onBack || onReset}
+                  onClick={onResearch || onReset}
                   className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all active:scale-95"
                 >
-                  다시 선택하기
+                  다시 검색하기
                 </button>
               </div>
             </div>
@@ -484,10 +486,10 @@ export default function ResultsBottomSheet({
               </svg>
             </button>
             <button
-              onClick={onBack || onReset}
+              onClick={onResearch || onReset}
               className="flex-1 bg-gray-100 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-200 transition-colors active:scale-95"
             >
-              다시 선택
+              다시 검색
             </button>
             <button
               onClick={() => setSheetPosition(sheetPosition === 'full' ? 'half' : 'full')}
