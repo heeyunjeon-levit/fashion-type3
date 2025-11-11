@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import ImageUpload from './components/ImageUpload'
 import CroppedImageGallery from './components/CroppedImageGallery'
 import Results from './components/Results'
+import { getSessionManager } from '../lib/sessionManager'
 
 export interface DetectedItem {
   category: string
@@ -20,10 +21,28 @@ export default function Home() {
   const [selectedItems, setSelectedItems] = useState<DetectedItem[]>([])
   const [results, setResults] = useState<Record<string, Array<{ link: string; thumbnail: string | null; title: string | null }>>>({})
   const [isLoading, setIsLoading] = useState(false)
+  const [sessionManager, setSessionManager] = useState<any>(null)
+
+  // Initialize session on mount (client-side only)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const manager = getSessionManager()
+      setSessionManager(manager)
+      console.log('Session ID:', manager.getSessionId())
+      if (manager.isReturningUser()) {
+        console.log('Welcome back! Phone:', manager.getPhoneNumber())
+      }
+    }
+  }, [])
 
   const handleImageUploaded = async (imageUrl: string) => {
     setUploadedImageUrl(imageUrl)
     setCurrentStep('analyzing')
+
+    // Log image upload
+    if (sessionManager) {
+      await sessionManager.logImageUpload(imageUrl)
+    }
 
     try {
       // Call GPT analysis + cropping immediately after upload
@@ -41,9 +60,18 @@ export default function Home() {
       if (analyzeData.items && analyzeData.items.length > 0) {
         console.log(`✅ Analysis complete: ${analyzeData.items.length} items detected and cropped`)
         setDetectedItems(analyzeData.items)
+
+        // Log GPT analysis
+        if (sessionManager) {
+          await sessionManager.logGPTAnalysis(analyzeData)
+          await sessionManager.logCroppedImages(analyzeData.items)
+        }
       } else {
         console.log('⚠️ No items detected by AI')
         setDetectedItems([])
+        if (sessionManager) {
+          await sessionManager.logGPTAnalysis({ items: [] })
+        }
       }
     } catch (error) {
       console.error('❌ Analysis error:', error)
@@ -58,6 +86,11 @@ export default function Home() {
     setSelectedItems(items)
     setCurrentStep('searching')
     setIsLoading(true)
+
+    // Log user selection
+    if (sessionManager) {
+      await sessionManager.logItemSelection(items)
+    }
 
     try {
       // Build cropped images map from selected items
@@ -90,6 +123,12 @@ export default function Home() {
 
       const data = await response.json()
       setResults(data.results || {})
+      
+      // Log search results (with GPT reasoning from meta data)
+      if (sessionManager) {
+        await sessionManager.logSearchResults(data.results, data.meta || {})
+      }
+      
       setCurrentStep('results')
     } catch (error) {
       console.error('Error fetching results:', error)
@@ -178,6 +217,7 @@ export default function Home() {
             isLoading={isLoading}
             croppedImages={croppedImagesForResults}
             onReset={handleReset}
+            selectedItems={selectedItems}
           />
         )}
       </div>

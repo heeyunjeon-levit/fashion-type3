@@ -1,6 +1,9 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { categories } from '../constants/categories'
+import PhoneModal from './PhoneModal'
+import { getSessionManager } from '../../lib/sessionManager'
 
 interface ProductOption {
   link: string
@@ -13,9 +16,67 @@ interface ResultsProps {
   isLoading: boolean
   croppedImages?: Record<string, string>
   onReset: () => void
+  selectedItems?: any[] // For tracking item descriptions
 }
 
-export default function Results({ results, isLoading, croppedImages, onReset }: ResultsProps) {
+export default function Results({ results, isLoading, croppedImages, onReset, selectedItems }: ResultsProps) {
+  const [showPhoneModal, setShowPhoneModal] = useState(true) // Show modal by default
+  const [phoneSubmitted, setPhoneSubmitted] = useState(false)
+  const [isReturningUser, setIsReturningUser] = useState(false)
+  const [sessionManager, setSessionManager] = useState<any>(null)
+
+  // Initialize session manager on client side only
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const manager = getSessionManager()
+      setSessionManager(manager)
+      setIsReturningUser(manager.isReturningUser())
+    }
+  }, [])
+
+  const handlePhoneSubmit = async (phoneNumber: string) => {
+    if (!sessionManager) return
+    
+    try {
+      const result = await sessionManager.logPhoneNumber(phoneNumber)
+      setPhoneSubmitted(true)
+      setShowPhoneModal(false)
+      
+      // Show welcome message for returning users
+      if (result.isReturningUser) {
+        console.log(`환영합니다! 총 ${result.totalSearches}번 방문하셨습니다.`)
+      }
+    } catch (error) {
+      console.error('Failed to submit phone number:', error)
+      throw error
+    }
+  }
+
+  const handleLinkClick = async (
+    category: string,
+    productLink: string,
+    productTitle: string | null,
+    productThumbnail: string | null,
+    linkPosition: number
+  ) => {
+    if (!sessionManager) return
+    
+    // Find the item description from selectedItems
+    const categoryKey = category.split('_')[0]
+    const itemIndex = parseInt(category.split('_')[1] || '1') - 1
+    const selectedItem = selectedItems?.[itemIndex]
+    const itemDescription = selectedItem?.groundingdino_prompt || selectedItem?.description || categoryKey
+
+    await sessionManager.logLinkClick({
+      itemCategory: categoryKey,
+      itemDescription,
+      productLink,
+      productTitle: productTitle || undefined,
+      productThumbnail: productThumbnail || undefined,
+      linkPosition,
+    })
+  }
+
   if (isLoading) {
     return (
       <div className="max-w-2xl mx-auto mt-8">
@@ -38,122 +99,155 @@ export default function Results({ results, isLoading, croppedImages, onReset }: 
     dress: '드레스',
   }
 
-  return (
-    <div className="max-w-2xl mx-auto mt-8">
-      <h1 className="text-4xl font-bold text-gray-800 mb-8 text-center">
-        검색 결과
-      </h1>
+  const totalCroppedImages = croppedImages ? Object.keys(croppedImages).length : 0
 
-      <div className="bg-white rounded-2xl shadow-xl p-8">
+  // Debug logging
+  useEffect(() => {
+    console.log('🔍 Results Component State:', {
+      showPhoneModal,
+      phoneSubmitted,
+      hasSessionManager: !!sessionManager,
+      isReturningUser
+    })
+  }, [showPhoneModal, phoneSubmitted, sessionManager, isReturningUser])
+
+  return (
+    <>
+      {/* Phone Modal - Shows on top of results */}
+      {showPhoneModal && !phoneSubmitted && (
+        <PhoneModal
+          onPhoneSubmit={handlePhoneSubmit}
+          isReturningUser={isReturningUser}
+        />
+      )}
+
+      <div className="max-w-7xl mx-auto mt-8 px-4">
         {Object.keys(results).length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-gray-600 text-lg">
-              결과를 찾을 수 없습니다. 다른 이미지로 시도해보세요.
-            </p>
-          </div>
-        ) : (
-          <div className="space-y-6">
-            {/* Show all cropped images if available */}
-        {croppedImages && Object.keys(croppedImages).length > 0 && (
-                      <div className="border-2 border-gray-200 rounded-lg p-4 bg-gray-50">
-                        <p className="text-sm font-medium text-gray-700 mb-3">감지된 아이템:</p>
-                        <div className="flex flex-wrap gap-3 justify-center">
-                          {Object.entries(croppedImages).map(([category, imgUrl]) => {
-                            // Handle duplicate categories (e.g., "tops", "tops_1", "tops_2")
-                            const categoryKey = category.split('_')[0]
-                            const suffix = category.includes('_') ? ` ${category.split('_')[1]}` : ''
-                            const displayName = `${categoryNames[categoryKey] || categoryKey}${suffix}`
-                            
-                            return (
-                              <div key={category} className="border border-gray-200 rounded-lg overflow-hidden max-w-[200px]">
-                                <p className="text-xs font-medium text-gray-600 px-2 py-1 bg-gray-100 text-center">
-                                  {displayName}
-                                </p>
-                                <img 
-                                  src={imgUrl} 
-                                  alt={`Cropped ${category}`}
-                                  className="w-full h-auto object-contain"
-                                />
-                              </div>
-                            )
-                          })}
-                        </div>
-                      </div>
-                    )}
-            {Object.entries(results).map(([category, links]) => {
-              // Handle duplicate categories (e.g., "tops", "tops_1", "tops_2")
-              const categoryKey = category.split('_')[0] // Get base category name
-              const suffix = category.includes('_') ? ` ${category.split('_')[1]}` : ''
-              const displayName = `${categoryNames[categoryKey] || categoryKey}${suffix}`
-              
-              return (
-                <div
-                  key={category}
-                  className="border-2 border-gray-200 rounded-lg p-6 hover:border-indigo-500 transition-colors"
-                >
-                  <h3 className="text-xl font-medium text-gray-800 mb-4">
-                    {displayName}
-                  </h3>
-                <div className="grid grid-cols-3 gap-4">
-                  {links.map((option, index) => (
-                    <a
-                      key={index}
-                      href={option.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="aspect-square bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-lg overflow-hidden transition-colors flex flex-col group relative"
-                    >
-                      {option.thumbnail ? (
-                        <img 
-                          src={option.thumbnail} 
-                          alt={option.title || `Product ${index + 1}`}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                        />
-                      ) : (
-                        <div className="flex flex-col items-center justify-center h-full p-2">
-                          <span className="text-xs text-gray-600 font-medium mb-2 text-center">
-                            옵션 {index + 1}
-                          </span>
-                          <span className="text-sm text-gray-800 font-semibold text-center mb-3">
-                            {new URL(option.link).hostname}
-                          </span>
-                          <svg
-                            className="w-6 h-6 text-indigo-600 group-hover:scale-110 transition-transform"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+        <div className="bg-white rounded-2xl shadow-xl p-12 text-center">
+          <p className="text-gray-600 text-lg">
+            결과를 찾을 수 없습니다. 다른 이미지로 시도해보세요.
+          </p>
+          <button
+            onClick={onReset}
+            className="mt-6 bg-gray-100 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-colors"
+          >
+            처음부터 다시하기
+          </button>
+        </div>
+      ) : (
+        <div className="space-y-12">
+          {/* Cropped Images Section */}
+          {croppedImages && totalCroppedImages > 0 && (
+            <div className="bg-white rounded-2xl shadow-lg p-8">
+              <h2 className="text-2xl font-bold text-indigo-600 mb-6 flex items-center gap-2">
+                <span>✂️</span>
+                <span>Cropped Images ({totalCroppedImages}):</span>
+              </h2>
+              <div className="flex flex-wrap gap-4">
+                {Object.entries(croppedImages).map(([category, imgUrl]) => (
+                  <div 
+                    key={category} 
+                    className="rounded-2xl overflow-hidden shadow-md border border-gray-200"
+                    style={{ width: '180px', height: '180px' }}
+                  >
+                    <img 
+                      src={imgUrl} 
+                      alt={`Cropped ${category}`}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Results by Category */}
+          {Object.entries(results).map(([category, links]) => {
+            const categoryKey = category.split('_')[0]
+            const displayName = categoryNames[categoryKey] || categoryKey
+            const numProducts = links.length
+            
+            return (
+              <div key={category} className="bg-white rounded-2xl shadow-lg p-8">
+                <h2 className="text-3xl font-bold text-indigo-600 mb-8">
+                  {displayName.toUpperCase()} ({numProducts} products)
+                </h2>
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {links.map((option, index) => {
+                    const isBlurred = !phoneSubmitted // Blur if phone not submitted
+                    
+                    return (
+                      <div 
+                        key={index}
+                        className={`bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 hover:shadow-xl transition-all flex flex-col relative ${isBlurred ? 'pointer-events-none' : ''}`}
+                      >
+                        {/* Blur overlay when phone not submitted */}
+                        {isBlurred && (
+                          <div className="absolute inset-0 backdrop-blur-md bg-white/30 z-10 flex items-center justify-center">
+                            <div className="bg-yellow-100 rounded-xl p-4 shadow-lg transform rotate-2">
+                              <p className="text-gray-800 font-bold text-center">
+                                🔒 전화번호 입력 후<br />확인 가능합니다
+                              </p>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Product Image */}
+                        <div className="aspect-[4/3] overflow-hidden bg-gray-50">
+                          {option.thumbnail ? (
+                            <img 
+                              src={option.thumbnail} 
+                              alt={option.title || `Product ${index + 1}`}
+                              className="w-full h-full object-cover hover:scale-105 transition-transform"
                             />
-                          </svg>
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center text-gray-400">
+                              No Image
+                            </div>
+                          )}
                         </div>
-                      )}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-2">
-                        <span className="text-white text-xs font-medium line-clamp-2">
-                          {option.title || new URL(option.link).hostname}
-                        </span>
+                        
+                        {/* Product Title */}
+                        <div className="p-4 flex-grow">
+                          <p className="text-sm text-gray-800 line-clamp-2 min-h-[2.5rem]">
+                            {option.title || new URL(option.link).hostname}
+                          </p>
+                        </div>
+                        
+                        {/* View Product Button */}
+                        <div className="p-4 pt-0">
+                          <a
+                            href={option.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={() => handleLinkClick(category, option.link, option.title, option.thumbnail, index + 1)}
+                            className="block w-full bg-indigo-600 hover:bg-indigo-700 text-white text-center py-3 rounded-lg font-semibold transition-colors"
+                          >
+                            View Product →
+                          </a>
+                        </div>
                       </div>
-                    </a>
-                  ))}
+                    )
+                  })}
                 </div>
               </div>
-              )
-            })}
-          </div>
-        )}
+            )
+          })}
 
-        <button
-          onClick={onReset}
-          className="mt-8 w-full bg-gray-100 text-gray-700 py-4 rounded-lg font-semibold hover:bg-gray-200 transition-colors"
-        >
-          처음부터 다시하기
-        </button>
+          {/* Reset Button */}
+          <div className="text-center pb-8">
+            <button
+              onClick={onReset}
+              className="bg-gray-100 text-gray-700 px-8 py-4 rounded-lg font-semibold hover:bg-gray-200 transition-colors"
+            >
+              처음부터 다시하기
+            </button>
+          </div>
+        </div>
+      )}
       </div>
-    </div>
+    </>
   )
 }
 

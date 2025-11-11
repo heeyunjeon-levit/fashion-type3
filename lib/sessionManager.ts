@@ -1,0 +1,233 @@
+/**
+ * Session Manager - Track user sessions and events
+ * Generates unique session IDs and stores them in localStorage
+ */
+
+export class SessionManager {
+  private sessionId: string
+  private userId: string | null = null
+  private phoneNumber: string | null = null
+
+  constructor() {
+    // Get or create session ID
+    if (typeof window !== 'undefined') {
+      this.sessionId = this.getOrCreateSessionId()
+      this.userId = localStorage.getItem('userId')
+      this.phoneNumber = localStorage.getItem('phoneNumber')
+    } else {
+      this.sessionId = this.generateSessionId()
+    }
+  }
+
+  private generateSessionId(): string {
+    return `session_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`
+  }
+
+  private getOrCreateSessionId(): string {
+    let sessionId = sessionStorage.getItem('sessionId')
+    
+    if (!sessionId) {
+      sessionId = this.generateSessionId()
+      sessionStorage.setItem('sessionId', sessionId)
+      
+      // Initialize session in database
+      this.initializeSession()
+    }
+    
+    return sessionId
+  }
+
+  private async initializeSession() {
+    try {
+      await fetch('/api/log/session/init', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sessionId: this.sessionId,
+          userId: this.userId,
+          phoneNumber: this.phoneNumber,
+        }),
+      })
+    } catch (error) {
+      console.error('Failed to initialize session:', error)
+    }
+  }
+
+  getSessionId(): string {
+    return this.sessionId
+  }
+
+  getUserId(): string | null {
+    return this.userId
+  }
+
+  getPhoneNumber(): string | null {
+    return this.phoneNumber
+  }
+
+  setUserInfo(userId: string, phoneNumber: string) {
+    this.userId = userId
+    this.phoneNumber = phoneNumber
+    
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('userId', userId)
+      localStorage.setItem('phoneNumber', phoneNumber)
+    }
+  }
+
+  isReturningUser(): boolean {
+    return this.userId !== null && this.phoneNumber !== null
+  }
+
+  // Log an event
+  async logEvent(eventType: string, eventData: any = {}) {
+    try {
+      await fetch('/api/log/event', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sessionId: this.sessionId,
+          userId: this.userId,
+          eventType,
+          eventData,
+          timestamp: new Date().toISOString(),
+        }),
+      })
+    } catch (error) {
+      console.error('Failed to log event:', error)
+    }
+  }
+
+  // Update session data
+  async updateSession(data: any) {
+    try {
+      await fetch('/api/log/session/update', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sessionId: this.sessionId,
+          ...data,
+        }),
+      })
+    } catch (error) {
+      console.error('Failed to update session:', error)
+    }
+  }
+
+  // Log image upload
+  async logImageUpload(imageUrl: string) {
+    await this.logEvent('image_upload', { imageUrl })
+    await this.updateSession({
+      uploaded_image_url: imageUrl,
+      uploaded_at: new Date().toISOString(),
+    })
+  }
+
+  // Log GPT analysis
+  async logGPTAnalysis(analysisResult: any) {
+    await this.logEvent('gpt_analysis', { 
+      itemCount: analysisResult.items?.length || 0,
+      items: analysisResult.items,
+    })
+    await this.updateSession({
+      gpt_analysis: analysisResult,
+      analyzed_at: new Date().toISOString(),
+    })
+  }
+
+  // Log cropped images
+  async logCroppedImages(croppedImages: any[]) {
+    await this.logEvent('items_cropped', { 
+      count: croppedImages.length,
+      items: croppedImages,
+    })
+    await this.updateSession({
+      cropped_images: croppedImages,
+      cropped_at: new Date().toISOString(),
+    })
+  }
+
+  // Log user selection
+  async logItemSelection(selectedItems: any[]) {
+    await this.logEvent('items_selected', { 
+      count: selectedItems.length,
+      items: selectedItems,
+    })
+    await this.updateSession({
+      selected_items: selectedItems,
+      selected_at: new Date().toISOString(),
+    })
+  }
+
+  // Log search results with GPT reasoning
+  async logSearchResults(results: any, gptReasoning: any = {}) {
+    await this.logEvent('search_completed', { 
+      resultCount: Object.keys(results).length,
+    })
+    await this.updateSession({
+      search_results: results,
+      gpt_selection_reasoning: gptReasoning,
+      searched_at: new Date().toISOString(),
+    })
+  }
+
+  // Log phone number collection
+  async logPhoneNumber(phoneNumber: string, countryCode: string = '+82') {
+    const response = await fetch('/api/log/phone', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        sessionId: this.sessionId,
+        phoneNumber,
+        countryCode,
+      }),
+    })
+
+    const data = await response.json()
+    
+    if (data.userId) {
+      this.setUserInfo(data.userId, phoneNumber)
+    }
+
+    await this.logEvent('phone_provided', { phoneNumber, countryCode })
+    await this.updateSession({
+      phone_collected_at: new Date().toISOString(),
+      status: 'completed',
+    })
+
+    return data
+  }
+
+  // Log link click
+  async logLinkClick(linkData: {
+    itemCategory: string
+    itemDescription: string
+    productLink: string
+    productTitle?: string
+    productThumbnail?: string
+    linkPosition: number
+  }) {
+    await fetch('/api/log/click', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        sessionId: this.sessionId,
+        userId: this.userId,
+        ...linkData,
+      }),
+    })
+
+    await this.logEvent('link_clicked', linkData)
+  }
+}
+
+// Singleton instance
+let sessionManagerInstance: SessionManager | null = null
+
+export function getSessionManager(): SessionManager {
+  if (!sessionManagerInstance) {
+    sessionManagerInstance = new SessionManager()
+  }
+  return sessionManagerInstance
+}
+
