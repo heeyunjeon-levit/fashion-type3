@@ -123,16 +123,27 @@ export class SessionManager {
     })
   }
 
-  // Log GPT analysis
+  // Log GPT analysis (Stage 1: Detection with GroundingDINO prompts)
   async logGPTAnalysis(analysisResult: any) {
+    console.log('📝 Logging GPT Analysis:', {
+      itemCount: analysisResult.items?.length || 0,
+      cached: analysisResult.cached,
+      sampleItem: analysisResult.items?.[0]
+    })
+    
     await this.logEvent('gpt_analysis', { 
       itemCount: analysisResult.items?.length || 0,
+      cached: analysisResult.cached,
       items: analysisResult.items,
+      timestamp: new Date().toISOString(),
     })
+    
     await this.updateSession({
       gpt_analysis: analysisResult,
       analyzed_at: new Date().toISOString(),
     })
+    
+    console.log('✅ GPT Analysis logged to session')
   }
 
   // Log cropped images
