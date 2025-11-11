@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import ImageUpload from './components/ImageUpload'
 import CroppedImageGallery from './components/CroppedImageGallery'
-import Results from './components/Results'
+import ResultsBottomSheet from './components/ResultsBottomSheet'
 import { getSessionManager } from '../lib/sessionManager'
 
 export interface DetectedItem {
@@ -212,10 +212,11 @@ export default function Home() {
           </div>
         )}
         {currentStep === 'results' && (
-          <Results
+          <ResultsBottomSheet
             results={results}
             isLoading={isLoading}
             croppedImages={croppedImagesForResults}
+            originalImageUrl={uploadedImageUrl}
             onReset={handleReset}
             selectedItems={selectedItems}
           />
