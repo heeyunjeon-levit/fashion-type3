@@ -762,7 +762,7 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links preferred) or
           console.log(`✅ Found ${validLinks.length} link(s) for ${resultKey}:`, validLinks.slice(0, 3))
           return { resultKey, results: linksWithThumbnails, source: 'gpt' }
         } else {
-          // Fallback: take top 3 organic results directly (with filtering)
+          // Fallback: take top 3 organic results directly (with STRICT filtering)
           const fallback = organicResults
             .filter((item: any) => {
               if (typeof item?.link !== 'string' || !item.link.startsWith('http')) return false
@@ -773,6 +773,35 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links preferred) or
               const isSocialMedia = blockedDomains.some(domain => linkLower.includes(domain))
               if (isSocialMedia) {
                 console.log(`🛟 Fallback: Blocked social media: ${item.link.substring(0, 60)}...`)
+                return false
+              }
+              
+              // Filter out forums, communities, blogs, media sites (NON-SHOPPING)
+              const nonShoppingSites = [
+                // Korean forums/communities
+                'theqoo.net', 'pann.nate.com', 'dcinside.com', 'fmkorea.com', 'clien.net',
+                'ppomppu.co.kr', 'bobaedream.co.kr', 'mlbpark.donga.com', 'ruliweb.com',
+                'instiz.net', 'ygosu.com', 'ilbe.com', 'todayhumor.co.kr',
+                // Blogs
+                'blog.naver.com', 'tistory.com', 'medium.com', 'blogger.com', 'wordpress.com',
+                'brunch.co.kr', 'velog.io', 'oopy.io',
+                // Media/streaming
+                'youtube.com', 'youtu.be', 'soundcloud.com', 'spotify.com', 'apple.com/music',
+                'vimeo.com', 'twitch.tv', 'tiktok.com',
+                // News/media
+                'naver.com/news', 'daum.net/news', 'joins.com', 'chosun.com', 'donga.com',
+                'hankyung.com', 'mk.co.kr', 'sedaily.com', 'mt.co.kr', 'hani.co.kr',
+                // Wiki/reference
+                'wikipedia.org', 'namu.wiki', 'wikiwand.com',
+                // Q&A/forums
+                'quora.com', 'reddit.com', 'stackoverflow.com', 'kin.naver.com',
+                // File sharing
+                'drive.google.com', 'dropbox.com', 'mega.nz'
+              ]
+              
+              const isNonShopping = nonShoppingSites.some(domain => linkLower.includes(domain))
+              if (isNonShopping) {
+                console.log(`🛟 Fallback: Blocked non-shopping site: ${item.link.substring(0, 60)}...`)
                 return false
               }
               
@@ -796,6 +825,27 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links preferred) or
               
               if (isCategoryPage) {
                 console.log(`🛟 Fallback: Blocked category page: ${item.link.substring(0, 60)}...`)
+                return false
+              }
+              
+              // Positive signal: Must have shopping indicators
+              const hasShoppingIndicators = 
+                linkLower.includes('/product') ||
+                linkLower.includes('/item') ||
+                linkLower.includes('/goods') ||
+                linkLower.includes('/shop') ||
+                linkLower.includes('/store') ||
+                linkLower.includes('/detail') ||
+                linkLower.includes('smartstore.naver.com') ||
+                linkLower.includes('.com/kr/') ||
+                linkLower.includes('.co.kr') ||
+                linkLower.match(/\/(p|pd|prd|prod)\/\d+/) || // product ID patterns
+                linkLower.match(/\/buy/) ||
+                linkLower.match(/\/cart/) ||
+                linkLower.match(/\/commerce/)
+              
+              if (!hasShoppingIndicators) {
+                console.log(`🛟 Fallback: No shopping indicators: ${item.link.substring(0, 60)}...`)
                 return false
               }
               
