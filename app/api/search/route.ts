@@ -76,8 +76,8 @@ export async function POST(request: NextRequest) {
               url: originalImageUrl,
               gl: 'kr',  // Korea region
               hl: 'ko',  // Korean language
-              // Add shopping context to bias toward e-commerce
-              q: 'buy fashion clothes online shopping',
+              // General fashion shopping context
+              q: 'shop fashion online',
             }),
           })
         })
@@ -152,7 +152,7 @@ export async function POST(request: NextRequest) {
       
       try {
         // Call Serper Lens 3 times for best result coverage
-        // Add shopping context to bias results toward e-commerce sites
+        // Add general shopping context to bias toward e-commerce (not category-specific)
         const serperCallPromises = Array.from({ length: 3 }, (_, i) => {
           console.log(`   Run ${i + 1}/3...`)
           return fetch('https://google.serper.dev/lens', {
@@ -165,8 +165,8 @@ export async function POST(request: NextRequest) {
               url: croppedImageUrl,
               gl: 'kr',  // Korea region
               hl: 'ko',  // Korean language
-              // Add shopping context query to bias toward e-commerce results
-              q: `buy ${categoryKey} online shopping product`,
+              // General fashion shopping context (not too narrow)
+              q: 'shop fashion online',
             }),
           })
         })
