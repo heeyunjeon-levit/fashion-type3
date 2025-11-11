@@ -139,6 +139,11 @@ export default function Home() {
     }
   }
 
+  const handleBack = () => {
+    // Go back to cropped image selection without losing data
+    setCurrentStep('gallery')
+  }
+
   const handleReset = () => {
     setCurrentStep('upload')
     setUploadedImageUrl('')
@@ -218,6 +223,7 @@ export default function Home() {
             croppedImages={croppedImagesForResults}
             originalImageUrl={uploadedImageUrl}
             onReset={handleReset}
+            onBack={handleBack}
             selectedItems={selectedItems}
           />
         )}

@@ -16,6 +16,7 @@ interface ResultsBottomSheetProps {
   croppedImages?: Record<string, string>
   originalImageUrl: string // Background image
   onReset: () => void
+  onBack?: () => void // Go back to cropped images selection
   selectedItems?: any[]
 }
 
@@ -25,6 +26,7 @@ export default function ResultsBottomSheet({
   croppedImages,
   originalImageUrl,
   onReset,
+  onBack,
   selectedItems
 }: ResultsBottomSheetProps) {
   const [showPhoneModal, setShowPhoneModal] = useState(true)
@@ -284,13 +286,14 @@ export default function ResultsBottomSheet({
         ></div>
       </div>
 
-      {/* Close button */}
+      {/* Back button */}
       <button
-        onClick={onReset}
+        onClick={onBack || onReset}
         className="fixed top-6 left-6 z-40 bg-white/90 backdrop-blur-sm rounded-full p-3 shadow-lg hover:bg-white transition-colors"
+        title="뒤로가기"
       >
         <svg className="w-6 h-6 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
         </svg>
       </button>
 
