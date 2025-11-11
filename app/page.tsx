@@ -35,13 +35,22 @@ export default function Home() {
     }
   }, [])
 
-  const handleImageUploaded = async (imageUrl: string) => {
+  const handleImageUploaded = async (imageUrl: string, uploadTimeSeconds?: number) => {
     setUploadedImageUrl(imageUrl)
     setCurrentStep('analyzing')
 
-    // Log image upload
+    // Log image upload and frontend timing
     if (sessionManager) {
       await sessionManager.logImageUpload(imageUrl)
+      
+      // Log frontend upload timing
+      if (uploadTimeSeconds) {
+        console.log(`⏱️  Frontend Upload: ${uploadTimeSeconds.toFixed(2)}s`)
+        await sessionManager.logEvent('frontend_timing', {
+          upload_seconds: parseFloat(uploadTimeSeconds.toFixed(3)),
+          stage: 'image_upload'
+        })
+      }
     }
 
     try {

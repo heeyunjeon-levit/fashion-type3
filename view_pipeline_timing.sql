@@ -1,16 +1,16 @@
 -- ⏱️  View Pipeline Timing Performance
 -- This query shows how long each stage of the pipeline takes
 
--- 1. Latest pipeline timing (backend + search API)
+-- 1. Latest pipeline timing (frontend + backend + search API)
 SELECT 
   session_id,
   event_type,
   created_at,
   event_data
 FROM events
-WHERE event_type IN ('pipeline_timing', 'backend_timing')
+WHERE event_type IN ('frontend_timing', 'backend_timing', 'pipeline_timing')
 ORDER BY created_at DESC
-LIMIT 10;
+LIMIT 15;
 
 -- 2. Complete timing view (backend + search API for same session)
 -- Backend fields in chronological order
@@ -213,4 +213,58 @@ WHERE event_type = 'backend_timing'
   AND event_data IS NOT NULL
 ORDER BY created_at DESC
 LIMIT 20;
+
+-- 8. Complete End-to-End Timing (Frontend Upload + Backend + Search)
+-- Shows the COMPLETE user experience timing
+WITH frontend_timing AS (
+  SELECT 
+    session_id,
+    (event_data->>'upload_seconds')::float as frontend_upload_seconds,
+    created_at
+  FROM events
+  WHERE event_type = 'frontend_timing'
+),
+backend_timing AS (
+  SELECT 
+    session_id,
+    (event_data->>'download_seconds')::float as download_seconds,
+    (event_data->>'gpt4o_seconds')::float as gpt4o_seconds,
+    (event_data->>'groundingdino_seconds')::float as groundingdino_seconds,
+    (event_data->>'processing_seconds')::float as processing_seconds,
+    (event_data->>'upload_seconds')::float as backend_upload_seconds,
+    (event_data->>'total_seconds')::float as backend_total,
+    created_at
+  FROM events
+  WHERE event_type = 'backend_timing'
+),
+search_timing AS (
+  SELECT 
+    session_id,
+    (event_data->>'wall_clock_seconds')::float as search_wall_clock,
+    (event_data->>'total_seconds')::float as search_total,
+    created_at
+  FROM events
+  WHERE event_type = 'pipeline_timing'
+)
+SELECT 
+  COALESCE(f.session_id, b.session_id, s.session_id) as session_id,
+  COALESCE(f.created_at, b.created_at, s.created_at) as created_at,
+  -- Frontend
+  ROUND(COALESCE(f.frontend_upload_seconds, 0)::numeric, 2) as frontend_upload,
+  -- Backend stages
+  ROUND(COALESCE(b.download_seconds, 0)::numeric, 3) as download,
+  ROUND(COALESCE(b.gpt4o_seconds, 0)::numeric, 2) as gpt4o,
+  ROUND(COALESCE(b.groundingdino_seconds, 0)::numeric, 3) as dino,
+  ROUND(COALESCE(b.processing_seconds, 0)::numeric, 3) as processing,
+  ROUND(COALESCE(b.backend_upload_seconds, 0)::numeric, 3) as backend_upload,
+  ROUND(COALESCE(b.backend_total, 0)::numeric, 2) as backend_total,
+  -- Search
+  ROUND(COALESCE(s.search_wall_clock, 0)::numeric, 2) as search,
+  -- Complete end-to-end
+  ROUND((COALESCE(f.frontend_upload_seconds, 0) + COALESCE(b.backend_total, 0) + COALESCE(s.search_wall_clock, 0))::numeric, 2) as end_to_end_total
+FROM frontend_timing f
+FULL OUTER JOIN backend_timing b ON f.session_id = b.session_id
+FULL OUTER JOIN search_timing s ON COALESCE(f.session_id, b.session_id) = s.session_id
+ORDER BY COALESCE(f.created_at, b.created_at, s.created_at) DESC
+LIMIT 10;
 

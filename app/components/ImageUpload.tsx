@@ -4,7 +4,7 @@ import { useState, useRef } from 'react'
 import imageCompression from 'browser-image-compression'
 
 interface ImageUploadProps {
-  onImageUploaded: (imageUrl: string) => void
+  onImageUploaded: (imageUrl: string, uploadTimeSeconds?: number) => void
 }
 
 export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
@@ -106,18 +106,22 @@ export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
     if (!image) return
 
     setIsUploading(true)
+    const uploadStartTime = performance.now()
+    
     try {
-      console.log('📤 Starting upload...', {
+      console.log('📤 Starting frontend upload...', {
         name: image.name,
         type: image.type,
         size: image.size,
       })
 
       let fileToUpload = image
+      let compressionTime = 0
 
       // Compress image if it's larger than 4MB (Vercel limit is 4.5MB)
       if (image.size > 4 * 1024 * 1024) {
         console.log('🗜️ Compressing large image...')
+        const compressionStart = performance.now()
         try {
           const compressed = await imageCompression(image, {
             maxSizeMB: 3.5, // Target 3.5MB to have buffer
@@ -125,7 +129,8 @@ export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
             useWebWorker: true,
             fileType: 'image/jpeg',
           })
-          console.log(`✅ Compressed: ${image.size} → ${compressed.size} bytes`)
+          compressionTime = (performance.now() - compressionStart) / 1000
+          console.log(`✅ Compressed: ${image.size} → ${compressed.size} bytes (${compressionTime.toFixed(2)}s)`)
           fileToUpload = compressed
         } catch (compressionError) {
           console.error('⚠️ Compression failed, uploading original:', compressionError)
@@ -137,20 +142,25 @@ export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
       const formData = new FormData()
       formData.append('file', fileToUpload)
 
+      const uploadRequestStart = performance.now()
       const response = await fetch('/api/upload', {
         method: 'POST',
         body: formData,
       })
 
       const data = await response.json()
+      const uploadRequestTime = (performance.now() - uploadRequestStart) / 1000
 
       if (!response.ok) {
         console.error('❌ Upload failed:', data)
         throw new Error(data.error || 'Upload failed')
       }
 
+      const totalUploadTime = (performance.now() - uploadStartTime) / 1000
       console.log('✅ Upload successful:', data.imageUrl)
-      onImageUploaded(data.imageUrl)
+      console.log(`⏱️  Frontend Upload Timing: ${totalUploadTime.toFixed(2)}s (compression: ${compressionTime.toFixed(2)}s, network: ${uploadRequestTime.toFixed(2)}s)`)
+      
+      onImageUploaded(data.imageUrl, totalUploadTime)
     } catch (error) {
       console.error('Error uploading image:', error)
       const errorMessage = error instanceof Error ? error.message : 'Unknown error'
