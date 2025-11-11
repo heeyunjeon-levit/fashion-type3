@@ -42,18 +42,25 @@ class GPT4OFashionAnalyzer:
         count_prompt = """
         Look at this fashion image and identify the most noticeable fashion items worn by the main person.
 
-        PRIORITIZE THESE MAIN ITEMS:
-        1. CLOTHING: shirts, tops, dresses, pants, skirts, jackets, sweaters
+        PRIORITIZE THESE MAIN ITEMS (IN ORDER):
+        1. PRIMARY CLOTHING: What is the person WEARING? (shirts, tops, hoodies, sweaters, jackets, dresses, pants, skirts)
         2. FOOTWEAR: shoes, boots, sandals (only if clearly visible)
-        3. BAGS: handbags, backpacks, purses (only if prominent/eye-catching)
+        3. BAGS: handbags, backpacks, purses (ONLY if CARRIED separately - NOT clothing straps!)
         4. OBVIOUS ACCESSORIES: large sunglasses, statement jewelry, watches (only if very noticeable)
+
+        🚨 CRITICAL - AVOID FALSE DETECTIONS:
+        - **DO NOT confuse clothing straps/harnesses with backpacks!**
+        - **DO NOT confuse decorative belts/straps on clothing as bags!**
+        - A bag must be a SEPARATE item being CARRIED, not part of the clothing
+        - Straps across shoulders = likely part of clothing/harness, NOT a backpack
+        - Always identify the PRIMARY GARMENT first (hoodie, jacket, shirt, etc.)
 
         CONSERVATIVE APPROACH:
         - Focus on items that immediately catch your eye
+        - Identify the main garment BEFORE looking for accessories
         - Skip small, subtle accessories (rings, earrings, bracelets unless very bold)
-        - Skip items that require careful examination to notice
-        - Only detect accessories that are clearly visible and make a visual impact
-        - Prioritize the main outfit pieces over small details
+        - Only detect bags if they are CLEARLY separate from clothing
+        - When in doubt between clothing and accessory, choose clothing
 
         For each item you identify, provide:
         1. A "groundingdino_prompt" - ULTRA-SIMPLE detection keyword (2-3 words max, just color + item type)
@@ -107,7 +114,7 @@ class GPT4OFashionAnalyzer:
                                 "type": "image_url",
                                 "image_url": {
                                     "url": f"data:image/jpeg;base64,{base64_image}",
-                                    "detail": "low"
+                                    "detail": "high"  # High detail to avoid misidentification
                                 }
                             }
                         ]
