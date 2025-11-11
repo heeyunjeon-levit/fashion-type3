@@ -132,6 +132,13 @@ export default function Home() {
         if (data.meta?.gptReasoning) {
           console.log('🤖 GPT Product Selection Reasoning:', data.meta.gptReasoning)
         }
+        
+        // Console log timing data for debugging
+        if (data.meta?.timing) {
+          console.log('⏱️  Pipeline Timing:', data.meta.timing)
+        } else {
+          console.log('⚠️  No timing data in response')
+        }
       }
       
       setCurrentStep('results')

@@ -1,18 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
-
-function getSupabaseClient() {
-  return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY || ''
-  )
-}
+import { getSupabaseServerClient } from '../../../../../lib/supabaseServer'
 
 export async function POST(request: NextRequest) {
   try {
     const { sessionId, ...updateData } = await request.json()
 
-    const supabase = getSupabaseClient()
+    const supabase = getSupabaseServerClient()
     const { error } = await supabase
       .from('sessions')
       .update(updateData)
