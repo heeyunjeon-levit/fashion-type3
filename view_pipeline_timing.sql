@@ -8,9 +8,38 @@ SELECT
   created_at,
   event_data
 FROM events
-WHERE event_type = 'pipeline_timing'
+WHERE event_type IN ('pipeline_timing', 'backend_timing')
 ORDER BY created_at DESC
 LIMIT 10;
+
+-- 2. Complete timing view (backend + search API for same session)
+SELECT 
+  e1.session_id,
+  e1.created_at,
+  'Backend (GPT-4o + GroundingDINO)' as stage,
+  (e1.event_data->>'gpt4o_seconds')::float as gpt4o_seconds,
+  (e1.event_data->>'groundingdino_seconds')::float as groundingdino_seconds,
+  (e1.event_data->>'total_seconds')::float as backend_total_seconds,
+  NULL::float as serper_seconds,
+  NULL::float as gpt4_turbo_seconds,
+  NULL::float as search_total_seconds
+FROM events e1
+WHERE e1.event_type = 'backend_timing'
+UNION ALL
+SELECT 
+  e2.session_id,
+  e2.created_at,
+  'Search API (Serper + GPT-4 Turbo)' as stage,
+  NULL as gpt4o_seconds,
+  NULL as groundingdino_seconds,
+  NULL as backend_total_seconds,
+  (e2.event_data->>'serper_seconds')::float as serper_seconds,
+  (e2.event_data->>'gpt4_turbo_seconds')::float as gpt4_turbo_seconds,
+  (e2.event_data->>'total_seconds')::float as search_total_seconds
+FROM events e2
+WHERE e2.event_type = 'pipeline_timing'
+ORDER BY created_at DESC, session_id
+LIMIT 20;
 
 -- 2. Average timing by stage (last 50 searches)
 WITH recent_timing AS (
@@ -111,15 +140,39 @@ WHERE event_type = 'pipeline_timing'
 GROUP BY serper_calls, gpt4_turbo_calls
 ORDER BY serper_calls, gpt4_turbo_calls;
 
--- 8. Complete pipeline view (backend + search API timing)
--- Note: Backend timing (GPT-4o + GroundingDINO) is logged separately in Python logs
--- This shows only Search API timing (Serper + GPT-4 Turbo)
+-- 8. Complete end-to-end timing (backend + search API combined)
+WITH backend_timing AS (
+  SELECT 
+    session_id,
+    (event_data->>'gpt4o_seconds')::float as gpt4o_seconds,
+    (event_data->>'groundingdino_seconds')::float as groundingdino_seconds,
+    (event_data->>'total_seconds')::float as backend_total,
+    created_at
+  FROM events
+  WHERE event_type = 'backend_timing'
+),
+search_timing AS (
+  SELECT 
+    session_id,
+    (event_data->>'serper_seconds')::float as serper_seconds,
+    (event_data->>'gpt4_turbo_seconds')::float as gpt4_turbo_seconds,
+    (event_data->>'total_seconds')::float as search_total,
+    created_at
+  FROM events
+  WHERE event_type = 'pipeline_timing'
+)
 SELECT 
-  e.session_id,
-  e.created_at,
-  jsonb_pretty(e.event_data) as timing_details
-FROM events e
-WHERE event_type = 'pipeline_timing'
-ORDER BY created_at DESC
-LIMIT 5;
+  COALESCE(b.session_id, s.session_id) as session_id,
+  COALESCE(b.created_at, s.created_at) as created_at,
+  ROUND(COALESCE(b.gpt4o_seconds, 0)::numeric, 2) as gpt4o_seconds,
+  ROUND(COALESCE(b.groundingdino_seconds, 0)::numeric, 3) as groundingdino_seconds,
+  ROUND(COALESCE(b.backend_total, 0)::numeric, 2) as backend_total,
+  ROUND(COALESCE(s.serper_seconds, 0)::numeric, 2) as serper_seconds,
+  ROUND(COALESCE(s.gpt4_turbo_seconds, 0)::numeric, 2) as gpt4_turbo_seconds,
+  ROUND(COALESCE(s.search_total, 0)::numeric, 2) as search_total,
+  ROUND((COALESCE(b.backend_total, 0) + COALESCE(s.search_total, 0))::numeric, 2) as end_to_end_total
+FROM backend_timing b
+FULL OUTER JOIN search_timing s ON b.session_id = s.session_id
+ORDER BY COALESCE(b.created_at, s.created_at) DESC
+LIMIT 10;
 

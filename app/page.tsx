@@ -61,10 +61,28 @@ export default function Home() {
         console.log(`✅ Analysis complete: ${analyzeData.items.length} items detected and cropped`)
         setDetectedItems(analyzeData.items)
 
+        // Log backend timing if available
+        if (analyzeData.timing) {
+          console.log('⏱️  Backend Timing:', {
+            gpt4o: `${analyzeData.timing.gpt4o_seconds}s`,
+            groundingdino: `${analyzeData.timing.groundingdino_seconds}s`,
+            total: `${analyzeData.timing.total_seconds}s`
+          })
+        }
+
         // Log GPT analysis
         if (sessionManager) {
           await sessionManager.logGPTAnalysis(analyzeData)
           await sessionManager.logCroppedImages(analyzeData.items)
+          
+          // Log backend timing as a separate event
+          if (analyzeData.timing) {
+            await sessionManager.logEvent('backend_timing', {
+              gpt4o_seconds: analyzeData.timing.gpt4o_seconds,
+              groundingdino_seconds: analyzeData.timing.groundingdino_seconds,
+              total_seconds: analyzeData.timing.total_seconds
+            })
+          }
         }
       } else {
         console.log('⚠️ No items detected by AI')

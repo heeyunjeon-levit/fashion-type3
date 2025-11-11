@@ -13,6 +13,11 @@ export interface DetectedItem {
 export interface AnalyzeResponse {
   items: DetectedItem[]
   cached: boolean
+  timing?: {
+    gpt4o_seconds: number
+    groundingdino_seconds: number
+    total_seconds: number
+  }
 }
 
 export async function POST(request: NextRequest) {
@@ -59,6 +64,14 @@ export async function POST(request: NextRequest) {
       console.log(`   - ${item.category}: ${item.groundingdino_prompt}`)
     })
     console.log(`💾 Cached: ${result.cached}`)
+    
+    // Log backend timing if available
+    if (result.timing) {
+      console.log('\n⏱️  BACKEND TIMING:')
+      console.log(`   GPT-4o Vision: ${result.timing.gpt4o_seconds}s`)
+      console.log(`   GroundingDINO: ${result.timing.groundingdino_seconds}s`)
+      console.log(`   Total backend: ${result.timing.total_seconds}s`)
+    }
     console.log('================================================================================\n')
 
     return NextResponse.json(result)

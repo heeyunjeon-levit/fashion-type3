@@ -113,14 +113,24 @@ def analyze_and_crop_all(image_url: str) -> dict:
                 },
                 ...
             ],
-            "cached": false
+            "cached": false,
+            "timing": {
+                "gpt4o_seconds": 3.45,
+                "groundingdino_seconds": 0.567,
+                "total_seconds": 4.02
+            }
         }
     """
     import requests
     from io import BytesIO
     from PIL import Image
+    import time
     
     print(f"🔍 Analyzing and cropping image: {image_url}")
+    
+    total_start = time.time()
+    gpt4o_time = 0
+    dino_time = 0
     
     # Check cache first for GPT result
     _clean_cache()
@@ -159,7 +169,10 @@ def analyze_and_crop_all(image_url: str) -> dict:
         
         try:
             print("🤖 Running GPT-4o analysis...")
+            gpt_start = time.time()
             gpt_result = cropper.gpt_analyzer.analyze_fashion_items(temp_image_path)
+            gpt4o_time = time.time() - gpt_start
+            print(f"⏱️  GPT-4o analysis took: {gpt4o_time:.2f}s")
         finally:
             if os.path.exists(temp_image_path):
                 os.unlink(temp_image_path)
@@ -191,8 +204,9 @@ def analyze_and_crop_all(image_url: str) -> dict:
                 return_tensors="pt"
             ).to(cropper.device)
             
-            # Run inference
+            # Run inference with timing
             import torch
+            dino_start = time.time()
             with torch.no_grad():
                 outputs = cropper.model(**inputs)
             
@@ -203,6 +217,9 @@ def analyze_and_crop_all(image_url: str) -> dict:
                 text_threshold=0.15,
                 target_sizes=[(image_height, image_width)]
             )
+            item_dino_time = time.time() - dino_start
+            dino_time += item_dino_time
+            print(f"   ⏱️  GroundingDINO inference: {item_dino_time:.3f}s")
             
             if len(results) == 0 or len(results[0]["boxes"]) == 0:
                 print(f"   ⚠️  No detection for '{prompt}'")
@@ -286,9 +303,25 @@ def analyze_and_crop_all(image_url: str) -> dict:
         }
         print(f"💾 Cached GPT result for {image_url}")
     
+    # Calculate total time
+    total_time = time.time() - total_start
+    
+    # Print timing summary
+    print(f"\n⏱️  TIMING SUMMARY:")
+    print(f"   GPT-4o Vision API: {gpt4o_time:.2f}s")
+    print(f"   GroundingDINO (total): {dino_time:.3f}s")
+    if len(gpt_result['items']) > 0:
+        print(f"   GroundingDINO (avg per item): {dino_time/len(gpt_result['items']):.3f}s")
+    print(f"   Total processing: {total_time:.2f}s\n")
+    
     return {
         "items": cropped_items,
-        "cached": bool(cached_gpt_result)
+        "cached": bool(cached_gpt_result),
+        "timing": {
+            "gpt4o_seconds": round(gpt4o_time, 2),
+            "groundingdino_seconds": round(dino_time, 3),
+            "total_seconds": round(total_time, 2)
+        }
     }
 
 def analyze_image_only(image_url: str) -> dict:
