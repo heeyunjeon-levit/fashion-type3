@@ -193,11 +193,13 @@ export class SessionManager {
     // Log timing data as a separate event
     if (meta.timing) {
       await this.logEvent('pipeline_timing', {
-        serper_seconds: meta.timing.serper_seconds,
+        wall_clock_seconds: meta.timing.wall_clock_seconds,
+        serper_api_time_seconds: meta.timing.serper_api_time_seconds,
         serper_count: meta.timing.serper_count,
-        gpt4_turbo_seconds: meta.timing.gpt4_turbo_seconds,
+        gpt4_turbo_api_time_seconds: meta.timing.gpt4_turbo_api_time_seconds,
         gpt4_turbo_count: meta.timing.gpt4_turbo_count,
-        total_seconds: meta.timing.total_seconds
+        total_seconds: meta.timing.total_seconds,
+        categories_parallel: meta.timing.categories_parallel
       })
     }
     

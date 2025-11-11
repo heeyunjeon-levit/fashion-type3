@@ -47,10 +47,11 @@ export async function POST(request: NextRequest) {
     const allResults: Record<string, Array<{ link: string; thumbnail: string | null; title: string | null }>> = {}
     const gptReasoningData: Record<string, any> = {}
     const timingData: Record<string, number> = {
-      serper_total: 0,
-      gpt4_turbo_total: 0,
+      serper_total_api_time: 0,  // Accumulated time across all Serper calls
+      gpt4_turbo_total_api_time: 0,  // Accumulated time across all GPT calls
       serper_count: 0,
-      gpt4_turbo_count: 0
+      gpt4_turbo_count: 0,
+      search_wall_clock_start: Date.now()  // Actual elapsed time
     }
     
     console.log(`🔍 Searching categories: ${categories.join(', ')}`)
@@ -143,7 +144,7 @@ export async function POST(request: NextRequest) {
         const serperStart = Date.now()
         const serperResponses = await Promise.all(serperCallPromises)
         const serperTime = (Date.now() - serperStart) / 1000
-        timingData.serper_total += serperTime
+        timingData.serper_total_api_time += serperTime
         timingData.serper_count += 1
         console.log(`   ⏱️  Serper API (3x parallel): ${serperTime.toFixed(2)}s`)
         
@@ -570,7 +571,7 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links preferred) or
           temperature: 0,
         })
         const gptTime = (Date.now() - gptStart) / 1000
-        timingData.gpt4_turbo_total += gptTime
+        timingData.gpt4_turbo_total_api_time += gptTime
         timingData.gpt4_turbo_count += 1
         console.log(`   ⏱️  GPT-4 Turbo filtering: ${gptTime.toFixed(2)}s`)
 
@@ -827,15 +828,20 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links preferred) or
     }
 
     const requestTotalTime = (Date.now() - requestStartTime) / 1000
+    const searchWallClockTime = (Date.now() - timingData.search_wall_clock_start) / 1000
     
     console.log('\n📊 Final results:', Object.keys(allResults))
     console.log(`📈 Result sources: GPT=${sourceCounts.gpt}, Fallback=${sourceCounts.fallback}, None=${sourceCounts.none}, Error=${sourceCounts.error}`)
     
-    // Timing summary
+    // Timing summary with clarifications
     console.log('\n⏱️  TIMING SUMMARY (Search API):')
-    console.log(`   Serper API calls: ${timingData.serper_total.toFixed(2)}s (${timingData.serper_count} calls, avg ${(timingData.serper_total / Math.max(timingData.serper_count, 1)).toFixed(2)}s)`)
-    console.log(`   GPT-4 Turbo calls: ${timingData.gpt4_turbo_total.toFixed(2)}s (${timingData.gpt4_turbo_count} calls, avg ${(timingData.gpt4_turbo_total / Math.max(timingData.gpt4_turbo_count, 1)).toFixed(2)}s)`)
-    console.log(`   Total request time: ${requestTotalTime.toFixed(2)}s\n`)
+    console.log(`   ⏰ Wall-clock time (actual elapsed): ${searchWallClockTime.toFixed(2)}s`)
+    console.log(`   🔍 Serper API time (accumulated): ${timingData.serper_total_api_time.toFixed(2)}s across ${timingData.serper_count} categories`)
+    console.log(`      → Avg per category: ${(timingData.serper_total_api_time / Math.max(timingData.serper_count, 1)).toFixed(2)}s`)
+    console.log(`   🤖 GPT-4 Turbo time (accumulated): ${timingData.gpt4_turbo_total_api_time.toFixed(2)}s across ${timingData.gpt4_turbo_count} categories`)
+    console.log(`      → Avg per category: ${(timingData.gpt4_turbo_total_api_time / Math.max(timingData.gpt4_turbo_count, 1)).toFixed(2)}s`)
+    console.log(`   📊 Categories processed: ${timingData.serper_count} in parallel`)
+    console.log(`   ⏱️  Total request time: ${requestTotalTime.toFixed(2)}s\n`)
     
     return NextResponse.json({ 
       results: allResults, 
@@ -843,11 +849,17 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links preferred) or
         sourceCounts,
         gptReasoning: gptReasoningData,  // Include GPT reasoning for each category
         timing: {
-          serper_seconds: parseFloat(timingData.serper_total.toFixed(2)),
+          // Wall-clock time (what user experiences)
+          wall_clock_seconds: parseFloat(searchWallClockTime.toFixed(2)),
+          // Accumulated API times (total time if run sequentially)
+          serper_api_time_seconds: parseFloat(timingData.serper_total_api_time.toFixed(2)),
           serper_count: timingData.serper_count,
-          gpt4_turbo_seconds: parseFloat(timingData.gpt4_turbo_total.toFixed(2)),
+          gpt4_turbo_api_time_seconds: parseFloat(timingData.gpt4_turbo_total_api_time.toFixed(2)),
           gpt4_turbo_count: timingData.gpt4_turbo_count,
-          total_seconds: parseFloat(requestTotalTime.toFixed(2))
+          // Total request time (includes overhead)
+          total_seconds: parseFloat(requestTotalTime.toFixed(2)),
+          // Parallel efficiency
+          categories_parallel: timingData.serper_count
         }
       } 
     })

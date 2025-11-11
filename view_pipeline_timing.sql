@@ -41,33 +41,38 @@ WHERE e2.event_type = 'pipeline_timing'
 ORDER BY created_at DESC, session_id
 LIMIT 20;
 
--- 2. Average timing by stage (last 50 searches)
+-- 3. Average timing by stage (last 50 searches)
 WITH recent_timing AS (
   SELECT 
-    (event_data->>'serper_seconds')::float as serper_seconds,
+    (event_data->>'wall_clock_seconds')::float as wall_clock_seconds,
+    (event_data->>'serper_api_time_seconds')::float as serper_api_time_seconds,
     (event_data->>'serper_count')::int as serper_count,
-    (event_data->>'gpt4_turbo_seconds')::float as gpt4_turbo_seconds,
+    (event_data->>'gpt4_turbo_api_time_seconds')::float as gpt4_turbo_api_time_seconds,
     (event_data->>'gpt4_turbo_count')::int as gpt4_turbo_count,
-    (event_data->>'total_seconds')::float as total_seconds
+    (event_data->>'total_seconds')::float as total_seconds,
+    (event_data->>'categories_parallel')::int as categories_parallel
   FROM events
   WHERE event_type = 'pipeline_timing'
   ORDER BY created_at DESC
   LIMIT 50
 )
 SELECT 
-  ROUND(AVG(serper_seconds)::numeric, 2) as avg_serper_seconds,
-  ROUND(AVG(serper_count)::numeric, 1) as avg_serper_calls,
-  ROUND(AVG(gpt4_turbo_seconds)::numeric, 2) as avg_gpt4_turbo_seconds,
+  ROUND(AVG(wall_clock_seconds)::numeric, 2) as avg_wall_clock_seconds,
+  ROUND(AVG(serper_api_time_seconds)::numeric, 2) as avg_serper_accumulated_seconds,
+  ROUND(AVG(serper_count)::numeric, 1) as avg_categories_searched,
+  ROUND(AVG(gpt4_turbo_api_time_seconds)::numeric, 2) as avg_gpt4_turbo_accumulated_seconds,
   ROUND(AVG(gpt4_turbo_count)::numeric, 1) as avg_gpt4_turbo_calls,
   ROUND(AVG(total_seconds)::numeric, 2) as avg_total_seconds,
+  ROUND(AVG(categories_parallel)::numeric, 1) as avg_categories_parallel,
   COUNT(*) as sample_size
 FROM recent_timing;
 
--- 3. Timing breakdown (percentages)
+-- 4. Timing breakdown (what takes the most time)
 WITH recent_timing AS (
   SELECT 
-    (event_data->>'serper_seconds')::float as serper_seconds,
-    (event_data->>'gpt4_turbo_seconds')::float as gpt4_turbo_seconds,
+    (event_data->>'wall_clock_seconds')::float as wall_clock_seconds,
+    (event_data->>'serper_api_time_seconds')::float as serper_api_time_seconds,
+    (event_data->>'gpt4_turbo_api_time_seconds')::float as gpt4_turbo_api_time_seconds,
     (event_data->>'total_seconds')::float as total_seconds
   FROM events
   WHERE event_type = 'pipeline_timing'
@@ -75,70 +80,69 @@ WITH recent_timing AS (
   LIMIT 50
 )
 SELECT 
-  ROUND(AVG(serper_seconds)::numeric, 2) as avg_serper_seconds,
-  ROUND((AVG(serper_seconds) / NULLIF(AVG(total_seconds), 0) * 100)::numeric, 1) as serper_percent,
-  ROUND(AVG(gpt4_turbo_seconds)::numeric, 2) as avg_gpt4_turbo_seconds,
-  ROUND((AVG(gpt4_turbo_seconds) / NULLIF(AVG(total_seconds), 0) * 100)::numeric, 1) as gpt4_turbo_percent,
-  ROUND((AVG(total_seconds) - AVG(serper_seconds) - AVG(gpt4_turbo_seconds))::numeric, 2) as avg_other_seconds,
-  ROUND(((AVG(total_seconds) - AVG(serper_seconds) - AVG(gpt4_turbo_seconds)) / NULLIF(AVG(total_seconds), 0) * 100)::numeric, 1) as other_percent,
+  ROUND(AVG(wall_clock_seconds)::numeric, 2) as avg_wall_clock_seconds,
+  ROUND(AVG(serper_api_time_seconds)::numeric, 2) as avg_serper_api_time,
+  ROUND((AVG(serper_api_time_seconds) / NULLIF(AVG(wall_clock_seconds), 0) * 100)::numeric, 1) as serper_efficiency_pct,
+  ROUND(AVG(gpt4_turbo_api_time_seconds)::numeric, 2) as avg_gpt4_turbo_api_time,
+  ROUND((AVG(gpt4_turbo_api_time_seconds) / NULLIF(AVG(wall_clock_seconds), 0) * 100)::numeric, 1) as gpt4_turbo_efficiency_pct,
   ROUND(AVG(total_seconds)::numeric, 2) as avg_total_seconds
 FROM recent_timing;
 
--- 4. Find slowest searches
+-- 5. Find slowest searches (by wall-clock time)
 SELECT 
   e.session_id,
   e.created_at,
-  (e.event_data->>'total_seconds')::float as total_seconds,
-  (e.event_data->>'serper_seconds')::float as serper_seconds,
-  (e.event_data->>'gpt4_turbo_seconds')::float as gpt4_turbo_seconds,
-  (e.event_data->>'serper_count')::int as serper_calls,
-  (e.event_data->>'gpt4_turbo_count')::int as gpt4_turbo_calls
+  (e.event_data->>'wall_clock_seconds')::float as wall_clock_seconds,
+  (e.event_data->>'serper_api_time_seconds')::float as serper_accumulated,
+  (e.event_data->>'gpt4_turbo_api_time_seconds')::float as gpt4_turbo_accumulated,
+  (e.event_data->>'categories_parallel')::int as categories,
+  (e.event_data->>'total_seconds')::float as total_seconds
 FROM events e
 WHERE event_type = 'pipeline_timing'
-ORDER BY (e.event_data->>'total_seconds')::float DESC
+ORDER BY (e.event_data->>'wall_clock_seconds')::float DESC
 LIMIT 10;
 
--- 5. Find fastest searches
+-- 6. Find fastest searches (by wall-clock time)
 SELECT 
   e.session_id,
   e.created_at,
-  (e.event_data->>'total_seconds')::float as total_seconds,
-  (e.event_data->>'serper_seconds')::float as serper_seconds,
-  (e.event_data->>'gpt4_turbo_seconds')::float as gpt4_turbo_seconds,
-  (e.event_data->>'serper_count')::int as serper_calls,
-  (e.event_data->>'gpt4_turbo_count')::int as gpt4_turbo_calls
+  (e.event_data->>'wall_clock_seconds')::float as wall_clock_seconds,
+  (e.event_data->>'serper_api_time_seconds')::float as serper_accumulated,
+  (e.event_data->>'gpt4_turbo_api_time_seconds')::float as gpt4_turbo_accumulated,
+  (e.event_data->>'categories_parallel')::int as categories,
+  (e.event_data->>'total_seconds')::float as total_seconds
 FROM events e
 WHERE event_type = 'pipeline_timing'
-ORDER BY (e.event_data->>'total_seconds')::float ASC
+ORDER BY (e.event_data->>'wall_clock_seconds')::float ASC
 LIMIT 10;
 
--- 6. Timing trends over time (by hour)
+-- 7. Timing trends over time (by hour)
 SELECT 
   DATE_TRUNC('hour', created_at) as hour,
   COUNT(*) as search_count,
-  ROUND(AVG((event_data->>'total_seconds')::float)::numeric, 2) as avg_total_seconds,
-  ROUND(AVG((event_data->>'serper_seconds')::float)::numeric, 2) as avg_serper_seconds,
-  ROUND(AVG((event_data->>'gpt4_turbo_seconds')::float)::numeric, 2) as avg_gpt4_turbo_seconds,
-  ROUND(MIN((event_data->>'total_seconds')::float)::numeric, 2) as min_total_seconds,
-  ROUND(MAX((event_data->>'total_seconds')::float)::numeric, 2) as max_total_seconds
+  ROUND(AVG((event_data->>'wall_clock_seconds')::float)::numeric, 2) as avg_wall_clock_seconds,
+  ROUND(AVG((event_data->>'serper_api_time_seconds')::float)::numeric, 2) as avg_serper_accumulated,
+  ROUND(AVG((event_data->>'gpt4_turbo_api_time_seconds')::float)::numeric, 2) as avg_gpt4_turbo_accumulated,
+  ROUND(MIN((event_data->>'wall_clock_seconds')::float)::numeric, 2) as min_wall_clock,
+  ROUND(MAX((event_data->>'wall_clock_seconds')::float)::numeric, 2) as max_wall_clock
 FROM events
 WHERE event_type = 'pipeline_timing'
   AND created_at > NOW() - INTERVAL '24 hours'
 GROUP BY DATE_TRUNC('hour', created_at)
 ORDER BY hour DESC;
 
--- 7. Performance by number of API calls
+-- 8. Performance by number of categories searched
 SELECT 
-  (event_data->>'serper_count')::int as serper_calls,
-  (event_data->>'gpt4_turbo_count')::int as gpt4_turbo_calls,
+  (event_data->>'categories_parallel')::int as categories_searched,
   COUNT(*) as search_count,
-  ROUND(AVG((event_data->>'total_seconds')::float)::numeric, 2) as avg_total_seconds,
-  ROUND(MIN((event_data->>'total_seconds')::float)::numeric, 2) as min_total_seconds,
-  ROUND(MAX((event_data->>'total_seconds')::float)::numeric, 2) as max_total_seconds
+  ROUND(AVG((event_data->>'wall_clock_seconds')::float)::numeric, 2) as avg_wall_clock_seconds,
+  ROUND(AVG((event_data->>'serper_api_time_seconds')::float)::numeric, 2) as avg_serper_accumulated,
+  ROUND(MIN((event_data->>'wall_clock_seconds')::float)::numeric, 2) as min_wall_clock,
+  ROUND(MAX((event_data->>'wall_clock_seconds')::float)::numeric, 2) as max_wall_clock
 FROM events
 WHERE event_type = 'pipeline_timing'
-GROUP BY serper_calls, gpt4_turbo_calls
-ORDER BY serper_calls, gpt4_turbo_calls;
+GROUP BY categories_searched
+ORDER BY categories_searched;
 
 -- 8. Complete end-to-end timing (backend + search API combined)
 WITH backend_timing AS (
@@ -154,9 +158,10 @@ WITH backend_timing AS (
 search_timing AS (
   SELECT 
     session_id,
-    (event_data->>'serper_seconds')::float as serper_seconds,
-    (event_data->>'gpt4_turbo_seconds')::float as gpt4_turbo_seconds,
-    (event_data->>'total_seconds')::float as search_total,
+    (event_data->>'wall_clock_seconds')::float as wall_clock_seconds,
+    (event_data->>'serper_api_time_seconds')::float as serper_api_time,
+    (event_data->>'gpt4_turbo_api_time_seconds')::float as gpt4_turbo_api_time,
+    (event_data->>'categories_parallel')::int as categories,
     created_at
   FROM events
   WHERE event_type = 'pipeline_timing'
@@ -165,12 +170,13 @@ SELECT
   COALESCE(b.session_id, s.session_id) as session_id,
   COALESCE(b.created_at, s.created_at) as created_at,
   ROUND(COALESCE(b.gpt4o_seconds, 0)::numeric, 2) as gpt4o_seconds,
-  ROUND(COALESCE(b.groundingdino_seconds, 0)::numeric, 3) as groundingdino_seconds,
+  ROUND(COALESCE(b.groundingdino_seconds, 0)::numeric, 3) as dino_seconds,
   ROUND(COALESCE(b.backend_total, 0)::numeric, 2) as backend_total,
-  ROUND(COALESCE(s.serper_seconds, 0)::numeric, 2) as serper_seconds,
-  ROUND(COALESCE(s.gpt4_turbo_seconds, 0)::numeric, 2) as gpt4_turbo_seconds,
-  ROUND(COALESCE(s.search_total, 0)::numeric, 2) as search_total,
-  ROUND((COALESCE(b.backend_total, 0) + COALESCE(s.search_total, 0))::numeric, 2) as end_to_end_total
+  ROUND(COALESCE(s.wall_clock_seconds, 0)::numeric, 2) as search_wall_clock,
+  ROUND(COALESCE(s.serper_api_time, 0)::numeric, 2) as serper_accumulated,
+  ROUND(COALESCE(s.gpt4_turbo_api_time, 0)::numeric, 2) as gpt4_turbo_accumulated,
+  COALESCE(s.categories, 0) as categories_parallel,
+  ROUND((COALESCE(b.backend_total, 0) + COALESCE(s.wall_clock_seconds, 0))::numeric, 2) as end_to_end_total
 FROM backend_timing b
 FULL OUTER JOIN search_timing s ON b.session_id = s.session_id
 ORDER BY COALESCE(b.created_at, s.created_at) DESC
