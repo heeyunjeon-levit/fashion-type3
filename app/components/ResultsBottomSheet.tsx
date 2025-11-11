@@ -369,12 +369,23 @@ export default function ResultsBottomSheet({
           {Object.keys(results).length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16">
               <p className="text-gray-600 text-lg mb-4">결과를 찾을 수 없습니다</p>
-              <button
-                onClick={onBack || onReset}
-                className="bg-gray-100 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-colors active:scale-95"
-              >
-                다시 선택하기
-              </button>
+              <div className="flex gap-3 justify-center">
+                <button
+                  onClick={onReset}
+                  className="bg-gray-100 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-colors active:scale-95 flex items-center gap-2"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                  </svg>
+                  처음부터
+                </button>
+                <button
+                  onClick={onBack || onReset}
+                  className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all active:scale-95"
+                >
+                  다시 선택하기
+                </button>
+              </div>
             </div>
           ) : (
             <div className="space-y-8 pb-8">
@@ -462,7 +473,16 @@ export default function ResultsBottomSheet({
 
         {/* Bottom action bar - only show when not at peek */}
         {sheetPosition !== 'peek' && (
-          <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 flex gap-3 z-20">
+          <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 flex gap-2 z-20">
+            <button
+              onClick={onReset}
+              className="flex-shrink-0 bg-gray-100 text-gray-700 p-3 rounded-xl font-semibold hover:bg-gray-200 transition-colors active:scale-95"
+              title="처음부터 다시"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+              </svg>
+            </button>
             <button
               onClick={onBack || onReset}
               className="flex-1 bg-gray-100 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-200 transition-colors active:scale-95"
