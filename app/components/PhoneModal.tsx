@@ -54,12 +54,12 @@ export default function PhoneModal({ onPhoneSubmit, onClose, isReturningUser }: 
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ touchAction: 'auto' }}>
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} style={{ touchAction: 'auto' }} />
       
       {/* Modal - Post-it style */}
-      <div className="relative bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-2xl shadow-2xl max-w-md w-full p-8 transform rotate-1 hover:rotate-0 transition-transform">
+      <div className="relative bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-2xl shadow-2xl max-w-md w-full p-8 transform rotate-1 hover:rotate-0 transition-transform" style={{ touchAction: 'auto' }}>
         {/* Tape effect at top */}
         <div className="absolute -top-3 left-1/4 right-1/4 h-6 bg-yellow-300/30 backdrop-blur-sm rounded-sm shadow-inner" />
         
@@ -115,9 +115,11 @@ export default function PhoneModal({ onPhoneSubmit, onClose, isReturningUser }: 
                 onChange={(e) => setPhoneNumber(formatPhoneNumber(e.target.value))}
                 placeholder="010-1234-5678"
                 className="w-full px-4 py-3 border-2 border-yellow-800/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-600 focus:border-transparent bg-white/80 text-gray-800 placeholder-gray-500 text-center text-lg font-medium"
+                style={{ touchAction: 'auto' }}
                 maxLength={13}
                 disabled={isSubmitting}
                 autoFocus
+                inputMode="numeric"
               />
               {error && (
                 <p className="text-red-600 text-sm mt-2 text-center font-medium">

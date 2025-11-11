@@ -170,9 +170,15 @@ export default function ResultsBottomSheet({
     }
   }, [isDragging])
 
-  // Prevent pull-to-refresh globally on this page
+  // Prevent pull-to-refresh globally on this page (but not on input fields)
   useEffect(() => {
     const preventPullToRefresh = (e: TouchEvent) => {
+      // Don't prevent if user is interacting with an input field
+      const target = e.target as HTMLElement
+      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
+        return
+      }
+      
       // Only prevent if we're at the top of the page
       if (window.scrollY === 0) {
         e.preventDefault()
