@@ -191,26 +191,45 @@ export default function ResultsBottomSheet({
     }
   }, [isDragging])
 
-  // Prevent pull-to-refresh globally on this page (but not on input fields)
+  // Prevent pull-to-refresh globally on this page (but not on input fields or horizontal scrolls)
   useEffect(() => {
+    let touchStartY = 0
+    let touchStartX = 0
+
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartY = e.touches[0].clientY
+      touchStartX = e.touches[0].clientX
+    }
+
     const preventPullToRefresh = (e: TouchEvent) => {
       // Don't prevent if user is interacting with an input field
       const target = e.target as HTMLElement
       if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
         return
       }
-      
-      // Only prevent if we're at the top of the page
-      if (window.scrollY === 0) {
+
+      // Check if this is a horizontal scroll
+      const touchCurrentY = e.touches[0].clientY
+      const touchCurrentX = e.touches[0].clientX
+      const deltaX = Math.abs(touchCurrentX - touchStartX)
+      const deltaY = Math.abs(touchCurrentY - touchStartY)
+
+      // If horizontal movement is greater, allow it (horizontal scroll)
+      if (deltaX > deltaY) {
+        return
+      }
+
+      // Only prevent vertical pull-to-refresh if we're at the top of the page
+      if (window.scrollY === 0 && touchCurrentY > touchStartY) {
         e.preventDefault()
       }
     }
 
-    document.addEventListener('touchstart', preventPullToRefresh, { passive: false })
+    document.addEventListener('touchstart', handleTouchStart, { passive: true })
     document.addEventListener('touchmove', preventPullToRefresh, { passive: false })
 
     return () => {
-      document.removeEventListener('touchstart', preventPullToRefresh)
+      document.removeEventListener('touchstart', handleTouchStart)
       document.removeEventListener('touchmove', preventPullToRefresh)
     }
   }, [])
@@ -373,7 +392,10 @@ export default function ResultsBottomSheet({
                     </div>
 
                     {/* Horizontal scroll for 3 products */}
-                    <div className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-hide">
+                    <div 
+                      className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-hide"
+                      style={{ touchAction: 'pan-x' }}
+                    >
                       {links.map((option, index) => (
                         <a
                           key={index}
