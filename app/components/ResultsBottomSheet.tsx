@@ -418,7 +418,7 @@ export default function ResultsBottomSheet({
 
                     {/* Horizontal scroll for 3 products */}
                     <div 
-                      className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-hide"
+                      className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-hide -mx-4 px-4"
                       style={{ 
                         touchAction: 'auto',
                         overscrollBehaviorX: 'contain'
@@ -431,7 +431,7 @@ export default function ResultsBottomSheet({
                           target="_blank"
                           rel="noopener noreferrer"
                           onClick={() => handleLinkClick(category, option.link, option.title, option.thumbnail, index + 1)}
-                          className="flex-shrink-0 w-40 snap-center group"
+                          className="flex-shrink-0 w-36 snap-start group"
                         >
                           <div className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all border border-gray-200 group-hover:border-indigo-300">
                             {/* Product image */}
