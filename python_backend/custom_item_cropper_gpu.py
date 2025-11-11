@@ -8,6 +8,7 @@ import torch
 from PIL import Image
 from typing import List, Dict
 import tempfile
+import time
 
 # Add /root to path for imports
 if "/root" not in sys.path:
@@ -95,6 +96,7 @@ class CustomItemCropper:
             raise
         
         # Step 1: Use GPT-4o to analyze (or use cached result)
+        gpt4o_time = 0
         if cached_gpt_result:
             print("🚀 Using cached GPT result (pre-analyzed!)")
             gpt_result = cached_gpt_result
@@ -107,7 +109,10 @@ class CustomItemCropper:
             try:
                 # Step 1: Use GPT-4o to analyze and generate prompts
                 print("🤖 Step 1: GPT-4o analysis...")
+                gpt4o_start = time.time()
                 gpt_result = self.gpt_analyzer.analyze_fashion_items(temp_image_path)
+                gpt4o_time = time.time() - gpt4o_start
+                print(f"⏱️  GPT-4o analysis took: {gpt4o_time:.2f}s")
             finally:
                 # Clean up temp file
                 if os.path.exists(temp_image_path):
@@ -159,6 +164,7 @@ class CustomItemCropper:
         print("🔍 Step 2: GroundingDINO detection...")
         
         crops_generated = 0
+        total_dino_time = 0
         os.makedirs(output_dir, exist_ok=True)
         
         for idx, item in enumerate(detected_items):
@@ -175,7 +181,8 @@ class CustomItemCropper:
                 return_tensors="pt"
             ).to(self.device)
             
-            # Run inference
+            # Run inference with timing
+            dino_start = time.time()
             with torch.no_grad():
                 outputs = self.model(**inputs)
             
@@ -186,6 +193,9 @@ class CustomItemCropper:
                 text_threshold=0.15,
                 target_sizes=[(image_height, image_width)]
             )
+            dino_time = time.time() - dino_start
+            total_dino_time += dino_time
+            print(f"   ⏱️  GroundingDINO inference: {dino_time:.3f}s")
             
             if len(results) == 0 or len(results[0]["boxes"]) == 0:
                 print(f"   ⚠️  No detections for '{prompt}'")
@@ -223,8 +233,21 @@ class CustomItemCropper:
         
         print(f"🏆 Generated {crops_generated}/{len(custom_items)} crops")
         
+        # Timing summary
+        print(f"\n⏱️  TIMING SUMMARY:")
+        print(f"   GPT-4o Vision API: {gpt4o_time:.2f}s")
+        print(f"   GroundingDINO (total): {total_dino_time:.3f}s")
+        if len(detected_items) > 0:
+            print(f"   GroundingDINO (avg per item): {total_dino_time/len(detected_items):.3f}s")
+        print(f"   Total processing: {gpt4o_time + total_dino_time:.2f}s\n")
+        
         return {
             'real_crops': crops_generated,
-            'expected_items': len(custom_items)
+            'expected_items': len(custom_items),
+            'timing': {
+                'gpt4o_seconds': round(gpt4o_time, 2),
+                'groundingdino_seconds': round(total_dino_time, 3),
+                'total_seconds': round(gpt4o_time + total_dino_time, 2)
+            }
         }
 

@@ -29,6 +29,7 @@ const categoryLabels: Record<string, string> = {
 
 export async function POST(request: NextRequest) {
   try {
+    const requestStartTime = Date.now()
     console.log('=== SEARCH REQUEST STARTED ===')
     
     const { categories, croppedImages, originalImageUrl } = await request.json()
@@ -45,6 +46,12 @@ export async function POST(request: NextRequest) {
 
     const allResults: Record<string, Array<{ link: string; thumbnail: string | null; title: string | null }>> = {}
     const gptReasoningData: Record<string, any> = {}
+    const timingData: Record<string, number> = {
+      serper_total: 0,
+      gpt4_turbo_total: 0,
+      serper_count: 0,
+      gpt4_turbo_count: 0
+    }
     
     console.log(`🔍 Searching categories: ${categories.join(', ')}`)
     
@@ -69,7 +76,10 @@ export async function POST(request: NextRequest) {
           })
         })
 
+        const fullImageStart = Date.now()
         const fullImageResponses = await Promise.all(fullImagePromises)
+        const fullImageTime = (Date.now() - fullImageStart) / 1000
+        console.log(`   ⏱️  Full image Serper (3x parallel): ${fullImageTime.toFixed(2)}s`)
         
         const allFullImageResults: any[] = []
         for (let i = 0; i < fullImageResponses.length; i++) {
@@ -130,7 +140,12 @@ export async function POST(request: NextRequest) {
           })
         })
 
+        const serperStart = Date.now()
         const serperResponses = await Promise.all(serperCallPromises)
+        const serperTime = (Date.now() - serperStart) / 1000
+        timingData.serper_total += serperTime
+        timingData.serper_count += 1
+        console.log(`   ⏱️  Serper API (3x parallel): ${serperTime.toFixed(2)}s`)
         
         // Aggregate results from 3 runs
         const allOrganicResults: any[] = []
@@ -542,6 +557,7 @@ Find the TOP 3-5 BEST AVAILABLE MATCHES. Prioritize:
 Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links preferred) or {"${resultKey}": []} ONLY if zero valid products found.`
 
         const openai = getOpenAIClient()
+        const gptStart = Date.now()
         const completion = await openai.chat.completions.create({
           model: 'gpt-4-turbo-preview',  // Original model - best quality
           messages: [
@@ -553,6 +569,10 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links preferred) or
           ],
           temperature: 0,
         })
+        const gptTime = (Date.now() - gptStart) / 1000
+        timingData.gpt4_turbo_total += gptTime
+        timingData.gpt4_turbo_count += 1
+        console.log(`   ⏱️  GPT-4 Turbo filtering: ${gptTime.toFixed(2)}s`)
 
         const responseText = completion.choices[0].message.content || '{}'
         console.log(`📄 GPT response for ${resultKey}:`, responseText.substring(0, 200))
@@ -806,13 +826,29 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links preferred) or
       }
     }
 
+    const requestTotalTime = (Date.now() - requestStartTime) / 1000
+    
     console.log('\n📊 Final results:', Object.keys(allResults))
     console.log(`📈 Result sources: GPT=${sourceCounts.gpt}, Fallback=${sourceCounts.fallback}, None=${sourceCounts.none}, Error=${sourceCounts.error}`)
+    
+    // Timing summary
+    console.log('\n⏱️  TIMING SUMMARY (Search API):')
+    console.log(`   Serper API calls: ${timingData.serper_total.toFixed(2)}s (${timingData.serper_count} calls, avg ${(timingData.serper_total / Math.max(timingData.serper_count, 1)).toFixed(2)}s)`)
+    console.log(`   GPT-4 Turbo calls: ${timingData.gpt4_turbo_total.toFixed(2)}s (${timingData.gpt4_turbo_count} calls, avg ${(timingData.gpt4_turbo_total / Math.max(timingData.gpt4_turbo_count, 1)).toFixed(2)}s)`)
+    console.log(`   Total request time: ${requestTotalTime.toFixed(2)}s\n`)
+    
     return NextResponse.json({ 
       results: allResults, 
       meta: { 
         sourceCounts,
-        gptReasoning: gptReasoningData  // Include GPT reasoning for each category
+        gptReasoning: gptReasoningData,  // Include GPT reasoning for each category
+        timing: {
+          serper_seconds: parseFloat(timingData.serper_total.toFixed(2)),
+          serper_count: timingData.serper_count,
+          gpt4_turbo_seconds: parseFloat(timingData.gpt4_turbo_total.toFixed(2)),
+          gpt4_turbo_count: timingData.gpt4_turbo_count,
+          total_seconds: parseFloat(requestTotalTime.toFixed(2))
+        }
       } 
     })
   } catch (error) {

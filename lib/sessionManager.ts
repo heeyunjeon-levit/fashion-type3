@@ -190,6 +190,17 @@ export class SessionManager {
       })
     }
     
+    // Log timing data as a separate event
+    if (meta.timing) {
+      await this.logEvent('pipeline_timing', {
+        serper_seconds: meta.timing.serper_seconds,
+        serper_count: meta.timing.serper_count,
+        gpt4_turbo_seconds: meta.timing.gpt4_turbo_seconds,
+        gpt4_turbo_count: meta.timing.gpt4_turbo_count,
+        total_seconds: meta.timing.total_seconds
+      })
+    }
+    
     await this.updateSession({
       search_results: results,
       gpt_selection_reasoning: meta.gptReasoning || {},
