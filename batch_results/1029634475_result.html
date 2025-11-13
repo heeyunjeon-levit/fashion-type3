@@ -562,7 +562,22 @@
                 });
             });
             
-            // If user previously clicked product and returned, show feedback after delay
+            // Detect when user returns to the tab after clicking a product
+            document.addEventListener('visibilitychange', function() {
+                if (!document.hidden && hasClickedProduct && !feedbackShown) {
+                    // User returned to the tab after clicking a product
+                    clearTimeout(feedbackTimer);
+                    setTimeout(function() {
+                        if (!feedbackShown) {
+                            showFeedback();
+                            // Clear the flag so modal doesn't show on next page load
+                            localStorage.removeItem(clickedProductKey);
+                        }
+                    }, 3000);
+                }
+            });
+            
+            // If user previously clicked product and returned (from previous session), show feedback
             if (previouslyClickedProduct && !feedbackShown) {
                 const timeClicked = parseInt(previouslyClickedProduct);
                 const timeSince = Date.now() - timeClicked;
