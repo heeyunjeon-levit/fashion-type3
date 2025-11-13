@@ -566,27 +566,42 @@
         // Feedback state
         let selectedSatisfaction = null;
         let feedbackShown = false;
+        let tabShouldShow = false; // Track if tab should be visible
         const pageLoadTime = Date.now();
         const phoneNumber = '1040455757';
         const API_URL = 'https://mvp-nu-six.vercel.app/api/feedback';
         
         // Check if feedback already submitted for this user
         const feedbackKey = 'feedback_submitted_' + phoneNumber;
+        const tabStateKey = 'feedback_tab_state_' + phoneNumber;
+        
         if (localStorage.getItem(feedbackKey)) {
             feedbackShown = true; // Don't show again
+        }
+        
+        // Check if tab was showing before
+        if (localStorage.getItem(tabStateKey) === 'visible') {
+            tabShouldShow = true;
+            document.getElementById('feedbackTab').classList.add('show');
         }
         
         function showFeedback() {
             if (feedbackShown) return;
             feedbackShown = true;
             document.getElementById('feedbackOverlay').classList.add('show');
-            document.getElementById('feedbackTab').classList.remove('show');
+            // Only hide tab if it should show later
+            if (tabShouldShow) {
+                document.getElementById('feedbackTab').classList.remove('show');
+            }
         }
         
         function closeFeedbackWithTab() {
             // Close modal and show the tab button
             document.getElementById('feedbackOverlay').classList.remove('show');
             document.getElementById('feedbackTab').classList.add('show');
+            // Mark that tab should be visible
+            tabShouldShow = true;
+            localStorage.setItem(tabStateKey, 'visible');
             // Reset feedbackShown so modal can show again if user engages more
             feedbackShown = false;
         }
@@ -645,7 +660,9 @@
                 if (response.ok) {
                     // Mark as submitted
                     localStorage.setItem(feedbackKey, 'true');
+                    localStorage.removeItem(tabStateKey); // Clear tab state
                     feedbackShown = true; // Prevent modal from showing again
+                    tabShouldShow = false; // Hide tab permanently
                     submitBtn.textContent = '감사합니다!';
                     setTimeout(function() {
                         const overlay = document.getElementById('feedbackOverlay');
