@@ -49,6 +49,17 @@ export function usePageTracking(options: PageTrackingOptions = {}) {
     const logPageVisit = async (timeOnPage: number | null = null) => {
       if (isTracking.current) return // Prevent duplicate calls
       
+      // Capture URL parameters for conversion tracking
+      const urlParams = new URLSearchParams(window.location.search)
+      const source = urlParams.get('source')
+      const phoneParam = urlParams.get('phone')
+      
+      // Build referrer string with source info
+      let referrerString = document.referrer || null
+      if (source && phoneParam) {
+        referrerString = `${document.referrer || 'direct'} (source: ${source}, phone: ${phoneParam})`
+      }
+      
       try {
         await fetch('/api/track-page', {
           method: 'POST',
@@ -63,7 +74,7 @@ export function usePageTracking(options: PageTrackingOptions = {}) {
             uploadedImage: options.uploadedImage || false,
             completedAnalysis: options.completedAnalysis || false,
             clickedSearch: options.clickedSearch || false,
-            referrer: document.referrer || null
+            referrer: referrerString
           })
         })
       } catch (error) {
@@ -79,6 +90,17 @@ export function usePageTracking(options: PageTrackingOptions = {}) {
       isTracking.current = true
       const timeOnPage = Math.floor((Date.now() - pageLoadTime.current) / 1000)
       
+      // Capture URL parameters for conversion tracking
+      const urlParams = new URLSearchParams(window.location.search)
+      const source = urlParams.get('source')
+      const phoneParam = urlParams.get('phone')
+      
+      // Build referrer string with source info
+      let referrerString = document.referrer || null
+      if (source && phoneParam) {
+        referrerString = `${document.referrer || 'direct'} (source: ${source}, phone: ${phoneParam})`
+      }
+      
       // Use sendBeacon for reliable delivery
       const data = JSON.stringify({
         sessionId: sid,
@@ -90,7 +112,7 @@ export function usePageTracking(options: PageTrackingOptions = {}) {
         uploadedImage: options.uploadedImage || false,
         completedAnalysis: options.completedAnalysis || false,
         clickedSearch: options.clickedSearch || false,
-        referrer: document.referrer || null
+        referrer: referrerString
       })
       navigator.sendBeacon('/api/track-page', new Blob([data], { type: 'application/json' }))
     }

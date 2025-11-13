@@ -117,9 +117,9 @@ def generate_html_page(phone: str, results: Dict) -> str:
         """
     
     # Add a button to search more images at the bottom
-    more_search_button = """
+    more_search_button = f"""
                 <div class="more-search-section">
-                    <a href="https://mvp-nu-six.vercel.app/" class="more-search-btn">
+                    <a href="https://mvp-nu-six.vercel.app/?source=result_page&phone={phone}" class="more-search-btn">
                         다른 이미지도 찾아보기
                     </a>
                 </div>
