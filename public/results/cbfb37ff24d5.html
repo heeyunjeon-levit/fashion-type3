@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>이미지 분석 결과</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Apple SD Gothic Neo', sans-serif;
+            background: #000;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .background-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+        }
+        
+        .bottom-sheet {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 20px 20px 0 0;
+            z-index: 50;
+            max-height: 65vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .sheet-handle {
+            width: 36px;
+            height: 5px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            margin: 12px auto 8px;
+            flex-shrink: 0;
+        }
+        
+        .toggle-view-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            color: #000;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 24px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .toggle-view-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .bottom-sheet.minimized {
+            max-height: 80px;
+            transition: max-height 0.3s ease;
+        }
+        
+        .bottom-sheet.minimized .sheet-content {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .sheet-content {
+            padding: 0 20px 30px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            flex: 1;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
+            min-height: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .category-section {
+            margin-bottom: 32px;
+        }
+        
+        .category-section:last-child {
+            margin-bottom: 0;
+        }
+        
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .cropped-thumb {
+            width: 72px;
+            height: 72px;
+            border-radius: 12px;
+            object-fit: cover;
+            background: #f5f5f5;
+        }
+        
+        .category-info h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: #000;
+        }
+        
+        .category-info p {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .products-scroll {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            padding-right: 20px;
+        }
+        
+        .products-scroll::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .product-card {
+            flex: 0 0 130px;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            text-decoration: none;
+            display: block;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        
+        .product-img {
+            width: 130px;
+            height: 170px;
+            position: relative;
+        }
+        
+        .product-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .no-img {
+            width: 100%;
+            height: 100%;
+            background: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 12px;
+        }
+        
+        .more-search-section {
+            margin-top: 40px;
+            padding: 20px 0 10px;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .more-search-btn {
+            display: inline-block;
+            padding: 16px 32px;
+            background: #000;
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .more-search-btn:active {
+            transform: scale(0.95);
+            background: #333;
+        }
+        
+        /* Feedback Modal */
+        .feedback-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .feedback-overlay.show {
+            display: flex;
+        }
+        
+        .feedback-modal {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 400px;
+            width: 100%;
+            position: relative;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        }
+        
+        .feedback-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 4px;
+            color: #666;
+        }
+        
+        .feedback-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-align: center;
+            color: #000;
+        }
+        
+        .feedback-subtitle {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        
+        .feedback-buttons {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .feedback-btn {
+            flex: 1;
+            padding: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .feedback-btn.selected {
+            border-color: #4A90E2;
+            background: #EBF5FF;
+        }
+        
+        .feedback-icon {
+            font-size: 32px;
+        }
+        
+        .feedback-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .feedback-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 14px;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        .feedback-submit {
+            width: 100%;
+            padding: 16px;
+            background: #4A90E2;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .feedback-submit:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .feedback-submit:active:not(:disabled) {
+            transform: scale(0.98);
+            background: #3A7BC8;
+        }
+        
+        /* Feedback Tab Button (appears after closing modal) */
+        .feedback-tab {
+            position: fixed;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%) translateX(100%);
+            background: #4A90E2;
+            color: white;
+            padding: 12px 8px;
+            border-radius: 8px 0 0 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            z-index: 999;
+            box-shadow: -2px 2px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+        }
+        
+        .feedback-tab.show {
+            transform: translateY(-50%) translateX(0);
+        }
+        
+        .feedback-tab:active {
+            background: #3A7BC8;
+        }
+        
+        .feedback-close-text {
+            font-size: 14px;
+            color: #4A90E2;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 8px;
+            text-align: center;
+            margin-top: 8px;
+        }
+        
+    </style>
+</head>
+<body>
+    <img src="https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763020159445_821032860463_original.jpg" alt="Original" class="background-image" />
+    
+    <!-- Toggle View Button -->
+    <button class="toggle-view-btn" id="toggleViewBtn" onclick="toggleBottomSheet()">
+        원본사진 보기
+    </button>
+    
+    
+        <div class="bottom-sheet">
+            <div class="sheet-handle"></div>
+            <div class="sheet-content">
+                
+                <div class="category-section">
+                    <div class="category-header">
+                        <img src="https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_pink_coat_1763020184563.jpg" alt="상의" class="cropped-thumb" />
+                        <div class="category-info">
+                            <h2>상의</h2>
+                            <p>3개 상품</p>
+                        </div>
+                    </div>
+                    <div class="products-scroll">
+                        
+                <a href="https://www.elandmall.co.kr/i/item?itemNo=2312829257&lowerVendNo=LV20018281" target="_blank" class="product-card">
+                    <div class="product-img">
+                        <img src="https://item.elandrs.com/r/image/item/2023-12-09/33a4bdbf-674a-42dc-9aa8-fb0c369732f2.jpg?w=750&h=&q=100" alt="케네스레이디 _ 셔링벨트 퍼 롱 다운 코트 EGDHNK..." />
+                    </div>
+                </a>
+            
+                <a href="https://www.ssg.com/item/itemView.ssg?itemId=1000623080779" target="_blank" class="product-card">
+                    <div class="product-img">
+                        <img src="https://sitem.ssgcdn.com/79/07/08/item/1000623080779_i2_750.jpg" alt="리스트] 폭스퍼 벨티드 덕다운 패딩 점퍼 - SSG.C..." />
+                    </div>
+                </a>
+            
+                <a href="https://bylynn.shop/product/LDDHNL0100" target="_blank" class="product-card">
+                    <div class="product-img">
+                        <img src="https://image.bylynn.shop/files/products/LDDHNL0100/103403/33-TXe81rI6uKpN6lARKZ3d.jpg?f=webp&q=80&w=536" alt="BYLYNNSHOP] 폭스퍼 후드 다운코트" />
+                    </div>
+                </a>
+            
+                    </div>
+                </div>
+        
+                
+                <div class="more-search-section">
+                    <a href="https://mvp-nu-six.vercel.app/?source=result_page&phone=821032860463" class="more-search-btn">
+                        다른 이미지도 찾아보기
+                    </a>
+                </div>
+    
+            </div>
+        </div>
+    
+    
+    <!-- Feedback Modal -->
+    <div class="feedback-overlay" id="feedbackOverlay">
+        <div class="feedback-modal">
+            <h2 class="feedback-title">설문 조사</h2>
+            <p class="feedback-subtitle">만족/불만족 체크</p>
+            
+            <div class="feedback-buttons">
+                <button class="feedback-btn" id="satisfiedBtn" onclick="selectSatisfaction('만족')">
+                    <div class="feedback-icon">😊</div>
+                    <div class="feedback-label">만족</div>
+                </button>
+                <button class="feedback-btn" id="unsatisfiedBtn" onclick="selectSatisfaction('불만족')">
+                    <div class="feedback-icon">😞</div>
+                    <div class="feedback-label">불만족</div>
+                </button>
+            </div>
+            
+            <textarea 
+                class="feedback-input" 
+                id="feedbackComment" 
+                placeholder="의견을 입력해주세요"
+            ></textarea>
+            
+            <button class="feedback-submit" id="submitBtn" onclick="submitFeedback()" disabled>
+                확인
+            </button>
+            
+            <div class="feedback-close-text" onclick="closeFeedbackWithTab()">
+                아직 결과를 다 못봤어요!
+            </div>
+        </div>
+    </div>
+    
+    <!-- Feedback Tab (appears after closing modal) -->
+    <div class="feedback-tab" id="feedbackTab" onclick="reopenFeedback()">
+        피드백
+    </div>
+    
+    <script>
+        // Visit tracking state
+        const phoneNumber = '821032860463';
+        const pageLoadTime = Date.now();
+        const VISIT_API_URL = 'https://mvp-nu-six.vercel.app/api/track-visit';
+        const API_URL = 'https://mvp-nu-six.vercel.app/api/feedback';
+        
+        // Generate or retrieve session ID
+        const sessionStorageKey = 'session_id';
+        let sessionId = sessionStorage.getItem(sessionStorageKey);
+        if (!sessionId) {
+            sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            sessionStorage.setItem(sessionStorageKey, sessionId);
+        }
+        
+        // Track engagement
+        let visitMetrics = {
+            clickedProducts: false,
+            clickedToggleButton: false,
+            openedFeedback: false
+        };
+        
+        // Log initial visit
+        async function logVisit(timeOnPage = null) {
+            try {
+                await fetch(VISIT_API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        phoneNumber: phoneNumber,
+                        resultPageUrl: window.location.href,
+                        sessionId: sessionId,
+                        timeOnPage: timeOnPage,
+                        clickedProducts: visitMetrics.clickedProducts,
+                        clickedToggleButton: visitMetrics.clickedToggleButton,
+                        openedFeedback: visitMetrics.openedFeedback,
+                        referrer: document.referrer || null
+                    })
+                });
+            } catch (error) {
+                console.error('Error logging visit:', error);
+            }
+        }
+        
+        // Log visit on page load
+        logVisit();
+        
+        // Update visit with time on page when leaving
+        window.addEventListener('beforeunload', function() {
+            const timeOnPage = Math.floor((Date.now() - pageLoadTime) / 1000);
+            // Use sendBeacon for reliable delivery during page unload
+            const data = JSON.stringify({
+                phoneNumber: phoneNumber,
+                resultPageUrl: window.location.href,
+                sessionId: sessionId,
+                timeOnPage: timeOnPage,
+                clickedProducts: visitMetrics.clickedProducts,
+                clickedToggleButton: visitMetrics.clickedToggleButton,
+                openedFeedback: visitMetrics.openedFeedback,
+                referrer: document.referrer || null
+            });
+            navigator.sendBeacon(VISIT_API_URL, new Blob([data], { type: 'application/json' }));
+        });
+        
+        // Feedback state
+        let selectedSatisfaction = null;
+        let feedbackShown = false;
+        let modalAutoShownOnce = false; // Track if modal was auto-shown in this session
+        let tabShouldShow = false; // Track if tab should be visible
+        
+        // Check if feedback already submitted for this user
+        const feedbackKey = 'feedback_submitted_' + phoneNumber;
+        const tabStateKey = 'feedback_tab_state_' + phoneNumber;
+        const autoShownKey = 'feedback_auto_shown_' + phoneNumber;
+        
+        // Debug logging
+        console.log('🔍 Feedback Modal Debug:', {
+            feedbackSubmitted: !!localStorage.getItem(feedbackKey),
+            modalShownThisSession: !!sessionStorage.getItem(autoShownKey),
+            tabVisible: localStorage.getItem(tabStateKey) === 'visible',
+            phoneNumber: phoneNumber
+        });
+        
+        if (localStorage.getItem(feedbackKey)) {
+            console.log('✅ Feedback already submitted - modal will NOT show');
+            feedbackShown = true; // Don't show again
+            modalAutoShownOnce = true; // Never auto-show if already submitted
+        }
+        
+        // Check if modal was auto-shown in this session
+        if (sessionStorage.getItem(autoShownKey)) {
+            console.log('✅ Modal already shown this session - will NOT show again');
+            modalAutoShownOnce = true; // Already shown in this session
+        }
+        
+        // Check if tab was showing before
+        if (localStorage.getItem(tabStateKey) === 'visible') {
+            console.log('✅ Tab was visible from previous session - showing tab');
+            tabShouldShow = true;
+            modalAutoShownOnce = true; // If tab is visible, modal was already shown
+            document.getElementById('feedbackTab').classList.add('show');
+        }
+        
+        if (!feedbackShown && !modalAutoShownOnce && !tabShouldShow) {
+            console.log('✅ Modal triggers are ACTIVE - will show on first trigger');
+        }
+        
+        function showFeedback() {
+            // Only auto-show ONCE per session
+            if (modalAutoShownOnce) {
+                console.log('⚠️ Modal already shown once - skipping');
+                return;
+            }
+            
+            console.log('🎉 Showing feedback modal!');
+            feedbackShown = true;
+            modalAutoShownOnce = true; // Mark as shown in this session
+            sessionStorage.setItem(autoShownKey, 'true'); // Persist for session
+            visitMetrics.openedFeedback = true; // Track feedback opened
+            document.getElementById('feedbackOverlay').classList.add('show');
+            // Only hide tab if it should show later
+            if (tabShouldShow) {
+                document.getElementById('feedbackTab').classList.remove('show');
+            }
+        }
+        
+        function closeFeedbackWithTab() {
+            // Close modal and show the tab button
+            document.getElementById('feedbackOverlay').classList.remove('show');
+            document.getElementById('feedbackTab').classList.add('show');
+            // Mark that tab should be visible
+            tabShouldShow = true;
+            localStorage.setItem(tabStateKey, 'visible');
+            // Don't reset feedbackShown - user dismissed it, respect that!
+        }
+        
+        function reopenFeedback() {
+            // Manual reopen via tab is always allowed
+            visitMetrics.openedFeedback = true; // Track feedback reopened
+            document.getElementById('feedbackTab').classList.remove('show');
+            document.getElementById('feedbackOverlay').classList.add('show');
+        }
+        
+        function selectSatisfaction(satisfaction) {
+            selectedSatisfaction = satisfaction;
+            
+            // Update button styles
+            const satisfiedBtn = document.getElementById('satisfiedBtn');
+            const unsatisfiedBtn = document.getElementById('unsatisfiedBtn');
+            
+            satisfiedBtn.classList.remove('selected');
+            unsatisfiedBtn.classList.remove('selected');
+            
+            if (satisfaction === '만족') {
+                satisfiedBtn.classList.add('selected');
+            } else {
+                unsatisfiedBtn.classList.add('selected');
+            }
+            
+            // Enable submit button
+            document.getElementById('submitBtn').disabled = false;
+        }
+        
+        async function submitFeedback() {
+            if (!selectedSatisfaction) return;
+            
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = '전송 중...';
+            
+            const comment = document.getElementById('feedbackComment').value;
+            const timeElapsed = Math.floor((Date.now() - pageLoadTime) / 1000);
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        phoneNumber: phoneNumber,
+                        satisfaction: selectedSatisfaction,
+                        comment: comment,
+                        resultPageUrl: window.location.href,
+                        pageLoadTime: timeElapsed
+                    })
+                });
+                
+                if (response.ok) {
+                    // Mark as submitted
+                    localStorage.setItem(feedbackKey, 'true');
+                    localStorage.removeItem(tabStateKey); // Clear tab state
+                    feedbackShown = true; // Prevent modal from showing again
+                    tabShouldShow = false; // Hide tab permanently
+                    submitBtn.textContent = '감사합니다!';
+                    setTimeout(function() {
+                        const overlay = document.getElementById('feedbackOverlay');
+                        const tab = document.getElementById('feedbackTab');
+                        if (overlay) overlay.classList.remove('show');
+                        if (tab) tab.classList.remove('show');
+                    }, 1500);
+                } else {
+                    throw new Error('Failed to submit');
+                }
+            } catch (error) {
+                console.error('Error submitting feedback:', error);
+                submitBtn.textContent = '전송 실패';
+                submitBtn.disabled = false;
+                setTimeout(() => {
+                    submitBtn.textContent = '확인';
+                }, 2000);
+            }
+        }
+        
+        // Toggle bottom sheet to view original image
+        let sheetMinimized = false;
+        function toggleBottomSheet() {
+            const bottomSheet = document.querySelector('.bottom-sheet');
+            const toggleBtn = document.getElementById('toggleViewBtn');
+            
+            visitMetrics.clickedToggleButton = true; // Track toggle button click
+            
+            if (sheetMinimized) {
+                // Show results
+                bottomSheet.classList.remove('minimized');
+                toggleBtn.textContent = '원본사진 보기';
+                sheetMinimized = false;
+            } else {
+                // Show original image
+                bottomSheet.classList.add('minimized');
+                toggleBtn.textContent = '결과 다시 보기';
+                sheetMinimized = true;
+            }
+        }
+        
+        // Enable smooth scrolling on iOS
+        document.addEventListener('DOMContentLoaded', function() {
+            const sheetContent = document.querySelector('.sheet-content');
+            const productsScroll = document.querySelector('.products-scroll');
+            
+            let hasEngaged = false;
+            let hasClickedProduct = false;
+            let hasReachedBottom = false;
+            let feedbackTimer = null;
+            
+            // Check if user clicked product in previous session
+            const clickedProductKey = 'clicked_product_' + phoneNumber;
+            const previouslyClickedProduct = localStorage.getItem(clickedProductKey);
+            
+            // Show feedback after 45 seconds (fallback if user doesn't engage)
+            feedbackTimer = setTimeout(function() {
+                console.log('⏰ 45-second timer triggered');
+                if (!feedbackShown) {
+                    showFeedback();
+                } else {
+                    console.log('⚠️ Timer fired but modal already shown');
+                }
+            }, 45000);
+            
+            // Track product clicks
+            const productCards = document.querySelectorAll('.product-card');
+            productCards.forEach(function(card) {
+                card.addEventListener('click', function() {
+                    // Mark that user clicked a product
+                    localStorage.setItem(clickedProductKey, Date.now().toString());
+                    hasClickedProduct = true;
+                    visitMetrics.clickedProducts = true; // Track for visit metrics
+                });
+            });
+            
+            // Detect when user returns to the tab after clicking a product
+            document.addEventListener('visibilitychange', function() {
+                if (!document.hidden && hasClickedProduct && !feedbackShown) {
+                    console.log('👀 User returned after clicking product - will show modal in 3s');
+                    // User returned to the tab after clicking a product
+                    clearTimeout(feedbackTimer);
+                    setTimeout(function() {
+                        if (!feedbackShown) {
+                            console.log('⏱️ 3-second delay complete - showing modal');
+                            showFeedback();
+                            // Clear the flag so modal doesn't show on next page load
+                            localStorage.removeItem(clickedProductKey);
+                        }
+                    }, 3000);
+                } else if (!document.hidden) {
+                    console.log('👀 User returned to tab (hasClickedProduct=' + hasClickedProduct + ', feedbackShown=' + feedbackShown + ')');
+                }
+            });
+            
+            // If user previously clicked product and returned (from previous session), show feedback
+            if (previouslyClickedProduct && !feedbackShown) {
+                const timeClicked = parseInt(previouslyClickedProduct);
+                const timeSince = Date.now() - timeClicked;
+                
+                // If they clicked within last 5 minutes, show feedback after 3 seconds
+                if (timeSince < 5 * 60 * 1000) {
+                    clearTimeout(feedbackTimer);
+                    setTimeout(function() {
+                        if (!feedbackShown) {
+                            showFeedback();
+                            // Clear the flag so we don't show again on future visits
+                            localStorage.removeItem(clickedProductKey);
+                        }
+                    }, 3000);
+                } else {
+                    // Old click, clear it
+                    localStorage.removeItem(clickedProductKey);
+                }
+            }
+            
+            // Track scrolling to bottom
+            if (sheetContent) {
+                sheetContent.addEventListener('scroll', function() {
+                    const scrollPosition = sheetContent.scrollTop + sheetContent.clientHeight;
+                    const bottomPosition = sheetContent.scrollHeight - 50; // 50px threshold
+                    
+                    if (scrollPosition >= bottomPosition && !hasReachedBottom && !feedbackShown) {
+                        console.log('📜 User scrolled to bottom - will show modal in 3s');
+                        hasReachedBottom = true;
+                        clearTimeout(feedbackTimer);
+                        // Show feedback 3 seconds after reaching bottom
+                        setTimeout(function() {
+                            if (!feedbackShown) {
+                                console.log('⏱️ Scroll delay complete - showing modal');
+                                showFeedback();
+                            }
+                        }, 3000);
+                    }
+                }, { passive: true });
+            }
+            
+            // Simple scroll handling - let native browser scrolling work
+            // Just prevent scrolling outside the bottom sheet
+            const bottomSheet = document.querySelector('.bottom-sheet');
+            
+            document.addEventListener('touchmove', function(e) {
+                // If touch is outside bottom sheet, prevent scroll
+                if (bottomSheet && !bottomSheet.contains(e.target)) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+        });
+    </script>
+</body>
+</html>
