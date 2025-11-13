@@ -172,11 +172,11 @@ export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
 
   return (
     <div className="max-w-2xl mx-auto mt-8">
-      <h1 className="text-4xl font-bold text-white mb-8 text-center">
+      <h1 className="text-4xl font-bold text-gray-900 mb-8 text-center">
         원하시는 옷<br />찾아드려요
       </h1>
       
-      <div className="bg-white rounded-2xl shadow-2xl p-8">
+      <div className="bg-white rounded-2xl shadow-2xl p-8 border border-gray-100">
         <div className="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center">
           {isConverting ? (
             <div className="space-y-4">

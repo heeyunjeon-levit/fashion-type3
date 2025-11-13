@@ -60,10 +60,10 @@ export default function CroppedImageGallery({
 
   return (
     <div className="max-w-4xl mx-auto mt-8">
-      <h1 className="text-4xl font-bold text-white mb-2 text-center">
+      <h1 className="text-4xl font-bold text-gray-900 mb-2 text-center">
         발견된 아이템
       </h1>
-      <p className="text-gray-300 text-center mb-2">
+      <p className="text-gray-600 text-center mb-2">
         검색할 아이템을 선택하세요
       </p>
       {detectedItems.length > 0 && (
@@ -74,7 +74,7 @@ export default function CroppedImageGallery({
         </div>
       )}
 
-      <div className="bg-white rounded-2xl shadow-xl p-8">
+      <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
         {/* Original Image */}
         <div className="mb-8">
           <h3 className="text-lg font-semibold text-gray-700 mb-3">원본 이미지</h3>

@@ -228,14 +228,14 @@ export default function Home() {
   })
 
   return (
-    <main className="min-h-screen bg-black">
+    <main className="min-h-screen bg-white">
       <div className="container mx-auto px-4 py-8">
         {currentStep === 'upload' && (
           <ImageUpload onImageUploaded={handleImageUploaded} />
         )}
         {currentStep === 'analyzing' && (
           <div className="max-w-2xl mx-auto mt-8">
-            <div className="bg-white rounded-2xl shadow-xl p-8">
+            <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
               <div className="text-center space-y-6">
                 {/* Image with animated gradient border (iPhone AI style) */}
                 <div className="relative inline-block overflow-hidden rounded-2xl">
@@ -274,7 +274,7 @@ export default function Home() {
         )}
         {currentStep === 'searching' && (
           <div className="max-w-2xl mx-auto mt-8">
-            <div className="bg-white rounded-2xl shadow-xl p-12">
+            <div className="bg-white rounded-2xl shadow-xl p-12 border border-gray-100">
               <div className="text-center space-y-6">
                 <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-black mx-auto"></div>
                 <h2 className="text-2xl font-bold text-black">AI가 요청하신 상품을 찾고 있어요</h2>
