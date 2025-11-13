@@ -629,25 +629,38 @@ def generate_html_page(phone: str, results: Dict) -> str:
         // Feedback state
         let selectedSatisfaction = null;
         let feedbackShown = false;
+        let modalAutoShownOnce = false; // Track if modal was auto-shown in this session
         let tabShouldShow = false; // Track if tab should be visible
         
         // Check if feedback already submitted for this user
         const feedbackKey = 'feedback_submitted_' + phoneNumber;
         const tabStateKey = 'feedback_tab_state_' + phoneNumber;
+        const autoShownKey = 'feedback_auto_shown_' + phoneNumber;
         
         if (localStorage.getItem(feedbackKey)) {{
             feedbackShown = true; // Don't show again
+            modalAutoShownOnce = true; // Never auto-show if already submitted
+        }}
+        
+        // Check if modal was auto-shown in this session
+        if (sessionStorage.getItem(autoShownKey)) {{
+            modalAutoShownOnce = true; // Already shown in this session
         }}
         
         // Check if tab was showing before
         if (localStorage.getItem(tabStateKey) === 'visible') {{
             tabShouldShow = true;
+            modalAutoShownOnce = true; // If tab is visible, modal was already shown
             document.getElementById('feedbackTab').classList.add('show');
         }}
         
         function showFeedback() {{
-            if (feedbackShown) return;
+            // Only auto-show ONCE per session
+            if (modalAutoShownOnce) return;
+            
             feedbackShown = true;
+            modalAutoShownOnce = true; // Mark as shown in this session
+            sessionStorage.setItem(autoShownKey, 'true'); // Persist for session
             visitMetrics.openedFeedback = true; // Track feedback opened
             document.getElementById('feedbackOverlay').classList.add('show');
             // Only hide tab if it should show later
@@ -663,12 +676,11 @@ def generate_html_page(phone: str, results: Dict) -> str:
             // Mark that tab should be visible
             tabShouldShow = true;
             localStorage.setItem(tabStateKey, 'visible');
-            // Reset feedbackShown so modal can show again if user engages more
-            feedbackShown = false;
+            // Don't reset feedbackShown - user dismissed it, respect that!
         }}
         
         function reopenFeedback() {{
-            // Hide tab and reopen modal
+            // Manual reopen via tab is always allowed
             visitMetrics.openedFeedback = true; // Track feedback reopened
             document.getElementById('feedbackTab').classList.remove('show');
             document.getElementById('feedbackOverlay').classList.add('show');
