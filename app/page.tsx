@@ -5,6 +5,7 @@ import ImageUpload from './components/ImageUpload'
 import CroppedImageGallery from './components/CroppedImageGallery'
 import ResultsBottomSheet from './components/ResultsBottomSheet'
 import { getSessionManager } from '../lib/sessionManager'
+import { usePageTracking } from '../lib/hooks/usePageTracking'
 
 export interface DetectedItem {
   category: string
@@ -22,6 +23,13 @@ export default function Home() {
   const [results, setResults] = useState<Record<string, Array<{ link: string; thumbnail: string | null; title: string | null }>>>({})
   const [isLoading, setIsLoading] = useState(false)
   const [sessionManager, setSessionManager] = useState<any>(null)
+
+  // Track page visits and user actions
+  usePageTracking({
+    uploadedImage: uploadedImageUrl !== '',
+    completedAnalysis: detectedItems.length > 0,
+    clickedSearch: Object.keys(results).length > 0
+  })
 
   // Initialize session on mount (client-side only)
   useEffect(() => {
