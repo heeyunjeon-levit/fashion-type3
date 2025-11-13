@@ -30,6 +30,9 @@ yarn-error.log*
 
 # local env files
 .env*.local
+
+# Private phone number mapping (DO NOT COMMIT!)
+phone_hash_mapping.json
 .env
 
 # vercel
