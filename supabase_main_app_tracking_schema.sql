@@ -82,7 +82,7 @@ SELECT
     MIN(visit_timestamp) as session_start,
     MAX(visit_timestamp) as session_end,
     COUNT(*) as pages_viewed,
-    STRING_AGG(DISTINCT page_path, ' → ' ORDER BY visit_timestamp) as user_journey,
+    STRING_AGG(page_path, ' → ' ORDER BY visit_timestamp) as user_journey,
     MAX(uploaded_image::int) > 0 as uploaded_image,
     MAX(completed_analysis::int) > 0 as completed_analysis,
     SUM(time_on_page_seconds) as total_time_seconds
