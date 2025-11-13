@@ -44,20 +44,60 @@ export async function POST(request: NextRequest) {
 
     // Call Python backend for GPT analysis
     const analyzeStart = Date.now()
-    const backendResponse = await fetch(`${BACKEND_URL}/analyze`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        imageUrl
-      }),
-    })
+    
+    // Add retry logic for cold starts
+    let backendResponse
+    let lastError
+    const maxRetries = 2
+    
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        console.log(`🔄 Attempt ${attempt}/${maxRetries} to reach backend...`)
+        
+        const controller = new AbortController()
+        const timeoutId = setTimeout(() => controller.abort(), 120000) // 2 minute timeout
+        
+        backendResponse = await fetch(`${BACKEND_URL}/analyze`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            imageUrl
+          }),
+          signal: controller.signal
+        })
+        
+        clearTimeout(timeoutId)
+        
+        if (backendResponse.ok) {
+          break // Success!
+        }
+        
+        lastError = await backendResponse.text()
+        console.warn(`⚠️ Attempt ${attempt} failed with status ${backendResponse.status}: ${lastError}`)
+        
+        if (attempt < maxRetries) {
+          console.log('⏳ Waiting 3 seconds before retry...')
+          await new Promise(resolve => setTimeout(resolve, 3000))
+        }
+      } catch (error) {
+        lastError = error instanceof Error ? error.message : String(error)
+        console.warn(`⚠️ Attempt ${attempt} error: ${lastError}`)
+        
+        if (attempt < maxRetries && (lastError.includes('timeout') || lastError.includes('aborted'))) {
+          console.log('⏳ Backend might be cold starting, waiting 5 seconds...')
+          await new Promise(resolve => setTimeout(resolve, 5000))
+        } else if (attempt >= maxRetries) {
+          throw error
+        }
+      }
+    }
 
-    if (!backendResponse.ok) {
-      const errorText = await backendResponse.text()
-      console.error('❌ Backend analysis failed:', errorText)
-      throw new Error(`Backend returned ${backendResponse.status}: ${errorText}`)
+    if (!backendResponse || !backendResponse.ok) {
+      const errorText = backendResponse ? await backendResponse.text() : lastError
+      console.error('❌ Backend analysis failed after all retries:', errorText)
+      throw new Error(`Backend returned ${backendResponse?.status || 'no response'}: ${errorText}`)
     }
 
     const result: AnalyzeResponse = await backendResponse.json()
