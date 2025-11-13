@@ -196,6 +196,38 @@ def generate_html_page(phone: str, results: Dict) -> str:
             flex-shrink: 0;
         }}
         
+        .toggle-view-btn {{
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            color: #000;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 24px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }}
+        
+        .toggle-view-btn:active {{
+            transform: scale(0.95);
+        }}
+        
+        .bottom-sheet.minimized {{
+            max-height: 80px;
+            transition: max-height 0.3s ease;
+        }}
+        
+        .bottom-sheet.minimized .sheet-content {{
+            opacity: 0;
+            pointer-events: none;
+        }}
+        
         .sheet-content {{
             padding: 0 20px 30px;
             overflow-y: auto;
@@ -204,6 +236,7 @@ def generate_html_page(phone: str, results: Dict) -> str:
             -webkit-overflow-scrolling: touch;
             overscroll-behavior: contain;
             min-height: 0;
+            transition: opacity 0.3s ease;
         }}
         
         .category-section {{
@@ -484,6 +517,11 @@ def generate_html_page(phone: str, results: Dict) -> str:
 <body>
     <img src="{original_url}" alt="Original" class="background-image" />
     
+    <!-- Toggle View Button -->
+    <button class="toggle-view-btn" id="toggleViewBtn" onclick="toggleBottomSheet()">
+        원본사진 보기
+    </button>
+    
     {bottom_sheets_html}
     
     <!-- Feedback Modal -->
@@ -623,6 +661,25 @@ def generate_html_page(phone: str, results: Dict) -> str:
                 setTimeout(() => {{
                     submitBtn.textContent = '확인';
                 }}, 2000);
+            }}
+        }}
+        
+        // Toggle bottom sheet to view original image
+        let sheetMinimized = false;
+        function toggleBottomSheet() {{
+            const bottomSheet = document.querySelector('.bottom-sheet');
+            const toggleBtn = document.getElementById('toggleViewBtn');
+            
+            if (sheetMinimized) {{
+                // Show results
+                bottomSheet.classList.remove('minimized');
+                toggleBtn.textContent = '원본사진 보기';
+                sheetMinimized = false;
+            }} else {{
+                // Show original image
+                bottomSheet.classList.add('minimized');
+                toggleBtn.textContent = '결과 다시 보기';
+                sheetMinimized = true;
             }}
         }}
         
