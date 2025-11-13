@@ -617,37 +617,52 @@
                 }, { passive: true });
             }
             
-            // Prevent body scroll, allow sheet scroll
+            // Prevent body/background scroll, allow sheet scroll
+            let touchStartY = 0;
+            document.body.addEventListener('touchstart', function(e) {
+                touchStartY = e.touches[0].clientY;
+            }, { passive: true });
+            
             document.body.addEventListener('touchmove', function(e) {
-                if (!sheetContent.contains(e.target)) {
+                // Only prevent scroll if touching outside the sheet
+                const target = e.target;
+                const isInsideSheet = sheetContent && sheetContent.contains(target);
+                
+                if (!isInsideSheet) {
                     e.preventDefault();
                 }
             }, { passive: false });
             
-            // Enable horizontal scroll for products
-            if (productsScroll) {
-                let isDown = false;
-                let startX;
-                let scrollLeft;
+            // Ensure sheet content is scrollable
+            if (sheetContent) {
+                sheetContent.style.webkitOverflowScrolling = 'touch';
+                sheetContent.style.overflowY = 'auto';
+            }
+            
+            // Handle horizontal product scrolling
+            const productsScrolls = document.querySelectorAll('.products-scroll');
+            productsScrolls.forEach(function(productsScroll) {
+                let startX = 0;
+                let scrollLeft = 0;
+                let isScrolling = false;
                 
                 productsScroll.addEventListener('touchstart', function(e) {
-                    isDown = true;
-                    startX = e.touches[0].pageX - productsScroll.offsetLeft;
+                    startX = e.touches[0].pageX;
                     scrollLeft = productsScroll.scrollLeft;
-                });
+                    isScrolling = false;
+                }, { passive: true });
                 
                 productsScroll.addEventListener('touchmove', function(e) {
-                    if (!isDown) return;
-                    e.stopPropagation();
-                    const x = e.touches[0].pageX - productsScroll.offsetLeft;
-                    const walk = (x - startX) * 2;
-                    productsScroll.scrollLeft = scrollLeft - walk;
-                });
-                
-                productsScroll.addEventListener('touchend', function() {
-                    isDown = false;
-                });
-            }
+                    const x = e.touches[0].pageX;
+                    const walk = (startX - x);
+                    
+                    // If horizontal movement is greater than vertical, scroll horizontally
+                    if (Math.abs(walk) > 5) {
+                        isScrolling = true;
+                        productsScroll.scrollLeft = scrollLeft + walk;
+                    }
+                }, { passive: true });
+            });
         });
     </script>
 </body>
