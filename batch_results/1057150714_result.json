@@ -1,0 +1,90 @@
+{
+  "status": "success",
+  "phone": "1057150714",
+  "uploaded_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763013536518_1057150714_original.jpg",
+  "cropped_data": {
+    "items": [
+      {
+        "category": "tops",
+        "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_black_jacket_1763013546995.jpg"
+      }
+    ]
+  },
+  "search_results": {
+    "results": {
+      "tops": [
+        {
+          "link": "https://www.adidas.co.kr/투어-파이어버드-트랙-탑/KT3456.html",
+          "thumbnail": "https://assets.adidas.com/images/w_600,f_auto,q_auto/05272771241f48dbb38e105082be5cc8_9366/Black_KT3456_01_laydown.jpg",
+          "title": "아디다스 투어 파이어버드 트랙 탑 - Black | adidas South Korea"
+        },
+        {
+          "link": "https://kream.co.kr/products/608797",
+          "thumbnail": "https://kream-phinf.pstatic.net/MjAyNTA5MjVfMTAz/MDAxNzU4Nzc5MTY3NDI1.G_EeCdCPYiGAyXcpxk0RKnC0Z47N0VvhStG4Hksbs_sg.WASQ9NlfxXwChTMwslOZFBhyE7lO4GKyowfuegDb4Osg.PNG/a_e234985986394c6a8251a1db29056f35.png",
+          "title": "아디다스 x 오아시스 투어 파이어버드 트랙 탑 블랙 - KR 사이즈 ..."
+        },
+        {
+          "link": "https://fruitsfamily.com/product/36rxm/아디다스-오아시스-블랙-트랙탑-m",
+          "thumbnail": "https://image.production.fruitsfamily.com/public/product/resized@width1125/EkDPR7BfZc-18373A38-0B38-4405-8D1C-04ADF7BC3FFA.jpg",
+          "title": "아디다스 오아시스 블랙 트랙탑 M | 후루츠패밀리"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 1,
+        "fallback": 0,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "tops": {
+          "itemDescription": "item1 black jacket",
+          "searchTerms": [
+            "item1 black jacket",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.adidas.co.kr/투어-파이어버드-트랙-탑/KT3456.html",
+              "title": "아디다스 투어 파이어버드 트랙 탑 - Black | adidas South Korea"
+            },
+            {
+              "link": "https://kream.co.kr/products/608797",
+              "title": "아디다스 x 오아시스 투어 파이어버드 트랙 탑 블랙 - KR 사이즈 ..."
+            },
+            {
+              "link": "https://fruitsfamily.com/product/36rxm/아디다스-오아시스-블랙-트랙탑-m",
+              "title": "아디다스 오아시스 블랙 트랙탑 M | 후루츠패밀리"
+            }
+          ],
+          "timestamp": "2025-11-13T05:59:26.219Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 4.76,
+        "per_category_search_seconds": 12.85,
+        "gpt4_turbo_api_time_seconds": 3.42,
+        "processing_overhead_seconds": 0.01,
+        "other_overhead_seconds": -3.41,
+        "wall_clock_seconds": 17.63,
+        "serper_api_time_seconds": 9.43,
+        "serper_count": 1,
+        "gpt4_turbo_count": 1,
+        "total_seconds": 17.63,
+        "categories_parallel": 1
+      }
+    }
+  },
+  "timestamp": "2025-11-13T14:59:26.224475"
+}

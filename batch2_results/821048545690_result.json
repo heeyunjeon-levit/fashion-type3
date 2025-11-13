@@ -1,0 +1,47 @@
+{
+  "status": "success",
+  "phone": "821048545690",
+  "uploaded_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763017695237_821048545690_original.jpg",
+  "cropped_data": {
+    "items": [
+      {
+        "category": "tops",
+        "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_black_top_1763017712392.jpg"
+      },
+      {
+        "category": "bottoms",
+        "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_black_pants_1763017713550.jpg"
+      },
+      {
+        "category": "shoes",
+        "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_black_sandals_1763017714694.jpg"
+      }
+    ]
+  },
+  "search_results": {
+    "results": {},
+    "meta": {
+      "sourceCounts": {
+        "gpt": 0,
+        "fallback": 0,
+        "none": 0,
+        "error": 3
+      },
+      "gptReasoning": {},
+      "timing": {
+        "full_image_search_seconds": 0,
+        "per_category_search_seconds": 10.01,
+        "gpt4_turbo_api_time_seconds": 0,
+        "processing_overhead_seconds": 0,
+        "other_overhead_seconds": 10.01,
+        "wall_clock_seconds": 20.02,
+        "serper_api_time_seconds": 0,
+        "serper_count": 0,
+        "gpt4_turbo_count": 0,
+        "total_seconds": 20.02,
+        "categories_parallel": 0
+      }
+    }
+  },
+  "timestamp": "2025-11-13T16:08:55.138109"
+}

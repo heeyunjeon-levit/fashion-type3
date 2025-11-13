@@ -1,0 +1,232 @@
+{
+  "status": "success",
+  "phone": "1092685607",
+  "uploaded_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763013710027_1092685607_original.jpg",
+  "cropped_data": {
+    "items": [
+      {
+        "category": "tops",
+        "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_brown_jacket_1763013720975.jpg"
+      },
+      {
+        "category": "bottoms",
+        "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_white_pants_1763013721777.jpg"
+      },
+      {
+        "category": "shoes",
+        "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_black_shoes_1763013723378.jpg"
+      },
+      {
+        "category": "bag",
+        "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item4_black_bag_1763013724456.jpg"
+      }
+    ]
+  },
+  "search_results": {
+    "results": {
+      "tops": [
+        {
+          "link": "https://www.kolonmall.com/Brands/andros/Product/K1667523212229019BK01",
+          "thumbnail": "https://images.kolonmall.com/Prod_Img/10003315/2022/LZ3/K1667523212229019BK01_LZ3.jpg",
+          "title": "[ANDROS] Suede Trucker Jacket (Dark Brown)"
+        },
+        {
+          "link": "https://www.kolonmall.com/Brands/aureseoul/Product/K1758466906428025BR01",
+          "thumbnail": "https://images.kolonmall.com/Prod_Img/10004303/2025/LZ1/K1758466906428025BR01_LZ1.jpg",
+          "title": "[오어서울] 더오어 스웨이드 자켓 [브라운]"
+        },
+        {
+          "link": "https://www.saksfifthavenue.com/product/frame-suede-button-front-jacket-0400020155247.html",
+          "thumbnail": "https://cdn.saksfifthavenue.com/is/image/saks/0400020155247_CHOCOLATE?wid=830&hei=1106&qlt=90&resMode=sharp2&op_usm=0.9,1.0,8,0",
+          "title": "Frame Suede Button-Front Jacket | Saks Fifth Avenue"
+        }
+      ],
+      "bottoms": [
+        {
+          "link": "https://clubdelecoahorro.com.pe/shopping/19481930/",
+          "thumbnail": "https://img.kr.gcp-karroter.net/origin/article/202504/1744116991382441d1c8240b2947b627121d70e9fc1042272882e808feced7fa950a0bfe18a8e0.jpg",
+          "title": "루에브르 토트백 블랙 Cle Nouveau Tote Large"
+        },
+        {
+          "link": "https://fruitsfamily.com/product/3bxyw/cle-nouveau-tote-large",
+          "thumbnail": "https://image.production.fruitsfamily.com/public/product/resized@width1125/wQTaA-C3FB-4F15ACB6-88F3-4D44-816A-FE6D90165558.jpg",
+          "title": "Cle Nouveau Tote Large | 후루츠패밀리"
+        },
+        {
+          "link": "https://www.clubdelecoahorro.com.pe/shopping/12361174/",
+          "thumbnail": "https://media.bunjang.co.kr/product/306088503_2_1746406983_w1200.jpg",
+          "title": "루에브르 리얼 스웨이드 돈피 자켓"
+        }
+      ],
+      "shoes": [
+        {
+          "link": "https://www.farfetch.com/id/shopping/men/alexander-hotto-pebble-leather-penny-loafers-item-31607943.aspx",
+          "thumbnail": "https://cdn-images.farfetch-contents.com/31/60/79/43/31607943_61386552_600.jpg",
+          "title": "Alexander Hotto pebble-leather Penny Loafers | Black | FARFETCH ID"
+        },
+        {
+          "link": "https://www.mytheresa.com/ch/en/men/george-cleverley-bradley-ii-leather-penny-loafers-black-p00964647",
+          "thumbnail": "https://www.mytheresa.com/media/1094/1238/100/3a/P00964647_d1.jpg",
+          "title": "Bradley II leather penny loafers in black - George Cleverley | Mytheresa"
+        },
+        {
+          "link": "https://www.carminashoemaker.com/en/penny-loafers-black-rusticalf-80191",
+          "thumbnail": "https://www.carminashoemaker.com/cdnassets/penny_loafers_black_rusticalf_80191_fadl.webp",
+          "title": "PENNY LOAFERS BLACK RUSTICALF | CARMINA Shoemaker"
+        }
+      ],
+      "bag": [
+        {
+          "link": "https://www.musinsa.com/products/4394178",
+          "thumbnail": "https://img.bstyle.kr/loeuvre/detail/2024/FA4AA2880_FH_P_04.jpg",
+          "title": "루에브르(LOEUVRE) Cle Nouveau Tote Large FA4AA288-FH - 사이즈 & 후기 | 무신사"
+        },
+        {
+          "link": "https://www.ebay.com/itm/205314256752",
+          "thumbnail": "https://i.ebayimg.com/images/g/WMEAAOSw8bpnvTEi/s-l1200.png",
+          "title": "LOEUVRE Cle Nouveau Tote Large - Black / Louvre Tote Bag | eBay"
+        },
+        {
+          "link": "https://www.amazon.com/Burberry-Medium-Monogram-Motif-Leather/dp/B0B2RCSFNT",
+          "thumbnail": "https://images-na.ssl-images-amazon.com/images/I/51w6VNUaPkL._AC_UL600_SR600,600_.jpg",
+          "title": "Amazon.com: BURBERRY Tb Medium Leather Tote, Black : Clothing, Shoes & Jewelry"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 3,
+        "fallback": 1,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "tops": {
+          "itemDescription": "item1 brown jacket",
+          "searchTerms": [
+            "item1 brown jacket",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.kolonmall.com/Brands/andros/Product/K1667523212229019BK01",
+              "title": "[ANDROS] Suede Trucker Jacket (Dark Brown)"
+            },
+            {
+              "link": "https://www.kolonmall.com/Brands/aureseoul/Product/K1758466906428025BR01",
+              "title": "[오어서울] 더오어 스웨이드 자켓 [브라운]"
+            },
+            {
+              "link": "https://www.saksfifthavenue.com/product/frame-suede-button-front-jacket-0400020155247.html",
+              "title": "Frame Suede Button-Front Jacket | Saks Fifth Avenue"
+            }
+          ],
+          "timestamp": "2025-11-13T06:02:22.795Z",
+          "candidateCount": 29,
+          "selectionCount": 3
+        },
+        "bottoms": {
+          "itemDescription": "item2 white pants",
+          "searchTerms": [
+            "item2 white pants",
+            "shorts",
+            "slacks",
+            "pants",
+            "trousers",
+            "jeans",
+            "skirt",
+            "leg trousers"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-13T06:02:23.910Z",
+          "candidateCount": 30
+        },
+        "shoes": {
+          "itemDescription": "item3 black shoes",
+          "searchTerms": [
+            "item3 black shoes",
+            "shoes",
+            "sneakers",
+            "boots",
+            "sandals",
+            "heels",
+            "flats",
+            "loafers",
+            "oxford"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.farfetch.com/id/shopping/men/alexander-hotto-pebble-leather-penny-loafers-item-31607943.aspx",
+              "title": "Alexander Hotto pebble-leather Penny Loafers | Black | FARFETCH ID"
+            },
+            {
+              "link": "https://www.mytheresa.com/ch/en/men/george-cleverley-bradley-ii-leather-penny-loafers-black-p00964647",
+              "title": "Bradley II leather penny loafers in black - George Cleverley | Mytheresa"
+            },
+            {
+              "link": "https://www.carminashoemaker.com/en/penny-loafers-black-rusticalf-80191",
+              "title": "PENNY LOAFERS BLACK RUSTICALF | CARMINA Shoemaker"
+            }
+          ],
+          "timestamp": "2025-11-13T06:02:28.279Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        },
+        "bag": {
+          "itemDescription": "item4 black bag",
+          "searchTerms": [
+            "item4 black bag",
+            "bag",
+            "backpack",
+            "handbag",
+            "tote bag",
+            "purse",
+            "clutch",
+            "messenger bag",
+            "shoulder bag",
+            "wallet"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.musinsa.com/products/4394178",
+              "title": "루에브르(LOEUVRE) Cle Nouveau Tote Large FA4AA288-FH - 사이즈 & 후기 | 무신사"
+            },
+            {
+              "link": "https://www.ebay.com/itm/205314256752",
+              "title": "LOEUVRE Cle Nouveau Tote Large - Black / Louvre Tote Bag | eBay"
+            },
+            {
+              "link": "https://www.amazon.com/Burberry-Medium-Monogram-Motif-Leather/dp/B0B2RCSFNT",
+              "title": "Amazon.com: BURBERRY Tb Medium Leather Tote, Black : Clothing, Shoes & Jewelry"
+            }
+          ],
+          "timestamp": "2025-11-13T06:02:30.628Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 4.76,
+        "per_category_search_seconds": 20.78,
+        "gpt4_turbo_api_time_seconds": 12.92,
+        "processing_overhead_seconds": 0.01,
+        "other_overhead_seconds": -12.91,
+        "wall_clock_seconds": 25.55,
+        "serper_api_time_seconds": 53.23,
+        "serper_count": 4,
+        "gpt4_turbo_count": 4,
+        "total_seconds": 25.55,
+        "categories_parallel": 4
+      }
+    }
+  },
+  "timestamp": "2025-11-13T15:02:30.631211"
+}

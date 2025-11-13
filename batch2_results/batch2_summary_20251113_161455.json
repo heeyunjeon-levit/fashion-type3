@@ -1,0 +1,104 @@
+{
+  "total": 17,
+  "success": 11,
+  "failed": 6,
+  "elapsed_seconds": 570.3909258842468,
+  "results": [
+    {
+      "phone": "821084562622",
+      "status": "success",
+      "links": 5,
+      "html_path": "./public/results/821084562622.html"
+    },
+    {
+      "phone": "821055526673",
+      "status": "success",
+      "links": 0,
+      "html_path": "./public/results/821055526673.html"
+    },
+    {
+      "phone": "821084562622",
+      "status": "success",
+      "links": 4,
+      "html_path": "./public/results/821084562622.html"
+    },
+    {
+      "phone": "821091803452",
+      "status": "success",
+      "links": 6,
+      "html_path": "./public/results/821091803452.html"
+    },
+    {
+      "phone": "821048545690",
+      "status": "success",
+      "links": 0,
+      "html_path": "./public/results/821048545690.html"
+    },
+    {
+      "phone": "821024362637",
+      "status": "failed",
+      "error": "500 Server Error: Internal Server Error for url: http://localhost:3001/api/upload"
+    },
+    {
+      "phone": "821086439904",
+      "status": "failed",
+      "error": "500 Server Error: Internal Server Error for url: http://localhost:3001/api/upload"
+    },
+    {
+      "phone": "821032860463",
+      "status": "failed",
+      "error": "500 Server Error: Internal Server Error for url: http://localhost:3001/api/upload"
+    },
+    {
+      "phone": "821087175357",
+      "status": "failed",
+      "error": "500 Server Error: Internal Server Error for url: http://localhost:3001/api/upload"
+    },
+    {
+      "phone": "821032846157",
+      "status": "failed",
+      "error": "500 Server Error: Internal Server Error for url: http://localhost:3001/api/upload"
+    },
+    {
+      "phone": "821095979009",
+      "status": "failed",
+      "error": "500 Server Error: Internal Server Error for url: http://localhost:3001/api/upload"
+    },
+    {
+      "phone": "821088762112",
+      "status": "success",
+      "links": 8,
+      "html_path": "./public/results/821088762112.html"
+    },
+    {
+      "phone": "821097892698",
+      "status": "success",
+      "links": 3,
+      "html_path": "./public/results/821097892698.html"
+    },
+    {
+      "phone": "821033056542",
+      "status": "success",
+      "links": 6,
+      "html_path": "./public/results/821033056542.html"
+    },
+    {
+      "phone": "821043750914",
+      "status": "success",
+      "links": 3,
+      "html_path": "./public/results/821043750914.html"
+    },
+    {
+      "phone": "821027233343",
+      "status": "success",
+      "links": 9,
+      "html_path": "./public/results/821027233343.html"
+    },
+    {
+      "phone": "821048205828",
+      "status": "success",
+      "links": 3,
+      "html_path": "./public/results/821048205828.html"
+    }
+  ]
+}

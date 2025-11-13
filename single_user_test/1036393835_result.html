@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>이미지 분석 결과</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Apple SD Gothic Neo', sans-serif;
+            background: #000;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+            position: fixed;
+        }
+        
+        .background-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+        }
+        
+        .bottom-sheet {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 20px 20px 0 0;
+            z-index: 50;
+            max-height: 65vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .sheet-handle {
+            width: 36px;
+            height: 5px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            margin: 12px auto 8px;
+            flex-shrink: 0;
+        }
+        
+        .sheet-content {
+            padding: 0 20px 30px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            flex: 1;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .cropped-thumb {
+            width: 72px;
+            height: 72px;
+            border-radius: 12px;
+            object-fit: cover;
+            background: #f5f5f5;
+        }
+        
+        .category-info h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: #000;
+        }
+        
+        .category-info p {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .products-scroll {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            padding-right: 20px;
+        }
+        
+        .products-scroll::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .product-card {
+            flex: 0 0 130px;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            text-decoration: none;
+            display: block;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        
+        .product-img {
+            width: 130px;
+            height: 170px;
+            position: relative;
+        }
+        
+        .product-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .no-img {
+            width: 100%;
+            height: 100%;
+            background: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 12px;
+        }
+        
+    </style>
+</head>
+<body>
+    <img src="https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763007194068_1036393835_original.jpg" alt="Original" class="background-image" />
+    
+    
+        <div class="bottom-sheet">
+            <div class="sheet-handle"></div>
+            <div class="sheet-content">
+                <div class="category-header">
+                    <img src="https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_pink_set_1763007232887.jpg" alt="상의" class="cropped-thumb" />
+                    <div class="category-info">
+                        <h2>상의</h2>
+                        <p>3개 상품</p>
+                    </div>
+                </div>
+                <div class="products-scroll">
+                    
+                <a href="https://www.daangn.com/kr/buy-sell/코코하니-내의2벌-바지추가3개-코코하니2개-에뜨와1개-o34wv3teyiet/" target="_blank" class="product-card">
+                    <div class="product-img">
+                        <img src="https://img.kr.gcp-karroter.net/origin/article/202510/e4d3ba58f1361f8c4e347c17a61420c4dc06d97de7368feb55b7500b784006ca_0.webp?f=webp&q=95&s=1440x1440&t=inside" alt="코코하니 내의2벌+바지추가3개(코코하니2개, 에뜨와1개..." />
+                    </div>
+                </a>
+            
+                <a href="https://delightkids.kr/shop_view/?idx=79248" target="_blank" class="product-card">
+                    <div class="product-img">
+                        <img src="https://cdn.imweb.me/thumbnail/20250818/b585254d85cdc.jpg" alt="히어아이엠-조이골지실내복 : 딜라잇" />
+                    </div>
+                </a>
+            
+                <a href="https://the-anne.co.kr/product/히어아이엠-코튼매쉬실내복/51678" target="_blank" class="product-card">
+                    <div class="product-img">
+                        <img src="https://m.the-anne.co.kr/web/upload/NNEditor/20250815/mobile/0ff08d6f805d6ce9ba103bc1485e617a_1755183910.jpg" alt="히어아이엠 코튼매쉬실내복 - the ANNE" />
+                    </div>
+                </a>
+            
+                </div>
+            </div>
+        </div>
+        
+</body>
+</html>

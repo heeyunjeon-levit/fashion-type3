@@ -1,0 +1,118 @@
+{
+  "phone": "1036393835",
+  "original_url": "https://api.typeform.com/responses/files/623a42975d55d51f53218c46015fd582685a18333d03281303d8a51a7c34b355/Screenshot_20251108_074058_Samsung_Internet.png",
+  "status": "success",
+  "timestamp": "2025-11-13T13:13:12.556780",
+  "uploaded_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763007194068_1036393835_original.jpg",
+  "cropped_data": {
+    "items": [
+      {
+        "category": "tops",
+        "groundingdino_prompt": "pink set",
+        "description": "light pink long sleeve top and matching pants set",
+        "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_pink_set_1763007232887.jpg",
+        "confidence": 0.664
+      },
+      {
+        "category": "tops",
+        "groundingdino_prompt": "yellow set",
+        "description": "light yellow long sleeve top and matching pants set",
+        "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_yellow_set_1763007234049.jpg",
+        "confidence": 0.741
+      },
+      {
+        "category": "tops",
+        "groundingdino_prompt": "orange set",
+        "description": "light orange long sleeve top and matching pants set",
+        "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_orange_set_1763007235409.jpg",
+        "confidence": 0.723
+      },
+      {
+        "category": "tops",
+        "groundingdino_prompt": "purple set",
+        "description": "light purple long sleeve top and matching pants set",
+        "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item4_purple_set_1763007236189.jpg",
+        "confidence": 0.656
+      },
+      {
+        "category": "tops",
+        "groundingdino_prompt": "gray set",
+        "description": "light gray long sleeve top and matching pants set",
+        "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item5_gray_set_1763007237466.jpg",
+        "confidence": 0.758
+      },
+      {
+        "category": "tops",
+        "groundingdino_prompt": "blue set",
+        "description": "light blue long sleeve top and matching pants set",
+        "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item6_blue_set_1763007238291.jpg",
+        "confidence": 0.708
+      }
+    ],
+    "croppedImages": {
+      "tops": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_pink_set_1763007232887.jpg"
+    }
+  },
+  "search_results": {
+    "results": {
+      "tops": [
+        {
+          "link": "https://www.daangn.com/kr/buy-sell/코코하니-내의2벌-바지추가3개-코코하니2개-에뜨와1개-o34wv3teyiet/",
+          "thumbnail": "https://img.kr.gcp-karroter.net/origin/article/202510/e4d3ba58f1361f8c4e347c17a61420c4dc06d97de7368feb55b7500b784006ca_0.webp?f=webp&q=95&s=1440x1440&t=inside",
+          "title": "코코하니 내의2벌+바지추가3개(코코하니2개, 에뜨와1개 ..."
+        },
+        {
+          "link": "https://delightkids.kr/shop_view/?idx=79248",
+          "thumbnail": "https://cdn.imweb.me/thumbnail/20250818/b585254d85cdc.jpg",
+          "title": "히어아이엠-조이골지실내복 : 딜라잇"
+        },
+        {
+          "link": "https://the-anne.co.kr/product/히어아이엠-코튼매쉬실내복/51678",
+          "thumbnail": "https://m.the-anne.co.kr/web/upload/NNEditor/20250815/mobile/0ff08d6f805d6ce9ba103bc1485e617a_1755183910.jpg",
+          "title": "히어아이엠 코튼매쉬실내복 - the ANNE"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 0,
+        "fallback": 1,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "tops": {
+          "itemDescription": "item1 pink set",
+          "searchTerms": [
+            "item1 pink set",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-13T04:14:28.068Z",
+          "candidateCount": 30
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 15.41,
+        "per_category_search_seconds": 12.79,
+        "gpt4_turbo_api_time_seconds": 2.27,
+        "processing_overhead_seconds": 0.01,
+        "other_overhead_seconds": -2.26,
+        "wall_clock_seconds": 28.21,
+        "serper_api_time_seconds": 10.51,
+        "serper_count": 1,
+        "gpt4_turbo_count": 1,
+        "total_seconds": 28.21,
+        "categories_parallel": 1
+      }
+    }
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "status": "success",
+  "phone": "821032846157",
+  "uploaded_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763020259220_821032846157_original.jpg",
+  "cropped_data": {
+    "items": [
+      {
+        "category": "tops",
+        "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_gray_sweatshirt_1763020297324.jpg"
+      }
+    ]
+  },
+  "search_results": {
+    "results": {
+      "tops": [
+        {
+          "link": "https://www.musinsa.com/products/4048034",
+          "thumbnail": "https://image.msscdn.net/images/goods_img/20240412/4048034/4048034_17134295966172_500.jpg",
+          "title": "패블러스아카이브(FABULOUS ARCHIVE) 우먼즈 크롭 스판 하트 엠보 로고 반소매 티셔츠 블랙(FCE2TS204W) - 사이즈 & 후기 | 무신사"
+        },
+        {
+          "link": "https://kor.lottedfs.com/kr/event/eventDetail?evtDispNo=1049243",
+          "thumbnail": "https://static.lottedfs.com/contents/images/ckeditor-img/20250220/20250220131924043a8326d8f5925403ebcdacb403ada871d.jpg",
+          "title": "롯데면세점"
+        },
+        {
+          "link": "https://www.musinsa.com/products/4371166",
+          "thumbnail": "https://image.msscdn.net/images/goods_img/20240826/4371166/4371166_17248222410042_500.jpg",
+          "title": "패블러스아카이브(FABULOUS ARCHIVE) 우먼즈 오렌지 트리 트라이앵글 체인 자수 크롭 맨투맨 크림(FCE3TS504W) - 사이즈 & 후기 | 무신사"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 0,
+        "fallback": 1,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "tops": {
+          "itemDescription": "item1 gray sweatshirt",
+          "searchTerms": [
+            "item1 gray sweatshirt",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-13T07:51:50.087Z",
+          "candidateCount": 13
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 4.14,
+        "per_category_search_seconds": 6.6,
+        "gpt4_turbo_api_time_seconds": 1.7,
+        "processing_overhead_seconds": 0.01,
+        "other_overhead_seconds": -1.69,
+        "wall_clock_seconds": 10.74,
+        "serper_api_time_seconds": 4.88,
+        "serper_count": 1,
+        "gpt4_turbo_count": 1,
+        "total_seconds": 10.74,
+        "categories_parallel": 1
+      }
+    }
+  },
+  "timestamp": "2025-11-13T16:51:50.090882"
+}

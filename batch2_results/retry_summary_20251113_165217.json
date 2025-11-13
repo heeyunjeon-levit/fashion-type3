@@ -1,0 +1,44 @@
+{
+  "total": 6,
+  "success": 6,
+  "failed": 0,
+  "elapsed_seconds": 287.8843240737915,
+  "results": [
+    {
+      "phone": "821024362637",
+      "status": "success",
+      "links": 6,
+      "html_path": "./public/results/821024362637.html"
+    },
+    {
+      "phone": "821086439904",
+      "status": "success",
+      "links": 11,
+      "html_path": "./public/results/821086439904.html"
+    },
+    {
+      "phone": "821032860463",
+      "status": "success",
+      "links": 3,
+      "html_path": "./public/results/821032860463.html"
+    },
+    {
+      "phone": "821087175357",
+      "status": "success",
+      "links": 9,
+      "html_path": "./public/results/821087175357.html"
+    },
+    {
+      "phone": "821032846157",
+      "status": "success",
+      "links": 3,
+      "html_path": "./public/results/821032846157.html"
+    },
+    {
+      "phone": "821095979009",
+      "status": "success",
+      "links": 3,
+      "html_path": "./public/results/821095979009.html"
+    }
+  ]
+}

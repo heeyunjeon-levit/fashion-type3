@@ -1,0 +1,170 @@
+{
+  "status": "success",
+  "phone": "1039106040",
+  "uploaded_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763014102380_1039106040_original.jpg",
+  "cropped_data": {
+    "items": [
+      {
+        "category": "tops",
+        "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_gray_sweater_1763014114542.jpg"
+      },
+      {
+        "category": "bottoms",
+        "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_navy_skirt_1763014116002.jpg"
+      },
+      {
+        "category": "shoes",
+        "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_black_sneakers_1763014117355.jpg"
+      }
+    ]
+  },
+  "search_results": {
+    "results": {
+      "tops": [
+        {
+          "link": "https://www.elandmall.co.kr/i/item?itemNo=2411591327&chnl_no=GSM",
+          "thumbnail": "https://item.elandrs.com/r/image/item/2024-11-18/33755ca8-62f4-488b-b8f8-33be5de42eca.jpg",
+          "title": "리스트 코듀로이 밴딩 스커트_TWWSKO82050- 이랜드몰"
+        },
+        {
+          "link": "https://ferragamo.department.ssg.com/item/itemView.ssg?itemId=1000620357897&siteNo=6009&salestrNo=1019&tlidSrchWd=리스트&srchPgNo=1&src_area=sdlist",
+          "thumbnail": "https://sitem.ssgcdn.com/97/78/35/item/1000620357897_i1_1200.jpg",
+          "title": "리스트] 코듀로이 밴딩 스커트 - 신세계백화점"
+        },
+        {
+          "link": "https://www.freepeople.com/shop/ray-corduroy-mini-skirt/",
+          "thumbnail": "https://images.urbndata.com/is/image/FreePeople/82955816_001_m3/?$a15-pdp-detail-shot$&fit=constrain&qlt=80&wid=640",
+          "title": "Ray Corduroy Mini Skirt | Free People"
+        }
+      ],
+      "bottoms": [
+        {
+          "link": "https://www.meandem.com/us/cotton-cord-midi-a-line-skirt-navy",
+          "thumbnail": "https://meandem.centracdn.net/client/dynamic/images/26899_254946783f-04september_19_m025_aw25ws406000001_ss24jt992000079_aw24sh538001257_aw25acc004001257_021-original.jpg",
+          "title": "Women's Navy Cord A-Line Midi Skirt | ME+EM"
+        },
+        {
+          "link": "https://www.talbots.com/corduroy-fit-and-flare-skirt/58361788.html?bvstate=pg:2/ct:r",
+          "thumbnail": "https://www.talbots.com/on/demandware.static/-/Sites-master-catalog-talbots/default/dw8e3591c7/images/253018323/253018323_7349.jpg",
+          "title": "Corduroy Fit & Flare Skirt | Talbots"
+        },
+        {
+          "link": "https://www.harrods.com/en-ec/p/meem-stretch-cotton-corduroy-midi-skirt-000000000007877297",
+          "thumbnail": "https://hrd-live.cdn.scayle.cloud/images/82e23f8c7333958df79d84aef005c4c2.jpg?quality=75",
+          "title": "ME+EM Navy Stretch-Cotton Corduroy Midi Skirt | Harrods EC"
+        }
+      ],
+      "shoes": [
+        {
+          "link": "https://www.adidas.com.tr/en/samba-og-shoes-kids/IE3678.html",
+          "thumbnail": "https://assets.adidas.com/images/w_600,f_auto,q_auto/4a1007291c004f7c95a7c9bbd5ae1d8b_faec/Samba_OG_Shoes_Kids_Black_IE3678_db04_standard.jpg",
+          "title": "adidas Samba OG Shoes Kids - Black | adidas Türkiye"
+        },
+        {
+          "link": "https://zigzag.kr/catalog/products/130755488",
+          "thumbnail": "https://cf.image-farm.s.zigzag.kr/original/review/2025/06/18/202506180328128937_52795.jpeg?format=webp&width=600&height=600&quality=80",
+          "title": "티원글로벌 [아디다스] 삼바 OG 코어 블랙 B75807"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 2,
+        "fallback": 1,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "tops": {
+          "itemDescription": "item1 gray sweater",
+          "searchTerms": [
+            "item1 gray sweater",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-13T06:08:51.517Z",
+          "candidateCount": 30
+        },
+        "bottoms": {
+          "itemDescription": "item2 navy skirt",
+          "searchTerms": [
+            "item2 navy skirt",
+            "shorts",
+            "slacks",
+            "pants",
+            "trousers",
+            "jeans",
+            "skirt",
+            "leg trousers"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.meandem.com/us/cotton-cord-midi-a-line-skirt-navy",
+              "title": "Women's Navy Cord A-Line Midi Skirt | ME+EM"
+            },
+            {
+              "link": "https://www.talbots.com/corduroy-fit-and-flare-skirt/58361788.html?bvstate=pg:2/ct:r",
+              "title": "Corduroy Fit & Flare Skirt | Talbots"
+            },
+            {
+              "link": "https://www.harrods.com/en-ec/p/meem-stretch-cotton-corduroy-midi-skirt-000000000007877297",
+              "title": "ME+EM Navy Stretch-Cotton Corduroy Midi Skirt | Harrods EC"
+            }
+          ],
+          "timestamp": "2025-11-13T06:08:54.862Z",
+          "candidateCount": 29,
+          "selectionCount": 3
+        },
+        "shoes": {
+          "itemDescription": "item3 black sneakers",
+          "searchTerms": [
+            "item3 black sneakers",
+            "shoes",
+            "sneakers",
+            "boots",
+            "sandals",
+            "heels",
+            "flats",
+            "loafers",
+            "oxford"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.adidas.com.tr/en/samba-og-shoes-kids/IE3678.html",
+              "title": "adidas Samba OG Shoes Kids - Black | adidas Türkiye"
+            },
+            {
+              "link": "https://zigzag.kr/catalog/products/130755488",
+              "title": "티원글로벌 [아디다스] 삼바 OG 코어 블랙 B75807"
+            }
+          ],
+          "timestamp": "2025-11-13T06:09:01.993Z",
+          "candidateCount": 29,
+          "selectionCount": 2
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 5.49,
+        "per_category_search_seconds": 18.07,
+        "gpt4_turbo_api_time_seconds": 10.25,
+        "processing_overhead_seconds": 0.06,
+        "other_overhead_seconds": -10.25,
+        "wall_clock_seconds": 23.62,
+        "serper_api_time_seconds": 26.28,
+        "serper_count": 3,
+        "gpt4_turbo_count": 3,
+        "total_seconds": 23.62,
+        "categories_parallel": 3
+      }
+    }
+  },
+  "timestamp": "2025-11-13T15:09:01.997152"
+}

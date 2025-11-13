@@ -1,0 +1,218 @@
+{
+  "status": "success",
+  "phone": "1040455757",
+  "uploaded_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763013611292_1040455757_original.jpg",
+  "cropped_data": {
+    "items": [
+      {
+        "category": "tops",
+        "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_gray_jacket_1763013622923.jpg"
+      },
+      {
+        "category": "bottoms",
+        "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_gray_pants_1763013624392.jpg"
+      },
+      {
+        "category": "shoes",
+        "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_white_shoes_1763013625751.jpg"
+      },
+      {
+        "category": "bag",
+        "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item4_black_bag_1763013627694.jpg"
+      }
+    ]
+  },
+  "search_results": {
+    "results": {
+      "tops": [
+        {
+          "link": "https://leejiral.com/product/detail.html?product_no=17675&cate_no=74&display_group=1&cafe_mkt=ue_woman01",
+          "thumbnail": "https://cafe24img.poxo.com/dalphins/web/upload/NNEditor/20251106/mobile/2268029e3b33cea2a70dae04261423f2_1762407540.jpg",
+          "title": "감각적 명품스타일!- 리지랄닷컴 LEEJIRAL"
+        },
+        {
+          "link": "https://otssa9.com/product/파니이지쓰리피스/12601",
+          "thumbnail": "https://cafe24.poxo.com/ec01/arachn/UVTjSep0dwP4/wX7AtHyXDJ1YakOHVdnw6pe6kgPkzMSiR79TwAh+/uvJsqhflfTqcMWLvBEFz2PsyzWE7/Whg==/_/web/product/big/202510/b5d4173869fa842473da353a3c3e6058.png",
+          "title": "파니이지쓰리피스 - 옷싸구"
+        },
+        {
+          "link": "https://www.daangn.com/kr/buy-sell/새상품-기모셋업-쓰리피스-조끼-후드집업-바지-핑크마감-아이보리만있어요-fnonosirwk5z/",
+          "thumbnail": "https://img.kr.gcp-karroter.net/origin/article/202511/1762785861424a9f79333a4b1a883d7fd39d79100fba8babc245fb0a48a2dbeafd8e9cfb1aed70.webp?f=webp&q=95&s=1440x1440&t=inside",
+          "title": "새상품)기모셋업 쓰리피스 (조끼.후드집업.바지)핑크마감.아이보리만있어요 | 여성의류 | 당근 중고거래"
+        }
+      ],
+      "bottoms": [
+        {
+          "link": "https://4910.kr/goods/46347927",
+          "thumbnail": "https://d3ha2047wt6x28.cloudfront.net/2zu18bgSoSk/pr:GOODS_DETAIL/czM6Ly9hYmx5LWltYWdlLWxlZ2FjeS9kYXRhL2dvb2RzLzIwMjUxMTA1XzE3NjIzMTAyMjIzMzA3ODNtLmpwZw",
+          "title": "톨앤숏 1+1 기장111cm 롱 와이드 스웻팬츠 긴 회색 츄리닝 ..."
+        },
+        {
+          "link": "https://www.aliexpress.com/i/1005008851335677.html",
+          "thumbnail": "https://ae01.alicdn.com/kf/Sbb15f47748ce45868ddbd3edf451a038J.jpg",
+          "title": "HOUZHOU Baggy Women Gray Sweatpants Oversized Korean Fashion ..."
+        },
+        {
+          "link": "https://www.amazon.in/Torpedo-Solid-Cotton-Athleisure-Lounge/dp/B0DSV3X4DB",
+          "thumbnail": "https://m.media-amazon.com/images/I/71aCdfJ2BgL.jpg",
+          "title": "PROGENY Solid Men GreyCotton Blend|Open Bottom |GRY0811NVJ ..."
+        }
+      ],
+      "shoes": [
+        {
+          "link": "https://m.leejiral.com/product/detail.html?product_no=17675&cate_no=74&display_group=1&cafe_mkt=ue_woman01",
+          "thumbnail": "https://cafe24img.poxo.com/dalphins/web/upload/NNEditor/20251106/mobile/2268029e3b33cea2a70dae04261423f2_1762407540.jpg",
+          "title": "감각적 명품스타일!- 리지랄닷컴 LEEJIRAL"
+        },
+        {
+          "link": "https://m.cn.leejiral.com/product/list_zoom.html?cate_no=108",
+          "thumbnail": "https://cafe24img.poxo.com/dalphins/web/product/medium/202511/c0e84b5023240e481782f12808ac6d42.gif",
+          "title": "재킷 - [LEEJIRAL] 韩国年轻女装时尚网站"
+        },
+        {
+          "link": "https://m.cn.leejiral.com/surl/P/17675&appid=",
+          "thumbnail": "https://cafe24img.poxo.com/dalphins/web/upload/NNEditor/20251106/87fcea8a9a4267302fb1da3581ab66cc.jpg",
+          "title": "OT-c727]엘리패딩베스트+ 집업+ 팬츠세트- [LEEJIRAL] 韩国年轻 ..."
+        }
+      ],
+      "bag": [
+        {
+          "link": "https://theshopyohjiyamamoto.com/ko/products/yp-i01-719-1",
+          "thumbnail": "https://theshopyohjiyamamoto.com/cdn/shop/files/YP-I01-719_1-3.jpg?v=1739849698&width=1445",
+          "title": "SMOOTH LEATHER COMBINATION CLASP BAG (S) – THE SHOP YOHJI YAMAMOTO"
+        },
+        {
+          "link": "https://www.musinsa.com/products/2716552",
+          "thumbnail": "https://image.msscdn.net/images/prd_img/2025062412531266665680787685a2128a2c28.jpg",
+          "title": "유르트(YURT) BOON MINI_BK - 사이즈 & 후기 | 무신사"
+        },
+        {
+          "link": "https://www.ssense.com/en-hk/men/product/marni/black-small-muso-bag/16051111",
+          "thumbnail": "https://res.cloudinary.com/ssenseweb/image/upload/b_white,c_lpad,g_south,h_706,w_470/c_scale,h_480/v550/242379M170002_1.jpg",
+          "title": "Black Small Muso Bag by Marni on Sale"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 2,
+        "fallback": 2,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "bag": {
+          "itemDescription": "item4 black bag",
+          "searchTerms": [
+            "item4 black bag",
+            "bag",
+            "backpack",
+            "handbag",
+            "tote bag",
+            "purse",
+            "clutch",
+            "messenger bag",
+            "shoulder bag",
+            "wallet"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://theshopyohjiyamamoto.com/ko/products/yp-i01-719-1",
+              "title": "SMOOTH LEATHER COMBINATION CLASP BAG (S) – THE SHOP YOHJI YAMAMOTO"
+            },
+            {
+              "link": "https://www.musinsa.com/products/2716552",
+              "title": "유르트(YURT) BOON MINI_BK - 사이즈 & 후기 | 무신사"
+            },
+            {
+              "link": "https://www.ssense.com/en-hk/men/product/marni/black-small-muso-bag/16051111",
+              "title": "Black Small Muso Bag by Marni on Sale"
+            }
+          ],
+          "timestamp": "2025-11-13T06:00:53.166Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        },
+        "tops": {
+          "itemDescription": "item1 gray jacket",
+          "searchTerms": [
+            "item1 gray jacket",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-13T06:00:56.675Z",
+          "candidateCount": 27
+        },
+        "shoes": {
+          "itemDescription": "item3 white shoes",
+          "searchTerms": [
+            "item3 white shoes",
+            "shoes",
+            "sneakers",
+            "boots",
+            "sandals",
+            "heels",
+            "flats",
+            "loafers",
+            "oxford"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-13T06:00:57.494Z",
+          "candidateCount": 30
+        },
+        "bottoms": {
+          "itemDescription": "item2 gray pants",
+          "searchTerms": [
+            "item2 gray pants",
+            "shorts",
+            "slacks",
+            "pants",
+            "trousers",
+            "jeans",
+            "skirt",
+            "leg trousers"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://4910.kr/goods/46347927",
+              "title": "톨앤숏 1+1 기장111cm 롱 와이드 스웻팬츠 긴 회색 츄리닝 ..."
+            },
+            {
+              "link": "https://www.aliexpress.com/i/1005008851335677.html",
+              "title": "HOUZHOU Baggy Women Gray Sweatpants Oversized Korean Fashion ..."
+            },
+            {
+              "link": "https://www.amazon.in/Torpedo-Solid-Cotton-Athleisure-Lounge/dp/B0DSV3X4DB",
+              "title": "PROGENY Solid Men GreyCotton Blend|Open Bottom |GRY0811NVJ ..."
+            }
+          ],
+          "timestamp": "2025-11-13T06:01:00.559Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 16.45,
+        "per_category_search_seconds": 15.26,
+        "gpt4_turbo_api_time_seconds": 10.51,
+        "processing_overhead_seconds": 0.1,
+        "other_overhead_seconds": -10.5,
+        "wall_clock_seconds": 31.81,
+        "serper_api_time_seconds": 36.11,
+        "serper_count": 4,
+        "gpt4_turbo_count": 4,
+        "total_seconds": 31.81,
+        "categories_parallel": 4
+      }
+    }
+  },
+  "timestamp": "2025-11-13T15:01:00.563147"
+}

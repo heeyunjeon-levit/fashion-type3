@@ -1,0 +1,79 @@
+{
+  "status": "success",
+  "phone": "1074416385",
+  "uploaded_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763013944063_1074416385_original.jpg",
+  "cropped_data": {
+    "items": [
+      {
+        "category": "bottoms",
+        "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_black_shorts_1763013955531.jpg"
+      }
+    ]
+  },
+  "search_results": {
+    "results": {
+      "bottoms": [
+        {
+          "link": "https://www.kolonmall.com/Brands/6147/Product/LFPBW25200BKX",
+          "thumbnail": "https://images.kolonmall.com/Prod_Img/LC/2025/LM5/LFPBW25200BKX_LM5.jpg",
+          "title": "LUCKY CHOUETTE] Entry Side Frill Knit Shorts (black)"
+        },
+        {
+          "link": "https://www.hiver.co.kr/products/148756544",
+          "thumbnail": "https://image.brandi.co.kr/cproduct/HIVER/2024/05/15/fae077f2-d3a7-47cd-a911-f1df14f7e063/SB000000000143498259_1715750522_image1_S.webp",
+          "title": "해외] 풀앤베어 와플니트 조거 버뮤다 쇼츠 7693/509 BLACK"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 1,
+        "fallback": 0,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "bottoms": {
+          "itemDescription": "item1 black shorts",
+          "searchTerms": [
+            "item1 black shorts",
+            "shorts",
+            "slacks",
+            "pants",
+            "trousers",
+            "jeans",
+            "skirt",
+            "leg trousers"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.kolonmall.com/Brands/6147/Product/LFPBW25200BKX",
+              "title": "LUCKY CHOUETTE] Entry Side Frill Knit Shorts (black)"
+            },
+            {
+              "link": "https://www.hiver.co.kr/products/148756544",
+              "title": "해외] 풀앤베어 와플니트 조거 버뮤다 쇼츠 7693/509 BLACK"
+            }
+          ],
+          "timestamp": "2025-11-13T06:06:20.019Z",
+          "candidateCount": 24,
+          "selectionCount": 2
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 11.14,
+        "per_category_search_seconds": 11.6,
+        "gpt4_turbo_api_time_seconds": 3.17,
+        "processing_overhead_seconds": 0.02,
+        "other_overhead_seconds": -3.16,
+        "wall_clock_seconds": 22.76,
+        "serper_api_time_seconds": 8.43,
+        "serper_count": 1,
+        "gpt4_turbo_count": 1,
+        "total_seconds": 22.76,
+        "categories_parallel": 1
+      }
+    }
+  },
+  "timestamp": "2025-11-13T15:06:20.021886"
+}

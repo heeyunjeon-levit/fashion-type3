@@ -1,0 +1,90 @@
+{
+  "status": "success",
+  "phone": "821097892698",
+  "uploaded_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763017862092_821097892698_original.jpg",
+  "cropped_data": {
+    "items": [
+      {
+        "category": "tops",
+        "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_black_t_shirt_1763017872952.jpg"
+      }
+    ]
+  },
+  "search_results": {
+    "results": {
+      "tops": [
+        {
+          "link": "https://global.musinsa.com/us/goods/5024648",
+          "thumbnail": "https://image.msscdn.net/thumbnails/images/goods_img/20250414/5024648/5024648_17448772657410_big.jpg",
+          "title": "MUSINSA | VASTIC Digital Love T-shirt Black"
+        },
+        {
+          "link": "https://satur.co.kr/product/saturday-retro-mood-graphic-t-shirt-vintage-black/1396",
+          "thumbnail": "https://satur.co.kr/web/product/big/202503/8bc3ca35a93a0bd94d4d7f9e2e8a052f.jpg",
+          "title": "SATUR | 세터 | 세터데이 레트로 무드 그래픽 반팔 티셔츠 ..."
+        },
+        {
+          "link": "https://www.29cm.co.kr/products/3246858",
+          "thumbnail": "https://img.29cm.co.kr/item/202504/11f023ccb4cf2486b131e3356e791d16.jpg?width=700&format=webp",
+          "title": "FLM 빈티지 하트 그래픽 티셔츠-블랙 - 감도 깊은 취향 셀렉트샵 ..."
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 1,
+        "fallback": 0,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "tops": {
+          "itemDescription": "item1 black t shirt",
+          "searchTerms": [
+            "item1 black t shirt",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://global.musinsa.com/us/goods/5024648",
+              "title": "MUSINSA | VASTIC Digital Love T-shirt Black"
+            },
+            {
+              "link": "https://satur.co.kr/product/saturday-retro-mood-graphic-t-shirt-vintage-black/1396",
+              "title": "SATUR | 세터 | 세터데이 레트로 무드 그래픽 반팔 티셔츠 ..."
+            },
+            {
+              "link": "https://www.29cm.co.kr/products/3246858",
+              "title": "FLM 빈티지 하트 그래픽 티셔츠-블랙 - 감도 깊은 취향 셀렉트샵 ..."
+            }
+          ],
+          "timestamp": "2025-11-13T07:11:37.664Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 4.44,
+        "per_category_search_seconds": 19.01,
+        "gpt4_turbo_api_time_seconds": 4.04,
+        "processing_overhead_seconds": 0.01,
+        "other_overhead_seconds": -4.04,
+        "wall_clock_seconds": 23.47,
+        "serper_api_time_seconds": 14.95,
+        "serper_count": 1,
+        "gpt4_turbo_count": 1,
+        "total_seconds": 23.47,
+        "categories_parallel": 1
+      }
+    }
+  },
+  "timestamp": "2025-11-13T16:11:37.668390"
+}

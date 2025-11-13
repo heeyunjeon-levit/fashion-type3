@@ -603,11 +603,14 @@
                 if (response.ok) {
                     // Mark as submitted
                     localStorage.setItem(feedbackKey, 'true');
+                    feedbackShown = true; // Prevent modal from showing again
                     submitBtn.textContent = '감사합니다!';
                     setTimeout(function() {
-                        document.getElementById('feedbackOverlay').classList.remove('show');
-                        document.getElementById('feedbackTab').classList.remove('show');
-                    }, 1000);
+                        const overlay = document.getElementById('feedbackOverlay');
+                        const tab = document.getElementById('feedbackTab');
+                        if (overlay) overlay.classList.remove('show');
+                        if (tab) tab.classList.remove('show');
+                    }, 1500);
                 } else {
                     throw new Error('Failed to submit');
                 }

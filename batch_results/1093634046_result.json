@@ -1,0 +1,90 @@
+{
+  "status": "success",
+  "phone": "1093634046",
+  "uploaded_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763012741558_1093634046_original.jpg",
+  "cropped_data": {
+    "items": [
+      {
+        "category": "tops",
+        "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_purple_sweater_1763012750793.jpg"
+      }
+    ]
+  },
+  "search_results": {
+    "results": {
+      "tops": [
+        {
+          "link": "https://poshmark.com/listing/ALC-Serena-BlousonSleeve-CableKnit-Sweater-Large-in-Lavender-61bf87b06914122d59b501ad",
+          "thumbnail": "https://di2ponv0v5otw.cloudfront.net/posts/2021/12/19/61bf87b06914122d59b501ad/m_wp_61bf87cf6f6c91fd4acbdac3.webp",
+          "title": "A.L.C. | Sweaters | Alc Serena Blousonsleeve Cableknit Sweater Large In Lavender | Poshmark"
+        },
+        {
+          "link": "https://www.ebay.com/itm/306511755562",
+          "thumbnail": "https://i.ebayimg.com/images/g/o0kAAOSwoZFm0QhF/s-l1200.jpg",
+          "title": "A.L.C. Purple Cable Knit Sweater Pullover Women's Size XL NWOT | eBay"
+        },
+        {
+          "link": "https://www.chicwish.com/crew-neck-pointelle-sleeve-pom-pom-knit-sweater-in-lilac.html",
+          "thumbnail": "https://www.chicwish.com/media/catalog/product/cache/aaa138aafda2e32295dbe3b94f267e44/2/0/201227mm.31.jpg",
+          "title": "Crew Neck Pointelle Sleeve Pom-Pom Knit Sweater in Lilac ..."
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 1,
+        "fallback": 0,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "tops": {
+          "itemDescription": "item1 purple sweater",
+          "searchTerms": [
+            "item1 purple sweater",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://poshmark.com/listing/ALC-Serena-BlousonSleeve-CableKnit-Sweater-Large-in-Lavender-61bf87b06914122d59b501ad",
+              "title": "A.L.C. | Sweaters | Alc Serena Blousonsleeve Cableknit Sweater Large In Lavender | Poshmark"
+            },
+            {
+              "link": "https://www.ebay.com/itm/306511755562",
+              "title": "A.L.C. Purple Cable Knit Sweater Pullover Women's Size XL NWOT | eBay"
+            },
+            {
+              "link": "https://www.chicwish.com/crew-neck-pointelle-sleeve-pom-pom-knit-sweater-in-lilac.html",
+              "title": "Crew Neck Pointelle Sleeve Pom-Pom Knit Sweater in Lilac ..."
+            }
+          ],
+          "timestamp": "2025-11-13T05:46:14.858Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 5,
+        "per_category_search_seconds": 17.09,
+        "gpt4_turbo_api_time_seconds": 4.44,
+        "processing_overhead_seconds": 0.1,
+        "other_overhead_seconds": -4.44,
+        "wall_clock_seconds": 22.19,
+        "serper_api_time_seconds": 12.63,
+        "serper_count": 1,
+        "gpt4_turbo_count": 1,
+        "total_seconds": 22.19,
+        "categories_parallel": 1
+      }
+    }
+  },
+  "timestamp": "2025-11-13T14:46:14.861915"
+}

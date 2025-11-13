@@ -1,0 +1,116 @@
+{
+  "status": "success",
+  "phone": "1024124049",
+  "uploaded_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763013294036_1024124049_original.jpg",
+  "cropped_data": {
+    "items": [
+      {
+        "category": "tops",
+        "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_beige_blouse_1763013306817.jpg"
+      },
+      {
+        "category": "tops",
+        "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_cream_blouse_1763013308467.jpg"
+      }
+    ]
+  },
+  "search_results": {
+    "results": {
+      "tops": [
+        {
+          "link": "https://www.etsy.com/listing/4338220823/cotton-girls-blouse-with-ruffled-collar",
+          "thumbnail": "https://i.etsystatic.com/50373508/r/il/211d17/6763342689/il_fullxfull.6763342689_ktd9.jpg",
+          "title": "Cotton Girl's Blouse With Ruffled Collar, Long Sleeve Beige Top, Toddler Baby Shirt, Vintage Style Kids Blouse, Soft Neutral Outfit - Etsy"
+        },
+        {
+          "link": "https://puellaflo.com/product/sera-blouse-beige/1924/",
+          "thumbnail": "https://ecimg.cafe24img.com/pg1991b62449950021/flocompany4577/web/product/big/20250729/8d1f22a4baa7c88a4216019a8c42624b.jpg",
+          "title": "Sera Blouse - beige | Puellaflo"
+        }
+      ],
+      "tops_1": [
+        {
+          "link": "https://www.zara.com/us/en/embroidered-warm-peter-pan-collar-top-p04805621.html",
+          "thumbnail": "https://static.zara.net/assets/public/115c/c14e/e6a3484887a8/751e50006adb/04805621712-e1/04805621712-e1.jpg?ts=1759757439391&w=744&f=auto",
+          "title": "EMBROIDERED WARM PETER PAN COLLAR TOP - Ecru | ZARA United States"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 2,
+        "fallback": 0,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "tops_1": {
+          "itemDescription": "item2 cream blouse",
+          "searchTerms": [
+            "item2 cream blouse",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.zara.com/us/en/embroidered-warm-peter-pan-collar-top-p04805621.html",
+              "title": "EMBROIDERED WARM PETER PAN COLLAR TOP - Ecru | ZARA United States"
+            }
+          ],
+          "timestamp": "2025-11-13T05:55:28.502Z",
+          "candidateCount": 27,
+          "selectionCount": 1
+        },
+        "tops": {
+          "itemDescription": "item1 beige blouse",
+          "searchTerms": [
+            "item1 beige blouse",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.etsy.com/listing/4338220823/cotton-girls-blouse-with-ruffled-collar",
+              "title": "Cotton Girl's Blouse With Ruffled Collar, Long Sleeve Beige Top, Toddler Baby Shirt, Vintage Style Kids Blouse, Soft Neutral Outfit - Etsy"
+            },
+            {
+              "link": "https://puellaflo.com/product/sera-blouse-beige/1924/",
+              "title": "Sera Blouse - beige | Puellaflo"
+            }
+          ],
+          "timestamp": "2025-11-13T05:55:29.189Z",
+          "candidateCount": 25,
+          "selectionCount": 2
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 11.64,
+        "per_category_search_seconds": 8.06,
+        "gpt4_turbo_api_time_seconds": 5.16,
+        "processing_overhead_seconds": 0.01,
+        "other_overhead_seconds": -5.16,
+        "wall_clock_seconds": 19.7,
+        "serper_api_time_seconds": 10.23,
+        "serper_count": 2,
+        "gpt4_turbo_count": 2,
+        "total_seconds": 19.71,
+        "categories_parallel": 2
+      }
+    }
+  },
+  "timestamp": "2025-11-13T14:55:29.192530"
+}

@@ -1,0 +1,134 @@
+{
+  "status": "success",
+  "phone": "1087894762",
+  "uploaded_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763012903263_1087894762_original.jpg",
+  "cropped_data": {
+    "items": [
+      {
+        "category": "tops",
+        "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_brown_coat_1763012916777.jpg"
+      },
+      {
+        "category": "bag",
+        "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_black_bag_1763012918776.jpg"
+      }
+    ]
+  },
+  "search_results": {
+    "results": {
+      "tops": [
+        {
+          "link": "https://recto.co/product/grandma-faux-fur-double-coat-vintage-brown/6648/",
+          "thumbnail": "https://cafe24img.poxo.com/product2011/web/product/extra/small/202510/e3daf78ba300090aed2e00dbbd811ff9.jpg",
+          "title": "RECTO"
+        },
+        {
+          "link": "https://www.manieredevoir.com/products/fur-oversized-coat-with-scarf-brown",
+          "thumbnail": "https://www.manieredevoir.com/cdn/shop/files/FurOversizedCoatwithScarf-Brown2.jpg?v=1728475874",
+          "title": "Fur Oversized Coat with Scarf - Brown | Manière De Voir"
+        },
+        {
+          "link": "https://supralondon.com/products/stand-studio-samira-coat-dark-brown",
+          "thumbnail": "http://supralondon.com/cdn/shop/products/SAMIRAS3_1200x1200.jpg?v=1666178677",
+          "title": "Stand Studio Samira Coat Dark Brown – Supra"
+        }
+      ],
+      "bag": [
+        {
+          "link": "https://www.amazon.com/Coach-Times-Square-Shoulder-Quilting/dp/B0DBDZPWL2",
+          "thumbnail": "https://images-na.ssl-images-amazon.com/images/I/71PI+FuHhyL._AC_UL600_SR600,600_.jpg",
+          "title": "COACH Quilted Washed Leather Times Square Tabby 26: Handbags: Amazon.com"
+        },
+        {
+          "link": "https://www.harrods.com/en-cr/p/coach-quilted-leather-tabby-26-shoulder-bag-000000000007731759",
+          "thumbnail": "https://hrd-live.cdn.scayle.cloud/images/053e5f78ccddc7017640df07d07db142.jpg?quality=75",
+          "title": "Coach Black Quilted Leather Tabby 26 Shoulder Bag | Harrods CR"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 2,
+        "fallback": 0,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "bag": {
+          "itemDescription": "item2 black bag",
+          "searchTerms": [
+            "item2 black bag",
+            "bag",
+            "backpack",
+            "handbag",
+            "tote bag",
+            "purse",
+            "clutch",
+            "messenger bag",
+            "shoulder bag",
+            "wallet"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.amazon.com/Coach-Times-Square-Shoulder-Quilting/dp/B0DBDZPWL2",
+              "title": "COACH Quilted Washed Leather Times Square Tabby 26: Handbags: Amazon.com"
+            },
+            {
+              "link": "https://www.harrods.com/en-cr/p/coach-quilted-leather-tabby-26-shoulder-bag-000000000007731759",
+              "title": "Coach Black Quilted Leather Tabby 26 Shoulder Bag | Harrods CR"
+            }
+          ],
+          "timestamp": "2025-11-13T05:49:03.081Z",
+          "candidateCount": 30,
+          "selectionCount": 2
+        },
+        "tops": {
+          "itemDescription": "item1 brown coat",
+          "searchTerms": [
+            "item1 brown coat",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://recto.co/product/grandma-faux-fur-double-coat-vintage-brown/6648/",
+              "title": "RECTO"
+            },
+            {
+              "link": "https://www.manieredevoir.com/products/fur-oversized-coat-with-scarf-brown",
+              "title": "Fur Oversized Coat with Scarf - Brown | Manière De Voir"
+            },
+            {
+              "link": "https://supralondon.com/products/stand-studio-samira-coat-dark-brown",
+              "title": "Stand Studio Samira Coat Dark Brown – Supra"
+            }
+          ],
+          "timestamp": "2025-11-13T05:49:13.380Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 4.48,
+        "per_category_search_seconds": 28.85,
+        "gpt4_turbo_api_time_seconds": 8.71,
+        "processing_overhead_seconds": 0.01,
+        "other_overhead_seconds": -8.71,
+        "wall_clock_seconds": 33.34,
+        "serper_api_time_seconds": 38.49,
+        "serper_count": 2,
+        "gpt4_turbo_count": 2,
+        "total_seconds": 33.34,
+        "categories_parallel": 2
+      }
+    }
+  },
+  "timestamp": "2025-11-13T14:49:13.384057"
+}

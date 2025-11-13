@@ -1,0 +1,76 @@
+{
+  "status": "success",
+  "phone": "1031423042",
+  "uploaded_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763013837071_1031423042_original.jpg",
+  "cropped_data": {
+    "items": [
+      {
+        "category": "tops",
+        "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_pink_top_1763013846713.jpg"
+      }
+    ]
+  },
+  "search_results": {
+    "results": {
+      "tops": [
+        {
+          "link": "https://www.coupang.com/vp/products/1316676627",
+          "thumbnail": "https://thumbnail.coupangcdn.com/thumbnails/remote/492x492ex/image/vendor_inventory/6c1c/93dcfa9bb8f847d5837988d6adaf974d4f24b9fe678d314b0049554d113e.jpg",
+          "title": "쿨 인견 노와이어 홑겹 무빙 메쉬 풀컵 레이스 브라 JBR2128 - 브래지어 | 쿠팡"
+        },
+        {
+          "link": "https://www.lotteimall.com/goods/viewGoodsDetail.lotte?goods_no=12792728",
+          "thumbnail": "https://image2.lotteimall.com/goods/28/27/79/12792728_1.jpg/dims/resizemc/550x550/optimize",
+          "title": "상품상세 - 롯데홈쇼핑"
+        },
+        {
+          "link": "https://zigzag.kr/catalog/products/162015336",
+          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/c/16/201/533/162015336-2762823596550241504.jpeg?width=720&height=720&quality=80&format=jpeg",
+          "title": "라라슬림 라이즈업 브라렛&팬티 세트"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 0,
+        "fallback": 1,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "tops": {
+          "itemDescription": "item1 pink top",
+          "searchTerms": [
+            "item1 pink top",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-13T06:04:30.077Z",
+          "candidateCount": 30
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 14.49,
+        "per_category_search_seconds": 6.98,
+        "gpt4_turbo_api_time_seconds": 1.7,
+        "processing_overhead_seconds": 0.03,
+        "other_overhead_seconds": -1.7,
+        "wall_clock_seconds": 21.49,
+        "serper_api_time_seconds": 5.25,
+        "serper_count": 1,
+        "gpt4_turbo_count": 1,
+        "total_seconds": 21.49,
+        "categories_parallel": 1
+      }
+    }
+  },
+  "timestamp": "2025-11-13T15:04:30.080020"
+}

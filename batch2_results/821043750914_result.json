@@ -1,0 +1,89 @@
+{
+  "status": "success",
+  "phone": "821043750914",
+  "uploaded_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763017951404_821043750914_original.jpg",
+  "cropped_data": {
+    "items": [
+      {
+        "category": "shoes",
+        "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_beige_shoes_1763017962130.jpg"
+      }
+    ]
+  },
+  "search_results": {
+    "results": {
+      "shoes": [
+        {
+          "link": "https://www.zara.com/us/en/split-leather-lace-up-ballet-flats-p12539510.html",
+          "thumbnail": "https://static.zara.net/assets/public/3173/050d/85eb4034ab2b/3b9e44797be0/12539510107-e1/12539510107-e1.jpg?ts=1758550489207",
+          "title": "SPLIT LEATHER LACE-UP BALLET FLATS - Sandy Brown | ZARA United States"
+        },
+        {
+          "link": "https://www.ebay.com/itm/127343629120",
+          "thumbnail": "https://i.ebayimg.com/images/g/ZaIAAeSwdiBotKAz/s-l1200.jpg",
+          "title": "ZARA NEW WOMAN SPLIT LEATHER LACE-UP BALLET FLATS SHOES SAND BROWN 2539/510/107 | eBay"
+        },
+        {
+          "link": "https://www.aliexpress.com/item/1005009384012330.html",
+          "thumbnail": "https://ae01.alicdn.com/kf/S7599e5ff4667439aba7db6068afcc7b6n.jpg",
+          "title": "Luxury Brand Lace-up Ballet Flats for Women Comfort Soft Leather Faux Suede Mary Jane Shoe Elegant Banquet Round Toe Dress Shoe - AliExpress"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 1,
+        "fallback": 0,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "shoes": {
+          "itemDescription": "item1 beige shoes",
+          "searchTerms": [
+            "item1 beige shoes",
+            "shoes",
+            "sneakers",
+            "boots",
+            "sandals",
+            "heels",
+            "flats",
+            "loafers",
+            "oxford"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.zara.com/us/en/split-leather-lace-up-ballet-flats-p12539510.html",
+              "title": "SPLIT LEATHER LACE-UP BALLET FLATS - Sandy Brown | ZARA United States"
+            },
+            {
+              "link": "https://www.ebay.com/itm/127343629120",
+              "title": "ZARA NEW WOMAN SPLIT LEATHER LACE-UP BALLET FLATS SHOES SAND BROWN 2539/510/107 | eBay"
+            },
+            {
+              "link": "https://www.aliexpress.com/item/1005009384012330.html",
+              "title": "Luxury Brand Lace-up Ballet Flats for Women Comfort Soft Leather Faux Suede Mary Jane Shoe Elegant Banquet Round Toe Dress Shoe - AliExpress"
+            }
+          ],
+          "timestamp": "2025-11-13T07:13:33.794Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 38.44,
+        "per_category_search_seconds": 11.9,
+        "gpt4_turbo_api_time_seconds": 2.93,
+        "processing_overhead_seconds": 0.01,
+        "other_overhead_seconds": -2.93,
+        "wall_clock_seconds": 50.35,
+        "serper_api_time_seconds": 8.96,
+        "serper_count": 1,
+        "gpt4_turbo_count": 1,
+        "total_seconds": 50.35,
+        "categories_parallel": 1
+      }
+    }
+  },
+  "timestamp": "2025-11-13T16:13:33.796986"
+}

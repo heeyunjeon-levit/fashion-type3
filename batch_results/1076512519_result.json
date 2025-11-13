@@ -1,0 +1,179 @@
+{
+  "status": "success",
+  "phone": "1076512519",
+  "uploaded_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763013130588_1076512519_original.jpg",
+  "cropped_data": {
+    "items": [
+      {
+        "category": "tops",
+        "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_black_jacket_1763013141521.jpg"
+      },
+      {
+        "category": "bottoms",
+        "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_black_pants_1763013142283.jpg"
+      },
+      {
+        "category": "shoes",
+        "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_green_shoes_1763013142832.jpg"
+      }
+    ]
+  },
+  "search_results": {
+    "results": {
+      "tops": [
+        {
+          "link": "https://www.aloyoga.com/products/u3040rg-accolade-1-4-zip-pullover-anthracite",
+          "thumbnail": "https://cdn.shopify.com/s/files/1/2185/2813/files/U3040RG_02125_b1_s1_a2_1_m191_750x.jpg?v=1733966975",
+          "title": "Accolade 1/4 Zip Pullover - Anthracite | ALO"
+        },
+        {
+          "link": "https://shop.lululemon.com/p/jackets-and-hoodies-jackets/Scuba-Oversized-Varsity-Jacket-Plush-MD/_/prod11801049",
+          "thumbnail": "https://images.lululemon.com/is/image/lululemon/LW3IW7S_031664_3",
+          "title": "Scuba Oversized Varsity Jacket *Plush | Women's Coats & Jackets | lululemon"
+        },
+        {
+          "link": "https://parkeofficial.com/products/halloween-varsity-mockneck",
+          "thumbnail": "https://parkeofficial.com/cdn/shop/files/6_02705ebd-60e9-4f17-a35f-94cd9269cf2b.jpg?v=1760636132&width=1946",
+          "title": "Halloween Varsity Mockneck – PARKE"
+        }
+      ],
+      "bottoms": [
+        {
+          "link": "https://www.aliexpress.com/item/1005007095220723.html",
+          "thumbnail": "https://ae01.alicdn.com/kf/Sa748094f72364de3a64874fa50550f10b.jpg",
+          "title": "New Men's Side Stripe Sweatpants Casual Drawstring Baggy Trousers Y2K Vintage Gym Jogger Pants Streetwear Pantalones Hombre - AliExpress"
+        },
+        {
+          "link": "https://www.farfetch.com/tr/shopping/men/juunj-drawstring-trousers-item-26898773.aspx",
+          "thumbnail": "https://cdn-images.farfetch-contents.com/26/89/87/73/26898773_58309029_1000.jpg",
+          "title": "Juun.J Drawstring Trousers | Black | FARFETCH TR"
+        },
+        {
+          "link": "https://www.aloyoga.com/products/m5200r-edition-sueded-straight-leg-pant-black",
+          "thumbnail": "http://www.aloyoga.com/cdn/shop/files/M5200R_01_b1_s1_a2_1_m203_1024x1024.jpg?v=1734054733",
+          "title": "Edition Sueded Straight Leg Pant - Black | ALO"
+        }
+      ],
+      "shoes": [
+        {
+          "link": "https://kream.co.kr/products/stock/11732781",
+          "thumbnail": "https://kream-phinf.pstatic.net/MjAyNTA5MTVfNDgg/MDAxNzU3OTI3NDMzNjc0.VIYAUX8MXK0P0ZNJoVLP_gX0W0PIAROjObrQAtOaY_Ag.tKvK6Aowvkx5NaKZkNQaBGXZMCRXDogWOr_4_TuKLKIg.JPEG/p_d85b86444bf445d194e91f9dd07b5698.jpeg?cors=w_production",
+          "title": "나이키 에어 줌 알파플라이 넥스트% 3 글레이셔 블루 민트 폼 | KREAM"
+        },
+        {
+          "link": "https://web.joongna.com/product/151710800",
+          "thumbnail": "https://img2.joongna.com/cafe-article-data/live/2024/01/20/1036245365/1705741478928_002_MGEy4.jpg",
+          "title": "나이키pg6 PG6 판매 255 사이즈 | 중고나라 - 안심되는 중고거래"
+        },
+        {
+          "link": "https://www.daangn.com/kr/buy-sell/조던1로우-se화이트-블랙-타이다이235-gnw8vho659xa/",
+          "thumbnail": "https://img.kr.gcp-karroter.net/origin/article/202511/e7d56a200dbec518c2b8767e360b520b60a8ab03146194d998429bd8b86580cd_0.webp?f=webp&q=95&s=1440x1440&t=inside",
+          "title": "조던1로우 SE화이트 블랙 타이다이235 | 여성잡화 | 당근 중고거래"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 2,
+        "fallback": 1,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "tops": {
+          "itemDescription": "item1 black jacket",
+          "searchTerms": [
+            "item1 black jacket",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-13T05:52:36.040Z",
+          "candidateCount": 12
+        },
+        "bottoms": {
+          "itemDescription": "item2 black pants",
+          "searchTerms": [
+            "item2 black pants",
+            "shorts",
+            "slacks",
+            "pants",
+            "trousers",
+            "jeans",
+            "skirt",
+            "leg trousers"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.aliexpress.com/item/1005007095220723.html",
+              "title": "New Men's Side Stripe Sweatpants Casual Drawstring Baggy Trousers Y2K Vintage Gym Jogger Pants Streetwear Pantalones Hombre - AliExpress"
+            },
+            {
+              "link": "https://www.farfetch.com/tr/shopping/men/juunj-drawstring-trousers-item-26898773.aspx",
+              "title": "Juun.J Drawstring Trousers | Black | FARFETCH TR"
+            },
+            {
+              "link": "https://www.aloyoga.com/products/m5200r-edition-sueded-straight-leg-pant-black",
+              "title": "Edition Sueded Straight Leg Pant - Black | ALO"
+            }
+          ],
+          "timestamp": "2025-11-13T05:52:38.055Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        },
+        "shoes": {
+          "itemDescription": "item3 green shoes",
+          "searchTerms": [
+            "item3 green shoes",
+            "shoes",
+            "sneakers",
+            "boots",
+            "sandals",
+            "heels",
+            "flats",
+            "loafers",
+            "oxford"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://kream.co.kr/products/stock/11732781",
+              "title": "나이키 에어 줌 알파플라이 넥스트% 3 글레이셔 블루 민트 폼 | KREAM"
+            },
+            {
+              "link": "https://web.joongna.com/product/151710800",
+              "title": "나이키pg6 PG6 판매 255 사이즈 | 중고나라 - 안심되는 중고거래"
+            },
+            {
+              "link": "https://www.daangn.com/kr/buy-sell/조던1로우-se화이트-블랙-타이다이235-gnw8vho659xa/",
+              "title": "조던1로우 SE화이트 블랙 타이다이235 | 여성잡화 | 당근 중고거래"
+            }
+          ],
+          "timestamp": "2025-11-13T05:52:38.831Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 5.49,
+        "per_category_search_seconds": 9.42,
+        "gpt4_turbo_api_time_seconds": 8.77,
+        "processing_overhead_seconds": 0.01,
+        "other_overhead_seconds": -8.77,
+        "wall_clock_seconds": 14.93,
+        "serper_api_time_seconds": 15.81,
+        "serper_count": 3,
+        "gpt4_turbo_count": 3,
+        "total_seconds": 14.93,
+        "categories_parallel": 3
+      }
+    }
+  },
+  "timestamp": "2025-11-13T14:52:38.835396"
+}

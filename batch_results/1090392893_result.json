@@ -1,0 +1,205 @@
+{
+  "status": "success",
+  "phone": "1090392893",
+  "uploaded_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763013570076_1090392893_original.jpg",
+  "cropped_data": {
+    "items": [
+      {
+        "category": "tops",
+        "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_brown_coat_1763013581281.jpg"
+      },
+      {
+        "category": "tops",
+        "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_beige_sweater_1763013582576.jpg"
+      },
+      {
+        "category": "bottoms",
+        "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_tan_pants_1763013584306.jpg"
+      },
+      {
+        "category": "shoes",
+        "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item4_beige_shoes_1763013585448.jpg"
+      }
+    ]
+  },
+  "search_results": {
+    "results": {
+      "tops": [
+        {
+          "link": "https://us.maxmara.com/p-1016085206001-teddy-camel",
+          "thumbnail": "https://b2c-media.maxmara.com/sys-master/m0/MM/2025/2/1016085206/001/s3master/1016085206001-a-teddy_thumbnail.jpg",
+          "title": "Teddy Bear Icon Coat, camel | Max Mara"
+        },
+        {
+          "link": "https://www.24s.com/en-us/icon-teddy-bear-camel-wool-coat-max-mara_MAX98674",
+          "thumbnail": "https://www.24s.com/static/images/PmcDZc4Es73Lcv54DEOlSZhYVQo=/fit-in/555x625/c1025b1552f6474f9e1e5e7b2cc8aee6",
+          "title": "Women's Icon Teddy Bear camel wool coat | MAX MARA | 24S"
+        }
+      ],
+      "tops_1": [
+        {
+          "link": "https://www.reversible.com/shopping/women/item/max-mara-wool-and-cashmere-polo-neck-sweater-975842396",
+          "thumbnail": "https://image-raw.reversible.com/raw_images/69e3a59d92da29175fa7af88ae6d2c476d0dafba163ef6f7fe5d92b4a2793ea5",
+          "title": "Max Mara MANTOVA Wool and cashmere polo-neck sweater | REVERSIBLE"
+        }
+      ],
+      "bottoms": [
+        {
+          "link": "https://www.reversible.com/shopping/women/item/max-mara-wool-and-cashmere-polo-neck-sweater-975842396",
+          "thumbnail": "https://image-raw.reversible.com/raw_images/69e3a59d92da29175fa7af88ae6d2c476d0dafba163ef6f7fe5d92b4a2793ea5",
+          "title": "Max Mara MANTOVA Wool and cashmere polo-neck sweater | REVERSIBLE"
+        },
+        {
+          "link": "https://www.balaan.co.kr/products/8653340",
+          "thumbnail": "https://i.balaan.io/images/79/79e4ef/79e4ef564dbdb8dddd4340c1e76a94a3919e574dbb97a689b67cc6770c2e92f7.jpg",
+          "title": "발란｜BALAAN"
+        },
+        {
+          "link": "https://www.farfetch.com/shopping/women/max-mara-teddy-coat-item-30989057.aspx",
+          "thumbnail": "https://cdn-images.farfetch-contents.com/30/98/90/57/30989057_59927649_600.jpg",
+          "title": "Max Mara Teddy Coat | Brown | FARFETCH"
+        }
+      ],
+      "shoes": [
+        {
+          "link": "https://www.ebay.com/itm/326834579105",
+          "thumbnail": "https://i.ebayimg.com/images/g/a5UAAeSwbGRo~Wnf/s-l1200.jpg",
+          "title": "Auth UGG LA Cloud Trainers 1136818 Beige Chemical Fiber Suede - Women's Sneakers | eBay"
+        },
+        {
+          "link": "https://www.charleskeith.eu/be-de/SL1-71650003_BEIGE.html",
+          "thumbnail": "https://www.charleskeith.eu/dw/image/v2/BMCD_PRD/on/demandware.static/-/Sites-ck-products/default/dw108f266f/images/hi-res/2025-L6-SL1-71650003-05-11.jpg?sw=756&sh=1008",
+          "title": "Beige Jace Sneakers aus Wildleder - CHARLES & KEITH BE"
+        },
+        {
+          "link": "https://www.footshop.eu/en/mens-shoes/389125-puma-ca-luxe-elevated-light-sand.html",
+          "thumbnail": "https://static.ftshp.digital/img/p/1/3/6/7/2/2/1/1367221-previewer.jpg",
+          "title": "Men's shoes Puma CA Luxe Elevated Light Sand | Footshop"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 3,
+        "fallback": 1,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "bottoms": {
+          "itemDescription": "item3 tan pants",
+          "searchTerms": [
+            "item3 tan pants",
+            "shorts",
+            "slacks",
+            "pants",
+            "trousers",
+            "jeans",
+            "skirt",
+            "leg trousers"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-13T06:00:01.323Z",
+          "candidateCount": 29
+        },
+        "tops": {
+          "itemDescription": "item1 brown coat",
+          "searchTerms": [
+            "item1 brown coat",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://us.maxmara.com/p-1016085206001-teddy-camel",
+              "title": "Teddy Bear Icon Coat, camel | Max Mara"
+            },
+            {
+              "link": "https://www.24s.com/en-us/icon-teddy-bear-camel-wool-coat-max-mara_MAX98674",
+              "title": "Women's Icon Teddy Bear camel wool coat | MAX MARA | 24S"
+            }
+          ],
+          "timestamp": "2025-11-13T06:00:03.093Z",
+          "candidateCount": 29,
+          "selectionCount": 2
+        },
+        "tops_1": {
+          "itemDescription": "item2 beige sweater",
+          "searchTerms": [
+            "item2 beige sweater",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.reversible.com/shopping/women/item/max-mara-wool-and-cashmere-polo-neck-sweater-975842396",
+              "title": "Max Mara MANTOVA Wool and cashmere polo-neck sweater | REVERSIBLE"
+            }
+          ],
+          "timestamp": "2025-11-13T06:00:04.024Z",
+          "candidateCount": 9,
+          "selectionCount": 1
+        },
+        "shoes": {
+          "itemDescription": "item4 beige shoes",
+          "searchTerms": [
+            "item4 beige shoes",
+            "shoes",
+            "sneakers",
+            "boots",
+            "sandals",
+            "heels",
+            "flats",
+            "loafers",
+            "oxford"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.ebay.com/itm/326834579105",
+              "title": "Auth UGG LA Cloud Trainers 1136818 Beige Chemical Fiber Suede - Women's Sneakers | eBay"
+            },
+            {
+              "link": "https://www.charleskeith.eu/be-de/SL1-71650003_BEIGE.html",
+              "title": "Beige Jace Sneakers aus Wildleder - CHARLES & KEITH BE"
+            },
+            {
+              "link": "https://www.footshop.eu/en/mens-shoes/389125-puma-ca-luxe-elevated-light-sand.html",
+              "title": "Men's shoes Puma CA Luxe Elevated Light Sand | Footshop"
+            }
+          ],
+          "timestamp": "2025-11-13T06:00:07.408Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 7.96,
+        "per_category_search_seconds": 13.47,
+        "gpt4_turbo_api_time_seconds": 12.92,
+        "processing_overhead_seconds": 0.02,
+        "other_overhead_seconds": -12.92,
+        "wall_clock_seconds": 21.45,
+        "serper_api_time_seconds": 27.1,
+        "serper_count": 4,
+        "gpt4_turbo_count": 4,
+        "total_seconds": 21.45,
+        "categories_parallel": 4
+      }
+    }
+  },
+  "timestamp": "2025-11-13T15:00:07.410547"
+}

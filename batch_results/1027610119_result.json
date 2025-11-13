@@ -1,0 +1,115 @@
+{
+  "status": "success",
+  "phone": "1027610119",
+  "uploaded_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763013163510_1027610119_original.jpg",
+  "cropped_data": {
+    "items": [
+      {
+        "category": "tops",
+        "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_white_sweatshirt_1763013177184.jpg"
+      },
+      {
+        "category": "tops",
+        "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_black_shirt_1763013177987.jpg"
+      }
+    ]
+  },
+  "search_results": {
+    "results": {
+      "tops": [
+        {
+          "link": "https://www2.hm.com/en_us/productpage.1248634003.html",
+          "thumbnail": "https://image.hm.com/assets/hm/c6/31/c6311e45d5d1e0a8415d1c514cb7037a32005320.jpg?imwidth=768",
+          "title": "Oversized Embellished Sweatshirt - Cream/Cherish - Ladies | H&M US"
+        },
+        {
+          "link": "https://www.elandmall.co.kr/i/item?itemNo=2505905016&chnl_no=GSW",
+          "thumbnail": "https://item.elandrs.com/r/image/item/2025-05-10/8fd25959-2837-49c6-8f08-37e2d66254b9.jpg?w=750&h=&q=100",
+          "title": "레터 포켓티 ALRA25534_NC유성점- 이랜드몰"
+        },
+        {
+          "link": "https://www.anthropologie.com/shop/bridemerch-reversible-bride-bucket-hat",
+          "thumbnail": "https://images.urbndata.com/is/image/Anthropologie/96336912_010_b?$an-category$&qlt=80&fit=constrain",
+          "title": "BRIDEMERCH Reversible Bride Bucket Hat | Anthropologie"
+        }
+      ],
+      "tops_1": [
+        {
+          "link": "https://m.bunjang.co.kr/products/234243292",
+          "thumbnail": "https://media.bunjang.co.kr/product/234243292_6_1692935183_w360.jpg",
+          "title": "마이클바스티안 반팔티 85(55) | 브랜드 중고거래 플랫폼, 번개장터"
+        },
+        {
+          "link": "https://fruitsfamily.com/product/37w6m/그라니프-873-카라반-킨키-걸-아트-반팔-티셔츠",
+          "thumbnail": "https://image.production.fruitsfamily.com/public/product/resized@width1125/dlVw67ulfY-3E90B95A-528B-4A7A-A61F-528EDD221FC4.jpg",
+          "title": "그라니프 873 카라반 킨키 걸 아트 반팔 티셔츠 | 후루츠패밀리"
+        },
+        {
+          "link": "https://m.bunjang.co.kr/products/346583002",
+          "thumbnail": "https://media.bunjang.co.kr/product/346583002_4_1753247221_w360.jpg",
+          "title": "언더아머 남성 민소매 티셔츠 | 브랜드 중고거래 플랫폼, 번개장터"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 0,
+        "fallback": 2,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "tops": {
+          "itemDescription": "item1 white sweatshirt",
+          "searchTerms": [
+            "item1 white sweatshirt",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-13T05:53:10.164Z",
+          "candidateCount": 15
+        },
+        "tops_1": {
+          "itemDescription": "item2 black shirt",
+          "searchTerms": [
+            "item2 black shirt",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-13T05:53:11.078Z",
+          "candidateCount": 28
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 5.18,
+        "per_category_search_seconds": 7.13,
+        "gpt4_turbo_api_time_seconds": 3.45,
+        "processing_overhead_seconds": 0.01,
+        "other_overhead_seconds": -3.45,
+        "wall_clock_seconds": 12.32,
+        "serper_api_time_seconds": 9.86,
+        "serper_count": 2,
+        "gpt4_turbo_count": 2,
+        "total_seconds": 12.32,
+        "categories_parallel": 2
+      }
+    }
+  },
+  "timestamp": "2025-11-13T14:53:11.081086"
+}

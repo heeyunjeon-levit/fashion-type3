@@ -1,0 +1,132 @@
+{
+  "status": "success",
+  "phone": "1021108617",
+  "uploaded_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763013445441_1021108617_original.jpg",
+  "cropped_data": {
+    "items": [
+      {
+        "category": "tops",
+        "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_beige_jacket_1763013457119.jpg"
+      },
+      {
+        "category": "bottoms",
+        "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_blue_jeans_1763013457792.jpg"
+      }
+    ]
+  },
+  "search_results": {
+    "results": {
+      "tops": [
+        {
+          "link": "https://www.zara.com/us/en/zw-collection-fleece-jacket-p03548249.html",
+          "thumbnail": "https://static.zara.net/assets/public/9972/3e8d/828e496bb6ef/8856b0299165/03548249733-p/03548249733-p.jpg?ts=1762856898311",
+          "title": "ZW COLLECTION FLEECE JACKET - Cream | ZARA United States"
+        },
+        {
+          "link": "https://u-a-r.com/product/푸들-뽀글-양털-카라-숏-집업/27868/",
+          "thumbnail": "https://cafe24img.poxo.com/minhye3/web/product/extra/big/202501/8af5f42126167e1d9d8139ca661598d0.jpg",
+          "title": "푸들 뽀글 양털 카라 숏 집업 - 유아르"
+        }
+      ],
+      "bottoms": [
+        {
+          "link": "https://www.amazon.com/Women-Vintage-Jeans-Streetwear-Fashion/dp/B0C7C392PD",
+          "thumbnail": "https://m.media-amazon.com/images/I/51NH8YxMViL._AC_UY1000_.jpg",
+          "title": "Women Vintage Jeans High Waist Streetwear Fashion Denim Pants at Amazon Women's Jeans store"
+        },
+        {
+          "link": "https://www.nykaafashion.com/kotty-women-regular-high-rise-blue-jeans/p/15536385",
+          "thumbnail": "https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/7/2/722e801KTTLADIESJEANS2489AirForceblue_1.jpg?rnd=20200526195200&tr=w-512",
+          "title": "Buy KOTTY Women Regular High Rise Blue Jeans Online"
+        },
+        {
+          "link": "https://www.ajio.com/kotty-lightly-washed-relaxed-fit-jeans/p/469520937003",
+          "thumbnail": "https://assets.ajio.com/medias/sys_master/root/20230705/DXF4/64a590cca9b42d15c93885ea/-288Wx360H-469520937-blue-MODEL.jpg",
+          "title": "Buy Blue Jeans & Jeggings for Women by KOTTY Online | Ajio.com"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 2,
+        "fallback": 0,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "tops": {
+          "itemDescription": "item1 beige jacket",
+          "searchTerms": [
+            "item1 beige jacket",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.zara.com/us/en/zw-collection-fleece-jacket-p03548249.html",
+              "title": "ZW COLLECTION FLEECE JACKET - Cream | ZARA United States"
+            },
+            {
+              "link": "https://u-a-r.com/product/푸들-뽀글-양털-카라-숏-집업/27868/",
+              "title": "푸들 뽀글 양털 카라 숏 집업 - 유아르"
+            }
+          ],
+          "timestamp": "2025-11-13T05:57:59.311Z",
+          "candidateCount": 26,
+          "selectionCount": 2
+        },
+        "bottoms": {
+          "itemDescription": "item2 blue jeans",
+          "searchTerms": [
+            "item2 blue jeans",
+            "shorts",
+            "slacks",
+            "pants",
+            "trousers",
+            "jeans",
+            "skirt",
+            "leg trousers"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.amazon.com/Women-Vintage-Jeans-Streetwear-Fashion/dp/B0C7C392PD",
+              "title": "Women Vintage Jeans High Waist Streetwear Fashion Denim Pants at Amazon Women's Jeans store"
+            },
+            {
+              "link": "https://www.nykaafashion.com/kotty-women-regular-high-rise-blue-jeans/p/15536385",
+              "title": "Buy KOTTY Women Regular High Rise Blue Jeans Online"
+            },
+            {
+              "link": "https://www.ajio.com/kotty-lightly-washed-relaxed-fit-jeans/p/469520937003",
+              "title": "Buy Blue Jeans & Jeggings for Women by KOTTY Online | Ajio.com"
+            }
+          ],
+          "timestamp": "2025-11-13T05:58:04.179Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 12.56,
+        "per_category_search_seconds": 12.58,
+        "gpt4_turbo_api_time_seconds": 7.45,
+        "processing_overhead_seconds": 0.01,
+        "other_overhead_seconds": -7.45,
+        "wall_clock_seconds": 25.15,
+        "serper_api_time_seconds": 12.8,
+        "serper_count": 2,
+        "gpt4_turbo_count": 2,
+        "total_seconds": 25.15,
+        "categories_parallel": 2
+      }
+    }
+  },
+  "timestamp": "2025-11-13T14:58:04.182719"
+}

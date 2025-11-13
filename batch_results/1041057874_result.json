@@ -1,0 +1,154 @@
+{
+  "status": "success",
+  "phone": "1041057874",
+  "uploaded_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763012698137_1041057874_original.jpg",
+  "cropped_data": {
+    "items": [
+      {
+        "category": "tops",
+        "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_black_shirt_1763012708977.jpg"
+      },
+      {
+        "category": "tops",
+        "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_white_shirt_1763012710409.jpg"
+      },
+      {
+        "category": "tops",
+        "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_navy_shirt_1763012711749.jpg"
+      }
+    ]
+  },
+  "search_results": {
+    "results": {
+      "tops": [
+        {
+          "link": "https://m.auction.co.kr/shop/tple35",
+          "thumbnail": "https://image.auction.co.kr/itemimage/52/f1/f4/52f1f452f3.jpg",
+          "title": "모바일 쇼핑은 옥션"
+        },
+        {
+          "link": "https://www.musinsa.com/products/2029969",
+          "thumbnail": "https://image.msscdn.net/thumbnails/images/goods_img/20210715/2029969/2029969_17151440658556_big.jpg?w=1000",
+          "title": "글리머(GLIMMER) [3PACK] 에어쿨링 드라이 기능성 무지 반팔티 ..."
+        },
+        {
+          "link": "https://www.elandmall.co.kr/i/item?itemNo=1906544869&",
+          "thumbnail": "https://item.elandrs.com/upload/prd/orgimg/869/1906544869_0000001.jpg?w=750&h=&q=100",
+          "title": "TS 퀵드라이쿨 반팔 티셔츠 3장세트- 이랜드몰"
+        }
+      ],
+      "tops_1": [
+        {
+          "link": "https://www.coupang.com/vp/products/8244054562",
+          "thumbnail": "https://thumbnail.coupangcdn.com/thumbnails/remote/300x300ex/image/vendor_inventory/d6b3/3d8fbd09f4bb0a4b0719f1ba3b542653cf4468071880672ad5c20e77d391.jpg",
+          "title": "나이키 스포츠웨어 여성 반팔티 링거 티셔츠 - 티셔츠 | 쿠팡"
+        },
+        {
+          "link": "https://www.woodnote.kr/mall/products.php?productId=8584605860",
+          "thumbnail": "https://img4a.coupangcdn.com/image/vendor_inventory/8603/f116e4ce56c6c4ec6e548b81f6df16f249712ca66e37db97da88049b7a68.jpg",
+          "title": "1+1] 디커버스 2장 DCOVERS 기능성 티셔츠 남자 여성 반팔티, 남성패션 [파트너스 샵]"
+        },
+        {
+          "link": "https://www.coupang.com/vp/products/8924982512",
+          "thumbnail": "https://thumbnail.coupangcdn.com/thumbnails/remote/300x300ex/image/vendor_inventory/854d/3caee9a1aeea2a3fc7f91199895e584d0d7a5e96c229feae31627caffbc6.jpg",
+          "title": "YALE 퀵 드라이 슬릿넥 폴로 셔츠_아이보리 359663 - 상의류 | 쿠팡"
+        }
+      ],
+      "tops_2": [
+        {
+          "link": "https://www.coupang.com/vp/products/9132843055",
+          "thumbnail": "https://thumbnail.coupangcdn.com/thumbnails/remote/300x300ex/image/vendor_inventory/4249/88464f97d0c82b239d5cbf0d3915b2ee99237dddd0ba6d79a0f9bea9a989.jpg",
+          "title": "YALE [16수 코마사] 2PACK 스몰아치 반팔티셔츠 화이트/블랙 292346 - 런닝 | 쿠팡"
+        },
+        {
+          "link": "http://per.auction.co.kr/recommend/recommendbridge.aspx?itemno=E642016769",
+          "thumbnail": "http://image.auction.co.kr/itemimage/52/f1/f4/52f1f452f3.jpg",
+          "title": "USMC 미해병대 반팔 국방색/ OCP 탄색 티셔츠 코튼 폴리 땀흡수 강화 Duke athletics 듀크 어슬렉틱사USA"
+        },
+        {
+          "link": "https://www.coupang.com/vp/products/8088544708",
+          "thumbnail": "https://image.coupangcdn.com/image/vendor_inventory/385c/a6665d171e8013fcfe4b5988bbca76fd7ad317437931c9566c6a05b62904.jpg",
+          "title": "GLIMMER [2PACK] 에어쿨링 소프트 기능성 무지 반팔티 - 티셔츠 | 쿠팡"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 0,
+        "fallback": 3,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "tops_2": {
+          "itemDescription": "item3 navy shirt",
+          "searchTerms": [
+            "item3 navy shirt",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-13T05:45:35.123Z",
+          "candidateCount": 29
+        },
+        "tops_1": {
+          "itemDescription": "item2 white shirt",
+          "searchTerms": [
+            "item2 white shirt",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-13T05:45:37.327Z",
+          "candidateCount": 30
+        },
+        "tops": {
+          "itemDescription": "item1 black shirt",
+          "searchTerms": [
+            "item1 black shirt",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-13T05:45:38.101Z",
+          "candidateCount": 30
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 12.27,
+        "per_category_search_seconds": 12.78,
+        "gpt4_turbo_api_time_seconds": 4.67,
+        "processing_overhead_seconds": 0.01,
+        "other_overhead_seconds": -4.67,
+        "wall_clock_seconds": 25.06,
+        "serper_api_time_seconds": 29.79,
+        "serper_count": 3,
+        "gpt4_turbo_count": 3,
+        "total_seconds": 25.07,
+        "categories_parallel": 3
+      }
+    }
+  },
+  "timestamp": "2025-11-13T14:45:38.104431"
+}
