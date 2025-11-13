@@ -470,13 +470,73 @@
     </div>
     
     <script>
+        // Visit tracking state
+        const phoneNumber = '1055166252';
+        const pageLoadTime = Date.now();
+        const VISIT_API_URL = 'https://mvp-nu-six.vercel.app/api/track-visit';
+        const API_URL = 'https://mvp-nu-six.vercel.app/api/feedback';
+        
+        // Generate or retrieve session ID
+        const sessionStorageKey = 'session_id';
+        let sessionId = sessionStorage.getItem(sessionStorageKey);
+        if (!sessionId) {
+            sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            sessionStorage.setItem(sessionStorageKey, sessionId);
+        }
+        
+        // Track engagement
+        let visitMetrics = {
+            clickedProducts: false,
+            clickedToggleButton: false,
+            openedFeedback: false
+        };
+        
+        // Log initial visit
+        async function logVisit(timeOnPage = null) {
+            try {
+                await fetch(VISIT_API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        phoneNumber: phoneNumber,
+                        resultPageUrl: window.location.href,
+                        sessionId: sessionId,
+                        timeOnPage: timeOnPage,
+                        clickedProducts: visitMetrics.clickedProducts,
+                        clickedToggleButton: visitMetrics.clickedToggleButton,
+                        openedFeedback: visitMetrics.openedFeedback,
+                        referrer: document.referrer || null
+                    })
+                });
+            } catch (error) {
+                console.error('Error logging visit:', error);
+            }
+        }
+        
+        // Log visit on page load
+        logVisit();
+        
+        // Update visit with time on page when leaving
+        window.addEventListener('beforeunload', function() {
+            const timeOnPage = Math.floor((Date.now() - pageLoadTime) / 1000);
+            // Use sendBeacon for reliable delivery during page unload
+            const data = JSON.stringify({
+                phoneNumber: phoneNumber,
+                resultPageUrl: window.location.href,
+                sessionId: sessionId,
+                timeOnPage: timeOnPage,
+                clickedProducts: visitMetrics.clickedProducts,
+                clickedToggleButton: visitMetrics.clickedToggleButton,
+                openedFeedback: visitMetrics.openedFeedback,
+                referrer: document.referrer || null
+            });
+            navigator.sendBeacon(VISIT_API_URL, new Blob([data], { type: 'application/json' }));
+        });
+        
         // Feedback state
         let selectedSatisfaction = null;
         let feedbackShown = false;
         let tabShouldShow = false; // Track if tab should be visible
-        const pageLoadTime = Date.now();
-        const phoneNumber = '1055166252';
-        const API_URL = 'https://mvp-nu-six.vercel.app/api/feedback';
         
         // Check if feedback already submitted for this user
         const feedbackKey = 'feedback_submitted_' + phoneNumber;
@@ -495,6 +555,7 @@
         function showFeedback() {
             if (feedbackShown) return;
             feedbackShown = true;
+            visitMetrics.openedFeedback = true; // Track feedback opened
             document.getElementById('feedbackOverlay').classList.add('show');
             // Only hide tab if it should show later
             if (tabShouldShow) {
@@ -515,6 +576,7 @@
         
         function reopenFeedback() {
             // Hide tab and reopen modal
+            visitMetrics.openedFeedback = true; // Track feedback reopened
             document.getElementById('feedbackTab').classList.remove('show');
             document.getElementById('feedbackOverlay').classList.add('show');
         }
@@ -596,6 +658,8 @@
             const bottomSheet = document.querySelector('.bottom-sheet');
             const toggleBtn = document.getElementById('toggleViewBtn');
             
+            visitMetrics.clickedToggleButton = true; // Track toggle button click
+            
             if (sheetMinimized) {
                 // Show results
                 bottomSheet.classList.remove('minimized');
@@ -637,6 +701,7 @@
                     // Mark that user clicked a product
                     localStorage.setItem(clickedProductKey, Date.now().toString());
                     hasClickedProduct = true;
+                    visitMetrics.clickedProducts = true; // Track for visit metrics
                 });
             });
             
