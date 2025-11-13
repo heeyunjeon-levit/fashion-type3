@@ -493,7 +493,7 @@ export default function ResultsBottomSheet({
             </button>
             <button
               onClick={() => setSheetPosition(sheetPosition === 'full' ? 'half' : 'full')}
-              className="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg active:scale-95"
+              className="flex-1 bg-black text-white py-3 rounded-xl font-semibold hover:bg-gray-800 transition-all shadow-lg active:scale-95"
             >
               {sheetPosition === 'full' ? '접기' : '전체보기'}
             </button>
