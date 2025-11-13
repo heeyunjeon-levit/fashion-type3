@@ -17,10 +17,12 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Apple SD Gothic Neo', sans-serif;
             background: #000;
-            overflow: hidden;
-            width: 100vw;
+            margin: 0;
+            padding: 0;
+            width: 100%;
             height: 100vh;
-            position: fixed;
+            overflow: hidden;
+            position: relative;
         }
         
         .background-image {
@@ -661,52 +663,16 @@
                 }, { passive: true });
             }
             
-            // Prevent body/background scroll, allow sheet scroll
-            let touchStartY = 0;
-            document.body.addEventListener('touchstart', function(e) {
-                touchStartY = e.touches[0].clientY;
-            }, { passive: true });
+            // Simple scroll handling - let native browser scrolling work
+            // Just prevent scrolling outside the bottom sheet
+            const bottomSheet = document.querySelector('.bottom-sheet');
             
-            document.body.addEventListener('touchmove', function(e) {
-                // Only prevent scroll if touching outside the sheet
-                const target = e.target;
-                const isInsideSheet = sheetContent && sheetContent.contains(target);
-                
-                if (!isInsideSheet) {
+            document.addEventListener('touchmove', function(e) {
+                // If touch is outside bottom sheet, prevent scroll
+                if (bottomSheet && !bottomSheet.contains(e.target)) {
                     e.preventDefault();
                 }
             }, { passive: false });
-            
-            // Ensure sheet content is scrollable
-            if (sheetContent) {
-                sheetContent.style.webkitOverflowScrolling = 'touch';
-                sheetContent.style.overflowY = 'auto';
-            }
-            
-            // Handle horizontal product scrolling
-            const productsScrolls = document.querySelectorAll('.products-scroll');
-            productsScrolls.forEach(function(productsScroll) {
-                let startX = 0;
-                let scrollLeft = 0;
-                let isScrolling = false;
-                
-                productsScroll.addEventListener('touchstart', function(e) {
-                    startX = e.touches[0].pageX;
-                    scrollLeft = productsScroll.scrollLeft;
-                    isScrolling = false;
-                }, { passive: true });
-                
-                productsScroll.addEventListener('touchmove', function(e) {
-                    const x = e.touches[0].pageX;
-                    const walk = (startX - x);
-                    
-                    // If horizontal movement is greater than vertical, scroll horizontally
-                    if (Math.abs(walk) > 5) {
-                        isScrolling = true;
-                        productsScroll.scrollLeft = scrollLeft + walk;
-                    }
-                }, { passive: true });
-            });
         });
     </script>
 </body>
