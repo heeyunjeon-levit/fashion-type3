@@ -587,6 +587,8 @@ def generate_html_page(phone: str, results: Dict) -> str:
             // Close modal and show the tab button
             document.getElementById('feedbackOverlay').classList.remove('show');
             document.getElementById('feedbackTab').classList.add('show');
+            // Reset feedbackShown so modal can show again if user engages more
+            feedbackShown = false;
         }}
         
         function reopenFeedback() {{
