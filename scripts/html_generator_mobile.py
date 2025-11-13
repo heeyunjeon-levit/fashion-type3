@@ -637,27 +637,46 @@ def generate_html_page(phone: str, results: Dict) -> str:
         const tabStateKey = 'feedback_tab_state_' + phoneNumber;
         const autoShownKey = 'feedback_auto_shown_' + phoneNumber;
         
+        // Debug logging
+        console.log('🔍 Feedback Modal Debug:', {{
+            feedbackSubmitted: !!localStorage.getItem(feedbackKey),
+            modalShownThisSession: !!sessionStorage.getItem(autoShownKey),
+            tabVisible: localStorage.getItem(tabStateKey) === 'visible',
+            phoneNumber: phoneNumber
+        }});
+        
         if (localStorage.getItem(feedbackKey)) {{
+            console.log('✅ Feedback already submitted - modal will NOT show');
             feedbackShown = true; // Don't show again
             modalAutoShownOnce = true; // Never auto-show if already submitted
         }}
         
         // Check if modal was auto-shown in this session
         if (sessionStorage.getItem(autoShownKey)) {{
+            console.log('✅ Modal already shown this session - will NOT show again');
             modalAutoShownOnce = true; // Already shown in this session
         }}
         
         // Check if tab was showing before
         if (localStorage.getItem(tabStateKey) === 'visible') {{
+            console.log('✅ Tab was visible from previous session - showing tab');
             tabShouldShow = true;
             modalAutoShownOnce = true; // If tab is visible, modal was already shown
             document.getElementById('feedbackTab').classList.add('show');
         }}
         
+        if (!feedbackShown && !modalAutoShownOnce && !tabShouldShow) {{
+            console.log('✅ Modal triggers are ACTIVE - will show on first trigger');
+        }}
+        
         function showFeedback() {{
             // Only auto-show ONCE per session
-            if (modalAutoShownOnce) return;
+            if (modalAutoShownOnce) {{
+                console.log('⚠️ Modal already shown once - skipping');
+                return;
+            }}
             
+            console.log('🎉 Showing feedback modal!');
             feedbackShown = true;
             modalAutoShownOnce = true; // Mark as shown in this session
             sessionStorage.setItem(autoShownKey, 'true'); // Persist for session
@@ -794,8 +813,11 @@ def generate_html_page(phone: str, results: Dict) -> str:
             
             // Show feedback after 45 seconds (fallback if user doesn't engage)
             feedbackTimer = setTimeout(function() {{
+                console.log('⏰ 45-second timer triggered');
                 if (!feedbackShown) {{
                     showFeedback();
+                }} else {{
+                    console.log('⚠️ Timer fired but modal already shown');
                 }}
             }}, 45000);
             
@@ -813,15 +835,19 @@ def generate_html_page(phone: str, results: Dict) -> str:
             // Detect when user returns to the tab after clicking a product
             document.addEventListener('visibilitychange', function() {{
                 if (!document.hidden && hasClickedProduct && !feedbackShown) {{
+                    console.log('👀 User returned after clicking product - will show modal in 3s');
                     // User returned to the tab after clicking a product
                     clearTimeout(feedbackTimer);
                     setTimeout(function() {{
                         if (!feedbackShown) {{
+                            console.log('⏱️ 3-second delay complete - showing modal');
                             showFeedback();
                             // Clear the flag so modal doesn't show on next page load
                             localStorage.removeItem(clickedProductKey);
                         }}
                     }}, 3000);
+                }} else if (!document.hidden) {{
+                    console.log('👀 User returned to tab (hasClickedProduct=' + hasClickedProduct + ', feedbackShown=' + feedbackShown + ')');
                 }}
             }});
             
@@ -853,11 +879,13 @@ def generate_html_page(phone: str, results: Dict) -> str:
                     const bottomPosition = sheetContent.scrollHeight - 50; // 50px threshold
                     
                     if (scrollPosition >= bottomPosition && !hasReachedBottom && !feedbackShown) {{
+                        console.log('📜 User scrolled to bottom - will show modal in 3s');
                         hasReachedBottom = true;
                         clearTimeout(feedbackTimer);
                         // Show feedback 3 seconds after reaching bottom
                         setTimeout(function() {{
                             if (!feedbackShown) {{
+                                console.log('⏱️ Scroll delay complete - showing modal');
                                 showFeedback();
                             }}
                         }}, 3000);
