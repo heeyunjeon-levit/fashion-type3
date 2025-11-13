@@ -279,7 +279,7 @@ export default function ResultsBottomSheet({
     return (
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
         <div className="bg-white rounded-2xl p-8">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-indigo-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-black mx-auto"></div>
           <p className="text-gray-800 mt-4 font-medium">제품 검색 중...</p>
         </div>
       </div>
@@ -402,7 +402,7 @@ export default function ResultsBottomSheet({
                     {/* Category header with cropped image */}
                     <div className="flex items-center gap-3">
                       {croppedImages?.[category] && (
-                        <div className="w-16 h-16 rounded-xl overflow-hidden bg-gray-100 flex-shrink-0 border-2 border-indigo-200">
+                        <div className="w-16 h-16 rounded-xl overflow-hidden bg-gray-100 flex-shrink-0 border-2 border-gray-300">
                           <img
                             src={croppedImages[category]}
                             alt={displayName}
@@ -435,7 +435,7 @@ export default function ResultsBottomSheet({
                           onClick={() => handleLinkClick(category, option.link, option.title, option.thumbnail, index + 1)}
                           className="flex-shrink-0 w-36 snap-start group"
                         >
-                          <div className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all border border-gray-200 group-hover:border-indigo-300">
+                          <div className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all border border-gray-200 group-hover:border-gray-400">
                             {/* Product image */}
                             <div className="aspect-square bg-gray-100 relative overflow-hidden">
                               {option.thumbnail ? (
@@ -503,7 +503,7 @@ export default function ResultsBottomSheet({
         {/* Peek state hint */}
         {sheetPosition === 'peek' && (
           <div className="absolute bottom-4 left-0 right-0 flex justify-center pointer-events-none">
-            <div className="bg-indigo-600 text-white px-6 py-2 rounded-full text-sm font-semibold shadow-lg">
+            <div className="bg-black text-white px-6 py-2 rounded-full text-sm font-semibold shadow-lg">
               ↑ 위로 드래그하여 상품 보기
             </div>
           </div>

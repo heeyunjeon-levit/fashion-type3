@@ -228,7 +228,7 @@ export default function Home() {
   })
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <main className="min-h-screen bg-black">
       <div className="container mx-auto px-4 py-8">
         {currentStep === 'upload' && (
           <ImageUpload onImageUploaded={handleImageUploaded} />
@@ -257,7 +257,7 @@ export default function Home() {
 
                 {/* Text */}
                 <div className="space-y-2">
-                  <h2 className="text-2xl font-bold text-gray-800">AI 분석중...</h2>
+                  <h2 className="text-2xl font-bold text-black">AI 분석중...</h2>
                   <p className="text-gray-600">이미지에서 아이템을 찾고 있어요</p>
                 </div>
               </div>
@@ -276,8 +276,8 @@ export default function Home() {
           <div className="max-w-2xl mx-auto mt-8">
             <div className="bg-white rounded-2xl shadow-xl p-12">
               <div className="text-center space-y-6">
-                <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-purple-600 mx-auto"></div>
-                <h2 className="text-2xl font-bold text-gray-800">AI가 요청하신 상품을 찾고 있어요</h2>
+                <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-black mx-auto"></div>
+                <h2 className="text-2xl font-bold text-black">AI가 요청하신 상품을 찾고 있어요</h2>
               </div>
             </div>
           </div>

@@ -172,15 +172,15 @@ export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
 
   return (
     <div className="max-w-2xl mx-auto mt-8">
-      <h1 className="text-4xl font-bold text-gray-800 mb-8 text-center">
+      <h1 className="text-4xl font-bold text-white mb-8 text-center">
         원하시는 옷<br />찾아드려요
       </h1>
       
-      <div className="bg-white rounded-2xl shadow-xl p-8">
+      <div className="bg-white rounded-2xl shadow-2xl p-8">
         <div className="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center">
           {isConverting ? (
             <div className="space-y-4">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black mx-auto"></div>
               <p className="text-gray-600">HEIC를 JPEG로 변환하는 중...</p>
             </div>
           ) : preview ? (
@@ -221,7 +221,7 @@ export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
               <p className="text-gray-600">이미지를 업로드하여 시작하세요</p>
               <button
                 onClick={() => fileInputRef.current?.click()}
-                className="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition-colors font-medium"
+                className="bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors font-medium"
               >
                 이미지 선택
               </button>
@@ -241,7 +241,7 @@ export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
           <button
             onClick={handleUpload}
             disabled={isUploading || isConverting}
-            className="mt-6 w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 rounded-lg font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+            className="mt-6 w-full bg-black text-white py-4 rounded-lg font-semibold hover:bg-gray-800 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isUploading ? '업로드 중...' : '계속하기'}
           </button>

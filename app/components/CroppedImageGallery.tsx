@@ -60,10 +60,10 @@ export default function CroppedImageGallery({
 
   return (
     <div className="max-w-4xl mx-auto mt-8">
-      <h1 className="text-4xl font-bold text-gray-800 mb-2 text-center">
+      <h1 className="text-4xl font-bold text-white mb-2 text-center">
         발견된 아이템
       </h1>
-      <p className="text-gray-600 text-center mb-2">
+      <p className="text-gray-300 text-center mb-2">
         검색할 아이템을 선택하세요
       </p>
       {detectedItems.length > 0 && (
@@ -112,7 +112,7 @@ export default function CroppedImageGallery({
                       onClick={() => toggleItem(idx)}
                       className={`relative p-4 rounded-xl border-2 transition-all ${
                         isSelected
-                          ? 'border-indigo-500 bg-indigo-50 shadow-md'
+                          ? 'border-black bg-gray-100 shadow-md'
                           : 'border-gray-200 hover:border-gray-300 bg-white'
                       }`}
                     >
@@ -121,7 +121,7 @@ export default function CroppedImageGallery({
                         <div
                           className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
                             isSelected
-                              ? 'bg-indigo-600 border-indigo-600'
+                              ? 'bg-black border-black'
                               : 'bg-white border-gray-300'
                           }`}
                         >
@@ -157,10 +157,10 @@ export default function CroppedImageGallery({
                       {/* Category & Description */}
                       <div className="text-left space-y-1">
                         <div className="flex items-center gap-2">
-                          <span className="text-sm font-semibold text-indigo-600">
+                          <span className="text-sm font-semibold text-black">
                             {getCategoryLabel(item.category)}
                           </span>
-                          <span className="text-xs bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full">
+                          <span className="text-xs bg-gray-200 text-gray-700 px-2 py-0.5 rounded-full">
                             AI
                           </span>
                         </div>
@@ -185,7 +185,7 @@ export default function CroppedImageGallery({
               <button
                 onClick={handleContinue}
                 disabled={selectedIndices.size === 0}
-                className="flex-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 px-8 rounded-lg font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-2 bg-black text-white py-4 px-8 rounded-lg font-semibold hover:bg-gray-800 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 선택한 {selectedIndices.size}개 아이템 검색
               </button>
