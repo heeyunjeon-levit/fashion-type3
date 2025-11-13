@@ -5,7 +5,7 @@
 - **Total Users**: 58
 - **Batch 1**: 41 users
 - **Batch 2**: 17 users
-- **Deployment**: https://mvp-nu-six.vercel.app/results
+- **Deployment**: https://fashionsource.vercel.app/results
 - **CSV File**: `FINAL_READY_TO_SEND.csv`
 
 ## ✨ All Features Included:

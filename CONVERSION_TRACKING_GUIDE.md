@@ -8,7 +8,7 @@ Track users who click the "다른 이미지도 찾아보기" button and convert 
 
 ### Button Link Format:
 ```
-https://mvp-nu-six.vercel.app/?source=result_page&phone=1040455757
+https://fashionsource.vercel.app/?source=result_page&phone=1040455757
 ```
 
 Parameters:
@@ -18,7 +18,7 @@ Parameters:
 ### Stored in Database:
 The `referrer` field in `app_page_visits` will show:
 ```
-https://mvp-nu-six.vercel.app/results/1040455757.html (source: result_page, phone: 1040455757)
+https://fashionsource.vercel.app/results/1040455757.html (source: result_page, phone: 1040455757)
 ```
 
 ## 📊 Analytics Queries

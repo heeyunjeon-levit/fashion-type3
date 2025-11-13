@@ -44,7 +44,7 @@ if __name__ == '__main__':
     test_phone = "1040455757"
     hashed = hash_phone(test_phone)
     print(f"Example: {test_phone} → {hashed}")
-    print(f"URL: https://mvp-nu-six.vercel.app/results/{hashed}.html")
+    print(f"URL: https://fashionsource.vercel.app/results/{hashed}.html")
     print()
     
     # Create full mapping

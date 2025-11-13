@@ -4,14 +4,14 @@
 
 ### Before (Privacy Risk):
 ```
-https://mvp-nu-six.vercel.app/results/1040455757.html
+https://fashionsource.vercel.app/results/1040455757.html
                                           ^^^^^^^^^
                                      Phone number visible!
 ```
 
 ### After (Privacy Protected):
 ```
-https://mvp-nu-six.vercel.app/results/dacbe91ee411.html
+https://fashionsource.vercel.app/results/dacbe91ee411.html
                                       ^^^^^^^^^^^^
                                     Secure hash ID!
 ```
@@ -57,7 +57,7 @@ Result: dacbe91ee411 (first 12 chars)
 
 ### 2. URL Generation
 ```
-User receives: https://mvp-nu-six.vercel.app/results/dacbe91ee411.html
+User receives: https://fashionsource.vercel.app/results/dacbe91ee411.html
 User sees: Just a secure hash, not their phone number
 System tracks: Still uses phone number internally
 ```
@@ -97,7 +97,7 @@ print(result['Phone'].values[0])
 ## 📱 SMS Template (Updated):
 
 ```
-안녕하세요! 요청하신 이미지 분석 결과입니다: https://mvp-nu-six.vercel.app/results/dacbe91ee411.html
+안녕하세요! 요청하신 이미지 분석 결과입니다: https://fashionsource.vercel.app/results/dacbe91ee411.html
 ```
 
 No phone number visible anywhere! 🎉

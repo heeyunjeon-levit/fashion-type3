@@ -75,7 +75,7 @@ def regenerate_all_with_hashes():
     print("Example URLs:")
     sample_phones = list(mapping.items())[:3]
     for phone, hashed in sample_phones:
-        print(f"  {phone}: https://mvp-nu-six.vercel.app/results/{hashed}.html")
+        print(f"  {phone}: https://fashionsource.vercel.app/results/{hashed}.html")
     
     return mapping
 

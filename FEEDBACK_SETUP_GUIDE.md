@@ -50,7 +50,7 @@ CREATE POLICY "Allow service role full access to user_feedback" ON user_feedback
 
 The feedback API is deployed at:
 ```
-https://mvp-nu-six.vercel.app/api/feedback
+https://fashionsource.vercel.app/api/feedback
 ```
 
 Located in: `/app/api/feedback/route.ts`
@@ -217,7 +217,7 @@ Matches your screenshot:
 https://mvp-ofhilalzw-heeyun-jeons-projects.vercel.app/results/
 
 ### Feedback API Endpoint
-https://mvp-nu-six.vercel.app/api/feedback
+https://fashionsource.vercel.app/api/feedback
 
 ### SMS List
 `FINAL_IMPROVED_TIMING.csv` - 58 users

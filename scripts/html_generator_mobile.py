@@ -119,7 +119,7 @@ def generate_html_page(phone: str, results: Dict) -> str:
     # Add a button to search more images at the bottom
     more_search_button = f"""
                 <div class="more-search-section">
-                    <a href="https://mvp-nu-six.vercel.app/?source=result_page&phone={phone}" class="more-search-btn">
+                    <a href="https://fashionsource.vercel.app/?source=result_page&phone={phone}" class="more-search-btn">
                         다른 이미지도 찾아보기
                     </a>
                 </div>
@@ -566,8 +566,8 @@ def generate_html_page(phone: str, results: Dict) -> str:
         // Visit tracking state
         const phoneNumber = '{phone}';
         const pageLoadTime = Date.now();
-        const VISIT_API_URL = 'https://mvp-nu-six.vercel.app/api/track-visit';
-        const API_URL = 'https://mvp-nu-six.vercel.app/api/feedback';
+        const VISIT_API_URL = 'https://fashionsource.vercel.app/api/track-visit';
+        const API_URL = 'https://fashionsource.vercel.app/api/feedback';
         
         // Generate or retrieve session ID
         const sessionStorageKey = 'session_id';
