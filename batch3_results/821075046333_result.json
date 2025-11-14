@@ -1,0 +1,79 @@
+{
+  "phone": "821075046333",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763119240560_Screenshot_20251105_133754_Instagram.jpg",
+  "items": [
+    {
+      "category": "dress",
+      "groundingdino_prompt": "green dress",
+      "description": "dark green dress with layered tulle and colorful pom-pom decorations",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_green_dress_1763119255169.jpg",
+      "confidence": 0.791
+    }
+  ],
+  "search_results": {
+    "results": {
+      "dress_1": [
+        {
+          "link": "https://www.amazon.com/Toddler-Christmas-Sequin-Layered-Dresses/dp/B0DHZYDYG6",
+          "thumbnail": "https://m.media-amazon.com/images/I/91JChotMKDL._AC_UY350_.jpg",
+          "title": "Toddler Baby Girl Christmas Dress Star Sequin Layered Tutu Tulle Dress Girls Cake Smash Xmas Tree Dresses (Green, 2-3 Years): Clothing, Shoes & Jewelry - Amazon.com"
+        },
+        {
+          "link": "https://www.amazon.com.mx/KAGAYD-Vestido-lentejuelas-estrellas-princesa/dp/B0DN7ZVR85",
+          "thumbnail": "https://m.media-amazon.com/images/I/619EpLCGw7L._AC_SX522_.jpg",
+          "title": "KAGAYD - Vestido de Navidad para niña pequeña, con lentejuelas y estrellas, vestido de princesa, vestido de fiesta, manga mosca, sesión de fotos, A, 3 Años/4 Años : Amazon.com.mx: Ropa, Zapatos y"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 1,
+        "fallback": 0,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "dress_1": {
+          "itemDescription": "item1 green dress",
+          "searchTerms": [
+            "item1 green dress",
+            "dress",
+            "gown",
+            "maxi dress",
+            "midi dress",
+            "mini dress",
+            "cocktail dress",
+            "casual dress"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.amazon.com/Toddler-Christmas-Sequin-Layered-Dresses/dp/B0DHZYDYG6",
+              "title": "Toddler Baby Girl Christmas Dress Star Sequin Layered Tutu Tulle Dress Girls Cake Smash Xmas Tree Dresses (Green, 2-3 Years): Clothing, Shoes & Jewelry - Amazon.com"
+            },
+            {
+              "link": "https://www.amazon.com.mx/KAGAYD-Vestido-lentejuelas-estrellas-princesa/dp/B0DN7ZVR85",
+              "title": "KAGAYD - Vestido de Navidad para niña pequeña, con lentejuelas y estrellas, vestido de princesa, vestido de fiesta, manga mosca, sesión de fotos, A, 3 Años/4 Años : Amazon.com.mx: Ropa, Zapatos y"
+            }
+          ],
+          "timestamp": "2025-11-14T11:21:24.067Z",
+          "candidateCount": 30,
+          "selectionCount": 2
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 8.33,
+        "per_category_search_seconds": 19.6,
+        "gpt4_turbo_api_time_seconds": 6.16,
+        "processing_overhead_seconds": 0,
+        "other_overhead_seconds": -6.16,
+        "wall_clock_seconds": 27.94,
+        "serper_api_time_seconds": 13.44,
+        "serper_count": 1,
+        "gpt4_turbo_count": 1,
+        "total_seconds": 27.95,
+        "categories_parallel": 1
+      }
+    }
+  },
+  "status": "success"
+}

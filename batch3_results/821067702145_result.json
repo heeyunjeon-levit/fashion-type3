@@ -1,0 +1,119 @@
+{
+  "phone": "821067702145",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763118910259_IMG_6454.jpg",
+  "items": [
+    {
+      "category": "bottoms",
+      "groundingdino_prompt": "gray pants",
+      "description": "gray straight-leg pants with a relaxed fit",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_gray_pants_1763118922432.jpg",
+      "confidence": 0.506
+    },
+    {
+      "category": "shoes",
+      "groundingdino_prompt": "black shoes",
+      "description": "black athletic shoes with a sleek design and lace-up closure",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_black_shoes_1763118923714.jpg",
+      "confidence": 0.705
+    }
+  ],
+  "search_results": {
+    "results": {
+      "bottoms_1": [
+        {
+          "link": "https://kream.co.kr/social/products/633159/details",
+          "thumbnail": "https://kream-phinf.pstatic.net/MjAyNTEwMDJfMTEz/MDAxNzU5MzQzODg2NTc4.6UJy1qpS8jII1RAx7oLCuSffC3HR0jTK884NCxtdV-cg.ROIIA3DHshP9jcnmpDBbbBkKFtbQCo9CR7YcNGwO6f4g.PNG/p_9e897927611c49af94dd2580fb2f6b8d.png",
+          "title": "JUNGDO Veil Bermuba S... STYLE | KREAM"
+        }
+      ],
+      "shoes_2": [
+        {
+          "link": "https://www.musinsa.com/products/3633437",
+          "thumbnail": "https://image.musinsa.com/images/prd_img/2023101715334700000088087.jpg",
+          "title": "아식스(ASICS) 아식스 X 언어펙티드 젤-카야노 14 - 다크 쉐도우 ..."
+        },
+        {
+          "link": "https://localers-online.com/ko/products/salomon-acs-pro-gtx-black-black-asphalt",
+          "thumbnail": "https://localers-online.com/cdn/shop/files/f_f2dec75d-bf70-4f21-a5c8-96fc7c7ec387_2048x2048.png?v=1725686989",
+          "title": "SALOMON \"ACS PRO GTX (Black/Black/Asphalt)\" – LOCALERS"
+        },
+        {
+          "link": "https://www.sneakinpeace.com/products/asics-x-unaffected-gel-kayano-14-dark-shadow-pure-silver-low-top-sneakers",
+          "thumbnail": "https://www.sneakinpeace.com/cdn/shop/files/ASICSxUnaffectedGEL-Kayano14-darkshadow-pure-silver-low-top-sneakers-trainers-5_440x570.jpg?v=1699526031",
+          "title": "Asics x Unaffected Unisex Gel-Kayano 14 Dark Shadow / Pure Silver Low Top Sneakers & Trainers"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 1,
+        "fallback": 1,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "bottoms_1": {
+          "itemDescription": "item1 gray pants",
+          "searchTerms": [
+            "item1 gray pants",
+            "shorts",
+            "slacks",
+            "pants",
+            "trousers",
+            "jeans",
+            "skirt",
+            "leg trousers"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-14T11:15:36.318Z",
+          "candidateCount": 30
+        },
+        "shoes_2": {
+          "itemDescription": "item2 black shoes",
+          "searchTerms": [
+            "item2 black shoes",
+            "shoes",
+            "sneakers",
+            "boots",
+            "sandals",
+            "heels",
+            "flats",
+            "loafers",
+            "oxford"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.musinsa.com/products/3633437",
+              "title": "아식스(ASICS) 아식스 X 언어펙티드 젤-카야노 14 - 다크 쉐도우 ..."
+            },
+            {
+              "link": "https://localers-online.com/ko/products/salomon-acs-pro-gtx-black-black-asphalt",
+              "title": "SALOMON \"ACS PRO GTX (Black/Black/Asphalt)\" – LOCALERS"
+            },
+            {
+              "link": "https://www.sneakinpeace.com/products/asics-x-unaffected-gel-kayano-14-dark-shadow-pure-silver-low-top-sneakers",
+              "title": "Asics x Unaffected Unisex Gel-Kayano 14 Dark Shadow / Pure Silver Low Top Sneakers & Trainers"
+            }
+          ],
+          "timestamp": "2025-11-14T11:15:42.521Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 4.67,
+        "per_category_search_seconds": 12.78,
+        "gpt4_turbo_api_time_seconds": 5.82,
+        "processing_overhead_seconds": 0,
+        "other_overhead_seconds": -5.82,
+        "wall_clock_seconds": 17.45,
+        "serper_api_time_seconds": 13.51,
+        "serper_count": 2,
+        "gpt4_turbo_count": 2,
+        "total_seconds": 17.45,
+        "categories_parallel": 2
+      }
+    }
+  },
+  "status": "success"
+}

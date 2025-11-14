@@ -1,0 +1,290 @@
+
+================================================================================
+BATCH 3 FINAL - PROCESSING 58 USERS
+================================================================================
+API: https://fashionsource.vercel.app
+================================================================================
+
+📊 Total users: 58
+
+
+Progress: 1/58
+
+================================================================================
+User 821082830425
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 2 items
+     - tops: pink jacket
+     - accessory: white hat
+  🔍 Searching products...
+  ✅ Found 6 shopping links
+
+  ❌ FAILED: 'status'
+
+Progress: 2/58
+
+================================================================================
+User 821064868350
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+
+  ❌ FAILED: 413 Client Error: Request Entity Too Large for url: https://fashionsource.vercel.app/api/upload
+
+Progress: 3/58
+
+================================================================================
+User 821030550242
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+
+  ❌ FAILED: 413 Client Error: Request Entity Too Large for url: https://fashionsource.vercel.app/api/upload
+
+Progress: 4/58
+
+================================================================================
+User 821050965822
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 2 items
+     - tops: gray shirt
+     - bottoms: blue jeans
+  🔍 Searching products...
+  ✅ Found 6 shopping links
+
+  ❌ FAILED: 'status'
+
+Progress: 5/58
+
+================================================================================
+User 821030090886
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 3 items
+     - tops: brown jacket
+     - bottoms: beige skirt
+     - shoes: brown shoes
+  🔍 Searching products...
+  ✅ Found 5 shopping links
+
+  ❌ FAILED: 'status'
+
+Progress: 6/58
+
+================================================================================
+User 821088749957
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 3 items
+     - tops: white sweatshirt
+     - bottoms: blue skirt
+     - shoes: red shoes
+  🔍 Searching products...
+  ✅ Found 8 shopping links
+
+  ❌ FAILED: 'status'
+
+Progress: 7/58
+
+================================================================================
+User 821091581688
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 1 items
+     - bag: black bag
+  🔍 Searching products...
+  ✅ Found 3 shopping links
+
+  ❌ FAILED: 'status'
+
+Progress: 8/58
+
+================================================================================
+User 821022625467
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 3 items
+     - tops: brown fur coat
+     - tops: white shirt
+     - bottoms: blue jeans
+  🔍 Searching products...
+  ✅ Found 8 shopping links
+
+  ❌ FAILED: 'status'
+
+Progress: 9/58
+
+================================================================================
+User 821090730739
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 1 items
+     - tops: gray jacket
+  🔍 Searching products...
+  ✅ Found 3 shopping links
+
+  ❌ FAILED: 'status'
+
+Progress: 10/58
+
+================================================================================
+User 821027283468
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 2 items
+     - tops: white hoodie
+     - bottoms: plaid skirt
+  🔍 Searching products...
+  ✅ Found 5 shopping links
+
+  ❌ FAILED: 'status'
+
+Progress: 11/58
+
+================================================================================
+User 821020247094
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+
+  ❌ FAILED: 413 Client Error: Request Entity Too Large for url: https://fashionsource.vercel.app/api/upload
+
+Progress: 12/58
+
+================================================================================
+User 821093218593
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 4 items
+     - bottoms: red dress
+     - bottoms: green dress
+     - tops: red beret
+     - tops: green beret
+  🔍 Searching products...
+  ✅ Found 12 shopping links
+
+  ❌ FAILED: 'status'
+
+Progress: 13/58
+
+================================================================================
+User 821042714453
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 4 items
+     - tops: beige coat
+     - bottoms: blue jeans
+     - shoes: white sneakers
+     - accessory: gray scarf
+  🔍 Searching products...
+  ✅ Found 9 shopping links
+
+  ❌ FAILED: 'status'
+
+Progress: 14/58
+
+================================================================================
+User 821090940472
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 2 items
+     - tops: black cardigan
+     - bag: brown bag
+  🔍 Searching products...
+  ✅ Found 4 shopping links
+
+  ❌ FAILED: 'status'
+
+Progress: 15/58
+
+================================================================================
+User 821042161317
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 3 items
+     - tops: cream sweater
+     - bottoms: black pants
+     - bag: brown bag
+  🔍 Searching products...
+  ✅ Found 7 shopping links
+
+  ❌ FAILED: 'status'
+
+Progress: 16/58
+
+================================================================================
+User 821067702145
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 2 items
+     - bottoms: gray pants
+     - shoes: black shoes
+  🔍 Searching products...
+  ✅ Found 4 shopping links
+
+  ❌ FAILED: 'status'
+
+Progress: 17/58
+
+================================================================================
+User 821094891031
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+
+  ❌ FAILED: 413 Client Error: Request Entity Too Large for url: https://fashionsource.vercel.app/api/upload
+
+Progress: 18/58
+
+================================================================================
+User 821087797860
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 1 items
+     - tops: white hoodie
+  🔍 Searching products...
+  ✅ Found 3 shopping links

@@ -1,0 +1,89 @@
+{
+  "phone": "821067339175",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763119448895_IMG_4240.jpg",
+  "items": [
+    {
+      "category": "shoes",
+      "groundingdino_prompt": "black sneakers",
+      "description": "black canvas sneakers with white laces and beige toe caps",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_black_sneakers_1763119460964.jpg",
+      "confidence": 0.726
+    }
+  ],
+  "search_results": {
+    "results": {
+      "shoes_1": [
+        {
+          "link": "https://www.clothbase.com/items/77f8a2f8_acne-studios-black-canvas-low-top-sneakers_acne-studios",
+          "thumbnail": "https://cdn.clothbase.com/uploads/9b2d8fd6-85fe-467d-b2f9-02e6e042cb14/211129F128007_5.jpg",
+          "title": "Acne Studios Black Canvas Low-Top Sneakers Acne Studios"
+        },
+        {
+          "link": "https://www.endclothing.com/dk/acne-studios-ballow-low-top-sneaker-ad0347-cgl.html",
+          "thumbnail": "https://media.endclothing.com/media/catalog/product/2/0/20-04-2022_ja_ad0347-cgl_1.jpg",
+          "title": "Acne Studios Ballow Low Top Sneaker Black & Off White | END. (DK)"
+        },
+        {
+          "link": "https://kream.co.kr/products/75364",
+          "thumbnail": "https://kream-phinf.pstatic.net/MjAyMjA4MjZfMzcg/MDAxNjYxNDk5MTIyODg2.Uei_0qnilvsCNP0bCEIf734hjqYuDZL8HjffKZCa9Z8g.WPHO_wjHonr7HqWpYEzkai7vXYTMckXys9u2AvjN80sg.PNG/a_8c587b543e484b91a24bbf768093c3ec.png",
+          "title": "W) 아크네 스튜디오 발로우 텀블드 로우탑 스니커즈 블랙 오프 화이트 | Acne Studios | KREAM"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 1,
+        "fallback": 0,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "shoes_1": {
+          "itemDescription": "item1 black sneakers",
+          "searchTerms": [
+            "item1 black sneakers",
+            "shoes",
+            "sneakers",
+            "boots",
+            "sandals",
+            "heels",
+            "flats",
+            "loafers",
+            "oxford"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.clothbase.com/items/77f8a2f8_acne-studios-black-canvas-low-top-sneakers_acne-studios",
+              "title": "Acne Studios Black Canvas Low-Top Sneakers Acne Studios"
+            },
+            {
+              "link": "https://www.endclothing.com/dk/acne-studios-ballow-low-top-sneaker-ad0347-cgl.html",
+              "title": "Acne Studios Ballow Low Top Sneaker Black & Off White | END. (DK)"
+            },
+            {
+              "link": "https://kream.co.kr/products/75364",
+              "title": "W) 아크네 스튜디오 발로우 텀블드 로우탑 스니커즈 블랙 오프 화이트 | Acne Studios | KREAM"
+            }
+          ],
+          "timestamp": "2025-11-14T11:24:39.717Z",
+          "candidateCount": 22,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 9.77,
+        "per_category_search_seconds": 8.09,
+        "gpt4_turbo_api_time_seconds": 4,
+        "processing_overhead_seconds": 0,
+        "other_overhead_seconds": -4,
+        "wall_clock_seconds": 17.86,
+        "serper_api_time_seconds": 4.08,
+        "serper_count": 1,
+        "gpt4_turbo_count": 1,
+        "total_seconds": 17.87,
+        "categories_parallel": 1
+      }
+    }
+  },
+  "status": "success"
+}

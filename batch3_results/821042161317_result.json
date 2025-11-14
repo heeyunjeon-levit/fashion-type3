@@ -1,0 +1,182 @@
+{
+  "phone": "821042161317",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763118867644_Screenshot_20251104_134905_NAVER.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "cream sweater",
+      "description": "cream sweater with a black geometric pattern and a high collar",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_cream_sweater_1763118882237.jpg",
+      "confidence": 0.895
+    },
+    {
+      "category": "bottoms",
+      "groundingdino_prompt": "black pants",
+      "description": "black wide-leg corduroy pants",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_black_pants_1763118883534.jpg",
+      "confidence": 0.882
+    },
+    {
+      "category": "bag",
+      "groundingdino_prompt": "brown bag",
+      "description": "brown suede shoulder bag with a relaxed shape",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_brown_bag_1763118884810.jpg",
+      "confidence": 0.8
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://monoatd.com/product/페잇츠-울-노르딕-반집업-니트/9036/",
+          "thumbnail": "https://dnsinter.diskn.com/MONOATD/M25DK017B_D_02.jpg",
+          "title": "모노앳디 - 페잇츠 울 노르딕 반집업 니트"
+        },
+        {
+          "link": "https://fashionbykakao.com/catalog/products/166999585",
+          "thumbnail": "http://jason006.img1.kr/canmart2025/251029/0024_1.jpg",
+          "title": "패션 바이 카카오 | 뮤즈 헤어리 반집업 울 니트"
+        }
+      ],
+      "bottoms_2": [
+        {
+          "link": "https://www.musinsa.com/products/4577904",
+          "thumbnail": "https://image.msscdn.net/images/goods_img/20241031/4577904/4577904_17308810640254_500.jpg",
+          "title": "어썸스튜디오(AWESOME STUDIO) 코듀로이 세미 와이드 핏 슬렉스 네이비 - 사이즈 & 후기 | 무신사"
+        },
+        {
+          "link": "https://zigzag.kr/catalog/products/153492791",
+          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/d/2024/11/20/17938_202411201557370666_86324.jpeg",
+          "title": "디플리 [S-L] 딥네이비 일자 와이드 골덴팬츠 코듀로이팬츠"
+        }
+      ],
+      "bag_3": [
+        {
+          "link": "https://www.nordstrom.com/s/free-people-we-the-free-roma-suede-tote-bag/7309061",
+          "thumbnail": "https://n.nordstrommedia.com/it/74fd965f-b6ff-4d19-bf95-dc984c3f8890.jpeg?trim=color&w=350&h=536",
+          "title": "Free People We the Free Roma Suede Tote Bag | Nordstrom"
+        },
+        {
+          "link": "https://www.asos.com/us/accessorize/accessorize-large-suede-pocket-shoulder-bag-in-chocolate-brown/prd/208475351",
+          "thumbnail": "https://images.asos-media.com/products/accessorize-large-suede-pocket-shoulder-bag-in-chocolate-brown/208475351-4?$n_640w$&wid=513&fit=constrain",
+          "title": "Accessorize large suede pocket shoulder bag in chocolate brown | ASOS"
+        },
+        {
+          "link": "https://www.zara.com/ca/en/split-leather-effect-shopper-bag-p13342620.html",
+          "thumbnail": "https://static.zara.net/assets/public/e0da/131d/a47a4a138f65/e4ca134dc05d/13342620700-e4/13342620700-e4.jpg?ts=1758636688471",
+          "title": "SPLIT LEATHER EFFECT SHOPPER BAG - Brown | ZARA Canada"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 3,
+        "fallback": 0,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "bottoms_2": {
+          "itemDescription": "item2 black pants",
+          "searchTerms": [
+            "item2 black pants",
+            "shorts",
+            "slacks",
+            "pants",
+            "trousers",
+            "jeans",
+            "skirt",
+            "leg trousers"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.musinsa.com/products/4577904",
+              "title": "어썸스튜디오(AWESOME STUDIO) 코듀로이 세미 와이드 핏 슬렉스 네이비 - 사이즈 & 후기 | 무신사"
+            },
+            {
+              "link": "https://zigzag.kr/catalog/products/153492791",
+              "title": "디플리 [S-L] 딥네이비 일자 와이드 골덴팬츠 코듀로이팬츠"
+            }
+          ],
+          "timestamp": "2025-11-14T11:15:01.533Z",
+          "candidateCount": 30,
+          "selectionCount": 2
+        },
+        "bag_3": {
+          "itemDescription": "item3 brown bag",
+          "searchTerms": [
+            "item3 brown bag",
+            "bag",
+            "backpack",
+            "handbag",
+            "tote bag",
+            "purse",
+            "clutch",
+            "messenger bag",
+            "shoulder bag",
+            "wallet"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.nordstrom.com/s/free-people-we-the-free-roma-suede-tote-bag/7309061",
+              "title": "Free People We the Free Roma Suede Tote Bag | Nordstrom"
+            },
+            {
+              "link": "https://www.asos.com/us/accessorize/accessorize-large-suede-pocket-shoulder-bag-in-chocolate-brown/prd/208475351",
+              "title": "Accessorize large suede pocket shoulder bag in chocolate brown | ASOS"
+            },
+            {
+              "link": "https://www.zara.com/ca/en/split-leather-effect-shopper-bag-p13342620.html",
+              "title": "SPLIT LEATHER EFFECT SHOPPER BAG - Brown | ZARA Canada"
+            }
+          ],
+          "timestamp": "2025-11-14T11:15:03.563Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        },
+        "tops_1": {
+          "itemDescription": "item1 cream sweater",
+          "searchTerms": [
+            "item1 cream sweater",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://monoatd.com/product/페잇츠-울-노르딕-반집업-니트/9036/",
+              "title": "모노앳디 - 페잇츠 울 노르딕 반집업 니트"
+            },
+            {
+              "link": "https://fashionbykakao.com/catalog/products/166999585",
+              "title": "패션 바이 카카오 | 뮤즈 헤어리 반집업 울 니트"
+            }
+          ],
+          "timestamp": "2025-11-14T11:15:04.007Z",
+          "candidateCount": 28,
+          "selectionCount": 2
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 9.32,
+        "per_category_search_seconds": 8.74,
+        "gpt4_turbo_api_time_seconds": 10.55,
+        "processing_overhead_seconds": 0,
+        "other_overhead_seconds": -10.55,
+        "wall_clock_seconds": 18.08,
+        "serper_api_time_seconds": 12.7,
+        "serper_count": 3,
+        "gpt4_turbo_count": 3,
+        "total_seconds": 18.08,
+        "categories_parallel": 3
+      }
+    }
+  },
+  "status": "success"
+}

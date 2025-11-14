@@ -1,0 +1,128 @@
+{
+  "phone": "821090940472",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763118819666_Screenshot_20251112_235608.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "black cardigan",
+      "description": "black ribbed button-up cardigan with a fitted style",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_black_cardigan_1763118842377.jpg",
+      "confidence": 0.915
+    },
+    {
+      "category": "bag",
+      "groundingdino_prompt": "brown bag",
+      "description": "brown leather shoulder bag with a simple design",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_brown_bag_1763118843739.jpg",
+      "confidence": 0.824
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://www.farfetch.com/shopping/women/sportmax-virgin-wool-cardigan-item-30648063.aspx",
+          "thumbnail": "https://cdn-images.farfetch-contents.com/30/64/80/63/30648063_59663672_1000.jpg",
+          "title": "Sportmax virgin-wool Cardigan | Black | FARFETCH"
+        },
+        {
+          "link": "https://www.ssense.com/en-us/women/product/loulou-studio/black-zephir-cashmere-cropped-cardigan/18130751",
+          "thumbnail": "https://img.ssensemedia.com/images/252473F095009_1/loulou-studio-black-zephir-cashmere-cropped-cardigan.jpg",
+          "title": "Loulou de Saison: Black Zephir Cashmere Cropped Cardigan | SSENSE"
+        }
+      ],
+      "bag_2": [
+        {
+          "link": "https://www.29cm.co.kr/products/2721560",
+          "thumbnail": "https://img.29cm.co.kr/item/202407/11ef4332efafdb4baad2af51810d6cd4.jpg?width=700&format=webp",
+          "title": "TOW BAG_ DARK BROWN - 감도 깊은 취향 셀렉트샵 29CM"
+        },
+        {
+          "link": "https://global.musinsa.com/th/goods/4089959",
+          "thumbnail": "https://image.msscdn.net/thumbnails/images/prd_img/20240426/4089959/detail_4089959_17212697980914_big.jpg",
+          "title": "MUSINSA | RAINBEE BLUME BAG_ DARK BROWN"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 2,
+        "fallback": 0,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "tops_1": {
+          "itemDescription": "item1 black cardigan",
+          "searchTerms": [
+            "item1 black cardigan",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.farfetch.com/shopping/women/sportmax-virgin-wool-cardigan-item-30648063.aspx",
+              "title": "Sportmax virgin-wool Cardigan | Black | FARFETCH"
+            },
+            {
+              "link": "https://www.ssense.com/en-us/women/product/loulou-studio/black-zephir-cashmere-cropped-cardigan/18130751",
+              "title": "Loulou de Saison: Black Zephir Cashmere Cropped Cardigan | SSENSE"
+            }
+          ],
+          "timestamp": "2025-11-14T11:14:20.022Z",
+          "candidateCount": 24,
+          "selectionCount": 2
+        },
+        "bag_2": {
+          "itemDescription": "item2 brown bag",
+          "searchTerms": [
+            "item2 brown bag",
+            "bag",
+            "backpack",
+            "handbag",
+            "tote bag",
+            "purse",
+            "clutch",
+            "messenger bag",
+            "shoulder bag",
+            "wallet"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.29cm.co.kr/products/2721560",
+              "title": "TOW BAG_ DARK BROWN - 감도 깊은 취향 셀렉트샵 29CM"
+            },
+            {
+              "link": "https://global.musinsa.com/th/goods/4089959",
+              "title": "MUSINSA | RAINBEE BLUME BAG_ DARK BROWN"
+            }
+          ],
+          "timestamp": "2025-11-14T11:14:22.281Z",
+          "candidateCount": 30,
+          "selectionCount": 2
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 3.63,
+        "per_category_search_seconds": 12.98,
+        "gpt4_turbo_api_time_seconds": 9.43,
+        "processing_overhead_seconds": 0.01,
+        "other_overhead_seconds": -9.42,
+        "wall_clock_seconds": 16.63,
+        "serper_api_time_seconds": 14.25,
+        "serper_count": 2,
+        "gpt4_turbo_count": 2,
+        "total_seconds": 16.63,
+        "categories_parallel": 2
+      }
+    }
+  },
+  "status": "success"
+}

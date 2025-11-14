@@ -1,0 +1,191 @@
+{
+  "phone": "821094116936",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763119115464_IMG_5482.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "beige coat",
+      "description": "beige wool coat with a wide collar and button closure",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_beige_coat_1763119130091.jpg",
+      "confidence": 0.937
+    },
+    {
+      "category": "bottoms",
+      "groundingdino_prompt": "black pants",
+      "description": "black wide-leg pants with a loose fit",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_black_pants_1763119131708.jpg",
+      "confidence": 0.73
+    },
+    {
+      "category": "bag",
+      "groundingdino_prompt": "brown bag",
+      "description": "small brown suede handbag with short handles",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_brown_bag_1763119132242.jpg",
+      "confidence": 0.677
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://hellowmatilda.com/product/detail.html?product_no=75317",
+          "thumbnail": "https://hellowmatilda.com/web/product/extra/big/202510/8d4cd91a4247692124a59e633bf2078d.jpg",
+          "title": "버베인]레아 알파카 핸드메이드 코트 - 헬로마틸다"
+        },
+        {
+          "link": "https://zigzag.kr/catalog/products/131328809",
+          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/d/2023/11/10/17375_202311101715040655_29360.gif?width=400&height=400&quality=80&format=jpeg",
+          "title": "레드비 [❄️알파카☃️] 부클하프코트 울하프코트 핸드메이드코트 알파카 알파카코트 울코트 겨울코트"
+        }
+      ],
+      "bottoms_2": [
+        {
+          "link": "https://www.amazon.com/Paintcolors-Joggers-Athletic-Sweatpants-Thermal/dp/B0CSK24FH5",
+          "thumbnail": "https://m.media-amazon.com/images/I/41h29MJb+9L._AC_UY350_.jpg",
+          "title": "Amazon.com: Paintcolors Women's Fleece Lined Joggers Pants Winter Warm Athletic Sweatpants Thermal Pants with Pockets Hiking Running Yoga -Black_t08 S : Clothing, Shoes & Jewelry"
+        },
+        {
+          "link": "https://zigzag.kr/catalog/products/109386470",
+          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/c/10/938/647/109386470-1234033247796313840.jpeg?width=720&height=720&quality=80&format=jpeg",
+          "title": "피핀 [메르시마리에] 키작키큰 융 부츠컷 슬랙스 #79377"
+        },
+        {
+          "link": "https://alittle-b.com/product/crunch-wrinkle-bootcut-pt-3color/17982/",
+          "thumbnail": "https://cafe24img.poxo.com/alittlebeat1/web37/0918(3)_pt_main.jpg",
+          "title": "crunch wrinkle bootcut pt (3color) 블랙 당일발송 - Alittlebeat"
+        }
+      ],
+      "bag_3": [
+        {
+          "link": "https://www.zara.com/us/en/leather-shopper-bag-p13343620.html",
+          "thumbnail": "https://static.zara.net/assets/public/fe0b/7d05/193b48bea17d/2055b6ded6e6/13343620700-e1/13343620700-e1.jpg?ts=1756886919456",
+          "title": "LEATHER SHOPPER BAG - Brown | ZARA United States"
+        },
+        {
+          "link": "https://www.ssense.com/en-us/women/product/the-row/brown-small-to-go-tote/17177091",
+          "thumbnail": "https://res.cloudinary.com/ssenseweb/image/upload/b_white,c_lpad,g_south,h_706,w_470/c_scale,h_480/v550/251359F048041_1.jpg",
+          "title": "The Row: Brown Small To Go Tote | SSENSE"
+        },
+        {
+          "link": "https://www.etsy.com/uk/listing/175962961/leather-tote-bag-carryall-shoulder-bag",
+          "thumbnail": "https://i.etsystatic.com/7325748/r/il/2a2157/551608059/il_340x270.551608059_lwl7.jpg",
+          "title": "Leather Tote Bag, Carryall, Shoulder Bag, Laptop, Macbook, Shopping Bag - Handmade Chocolate Brown Genuine Leather - Etsy UK"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 3,
+        "fallback": 0,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "bag_3": {
+          "itemDescription": "item3 brown bag",
+          "searchTerms": [
+            "item3 brown bag",
+            "bag",
+            "backpack",
+            "handbag",
+            "tote bag",
+            "purse",
+            "clutch",
+            "messenger bag",
+            "shoulder bag",
+            "wallet"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.zara.com/us/en/leather-shopper-bag-p13343620.html",
+              "title": "LEATHER SHOPPER BAG - Brown | ZARA United States"
+            },
+            {
+              "link": "https://www.ssense.com/en-us/women/product/the-row/brown-small-to-go-tote/17177091",
+              "title": "The Row: Brown Small To Go Tote | SSENSE"
+            },
+            {
+              "link": "https://www.etsy.com/uk/listing/175962961/leather-tote-bag-carryall-shoulder-bag",
+              "title": "Leather Tote Bag, Carryall, Shoulder Bag, Laptop, Macbook, Shopping Bag - Handmade Chocolate Brown Genuine Leather - Etsy UK"
+            }
+          ],
+          "timestamp": "2025-11-14T11:19:11.303Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        },
+        "bottoms_2": {
+          "itemDescription": "item2 black pants",
+          "searchTerms": [
+            "item2 black pants",
+            "shorts",
+            "slacks",
+            "pants",
+            "trousers",
+            "jeans",
+            "skirt",
+            "leg trousers"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.amazon.com/Paintcolors-Joggers-Athletic-Sweatpants-Thermal/dp/B0CSK24FH5",
+              "title": "Amazon.com: Paintcolors Women's Fleece Lined Joggers Pants Winter Warm Athletic Sweatpants Thermal Pants with Pockets Hiking Running Yoga -Black_t08 S : Clothing, Shoes & Jewelry"
+            },
+            {
+              "link": "https://zigzag.kr/catalog/products/109386470",
+              "title": "피핀 [메르시마리에] 키작키큰 융 부츠컷 슬랙스 #79377"
+            },
+            {
+              "link": "https://alittle-b.com/product/crunch-wrinkle-bootcut-pt-3color/17982/",
+              "title": "crunch wrinkle bootcut pt (3color) 블랙 당일발송 - Alittlebeat"
+            }
+          ],
+          "timestamp": "2025-11-14T11:19:11.719Z",
+          "candidateCount": 29,
+          "selectionCount": 3
+        },
+        "tops_1": {
+          "itemDescription": "item1 beige coat",
+          "searchTerms": [
+            "item1 beige coat",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://hellowmatilda.com/product/detail.html?product_no=75317",
+              "title": "버베인]레아 알파카 핸드메이드 코트 - 헬로마틸다"
+            },
+            {
+              "link": "https://zigzag.kr/catalog/products/131328809",
+              "title": "레드비 [❄️알파카☃️] 부클하프코트 울하프코트 핸드메이드코트 알파카 알파카코트 울코트 겨울코트"
+            }
+          ],
+          "timestamp": "2025-11-14T11:19:13.776Z",
+          "candidateCount": 29,
+          "selectionCount": 2
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 10.86,
+        "per_category_search_seconds": 9.99,
+        "gpt4_turbo_api_time_seconds": 8.94,
+        "processing_overhead_seconds": 0,
+        "other_overhead_seconds": -8.94,
+        "wall_clock_seconds": 20.86,
+        "serper_api_time_seconds": 16.49,
+        "serper_count": 3,
+        "gpt4_turbo_count": 3,
+        "total_seconds": 20.86,
+        "categories_parallel": 3
+      }
+    }
+  },
+  "status": "success"
+}

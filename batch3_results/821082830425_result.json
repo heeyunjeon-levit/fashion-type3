@@ -1,20 +1,20 @@
 {
   "status": "success",
   "phone": "821082830425",
-  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763118508786_IMG_9785.jpeg",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763119485146_IMG_9785.jpeg",
   "items": [
     {
       "category": "tops",
       "groundingdino_prompt": "pink jacket",
-      "description": "light pink puffer jacket with a high collar and visible logo on the chest",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_pink_jacket_1763118528476.jpg",
+      "description": "light pink puffer jacket with a high collar and logo on the chest",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_pink_jacket_1763119509419.jpg",
       "confidence": 0.771
     },
     {
       "category": "accessory",
       "groundingdino_prompt": "white hat",
-      "description": "white textured beanie with a prominent embroidered logo on the front",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_white_hat_1763118529396.jpg",
+      "description": "white textured beanie with a logo on the front",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_white_hat_1763119510851.jpg",
       "confidence": 0.839
     }
   ],
@@ -28,12 +28,12 @@
         },
         {
           "link": "https://www.musinsa.com/products/2886568",
-          "thumbnail": "https://image.musinsa.com/thumbnails/images/prd_img/2022102517454400000058576.png?w=780",
+          "thumbnail": "https://image.musinsa.com/images/prd_img/2022102517455000000098630.jpg",
           "title": "레스트앤레크레이션(REST&RECREATION) RR LOGO DOWN JACKET - PINK - 사이즈 & 후기 | 무신사"
         },
         {
           "link": "https://global.musinsa.com/au/goods/2886568",
-          "thumbnail": "https://image.musinsa.com/thumbnails/images/prd_img/2022102517455100000062231.jpg?w=780",
+          "thumbnail": "https://image.musinsa.com/thumbnails/images/prd_img/2022102517454300000024916.png?w=780",
           "title": "MUSINSA | REST&RECREATION RR LOGO DOWN JACKET - PINK"
         }
       ],
@@ -82,8 +82,8 @@
             "sunglasses"
           ],
           "selectedLinks": [],
-          "timestamp": "2025-11-14T11:09:00.849Z",
-          "candidateCount": 28
+          "timestamp": "2025-11-14T11:25:24.640Z",
+          "candidateCount": 27
         },
         "tops_1": {
           "itemDescription": "item1 pink jacket",
@@ -113,22 +113,22 @@
               "title": "MUSINSA | REST&RECREATION RR LOGO DOWN JACKET - PINK"
             }
           ],
-          "timestamp": "2025-11-14T11:09:02.182Z",
+          "timestamp": "2025-11-14T11:25:26.886Z",
           "candidateCount": 30,
           "selectionCount": 3
         }
       },
       "timing": {
-        "full_image_search_seconds": 4.49,
-        "per_category_search_seconds": 7.52,
-        "gpt4_turbo_api_time_seconds": 4.03,
-        "processing_overhead_seconds": 0.01,
-        "other_overhead_seconds": -4.03,
-        "wall_clock_seconds": 12.02,
-        "serper_api_time_seconds": 9.67,
+        "full_image_search_seconds": 7.98,
+        "per_category_search_seconds": 6.73,
+        "gpt4_turbo_api_time_seconds": 3.93,
+        "processing_overhead_seconds": 0,
+        "other_overhead_seconds": -3.93,
+        "wall_clock_seconds": 14.72,
+        "serper_api_time_seconds": 7.26,
         "serper_count": 2,
         "gpt4_turbo_count": 2,
-        "total_seconds": 12.02,
+        "total_seconds": 14.72,
         "categories_parallel": 2
       }
     }

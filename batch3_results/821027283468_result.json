@@ -1,0 +1,144 @@
+{
+  "status": "success",
+  "phone": "821027283468",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763119836687_KakaoTalk_20251114_161137277_01.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "white hoodie",
+      "description": "white oversized hoodie with a relaxed fit and long sleeves",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_white_hoodie_1763119850404.jpg",
+      "confidence": 0.799
+    },
+    {
+      "category": "bottoms",
+      "groundingdino_prompt": "plaid skirt",
+      "description": "black and gray plaid skirt with a knee-length hem",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_plaid_skirt_1763119851027.jpg",
+      "confidence": 0.733
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://www.reversible.com/shopping/men/item/balenciaga-balenciaga-new-copyright-medium-fit-hoodie-white-570811tiv559152-451101153",
+          "thumbnail": "https://image-raw.reversible.com/raw_images/c15c3982e0ff13e1802b43450c479fc254679ad3461af280047ee572524ab074",
+          "title": "BALENCIAGA Balenciaga Balenciaga Copyright Logo Print Medium Fit Hoodie 'White' 578135TIV559152 | REVERSIBLE"
+        },
+        {
+          "link": "https://www.farfetch.com/shopping/men/off-white-logo-print-drawstring-hoodie-item-20303822.aspx",
+          "thumbnail": "https://cdn-images.farfetch-contents.com/20/30/38/22/20303822_51170322_600.jpg",
+          "title": "Off-White logo-print Drawstring Hoodie | White | FARFETCH"
+        },
+        {
+          "link": "https://www.farfetch.com/uz/shopping/men/vetements-logo-print-cotton-blend-hoodie-item-20265042.aspx",
+          "thumbnail": "https://cdn-images.farfetch-contents.com/20/26/50/42/20265042_50364587_600.jpg",
+          "title": "VETEMENTS logo-print cotton-blend Hoodie | White | FARFETCH UZ"
+        }
+      ],
+      "bottoms_2": [
+        {
+          "link": "https://www.musinsa.com/products/4766249",
+          "thumbnail": "https://image.msscdn.net/thumbnails/images/goods_img/20250206/4766249/4766249_17388553323449_big.jpg?w=390",
+          "title": "제로플래닛(ZEROPLANET) 에린 체크 플리츠 스커트 [CHARCOAL] - 사이즈 & 후기 | 무신사"
+        },
+        {
+          "link": "https://m.shopcider.com/goods/two-tone-check-skirt",
+          "thumbnail": "https://img1.shopcider.com/product/1625744972000-ZyH7aB.jpg?x-oss-process=image/resize,w_1050,m_lfit/quality,Q_60/interlace,1",
+          "title": "Two Tone Check Skirt - Cider"
+        },
+        {
+          "link": "https://noirmute.co.kr/product/made-패챠-체크-플리츠-마이크로-미니-스커트-check-pleated-micro-mini-skirt/3910",
+          "thumbnail": "https://cafe24img.poxo.com/topping99/web/product/small/202510/b1684a3e4cff48a37d7766b75ee41920.jpg",
+          "title": "MADE] 패챠 체크 플리츠 마이크로 미니 스커트 Check Pleated Micro Mini Skirt - 누아뮤트"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 2,
+        "fallback": 0,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "bottoms_2": {
+          "itemDescription": "item2 plaid skirt",
+          "searchTerms": [
+            "item2 plaid skirt",
+            "shorts",
+            "slacks",
+            "pants",
+            "trousers",
+            "jeans",
+            "skirt",
+            "leg trousers"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.musinsa.com/products/4766249",
+              "title": "제로플래닛(ZEROPLANET) 에린 체크 플리츠 스커트 [CHARCOAL] - 사이즈 & 후기 | 무신사"
+            },
+            {
+              "link": "https://m.shopcider.com/goods/two-tone-check-skirt",
+              "title": "Two Tone Check Skirt - Cider"
+            },
+            {
+              "link": "https://noirmute.co.kr/product/made-패챠-체크-플리츠-마이크로-미니-스커트-check-pleated-micro-mini-skirt/3910",
+              "title": "MADE] 패챠 체크 플리츠 마이크로 미니 스커트 Check Pleated Micro Mini Skirt - 누아뮤트"
+            }
+          ],
+          "timestamp": "2025-11-14T11:31:07.953Z",
+          "candidateCount": 26,
+          "selectionCount": 3
+        },
+        "tops_1": {
+          "itemDescription": "item1 white hoodie",
+          "searchTerms": [
+            "item1 white hoodie",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.reversible.com/shopping/men/item/balenciaga-balenciaga-new-copyright-medium-fit-hoodie-white-570811tiv559152-451101153",
+              "title": "BALENCIAGA Balenciaga Balenciaga Copyright Logo Print Medium Fit Hoodie 'White' 578135TIV559152 | REVERSIBLE"
+            },
+            {
+              "link": "https://www.farfetch.com/shopping/men/off-white-logo-print-drawstring-hoodie-item-20303822.aspx",
+              "title": "Off-White logo-print Drawstring Hoodie | White | FARFETCH"
+            },
+            {
+              "link": "https://www.farfetch.com/uz/shopping/men/vetements-logo-print-cotton-blend-hoodie-item-20265042.aspx",
+              "title": "VETEMENTS logo-print cotton-blend Hoodie | White | FARFETCH UZ"
+            }
+          ],
+          "timestamp": "2025-11-14T11:31:08.492Z",
+          "candidateCount": 21,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 7.44,
+        "per_category_search_seconds": 9.38,
+        "gpt4_turbo_api_time_seconds": 8.54,
+        "processing_overhead_seconds": 0,
+        "other_overhead_seconds": -8.54,
+        "wall_clock_seconds": 16.82,
+        "serper_api_time_seconds": 9.66,
+        "serper_count": 2,
+        "gpt4_turbo_count": 2,
+        "total_seconds": 16.82,
+        "categories_parallel": 2
+      }
+    }
+  }
+}

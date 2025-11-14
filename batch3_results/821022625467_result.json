@@ -1,0 +1,186 @@
+{
+  "status": "success",
+  "phone": "821022625467",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763119737062_IMG_8724.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "brown fur coat",
+      "description": "brown fur coat with a thick, luxurious texture and a cropped fit",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_brown_fur_coat_1763119754529.jpg",
+      "confidence": 0.907
+    },
+    {
+      "category": "tops",
+      "groundingdino_prompt": "white shirt",
+      "description": "white short sleeve shirt with lace trim detail at the hem",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_white_shirt_1763119756136.jpg",
+      "confidence": 0.654
+    },
+    {
+      "category": "bottoms",
+      "groundingdino_prompt": "blue jeans",
+      "description": "blue denim jeans with a classic fit and slight distressing",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_blue_jeans_1763119756922.jpg",
+      "confidence": 0.912
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://www.nordstrom.com/s/selection-faux-fur-jacket/8582216",
+          "thumbnail": "https://n.nordstrommedia.com/it/e11b9ce0-9808-4f9d-bb0f-0b3ee06cbe1d.jpeg?trim=color&w=350&h=536",
+          "title": "MANGO Selection Faux Fur Jacket | Nordstrom"
+        },
+        {
+          "link": "https://www.asos.com/us/aria-cove/aria-cove-oversized-cropped-wide-sleeve-faux-fur-jacket-in-brown-tipped-fur/prd/208489370",
+          "thumbnail": "https://images.asos-media.com/products/aria-cove-oversized-cropped-wide-sleeve-faux-fur-jacket-in-brown-tipped-fur/208489370-4?$n_640w$&wid=513&fit=constrain",
+          "title": "Aria Cove oversized cropped wide sleeve faux fur jacket in brown tipped fur | ASOS"
+        },
+        {
+          "link": "https://www.breuninger.com/it/en/b/rotate-birger-christensen/faux-fur-jacket/1002889430/p/",
+          "thumbnail": "https://cms.brnstc.de/product_images/1122x1536_retina/cpro/media/images/product/25/9/100288942315000_0_1758097967421.jpg",
+          "title": "ROTATE Faux fur jacket in light brown"
+        }
+      ],
+      "tops_2": [
+        {
+          "link": "https://www2.hm.com/en_us/productpage.1237159002.html",
+          "thumbnail": "https://image.hm.com/assets/hm/48/41/4841b18e8bcb04741525367dfa91146397d88c0c.jpg?imwidth=768",
+          "title": "Fluffy Jacket - Dark beige - Kids | H&M US"
+        },
+        {
+          "link": "https://www.farfetch.com/shopping/women/miu-miu-ribbed-knit-flared-skirt-item-31789112.aspx",
+          "thumbnail": "https://cdn-images.farfetch-contents.com/31/78/91/12/31789112_61243887_1000.jpg",
+          "title": "Miu Miu Lamé Skirt | Grey | FARFETCH"
+        },
+        {
+          "link": "https://fetching.co.kr/product/48692203/아스펜 텍스타일 퍼스",
+          "thumbnail": "https://images.thebestshops.com/product_images/original/SL13967-048_03-4f4f5f.jpg",
+          "title": "아스펜 텍스타일 퍼스 PZS024SOOO158LF0151 | 프라다 | 페칭 FETCHING"
+        }
+      ],
+      "bottoms_3": [
+        {
+          "link": "https://miamasvin.net/product/코코뱅-워싱-데님팬츠/74357",
+          "thumbnail": "https://cafe24img.poxo.com/irisccc/web/upload/NNEditor/20241105/mobile/269de165bb1f7c7bc18207106fbe935f_1730769034.jpg",
+          "title": "코코뱅 워싱 데님팬츠 - Miamasvin loves u! Womens Clothing. Korean Fashion."
+        },
+        {
+          "link": "https://zigzag.kr/catalog/products/119730177",
+          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/c/11/973/017/119730177-1702238969104640005.jpeg?width=720&height=720&quality=80&format=jpeg",
+          "title": "고고싱 [오늘출발]코지 스트레이트 데님(난스판,와이드,YKK,기장별)"
+        },
+        {
+          "link": "https://m.inanity.co.kr/product/캣-브러쉬-딥-워싱-와이드-진청-데님팬츠/1755",
+          "thumbnail": "https://m.inanity.co.kr/web/upload/NNEditor/20230331/mobile/ffd68322540f4d10b3da6ca5688fcdfe_1680252512.jpg",
+          "title": "캣 브러쉬 딥 워싱 와이드 진청 데님팬츠"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 2,
+        "fallback": 1,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "tops_2": {
+          "itemDescription": "item2 white shirt",
+          "searchTerms": [
+            "item2 white shirt",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-14T11:29:37.245Z",
+          "candidateCount": 12
+        },
+        "tops_1": {
+          "itemDescription": "item1 brown fur coat",
+          "searchTerms": [
+            "item1 brown fur coat",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.nordstrom.com/s/selection-faux-fur-jacket/8582216",
+              "title": "MANGO Selection Faux Fur Jacket | Nordstrom"
+            },
+            {
+              "link": "https://www.asos.com/us/aria-cove/aria-cove-oversized-cropped-wide-sleeve-faux-fur-jacket-in-brown-tipped-fur/prd/208489370",
+              "title": "Aria Cove oversized cropped wide sleeve faux fur jacket in brown tipped fur | ASOS"
+            },
+            {
+              "link": "https://www.breuninger.com/it/en/b/rotate-birger-christensen/faux-fur-jacket/1002889430/p/",
+              "title": "ROTATE Faux fur jacket in light brown"
+            }
+          ],
+          "timestamp": "2025-11-14T11:29:39.832Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        },
+        "bottoms_3": {
+          "itemDescription": "item3 blue jeans",
+          "searchTerms": [
+            "item3 blue jeans",
+            "shorts",
+            "slacks",
+            "pants",
+            "trousers",
+            "jeans",
+            "skirt",
+            "leg trousers"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://miamasvin.net/product/코코뱅-워싱-데님팬츠/74357",
+              "title": "코코뱅 워싱 데님팬츠 - Miamasvin loves u! Womens Clothing. Korean Fashion."
+            },
+            {
+              "link": "https://zigzag.kr/catalog/products/119730177",
+              "title": "고고싱 [오늘출발]코지 스트레이트 데님(난스판,와이드,YKK,기장별)"
+            },
+            {
+              "link": "https://m.inanity.co.kr/product/캣-브러쉬-딥-워싱-와이드-진청-데님팬츠/1755",
+              "title": "캣 브러쉬 딥 워싱 와이드 진청 데님팬츠"
+            }
+          ],
+          "timestamp": "2025-11-14T11:29:44.695Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 13.55,
+        "per_category_search_seconds": 13.32,
+        "gpt4_turbo_api_time_seconds": 9.6,
+        "processing_overhead_seconds": 0,
+        "other_overhead_seconds": -9.6,
+        "wall_clock_seconds": 26.88,
+        "serper_api_time_seconds": 18.04,
+        "serper_count": 3,
+        "gpt4_turbo_count": 3,
+        "total_seconds": 26.88,
+        "categories_parallel": 3
+      }
+    }
+  }
+}

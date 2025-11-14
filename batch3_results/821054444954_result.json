@@ -1,0 +1,180 @@
+{
+  "phone": "821054444954",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763119790415_IMG_1850.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "gray sweater",
+      "description": "gray cardigan sweater with a button-up front and ribbed cuffs",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_gray_sweater_1763119837043.jpg",
+      "confidence": 0.774
+    },
+    {
+      "category": "bottoms",
+      "groundingdino_prompt": "black skirt",
+      "description": "black pleated mini skirt with a high waist",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_black_skirt_1763119838094.jpg",
+      "confidence": 0.825
+    },
+    {
+      "category": "shoes",
+      "groundingdino_prompt": "black shoes",
+      "description": "black flat shoes with a bow detail on the front",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_black_shoes_1763119838627.jpg",
+      "confidence": 0.551
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://www.29cm.co.kr/products/3117255",
+          "thumbnail": "https://img.29cm.co.kr/item/202503/11eff8aa4bdd2f3a8b63bb6d02ff6119.jpg?width=700&format=webp",
+          "title": "5 button cashmere crew neck cardigan (Gray) - 감도 깊은 취향 셀렉트샵 29CM"
+        },
+        {
+          "link": "https://global.musinsa.com/au/goods/5479183",
+          "thumbnail": "https://image.msscdn.net/thumbnails/images/prd_img/202509171530350974728874068ca558b17cc8.jpg?w=780",
+          "title": "MUSINSA | BBAEBBAE Round Neck Simple Cozy Button Knit Cardigan 3 Colors"
+        }
+      ],
+      "bottoms_2": [
+        {
+          "link": "https://www.coupang.com/vp/products/8034929749",
+          "thumbnail": "https://thumbnail.coupangcdn.com/thumbnails/remote/230x230ex/image/vendor_inventory/0b5f/709a9d108cc25c44027d94618dad48b3a0d906f6f467738e372cc24ba933.jpg",
+          "title": "ROYALBELLE 여성용 심플 에이라인 긴치마 루즈핏 정장 하이웨스트 오피스룩 롱 스커트 X41601 AN - 스커트/치마 | 쿠팡"
+        },
+        {
+          "link": "https://creamcheese.co.kr/product/detail.html?product_no=14830&cate_no=72&display_group=1",
+          "thumbnail": "https://creamcheese.co.kr/web/upload/NNEditor/20230511/copy-1683803602-38.jpg",
+          "title": "벨트증정] 개미허리 연출, 컷팅 플레어 코튼 롱스커트 - sk / 4계절템 - Cream Cheese"
+        },
+        {
+          "link": "https://www.etsy.com/listing/1830655700/vintage-celine-black-wool-belted-midi",
+          "thumbnail": "https://i.etsystatic.com/13723725/c/2250/2250/0/671/il/f510e8/6513116792/il_340x270.6513116792_lf9e.jpg",
+          "title": "Vintage Celine Black Wool Belted Midi Skirt - Etsy"
+        }
+      ],
+      "shoes_3": [
+        {
+          "link": "https://www.camper.com/en_US/women/shoes/dina/camper-dina-K400634-001",
+          "thumbnail": "https://cloud.camper.com/is/image/YnJldW5pbmdlcjAx/K400634-001_LF.jpg",
+          "title": "Dina Black Boots for Women - Autumn / Winter collection - Camper USA"
+        },
+        {
+          "link": "https://www.farfetch.com/bh/shopping/women/proenza-schouler-sock-fit-calf-leather-boots-item-30304987.aspx",
+          "thumbnail": "https://cdn-images.farfetch-contents.com/30/30/49/87/30304987_60021510_1000.jpg",
+          "title": "Proenza Schouler sock-fit Calf Leather Boots | Black | FARFETCH BH"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 3,
+        "fallback": 0,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "bottoms_2": {
+          "itemDescription": "item2 black skirt",
+          "searchTerms": [
+            "item2 black skirt",
+            "shorts",
+            "slacks",
+            "pants",
+            "trousers",
+            "jeans",
+            "skirt",
+            "leg trousers"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.coupang.com/vp/products/8034929749",
+              "title": "ROYALBELLE 여성용 심플 에이라인 긴치마 루즈핏 정장 하이웨스트 오피스룩 롱 스커트 X41601 AN - 스커트/치마 | 쿠팡"
+            },
+            {
+              "link": "https://creamcheese.co.kr/product/detail.html?product_no=14830&cate_no=72&display_group=1",
+              "title": "벨트증정] 개미허리 연출, 컷팅 플레어 코튼 롱스커트 - sk / 4계절템 - Cream Cheese"
+            },
+            {
+              "link": "https://www.etsy.com/listing/1830655700/vintage-celine-black-wool-belted-midi",
+              "title": "Vintage Celine Black Wool Belted Midi Skirt - Etsy"
+            }
+          ],
+          "timestamp": "2025-11-14T11:30:57.246Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        },
+        "tops_1": {
+          "itemDescription": "item1 gray sweater",
+          "searchTerms": [
+            "item1 gray sweater",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.29cm.co.kr/products/3117255",
+              "title": "5 button cashmere crew neck cardigan (Gray) - 감도 깊은 취향 셀렉트샵 29CM"
+            },
+            {
+              "link": "https://global.musinsa.com/au/goods/5479183",
+              "title": "MUSINSA | BBAEBBAE Round Neck Simple Cozy Button Knit Cardigan 3 Colors"
+            }
+          ],
+          "timestamp": "2025-11-14T11:30:58.449Z",
+          "candidateCount": 26,
+          "selectionCount": 2
+        },
+        "shoes_3": {
+          "itemDescription": "item3 black shoes",
+          "searchTerms": [
+            "item3 black shoes",
+            "shoes",
+            "sneakers",
+            "boots",
+            "sandals",
+            "heels",
+            "flats",
+            "loafers",
+            "oxford"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.camper.com/en_US/women/shoes/dina/camper-dina-K400634-001",
+              "title": "Dina Black Boots for Women - Autumn / Winter collection - Camper USA"
+            },
+            {
+              "link": "https://www.farfetch.com/bh/shopping/women/proenza-schouler-sock-fit-calf-leather-boots-item-30304987.aspx",
+              "title": "Proenza Schouler sock-fit Calf Leather Boots | Black | FARFETCH BH"
+            }
+          ],
+          "timestamp": "2025-11-14T11:31:01.347Z",
+          "candidateCount": 30,
+          "selectionCount": 2
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 10.58,
+        "per_category_search_seconds": 11.44,
+        "gpt4_turbo_api_time_seconds": 10.84,
+        "processing_overhead_seconds": 0,
+        "other_overhead_seconds": -10.84,
+        "wall_clock_seconds": 22.02,
+        "serper_api_time_seconds": 16.46,
+        "serper_count": 3,
+        "gpt4_turbo_count": 3,
+        "total_seconds": 22.03,
+        "categories_parallel": 3
+      }
+    }
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "phone": "821087797860",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763118951804_IMG_8710.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "white hoodie",
+      "description": "white fluffy hoodie with bunny ears on the hood and a rabbit graphic on the front",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_white_hoodie_1763118960911.jpg",
+      "confidence": 0.889
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://www.amazon.com/-/es/Cuteighteen-Lolita-Kawaii-adolescentes-esponjosa/dp/B0DC9YSPW7",
+          "thumbnail": "https://m.media-amazon.com/images/I/61u6V2G-ClL._SY350_QL65_.jpg",
+          "title": "Cuteighteen Lolita Kawaii - Sudadera con capucha y botones con orejas de conejo, para adolescentes, chaqueta sherpa esponjosa, anime, cosplay, invierno, abrigo cálido y mullido con capucha, Blanco : Ropa, Zapatos y Joyería - Amazon.com"
+        },
+        {
+          "link": "https://us.newkiki.com/product/밀크마일-방글이양면보아후드짚업/2962/",
+          "thumbnail": "https://milkmile.speedgabia.com/m/a/q/MAQUJP07/04_color01.jpg",
+          "title": "밀크마일] 방글이양면보아후드짚업 | newkiki"
+        },
+        {
+          "link": "https://www2.hm.com/en_us/productpage.1256937001.html",
+          "thumbnail": "https://image.hm.com/assets/hm/82/4a/824a32f81229efa8b4ed6d4c49e9fe73231ee574.jpg?imwidth=1260",
+          "title": "Pile Hoodie - Cream/Minnie Mouse - Kids | H&M US"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 1,
+        "fallback": 0,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "tops_1": {
+          "itemDescription": "item1 white hoodie",
+          "searchTerms": [
+            "item1 white hoodie",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.amazon.com/-/es/Cuteighteen-Lolita-Kawaii-adolescentes-esponjosa/dp/B0DC9YSPW7",
+              "title": "Cuteighteen Lolita Kawaii - Sudadera con capucha y botones con orejas de conejo, para adolescentes, chaqueta sherpa esponjosa, anime, cosplay, invierno, abrigo cálido y mullido con capucha, Blanco : Ropa, Zapatos y Joyería - Amazon.com"
+            },
+            {
+              "link": "https://us.newkiki.com/product/밀크마일-방글이양면보아후드짚업/2962/",
+              "title": "밀크마일] 방글이양면보아후드짚업 | newkiki"
+            },
+            {
+              "link": "https://www2.hm.com/en_us/productpage.1256937001.html",
+              "title": "Pile Hoodie - Cream/Minnie Mouse - Kids | H&M US"
+            }
+          ],
+          "timestamp": "2025-11-14T11:16:24.040Z",
+          "candidateCount": 17,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 4.9,
+        "per_category_search_seconds": 17.14,
+        "gpt4_turbo_api_time_seconds": 3.14,
+        "processing_overhead_seconds": 0.01,
+        "other_overhead_seconds": -3.14,
+        "wall_clock_seconds": 22.05,
+        "serper_api_time_seconds": 13.99,
+        "serper_count": 1,
+        "gpt4_turbo_count": 1,
+        "total_seconds": 22.05,
+        "categories_parallel": 1
+      }
+    }
+  },
+  "status": "success"
+}

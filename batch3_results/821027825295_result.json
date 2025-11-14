@@ -1,0 +1,178 @@
+{
+  "phone": "821027825295",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763119522219_IMG_3093.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "green jacket",
+      "description": "olive green oversized hooded jacket with a relaxed fit",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_green_jacket_1763119536711.jpg",
+      "confidence": 0.824
+    },
+    {
+      "category": "tops",
+      "groundingdino_prompt": "white shirt",
+      "description": "white fitted sleeveless top",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_white_shirt_1763119537838.jpg",
+      "confidence": 0.782
+    },
+    {
+      "category": "shoes",
+      "groundingdino_prompt": "brown boots",
+      "description": "dark brown knee-high leather boots with a rugged style",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_brown_boots_1763119538363.jpg",
+      "confidence": 0.681
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://zigzag.kr/catalog/products/137120828",
+          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/c/16/364/560/163645606-3302955799343287260.gif?width=400&height=400&quality=80&format=jpeg",
+          "title": "나이니 오스넬 사파리 후드 야상 점퍼"
+        },
+        {
+          "link": "https://global.musinsa.com/us/goods/5314035",
+          "thumbnail": "https://wednesdayoasis1.cafe24.com/web/upload/NNEditor/20250818/7b76f821638cc43317d88faa9d25df10.jpg",
+          "title": "MUSINSA | WEDNESDAY OASIS N-3B Fishtail Flight Jacket_KHAKI (WC25-OT03)"
+        }
+      ],
+      "tops_2": [
+        {
+          "link": "https://m.on-go.kr/product/새틴-스트라이프-미디-스커트/2342/",
+          "thumbnail": "https://m.on-go.kr/web/upload/NNEditor/20251026/mobile/e8e424443affd21ee4d946f35b39bd94_1761483795.jpg",
+          "title": "새틴 스트라이프 미디 스커트 - 온고"
+        },
+        {
+          "link": "https://zigzag.kr/catalog/products/148097243",
+          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/d/2024/9/10/14562_202409101729370924_33182.jpeg?width=400&height=400&quality=80&format=webp",
+          "title": "해나리아 3color S/M/L 블랙 브라운 연베이지 레더 가죽 자켓"
+        },
+        {
+          "link": "https://zigzag.kr/catalog/products/166019628",
+          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/c/16/647/084/166470841-2586675568331858568.gif?width=400&height=400&quality=80&format=jpeg",
+          "title": "미루엘 [슬림핏보장/쫀쫀스판👍] 벨로즈 랩버튼 스커트 부츠컷 스판 팬츠-PT008"
+        }
+      ],
+      "shoes_3": [
+        {
+          "link": "https://kream.co.kr/products/347659",
+          "thumbnail": "https://kream-phinf.pstatic.net/MjAyNDA5MTBfMjA4/MDAxNzI1OTY4NDgyODIx.Ceq2_XrqOzbI9Z6oEfjIjHR36Cam7WWHvByy4x9r6GYg.ntyt5QDrID-owJjfeZZma7AHrHj7kR1knQhazXDLJLkg.JPEG/p_3d8bdc554ed64c0095ac4866a5cfedde.jpg?cors=w_production_349720",
+          "title": "네거티브쓰리 슬러치 롱부츠 워시드 브라운 | NegativeThree | KREAM"
+        },
+        {
+          "link": "https://www.amazon.com.au/GUARDOLO-グァルドロ-423001-Guardro-Draped/dp/B00GNSUHTM",
+          "thumbnail": "https://m.media-amazon.com/images/I/91lpLbniZbL._AC_SX395_.jpg",
+          "title": "Guardro Draped Short Boots, Dark Brown, 22.5 cm : Amazon.com ..."
+        },
+        {
+          "link": "https://www.fluevog.com/shop/8111-big-john-brown-grey",
+          "thumbnail": "https://www.fluevog.com/images/big-john-brown-grey-pull-up-moto-boots-top-view-colour_image-0000031798-retina_detail.webp",
+          "title": "Big John - Brown/Grey | Pull-Up Moto Boots | Fluevog Shoes"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 2,
+        "fallback": 1,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "tops_2": {
+          "itemDescription": "item2 white shirt",
+          "searchTerms": [
+            "item2 white shirt",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-14T11:25:55.980Z",
+          "candidateCount": 26
+        },
+        "tops_1": {
+          "itemDescription": "item1 green jacket",
+          "searchTerms": [
+            "item1 green jacket",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://zigzag.kr/catalog/products/137120828",
+              "title": "나이니 오스넬 사파리 후드 야상 점퍼"
+            },
+            {
+              "link": "https://global.musinsa.com/us/goods/5314035",
+              "title": "MUSINSA | WEDNESDAY OASIS N-3B Fishtail Flight Jacket_KHAKI (WC25-OT03)"
+            }
+          ],
+          "timestamp": "2025-11-14T11:25:58.388Z",
+          "candidateCount": 27,
+          "selectionCount": 2
+        },
+        "shoes_3": {
+          "itemDescription": "item3 brown boots",
+          "searchTerms": [
+            "item3 brown boots",
+            "shoes",
+            "sneakers",
+            "boots",
+            "sandals",
+            "heels",
+            "flats",
+            "loafers",
+            "oxford"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://kream.co.kr/products/347659",
+              "title": "네거티브쓰리 슬러치 롱부츠 워시드 브라운 | NegativeThree | KREAM"
+            },
+            {
+              "link": "https://www.amazon.com.au/GUARDOLO-グァルドロ-423001-Guardro-Draped/dp/B00GNSUHTM",
+              "title": "Guardro Draped Short Boots, Dark Brown, 22.5 cm : Amazon.com ..."
+            },
+            {
+              "link": "https://www.fluevog.com/shop/8111-big-john-brown-grey",
+              "title": "Big John - Brown/Grey | Pull-Up Moto Boots | Fluevog Shoes"
+            }
+          ],
+          "timestamp": "2025-11-14T11:26:18.211Z",
+          "candidateCount": 24,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 11.17,
+        "per_category_search_seconds": 27.94,
+        "gpt4_turbo_api_time_seconds": 9.45,
+        "processing_overhead_seconds": 0,
+        "other_overhead_seconds": -9.44,
+        "wall_clock_seconds": 39.12,
+        "serper_api_time_seconds": 32.3,
+        "serper_count": 3,
+        "gpt4_turbo_count": 3,
+        "total_seconds": 39.12,
+        "categories_parallel": 3
+      }
+    }
+  },
+  "status": "success"
+}

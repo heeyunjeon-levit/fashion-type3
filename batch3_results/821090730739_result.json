@@ -1,0 +1,90 @@
+{
+  "status": "success",
+  "phone": "821090730739",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763119789809_IMG_3738.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "gray jacket",
+      "description": "gray button-up jacket with a soft texture, featuring a collar and two front pockets",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_gray_jacket_1763119800866.jpg",
+      "confidence": 0.948
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://www.landsend.com/products/womens-reversible-shearling-fleece-button-front-coat/id_396447",
+          "thumbnail": "https://s7.landsend.com/is/image/LandsEnd/554422_LEPP_S1_BRO?$xl$&wid=1003&hei=1003",
+          "title": "Women's Reversible Shearling Fleece Button Front Coat | Lands' End"
+        },
+        {
+          "link": "https://m.gsshop.com/prd/prd.gs?prdid=1087517838",
+          "thumbnail": "https://asset.m-gs.kr/prod/1087517838/1/550",
+          "title": "데사1972 그레이 인조 퍼 시어링 재킷 KK13847 GRES - GS SHOP"
+        },
+        {
+          "link": "https://www.ebay.com/itm/266391033796",
+          "thumbnail": "https://i.ebayimg.com/images/g/LxcAAOSwGzBfTro7/s-l1200.jpg",
+          "title": "NWOT Women's Brandon Thomas Reversible Jacket Faux Suede and Faux Fur – Large | eBay"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 1,
+        "fallback": 0,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "tops_1": {
+          "itemDescription": "item1 gray jacket",
+          "searchTerms": [
+            "item1 gray jacket",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.landsend.com/products/womens-reversible-shearling-fleece-button-front-coat/id_396447",
+              "title": "Women's Reversible Shearling Fleece Button Front Coat | Lands' End"
+            },
+            {
+              "link": "https://m.gsshop.com/prd/prd.gs?prdid=1087517838",
+              "title": "데사1972 그레이 인조 퍼 시어링 재킷 KK13847 GRES - GS SHOP"
+            },
+            {
+              "link": "https://www.ebay.com/itm/266391033796",
+              "title": "NWOT Women's Brandon Thomas Reversible Jacket Faux Suede and Faux Fur – Large | eBay"
+            }
+          ],
+          "timestamp": "2025-11-14T11:30:31.683Z",
+          "candidateCount": 26,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 15.15,
+        "per_category_search_seconds": 12.26,
+        "gpt4_turbo_api_time_seconds": 3.16,
+        "processing_overhead_seconds": 0,
+        "other_overhead_seconds": -3.15,
+        "wall_clock_seconds": 27.42,
+        "serper_api_time_seconds": 9.1,
+        "serper_count": 1,
+        "gpt4_turbo_count": 1,
+        "total_seconds": 27.42,
+        "categories_parallel": 1
+      }
+    }
+  }
+}

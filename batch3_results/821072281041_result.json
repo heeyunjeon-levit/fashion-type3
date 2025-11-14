@@ -1,0 +1,76 @@
+{
+  "phone": "821072281041",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763119288889_IMG_8927.jpeg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "pink bag",
+      "description": "light pink leather handbag with a curved shape and top handles",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_pink_bag_1763119297743.jpg",
+      "confidence": 0.89
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://m.bunjang.co.kr/products/117767864",
+          "thumbnail": "https://media.bunjang.co.kr/product/117767864_{cnt}_1707145655_w{res}.jpg",
+          "title": "앤딜로즈 u백 | 브랜드 중고거래 플랫폼, 번개장터"
+        },
+        {
+          "link": "https://web.joongna.com/product/50918085",
+          "thumbnail": "https://img2.joongna.com/media/original/2022/06/16/1655364784706cSb_rbdc6.jpg",
+          "title": "라비엔로즈 가방 딥핑크 | 중고나라 - 안심되는 중고거래"
+        },
+        {
+          "link": "https://www.daangn.com/kr/buy-sell/앤딜로즈유백-블랙-토트백-크로스백-x9evico6gwwo/",
+          "thumbnail": "https://img.kr.gcp-karroter.net/origin/article/202511/176215183446887b81621e1e025798b6c43985bf1f6070fd3373335b4d929d154f2d7730c5f1e0.webp?f=webp&q=95&s=1440x1440&t=inside",
+          "title": "앤딜로즈유백 블랙 토트백&amp;크로스백 | 여성잡화 | 당근 중고거래"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 0,
+        "fallback": 1,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "tops_1": {
+          "itemDescription": "item1 pink bag",
+          "searchTerms": [
+            "item1 pink bag",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-14T11:22:09.304Z",
+          "candidateCount": 30
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 8.48,
+        "per_category_search_seconds": 21.09,
+        "gpt4_turbo_api_time_seconds": 1.43,
+        "processing_overhead_seconds": 0,
+        "other_overhead_seconds": -1.42,
+        "wall_clock_seconds": 29.58,
+        "serper_api_time_seconds": 19.66,
+        "serper_count": 1,
+        "gpt4_turbo_count": 1,
+        "total_seconds": 29.58,
+        "categories_parallel": 1
+      }
+    }
+  },
+  "status": "success"
+}
