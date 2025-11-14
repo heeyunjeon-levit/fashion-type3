@@ -1,27 +1,27 @@
 {
   "status": "success",
   "phone": "821088749957",
-  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763119642985_Screenshot_20251016_085411_Coupang.jpg",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763120624655_Screenshot_20251016_085411_Coupang.jpg",
   "items": [
     {
       "category": "tops",
       "groundingdino_prompt": "white sweatshirt",
       "description": "white sweatshirt with red lettering on the front",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_white_sweatshirt_1763119662882.jpg",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_white_sweatshirt_1763120640114.jpg",
       "confidence": 0.72
     },
     {
       "category": "bottoms",
       "groundingdino_prompt": "blue skirt",
       "description": "dark blue denim skirt with large side pockets",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_blue_skirt_1763119664072.jpg",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_blue_skirt_1763120640632.jpg",
       "confidence": 0.858
     },
     {
       "category": "shoes",
       "groundingdino_prompt": "red shoes",
       "description": "red canvas sneakers with white laces",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_red_shoes_1763119664656.jpg",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_red_shoes_1763120641146.jpg",
       "confidence": 0.788
     }
   ],
@@ -41,7 +41,7 @@
         {
           "link": "https://zigzag.kr/catalog/products/135622429",
           "thumbnail": "https://cf.product-image.s.zigzag.kr/original/d/2024/2/23/25904_202402231212170480_39983.jpeg?width=400&height=400&quality=80&format=webp",
-          "title": "이버유 [최저가/데일리] 짱편한 오버핏 귀염핏 여리여리 버터 ..."
+          "title": "이버유 [최저가/데일리] 짱편한 오버핏 귀염핏 여리여리 버터 긴팔 티셔츠"
         }
       ],
       "bottoms_2": [
@@ -58,24 +58,19 @@
         {
           "link": "https://www.musinsa.com/products/3506101",
           "thumbnail": "https://img.ssfshop.com/cmd/LB_750x/src/img.ssfshop.com/goods/8SBR/23/08/21/GM0023082190003_6_THNAIL_ORGINL_20230824221806653.jpg",
-          "title": "에잇세컨즈(8SECONDS) 데님 카고 미니 스커트 네이비 ..."
+          "title": "에잇세컨즈(8SECONDS) 데님 카고 미니 스커트 네이비 (163927FP6R) - 사이즈 & 후기 | 무신사"
         }
       ],
       "shoes_3": [
         {
-          "link": "https://www.musinsa.com/products/102620",
-          "thumbnail": "https://image.msscdn.net/thumbnails/images/prd_img/20140620/102620/detail_102620_36_big.jpg?w=1000",
-          "title": "반스(VANS) 어센틱 - 레드 / VN000EE3RED1 - 사이즈 & 후기 | 무신사"
-        },
-        {
-          "link": "https://www.ssg.com/item/itemView.ssg?itemId=1000520167778",
-          "thumbnail": "https://sitem.ssgcdn.com/78/77/16/item/1000520167778_i1_250.jpg",
-          "title": "반스 키즈 Authentic 어센틱 VN000WWX6RT1 - SSG.COM"
-        },
-        {
           "link": "https://www.coolbe.com/en/products/657bcbe3e4972f0136664b69",
           "thumbnail": "https://img.joomcdn.net/792e0214d451ba84d48dca79194d49407d3c6709_original.jpeg",
           "title": "Vans Authentic Red True White Vn000wwx6rt Red True White – buy the best products in the Coolbe online store"
+        },
+        {
+          "link": "https://www.farfetch.com/bh/shopping/men/vans-classic-low-top-sneakers-item-18748874.aspx",
+          "thumbnail": "https://cdn-images.farfetch-contents.com/18/74/88/74/18748874_40694330_1000.jpg",
+          "title": "Vans Classic low-top Sneakers | Red | FARFETCH BH"
         }
       ]
     },
@@ -102,8 +97,8 @@
             "cardigan"
           ],
           "selectedLinks": [],
-          "timestamp": "2025-11-14T11:27:58.938Z",
-          "candidateCount": 14
+          "timestamp": "2025-11-14T11:44:16.134Z",
+          "candidateCount": 13
         },
         "bottoms_2": {
           "itemDescription": "item2 blue skirt",
@@ -128,10 +123,10 @@
             },
             {
               "link": "https://www.musinsa.com/products/3506101",
-              "title": "에잇세컨즈(8SECONDS) 데님 카고 미니 스커트 네이비 ..."
+              "title": "에잇세컨즈(8SECONDS) 데님 카고 미니 스커트 네이비 (163927FP6R) - 사이즈 & 후기 | 무신사"
             }
           ],
-          "timestamp": "2025-11-14T11:28:00.760Z",
+          "timestamp": "2025-11-14T11:44:17.618Z",
           "candidateCount": 27,
           "selectionCount": 3
         },
@@ -150,34 +145,30 @@
           ],
           "selectedLinks": [
             {
-              "link": "https://www.musinsa.com/products/102620",
-              "title": "반스(VANS) 어센틱 - 레드 / VN000EE3RED1 - 사이즈 & 후기 | 무신사"
-            },
-            {
-              "link": "https://www.ssg.com/item/itemView.ssg?itemId=1000520167778",
-              "title": "반스 키즈 Authentic 어센틱 VN000WWX6RT1 - SSG.COM"
-            },
-            {
               "link": "https://www.coolbe.com/en/products/657bcbe3e4972f0136664b69",
               "title": "Vans Authentic Red True White Vn000wwx6rt Red True White – buy the best products in the Coolbe online store"
+            },
+            {
+              "link": "https://www.farfetch.com/bh/shopping/men/vans-classic-low-top-sneakers-item-18748874.aspx",
+              "title": "Vans Classic low-top Sneakers | Red | FARFETCH BH"
             }
           ],
-          "timestamp": "2025-11-14T11:28:06.504Z",
+          "timestamp": "2025-11-14T11:44:18.136Z",
           "candidateCount": 30,
-          "selectionCount": 3
+          "selectionCount": 2
         }
       },
       "timing": {
-        "full_image_search_seconds": 5.03,
-        "per_category_search_seconds": 16.16,
-        "gpt4_turbo_api_time_seconds": 8.54,
+        "full_image_search_seconds": 8.32,
+        "per_category_search_seconds": 7.94,
+        "gpt4_turbo_api_time_seconds": 8.49,
         "processing_overhead_seconds": 0,
-        "other_overhead_seconds": -8.54,
-        "wall_clock_seconds": 21.19,
-        "serper_api_time_seconds": 26.59,
+        "other_overhead_seconds": -8.49,
+        "wall_clock_seconds": 16.26,
+        "serper_api_time_seconds": 12.78,
         "serper_count": 3,
         "gpt4_turbo_count": 3,
-        "total_seconds": 21.19,
+        "total_seconds": 16.26,
         "categories_parallel": 3
       }
     }

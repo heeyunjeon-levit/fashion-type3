@@ -1,0 +1,78 @@
+{
+  "phone": "821089485523",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763120232696_Screenshot_20251112_154244_W.jpg",
+  "items": [
+    {
+      "category": "bottoms",
+      "groundingdino_prompt": "brown skirt",
+      "description": "dark brown mini skirt with a straight fit",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_brown_skirt_1763120273558.jpg",
+      "confidence": 0.822
+    }
+  ],
+  "search_results": {
+    "results": {
+      "bottoms_1": [
+        {
+          "link": "https://withmari.co.kr/product/겨울-따뜻-울-미디-스커트/20071/",
+          "thumbnail": "https://m.withmari.co.kr/web/product/extra/big/202411/37f86eb9f51d21d755c6696847248c21.jpg",
+          "title": "겨울 따뜻 울 미디 스커트"
+        },
+        {
+          "link": "https://www.farfetch.com/kr/shopping/women/parosh--item-30343563.aspx",
+          "thumbnail": "https://cdn-images.farfetch-contents.com/30/34/35/63/30343563_61783131_600.jpg",
+          "title": "P.A.R.O.S.H. 울 미니 스커트 | 브라운 | FARFETCH KR"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 1,
+        "fallback": 0,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "bottoms_1": {
+          "itemDescription": "item2 brown skirt",
+          "searchTerms": [
+            "item2 brown skirt",
+            "shorts",
+            "slacks",
+            "pants",
+            "trousers",
+            "jeans",
+            "skirt",
+            "leg trousers"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://withmari.co.kr/product/겨울-따뜻-울-미디-스커트/20071/",
+              "title": "겨울 따뜻 울 미디 스커트"
+            },
+            {
+              "link": "https://www.farfetch.com/kr/shopping/women/parosh--item-30343563.aspx",
+              "title": "P.A.R.O.S.H. 울 미니 스커트 | 브라운 | FARFETCH KR"
+            }
+          ],
+          "timestamp": "2025-11-14T11:38:21.112Z",
+          "candidateCount": 29,
+          "selectionCount": 2
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 10.98,
+        "per_category_search_seconds": 15.7,
+        "gpt4_turbo_api_time_seconds": 2.8,
+        "processing_overhead_seconds": 0,
+        "other_overhead_seconds": -2.79,
+        "wall_clock_seconds": 26.69,
+        "serper_api_time_seconds": 12.9,
+        "serper_count": 1,
+        "gpt4_turbo_count": 1,
+        "total_seconds": 26.69,
+        "categories_parallel": 1
+      }
+    }
+  }
+}

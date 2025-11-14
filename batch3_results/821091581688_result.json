@@ -1,13 +1,13 @@
 {
   "status": "success",
   "phone": "821091581688",
-  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763119691332_Screenshot_20251104_103428_Naver_Cafe.jpg",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763120663003_Screenshot_20251104_103428_Naver_Cafe.jpg",
   "items": [
     {
       "category": "bag",
       "groundingdino_prompt": "black bag",
       "description": "black tote bag with green handles and purple bottom, featuring Trader Joe's logo",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_black_bag_1763119701927.jpg",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_black_bag_1763120681521.jpg",
       "confidence": 0.856
     }
   ],
@@ -15,26 +15,26 @@
     "results": {
       "bag_1": [
         {
-          "link": "https://www.ebay.com/itm/136568135940",
-          "thumbnail": "https://i.ebayimg.com/images/g/dz4AAeSwFo9o5pFu/s-l400.jpg",
-          "title": "Trader Joe's Mini Halloween Canvas Tote Bag Set Of 4 limited ..."
+          "link": "https://www.mercari.com/us/item/m71545978739/",
+          "thumbnail": "https://u-mercari-images.mercdn.net/thumb/photos/m28788466026_1.jpg?width=2560&quality=75&_=1762445836",
+          "title": "Trader Joe's mini Totes-4 sets Trader Joe'S | Mercari"
         },
         {
-          "link": "https://www.mercari.com/us/item/m49659927194/",
-          "thumbnail": "https://u-mercari-images.mercdn.net/photos/m49659927194_1.jpg?width=2560&quality=75&_=1760557471",
-          "title": "Trader Joes Halloween Mini Tote NEW | Mercari"
+          "link": "https://www.daangn.com/kr/buy-sell/트레이더스조-미니-에코백-할로윈-버전-판매-tdgi2x58qxfu/",
+          "thumbnail": "https://img.kr.gcp-karroter.net/origin/article/202511/c6abf3c0797b6db8d19c2743fa6860065855cbebcfcbb706dc745ce16ce883a8_1.webp?f=webp&q=95&s=1440x1440&t=inside",
+          "title": "트레이더스조 미니 에코백 할로윈 버전 판매 | 여성잡화 | 당근 중고거래"
         },
         {
-          "link": "https://poshmark.com/listing/Trader-Joes-Halloween-Mini-tote-bag-set-68f1cd8c24b20bc373a2c925",
-          "thumbnail": "https://di2ponv0v5otw.cloudfront.net/posts/2025/10/16/68f1cd8c24b20bc373a2c925/m_wp_68f1cdd61986c243ee9049b1.webp",
-          "title": "Trader Joe'S | Bags | Trader Joes Halloween Mini Tote Bag ..."
+          "link": "https://m.bunjang.co.kr/products/361962176",
+          "thumbnail": "https://media.bunjang.co.kr/product/361962176_2_1760179711_w360.jpg",
+          "title": "트레이더조 토트백 할로윈 한정판 신상 | 브랜드 중고거래 ..."
         }
       ]
     },
     "meta": {
       "sourceCounts": {
-        "gpt": 1,
-        "fallback": 0,
+        "gpt": 0,
+        "fallback": 1,
         "none": 0,
         "error": 0
       },
@@ -53,36 +53,22 @@
             "shoulder bag",
             "wallet"
           ],
-          "selectedLinks": [
-            {
-              "link": "https://www.ebay.com/itm/136568135940",
-              "title": "Trader Joe's Mini Halloween Canvas Tote Bag Set Of 4 limited ..."
-            },
-            {
-              "link": "https://www.mercari.com/us/item/m49659927194/",
-              "title": "Trader Joes Halloween Mini Tote NEW | Mercari"
-            },
-            {
-              "link": "https://poshmark.com/listing/Trader-Joes-Halloween-Mini-tote-bag-set-68f1cd8c24b20bc373a2c925",
-              "title": "Trader Joe'S | Bags | Trader Joes Halloween Mini Tote Bag ..."
-            }
-          ],
-          "timestamp": "2025-11-14T11:28:51.034Z",
-          "candidateCount": 30,
-          "selectionCount": 3
+          "selectedLinks": [],
+          "timestamp": "2025-11-14T11:44:58.563Z",
+          "candidateCount": 30
         }
       },
       "timing": {
-        "full_image_search_seconds": 9.23,
-        "per_category_search_seconds": 18.2,
-        "gpt4_turbo_api_time_seconds": 2.99,
+        "full_image_search_seconds": 4.12,
+        "per_category_search_seconds": 11.66,
+        "gpt4_turbo_api_time_seconds": 1.94,
         "processing_overhead_seconds": 0,
-        "other_overhead_seconds": -2.99,
-        "wall_clock_seconds": 27.44,
-        "serper_api_time_seconds": 15.21,
+        "other_overhead_seconds": -1.94,
+        "wall_clock_seconds": 15.78,
+        "serper_api_time_seconds": 9.71,
         "serper_count": 1,
         "gpt4_turbo_count": 1,
-        "total_seconds": 27.44,
+        "total_seconds": 15.78,
         "categories_parallel": 1
       }
     }

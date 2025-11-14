@@ -1,0 +1,133 @@
+{
+  "phone": "821087330846",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763120310531_Screenshot_20251114_172854.jpg",
+  "items": [
+    {
+      "category": "bottoms",
+      "groundingdino_prompt": "brown pants",
+      "description": "brown ribbed pants with white fleece lining and cuffs",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_brown_pants_1763120322830.jpg",
+      "confidence": 0.438
+    },
+    {
+      "category": "shoes",
+      "groundingdino_prompt": "brown shoes",
+      "description": "brown sneakers with white laces and thick white soles",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_brown_shoes_1763120323898.jpg",
+      "confidence": 0.781
+    }
+  ],
+  "search_results": {
+    "results": {
+      "bottoms_1": [
+        {
+          "link": "https://www.amazon.com/-/es/Leggings-cordero-pantalones-sueltos-térmicos/dp/B0DFLSDJGW",
+          "thumbnail": "https://m.media-amazon.com/images/I/81i0sZfP7BL._AC_UY350_.jpg",
+          "title": "Amazon.com: Leggings con forro polar para mujer, talla grande, cordero, color sólido, rayas, lana, pana, pantalones sueltos, pantalones térmicos para mujer, Marrón : Ropa, Zapatos y Joyería"
+        },
+        {
+          "link": "https://www.aliexpress.com/item/1005008264279951.html",
+          "thumbnail": "https://ae01.alicdn.com/kf/S326113d75c54448d8c5a20b25ef7ccc0u.jpg",
+          "title": "Autumn Winter Corduroy Wide Leg Pants For Women Loose Fit Extra Thick Warm Straight Joggers Sweatpants - AliExpress"
+        }
+      ],
+      "shoes_2": [
+        {
+          "link": "https://www.farfetch.com/kr/shopping/men/rhun-2020-item-28754347.aspx",
+          "thumbnail": "https://cdn-images.farfetch-contents.com/28/75/43/47/28754347_58034595_1000.jpg",
+          "title": "Rhun 2020 스니커즈 | 브라운 | FARFETCH KR"
+        },
+        {
+          "link": "https://kream.co.kr/products/606239",
+          "thumbnail": "https://kream-phinf.pstatic.net/MjAyNTA5MTJfNSAg/MDAxNzU3NjU4NDc0ODcw.pBxTyTVojcOxvlfobP32x0ai1ntfuFwWD2Y4xZnAv6wg.4IsvBC6qOnT5pL-9xsQaT4K134zQFu8gzxKUFKt3ozYg.PNG/a_3b16d7efa81d450ca6d8ac8dcf412edd.png?type=l",
+          "title": "아미 캔버스 로우탑 스니커즈 브라운 | AMI | KREAM"
+        },
+        {
+          "link": "https://www.farfetch.com/kr/shopping/men/rhun--item-29827946.aspx",
+          "thumbnail": "https://cdn-images.farfetch-contents.com/29/82/79/46/29827946_59159786_600.jpg",
+          "title": "Rhun 트레블 스니커즈 | 브라운 | FARFETCH KR"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 2,
+        "fallback": 0,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "bottoms_1": {
+          "itemDescription": "item1 brown pants",
+          "searchTerms": [
+            "item1 brown pants",
+            "shorts",
+            "slacks",
+            "pants",
+            "trousers",
+            "jeans",
+            "skirt",
+            "leg trousers"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.amazon.com/-/es/Leggings-cordero-pantalones-sueltos-térmicos/dp/B0DFLSDJGW",
+              "title": "Amazon.com: Leggings con forro polar para mujer, talla grande, cordero, color sólido, rayas, lana, pana, pantalones sueltos, pantalones térmicos para mujer, Marrón : Ropa, Zapatos y Joyería"
+            },
+            {
+              "link": "https://www.aliexpress.com/item/1005008264279951.html",
+              "title": "Autumn Winter Corduroy Wide Leg Pants For Women Loose Fit Extra Thick Warm Straight Joggers Sweatpants - AliExpress"
+            }
+          ],
+          "timestamp": "2025-11-14T11:39:03.534Z",
+          "candidateCount": 30,
+          "selectionCount": 2
+        },
+        "shoes_2": {
+          "itemDescription": "item2 brown shoes",
+          "searchTerms": [
+            "item2 brown shoes",
+            "shoes",
+            "sneakers",
+            "boots",
+            "sandals",
+            "heels",
+            "flats",
+            "loafers",
+            "oxford"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.farfetch.com/kr/shopping/men/rhun-2020-item-28754347.aspx",
+              "title": "Rhun 2020 스니커즈 | 브라운 | FARFETCH KR"
+            },
+            {
+              "link": "https://kream.co.kr/products/606239",
+              "title": "아미 캔버스 로우탑 스니커즈 브라운 | AMI | KREAM"
+            },
+            {
+              "link": "https://www.farfetch.com/kr/shopping/men/rhun--item-29827946.aspx",
+              "title": "Rhun 트레블 스니커즈 | 브라운 | FARFETCH KR"
+            }
+          ],
+          "timestamp": "2025-11-14T11:39:05.720Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 4.44,
+        "per_category_search_seconds": 16.22,
+        "gpt4_turbo_api_time_seconds": 8.45,
+        "processing_overhead_seconds": 0,
+        "other_overhead_seconds": -8.45,
+        "wall_clock_seconds": 20.67,
+        "serper_api_time_seconds": 21.8,
+        "serper_count": 2,
+        "gpt4_turbo_count": 2,
+        "total_seconds": 20.67,
+        "categories_parallel": 2
+      }
+    }
+  }
+}

@@ -1,19 +1,20 @@
 {
+  "status": "success",
   "phone": "821089903592",
-  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763119208766_Screenshot_20251114_162449_Nike.jpg",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763120954464_Screenshot_20251114_162449_Nike.jpg",
   "items": [
     {
       "category": "tops",
       "groundingdino_prompt": "white jacket",
       "description": "white puffer jacket with a hood and quilted design",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_white_jacket_1763119219621.jpg",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_white_jacket_1763120969571.jpg",
       "confidence": 0.806
     },
     {
       "category": "tops",
       "groundingdino_prompt": "white shirt",
       "description": "white t-shirt with a colorful logo on the chest",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_white_shirt_1763119220785.jpg",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_white_shirt_1763120970712.jpg",
       "confidence": 0.513
     }
   ],
@@ -21,17 +22,22 @@
     "results": {
       "tops_1": [
         {
-          "link": "https://www.zara.com/us/en/combination-puffer-jacket-p08073257.html",
-          "thumbnail": "https://static.zara.net/assets/public/8c65/bd8e/f49e4a86ae28/bdfbe9205d0e/08073026712-p/08073026712-p.jpg?ts=1738916848162&w=560",
-          "title": "COMBINATION PUFFER JACKET - Ecru | ZARA United States"
+          "link": "https://www.ebay.com/itm/225183795317",
+          "thumbnail": "https://i.ebayimg.com/images/g/de0AAOSwHmxjNbEr/s-l1200.jpg",
+          "title": "NIKE WOMENS SPORTSWEAR DOWN FILL WINDRUNNER FULL ZIP JACKET Size XL CU5094 140 | eBay"
         },
         {
-          "link": "https://www.macys.com/shop/product/charter-club-womens-packable-hooded-puffer-coat-created-for-macys?ID=25061153&swatchColor=Chino",
-          "thumbnail": "https://slimages.macysassets.com/is/image/MCY/products/4/optimized/31543154_fpx.tif",
-          "title": "Charter Club Women's Packable Hooded Puffer Coat, Created for Macy's - Macy's"
+          "link": "https://top4running.com/p/nike-down-winter-0-cu5094-140",
+          "thumbnail": "https://i1.t4s.cz//products/cu5094-140/nike-w-nsw-down-fill-wr-jkt-308832-cu5094-140-960.webp",
+          "title": "Hooded jacket Nike W NSW DOWN-FILL WR JKT - Top4Running.com"
         }
       ],
       "tops_2": [
+        {
+          "link": "https://www.nike.com/kr/t/스포츠웨어-windpuffer-여성-써마-핏-후드-패딩-3uxbafJY",
+          "thumbnail": "https://static.nike.com/a/images/t_default/1a01fe8b-1815-41b5-a5cb-105e893add26/W+NSW+TF+DWNFL+NK+ED+WNDPFR.png",
+          "title": "나이키 스포츠웨어 윈드푸퍼 - 여성 써마 핏 후드 패딩"
+        },
         {
           "link": "https://www.rei.com/product/255584/arcteryx-cerium-down-hoody-womens",
           "thumbnail": "https://www.rei.com/media/82e41522-3e2e-4d7b-a57b-5d1c612d70dc",
@@ -41,11 +47,6 @@
           "link": "https://www.trenbe.com/product/++64710149",
           "thumbnail": "https://image-cdn.trenbe.com/product-images/1703065987219_3033941d9342593d4335b163a03b0646_0.jpg",
           "title": "나이키(Nike) | 나이키 우먼스 숏패딩 윈드러너 경량 패딩 조끼 다운 자켓 스우시 CU5095-140 | 트렌비"
-        },
-        {
-          "link": "https://www.macys.com/shop/product/charter-club-womens-packable-hooded-puffer-coat-created-for-macys?ID=25061153&swatchColor=Chino",
-          "thumbnail": "https://slimages.macysassets.com/is/image/MCY/products/4/optimized/31543154_fpx.tif",
-          "title": "Charter Club Women's Packable Hooded Puffer Coat, Created for Macy's - Macy's"
         }
       ]
     },
@@ -72,7 +73,7 @@
             "cardigan"
           ],
           "selectedLinks": [],
-          "timestamp": "2025-11-14T11:20:34.003Z",
+          "timestamp": "2025-11-14T11:49:40.910Z",
           "candidateCount": 16
         },
         "tops_1": {
@@ -91,33 +92,32 @@
           ],
           "selectedLinks": [
             {
-              "link": "https://www.zara.com/us/en/combination-puffer-jacket-p08073257.html",
-              "title": "COMBINATION PUFFER JACKET - Ecru | ZARA United States"
+              "link": "https://www.ebay.com/itm/225183795317",
+              "title": "NIKE WOMENS SPORTSWEAR DOWN FILL WINDRUNNER FULL ZIP JACKET Size XL CU5094 140 | eBay"
             },
             {
-              "link": "https://www.macys.com/shop/product/charter-club-womens-packable-hooded-puffer-coat-created-for-macys?ID=25061153&swatchColor=Chino",
-              "title": "Charter Club Women's Packable Hooded Puffer Coat, Created for Macy's - Macy's"
+              "link": "https://top4running.com/p/nike-down-winter-0-cu5094-140",
+              "title": "Hooded jacket Nike W NSW DOWN-FILL WR JKT - Top4Running.com"
             }
           ],
-          "timestamp": "2025-11-14T11:20:35.693Z",
-          "candidateCount": 30,
+          "timestamp": "2025-11-14T11:49:43.418Z",
+          "candidateCount": 29,
           "selectionCount": 2
         }
       },
       "timing": {
-        "full_image_search_seconds": 3.92,
-        "per_category_search_seconds": 10.23,
-        "gpt4_turbo_api_time_seconds": 8.22,
+        "full_image_search_seconds": 4.29,
+        "per_category_search_seconds": 7.62,
+        "gpt4_turbo_api_time_seconds": 4.12,
         "processing_overhead_seconds": 0,
-        "other_overhead_seconds": -8.22,
-        "wall_clock_seconds": 14.15,
-        "serper_api_time_seconds": 10.54,
+        "other_overhead_seconds": -4.12,
+        "wall_clock_seconds": 11.91,
+        "serper_api_time_seconds": 8.6,
         "serper_count": 2,
         "gpt4_turbo_count": 2,
-        "total_seconds": 14.15,
+        "total_seconds": 11.91,
         "categories_parallel": 2
       }
     }
-  },
-  "status": "success"
+  }
 }

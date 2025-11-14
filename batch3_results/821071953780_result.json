@@ -1,19 +1,20 @@
 {
+  "status": "success",
   "phone": "821071953780",
-  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763119367136_IMG_7721.jpg",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763120534486_IMG_7721.jpg",
   "items": [
     {
       "category": "bottoms",
       "groundingdino_prompt": "beige pants",
       "description": "beige wide-leg pants with a relaxed fit",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_beige_pants_1763119379724.jpg",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_beige_pants_1763120560788.jpg",
       "confidence": 0.535
     },
     {
       "category": "shoes",
       "groundingdino_prompt": "black shoes",
       "description": "black suede sneakers with a thick sole and velcro straps",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_black_shoes_1763119381211.jpg",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_black_shoes_1763120561594.jpg",
       "confidence": 0.696
     }
   ],
@@ -27,30 +28,30 @@
         },
         {
           "link": "https://m.nbkorea.com/product/productDetail.action?styleCode=NBNVE3W612&colCode=35&review=Y",
-          "thumbnail": "https://image.nbkorea.com/NBRB_Product/20240326/NB20240326091741369001.jpg",
-          "title": "New Balance Korea - WOMEN FROZEN 우븐 스트레치 4부 숏팬츠 ..."
+          "thumbnail": "https://image.nbkorea.com/NBRB_Product/20240326/NB20240326091738924001.jpg",
+          "title": "New Balance Korea - WOMEN FROZEN 우븐 스트레치 4부 숏팬츠(STANDARD FIT)"
         },
         {
           "link": "https://www.trenbe.com/product/++119434615",
           "thumbnail": "https://image-cdn.trenbe.com/product-images/1732673751508_839403c023c1bfc33e8f4234355579b2_8.jpeg",
-          "title": "뉴발란스(New Balance) | 뉴발란스 WOMEN 후디 세미 크롭 패딩 ..."
+          "title": "뉴발란스(New Balance) | 뉴발란스 WOMEN 후디 세미 크롭 패딩 자켓 - (35)Beige | 트렌비"
         }
       ],
       "shoes_2": [
         {
-          "link": "https://www.29cm.co.kr/products/2979115",
-          "thumbnail": "https://img.29cm.co.kr/item/202412/11efb6dc88939b8f85210d08aa49ae94.jpg?width=3840&format=webp",
-          "title": "TWIN VELCRO MARY JANE SNEAKERS / BLACK - 감도 깊은 취향 셀렉트샵 29CM"
+          "link": "https://www.daangn.com/kr/buy-sell/뉴발란스-윈터브리즈-블랙-230-새상품-6zkbi3s66os9/",
+          "thumbnail": "https://img.kr.gcp-karroter.net/origin/article/202511/176293629548912c78355d16ebbc4801c7949a34b75caea048652ef44e75011d70b583e6a6ce50.webp?f=webp&q=95&s=1440x1440&t=inside",
+          "title": "뉴발란스 윈터브리즈 블랙 230 새상품 | 여성잡화 | 당근 중고거래"
         },
         {
-          "link": "https://kream.co.kr/products/487148",
-          "thumbnail": "https://kream-phinf.pstatic.net/MjAyNTA0MjFfMTkx/MDAxNzQ1MjE4NDM4MzM0.XHW_IRIRSl7LlQTYze-ony1aHlmhST_9vwoZRHwO_68g.QdcV3DWPB0a-tF4rEqRw9bn4JCntmif_z-Jv_4SCpyUg.PNG/a_c2fdc3ac81a14326a35dbf17696a41c5.png?type=m",
-          "title": "W) 시몬 로샤 클래식 크로스 트래커 발레리나 블랙 | Simone Rocha | KREAM"
+          "link": "https://www.ssg.com/item/itemView.ssg?itemId=1000561722030",
+          "thumbnail": "https://dia2139.godohosting.com/sabangnet/902/rbtmas_04.jpg",
+          "title": "로베 버클 투스트랩 메리제인 어글리 스니커즈 3cm - SSG.COM"
         },
         {
-          "link": "https://www.divincenzoboutique.com/en/product/simone-rocha-black-tracker-ballerina-shoes-simone-rocha-women-ht19b0755-blkjt",
-          "thumbnail": "https://www.divincenzoboutique.com/sync/foto/A25---SIMONE ROCHA---HT19B0755BLKJT.JPG",
-          "title": "Black tracker ballerina shoes Simone rocha - women - SIMONE ROCHA - divincenzoboutique.com"
+          "link": "https://m.nbkorea.com/product/productDetail.action?styleCode=NBRJFF010B&colCode=19&review=Y",
+          "thumbnail": "https://image.nbkorea.com/NBRB_Product/20251002/NB20251002143836092001.jpg",
+          "title": "New Balance Korea - WINTER Breeze / SD2205BK"
         }
       ]
     },
@@ -62,6 +63,22 @@
         "error": 0
       },
       "gptReasoning": {
+        "bottoms_1": {
+          "itemDescription": "item1 beige pants",
+          "searchTerms": [
+            "item1 beige pants",
+            "shorts",
+            "slacks",
+            "pants",
+            "trousers",
+            "jeans",
+            "skirt",
+            "leg trousers"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-14T11:43:11.405Z",
+          "candidateCount": 28
+        },
         "shoes_2": {
           "itemDescription": "item2 black shoes",
           "searchTerms": [
@@ -77,53 +94,36 @@
           ],
           "selectedLinks": [
             {
-              "link": "https://www.29cm.co.kr/products/2979115",
-              "title": "TWIN VELCRO MARY JANE SNEAKERS / BLACK - 감도 깊은 취향 셀렉트샵 29CM"
+              "link": "https://www.daangn.com/kr/buy-sell/뉴발란스-윈터브리즈-블랙-230-새상품-6zkbi3s66os9/",
+              "title": "뉴발란스 윈터브리즈 블랙 230 새상품 | 여성잡화 | 당근 중고거래"
             },
             {
-              "link": "https://kream.co.kr/products/487148",
-              "title": "W) 시몬 로샤 클래식 크로스 트래커 발레리나 블랙 | Simone Rocha | KREAM"
+              "link": "https://www.ssg.com/item/itemView.ssg?itemId=1000561722030",
+              "title": "로베 버클 투스트랩 메리제인 어글리 스니커즈 3cm - SSG.COM"
             },
             {
-              "link": "https://www.divincenzoboutique.com/en/product/simone-rocha-black-tracker-ballerina-shoes-simone-rocha-women-ht19b0755-blkjt",
-              "title": "Black tracker ballerina shoes Simone rocha - women - SIMONE ROCHA - divincenzoboutique.com"
+              "link": "https://m.nbkorea.com/product/productDetail.action?styleCode=NBRJFF010B&colCode=19&review=Y",
+              "title": "New Balance Korea - WINTER Breeze / SD2205BK"
             }
           ],
-          "timestamp": "2025-11-14T11:23:15.773Z",
+          "timestamp": "2025-11-14T11:43:15.263Z",
           "candidateCount": 30,
           "selectionCount": 3
-        },
-        "bottoms_1": {
-          "itemDescription": "item1 beige pants",
-          "searchTerms": [
-            "item1 beige pants",
-            "shorts",
-            "slacks",
-            "pants",
-            "trousers",
-            "jeans",
-            "skirt",
-            "leg trousers"
-          ],
-          "selectedLinks": [],
-          "timestamp": "2025-11-14T11:23:19.157Z",
-          "candidateCount": 26
         }
       },
       "timing": {
-        "full_image_search_seconds": 4.39,
-        "per_category_search_seconds": 11.32,
-        "gpt4_turbo_api_time_seconds": 5.71,
-        "processing_overhead_seconds": 0.01,
-        "other_overhead_seconds": -5.71,
-        "wall_clock_seconds": 15.73,
-        "serper_api_time_seconds": 13.51,
+        "full_image_search_seconds": 15.72,
+        "per_category_search_seconds": 17.24,
+        "gpt4_turbo_api_time_seconds": 9.62,
+        "processing_overhead_seconds": 0,
+        "other_overhead_seconds": -9.62,
+        "wall_clock_seconds": 32.96,
+        "serper_api_time_seconds": 20.99,
         "serper_count": 2,
         "gpt4_turbo_count": 2,
-        "total_seconds": 15.73,
+        "total_seconds": 32.96,
         "categories_parallel": 2
       }
     }
-  },
-  "status": "success"
+  }
 }

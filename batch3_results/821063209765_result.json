@@ -1,33 +1,34 @@
 {
+  "status": "success",
   "phone": "821063209765",
-  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763119053570_9F2377ED_ACF5_47EA_8F22_FC9AD85BC7B1.jpg",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763120779371_9F2377ED_ACF5_47EA_8F22_FC9AD85BC7B1.jpg",
   "items": [
     {
       "category": "tops",
       "groundingdino_prompt": "brown coat",
       "description": "long brown overcoat with a classic tailored fit",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_brown_coat_1763119072316.jpg",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_brown_coat_1763120805029.jpg",
       "confidence": 0.832
     },
     {
       "category": "tops",
       "groundingdino_prompt": "gray hoodie",
       "description": "light gray hoodie with a relaxed fit and visible hood",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_gray_hoodie_1763119073838.jpg",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_gray_hoodie_1763120806299.jpg",
       "confidence": 0.631
     },
     {
       "category": "bottoms",
       "groundingdino_prompt": "blue jeans",
-      "description": "dark blue wide-leg jeans with a casual fit",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_blue_jeans_1763119075421.jpg",
+      "description": "dark blue wide-leg jeans with a casual style",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_blue_jeans_1763120807122.jpg",
       "confidence": 0.583
     },
     {
       "category": "shoes",
       "groundingdino_prompt": "white sneakers",
       "description": "white sneakers with a simple design and visible soles",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item4_white_sneakers_1763119075954.jpg",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item4_white_sneakers_1763120807634.jpg",
       "confidence": 0.763
     }
   ],
@@ -57,31 +58,26 @@
           "title": "여성용 우아한 화이트 코트, O-넥 긴팔 재킷, 2024 가을 겨울 패션, 얇고 루즈한 레이디 아웃웨어 - AliExpress"
         },
         {
-          "link": "https://m.soupmall.co.kr/product/ad-hoc-남여공용피크드카라더블코트hzahc81/50121/",
-          "thumbnail": "https://cafe24img.poxo.com/dcollec/web/product/extra/big/20231114/b4581f3086b1f0e08e1530601c76f900.jpg",
-          "title": "AD HOC] 남여공용피크드카라더블코트(HZAHC81) - 숲몰"
+          "link": "https://www.aliexpress.com/item/1005007812865398.html",
+          "thumbnail": "https://ae01.alicdn.com/kf/S39046f32bfa041e4b4e5ef3067e54a87o.jpg",
+          "title": "Vintage Lapel Solid Long Coats Women Elegant Casual Brown Double-Breasted Woolen Coat Female Winter Chic Loose Street Outwear - AliExpress"
         },
         {
-          "link": "https://m.page27.co.kr/product/메르시-오버-울-더블코트4color/1629/",
-          "thumbnail": "https://m.page27.co.kr/web/product/big/201811/bc67475a8febb94119aeb2bd0cef625f.jpg",
-          "title": "메르시 오버 울 더블코트(4color) - 페이지27"
+          "link": "https://www.cos.com/en-us/women/womenswear/tops/longsleevetops/product/slim-merino-wool-top-taupe-mlange-1288664004",
+          "thumbnail": "https://media.cos.com/assets/001/fb/bc/fbbc06f56870907da9c05a96601a9bdb4f9b7d34_xxl-1.jpg?imwidth=2160",
+          "title": "SLIM MERINO WOOL SWEATER - TAUPE MELANGE | COS GB"
         }
       ],
       "bottoms_3": [
         {
-          "link": "https://zigzag.kr/bridges/creator-lounge/pdp?product_id=149081012&shop_id=45208&share_type=AFFILIATE&referral_code=Jb8ZoV7Q&shop_id=45208&zz_source=zz_affiliate&zz_campaign=Jb8ZoV7Q&airbridge_referrer=airbridge=true&client_id=eeb19a50-478c-4fd9-8123-eb785cdf3f3e&event_uuid=dab1077d-33a6-4d02-b1d4-fa0450418400&referrer_timestamp=1748683035890&channel=affiliate&utm_source=affiliate&deeplink_url=zigzag://open/full_screen_simple_browser?product_id=149081012&shop_id=45208&url=https://store.zigzag.kr/bridges/creator-lounge/pdp?product_id=149081012&shop_id=45208&share_type=AFFILIATE&referral_code=Jb8ZoV7Q&shop_id=45208&zz_source=zz_affiliate&zz_campaign=Jb8ZoV7Q&fallback_desktop=https://zigzag.kr/bridges/creator-lounge/pdp?product_id=149081012&shop_id=45208&share_type=AFFILIATE&referral_code=Jb8ZoV7Q&shop_id=45208&zz_source=zz_affiliate&zz_campaign=Jb8ZoV7Q",
-          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/c/14/908/101/149081012-2159513649369334012.jpeg",
+          "link": "https://4910.kr/goods/47780306",
+          "thumbnail": "https://d3ha2047wt6x28.cloudfront.net/KkJXIzwzqlg/pr:NEW_GOODS_THUMB_STILL/czM6Ly9hYmx5LWltYWdlLWxlZ2FjeS9kYXRhL2dvb2RzL2YwY2FlYjllMmQ2NDNhM2MzODUzOGM4MDMxM2QyMjU3LmpwZWc",
+          "title": "룩브릿지 81 데미지 컷팅 버뮤다 데님팬츠 - 4910 | 패션이 쉬워지는 순간"
+        },
+        {
+          "link": "https://zigzag.kr/catalog/products/149081012?airbridge_referrer=airbridge=true&client_id=ca12a234-0711-4102-a137-280517b37026&event_uuid=4955cf1e-a490-49be-8937-9b4c0f2b9f42&referrer_timestamp=1758310825567&channel=affiliate&utm_source=affiliate&deeplink_url=zigzag://open/product_detail?browsing_type=Z_BROWSER&shop_id=45208&catalog_product_id=149081012&url=https://store.zigzag.kr/catalog/products/149081012?shop_id=45208&shop_product_no=&catalog_product_id=149081012&share_type=AFFILIATE&referral_code=Jb8ZoV7Q&product_id=149081012&zz_source=zz_affiliate&zz_campaign=Jb8ZoV7Q&fallback_desktop=https://zigzag.kr/catalog/products/149081012",
+          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/c/14/908/101/149081012-2159513649369334012.jpeg?width=720&height=720&quality=80&format=jpeg",
           "title": "오뉴이 미토 벌룬 와이드 데님 팬츠"
-        },
-        {
-          "link": "https://fruitsfamily.com/product/1vl4q/낫포너드-청바지",
-          "thumbnail": "https://image.production.fruitsfamily.com/public/product/resized@width1125/0nAuJm-UNx-13C1A1F6-77A7-41BA-86E1-27A874A2B22E.jpg",
-          "title": "낫포너드 청바지 | 후루츠패밀리"
-        },
-        {
-          "link": "https://s.zigzag.kr/Fgyp2dhQpD",
-          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/c/12/155/687/121556879-807007822450463025.jpeg?width=720&height=720&quality=80&format=jpeg",
-          "title": "라룸 [by LAROOM] 빈티지데님"
         }
       ],
       "shoes_4": [
@@ -100,6 +96,24 @@
         "error": 0
       },
       "gptReasoning": {
+        "tops_2": {
+          "itemDescription": "item2 gray hoodie",
+          "searchTerms": [
+            "item2 gray hoodie",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-14T11:47:10.702Z",
+          "candidateCount": 10
+        },
         "shoes_4": {
           "itemDescription": "item4 white sneakers",
           "searchTerms": [
@@ -119,9 +133,35 @@
               "title": "DSQUARED2 Rider Sneakers | White | FARFETCH"
             }
           ],
-          "timestamp": "2025-11-14T11:18:20.449Z",
+          "timestamp": "2025-11-14T11:47:11.418Z",
           "candidateCount": 29,
           "selectionCount": 1
+        },
+        "bottoms_3": {
+          "itemDescription": "item3 blue jeans",
+          "searchTerms": [
+            "item3 blue jeans",
+            "shorts",
+            "slacks",
+            "pants",
+            "trousers",
+            "jeans",
+            "skirt",
+            "leg trousers"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://4910.kr/goods/47780306",
+              "title": "룩브릿지 81 데미지 컷팅 버뮤다 데님팬츠 - 4910 | 패션이 쉬워지는 순간"
+            },
+            {
+              "link": "https://zigzag.kr/catalog/products/149081012?airbridge_referrer=airbridge=true&client_id=ca12a234-0711-4102-a137-280517b37026&event_uuid=4955cf1e-a490-49be-8937-9b4c0f2b9f42&referrer_timestamp=1758310825567&channel=affiliate&utm_source=affiliate&deeplink_url=zigzag://open/product_detail?browsing_type=Z_BROWSER&shop_id=45208&catalog_product_id=149081012&url=https://store.zigzag.kr/catalog/products/149081012?shop_id=45208&shop_product_no=&catalog_product_id=149081012&share_type=AFFILIATE&referral_code=Jb8ZoV7Q&product_id=149081012&zz_source=zz_affiliate&zz_campaign=Jb8ZoV7Q&fallback_desktop=https://zigzag.kr/catalog/products/149081012",
+              "title": "오뉴이 미토 벌룬 와이드 데님 팬츠"
+            }
+          ],
+          "timestamp": "2025-11-14T11:47:16.631Z",
+          "candidateCount": 30,
+          "selectionCount": 2
         },
         "tops_1": {
           "itemDescription": "item1 brown coat",
@@ -151,73 +191,24 @@
               "title": "MUSINSA | INSILENCE MTR Cashmere Double Coat BEIGE"
             }
           ],
-          "timestamp": "2025-11-14T11:18:26.873Z",
+          "timestamp": "2025-11-14T11:47:18.482Z",
           "candidateCount": 29,
           "selectionCount": 3
-        },
-        "bottoms_3": {
-          "itemDescription": "item3 blue jeans",
-          "searchTerms": [
-            "item3 blue jeans",
-            "shorts",
-            "slacks",
-            "pants",
-            "trousers",
-            "jeans",
-            "skirt",
-            "leg trousers"
-          ],
-          "selectedLinks": [
-            {
-              "link": "https://zigzag.kr/bridges/creator-lounge/pdp?product_id=149081012&shop_id=45208&share_type=AFFILIATE&referral_code=Jb8ZoV7Q&shop_id=45208&zz_source=zz_affiliate&zz_campaign=Jb8ZoV7Q&airbridge_referrer=airbridge=true&client_id=eeb19a50-478c-4fd9-8123-eb785cdf3f3e&event_uuid=dab1077d-33a6-4d02-b1d4-fa0450418400&referrer_timestamp=1748683035890&channel=affiliate&utm_source=affiliate&deeplink_url=zigzag://open/full_screen_simple_browser?product_id=149081012&shop_id=45208&url=https://store.zigzag.kr/bridges/creator-lounge/pdp?product_id=149081012&shop_id=45208&share_type=AFFILIATE&referral_code=Jb8ZoV7Q&shop_id=45208&zz_source=zz_affiliate&zz_campaign=Jb8ZoV7Q&fallback_desktop=https://zigzag.kr/bridges/creator-lounge/pdp?product_id=149081012&shop_id=45208&share_type=AFFILIATE&referral_code=Jb8ZoV7Q&shop_id=45208&zz_source=zz_affiliate&zz_campaign=Jb8ZoV7Q",
-              "title": "오뉴이 미토 벌룬 와이드 데님 팬츠"
-            },
-            {
-              "link": "https://fruitsfamily.com/product/1vl4q/낫포너드-청바지",
-              "title": "낫포너드 청바지 | 후루츠패밀리"
-            },
-            {
-              "link": "https://s.zigzag.kr/Fgyp2dhQpD",
-              "title": "라룸 [by LAROOM] 빈티지데님"
-            }
-          ],
-          "timestamp": "2025-11-14T11:18:27.434Z",
-          "candidateCount": 29,
-          "selectionCount": 3
-        },
-        "tops_2": {
-          "itemDescription": "item2 gray hoodie",
-          "searchTerms": [
-            "item2 gray hoodie",
-            "jacket",
-            "coat",
-            "outerwear",
-            "shirt",
-            "sweater",
-            "blouse",
-            "top",
-            "blazer",
-            "cardigan"
-          ],
-          "selectedLinks": [],
-          "timestamp": "2025-11-14T11:18:30.185Z",
-          "candidateCount": 10
         }
       },
       "timing": {
-        "full_image_search_seconds": 17.02,
-        "per_category_search_seconds": 16.55,
-        "gpt4_turbo_api_time_seconds": 23.26,
-        "processing_overhead_seconds": 0.01,
-        "other_overhead_seconds": -23.25,
-        "wall_clock_seconds": 33.58,
-        "serper_api_time_seconds": 27.12,
+        "full_image_search_seconds": 16.16,
+        "per_category_search_seconds": 13.88,
+        "gpt4_turbo_api_time_seconds": 21.19,
+        "processing_overhead_seconds": 0,
+        "other_overhead_seconds": -21.19,
+        "wall_clock_seconds": 30.04,
+        "serper_api_time_seconds": 17.59,
         "serper_count": 4,
         "gpt4_turbo_count": 4,
-        "total_seconds": 33.58,
+        "total_seconds": 30.04,
         "categories_parallel": 4
       }
     }
-  },
-  "status": "success"
+  }
 }

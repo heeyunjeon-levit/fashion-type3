@@ -1,12 +1,13 @@
 {
+  "status": "success",
   "phone": "821041798505",
-  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763119646599_Screenshot_20251114_164100.jpg",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763120847209_Screenshot_20251114_164100.jpg",
   "items": [
     {
       "category": "tops",
       "groundingdino_prompt": "beige jacket",
       "description": "beige quilted puffer jacket with a hood and front pockets",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_beige_jacket_1763119675568.jpg",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_beige_jacket_1763120868343.jpg",
       "confidence": 0.931
     }
   ],
@@ -19,14 +20,14 @@
           "title": "Amazon.com: HGps8w Abrigo acolchado para mujer, ligero, casual, con capucha, cálido, para invierno, con aislamiento, con bolsillos, 01 Beige, Mediana : Ropa, Zapatos y Joyería"
         },
         {
-          "link": "https://www.amazon.com.mx/Adhdyuud-chamarra-acolchado-algodón-bolsillo/dp/B0CQVL6WLJ",
-          "thumbnail": "https://m.media-amazon.com/images/I/61FvXq+xQzL._AC_SY879_.jpg",
-          "title": "Adhdyuud - chamarra con capucha y cierre cálida para mujer, con bolsillo, informal, para invierno, algodón, color beige, talla M : Amazon.com.mx: Ropa, Zapatos y Accesorios"
+          "link": "https://www.coupang.com/vp/products/8406355124",
+          "thumbnail": "https://image.coupangcdn.com/image/vendor_inventory/0b81/1389a4224ef3f42de8a69eab114e2b38b4d8b0d88c427593924c333643b5.jpg",
+          "title": "AOKADA NEW 여성 경량패딩 가을자켓 누빔 웰론 패딩 점퍼 퀼팅자켓 후드 숏패딩"
         },
         {
-          "link": "https://www.amazon.com.au/Haitpant-Winter-Knitted-Spliced-Puffer/dp/B0CPVQQWMD",
-          "thumbnail": "https://m.media-amazon.com/images/I/61+AcqIfs5L._AC_SX342_.jpg",
-          "title": "Haitpant Winter False Two Piece Knitted Spliced Puffer Jacket Women Short Loose Hooded Parkas Casual 90% Duck Down Coat, Beige, Small : Amazon.com.au: Clothing, Shoes & Accessories"
+          "link": "https://www.luulla.com/product/1897889/quilted-womens-winter-jacket-with-hooded-warmth",
+          "thumbnail": "https://b5524bc4199c7b8181ec-a2640485f38efef7d1061bf2ed701b05.ssl.cf2.rackcdn.com/product-hugerect-3469238-504307-1729382564-90cb22cd0c326714cb568791bbfc324b.729382565_type_hugerect_nid_3469238_uid_504307_6",
+          "title": "Quilted Womens Winter Jacket With Hooded Warmth on Luulla"
         }
       ]
     },
@@ -58,33 +59,32 @@
               "title": "Amazon.com: HGps8w Abrigo acolchado para mujer, ligero, casual, con capucha, cálido, para invierno, con aislamiento, con bolsillos, 01 Beige, Mediana : Ropa, Zapatos y Joyería"
             },
             {
-              "link": "https://www.amazon.com.mx/Adhdyuud-chamarra-acolchado-algodón-bolsillo/dp/B0CQVL6WLJ",
-              "title": "Adhdyuud - chamarra con capucha y cierre cálida para mujer, con bolsillo, informal, para invierno, algodón, color beige, talla M : Amazon.com.mx: Ropa, Zapatos y Accesorios"
+              "link": "https://www.coupang.com/vp/products/8406355124",
+              "title": "AOKADA NEW 여성 경량패딩 가을자켓 누빔 웰론 패딩 점퍼 퀼팅자켓 후드 숏패딩"
             },
             {
-              "link": "https://www.amazon.com.au/Haitpant-Winter-Knitted-Spliced-Puffer/dp/B0CPVQQWMD",
-              "title": "Haitpant Winter False Two Piece Knitted Spliced Puffer Jacket Women Short Loose Hooded Parkas Casual 90% Duck Down Coat, Beige, Small : Amazon.com.au: Clothing, Shoes & Accessories"
+              "link": "https://www.luulla.com/product/1897889/quilted-womens-winter-jacket-with-hooded-warmth",
+              "title": "Quilted Womens Winter Jacket With Hooded Warmth on Luulla"
             }
           ],
-          "timestamp": "2025-11-14T11:28:09.136Z",
-          "candidateCount": 28,
+          "timestamp": "2025-11-14T11:48:03.146Z",
+          "candidateCount": 29,
           "selectionCount": 3
         }
       },
       "timing": {
-        "full_image_search_seconds": 3.76,
-        "per_category_search_seconds": 8.26,
-        "gpt4_turbo_api_time_seconds": 3.45,
+        "full_image_search_seconds": 4.68,
+        "per_category_search_seconds": 8.87,
+        "gpt4_turbo_api_time_seconds": 3.85,
         "processing_overhead_seconds": 0,
-        "other_overhead_seconds": -3.45,
-        "wall_clock_seconds": 12.02,
-        "serper_api_time_seconds": 4.8,
+        "other_overhead_seconds": -3.84,
+        "wall_clock_seconds": 13.55,
+        "serper_api_time_seconds": 5.01,
         "serper_count": 1,
         "gpt4_turbo_count": 1,
-        "total_seconds": 12.02,
+        "total_seconds": 13.55,
         "categories_parallel": 1
       }
     }
-  },
-  "status": "success"
+  }
 }

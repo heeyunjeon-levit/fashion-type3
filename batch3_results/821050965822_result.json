@@ -1,20 +1,20 @@
 {
   "status": "success",
   "phone": "821050965822",
-  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763119541429_IMG_1268.jpg",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763120530327_IMG_1268.jpg",
   "items": [
     {
       "category": "tops",
       "groundingdino_prompt": "gray shirt",
       "description": "gray long sleeve henley shirt with buttons and fitted style",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_gray_shirt_1763119566018.jpg",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_gray_shirt_1763120551133.jpg",
       "confidence": 0.853
     },
     {
       "category": "bottoms",
       "groundingdino_prompt": "blue jeans",
       "description": "blue relaxed fit jeans with a faded wash",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_blue_jeans_1763119566575.jpg",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_blue_jeans_1763120551752.jpg",
       "confidence": 0.907
     }
   ],
@@ -27,9 +27,9 @@
           "title": "LONG-SLEEVED HENLEY TOP - GRAY MÉLANGE | COS GB"
         },
         {
-          "link": "https://www2.hm.com/en_ca/productpage.1317727001.html",
-          "thumbnail": "https://image.hm.com/assets/hm/41/29/41290a5996f02c20ab33b280f13a1e93ee075e6f.jpg?imwidth=1260",
-          "title": "Women's Dark gray Rib-Knit Top | H&M CA"
+          "link": "https://www.nordstromrack.com/s/rag-and-bone-essie-rib-henley/8576716?origin=category-personalizedsort&breadcrumb=Home/Women/Clothing/Tops&color=001",
+          "thumbnail": "https://n.nordstrommedia.com/it/342e42bf-ff61-4739-8e68-618fc65cd826.jpeg?h=368&w=240&dpr=2",
+          "title": "rag & bone Essie Rib Henley | Nordstromrack"
         },
         {
           "link": "https://www.everlane.com/products/womens-pima-rib-long-sleeve-henley-heathered-grey",
@@ -63,6 +63,38 @@
         "error": 0
       },
       "gptReasoning": {
+        "tops_1": {
+          "itemDescription": "item1 gray shirt",
+          "searchTerms": [
+            "item1 gray shirt",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.cos.com/en-us/women/womenswear/tops/longsleevetops/product/long-sleeved-henley-top-grey-mlange-1292722001",
+              "title": "LONG-SLEEVED HENLEY TOP - GRAY MÉLANGE | COS GB"
+            },
+            {
+              "link": "https://www.nordstromrack.com/s/rag-and-bone-essie-rib-henley/8576716?origin=category-personalizedsort&breadcrumb=Home/Women/Clothing/Tops&color=001",
+              "title": "rag & bone Essie Rib Henley | Nordstromrack"
+            },
+            {
+              "link": "https://www.everlane.com/products/womens-pima-rib-long-sleeve-henley-heathered-grey",
+              "title": "The Luxe Rib Henley | Heathered Grey – Everlane"
+            }
+          ],
+          "timestamp": "2025-11-14T11:42:45.714Z",
+          "candidateCount": 28,
+          "selectionCount": 3
+        },
         "bottoms_2": {
           "itemDescription": "item2 blue jeans",
           "searchTerms": [
@@ -89,54 +121,22 @@
               "title": "The 1991 Loose Straight Jean in Aalto Wash"
             }
           ],
-          "timestamp": "2025-11-14T11:26:22.049Z",
+          "timestamp": "2025-11-14T11:42:45.811Z",
           "candidateCount": 30,
-          "selectionCount": 3
-        },
-        "tops_1": {
-          "itemDescription": "item1 gray shirt",
-          "searchTerms": [
-            "item1 gray shirt",
-            "jacket",
-            "coat",
-            "outerwear",
-            "shirt",
-            "sweater",
-            "blouse",
-            "top",
-            "blazer",
-            "cardigan"
-          ],
-          "selectedLinks": [
-            {
-              "link": "https://www.cos.com/en-us/women/womenswear/tops/longsleevetops/product/long-sleeved-henley-top-grey-mlange-1292722001",
-              "title": "LONG-SLEEVED HENLEY TOP - GRAY MÉLANGE | COS GB"
-            },
-            {
-              "link": "https://www2.hm.com/en_ca/productpage.1317727001.html",
-              "title": "Women's Dark gray Rib-Knit Top | H&M CA"
-            },
-            {
-              "link": "https://www.everlane.com/products/womens-pima-rib-long-sleeve-henley-heathered-grey",
-              "title": "The Luxe Rib Henley | Heathered Grey – Everlane"
-            }
-          ],
-          "timestamp": "2025-11-14T11:26:22.860Z",
-          "candidateCount": 26,
           "selectionCount": 3
         }
       },
       "timing": {
-        "full_image_search_seconds": 7.16,
-        "per_category_search_seconds": 8.28,
-        "gpt4_turbo_api_time_seconds": 7.23,
-        "processing_overhead_seconds": 0.01,
-        "other_overhead_seconds": -7.22,
-        "wall_clock_seconds": 15.44,
-        "serper_api_time_seconds": 8.51,
+        "full_image_search_seconds": 3.86,
+        "per_category_search_seconds": 9.01,
+        "gpt4_turbo_api_time_seconds": 8.88,
+        "processing_overhead_seconds": 0,
+        "other_overhead_seconds": -8.88,
+        "wall_clock_seconds": 12.87,
+        "serper_api_time_seconds": 9.03,
         "serper_count": 2,
         "gpt4_turbo_count": 2,
-        "total_seconds": 15.44,
+        "total_seconds": 12.87,
         "categories_parallel": 2
       }
     }

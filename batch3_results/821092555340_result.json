@@ -1,0 +1,185 @@
+{
+  "phone": "821092555340",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763120017151_IMG_4127.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "blue sweatshirt",
+      "description": "light blue sweatshirt with brown stitching details and ribbed cuffs",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_blue_sweatshirt_1763120044685.jpg",
+      "confidence": 0.941
+    },
+    {
+      "category": "shoes",
+      "groundingdino_prompt": "brown shoes",
+      "description": "brown suede sneakers with matching laces",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_brown_shoes_1763120046090.jpg",
+      "confidence": 0.715
+    },
+    {
+      "category": "shoes",
+      "groundingdino_prompt": "white shoes",
+      "description": "white sneakers with brown laces and textured sole",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_white_shoes_1763120047395.jpg",
+      "confidence": 0.695
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://global.musinsa.com/ph/goods/4734238",
+          "thumbnail": "https://image.msscdn.net/thumbnails/images/goods_img/20250121/4734238/4734238_17374472505298_big.jpg",
+          "title": "MUSINSA | BAKKEN Basic Stitch Point Sweatshirt BK5960_Sky Blue"
+        },
+        {
+          "link": "https://kkst.kr/product/베이직-스티치-포인트-스웨트셔츠-그레이/12904",
+          "thumbnail": "https://kkst.kr/web/product/tiny/202506/f40eb7de6b3a555e1b9618921d19fb37.jpg",
+          "title": "베이직 스티치 포인트 스웨트셔츠 [그레이] | 케이케이에스티"
+        },
+        {
+          "link": "https://www.kolonmall.com/Brands/bakken/Product/K1700099179027079GY01",
+          "thumbnail": "https://images.kolonmall.com/Prod_Img/10002294/2024/LS1/K1738308148322008GY01_LS1.jpg",
+          "title": "BAKKEN] 바켄 Atelier Amuz 후드 집업 BK7989_멜란지그레이"
+        }
+      ],
+      "shoes_2": [
+        {
+          "link": "https://www.next.us/en/style/su914105/w86415",
+          "thumbnail": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/W86415s.jpg",
+          "title": "Buy Bronx Oatmilk Myraa Suede Sneakers from Next USA"
+        },
+        {
+          "link": "https://zigzag.kr/catalog/products/110073463",
+          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/c/11/007/346/110073463-649011440340675604.jpeg?width=400&height=400&quality=80&format=webp",
+          "title": "바닐라슈 뉴 모티아 소가죽 어글리 키높이 스니커즈(6cm)"
+        },
+        {
+          "link": "https://www.coupang.com/vp/products/8200499703",
+          "thumbnail": "https://thumbnail.coupangcdn.com/thumbnails/remote/492x492ex/image/vendor_inventory/0d00/4fa266fc1c276690fdaa0c3ee191d70ce5f42a6bec9cc438c03b1f3112c8.png",
+          "title": "메시 통기성 발레 실버 스포츠 캐주얼 신발 여성의 도덕적 훈련 - 해외직구 | 쿠팡"
+        }
+      ],
+      "shoes_3": [
+        {
+          "link": "https://www.amazon.com/-/es/Zapatos-Cloudboom-para-mujer/dp/B0DP1Y26XV",
+          "thumbnail": "https://images-na.ssl-images-amazon.com/images/I/91krDquPmiL._AC_UL600_SR600,600_.jpg",
+          "title": "Amazon.com: On Zapatos Cloudboom 1 para mujer, Blanco/Negro/Blanco, 6,5 : Ropa, Zapatos y Joyería"
+        },
+        {
+          "link": "https://www.farfetch.com/shopping/women/ash-ash-kasar-lace-up-sneakers-item-31999848.aspx",
+          "thumbnail": "https://cdn-images.farfetch-contents.com/31/99/98/48/31999848_61891650_600.jpg",
+          "title": "Ash Ash Kasar lace-up Sneakers | Neutrals | FARFETCH"
+        },
+        {
+          "link": "https://stevemadden.be/products/asiel-sneaker-white-suede",
+          "thumbnail": "http://stevemadden.be/cdn/shop/files/STEVEMADDEN_SHOES_ASIEL_WHITESUEDE_SIDE.jpg?v=1752833490",
+          "title": "Asiel Sneaker WHITE SUEDE - Steve Madden® België"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 2,
+        "fallback": 1,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "tops_1": {
+          "itemDescription": "item1 blue sweatshirt",
+          "searchTerms": [
+            "item1 blue sweatshirt",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-14T11:34:18.102Z",
+          "candidateCount": 13
+        },
+        "shoes_2": {
+          "itemDescription": "item2 brown shoes",
+          "searchTerms": [
+            "item2 brown shoes",
+            "shoes",
+            "sneakers",
+            "boots",
+            "sandals",
+            "heels",
+            "flats",
+            "loafers",
+            "oxford"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.next.us/en/style/su914105/w86415",
+              "title": "Buy Bronx Oatmilk Myraa Suede Sneakers from Next USA"
+            },
+            {
+              "link": "https://zigzag.kr/catalog/products/110073463",
+              "title": "바닐라슈 뉴 모티아 소가죽 어글리 키높이 스니커즈(6cm)"
+            },
+            {
+              "link": "https://www.coupang.com/vp/products/8200499703",
+              "title": "메시 통기성 발레 실버 스포츠 캐주얼 신발 여성의 도덕적 훈련 - 해외직구 | 쿠팡"
+            }
+          ],
+          "timestamp": "2025-11-14T11:34:19.020Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        },
+        "shoes_3": {
+          "itemDescription": "item3 white shoes",
+          "searchTerms": [
+            "item3 white shoes",
+            "shoes",
+            "sneakers",
+            "boots",
+            "sandals",
+            "heels",
+            "flats",
+            "loafers",
+            "oxford"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.amazon.com/-/es/Zapatos-Cloudboom-para-mujer/dp/B0DP1Y26XV",
+              "title": "Amazon.com: On Zapatos Cloudboom 1 para mujer, Blanco/Negro/Blanco, 6,5 : Ropa, Zapatos y Joyería"
+            },
+            {
+              "link": "https://www.farfetch.com/shopping/women/ash-ash-kasar-lace-up-sneakers-item-31999848.aspx",
+              "title": "Ash Ash Kasar lace-up Sneakers | Neutrals | FARFETCH"
+            },
+            {
+              "link": "https://stevemadden.be/products/asiel-sneaker-white-suede",
+              "title": "Asiel Sneaker WHITE SUEDE - Steve Madden® België"
+            }
+          ],
+          "timestamp": "2025-11-14T11:34:20.987Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 3.67,
+        "per_category_search_seconds": 9.01,
+        "gpt4_turbo_api_time_seconds": 7.97,
+        "processing_overhead_seconds": 0.01,
+        "other_overhead_seconds": -7.96,
+        "wall_clock_seconds": 12.69,
+        "serper_api_time_seconds": 14.19,
+        "serper_count": 3,
+        "gpt4_turbo_count": 3,
+        "total_seconds": 12.69,
+        "categories_parallel": 3
+      }
+    }
+  }
+}

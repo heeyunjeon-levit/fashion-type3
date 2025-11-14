@@ -1,0 +1,71 @@
+{
+  "phone": "821086891513",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763119898634_Screenshot_20251112_170458_NAVER.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "black vest",
+      "description": "black quilted long padded vest with a hood and waist drawstring",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_black_vest_1763119908700.jpg",
+      "confidence": 0.951
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://www.amazon.com/-/es/Chaleco-cremallera-acolchado-delantera-bolsillos/dp/B0DKJRXJZX",
+          "thumbnail": "https://m.media-amazon.com/images/I/718CqUbAx2L._AC_UY1000_.jpg",
+          "title": "Chaleco largo para mujer, con cremallera, sin mangas, acolchado, con capucha, parte delantera abierta, con botones y bolsillos, Negro -, 3X-Grande : Ropa, Zapatos y Joyería - Amazon.com"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 1,
+        "fallback": 0,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "tops_1": {
+          "itemDescription": "item1 black vest",
+          "searchTerms": [
+            "item1 black vest",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.amazon.com/-/es/Chaleco-cremallera-acolchado-delantera-bolsillos/dp/B0DKJRXJZX",
+              "title": "Chaleco largo para mujer, con cremallera, sin mangas, acolchado, con capucha, parte delantera abierta, con botones y bolsillos, Negro -, 3X-Grande : Ropa, Zapatos y Joyería - Amazon.com"
+            }
+          ],
+          "timestamp": "2025-11-14T11:32:07.387Z",
+          "candidateCount": 10,
+          "selectionCount": 1
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 4.4,
+        "per_category_search_seconds": 13.34,
+        "gpt4_turbo_api_time_seconds": 2.57,
+        "processing_overhead_seconds": 0,
+        "other_overhead_seconds": -2.57,
+        "wall_clock_seconds": 17.74,
+        "serper_api_time_seconds": 10.76,
+        "serper_count": 1,
+        "gpt4_turbo_count": 1,
+        "total_seconds": 17.74,
+        "categories_parallel": 1
+      }
+    }
+  }
+}

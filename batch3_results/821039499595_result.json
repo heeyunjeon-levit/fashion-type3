@@ -1,26 +1,27 @@
 {
+  "status": "success",
   "phone": "821039499595",
-  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763119405168_IMG_2426.jpg",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763120601312_IMG_2426.jpg",
   "items": [
     {
       "category": "tops",
       "groundingdino_prompt": "black coat",
-      "description": "black long coat with a beige fur collar and cuffs, buttoned front",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_black_coat_1763119419418.jpg",
+      "description": "long black coat with a button-up front and beige fur collar and cuffs",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_black_coat_1763120627162.jpg",
       "confidence": 0.923
     },
     {
-      "category": "shoes",
-      "groundingdino_prompt": "black boots",
-      "description": "black ankle boots with a prominent 'H' logo on the front",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_black_boots_1763119421339.jpg",
-      "confidence": 0.805
+      "category": "tops",
+      "groundingdino_prompt": "black shoes",
+      "description": "black shoes with a prominent white 'H' logo on the top",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_black_shoes_1763120628346.jpg",
+      "confidence": 0.756
     },
     {
       "category": "bag",
       "groundingdino_prompt": "black bag",
-      "description": "black handbag with short handles, carried in hand",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_black_bag_1763119421878.jpg",
+      "description": "black handbag with short handles, carried in the hand",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_black_bag_1763120628856.jpg",
       "confidence": 0.751
     }
   ],
@@ -28,43 +29,43 @@
     "results": {
       "tops_1": [
         {
-          "link": "https://zigzag.kr/catalog/products/101003249",
-          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/c/10/100/324/101003249-2648352250792895695.gif?width=400&height=400&quality=80&format=jpeg",
-          "title": "코코쓰 원조 밍크트렌치 롱점퍼 (전체 안감털) - 빅사이즈 롱점퍼 롱코트"
+          "link": "https://www.ebay.com/itm/156633107425",
+          "thumbnail": "https://i.ebayimg.com/images/g/E2cAAOSwpxJkE4qg/s-l400.jpg",
+          "title": "31. Fashion Black Teddy Fleece Lining Collared Button Down Midi Coat Size S | eBay"
         },
         {
-          "link": "https://zigzag.kr/catalog/products/115556535",
-          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/d/2022/10/3/16029_202210032349060027_19280.jpeg?width=400&height=400&quality=80&format=webp",
-          "title": "입따 ipdda 입따 밍크퍼 안감 카라 스트링 롱 패딩 코트 겨울 여성 점퍼 가볍고 따뜻한 오버핏 JP"
+          "link": "https://globalbunjang.com/product/352259801",
+          "thumbnail": "https://media.bunjang.co.kr/product/367645688_1_1762467529_w1200.jpg?crop=0",
+          "title": "FRONTROW Woolrich Blend Coat on Bunjang Global Site."
         },
         {
-          "link": "https://m.bunjang.co.kr/products/138471422",
-          "thumbnail": "https://media.bunjang.co.kr/product/138471422_1_1684419563_w360.jpg",
-          "title": "새상품- (국내제작 퀄리티 좋음) 밍크 안감 전체 퍼코트 | 브랜드 중고거래 플랫폼, 번개장터"
+          "link": "https://www.coupang.com/vp/products/4564750380?itemId=5566663179&vendorItemId=72866028207",
+          "thumbnail": "https://thumbnail10.coupangcdn.com/thumbnails/remote/230x230ex/image/retail/images/2404355783789-4e80534c-7e0c-430c-b1b9-86976d977ffd.jpg",
+          "title": "소울링 밍크 스트랩 롱 트렌치코트 JK3030K0B - 코트/트렌치코트 ..."
         }
       ],
-      "shoes_2": [
+      "tops_2": [
         {
-          "link": "https://www.ebay.com/itm/267151728225",
-          "thumbnail": "https://i.ebayimg.com/images/g/VwsAAOSwrZ1nqik7/s-l400.jpg",
-          "title": "Hermes Saint Honoré Boots Short Shoe Shoes Suede Black Silver Women's Used | eBay"
+          "link": "https://web.joongna.com/product/66261870",
+          "thumbnail": "https://web.joongna.com/cafe-article-data/live/2022/09/07/940232249/1662526379359000x2R_If8Os.jpg",
+          "title": "에르메스 생토로네 부츠 정품 풀박스 39사이즈 | 중고나라 - 안심되는 중고거래"
         },
         {
-          "link": "https://us.vestiairecollective.com/women-shoes/ankle-boots/hermes/black-leather-saint-honore-hermes-ankle-boots-26008533.shtml",
-          "thumbnail": "https://images.vestiairecollective.com/images/resized/w=1024,h=1024,q=75,f=auto,/produit/26008533-1_2.jpg",
-          "title": "Saint-honoré leather ankle boots Hermès Black size 38 EU in Leather - 26008533"
+          "link": "https://m.grandparis.kr/product/productDetail?seq=1000005125",
+          "thumbnail": "https://kr.object.ncloudstorage.com/grandparis/product/1000005125_detail_1100.jpg",
+          "title": "그랑파리(GrandParis) ::"
         },
         {
-          "link": "https://poshmark.com/listing/Hermes-Black-Suede-Saint-Honore-Ankle-Boots-66d9b149f9927cad1aad8f66",
-          "thumbnail": "https://di2ponv0v5otw.cloudfront.net/posts/2024/09/05/66d9b149f9927cad1aad8f66/m_66d9b1636ccbb67bbc6997c5.jpg",
-          "title": "Hermes | Shoes | Hermes Black Suede Saint Honore Ankle Boots | Poshmark"
+          "link": "https://www.daangn.com/kr/buy-sell/에르메스-은장-부츠-앵클-39-새상품급-한정판-정품-여성용-스웨이드-s19crhaj3yzx/",
+          "thumbnail": "https://img.kr.gcp-karroter.net/origin/article/202508/984fb6ba878d7c320a58a82058432291943f2a391775b05fba2c9d69f72e64d5_2.webp?f=webp&q=95&s=1440x1440&t=inside",
+          "title": "에르메스 은장 부츠 앵클 39 새상품급 한정판&lt;&lt;정품&gt;&gt;여성용 스웨이드 | 여성잡화 | 당근 중고거래"
         }
       ],
       "bag_3": [
         {
           "link": "https://www.amazon.com/Little-Liffner-Womens-Sprout-Tote/dp/B0CWX26T48",
           "thumbnail": "https://m.media-amazon.com/images/I/51MblMFSYEL._AC_AC_SY350_QL65_.jpg",
-          "title": "Liffner Women's Sprout Tote, Black, One Size ... - Amazon.com"
+          "title": "Liffner Women's Sprout Tote, Black, One Size | Travel Totes - Amazon.com"
         },
         {
           "link": "https://www.mytheresa.com/me/en/women/toteme-suede-tote-bag-black-p01024013",
@@ -86,41 +87,10 @@
         "error": 0
       },
       "gptReasoning": {
-        "shoes_2": {
-          "itemDescription": "item2 black boots",
+        "tops_2": {
+          "itemDescription": "item2 black shoes",
           "searchTerms": [
-            "item2 black boots",
-            "shoes",
-            "sneakers",
-            "boots",
-            "sandals",
-            "heels",
-            "flats",
-            "loafers",
-            "oxford"
-          ],
-          "selectedLinks": [
-            {
-              "link": "https://www.ebay.com/itm/267151728225",
-              "title": "Hermes Saint Honoré Boots Short Shoe Shoes Suede Black Silver Women's Used | eBay"
-            },
-            {
-              "link": "https://us.vestiairecollective.com/women-shoes/ankle-boots/hermes/black-leather-saint-honore-hermes-ankle-boots-26008533.shtml",
-              "title": "Saint-honoré leather ankle boots Hermès Black size 38 EU in Leather - 26008533"
-            },
-            {
-              "link": "https://poshmark.com/listing/Hermes-Black-Suede-Saint-Honore-Ankle-Boots-66d9b149f9927cad1aad8f66",
-              "title": "Hermes | Shoes | Hermes Black Suede Saint Honore Ankle Boots | Poshmark"
-            }
-          ],
-          "timestamp": "2025-11-14T11:23:56.425Z",
-          "candidateCount": 27,
-          "selectionCount": 3
-        },
-        "tops_1": {
-          "itemDescription": "item1 black coat",
-          "searchTerms": [
-            "item1 black coat",
+            "item2 black shoes",
             "jacket",
             "coat",
             "outerwear",
@@ -132,8 +102,8 @@
             "cardigan"
           ],
           "selectedLinks": [],
-          "timestamp": "2025-11-14T11:23:59.191Z",
-          "candidateCount": 29
+          "timestamp": "2025-11-14T11:43:59.122Z",
+          "candidateCount": 30
         },
         "bag_3": {
           "itemDescription": "item3 black bag",
@@ -152,7 +122,7 @@
           "selectedLinks": [
             {
               "link": "https://www.amazon.com/Little-Liffner-Womens-Sprout-Tote/dp/B0CWX26T48",
-              "title": "Liffner Women's Sprout Tote, Black, One Size ... - Amazon.com"
+              "title": "Liffner Women's Sprout Tote, Black, One Size | Travel Totes - Amazon.com"
             },
             {
               "link": "https://www.mytheresa.com/me/en/women/toteme-suede-tote-bag-black-p01024013",
@@ -163,25 +133,56 @@
               "title": "허니제이 / 츠퓨린 스웨이드 심플 토트백(3color) - SSG.COM"
             }
           ],
-          "timestamp": "2025-11-14T11:24:03.212Z",
+          "timestamp": "2025-11-14T11:44:00.703Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        },
+        "tops_1": {
+          "itemDescription": "item1 black coat",
+          "searchTerms": [
+            "item1 black coat",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.ebay.com/itm/156633107425",
+              "title": "31. Fashion Black Teddy Fleece Lining Collared Button Down Midi Coat Size S | eBay"
+            },
+            {
+              "link": "https://globalbunjang.com/product/352259801",
+              "title": "FRONTROW Woolrich Blend Coat on Bunjang Global Site."
+            },
+            {
+              "link": "https://www.coupang.com/vp/products/4564750380?itemId=5566663179&vendorItemId=72866028207",
+              "title": "소울링 밍크 스트랩 롱 트렌치코트 JK3030K0B - 코트/트렌치코트 ..."
+            }
+          ],
+          "timestamp": "2025-11-14T11:44:08.836Z",
           "candidateCount": 30,
           "selectionCount": 3
         }
       },
       "timing": {
-        "full_image_search_seconds": 4.71,
-        "per_category_search_seconds": 15.89,
-        "gpt4_turbo_api_time_seconds": 12.66,
-        "processing_overhead_seconds": 0.01,
-        "other_overhead_seconds": -12.65,
-        "wall_clock_seconds": 20.61,
-        "serper_api_time_seconds": 24.16,
+        "full_image_search_seconds": 4.14,
+        "per_category_search_seconds": 14.88,
+        "gpt4_turbo_api_time_seconds": 7.59,
+        "processing_overhead_seconds": 0,
+        "other_overhead_seconds": -7.59,
+        "wall_clock_seconds": 19.03,
+        "serper_api_time_seconds": 19.17,
         "serper_count": 3,
         "gpt4_turbo_count": 3,
-        "total_seconds": 20.61,
+        "total_seconds": 19.03,
         "categories_parallel": 3
       }
     }
-  },
-  "status": "success"
+  }
 }

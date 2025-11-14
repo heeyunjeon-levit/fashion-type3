@@ -1,0 +1,89 @@
+{
+  "phone": "821051321548",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763120108046_Screenshot_20251112_164359_NAVER.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "multicolor jacket",
+      "description": "beige, yellow, brown, and navy color-block fleece jacket with a zip front and a chest pocket",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_multicolor_jacket_1763120134729.jpg",
+      "confidence": 0.931
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://www.coupang.com/vp/products/8358012591",
+          "thumbnail": "https://image.coupangcdn.com/image/vendor_inventory/38ff/68757aea7c3e48f85d3524a089f498e32473db884109cea5a559876879a3.jpg",
+          "title": "노스페이스키즈 아동 후리스 NJ4FQ51 키즈 로얄톤 플리스 자켓 KS LOYALTON FLEECE JACKET 캠핑 윈드브레이커 - 자켓/점퍼/조끼 | 쿠팡"
+        },
+        {
+          "link": "https://www.coupang.com/vp/products/8395174329?itemId=24267521359&vendorItemId=91504991738",
+          "thumbnail": "https://thumbnail9.coupangcdn.com/thumbnails/remote/230x230ex/image/vendor_inventory/3ecc/040f31015500d4ea516ee14008919f637b117d3d0805a9c534f076c467ae.jpg",
+          "title": "노스페이스 키즈 로얄톤 플리스 자켓 NJ4FQ51V - 자켓/점퍼 | 쿠팡"
+        },
+        {
+          "link": "https://www.bloomingdales.com/shop/product/the-north-face-unisex-kids-denali-jacket-cameo-pink-little-kid?ID=4290901",
+          "thumbnail": "https://images.bloomingdalesassets.com/is/image/BLM/products/0/optimized/12602700_fpx.tif",
+          "title": "The North Face® Unisex Kids' Denali Jacket Cameo Pink - Little Kid | Bloomingdale's"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 1,
+        "fallback": 0,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "tops_1": {
+          "itemDescription": "item1 multicolor jacket",
+          "searchTerms": [
+            "item1 multicolor jacket",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.coupang.com/vp/products/8358012591",
+              "title": "노스페이스키즈 아동 후리스 NJ4FQ51 키즈 로얄톤 플리스 자켓 KS LOYALTON FLEECE JACKET 캠핑 윈드브레이커 - 자켓/점퍼/조끼 | 쿠팡"
+            },
+            {
+              "link": "https://www.coupang.com/vp/products/8395174329?itemId=24267521359&vendorItemId=91504991738",
+              "title": "노스페이스 키즈 로얄톤 플리스 자켓 NJ4FQ51V - 자켓/점퍼 | 쿠팡"
+            },
+            {
+              "link": "https://www.bloomingdales.com/shop/product/the-north-face-unisex-kids-denali-jacket-cameo-pink-little-kid?ID=4290901",
+              "title": "The North Face® Unisex Kids' Denali Jacket Cameo Pink - Little Kid | Bloomingdale's"
+            }
+          ],
+          "timestamp": "2025-11-14T11:36:02.213Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 3.89,
+        "per_category_search_seconds": 21.74,
+        "gpt4_turbo_api_time_seconds": 4.93,
+        "processing_overhead_seconds": 0,
+        "other_overhead_seconds": -4.93,
+        "wall_clock_seconds": 25.64,
+        "serper_api_time_seconds": 16.8,
+        "serper_count": 1,
+        "gpt4_turbo_count": 1,
+        "total_seconds": 25.64,
+        "categories_parallel": 1
+      }
+    }
+  }
+}

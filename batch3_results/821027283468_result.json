@@ -1,20 +1,20 @@
 {
   "status": "success",
   "phone": "821027283468",
-  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763119836687_KakaoTalk_20251114_161137277_01.jpg",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763120787212_KakaoTalk_20251114_161137277_01.jpg",
   "items": [
     {
       "category": "tops",
       "groundingdino_prompt": "white hoodie",
-      "description": "white oversized hoodie with a relaxed fit and long sleeves",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_white_hoodie_1763119850404.jpg",
+      "description": "white oversized hoodie with a loose fit and long sleeves",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_white_hoodie_1763120817058.jpg",
       "confidence": 0.799
     },
     {
       "category": "bottoms",
       "groundingdino_prompt": "plaid skirt",
-      "description": "black and gray plaid skirt with a knee-length hem",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_plaid_skirt_1763119851027.jpg",
+      "description": "black and gray plaid knee-length skirt with a pleated design",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_plaid_skirt_1763120817595.jpg",
       "confidence": 0.733
     }
   ],
@@ -22,31 +22,26 @@
     "results": {
       "tops_1": [
         {
-          "link": "https://www.reversible.com/shopping/men/item/balenciaga-balenciaga-new-copyright-medium-fit-hoodie-white-570811tiv559152-451101153",
-          "thumbnail": "https://image-raw.reversible.com/raw_images/c15c3982e0ff13e1802b43450c479fc254679ad3461af280047ee572524ab074",
-          "title": "BALENCIAGA Balenciaga Balenciaga Copyright Logo Print Medium Fit Hoodie 'White' 578135TIV559152 | REVERSIBLE"
+          "link": "https://www.kfriday.net/bunjang/men-fashion/367302617",
+          "thumbnail": "https://media.bunjang.co.kr/product/367302617_2_1762322310_w900.jpg?crop=0",
+          "title": "18815 나이키 NIKE 후드티 110 남자 맨투맨 긴팔티 브랜구제 | Buy from Bunjang via Kfriday Proxy"
         },
         {
-          "link": "https://www.farfetch.com/shopping/men/off-white-logo-print-drawstring-hoodie-item-20303822.aspx",
-          "thumbnail": "https://cdn-images.farfetch-contents.com/20/30/38/22/20303822_51170322_600.jpg",
-          "title": "Off-White logo-print Drawstring Hoodie | White | FARFETCH"
-        },
-        {
-          "link": "https://www.farfetch.com/uz/shopping/men/vetements-logo-print-cotton-blend-hoodie-item-20265042.aspx",
-          "thumbnail": "https://cdn-images.farfetch-contents.com/20/26/50/42/20265042_50364587_600.jpg",
-          "title": "VETEMENTS logo-print cotton-blend Hoodie | White | FARFETCH UZ"
+          "link": "https://www.marpple.com/kr/product/detail?bp_id=3125",
+          "thumbnail": "https://image1.marpple.co/files/u_1364736/2021/2/original/645e09e6d9d3cad821bb3a40a921158dd83218b68.jpg?q=90&w=800&f=jpg",
+          "title": "길단 12500 베이직 후드 (USA 핏) 기능성/기모 제작 | 마플"
         }
       ],
       "bottoms_2": [
         {
           "link": "https://www.musinsa.com/products/4766249",
-          "thumbnail": "https://image.msscdn.net/thumbnails/images/goods_img/20250206/4766249/4766249_17388553323449_big.jpg?w=390",
+          "thumbnail": "https://image.msscdn.net/images/goods_img/20250206/4766249/4766249_17388553323449_500.jpg",
           "title": "제로플래닛(ZEROPLANET) 에린 체크 플리츠 스커트 [CHARCOAL] - 사이즈 & 후기 | 무신사"
         },
         {
-          "link": "https://m.shopcider.com/goods/two-tone-check-skirt",
-          "thumbnail": "https://img1.shopcider.com/product/1625744972000-ZyH7aB.jpg?x-oss-process=image/resize,w_1050,m_lfit/quality,Q_60/interlace,1",
-          "title": "Two Tone Check Skirt - Cider"
+          "link": "https://m.vintageenjoy.co.kr/product/detail.html?product_no=26066",
+          "thumbnail": "https://m.vintageenjoy.co.kr/web/upload/NNEditor/20181211/mobile/efb2d0ab84a6468e4d3ea31559f49093_26066_1544443601.jpg",
+          "title": "JPN 모직 체크 스커트 / WOMEN S빈티지엔조이"
         },
         {
           "link": "https://noirmute.co.kr/product/made-패챠-체크-플리츠-마이크로-미니-스커트-check-pleated-micro-mini-skirt/3910",
@@ -81,15 +76,15 @@
               "title": "제로플래닛(ZEROPLANET) 에린 체크 플리츠 스커트 [CHARCOAL] - 사이즈 & 후기 | 무신사"
             },
             {
-              "link": "https://m.shopcider.com/goods/two-tone-check-skirt",
-              "title": "Two Tone Check Skirt - Cider"
+              "link": "https://m.vintageenjoy.co.kr/product/detail.html?product_no=26066",
+              "title": "JPN 모직 체크 스커트 / WOMEN S빈티지엔조이"
             },
             {
               "link": "https://noirmute.co.kr/product/made-패챠-체크-플리츠-마이크로-미니-스커트-check-pleated-micro-mini-skirt/3910",
               "title": "MADE] 패챠 체크 플리츠 마이크로 미니 스커트 Check Pleated Micro Mini Skirt - 누아뮤트"
             }
           ],
-          "timestamp": "2025-11-14T11:31:07.953Z",
+          "timestamp": "2025-11-14T11:47:10.685Z",
           "candidateCount": 26,
           "selectionCount": 3
         },
@@ -109,34 +104,30 @@
           ],
           "selectedLinks": [
             {
-              "link": "https://www.reversible.com/shopping/men/item/balenciaga-balenciaga-new-copyright-medium-fit-hoodie-white-570811tiv559152-451101153",
-              "title": "BALENCIAGA Balenciaga Balenciaga Copyright Logo Print Medium Fit Hoodie 'White' 578135TIV559152 | REVERSIBLE"
+              "link": "https://www.kfriday.net/bunjang/men-fashion/367302617",
+              "title": "18815 나이키 NIKE 후드티 110 남자 맨투맨 긴팔티 브랜구제 | Buy from Bunjang via Kfriday Proxy"
             },
             {
-              "link": "https://www.farfetch.com/shopping/men/off-white-logo-print-drawstring-hoodie-item-20303822.aspx",
-              "title": "Off-White logo-print Drawstring Hoodie | White | FARFETCH"
-            },
-            {
-              "link": "https://www.farfetch.com/uz/shopping/men/vetements-logo-print-cotton-blend-hoodie-item-20265042.aspx",
-              "title": "VETEMENTS logo-print cotton-blend Hoodie | White | FARFETCH UZ"
+              "link": "https://www.marpple.com/kr/product/detail?bp_id=3125",
+              "title": "길단 12500 베이직 후드 (USA 핏) 기능성/기모 제작 | 마플"
             }
           ],
-          "timestamp": "2025-11-14T11:31:08.492Z",
-          "candidateCount": 21,
-          "selectionCount": 3
+          "timestamp": "2025-11-14T11:47:17.867Z",
+          "candidateCount": 23,
+          "selectionCount": 2
         }
       },
       "timing": {
-        "full_image_search_seconds": 7.44,
-        "per_category_search_seconds": 9.38,
-        "gpt4_turbo_api_time_seconds": 8.54,
+        "full_image_search_seconds": 4.64,
+        "per_category_search_seconds": 14.99,
+        "gpt4_turbo_api_time_seconds": 6.72,
         "processing_overhead_seconds": 0,
-        "other_overhead_seconds": -8.54,
-        "wall_clock_seconds": 16.82,
-        "serper_api_time_seconds": 9.66,
+        "other_overhead_seconds": -6.71,
+        "wall_clock_seconds": 19.65,
+        "serper_api_time_seconds": 16.07,
         "serper_count": 2,
         "gpt4_turbo_count": 2,
-        "total_seconds": 16.82,
+        "total_seconds": 19.65,
         "categories_parallel": 2
       }
     }

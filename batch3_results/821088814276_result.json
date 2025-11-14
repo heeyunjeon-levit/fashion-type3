@@ -1,26 +1,27 @@
 {
+  "status": "success",
   "phone": "821088814276",
-  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763119158810_Screenshot_20251014_121732_Instagram.jpg",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763120911938_Screenshot_20251014_121732_Instagram.jpg",
   "items": [
     {
       "category": "tops",
       "groundingdino_prompt": "gray sweater",
       "description": "light gray long sleeve sweater with a relaxed fit",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_gray_sweater_1763119173057.jpg",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_gray_sweater_1763120924861.jpg",
       "confidence": 0.464
     },
     {
       "category": "bottoms",
       "groundingdino_prompt": "white skirt",
-      "description": "white midi skirt with a simple, straight cut",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_white_skirt_1763119174293.jpg",
+      "description": "white midi skirt with a straight cut",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_white_skirt_1763120926063.jpg",
       "confidence": 0.87
     },
     {
       "category": "shoes",
       "groundingdino_prompt": "black boots",
-      "description": "black leather ankle boots with a chunky sole",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_black_boots_1763119175561.jpg",
+      "description": "black leather ankle boots with a rounded toe",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_black_boots_1763120927078.jpg",
       "confidence": 0.6
     }
   ],
@@ -28,53 +29,48 @@
     "results": {
       "tops_1": [
         {
-          "link": "http://m.blog.slowand.com/product/detail.html?product_no=9628&cate_no=410&display_group=1",
-          "thumbnail": "https://cafe24img.poxo.com/anne2173/web/product/extra/big/202508/ad7163764f7cdb8a5abfe5f1eb3c1d5b.jpg",
-          "title": "오늘드림🚚/기장세분화] #SLOWMADE. 뮤엘 새틴스커트 (+숏/롱ver ..."
+          "link": "https://zigzag.kr/catalog/products/165384260?product_id=165384260&shop_id=2833&share_type=AFFILIATE&referral_code=rKfWgbZ1&zz_source=zz_affiliate&zz_campaign=rKfWgbZ1&airbridge_referrer=airbridge=true&client_id=a4a1d74a-22b8-4c88-bb56-a64cd257679e&event_uuid=11aa10a0-a51b-43cf-afc6-8b78407bc945&referrer_timestamp=1761389655740&channel=affiliate&utm_source=affiliate",
+          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/c/16/538/426/165384260-1446254048544129009.jpeg?width=720&height=720&quality=80&format=jpeg",
+          "title": "슬로우앤드 [오늘드림🚚/기장세분화] #SLOWMADE. 뮤엘 새틴스커트 (+숏/롱ver) - 3 size"
         },
+        {
+          "link": "https://www.brandi.co.kr/products/18353072",
+          "thumbnail": "https://imgb.a-bly.com/data/editor/20200718_1595040888713845l.jpg",
+          "title": "당일발송/1,000장돌파] 자체제작 린넨 롱 A라인 뒷밴딩 플레어 스커트 베이지 / 겨자 / 블랙"
+        },
+        {
+          "link": "https://www.musinsa.com/products/1995384",
+          "thumbnail": "https://image.msscdn.net/images/goods_img/20210614/1995384/1995384_1_500.jpg",
+          "title": "에이치에이트(H8) 노트 스커트 - 사이즈 & 후기 | 무신사"
+        }
+      ],
+      "bottoms_2": [
         {
           "link": "https://www.brandi.co.kr/products/18353072",
           "thumbnail": "https://imgb.a-bly.com/data/editor/20200718_1595040888713845l.jpg",
           "title": "당일발송/1,000장돌파] 자체제작 린넨 롱 A라인 뒷밴딩 플레어 ..."
         },
         {
-          "link": "https://zigzag.kr/catalog/products/163590470",
-          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/c/16/359/047/163590470-1624307653184725363.gif?width=400&height=400&quality=80&format=jpeg",
-          "title": "플라이모델 모어델-슬릿 롱스커트 (단독주문시 당일발송)"
-        }
-      ],
-      "bottoms_2": [
-        {
-          "link": "https://www.coupang.com/vp/products/7240869978",
-          "thumbnail": "https://thumbnail.coupangcdn.com/thumbnails/remote/492x492ex/image/rs_quotation_api/xguit6dc/227a627f56b44aada64a52d98150ed07.jpg",
-          "title": "하우코 베이직 롱 스커트 cpsk5391k33 - 스커트/치마 | 쿠팡"
-        },
-        {
-          "link": "https://www.musinsa.com/products/4415921",
-          "thumbnail": "https://image.msscdn.net/images/goods_img/20240906/4415921/4415921_17256044587975_500.jpg",
-          "title": "비뮤즈맨션(BEMUSE MANSION) Fringe lace frill skirt - Off white - 사이즈 & 후기 | 무신사"
-        },
-        {
-          "link": "https://m.bonnieshop.co.kr/product/2023-비비안-트위드-스커트/12119",
-          "thumbnail": "https://m.bonnieshop.co.kr/web/upload/NNEditor/20230405/mobile/1e56e39f6df574daa2ecafe0e7ef4287_1680668856.jpg",
-          "title": "즐거운 온라인 쇼핑공간에 오신 것을 환영합니다!"
+          "link": "https://en.attrangs.com/product/back-banding-flare-long-skirt-sk6509/82328",
+          "thumbnail": "https://cafe24img.poxo.com/attrangs/web/product/big/202407/98e407a61a5e23b5e616f73f31567659.jpg",
+          "title": "Back banding flare long skirt sk6509 | ATTRANGS: Shop Korean fashion clothing, bags, shoes and accessories for women"
         }
       ],
       "shoes_3": [
         {
-          "link": "https://www.zara.com/ae/en/patent-ankle-boots-p12108630.html",
+          "link": "https://www.zara.com/sa/en/patent-ankle-boots-p12108630.html",
           "thumbnail": "https://static.zara.net/assets/public/8c35/f91c/625f4bd4828d/600454d72ea7/poster/poster.jpg?ts=1759931329821&w={width}",
-          "title": "PATENT ANKLE BOOTS - Black | ZARA UAE - Dubai/Sharjah/Ajman/UAQ/Fujairah"
+          "title": "PATENT ANKLE BOOTS - Black | ZARA Saudi Arabia"
         },
         {
-          "link": "https://www.charleskeith.com/kr/CK1-90920094_BLKTXT.html",
-          "thumbnail": "https://www.charleskeith.com/dw/image/v2/BCWJ_PRD/on/demandware.static/-/Sites-ck-products/default/dw10aad142/images/hi-res/2021-L6-CK1-90920094-B8-5.jpg?sw=370&sh=494",
-          "title": "에나멜 라운드 토 지퍼-업 앵클 부츠 - 블랙 텍스처드 | 세일 | 찰스앤키스 코리아"
+          "link": "https://global.musinsa.com/hk/goods/4177830",
+          "thumbnail": "https://worksby00.cafe24.com/AM/MD/AN245901_modeldetail.jpg",
+          "title": "MUSINSA | ANALOGMOOD Glossy Modern Commando Men's Rain Zip Chelsea Boots (Black)"
         },
         {
-          "link": "https://www.coupang.com/vp/products/6922779675",
-          "thumbnail": "https://thumbnail.coupangcdn.com/thumbnails/remote/230x230ex/image/retail/images/7033675512651749-fdbb5da8-de6c-42f6-8b4a-ef7200278858.JPG",
-          "title": "단골언니 여성용 트렌드 어글리 스판 가죽 카베르 앵클부츠 - 워커/부츠 | 쿠팡"
+          "link": "https://www.farfetch.com/my/shopping/women/maretto-leather-zip-boots-item-31334658.aspx",
+          "thumbnail": "https://cdn-images.farfetch-contents.com/31/33/46/58/31334658_60766534_600.jpg",
+          "title": "Maretto Leather Zip Boots | Black | FARFETCH MY"
         }
       ]
     },
@@ -86,36 +82,6 @@
         "error": 0
       },
       "gptReasoning": {
-        "bottoms_2": {
-          "itemDescription": "item2 white skirt",
-          "searchTerms": [
-            "item2 white skirt",
-            "shorts",
-            "slacks",
-            "pants",
-            "trousers",
-            "jeans",
-            "skirt",
-            "leg trousers"
-          ],
-          "selectedLinks": [
-            {
-              "link": "https://www.coupang.com/vp/products/7240869978",
-              "title": "하우코 베이직 롱 스커트 cpsk5391k33 - 스커트/치마 | 쿠팡"
-            },
-            {
-              "link": "https://www.musinsa.com/products/4415921",
-              "title": "비뮤즈맨션(BEMUSE MANSION) Fringe lace frill skirt - Off white - 사이즈 & 후기 | 무신사"
-            },
-            {
-              "link": "https://m.bonnieshop.co.kr/product/2023-비비안-트위드-스커트/12119",
-              "title": "즐거운 온라인 쇼핑공간에 오신 것을 환영합니다!"
-            }
-          ],
-          "timestamp": "2025-11-14T11:19:56.004Z",
-          "candidateCount": 28,
-          "selectionCount": 3
-        },
         "shoes_3": {
           "itemDescription": "item3 black boots",
           "searchTerms": [
@@ -131,20 +97,20 @@
           ],
           "selectedLinks": [
             {
-              "link": "https://www.zara.com/ae/en/patent-ankle-boots-p12108630.html",
-              "title": "PATENT ANKLE BOOTS - Black | ZARA UAE - Dubai/Sharjah/Ajman/UAQ/Fujairah"
+              "link": "https://www.zara.com/sa/en/patent-ankle-boots-p12108630.html",
+              "title": "PATENT ANKLE BOOTS - Black | ZARA Saudi Arabia"
             },
             {
-              "link": "https://www.charleskeith.com/kr/CK1-90920094_BLKTXT.html",
-              "title": "에나멜 라운드 토 지퍼-업 앵클 부츠 - 블랙 텍스처드 | 세일 | 찰스앤키스 코리아"
+              "link": "https://global.musinsa.com/hk/goods/4177830",
+              "title": "MUSINSA | ANALOGMOOD Glossy Modern Commando Men's Rain Zip Chelsea Boots (Black)"
             },
             {
-              "link": "https://www.coupang.com/vp/products/6922779675",
-              "title": "단골언니 여성용 트렌드 어글리 스판 가죽 카베르 앵클부츠 - 워커/부츠 | 쿠팡"
+              "link": "https://www.farfetch.com/my/shopping/women/maretto-leather-zip-boots-item-31334658.aspx",
+              "title": "Maretto Leather Zip Boots | Black | FARFETCH MY"
             }
           ],
-          "timestamp": "2025-11-14T11:20:01.555Z",
-          "candidateCount": 26,
+          "timestamp": "2025-11-14T11:49:00.040Z",
+          "candidateCount": 24,
           "selectionCount": 3
         },
         "tops_1": {
@@ -162,24 +128,49 @@
             "cardigan"
           ],
           "selectedLinks": [],
-          "timestamp": "2025-11-14T11:20:04.295Z",
-          "candidateCount": 30
+          "timestamp": "2025-11-14T11:49:04.020Z",
+          "candidateCount": 25
+        },
+        "bottoms_2": {
+          "itemDescription": "item2 white skirt",
+          "searchTerms": [
+            "item2 white skirt",
+            "shorts",
+            "slacks",
+            "pants",
+            "trousers",
+            "jeans",
+            "skirt",
+            "leg trousers"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.brandi.co.kr/products/18353072",
+              "title": "당일발송/1,000장돌파] 자체제작 린넨 롱 A라인 뒷밴딩 플레어 ..."
+            },
+            {
+              "link": "https://en.attrangs.com/product/back-banding-flare-long-skirt-sk6509/82328",
+              "title": "Back banding flare long skirt sk6509 | ATTRANGS: Shop Korean fashion clothing, bags, shoes and accessories for women"
+            }
+          ],
+          "timestamp": "2025-11-14T11:49:10.036Z",
+          "candidateCount": 27,
+          "selectionCount": 2
         }
       },
       "timing": {
-        "full_image_search_seconds": 13.03,
-        "per_category_search_seconds": 15.07,
-        "gpt4_turbo_api_time_seconds": 10.27,
-        "processing_overhead_seconds": 0,
-        "other_overhead_seconds": -10.27,
-        "wall_clock_seconds": 28.11,
-        "serper_api_time_seconds": 23.89,
+        "full_image_search_seconds": 4.86,
+        "per_category_search_seconds": 17.46,
+        "gpt4_turbo_api_time_seconds": 7.31,
+        "processing_overhead_seconds": 0.01,
+        "other_overhead_seconds": -7.31,
+        "wall_clock_seconds": 22.32,
+        "serper_api_time_seconds": 29.03,
         "serper_count": 3,
         "gpt4_turbo_count": 3,
-        "total_seconds": 28.11,
+        "total_seconds": 22.33,
         "categories_parallel": 3
       }
     }
-  },
-  "status": "success"
+  }
 }

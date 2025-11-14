@@ -1,19 +1,20 @@
 {
+  "status": "success",
   "phone": "821091805701",
-  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763118990366_IMG_2479.jpg",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763120726797_IMG_2479.jpg",
   "items": [
     {
       "category": "dress",
       "groundingdino_prompt": "white dress",
       "description": "white long sleeve dress with buttons and a loose fit",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_white_dress_1763119003647.jpg",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_white_dress_1763120751109.jpg",
       "confidence": 0.945
     },
     {
       "category": "bag",
       "groundingdino_prompt": "brown bag",
-      "description": "brown shoulder bag with a simple design",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_brown_bag_1763119005514.jpg",
+      "description": "brown shoulder bag with a strap and metal buckle",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_brown_bag_1763120752146.jpg",
       "confidence": 0.435
     }
   ],
@@ -21,9 +22,9 @@
     "results": {
       "dress_1": [
         {
-          "link": "https://zigzag.kr/catalog/products/166309544",
-          "thumbnail": "https://ecimg.cafe24img.com/pg1255b70082919088/uth0115/web/upload/NNEditor/20251023/ea6b580bcf0e15f4ba76ee55249ac641.jpg",
-          "title": "언더더힐 hug fw blouse (1color)"
+          "link": "https://zigzag.kr/catalog/products/148905545",
+          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/c/16/595/591/165955916-9144376734832867023.gif?width=400&height=400&quality=80&format=jpeg",
+          "title": "커먼유니크 루아네 링클 백 버튼 스트랩 롱 원피스 (가을/쉬폰/주름/허리끈/플레어/퍼프소매/셔링/러블리/페미닌/데이트룩/하객룩/오피스룩)"
         },
         {
           "link": "https://m.attrangs.co.kr/shop/view_slide_detail.php?index_no=165221",
@@ -31,53 +32,37 @@
           "title": "아뜨랑스 상세보기"
         },
         {
-          "link": "https://m.shopperland.co.kr/product/detail.html?product_no=20563&cate_no=129&display_group=0",
-          "thumbnail": "https://m.shopperland.co.kr/web/product/big/202404/9e83270b907a4b57793b5e7fc4ea48ce.jpg",
-          "title": "기획]라몬 레이스 셔링 리본 블라우스 (2color)쇼퍼랜드"
+          "link": "https://zigzag.kr/catalog/products/148261532",
+          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/d/2024/9/13/15489_202409131638190373_43522.jpeg?width=400&height=400&quality=80&format=webp",
+          "title": "에이치다 [BEST/여행룩] 보헤미안 셔링 플레어 봄 가을 레이어드 원피스 (미니/루즈핏/리본/긴팔)"
         }
       ],
       "bag_2": [
         {
           "link": "https://www.ebay.com/itm/316162561185",
           "thumbnail": "https://i.ebayimg.com/images/g/ltIAAOSwNXNnlqtO/s-l1200.jpg",
-          "title": "Gun Tote'n Mamas Brown Leather Concealed Carry Purse ..."
+          "title": "Gun Tote'n Mamas Brown Leather Concealed Carry Purse Adjustable Strap GTM/90 | eBay"
         },
         {
           "link": "https://poshmark.com/listing/Gun-Toten-Mamas-Brown-Leather-Shoulder-Crossbody-Bag-62379c2ace1e8769c150a1c5",
           "thumbnail": "https://di2ponv0v5otw.cloudfront.net/posts/2022/03/20/62379c2ace1e8769c150a1c5/s_wp_623bef67da1041c8dcd8e79b.webp",
-          "title": "Gun Tote'n Mamas | Bags | Gun Toten Mamas Brown Leather ..."
+          "title": "Gun Tote'n Mamas | Bags | Gun Toten Mamas Brown Leather Shoulder Crossbody Bag | Poshmark"
         },
         {
-          "link": "https://www.ebay.com/itm/353401111500",
-          "thumbnail": "https://i.ebayimg.com/images/g/guMAAOSwaRFgOTjH/s-l1200.jpg",
-          "title": "Armani Exchange Vintage Leather Clutch Bag Purse Brown | eBay"
+          "link": "https://www.mercari.com/us/item/m88887308585/",
+          "thumbnail": "https://u-mercari-images.mercdn.net/photos/m88887308585_2.jpg?width=2560&quality=75&_=1760743798",
+          "title": "Juicy couture brown tote bag with rhinestone | Mercari"
         }
       ]
     },
     "meta": {
       "sourceCounts": {
-        "gpt": 1,
-        "fallback": 1,
+        "gpt": 2,
+        "fallback": 0,
         "none": 0,
         "error": 0
       },
       "gptReasoning": {
-        "dress_1": {
-          "itemDescription": "item1 white dress",
-          "searchTerms": [
-            "item1 white dress",
-            "dress",
-            "gown",
-            "maxi dress",
-            "midi dress",
-            "mini dress",
-            "cocktail dress",
-            "casual dress"
-          ],
-          "selectedLinks": [],
-          "timestamp": "2025-11-14T11:17:16.049Z",
-          "candidateCount": 30
-        },
         "bag_2": {
           "itemDescription": "item2 brown bag",
           "searchTerms": [
@@ -95,36 +80,65 @@
           "selectedLinks": [
             {
               "link": "https://www.ebay.com/itm/316162561185",
-              "title": "Gun Tote'n Mamas Brown Leather Concealed Carry Purse ..."
+              "title": "Gun Tote'n Mamas Brown Leather Concealed Carry Purse Adjustable Strap GTM/90 | eBay"
             },
             {
               "link": "https://poshmark.com/listing/Gun-Toten-Mamas-Brown-Leather-Shoulder-Crossbody-Bag-62379c2ace1e8769c150a1c5",
-              "title": "Gun Tote'n Mamas | Bags | Gun Toten Mamas Brown Leather ..."
+              "title": "Gun Tote'n Mamas | Bags | Gun Toten Mamas Brown Leather Shoulder Crossbody Bag | Poshmark"
             },
             {
-              "link": "https://www.ebay.com/itm/353401111500",
-              "title": "Armani Exchange Vintage Leather Clutch Bag Purse Brown | eBay"
+              "link": "https://www.mercari.com/us/item/m88887308585/",
+              "title": "Juicy couture brown tote bag with rhinestone | Mercari"
             }
           ],
-          "timestamp": "2025-11-14T11:17:27.167Z",
+          "timestamp": "2025-11-14T11:46:09.278Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        },
+        "dress_1": {
+          "itemDescription": "item1 white dress",
+          "searchTerms": [
+            "item1 white dress",
+            "dress",
+            "gown",
+            "maxi dress",
+            "midi dress",
+            "mini dress",
+            "cocktail dress",
+            "casual dress"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://zigzag.kr/catalog/products/148905545",
+              "title": "커먼유니크 루아네 링클 백 버튼 스트랩 롱 원피스 (가을/쉬폰/주름/허리끈/플레어/퍼프소매/셔링/러블리/페미닌/데이트룩/하객룩/오피스룩)"
+            },
+            {
+              "link": "https://m.attrangs.co.kr/shop/view_slide_detail.php?index_no=165221",
+              "title": "아뜨랑스 상세보기"
+            },
+            {
+              "link": "https://zigzag.kr/catalog/products/148261532",
+              "title": "에이치다 [BEST/여행룩] 보헤미안 셔링 플레어 봄 가을 레이어드 원피스 (미니/루즈핏/리본/긴팔)"
+            }
+          ],
+          "timestamp": "2025-11-14T11:46:13.285Z",
           "candidateCount": 30,
           "selectionCount": 3
         }
       },
       "timing": {
-        "full_image_search_seconds": 15.47,
-        "per_category_search_seconds": 25.3,
-        "gpt4_turbo_api_time_seconds": 4.4,
+        "full_image_search_seconds": 8.02,
+        "per_category_search_seconds": 12.41,
+        "gpt4_turbo_api_time_seconds": 7.9,
         "processing_overhead_seconds": 0,
-        "other_overhead_seconds": -4.39,
-        "wall_clock_seconds": 40.78,
-        "serper_api_time_seconds": 35.08,
+        "other_overhead_seconds": -7.9,
+        "wall_clock_seconds": 20.43,
+        "serper_api_time_seconds": 12.89,
         "serper_count": 2,
         "gpt4_turbo_count": 2,
-        "total_seconds": 40.78,
+        "total_seconds": 20.43,
         "categories_parallel": 2
       }
     }
-  },
-  "status": "success"
+  }
 }

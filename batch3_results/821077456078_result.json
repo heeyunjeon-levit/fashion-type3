@@ -1,0 +1,78 @@
+{
+  "phone": "821077456078",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763120381976_Screenshot_20251026_213517_Instagram.jpg",
+  "items": [
+    {
+      "category": "dress",
+      "groundingdino_prompt": "gray dress",
+      "description": "light gray wrap-style dress with long sleeves and a black waist tie",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_gray_dress_1763120407224.jpg",
+      "confidence": 0.936
+    }
+  ],
+  "search_results": {
+    "results": {
+      "dress_1": [
+        {
+          "link": "https://joteta.com/products/light-gray-modern-hanbok-dress",
+          "thumbnail": "https://cdn.shopify.com/s/files/1/0392/1212/2157/files/Light_Gray_16_600x600.jpg?v=1611544224",
+          "title": "Light Gray Modern Hanbok Dress – Joteta Korean Online Shop"
+        },
+        {
+          "link": "https://www.etsy.com/listing/1772109878/korean-womens-modern-hanbok-daily-hanbok",
+          "thumbnail": "https://i.etsystatic.com/27204453/r/il/68c141/6234350358/il_570xN.6234350358_g6jk.jpg",
+          "title": "Korean Women's Modern Hanbok Daily Hanbok for Fall and Winter- Grasia - Etsy"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 1,
+        "fallback": 0,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "dress_1": {
+          "itemDescription": "item1 gray dress",
+          "searchTerms": [
+            "item1 gray dress",
+            "dress",
+            "gown",
+            "maxi dress",
+            "midi dress",
+            "mini dress",
+            "cocktail dress",
+            "casual dress"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://joteta.com/products/light-gray-modern-hanbok-dress",
+              "title": "Light Gray Modern Hanbok Dress – Joteta Korean Online Shop"
+            },
+            {
+              "link": "https://www.etsy.com/listing/1772109878/korean-womens-modern-hanbok-daily-hanbok",
+              "title": "Korean Women's Modern Hanbok Daily Hanbok for Fall and Winter- Grasia - Etsy"
+            }
+          ],
+          "timestamp": "2025-11-14T11:40:25.402Z",
+          "candidateCount": 30,
+          "selectionCount": 2
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 4.33,
+        "per_category_search_seconds": 12.3,
+        "gpt4_turbo_api_time_seconds": 3.13,
+        "processing_overhead_seconds": 0,
+        "other_overhead_seconds": -3.13,
+        "wall_clock_seconds": 16.64,
+        "serper_api_time_seconds": 9.17,
+        "serper_count": 1,
+        "gpt4_turbo_count": 1,
+        "total_seconds": 16.64,
+        "categories_parallel": 1
+      }
+    }
+  }
+}

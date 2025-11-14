@@ -1,27 +1,27 @@
 {
   "status": "success",
   "phone": "821022625467",
-  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763119737062_IMG_8724.jpg",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763120704376_IMG_8724.jpg",
   "items": [
     {
       "category": "tops",
       "groundingdino_prompt": "brown fur coat",
-      "description": "brown fur coat with a thick, luxurious texture and a cropped fit",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_brown_fur_coat_1763119754529.jpg",
+      "description": "brown fur coat with a thick, luxurious texture and wide collar",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_brown_fur_coat_1763120719630.jpg",
       "confidence": 0.907
     },
     {
       "category": "tops",
       "groundingdino_prompt": "white shirt",
-      "description": "white short sleeve shirt with lace trim detail at the hem",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_white_shirt_1763119756136.jpg",
+      "description": "white short sleeve shirt with lace trim at the hem",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_white_shirt_1763120721611.jpg",
       "confidence": 0.654
     },
     {
       "category": "bottoms",
       "groundingdino_prompt": "blue jeans",
       "description": "blue denim jeans with a classic fit and slight distressing",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_blue_jeans_1763119756922.jpg",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_blue_jeans_1763120723217.jpg",
       "confidence": 0.912
     }
   ],
@@ -39,7 +39,7 @@
           "title": "Aria Cove oversized cropped wide sleeve faux fur jacket in brown tipped fur | ASOS"
         },
         {
-          "link": "https://www.breuninger.com/it/en/b/rotate-birger-christensen/faux-fur-jacket/1002889430/p/",
+          "link": "https://www.breuninger.com/es/en/b/rotate-birger-christensen/faux-fur-jacket/1002889430/p/",
           "thumbnail": "https://cms.brnstc.de/product_images/1122x1536_retina/cpro/media/images/product/25/9/100288942315000_0_1758097967421.jpg",
           "title": "ROTATE Faux fur jacket in light brown"
         }
@@ -73,9 +73,9 @@
           "title": "고고싱 [오늘출발]코지 스트레이트 데님(난스판,와이드,YKK,기장별)"
         },
         {
-          "link": "https://m.inanity.co.kr/product/캣-브러쉬-딥-워싱-와이드-진청-데님팬츠/1755",
-          "thumbnail": "https://m.inanity.co.kr/web/upload/NNEditor/20230331/mobile/ffd68322540f4d10b3da6ca5688fcdfe_1680252512.jpg",
-          "title": "캣 브러쉬 딥 워싱 와이드 진청 데님팬츠"
+          "link": "https://beidelli.com/product/당일출고made렌치-일자-데님-팬츠/4700/",
+          "thumbnail": "https://cafe24img.poxo.com/eb970604/web/product/extra/small/202510/15b1cde09681c45b885b3f2ccae26c99.jpg",
+          "title": "당일출고][MADE]렌치 일자 데님 팬츠 - 베이델리"
         }
       ]
     },
@@ -102,8 +102,38 @@
             "cardigan"
           ],
           "selectedLinks": [],
-          "timestamp": "2025-11-14T11:29:37.245Z",
-          "candidateCount": 12
+          "timestamp": "2025-11-14T11:45:36.855Z",
+          "candidateCount": 14
+        },
+        "bottoms_3": {
+          "itemDescription": "item3 blue jeans",
+          "searchTerms": [
+            "item3 blue jeans",
+            "shorts",
+            "slacks",
+            "pants",
+            "trousers",
+            "jeans",
+            "skirt",
+            "leg trousers"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://miamasvin.net/product/코코뱅-워싱-데님팬츠/74357",
+              "title": "코코뱅 워싱 데님팬츠 - Miamasvin loves u! Womens Clothing. Korean Fashion."
+            },
+            {
+              "link": "https://zigzag.kr/catalog/products/119730177",
+              "title": "고고싱 [오늘출발]코지 스트레이트 데님(난스판,와이드,YKK,기장별)"
+            },
+            {
+              "link": "https://beidelli.com/product/당일출고made렌치-일자-데님-팬츠/4700/",
+              "title": "당일출고][MADE]렌치 일자 데님 팬츠 - 베이델리"
+            }
+          ],
+          "timestamp": "2025-11-14T11:45:40.407Z",
+          "candidateCount": 30,
+          "selectionCount": 3
         },
         "tops_1": {
           "itemDescription": "item1 brown fur coat",
@@ -129,56 +159,26 @@
               "title": "Aria Cove oversized cropped wide sleeve faux fur jacket in brown tipped fur | ASOS"
             },
             {
-              "link": "https://www.breuninger.com/it/en/b/rotate-birger-christensen/faux-fur-jacket/1002889430/p/",
+              "link": "https://www.breuninger.com/es/en/b/rotate-birger-christensen/faux-fur-jacket/1002889430/p/",
               "title": "ROTATE Faux fur jacket in light brown"
             }
           ],
-          "timestamp": "2025-11-14T11:29:39.832Z",
-          "candidateCount": 30,
-          "selectionCount": 3
-        },
-        "bottoms_3": {
-          "itemDescription": "item3 blue jeans",
-          "searchTerms": [
-            "item3 blue jeans",
-            "shorts",
-            "slacks",
-            "pants",
-            "trousers",
-            "jeans",
-            "skirt",
-            "leg trousers"
-          ],
-          "selectedLinks": [
-            {
-              "link": "https://miamasvin.net/product/코코뱅-워싱-데님팬츠/74357",
-              "title": "코코뱅 워싱 데님팬츠 - Miamasvin loves u! Womens Clothing. Korean Fashion."
-            },
-            {
-              "link": "https://zigzag.kr/catalog/products/119730177",
-              "title": "고고싱 [오늘출발]코지 스트레이트 데님(난스판,와이드,YKK,기장별)"
-            },
-            {
-              "link": "https://m.inanity.co.kr/product/캣-브러쉬-딥-워싱-와이드-진청-데님팬츠/1755",
-              "title": "캣 브러쉬 딥 워싱 와이드 진청 데님팬츠"
-            }
-          ],
-          "timestamp": "2025-11-14T11:29:44.695Z",
+          "timestamp": "2025-11-14T11:45:48.024Z",
           "candidateCount": 30,
           "selectionCount": 3
         }
       },
       "timing": {
-        "full_image_search_seconds": 13.55,
-        "per_category_search_seconds": 13.32,
-        "gpt4_turbo_api_time_seconds": 9.6,
+        "full_image_search_seconds": 7.92,
+        "per_category_search_seconds": 15.94,
+        "gpt4_turbo_api_time_seconds": 7.89,
         "processing_overhead_seconds": 0,
-        "other_overhead_seconds": -9.6,
-        "wall_clock_seconds": 26.88,
-        "serper_api_time_seconds": 18.04,
+        "other_overhead_seconds": -7.89,
+        "wall_clock_seconds": 23.86,
+        "serper_api_time_seconds": 21.12,
         "serper_count": 3,
         "gpt4_turbo_count": 3,
-        "total_seconds": 26.88,
+        "total_seconds": 23.86,
         "categories_parallel": 3
       }
     }

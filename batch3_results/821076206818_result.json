@@ -1,0 +1,89 @@
+{
+  "phone": "821076206818",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763120167207_IMG_1797.jpg",
+  "items": [
+    {
+      "category": "bag",
+      "groundingdino_prompt": "dark brown bag",
+      "description": "dark brown woven leather mini bag with a crossbody strap",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_dark_brown_bag_1763120178217.jpg",
+      "confidence": 0.892
+    }
+  ],
+  "search_results": {
+    "results": {
+      "bag_1": [
+        {
+          "link": "https://www.bottegaveneta.com/en-us/mini-loop-dark-barolo-813980041.html",
+          "thumbnail": "https://bottega-veneta.dam.kering.com/asset/05dd2e28-2a88-4053-91f2-ad69e3f8751f/Thumbnail/723547V1G112262_A.jpg?v=2",
+          "title": "Women's Mini Loop in Dark barolo | Bottega Veneta US"
+        },
+        {
+          "link": "https://www.ssense.com/en-us/women/product/bottega-veneta/brown-mini-loop-camera-bag/16956861",
+          "thumbnail": "https://res.cloudinary.com/ssenseweb/image/upload/b_white,c_lpad,g_south,h_706,w_470/c_scale,h_480/v550/251798F048037_1.jpg",
+          "title": "Bottega Veneta: Brown Mini Loop Camera Bag | SSENSE"
+        },
+        {
+          "link": "https://www.mytheresa.com/de/en/women/bottega-veneta-loop-small-leather-crossbody-bag-brown-p00808929",
+          "thumbnail": "https://www.mytheresa.com/media/356/402/30/43/P00808929.jpg",
+          "title": "Loop Intrecciato leather camera bag in brown - Bottega Veneta | Mytheresa"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 1,
+        "fallback": 0,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "bag_1": {
+          "itemDescription": "item1 dark brown bag",
+          "searchTerms": [
+            "item1 dark brown bag",
+            "bag",
+            "backpack",
+            "handbag",
+            "tote bag",
+            "purse",
+            "clutch",
+            "messenger bag",
+            "shoulder bag",
+            "wallet"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.bottegaveneta.com/en-us/mini-loop-dark-barolo-813980041.html",
+              "title": "Women's Mini Loop in Dark barolo | Bottega Veneta US"
+            },
+            {
+              "link": "https://www.ssense.com/en-us/women/product/bottega-veneta/brown-mini-loop-camera-bag/16956861",
+              "title": "Bottega Veneta: Brown Mini Loop Camera Bag | SSENSE"
+            },
+            {
+              "link": "https://www.mytheresa.com/de/en/women/bottega-veneta-loop-small-leather-crossbody-bag-brown-p00808929",
+              "title": "Loop Intrecciato leather camera bag in brown - Bottega Veneta | Mytheresa"
+            }
+          ],
+          "timestamp": "2025-11-14T11:36:30.978Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 4.67,
+        "per_category_search_seconds": 6.85,
+        "gpt4_turbo_api_time_seconds": 3.13,
+        "processing_overhead_seconds": 0,
+        "other_overhead_seconds": -3.13,
+        "wall_clock_seconds": 11.53,
+        "serper_api_time_seconds": 3.72,
+        "serper_count": 1,
+        "gpt4_turbo_count": 1,
+        "total_seconds": 11.53,
+        "categories_parallel": 1
+      }
+    }
+  }
+}

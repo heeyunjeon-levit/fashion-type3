@@ -1,80 +1,44 @@
 {
+  "status": "success",
   "phone": "821031981119",
-  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763119583219_Screenshot_20250815_144123_Instagram.jpg",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763120819469_Screenshot_20250815_144123_Instagram.jpg",
   "items": [
     {
       "category": "shoes",
       "groundingdino_prompt": "silver shoes",
       "description": "silver sequin sneakers with white stripes and laces",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_silver_shoes_1763119595166.jpg",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_silver_shoes_1763120831629.jpg",
       "confidence": 0.758
-    },
-    {
-      "category": "tops",
-      "groundingdino_prompt": "blue shirt",
-      "description": "light blue t-shirt with a cartoon graphic on the front",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_blue_shirt_1763119596419.jpg",
-      "confidence": 0.573
     }
   ],
   "search_results": {
     "results": {
       "shoes_1": [
         {
-          "link": "https://www.adidas.co.kr/삼바-og/JR0035.html",
-          "thumbnail": "https://assets.adidas.com/images/w_600,f_auto,q_auto/ed0d15212f744f6ab1fe9b231942d26e_faec/OG_Silver_JR0035_db01_00_standard.tiff.jpg",
-          "title": "아디다스 삼바 OG - Silver | adidas South Korea"
+          "link": "https://www.adidas.com/us/samba-og-shoes/JR0035.html",
+          "thumbnail": "https://assets.adidas.com/images/w_600,f_auto,q_auto/ed0d15212f744f6ab1fe9b231942d26e_9366/SAMBA_OG_SHOES_Silver_JR0035_01_00_standard.jpg",
+          "title": "adidas SAMBA OG SHOES - Silver | Free Shipping with adiClub | adidas US"
         },
         {
-          "link": "https://www.trenbe.com/product/++130822258",
-          "thumbnail": "https://image-cdn.trenbe.com/productmain/1744015397796-fffb00d0-acb5-4bf6-8a5c-85c6c1c58c6c.jpeg",
-          "title": "아디다스(Adidas) | 아디다스 삼바 OG 미러볼 실버 W | 트렌비"
-        }
-      ],
-      "tops_2": [
-        {
-          "link": "https://www.adidas.co.kr/삼바-og/JR0035.html",
-          "thumbnail": "https://assets.adidas.com/images/w_600,f_auto,q_auto/ed0d15212f744f6ab1fe9b231942d26e_9366/OG_Silver_JR0035_01_00_standard.jpg",
-          "title": "아디다스 삼바 OG - Silver | adidas South Korea"
+          "link": "https://www.musinsa.com/products/5102675",
+          "thumbnail": "https://image.msscdn.net/thumbnails/images/prd_img/20250512/5102675/detail_5102675_17471795076192_big.jpg?w=1000",
+          "title": "아디다스(ADIDAS) 삼바 OG - 실버:화이트 / JR0035 - 사이즈 & 후기 | 무신사"
         },
         {
-          "link": "https://www.trenbe.com/product/++130757770",
-          "thumbnail": "https://image-cdn.trenbe.com/product-images/1742957231548_16ddadbd8f1386abac040205dad46d75_0.jpeg",
-          "title": "아디다스(Adidas) | 아디다스 W 삼바 SAMBA OG 미러볼 실버 ..."
-        },
-        {
-          "link": "https://www.trenbe.com/product/++130822258",
-          "thumbnail": "https://image-cdn.trenbe.com/productmain/1744015397796-fffb00d0-acb5-4bf6-8a5c-85c6c1c58c6c.jpeg",
-          "title": "아디다스(Adidas) | 아디다스 삼바 OG 미러볼 실버 W | 트렌비"
+          "link": "https://poshmark.com/listing/Adidas-Samba-Metallic-Silver-Sneakers-682fe65eed788ddda146d4d0",
+          "thumbnail": "https://di2ponv0v5otw.cloudfront.net/posts/2025/05/22/682fe65eed788ddda146d4d0/s_wp_682fe66d2fa054120b435500.webp",
+          "title": "adidas | Shoes | Adidas Samba Metallic Silver Sneakers | Poshmark"
         }
       ]
     },
     "meta": {
       "sourceCounts": {
         "gpt": 1,
-        "fallback": 1,
+        "fallback": 0,
         "none": 0,
         "error": 0
       },
       "gptReasoning": {
-        "tops_2": {
-          "itemDescription": "item2 blue shirt",
-          "searchTerms": [
-            "item2 blue shirt",
-            "jacket",
-            "coat",
-            "outerwear",
-            "shirt",
-            "sweater",
-            "blouse",
-            "top",
-            "blazer",
-            "cardigan"
-          ],
-          "selectedLinks": [],
-          "timestamp": "2025-11-14T11:27:11.728Z",
-          "candidateCount": 30
-        },
         "shoes_1": {
           "itemDescription": "item1 silver shoes",
           "searchTerms": [
@@ -90,33 +54,36 @@
           ],
           "selectedLinks": [
             {
-              "link": "https://www.adidas.co.kr/삼바-og/JR0035.html",
-              "title": "아디다스 삼바 OG - Silver | adidas South Korea"
+              "link": "https://www.adidas.com/us/samba-og-shoes/JR0035.html",
+              "title": "adidas SAMBA OG SHOES - Silver | Free Shipping with adiClub | adidas US"
             },
             {
-              "link": "https://www.trenbe.com/product/++130822258",
-              "title": "아디다스(Adidas) | 아디다스 삼바 OG 미러볼 실버 W | 트렌비"
+              "link": "https://www.musinsa.com/products/5102675",
+              "title": "아디다스(ADIDAS) 삼바 OG - 실버:화이트 / JR0035 - 사이즈 & 후기 | 무신사"
+            },
+            {
+              "link": "https://poshmark.com/listing/Adidas-Samba-Metallic-Silver-Sneakers-682fe65eed788ddda146d4d0",
+              "title": "adidas | Shoes | Adidas Samba Metallic Silver Sneakers | Poshmark"
             }
           ],
-          "timestamp": "2025-11-14T11:27:21.841Z",
+          "timestamp": "2025-11-14T11:47:22.576Z",
           "candidateCount": 30,
-          "selectionCount": 2
+          "selectionCount": 3
         }
       },
       "timing": {
-        "full_image_search_seconds": 23.57,
-        "per_category_search_seconds": 20.4,
-        "gpt4_turbo_api_time_seconds": 5.05,
+        "full_image_search_seconds": 1.46,
+        "per_category_search_seconds": 8.51,
+        "gpt4_turbo_api_time_seconds": 4.26,
         "processing_overhead_seconds": 0,
-        "other_overhead_seconds": -5.05,
-        "wall_clock_seconds": 43.97,
-        "serper_api_time_seconds": 25.61,
-        "serper_count": 2,
-        "gpt4_turbo_count": 2,
-        "total_seconds": 43.97,
-        "categories_parallel": 2
+        "other_overhead_seconds": -4.26,
+        "wall_clock_seconds": 9.97,
+        "serper_api_time_seconds": 4.24,
+        "serper_count": 1,
+        "gpt4_turbo_count": 1,
+        "total_seconds": 9.97,
+        "categories_parallel": 1
       }
     }
-  },
-  "status": "success"
+  }
 }

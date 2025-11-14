@@ -1,13 +1,13 @@
 {
   "status": "success",
   "phone": "821090730739",
-  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763119789809_IMG_3738.jpg",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763120752846_IMG_3738.jpg",
   "items": [
     {
       "category": "tops",
       "groundingdino_prompt": "gray jacket",
       "description": "gray button-up jacket with a soft texture, featuring a collar and two front pockets",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_gray_jacket_1763119800866.jpg",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_gray_jacket_1763120763158.jpg",
       "confidence": 0.948
     }
   ],
@@ -15,26 +15,26 @@
     "results": {
       "tops_1": [
         {
-          "link": "https://www.landsend.com/products/womens-reversible-shearling-fleece-button-front-coat/id_396447",
-          "thumbnail": "https://s7.landsend.com/is/image/LandsEnd/554422_LEPP_S1_BRO?$xl$&wid=1003&hei=1003",
-          "title": "Women's Reversible Shearling Fleece Button Front Coat | Lands' End"
+          "link": "https://globalbunjang.com/product/318181958",
+          "thumbnail": "https://media.bunjang.co.kr/product/318181958_1_1739845664_w1200.jpg?crop=0",
+          "title": "MUJI | 무인양품 MUJI Men's Fleece Jacket [MAN M] #일본빈티지,#일본브랜드,#무인양품후리스,#후리스자켓,#무인양품 on Bunjang Global Site."
         },
         {
-          "link": "https://m.gsshop.com/prd/prd.gs?prdid=1087517838",
-          "thumbnail": "https://asset.m-gs.kr/prod/1087517838/1/550",
-          "title": "데사1972 그레이 인조 퍼 시어링 재킷 KK13847 GRES - GS SHOP"
+          "link": "https://m.coupang.com/vm/products/7619062774?itemId=20195849789&vendorItemId=87286857492",
+          "thumbnail": "https://thumbnail.coupangcdn.com/thumbnails/remote/492x492ex/image/retail/images/678175462427913-9214dfbb-32a3-4e4d-8ee5-91c3e8cbd962.jpg",
+          "title": "캐럿 남녀공용 소프트 극세사 긴팔 카라 잠옷 상하 세트 - 남성 ..."
         },
         {
-          "link": "https://www.ebay.com/itm/266391033796",
-          "thumbnail": "https://i.ebayimg.com/images/g/LxcAAOSwGzBfTro7/s-l1200.jpg",
-          "title": "NWOT Women's Brandon Thomas Reversible Jacket Faux Suede and Faux Fur – Large | eBay"
+          "link": "https://www.daangn.com/kr/buy-sell/니트볼레로-원피스-세트-z14ueuuar4rh/",
+          "thumbnail": "https://img.kr.gcp-karroter.net/origin/article/202510/1761226700547cab56e9043abb0f03c5eefec6b885747034a4bfde8d25b868a9632b83d0bd11c0.webp?q=82&s=300x300&t=crop&f=webp",
+          "title": "니트볼레로 원피스 세트 | 여성의류 | 당근 중고거래"
         }
       ]
     },
     "meta": {
       "sourceCounts": {
-        "gpt": 1,
-        "fallback": 0,
+        "gpt": 0,
+        "fallback": 1,
         "none": 0,
         "error": 0
       },
@@ -53,36 +53,22 @@
             "blazer",
             "cardigan"
           ],
-          "selectedLinks": [
-            {
-              "link": "https://www.landsend.com/products/womens-reversible-shearling-fleece-button-front-coat/id_396447",
-              "title": "Women's Reversible Shearling Fleece Button Front Coat | Lands' End"
-            },
-            {
-              "link": "https://m.gsshop.com/prd/prd.gs?prdid=1087517838",
-              "title": "데사1972 그레이 인조 퍼 시어링 재킷 KK13847 GRES - GS SHOP"
-            },
-            {
-              "link": "https://www.ebay.com/itm/266391033796",
-              "title": "NWOT Women's Brandon Thomas Reversible Jacket Faux Suede and Faux Fur – Large | eBay"
-            }
-          ],
-          "timestamp": "2025-11-14T11:30:31.683Z",
-          "candidateCount": 26,
-          "selectionCount": 3
+          "selectedLinks": [],
+          "timestamp": "2025-11-14T11:46:21.939Z",
+          "candidateCount": 26
         }
       },
       "timing": {
-        "full_image_search_seconds": 15.15,
-        "per_category_search_seconds": 12.26,
-        "gpt4_turbo_api_time_seconds": 3.16,
+        "full_image_search_seconds": 4.14,
+        "per_category_search_seconds": 13.37,
+        "gpt4_turbo_api_time_seconds": 1.19,
         "processing_overhead_seconds": 0,
-        "other_overhead_seconds": -3.15,
-        "wall_clock_seconds": 27.42,
-        "serper_api_time_seconds": 9.1,
+        "other_overhead_seconds": -1.18,
+        "wall_clock_seconds": 17.51,
+        "serper_api_time_seconds": 12.18,
         "serper_count": 1,
         "gpt4_turbo_count": 1,
-        "total_seconds": 27.42,
+        "total_seconds": 17.51,
         "categories_parallel": 1
       }
     }

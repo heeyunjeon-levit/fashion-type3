@@ -1,0 +1,184 @@
+{
+  "phone": "821091453582",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763120195449_Screenshot_20251113_115821_Threads.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "gray sweatshirt",
+      "description": "light gray long sleeve sweatshirt with ribbed cuffs and a relaxed fit",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_gray_sweatshirt_1763120208783.jpg",
+      "confidence": 0.494
+    },
+    {
+      "category": "bottoms",
+      "groundingdino_prompt": "gray skirt",
+      "description": "light gray midi skirt with a drawstring waist and straight cut",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_gray_skirt_1763120209863.jpg",
+      "confidence": 0.832
+    },
+    {
+      "category": "shoes",
+      "groundingdino_prompt": "white sneakers",
+      "description": "white athletic sneakers with black accents and thick soles",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_white_sneakers_1763120210506.jpg",
+      "confidence": 0.655
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://spao.elandmall.co.kr/i/item?itemNo=2407353753&lowerVendNo=LV16003626",
+          "thumbnail": "https://item.elandrs.com/r/image/item/2024-08-05/0be5c399-044a-4243-8df4-b33ae73ab63d.jpg",
+          "title": "여성용] [프렌치테리] 베이직 스커트(기모)_SPWME4TG10- 스파오"
+        },
+        {
+          "link": "https://www.reversible.com/shopping/women/item/converse-full-length-maxi-skirt-166599667",
+          "thumbnail": "https://image.reversible.com/spu_thumbnail/6c6a488858e0591683d26e9a2ab22edd8d7328723cc9f6391c64d2a181327399",
+          "title": "Converse Full-Length Maxi Skirt | REVERSIBLE"
+        },
+        {
+          "link": "https://m.lizme.co.kr/product/데일리템🌹휘뚤마뚤-캐주얼하게-착용하기좋은-h라인-핏감의-데일리-밴딩-스커트/1710",
+          "thumbnail": "https://m.lizme.co.kr/web/upload/NNEditor/20250224/eba05e48358c056b623334bf70692bf7.jpg",
+          "title": "LIZME | 데일리 밴딩 스커트 - 캐주얼한 H라인 핏"
+        }
+      ],
+      "bottoms_2": [
+        {
+          "link": "https://www.musinsa.com/products/4279211",
+          "thumbnail": "https://item.elandrs.com/r/image/item/2024-08-05/2e4b2e49-998f-4048-a93e-df12d8a6537c.jpg",
+          "title": "스파오(SPAO) [프렌치테리] 베이직 스커트(기모)_SPWME4TG10 - 사이즈 & 후기 | 무신사"
+        },
+        {
+          "link": "https://www.asos.com/us/renee-studio/renee-studio-plus-exclusive-drawstring-waist-sweat-maxi-skirt-in-gray-part-of-a-set/prd/207216378",
+          "thumbnail": "https://images.asos-media.com/products/renee-studio-plus-exclusive-drawstring-waist-sweat-maxi-skirt-in-gray-part-of-a-set/207216378-2?$n_640w$&wid=513&fit=constrain",
+          "title": "Renee Studio Plus exclusive drawstring waist sweat maxi skirt in gray - part of a set | ASOS"
+        },
+        {
+          "link": "https://www.musinsa.com/products/4916180",
+          "thumbnail": "https://img.ssfshop.com/cmd/LB_750x/src/img.ssfshop.com/goods/ECBR/25/02/26/GM0025022608028_4_THNAIL_ORGINL_20250318195908447.jpg",
+          "title": "샌드 사운드(SAND SOUND) (WOMEN) 스웻 롱 스커트 라이트 그레이 - 사이즈 & 후기 | 무신사"
+        }
+      ],
+      "shoes_3": [
+        {
+          "link": "https://www.amazon.com/New-Balance-Mens-408-Sneaker/dp/B0DJW1LTSK",
+          "thumbnail": "https://m.media-amazon.com/images/I/71AEiwavYHL._AC_UY300_.jpg",
+          "title": "New Balance Men's 408 V1 Sneaker, Nb White/Natural Indigo, 4 M | Fashion Sneakers - Amazon.com"
+        },
+        {
+          "link": "https://www.famousfootwear.com/product/new-balance-408-sneaker-1056430/white-natural-indigo-blue-33803?bvstate=pg:2/ct:r",
+          "thumbnail": "https://www.famousfootwear.com/blob/product-images/20000/33/80/3/33803_pair_feed1000.jpg",
+          "title": "New Balance 408 Sneaker | Famous Footwear"
+        },
+        {
+          "link": "https://www.farfetch.com/shopping/men/new-balance-ml-408-v1-sneakers-item-24462193.aspx",
+          "thumbnail": "https://cdn-images.farfetch-contents.com/24/46/21/93/24462193_54404094_600.jpg",
+          "title": "New Balance ML 408 V1 Sneakers | White | FARFETCH"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 2,
+        "fallback": 1,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "tops_1": {
+          "itemDescription": "item1 gray sweatshirt",
+          "searchTerms": [
+            "item1 gray sweatshirt",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-14T11:37:05.714Z",
+          "candidateCount": 27
+        },
+        "bottoms_2": {
+          "itemDescription": "item2 gray skirt",
+          "searchTerms": [
+            "item2 gray skirt",
+            "shorts",
+            "slacks",
+            "pants",
+            "trousers",
+            "jeans",
+            "skirt",
+            "leg trousers"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.musinsa.com/products/4279211",
+              "title": "스파오(SPAO) [프렌치테리] 베이직 스커트(기모)_SPWME4TG10 - 사이즈 & 후기 | 무신사"
+            },
+            {
+              "link": "https://www.asos.com/us/renee-studio/renee-studio-plus-exclusive-drawstring-waist-sweat-maxi-skirt-in-gray-part-of-a-set/prd/207216378",
+              "title": "Renee Studio Plus exclusive drawstring waist sweat maxi skirt in gray - part of a set | ASOS"
+            },
+            {
+              "link": "https://www.musinsa.com/products/4916180",
+              "title": "샌드 사운드(SAND SOUND) (WOMEN) 스웻 롱 스커트 라이트 그레이 - 사이즈 & 후기 | 무신사"
+            }
+          ],
+          "timestamp": "2025-11-14T11:37:06.211Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        },
+        "shoes_3": {
+          "itemDescription": "item3 white sneakers",
+          "searchTerms": [
+            "item3 white sneakers",
+            "shoes",
+            "sneakers",
+            "boots",
+            "sandals",
+            "heels",
+            "flats",
+            "loafers",
+            "oxford"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.amazon.com/New-Balance-Mens-408-Sneaker/dp/B0DJW1LTSK",
+              "title": "New Balance Men's 408 V1 Sneaker, Nb White/Natural Indigo, 4 M | Fashion Sneakers - Amazon.com"
+            },
+            {
+              "link": "https://www.famousfootwear.com/product/new-balance-408-sneaker-1056430/white-natural-indigo-blue-33803?bvstate=pg:2/ct:r",
+              "title": "New Balance 408 Sneaker | Famous Footwear"
+            },
+            {
+              "link": "https://www.farfetch.com/shopping/men/new-balance-ml-408-v1-sneakers-item-24462193.aspx",
+              "title": "New Balance ML 408 V1 Sneakers | White | FARFETCH"
+            }
+          ],
+          "timestamp": "2025-11-14T11:37:07.915Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 4.08,
+        "per_category_search_seconds": 12.58,
+        "gpt4_turbo_api_time_seconds": 8.81,
+        "processing_overhead_seconds": 0,
+        "other_overhead_seconds": -8.8,
+        "wall_clock_seconds": 16.66,
+        "serper_api_time_seconds": 24.99,
+        "serper_count": 3,
+        "gpt4_turbo_count": 3,
+        "total_seconds": 16.66,
+        "categories_parallel": 3
+      }
+    }
+  }
+}

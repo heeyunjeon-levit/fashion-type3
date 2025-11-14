@@ -1,0 +1,89 @@
+{
+  "phone": "821089070741",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763120471871_IMG_0871.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "gray cardigan",
+      "description": "dark gray crew neck cardigan with button closure and ribbed cuffs",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_gray_cardigan_1763120491057.jpg",
+      "confidence": 0.929
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://danton.com/products/dnb252l102-0003",
+          "thumbnail": "https://danton.com/cdn/shop/files/DNB252L102-0003_color_121.jpg?v=1756372354&width=1080",
+          "title": "DANTON WOMEN'S LAMBSWOOL CREW NECK KNIT CARDIGAN"
+        },
+        {
+          "link": "https://m.ssfshop.com/Danton/GM0024101615644/good?utag=ref_tpl:111943$ref_cnr:23516$ref_br:MCBR$set:2$dpos:2&dspCtgryNo=&brndShopId=MCBR&brandShopNo=BDMA09F11&leftBrandNM=BEAKER_MCBR&godEvlTurn=23",
+          "thumbnail": "https://img.ssfshop.com/cmd/LB_300x/src/https://img.ssfshop.com/god_god_evl/25/05/06/631217981476679.jpeg",
+          "title": "Danton-Crew Neck Cardigan - Grey│삼성물산 온라인몰 SSF Shop"
+        },
+        {
+          "link": "https://noclaim.co.kr/product/danton-for-womencrew-neck-cardigan-charcoal-단톤-포-우먼크루넥-가디건-챠콜/23819",
+          "thumbnail": "https://cafe24.poxo.com/ec01/mcgun/q3L+VXA3MkjlAMzHB3lVZN8WIkzCAAUDfxKyybteJXt6CevpWgC8zNhcWCQCCQEBYn6BW7UvWSYYKCeqd8mDXQ==/_/web/product/extra/small/202211/ea771dba10d7b9e9061dbe4d4a76ff6d.jpg",
+          "title": "DANTON [For Women]Crew Neck Cardigan \"Charcoal\" 단톤 [포 우먼]크루넥 가디건 \"챠콜\"NOCLAIM"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 1,
+        "fallback": 0,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "tops_1": {
+          "itemDescription": "item1 gray cardigan",
+          "searchTerms": [
+            "item1 gray cardigan",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://danton.com/products/dnb252l102-0003",
+              "title": "DANTON WOMEN'S LAMBSWOOL CREW NECK KNIT CARDIGAN"
+            },
+            {
+              "link": "https://m.ssfshop.com/Danton/GM0024101615644/good?utag=ref_tpl:111943$ref_cnr:23516$ref_br:MCBR$set:2$dpos:2&dspCtgryNo=&brndShopId=MCBR&brandShopNo=BDMA09F11&leftBrandNM=BEAKER_MCBR&godEvlTurn=23",
+              "title": "Danton-Crew Neck Cardigan - Grey│삼성물산 온라인몰 SSF Shop"
+            },
+            {
+              "link": "https://noclaim.co.kr/product/danton-for-womencrew-neck-cardigan-charcoal-단톤-포-우먼크루넥-가디건-챠콜/23819",
+              "title": "DANTON [For Women]Crew Neck Cardigan \"Charcoal\" 단톤 [포 우먼]크루넥 가디건 \"챠콜\"NOCLAIM"
+            }
+          ],
+          "timestamp": "2025-11-14T11:42:04.998Z",
+          "candidateCount": 23,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 11.17,
+        "per_category_search_seconds": 21.31,
+        "gpt4_turbo_api_time_seconds": 5.11,
+        "processing_overhead_seconds": 0,
+        "other_overhead_seconds": -5.11,
+        "wall_clock_seconds": 32.48,
+        "serper_api_time_seconds": 16.19,
+        "serper_count": 1,
+        "gpt4_turbo_count": 1,
+        "total_seconds": 32.48,
+        "categories_parallel": 1
+      }
+    }
+  }
+}

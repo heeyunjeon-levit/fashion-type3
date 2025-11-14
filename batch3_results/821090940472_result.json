@@ -1,19 +1,20 @@
 {
+  "status": "success",
   "phone": "821090940472",
-  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763118819666_Screenshot_20251112_235608.jpg",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763120980604_Screenshot_20251112_235608.jpg",
   "items": [
     {
       "category": "tops",
       "groundingdino_prompt": "black cardigan",
-      "description": "black ribbed button-up cardigan with a fitted style",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_black_cardigan_1763118842377.jpg",
+      "description": "black ribbed long sleeve cardigan with buttons",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_black_cardigan_1763121012460.jpg",
       "confidence": 0.915
     },
     {
       "category": "bag",
       "groundingdino_prompt": "brown bag",
       "description": "brown leather shoulder bag with a simple design",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_brown_bag_1763118843739.jpg",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_brown_bag_1763121013291.jpg",
       "confidence": 0.824
     }
   ],
@@ -33,14 +34,19 @@
       ],
       "bag_2": [
         {
-          "link": "https://www.29cm.co.kr/products/2721560",
-          "thumbnail": "https://img.29cm.co.kr/item/202407/11ef4332efafdb4baad2af51810d6cd4.jpg?width=700&format=webp",
-          "title": "TOW BAG_ DARK BROWN - 감도 깊은 취향 셀렉트샵 29CM"
+          "link": "https://www.ebay.com/itm/314123390781",
+          "thumbnail": "https://i.ebayimg.com/images/g/4lwAAOSwWG9jC3Nk/s-l1200.jpg",
+          "title": "Marc O'Polo Tally Hobo Bag L Schultertasche Tasche Dark Walnut dunkelbraun Neu | eBay"
         },
         {
-          "link": "https://global.musinsa.com/th/goods/4089959",
-          "thumbnail": "https://image.msscdn.net/thumbnails/images/prd_img/20240426/4089959/detail_4089959_17212697980914_big.jpg",
-          "title": "MUSINSA | RAINBEE BLUME BAG_ DARK BROWN"
+          "link": "https://baggu.com/products/recycled-leather-shoulder-bag-brown",
+          "thumbnail": "https://cdn.shopify.com/s/files/1/0851/3262/files/b0bdf64bce7e0d0a0adb5f15144133a41512efa9-2048x2560.jpg?v=1738115200&width=1200&height=1500&format=webp&quality=90",
+          "title": "Recycled Leather Shoulder Bag Brown - Baggu"
+        },
+        {
+          "link": "https://www.ssfshop.com/public/inflow/partnerGate/serviceId/40997?nextUrl=/COURONNE/GQ0Z25091615988/good",
+          "thumbnail": "https://images.kolonmall.com/Prod_Img/CR/2025/LL7/RXBSX25611BRX_LL7.jpg?v1757641170319",
+          "title": "COURONNE-Coobo Shoulder 38 RXBSX25611BRX│삼성물산 온라인몰 SSF Shop"
         }
       ]
     },
@@ -52,6 +58,38 @@
         "error": 0
       },
       "gptReasoning": {
+        "bag_2": {
+          "itemDescription": "item2 brown bag",
+          "searchTerms": [
+            "item2 brown bag",
+            "bag",
+            "backpack",
+            "handbag",
+            "tote bag",
+            "purse",
+            "clutch",
+            "messenger bag",
+            "shoulder bag",
+            "wallet"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.ebay.com/itm/314123390781",
+              "title": "Marc O'Polo Tally Hobo Bag L Schultertasche Tasche Dark Walnut dunkelbraun Neu | eBay"
+            },
+            {
+              "link": "https://baggu.com/products/recycled-leather-shoulder-bag-brown",
+              "title": "Recycled Leather Shoulder Bag Brown - Baggu"
+            },
+            {
+              "link": "https://www.ssfshop.com/public/inflow/partnerGate/serviceId/40997?nextUrl=/COURONNE/GQ0Z25091615988/good",
+              "title": "COURONNE-Coobo Shoulder 38 RXBSX25611BRX│삼성물산 온라인몰 SSF Shop"
+            }
+          ],
+          "timestamp": "2025-11-14T11:50:26.561Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        },
         "tops_1": {
           "itemDescription": "item1 black cardigan",
           "searchTerms": [
@@ -76,53 +114,24 @@
               "title": "Loulou de Saison: Black Zephir Cashmere Cropped Cardigan | SSENSE"
             }
           ],
-          "timestamp": "2025-11-14T11:14:20.022Z",
+          "timestamp": "2025-11-14T11:50:29.245Z",
           "candidateCount": 24,
-          "selectionCount": 2
-        },
-        "bag_2": {
-          "itemDescription": "item2 brown bag",
-          "searchTerms": [
-            "item2 brown bag",
-            "bag",
-            "backpack",
-            "handbag",
-            "tote bag",
-            "purse",
-            "clutch",
-            "messenger bag",
-            "shoulder bag",
-            "wallet"
-          ],
-          "selectedLinks": [
-            {
-              "link": "https://www.29cm.co.kr/products/2721560",
-              "title": "TOW BAG_ DARK BROWN - 감도 깊은 취향 셀렉트샵 29CM"
-            },
-            {
-              "link": "https://global.musinsa.com/th/goods/4089959",
-              "title": "MUSINSA | RAINBEE BLUME BAG_ DARK BROWN"
-            }
-          ],
-          "timestamp": "2025-11-14T11:14:22.281Z",
-          "candidateCount": 30,
           "selectionCount": 2
         }
       },
       "timing": {
-        "full_image_search_seconds": 3.63,
-        "per_category_search_seconds": 12.98,
-        "gpt4_turbo_api_time_seconds": 9.43,
-        "processing_overhead_seconds": 0.01,
-        "other_overhead_seconds": -9.42,
-        "wall_clock_seconds": 16.63,
-        "serper_api_time_seconds": 14.25,
+        "full_image_search_seconds": 4.44,
+        "per_category_search_seconds": 10.16,
+        "gpt4_turbo_api_time_seconds": 10.35,
+        "processing_overhead_seconds": 0,
+        "other_overhead_seconds": -10.34,
+        "wall_clock_seconds": 14.61,
+        "serper_api_time_seconds": 7.28,
         "serper_count": 2,
         "gpt4_turbo_count": 2,
-        "total_seconds": 16.63,
+        "total_seconds": 14.61,
         "categories_parallel": 2
       }
     }
-  },
-  "status": "success"
+  }
 }

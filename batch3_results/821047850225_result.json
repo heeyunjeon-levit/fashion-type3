@@ -1,26 +1,27 @@
 {
+  "status": "success",
   "phone": "821047850225",
-  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763119744097_Screenshot_20251114_164408_Instagram.jpg",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763120921835_Screenshot_20251114_164408_Instagram.jpg",
   "items": [
     {
       "category": "tops",
       "groundingdino_prompt": "beige cardigan",
-      "description": "beige open-front cardigan with black trim and ribbed cuffs",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_beige_cardigan_1763119767998.jpg",
+      "description": "beige knit cardigan with black trim and long sleeves",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_beige_cardigan_1763120956388.jpg",
       "confidence": 0.734
     },
     {
       "category": "bottoms",
       "groundingdino_prompt": "beige pants",
       "description": "beige high-waisted pants with a straight fit",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_beige_pants_1763119769091.jpg",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_beige_pants_1763120958014.jpg",
       "confidence": 0.591
     },
     {
       "category": "bag",
       "groundingdino_prompt": "beige bag",
-      "description": "large beige tote bag with sturdy handles",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_beige_bag_1763119769869.jpg",
+      "description": "large beige tote bag with handles",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_beige_bag_1763120959100.jpg",
       "confidence": 0.352
     }
   ],
@@ -57,19 +58,19 @@
       ],
       "bag_3": [
         {
-          "link": "https://m.oh-car.co.kr/goods/goods_view.php?goodsNo=1000088478",
-          "thumbnail": "https://d2yvw3vh7zamx3.cloudfront.net/data/tuningContents/gnihope2015/ohcar_bi_5_223145790591.jpg",
-          "title": "볼보 S90 운전석시트의 닳고 해진 가죽복원 후기 / 과천 삼부 ..."
+          "link": "https://m.oh-car.co.kr/goods/goods_view.php?goodsNo=1000584046",
+          "thumbnail": "https://d2yvw3vh7zamx3.cloudfront.net/data/tuningContents/rlarkdls0928/ohcar_bi_12_223344411171.jpg",
+          "title": "카니발ka4 빌스콘티 램프 파손교체&베이지 시트 이염 제거 클리닝 후 가죽코팅 클리어!!~~ | 오늘의카 - 튜닝,정비 시공후기 모음 앱"
         },
         {
-          "link": "https://m.oh-car.co.kr/goods/goods_view.php?goodsNo=1000059382",
-          "thumbnail": "https://d2yvw3vh7zamx3.cloudfront.net/data/tuningContents/pro_oc/ohcar_bi_16_223258921777.jpg",
-          "title": "자동차 실내복원 울산 그랜져 GN7 가죽 시트 복원 / 울산 북구, 부산, 포항 | 오늘의카 - 튜닝,정비 시공후기 모음 앱"
+          "link": "https://m.oh-car.co.kr/goods/goods_view.php?goodsNo=1000579966",
+          "thumbnail": "https://d2yvw3vh7zamx3.cloudfront.net/data/tuningContents/dreamer_kim37/ohcar_bi_8_223856984070.jpg",
+          "title": "4세대 카니발 리무진시트 교체] 1열 운전석, 조수석 나파가죽 메모리폼 시트 착석감튜닝 작업기 / 남양주시 다산동 | 오늘의카 - 튜닝,정비 시공후기 모음 앱"
         },
         {
-          "link": "https://m.imim.kr/product/더뉴카니발-2열-열선시트-베이지/5505",
-          "thumbnail": "https://m.imim.kr/web/upload/NNEditor/20201118/mobile/d92a70f507e0541f977401dfdba48e9e_1605674473.jpg",
-          "title": "더뉴카니발 2열 열선시트 베이지 - 자동차부품 준준모터스"
+          "link": "https://m.oh-car.co.kr/goods/goods_view.php?goodsNo=1000646441",
+          "thumbnail": "https://d2yvw3vh7zamx3.cloudfront.net/data/tuningContents/autocrew1389/ohcar_bi_7_223909906555.jpg",
+          "title": "자동차 시트에 커피 쏟았을때 대처법 시트 탈거 실내크리닝 / 경기 김포 | 오늘의카 - 튜닝,정비 시공후기 모음 앱"
         }
       ]
     },
@@ -94,7 +95,25 @@
             "leg trousers"
           ],
           "selectedLinks": [],
-          "timestamp": "2025-11-14T11:29:39.848Z",
+          "timestamp": "2025-11-14T11:49:37.835Z",
+          "candidateCount": 30
+        },
+        "bag_3": {
+          "itemDescription": "item3 beige bag",
+          "searchTerms": [
+            "item3 beige bag",
+            "bag",
+            "backpack",
+            "handbag",
+            "tote bag",
+            "purse",
+            "clutch",
+            "messenger bag",
+            "shoulder bag",
+            "wallet"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-14T11:49:37.977Z",
           "candidateCount": 30
         },
         "tops_1": {
@@ -125,43 +144,24 @@
               "title": "Anne Klein-[앤클라인]스티치 라인 가디건 O5HS15│삼성물산 온라인몰 SSF Shop"
             }
           ],
-          "timestamp": "2025-11-14T11:29:40.871Z",
+          "timestamp": "2025-11-14T11:49:39.118Z",
           "candidateCount": 20,
           "selectionCount": 3
-        },
-        "bag_3": {
-          "itemDescription": "item3 beige bag",
-          "searchTerms": [
-            "item3 beige bag",
-            "bag",
-            "backpack",
-            "handbag",
-            "tote bag",
-            "purse",
-            "clutch",
-            "messenger bag",
-            "shoulder bag",
-            "wallet"
-          ],
-          "selectedLinks": [],
-          "timestamp": "2025-11-14T11:29:44.943Z",
-          "candidateCount": 30
         }
       },
       "timing": {
-        "full_image_search_seconds": 3.01,
-        "per_category_search_seconds": 11.33,
-        "gpt4_turbo_api_time_seconds": 6.68,
+        "full_image_search_seconds": 12.75,
+        "per_category_search_seconds": 6.6,
+        "gpt4_turbo_api_time_seconds": 4.77,
         "processing_overhead_seconds": 0,
-        "other_overhead_seconds": -6.68,
-        "wall_clock_seconds": 14.35,
-        "serper_api_time_seconds": 18.13,
+        "other_overhead_seconds": -4.77,
+        "wall_clock_seconds": 19.35,
+        "serper_api_time_seconds": 12.58,
         "serper_count": 3,
         "gpt4_turbo_count": 3,
-        "total_seconds": 14.35,
+        "total_seconds": 19.35,
         "categories_parallel": 3
       }
     }
-  },
-  "status": "success"
+  }
 }

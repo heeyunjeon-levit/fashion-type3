@@ -1,19 +1,20 @@
 {
+  "status": "success",
   "phone": "821077642614",
-  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763119333428_IMG_7511.jpeg",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763120488326_IMG_7511.jpeg",
   "items": [
     {
       "category": "tops",
       "groundingdino_prompt": "gray jacket",
-      "description": "dark gray bomber jacket with a relaxed fit and zip closure",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_gray_jacket_1763119342055.jpg",
+      "description": "dark gray bomber jacket with a relaxed fit and no visible fastenings",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_gray_jacket_1763120509618.jpg",
       "confidence": 0.931
     },
     {
       "category": "tops",
       "groundingdino_prompt": "white shirt",
       "description": "plain white crew neck t-shirt with a simple design",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_white_shirt_1763119342841.jpg",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_white_shirt_1763120510899.jpg",
       "confidence": 0.513
     }
   ],
@@ -21,26 +22,26 @@
     "results": {
       "tops_1": [
         {
-          "link": "https://www.farfetch.com/shopping/men/les-deux-zip-up-bomber-jacket-item-28404115.aspx",
-          "thumbnail": "https://cdn-images.farfetch-contents.com/28/40/41/15/28404115_61063563_600.jpg",
-          "title": "Les Deux zip-up Bomber Jacket | Grey | FARFETCH"
+          "link": "https://www.zara.com/us/en/100-wool-knit-bomber-jacket-p03920099.html",
+          "thumbnail": "https://static.zara.net/assets/public/074a/979f/3bca42d3b7ca/e6ee7785647f/03920099814-a1/03920099814-a1.jpg?ts=1759832906755",
+          "title": "100% WOOL KNIT BOMBER JACKET - Gray / Beige | ZARA United States"
         },
         {
-          "link": "https://www.cos.com/en-ww/men/menswear/coatsjackets/wool/product/split-wool-bomber-jacket-dark-grey-1294462002",
-          "thumbnail": "https://media.cos.com/assets/001/93/72/937250da4142ec412124020e389cd3b60bc1a41f_xxl-1.jpg?imwidth=2160",
-          "title": "DOUBLE-FACED WOOL BOMBER JACKET - DARK GREY | COS"
+          "link": "https://www.cos.com/en-us/men/menswear/coatsjackets/wool/product/split-wool-bomber-jacket-dark-grey-1294462002",
+          "thumbnail": "https://media.cos.com/assets/001/93/72/937250da4142ec412124020e389cd3b60bc1a41f_xxl-1.jpg?imwidth=1200",
+          "title": "DOUBLE-FACED WOOL BOMBER JACKET - DARK GRAY | COS"
         },
         {
-          "link": "https://ptry.co.kr/product/detail.html?product_no=2153",
-          "thumbnail": "https://images.ptry.im/products/PCE3MWK301GY/lk5.1500.webp",
-          "title": "셔틀랜드 울 봄버 자켓_그레이"
+          "link": "https://byrang.com/product/zipped-cotton-jersey-jacket-grey/55/",
+          "thumbnail": "https://ecimg.cafe24img.com/pg573b81544624099/byrang2023/web/product/extra/big/20250108/26ea0309a5129472a56d5f34b6952872.jpg",
+          "title": "바이랑 - ZIPPED COTTON JERSEY JACKET - GREY"
         }
       ],
       "tops_2": [
         {
-          "link": "https://www.kohls.com/product/prd-6987175/apt-9-mens-mixed-media-varsity-bomber-jacket.jsp",
-          "thumbnail": "https://media.kohlsimg.com/is/image/kohls/6987175_ALT2?wid=400&hei=400&op_sharpen=1",
-          "title": "Apt. 9® Men's Mixed Media Varsity Bomber Jacket"
+          "link": "https://www2.hm.com/en_us/productpage.1240113002.html",
+          "thumbnail": "https://image.hm.com/assets/hm/6d/67/6d673f1745e61ebda17dd9c19c8522ca561c82f3.jpg",
+          "title": "Regular Fit Wool-Blend Bomber Jacket - Black - Men | H&M US"
         },
         {
           "link": "https://bananarepublic.gap.com/browse/product.do?pid=378333002",
@@ -62,24 +63,6 @@
         "error": 0
       },
       "gptReasoning": {
-        "tops_2": {
-          "itemDescription": "item2 white shirt",
-          "searchTerms": [
-            "item2 white shirt",
-            "jacket",
-            "coat",
-            "outerwear",
-            "shirt",
-            "sweater",
-            "blouse",
-            "top",
-            "blazer",
-            "cardigan"
-          ],
-          "selectedLinks": [],
-          "timestamp": "2025-11-14T11:22:31.424Z",
-          "candidateCount": 12
-        },
         "tops_1": {
           "itemDescription": "item1 gray jacket",
           "searchTerms": [
@@ -96,37 +79,54 @@
           ],
           "selectedLinks": [
             {
-              "link": "https://www.farfetch.com/shopping/men/les-deux-zip-up-bomber-jacket-item-28404115.aspx",
-              "title": "Les Deux zip-up Bomber Jacket | Grey | FARFETCH"
+              "link": "https://www.zara.com/us/en/100-wool-knit-bomber-jacket-p03920099.html",
+              "title": "100% WOOL KNIT BOMBER JACKET - Gray / Beige | ZARA United States"
             },
             {
-              "link": "https://www.cos.com/en-ww/men/menswear/coatsjackets/wool/product/split-wool-bomber-jacket-dark-grey-1294462002",
-              "title": "DOUBLE-FACED WOOL BOMBER JACKET - DARK GREY | COS"
+              "link": "https://www.cos.com/en-us/men/menswear/coatsjackets/wool/product/split-wool-bomber-jacket-dark-grey-1294462002",
+              "title": "DOUBLE-FACED WOOL BOMBER JACKET - DARK GRAY | COS"
             },
             {
-              "link": "https://ptry.co.kr/product/detail.html?product_no=2153",
-              "title": "셔틀랜드 울 봄버 자켓_그레이"
+              "link": "https://byrang.com/product/zipped-cotton-jersey-jacket-grey/55/",
+              "title": "바이랑 - ZIPPED COTTON JERSEY JACKET - GREY"
             }
           ],
-          "timestamp": "2025-11-14T11:22:41.109Z",
-          "candidateCount": 26,
+          "timestamp": "2025-11-14T11:42:06.034Z",
+          "candidateCount": 29,
           "selectionCount": 3
+        },
+        "tops_2": {
+          "itemDescription": "item2 white shirt",
+          "searchTerms": [
+            "item2 white shirt",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-14T11:42:09.287Z",
+          "candidateCount": 12
         }
       },
       "timing": {
-        "full_image_search_seconds": 2.5,
-        "per_category_search_seconds": 15.05,
-        "gpt4_turbo_api_time_seconds": 6.17,
+        "full_image_search_seconds": 3.48,
+        "per_category_search_seconds": 14.26,
+        "gpt4_turbo_api_time_seconds": 7.82,
         "processing_overhead_seconds": 0,
-        "other_overhead_seconds": -6.17,
-        "wall_clock_seconds": 17.56,
-        "serper_api_time_seconds": 14.23,
+        "other_overhead_seconds": -7.82,
+        "wall_clock_seconds": 17.75,
+        "serper_api_time_seconds": 17.43,
         "serper_count": 2,
         "gpt4_turbo_count": 2,
-        "total_seconds": 17.56,
+        "total_seconds": 17.75,
         "categories_parallel": 2
       }
     }
-  },
-  "status": "success"
+  }
 }
