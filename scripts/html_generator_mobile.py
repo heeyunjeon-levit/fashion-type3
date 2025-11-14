@@ -46,8 +46,8 @@ def generate_html_page(phone: str, results: Dict) -> str:
     
     search_results = results.get('search_results', {}).get('results', {})
     cropped_data = results.get('cropped_data', {})
-    items = cropped_data.get('items', [])
-    original_url = results.get('uploaded_url', '')
+    items = results.get('items', [])  # Get items directly from results
+    original_url = results.get('original_url', '')  # Fixed: use 'original_url'
     
     category_names = {
         'tops': '상의',
