@@ -65,10 +65,7 @@ def generate_html_page(phone: str, results: Dict) -> str:
         if not product_links or len(product_links) == 0:
             continue
         
-        # Skip numbered variants (e.g., "tops_1", "tops_2") - only show base categories
-        if '_' in category and category.split('_')[-1].isdigit():
-            continue
-        
+        # Show all categories including numbered variants
         category_key = category.split('_')[0]
         category_ko = category_names.get(category_key, category_key)
         num_products = len(product_links)
