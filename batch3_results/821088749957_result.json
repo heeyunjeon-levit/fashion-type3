@@ -1,0 +1,175 @@
+{
+  "phone": "821088749957",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763118473640_Screenshot_20251016_085411_Coupang.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "white sweatshirt",
+      "description": "white sweatshirt with red lettering on the front",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_white_sweatshirt_1763118485847.jpg",
+      "confidence": 0.72
+    },
+    {
+      "category": "bottoms",
+      "groundingdino_prompt": "blue skirt",
+      "description": "dark blue denim skirt with large side pockets",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_blue_skirt_1763118486425.jpg",
+      "confidence": 0.858
+    },
+    {
+      "category": "shoes",
+      "groundingdino_prompt": "red shoes",
+      "description": "red canvas sneakers with white laces",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_red_shoes_1763118486954.jpg",
+      "confidence": 0.788
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://www.daangn.com/kr/buy-sell/145-150-아이옷-일괄-15000-ns65w115snv6/",
+          "thumbnail": "https://img.kr.gcp-karroter.net/origin/article/202511/176204593457430a3f1722f8fe6c35d510a7a8565a7b551b1046e11013397ca5412c61c4f248f0.webp?f=webp&q=95&s=1440x1440&t=inside",
+          "title": "145-150 아이옷 일괄 15000 | 유아동 | 당근 중고거래"
+        },
+        {
+          "link": "https://spao.elandmall.co.kr/i/item?itemNo=2108239957&lowerVendNo=LV16003626",
+          "thumbnail": "https://spao.elandmall.co.kr/prd/orgimg/957/2108239957_0000010.jpg",
+          "title": "캠퍼스 그래픽 후드 풀오버_SPMHB4TG30- 스파오"
+        },
+        {
+          "link": "https://zigzag.kr/catalog/products/135622429",
+          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/d/2024/2/23/25904_202402231212170480_39983.jpeg?width=400&height=400&quality=80&format=webp",
+          "title": "이버유 [최저가/데일리] 짱편한 오버핏 귀염핏 여리여리 버터 긴팔 티셔츠"
+        }
+      ],
+      "bottoms_2": [
+        {
+          "link": "https://www.asos.com/us/asos-curve/asos-design-curve-denim-mini-skirt-in-blue/prd/203524405",
+          "thumbnail": "https://images.asos-media.com/products/asos-design-curve-denim-mini-skirt-in-blue/203524405-3?$n_640w$&wid=513&fit=constrain",
+          "title": "ASOS DESIGN Curve denim mini skirt in blue | ASOS"
+        },
+        {
+          "link": "https://fm2050.com/ko/products/colin-cargo-denim-mini-skirt-navy",
+          "thumbnail": "https://fm2050.com/cdn/shop/files/01243141.jpg?v=1725256087",
+          "title": "Colin Cargo 데님 미니 스커트, 네이비 – FM2050"
+        },
+        {
+          "link": "https://www.amazon.com/Glkaend-Casual-Elastic-Stretchy-Pockets/dp/B0D4MDTCQK",
+          "thumbnail": "https://m.media-amazon.com/images/I/610caxk2OGL._AC_UY350_.jpg",
+          "title": "Amazon.com: Glkaend Denim Skirt Women Casual Mini Elastic Waist Stretchy Washed Flap Pockets Wrap Skirts,Dark Blue,S : Clothing, Shoes & Jewelry"
+        }
+      ],
+      "shoes_3": [
+        {
+          "link": "https://www.vans.com/en-us/p/shoes/icons/authentic-5310/little-kids-authentic-shoe-VN000WWX6RT",
+          "thumbnail": "https://assets.vans.com/images/t_img/c_fill,g_center,f_auto,h_70,e_unsharp_mask:100,w_56/dpr_2.0/v1753918097/VN000WWX6RT-HERO/red-white-swatch.png",
+          "title": "Kids Authentic Red/True White Shoes - Vans"
+        },
+        {
+          "link": "https://www.ssg.com/item/itemView.ssg?itemId=1000270745282",
+          "thumbnail": "https://sitem.ssgcdn.com/82/52/74/item/1000270745282_i1_250.jpg",
+          "title": "반스 운동화 코어클래식 어센틱 스니커즈 레드 VN000EE3RED - SSG.COM"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 2,
+        "fallback": 1,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "bottoms_2": {
+          "itemDescription": "item2 blue skirt",
+          "searchTerms": [
+            "item2 blue skirt",
+            "shorts",
+            "slacks",
+            "pants",
+            "trousers",
+            "jeans",
+            "skirt",
+            "leg trousers"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.asos.com/us/asos-curve/asos-design-curve-denim-mini-skirt-in-blue/prd/203524405",
+              "title": "ASOS DESIGN Curve denim mini skirt in blue | ASOS"
+            },
+            {
+              "link": "https://fm2050.com/ko/products/colin-cargo-denim-mini-skirt-navy",
+              "title": "Colin Cargo 데님 미니 스커트, 네이비 – FM2050"
+            },
+            {
+              "link": "https://www.amazon.com/Glkaend-Casual-Elastic-Stretchy-Pockets/dp/B0D4MDTCQK",
+              "title": "Amazon.com: Glkaend Denim Skirt Women Casual Mini Elastic Waist Stretchy Washed Flap Pockets Wrap Skirts,Dark Blue,S : Clothing, Shoes & Jewelry"
+            }
+          ],
+          "timestamp": "2025-11-14T11:08:20.534Z",
+          "candidateCount": 26,
+          "selectionCount": 3
+        },
+        "shoes_3": {
+          "itemDescription": "item3 red shoes",
+          "searchTerms": [
+            "item3 red shoes",
+            "shoes",
+            "sneakers",
+            "boots",
+            "sandals",
+            "heels",
+            "flats",
+            "loafers",
+            "oxford"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.vans.com/en-us/p/shoes/icons/authentic-5310/little-kids-authentic-shoe-VN000WWX6RT",
+              "title": "Kids Authentic Red/True White Shoes - Vans"
+            },
+            {
+              "link": "https://www.ssg.com/item/itemView.ssg?itemId=1000270745282",
+              "title": "반스 운동화 코어클래식 어센틱 스니커즈 레드 VN000EE3RED - SSG.COM"
+            }
+          ],
+          "timestamp": "2025-11-14T11:08:20.918Z",
+          "candidateCount": 30,
+          "selectionCount": 2
+        },
+        "tops_1": {
+          "itemDescription": "item1 white sweatshirt",
+          "searchTerms": [
+            "item1 white sweatshirt",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-14T11:08:22.834Z",
+          "candidateCount": 16
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 5.1,
+        "per_category_search_seconds": 10.13,
+        "gpt4_turbo_api_time_seconds": 8.17,
+        "processing_overhead_seconds": 0,
+        "other_overhead_seconds": -8.17,
+        "wall_clock_seconds": 15.24,
+        "serper_api_time_seconds": 17.99,
+        "serper_count": 3,
+        "gpt4_turbo_count": 3,
+        "total_seconds": 15.24,
+        "categories_parallel": 3
+      }
+    }
+  }
+}

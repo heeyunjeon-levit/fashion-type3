@@ -1,0 +1,75 @@
+{
+  "phone": "821091581688",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763118507811_Screenshot_20251104_103428_Naver_Cafe.jpg",
+  "items": [
+    {
+      "category": "bag",
+      "groundingdino_prompt": "black bag",
+      "description": "black tote bag with green handles and purple base, featuring an orange Trader Joe's logo",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_black_bag_1763118518286.jpg",
+      "confidence": 0.856
+    }
+  ],
+  "search_results": {
+    "results": {
+      "bag_1": [
+        {
+          "link": "https://www.mercari.com/us/item/m71545978739/",
+          "thumbnail": "https://u-mercari-images.mercdn.net/thumb/photos/m28788466026_1.jpg?width=2560&quality=75&_=1762445836",
+          "title": "Trader Joe's mini Totes-4 sets Trader Joe'S | Mercari"
+        },
+        {
+          "link": "https://www.daangn.com/kr/buy-sell/트레이더스조-미니-에코백-할로윈-버전-판매-tdgi2x58qxfu/",
+          "thumbnail": "https://img.kr.gcp-karroter.net/origin/article/202511/c6abf3c0797b6db8d19c2743fa6860065855cbebcfcbb706dc745ce16ce883a8_1.webp?f=webp&q=95&s=1440x1440&t=inside",
+          "title": "트레이더스조 미니 에코백 할로윈 버전 판매 | 여성잡화 | 당근 중고거래"
+        },
+        {
+          "link": "https://m.bunjang.co.kr/products/361962176",
+          "thumbnail": "https://media.bunjang.co.kr/product/361962176_2_1760179711_w360.jpg",
+          "title": "트레이더조 토트백 할로윈 한정판 신상 | 브랜드 중고거래 ..."
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 0,
+        "fallback": 1,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "bag_1": {
+          "itemDescription": "item1 black bag",
+          "searchTerms": [
+            "item1 black bag",
+            "bag",
+            "backpack",
+            "handbag",
+            "tote bag",
+            "purse",
+            "clutch",
+            "messenger bag",
+            "shoulder bag",
+            "wallet"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-14T11:09:08.540Z",
+          "candidateCount": 30
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 14.22,
+        "per_category_search_seconds": 13.86,
+        "gpt4_turbo_api_time_seconds": 1.82,
+        "processing_overhead_seconds": 0,
+        "other_overhead_seconds": -1.82,
+        "wall_clock_seconds": 28.09,
+        "serper_api_time_seconds": 12.03,
+        "serper_count": 1,
+        "gpt4_turbo_count": 1,
+        "total_seconds": 28.09,
+        "categories_parallel": 1
+      }
+    }
+  }
+}

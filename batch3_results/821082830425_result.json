@@ -1,0 +1,136 @@
+{
+  "status": "success",
+  "phone": "821082830425",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763118508786_IMG_9785.jpeg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "pink jacket",
+      "description": "light pink puffer jacket with a high collar and visible logo on the chest",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_pink_jacket_1763118528476.jpg",
+      "confidence": 0.771
+    },
+    {
+      "category": "accessory",
+      "groundingdino_prompt": "white hat",
+      "description": "white textured beanie with a prominent embroidered logo on the front",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_white_hat_1763118529396.jpg",
+      "confidence": 0.839
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://global.musinsa.com/jp/goods/2886568",
+          "thumbnail": "https://image.msscdn.net/thumbnails/data/estimate/2886568_0/gallery_6405e66573e91.jpg",
+          "title": "MUSINSA公式 | REST&RECREATION RR LOGO DOWN JACKET - PINK"
+        },
+        {
+          "link": "https://www.musinsa.com/products/2886568",
+          "thumbnail": "https://image.musinsa.com/thumbnails/images/prd_img/2022102517454400000058576.png?w=780",
+          "title": "레스트앤레크레이션(REST&RECREATION) RR LOGO DOWN JACKET - PINK - 사이즈 & 후기 | 무신사"
+        },
+        {
+          "link": "https://global.musinsa.com/au/goods/2886568",
+          "thumbnail": "https://image.musinsa.com/thumbnails/images/prd_img/2022102517455100000062231.jpg?w=780",
+          "title": "MUSINSA | REST&RECREATION RR LOGO DOWN JACKET - PINK"
+        }
+      ],
+      "accessory_2": [
+        {
+          "link": "https://www.mlb-korea.com/product-detail/7FBNB0956-50PKS",
+          "thumbnail": "https://static-resource.mlb-korea.com/cdn-cgi/image/q=75,w=432,format=auto,fit=scale-down,onerror=redirect/images/goods/ec/M25F3ABNB115643PKL/thnail/BF5397D18D52420CB606FE6E26361C34.png",
+          "title": "MLB 여아 미야옹 부클 비니 뉴욕양키스 (PINK)"
+        },
+        {
+          "link": "https://zigzag.kr/catalog/products/130642209?referrer=shopppable-zigzag",
+          "thumbnail": "https://imgb.a-bly.com/data/editor/20231018_1697620043038730l.png",
+          "title": "씨엘투 [4col] 키키냥 여성 겨울 앙고라 고양이 털 비니 모자"
+        },
+        {
+          "link": "https://codibook.net/product/binary01/lettering-hipping-beanie/740093",
+          "thumbnail": "https://i3.codibook.net/files/1980062962405/6a1956cb8a91723e/920203064.jpg",
+          "title": "binary01 - lettering hipping beanie - Codibook."
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 1,
+        "fallback": 1,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "accessory_2": {
+          "itemDescription": "item2 white hat",
+          "searchTerms": [
+            "item2 white hat",
+            "accessory",
+            "jewelry",
+            "watch",
+            "necklace",
+            "earrings",
+            "bracelet",
+            "ring",
+            "hat",
+            "cap",
+            "beanie",
+            "belt",
+            "scarf",
+            "sunglasses"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-14T11:09:00.849Z",
+          "candidateCount": 28
+        },
+        "tops_1": {
+          "itemDescription": "item1 pink jacket",
+          "searchTerms": [
+            "item1 pink jacket",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://global.musinsa.com/jp/goods/2886568",
+              "title": "MUSINSA公式 | REST&RECREATION RR LOGO DOWN JACKET - PINK"
+            },
+            {
+              "link": "https://www.musinsa.com/products/2886568",
+              "title": "레스트앤레크레이션(REST&RECREATION) RR LOGO DOWN JACKET - PINK - 사이즈 & 후기 | 무신사"
+            },
+            {
+              "link": "https://global.musinsa.com/au/goods/2886568",
+              "title": "MUSINSA | REST&RECREATION RR LOGO DOWN JACKET - PINK"
+            }
+          ],
+          "timestamp": "2025-11-14T11:09:02.182Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 4.49,
+        "per_category_search_seconds": 7.52,
+        "gpt4_turbo_api_time_seconds": 4.03,
+        "processing_overhead_seconds": 0.01,
+        "other_overhead_seconds": -4.03,
+        "wall_clock_seconds": 12.02,
+        "serper_api_time_seconds": 9.67,
+        "serper_count": 2,
+        "gpt4_turbo_count": 2,
+        "total_seconds": 12.02,
+        "categories_parallel": 2
+      }
+    }
+  }
+}

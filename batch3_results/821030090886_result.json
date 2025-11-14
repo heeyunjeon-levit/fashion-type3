@@ -1,0 +1,158 @@
+{
+  "phone": "821030090886",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763118419480_IMG_6208.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "brown jacket",
+      "description": "brown suede jacket with a relaxed fit and visible zipper",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_brown_jacket_1763118434272.jpg",
+      "confidence": 0.414
+    },
+    {
+      "category": "bottoms",
+      "groundingdino_prompt": "beige skirt",
+      "description": "beige long flared skirt with a flowing silhouette",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_beige_skirt_1763118435104.jpg",
+      "confidence": 0.72
+    },
+    {
+      "category": "shoes",
+      "groundingdino_prompt": "brown shoes",
+      "description": "brown platform shoes with a chunky sole",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_brown_shoes_1763118436331.jpg",
+      "confidence": 0.77
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://global.musinsa.com/us/goods/3600833",
+          "thumbnail": "https://img.29cm.co.kr/item/202310/11ee61fabe313cd1a5b31b9bb4ab6e18.jpeg",
+          "title": "MUSINSA | COTTON BELL Cotton Work Jacket - Brown"
+        },
+        {
+          "link": "https://www.coupang.com/vp/products/7956627553",
+          "thumbnail": "https://thumbnail.coupangcdn.com/thumbnails/remote/300x300ex/image/vendor_inventory/ed96/d5c0e79d8416969f6ba9e9f342a65d678f63d0314d94d83f717ffdca9571.jpg",
+          "title": "K2(케이투)KWP23118 여성용 방수자켓 MAC JACKET W_ COVER HIP - 등산의류 | 쿠팡"
+        }
+      ],
+      "bottoms_2": [
+        {
+          "link": "https://zigzag.kr/catalog/products/150129000",
+          "thumbnail": "https://cdn.imweb.me/upload/S202408296a3ab10cee80b/7d9c1d2e6a154.jpg",
+          "title": "어반그래스 스웨이드 모아나 미디 스커트 - 베이지"
+        },
+        {
+          "link": "https://labellepoque.co.kr/product/카운티-가을-겨울-결혼식-하객-하이웨스트-언발-스웨이드-롱-스커트/6481",
+          "thumbnail": "https://labellepoque.co.kr/web/upload/NNEditor/20251019/mobile/3362b2c3d4c44de2091f22dd0c71a859_1760883995.jpg",
+          "title": "카운티 가을 겨울 결혼식 하객 하이웨스트 언발 스웨이드 롱 ..."
+        },
+        {
+          "link": "https://fruitsfamily.com/product/2fq5x/더-오픈-프로덕트-니트-랩스커트-베이지-컬러",
+          "thumbnail": "https://image.production.fruitsfamily.com/public/product/resized@width620/6yRN6omMvG-AD41BBB4-4612-44DC-8EAC-3B71ABAA7BEA.jpg",
+          "title": "더 오픈 프로덕트 니트 랩스커트 / 베이지 컬러 | 후루츠패밀리"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 2,
+        "fallback": 0,
+        "none": 1,
+        "error": 0
+      },
+      "gptReasoning": {
+        "shoes_3": {
+          "itemDescription": "item3 brown shoes",
+          "searchTerms": [
+            "item3 brown shoes",
+            "shoes",
+            "sneakers",
+            "boots",
+            "sandals",
+            "heels",
+            "flats",
+            "loafers",
+            "oxford"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-14T11:07:37.894Z",
+          "candidateCount": 10
+        },
+        "tops_1": {
+          "itemDescription": "item1 brown jacket",
+          "searchTerms": [
+            "item1 brown jacket",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://global.musinsa.com/us/goods/3600833",
+              "title": "MUSINSA | COTTON BELL Cotton Work Jacket - Brown"
+            },
+            {
+              "link": "https://www.coupang.com/vp/products/7956627553",
+              "title": "K2(케이투)KWP23118 여성용 방수자켓 MAC JACKET W_ COVER HIP - 등산의류 | 쿠팡"
+            }
+          ],
+          "timestamp": "2025-11-14T11:07:43.439Z",
+          "candidateCount": 25,
+          "selectionCount": 2
+        },
+        "bottoms_2": {
+          "itemDescription": "item2 beige skirt",
+          "searchTerms": [
+            "item2 beige skirt",
+            "shorts",
+            "slacks",
+            "pants",
+            "trousers",
+            "jeans",
+            "skirt",
+            "leg trousers"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://zigzag.kr/catalog/products/150129000",
+              "title": "어반그래스 스웨이드 모아나 미디 스커트 - 베이지"
+            },
+            {
+              "link": "https://labellepoque.co.kr/product/카운티-가을-겨울-결혼식-하객-하이웨스트-언발-스웨이드-롱-스커트/6481",
+              "title": "카운티 가을 겨울 결혼식 하객 하이웨스트 언발 스웨이드 롱 ..."
+            },
+            {
+              "link": "https://fruitsfamily.com/product/2fq5x/더-오픈-프로덕트-니트-랩스커트-베이지-컬러",
+              "title": "더 오픈 프로덕트 니트 랩스커트 / 베이지 컬러 | 후루츠패밀리"
+            }
+          ],
+          "timestamp": "2025-11-14T11:07:49.231Z",
+          "candidateCount": 29,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 14.3,
+        "per_category_search_seconds": 17.41,
+        "gpt4_turbo_api_time_seconds": 10.23,
+        "processing_overhead_seconds": 0.01,
+        "other_overhead_seconds": -10.23,
+        "wall_clock_seconds": 31.72,
+        "serper_api_time_seconds": 24.85,
+        "serper_count": 3,
+        "gpt4_turbo_count": 3,
+        "total_seconds": 31.72,
+        "categories_parallel": 3
+      }
+    }
+  }
+}
