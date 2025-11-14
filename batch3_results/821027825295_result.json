@@ -1,27 +1,34 @@
 {
   "status": "success",
   "phone": "821027825295",
-  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763120766992_IMG_3093.jpg",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763121320207_IMG_3093.jpg",
   "items": [
     {
       "category": "tops",
       "groundingdino_prompt": "green jacket",
-      "description": "oversized green hooded jacket with a relaxed fit",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_green_jacket_1763120790515.jpg",
+      "description": "olive green oversized hooded jacket with button details",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_green_jacket_1763121335967.jpg",
       "confidence": 0.824
     },
     {
       "category": "tops",
-      "groundingdino_prompt": "white top",
-      "description": "white sleeveless fitted top",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_white_top_1763120791600.jpg",
-      "confidence": 0.637
+      "groundingdino_prompt": "white shirt",
+      "description": "white fitted sleeveless top",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_white_shirt_1763121337473.jpg",
+      "confidence": 0.782
+    },
+    {
+      "category": "bottoms",
+      "groundingdino_prompt": "black shorts",
+      "description": "black high-waisted shorts with grommet belt",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_black_shorts_1763121338006.jpg",
+      "confidence": 0.766
     },
     {
       "category": "shoes",
       "groundingdino_prompt": "brown boots",
-      "description": "tall brown leather boots with a rugged style",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_brown_boots_1763120792100.jpg",
+      "description": "dark brown knee-high leather boots",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item4_brown_boots_1763121338511.jpg",
       "confidence": 0.681
     }
   ],
@@ -29,94 +36,80 @@
     "results": {
       "tops_1": [
         {
+          "link": "https://zigzag.kr/catalog/products/137120828",
+          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/c/16/364/560/163645606-3302955799343287260.gif?width=400&height=400&quality=80&format=jpeg",
+          "title": "나이니 오스넬 사파리 후드 야상 점퍼"
+        },
+        {
           "link": "https://m.kimis.co.kr/product/detail.html?product_no=369&cate_no=0&display_group=",
           "thumbnail": "https://cafe24img.poxo.com/gmtln03299/web/upload/NNEditor/20220902/1d861e295ccd080ef143e6d798b9d28b.jpg",
           "title": "재진행/UNISEX]빈티지 워싱 포켓 야상 점퍼(khaki) - 키미스"
-        },
-        {
-          "link": "https://m.hippiedippy.kr/product/box-safari-jp-3color/1340/",
-          "thumbnail": "https://ecimg.cafe24img.com/pg538b59795769072/hippiedippykr/web/upload/NNEditor/20240325/30f95e1bdc361129670c80ce9e30470b.jpg",
-          "title": "box safari jp (3color) - hippiedippy 히피디피"
         }
       ],
       "tops_2": [
         {
-          "link": "https://m.common-unique.com/product/detail.html?product_no=29564&cate_no=1&display_group=134",
-          "thumbnail": "https://common-unique.com/date/2024/0909/5/5o-240909_17.jpg",
-          "title": "커먼유니크"
+          "link": "https://m.on-go.kr/product/새틴-스트라이프-미디-스커트/2342/",
+          "thumbnail": "https://m.on-go.kr/web/upload/NNEditor/20251026/mobile/e8e424443affd21ee4d946f35b39bd94_1761483795.jpg",
+          "title": "새틴 스트라이프 미디 스커트 - 온고"
         },
         {
-          "link": "https://www.coupang.com/vp/products/8401025814",
-          "thumbnail": "https://thumbnail.coupangcdn.com/thumbnails/remote/492x492ex/image/retail/images/1027027895365339-52c0b751-6f03-4b67-a940-c36684afa3e0.JPG",
-          "title": "아피나르 여성용 울라이크 소프트터치 후디 코트 자켓 - 재킷 | 쿠팡"
+          "link": "https://zigzag.kr/catalog/products/148097243",
+          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/d/2024/9/10/14562_202409101729370924_33182.jpeg?width=400&height=400&quality=80&format=webp",
+          "title": "해나리아 3color S/M/L 블랙 브라운 연베이지 레더 가죽 자켓"
         },
         {
-          "link": "https://store.zigzag.kr/catalog/products/150374846",
-          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/d/2024/10/21/142_202410211930060643_87206.jpeg?width=400&height=400&quality=80&format=webp",
-          "title": "[무료배송][브랜드퀄리티/MD소장]배닛 레더 자켓 - 투웨이 루즈핏 카라 집업 데일리 모던 출근룩 데이트룩"
+          "link": "https://zigzag.kr/catalog/products/166019628",
+          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/c/16/647/084/166470841-2586675568331858568.gif?width=400&height=400&quality=80&format=jpeg",
+          "title": "미루엘 [슬림핏보장/쫀쫀스판👍] 벨로즈 랩버튼 스커트 부츠컷 스판 팬츠-PT008"
         }
       ],
-      "shoes_3": [
+      "bottoms_3": [
         {
-          "link": "https://www.ebay.com/itm/116429614085",
-          "thumbnail": "https://i.ebayimg.com/images/g/nK8AAOSwcGRlGsro/s-l400.png",
-          "title": "BOUTIQUE 9 DODE SIZE 8.5 M BROWN GENUINE LEATHER ANKLE BOOTS MOTO BOOTIES SHOES | eBay"
+          "link": "https://nomadicenigma.com/products/mag-stud-lace-flare-pants",
+          "thumbnail": "https://nomadicenigma.com/cdn/shop/files/5ecd4472-f3ce-4549-8a3f-297437c65838_-_Copy.jpg?crop=center&height=800&v=1748981342&width=800",
+          "title": "Mag Stud-Lace Flare Pants – Nomadic Enigma"
         },
         {
-          "link": "https://boogzelclothing.com/products/dusty-road-mid-calf-buckle-boots",
-          "thumbnail": "https://boogzelclothing.com/cdn/shop/files/dusty-road-mid-calf-buckle-boots-boogzel-clothing_7_800x.jpg?v=1757518320",
-          "title": "Dusty Road Mid-Calf Buckle Boots | AESTHETIC SHOES – Boogzel Clothing"
+          "link": "https://www.wrongweather.net/pr/shop/product/231-m315a-10032-0099-big-pants-with-ey-elets-in-elastic-10032-black",
+          "thumbnail": "https://cdn.wrongweather.net/media/products/product_detail/a9670ae8-4d76-4110-ad08-96f9d381bccf.jpeg",
+          "title": "RAF SIMONS Eyelets Big Jeans - Wrong Weather"
+        },
+        {
+          "link": "https://www.scubasams.com/item/20798685",
+          "thumbnail": "https://u-mercari-images.mercdn.net/photos/m98856215632_7.jpg",
+          "title": "RE/DONE Eyelet embellished stretch cotton jersey mini dress"
+        }
+      ],
+      "shoes_4": [
+        {
+          "link": "https://www.famousfootwear.com/product/blowfish-malibu-womens-verona-mid-calf-boot-1058743",
+          "thumbnail": "https://www.famousfootwear.com/blob/product-images/20000/73/60/2/73602_back_feed1000.jpg",
+          "title": "Blowfish Malibu Women's Verona Mid Calf Boot | Famous Footwear"
         },
         {
           "link": "https://www.kikkiline.it/en/products/womens-brown-biker-boots-with-buckles-and-side-zip-made-in-italy",
           "thumbnail": "https://www.kikkiline.it/cdn/shop/files/DSC_0067_cab39f87-ff1c-43d8-bfed-5939338a39db.jpg?v=1692782268&width=450",
           "title": "Women's Brown Biker Boots with Buckles and Side Zip Made in Italy – KikkiLine Calzature"
+        },
+        {
+          "link": "https://us.vestiairecollective.com/women-shoes/boots/harley-davidson/brown-leather-harley-davidson-boots-40201529.shtml",
+          "thumbnail": "https://images.vestiairecollective.com/images/resized/w=1246,q=75,f=auto,/produit/brown-leather-harley-davidson-boots-40201529-10_4.jpg",
+          "title": "Leather biker boots HARLEY DAVIDSON Brown size 38 EU in Leather - 40201529"
         }
       ]
     },
     "meta": {
       "sourceCounts": {
-        "gpt": 3,
-        "fallback": 0,
+        "gpt": 2,
+        "fallback": 2,
         "none": 0,
         "error": 0
       },
       "gptReasoning": {
-        "shoes_3": {
-          "itemDescription": "item3 brown boots",
-          "searchTerms": [
-            "item3 brown boots",
-            "shoes",
-            "sneakers",
-            "boots",
-            "sandals",
-            "heels",
-            "flats",
-            "loafers",
-            "oxford"
-          ],
-          "selectedLinks": [
-            {
-              "link": "https://www.ebay.com/itm/116429614085",
-              "title": "BOUTIQUE 9 DODE SIZE 8.5 M BROWN GENUINE LEATHER ANKLE BOOTS MOTO BOOTIES SHOES | eBay"
-            },
-            {
-              "link": "https://boogzelclothing.com/products/dusty-road-mid-calf-buckle-boots",
-              "title": "Dusty Road Mid-Calf Buckle Boots | AESTHETIC SHOES – Boogzel Clothing"
-            },
-            {
-              "link": "https://www.kikkiline.it/en/products/womens-brown-biker-boots-with-buckles-and-side-zip-made-in-italy",
-              "title": "Women's Brown Biker Boots with Buckles and Side Zip Made in Italy – KikkiLine Calzature"
-            }
-          ],
-          "timestamp": "2025-11-14T11:46:49.045Z",
-          "candidateCount": 27,
-          "selectionCount": 3
-        },
         "tops_2": {
-          "itemDescription": "item2 white top",
+          "itemDescription": "item2 white shirt",
           "searchTerms": [
-            "item2 white top",
+            "item2 white shirt",
             "jacket",
             "coat",
             "outerwear",
@@ -127,23 +120,25 @@
             "blazer",
             "cardigan"
           ],
-          "selectedLinks": [
-            {
-              "link": "https://m.common-unique.com/product/detail.html?product_no=29564&cate_no=1&display_group=134",
-              "title": "커먼유니크"
-            },
-            {
-              "link": "https://www.coupang.com/vp/products/8401025814",
-              "title": "아피나르 여성용 울라이크 소프트터치 후디 코트 자켓 - 재킷 | 쿠팡"
-            },
-            {
-              "link": "https://store.zigzag.kr/catalog/products/150374846",
-              "title": "[무료배송][브랜드퀄리티/MD소장]배닛 레더 자켓 - 투웨이 루즈핏 카라 집업 데일리 모던 출근룩 데이트룩"
-            }
+          "selectedLinks": [],
+          "timestamp": "2025-11-14T11:55:49.963Z",
+          "candidateCount": 25
+        },
+        "bottoms_3": {
+          "itemDescription": "item3 black shorts",
+          "searchTerms": [
+            "item3 black shorts",
+            "shorts",
+            "slacks",
+            "pants",
+            "trousers",
+            "jeans",
+            "skirt",
+            "leg trousers"
           ],
-          "timestamp": "2025-11-14T11:46:49.186Z",
-          "candidateCount": 30,
-          "selectionCount": 3
+          "selectedLinks": [],
+          "timestamp": "2025-11-14T11:55:52.609Z",
+          "candidateCount": 20
         },
         "tops_1": {
           "itemDescription": "item1 green jacket",
@@ -161,31 +156,62 @@
           ],
           "selectedLinks": [
             {
-              "link": "https://m.kimis.co.kr/product/detail.html?product_no=369&cate_no=0&display_group=",
-              "title": "재진행/UNISEX]빈티지 워싱 포켓 야상 점퍼(khaki) - 키미스"
+              "link": "https://zigzag.kr/catalog/products/137120828",
+              "title": "나이니 오스넬 사파리 후드 야상 점퍼"
             },
             {
-              "link": "https://m.hippiedippy.kr/product/box-safari-jp-3color/1340/",
-              "title": "box safari jp (3color) - hippiedippy 히피디피"
+              "link": "https://m.kimis.co.kr/product/detail.html?product_no=369&cate_no=0&display_group=",
+              "title": "재진행/UNISEX]빈티지 워싱 포켓 야상 점퍼(khaki) - 키미스"
             }
           ],
-          "timestamp": "2025-11-14T11:46:54.769Z",
+          "timestamp": "2025-11-14T11:55:53.238Z",
           "candidateCount": 27,
           "selectionCount": 2
+        },
+        "shoes_4": {
+          "itemDescription": "item4 brown boots",
+          "searchTerms": [
+            "item4 brown boots",
+            "shoes",
+            "sneakers",
+            "boots",
+            "sandals",
+            "heels",
+            "flats",
+            "loafers",
+            "oxford"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.famousfootwear.com/product/blowfish-malibu-womens-verona-mid-calf-boot-1058743",
+              "title": "Blowfish Malibu Women's Verona Mid Calf Boot | Famous Footwear"
+            },
+            {
+              "link": "https://www.kikkiline.it/en/products/womens-brown-biker-boots-with-buckles-and-side-zip-made-in-italy",
+              "title": "Women's Brown Biker Boots with Buckles and Side Zip Made in Italy – KikkiLine Calzature"
+            },
+            {
+              "link": "https://us.vestiairecollective.com/women-shoes/boots/harley-davidson/brown-leather-harley-davidson-boots-40201529.shtml",
+              "title": "Leather biker boots HARLEY DAVIDSON Brown size 38 EU in Leather - 40201529"
+            }
+          ],
+          "timestamp": "2025-11-14T11:55:53.801Z",
+          "candidateCount": 25,
+          "selectionCount": 3
         }
       },
       "timing": {
-        "full_image_search_seconds": 8.37,
-        "per_category_search_seconds": 13.65,
-        "gpt4_turbo_api_time_seconds": 10.19,
+        "full_image_search_seconds": 5.02,
+        "per_category_search_seconds": 9.59,
+        "gpt4_turbo_api_time_seconds": 12.54,
         "processing_overhead_seconds": 0,
-        "other_overhead_seconds": -10.19,
-        "wall_clock_seconds": 22.02,
-        "serper_api_time_seconds": 19.42,
-        "serper_count": 3,
-        "gpt4_turbo_count": 3,
-        "total_seconds": 22.02,
-        "categories_parallel": 3
+        "other_overhead_seconds": -12.53,
+        "wall_clock_seconds": 14.61,
+        "serper_api_time_seconds": 20.18,
+        "serper_count": 4,
+        "gpt4_turbo_count": 4,
+        "total_seconds": 14.61,
+        "categories_parallel": 4
       }
     }
   }

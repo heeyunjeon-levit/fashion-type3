@@ -1,0 +1,90 @@
+{
+  "status": "success",
+  "phone": "821055918655",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763121479943_image.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "gray hoodie",
+      "description": "light gray hoodie with a front pocket and drawstrings, featuring bold black lettering on the front",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_gray_hoodie_1763121518661.jpg",
+      "confidence": 0.865
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://www2.hm.com/en_us/productpage.1254107002.html",
+          "thumbnail": "https://image.hm.com/assets/hm/75/ee/75eeea42b3178f850f39589b302fa069fee7b030.jpg?imwidth=2160",
+          "title": "Oversized Fit Sports Hoodie - Gray melange/Training Team - Men | H&M US"
+        },
+        {
+          "link": "https://global.musinsa.com/sg/goods/3568970",
+          "thumbnail": "https://gi.esmplus.com/artistwear/ATW_2023FW/HOOLIGAN_LOCAL_SEOUL_HOODIE/ATW_2023FW_LOCALSEOUL_HOODIE0005.jpg",
+          "title": "MUSINSA | ARTISTWEAR [ATW x HOOLIGAN] Local Seoul hoodie"
+        },
+        {
+          "link": "https://unalloyed.kr/product/arch-logo-hoodie-grey/3042",
+          "thumbnail": "https://cafe24img.poxo.com/unalloyed/web/upload/NNEditor/20220314/mobile/3ea4eae63807ac01452fadf583c5ac31_1647223600.jpg",
+          "title": "UNALLOYED®︎ 어널로이드"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 1,
+        "fallback": 0,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "tops_1": {
+          "itemDescription": "item1 gray hoodie",
+          "searchTerms": [
+            "item1 gray hoodie",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www2.hm.com/en_us/productpage.1254107002.html",
+              "title": "Oversized Fit Sports Hoodie - Gray melange/Training Team - Men | H&M US"
+            },
+            {
+              "link": "https://global.musinsa.com/sg/goods/3568970",
+              "title": "MUSINSA | ARTISTWEAR [ATW x HOOLIGAN] Local Seoul hoodie"
+            },
+            {
+              "link": "https://unalloyed.kr/product/arch-logo-hoodie-grey/3042",
+              "title": "UNALLOYED®︎ 어널로이드"
+            }
+          ],
+          "timestamp": "2025-11-14T11:58:51.517Z",
+          "candidateCount": 27,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 3.85,
+        "per_category_search_seconds": 7.34,
+        "gpt4_turbo_api_time_seconds": 2.77,
+        "processing_overhead_seconds": 0,
+        "other_overhead_seconds": -2.77,
+        "wall_clock_seconds": 11.2,
+        "serper_api_time_seconds": 4.57,
+        "serper_count": 1,
+        "gpt4_turbo_count": 1,
+        "total_seconds": 11.2,
+        "categories_parallel": 1
+      }
+    }
+  }
+}

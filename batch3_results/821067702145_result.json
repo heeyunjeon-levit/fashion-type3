@@ -1,20 +1,20 @@
 {
   "status": "success",
   "phone": "821067702145",
-  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763120638522_IMG_6454.jpg",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763121075411_IMG_6454.jpg",
   "items": [
     {
       "category": "bottoms",
       "groundingdino_prompt": "gray pants",
-      "description": "gray loose-fitting pants with a straight cut",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_gray_pants_1763120651137.jpg",
+      "description": "gray straight-leg pants with a relaxed fit",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_gray_pants_1763121104171.jpg",
       "confidence": 0.506
     },
     {
       "category": "shoes",
       "groundingdino_prompt": "black shoes",
       "description": "black athletic shoes with a sleek design and lace-up closure",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_black_shoes_1763120652329.jpg",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_black_shoes_1763121105390.jpg",
       "confidence": 0.705
     }
   ],
@@ -22,9 +22,9 @@
     "results": {
       "bottoms_1": [
         {
-          "link": "https://fruitsfamily.com/product/m4v9/aop-bartack-cargo-pants-dust",
-          "thumbnail": "https://image.production.fruitsfamily.com/public/product/resized@width1125/L78Px3e1AV-414C988F-7E38-42F5-9C52-EF05348D4352.jpg",
-          "title": "AOP Bartack cargo pants_Dust | 후루츠패밀리"
+          "link": "https://www.rolimons.com/item/18309980035",
+          "thumbnail": "https://tr.rbxcdn.com/180DAY-a1d9cf89c2a98a824bac2b2f226b391c/420/420/Hat/Webp/noFilter",
+          "title": "White Bandages | Head | Clean | Roblox Item - Rolimon's"
         }
       ],
       "shoes_2": [
@@ -39,16 +39,16 @@
           "title": "MM6 Maison Margiela X Salomon x Salomon ACS Pro Sneakers | Black | FARFETCH BE"
         },
         {
-          "link": "https://motome.co.kr/product/아식스-gel-kahana-tr-v4-실버-카본-블랙-공용사이즈/806",
-          "thumbnail": "https://motome.co.kr/web/product/extra/big/202408/2c6f3f45a0d3ddc01121a5d810cf58fc.png",
-          "title": "Asics Gel-Kahana TR V4 Carbon Black 아식스 Gel Kahana TR V4 실버 카본 블랙 공용사이즈 1203A497-001"
+          "link": "https://m.bunjang.co.kr/products/356429996?ref=검색결과",
+          "thumbnail": "https://media.bunjang.co.kr/product/356429996_4_1757925178_w360.jpg",
+          "title": "Asics Gel-Kayano 14 DARK SHADOW/PURE 실버 | 브랜드 중고거래 플랫폼, 번개장터"
         }
       ]
     },
     "meta": {
       "sourceCounts": {
-        "gpt": 2,
-        "fallback": 0,
+        "gpt": 1,
+        "fallback": 1,
         "none": 0,
         "error": 0
       },
@@ -76,11 +76,11 @@
               "title": "MM6 Maison Margiela X Salomon x Salomon ACS Pro Sneakers | Black | FARFETCH BE"
             },
             {
-              "link": "https://motome.co.kr/product/아식스-gel-kahana-tr-v4-실버-카본-블랙-공용사이즈/806",
-              "title": "Asics Gel-Kahana TR V4 Carbon Black 아식스 Gel Kahana TR V4 실버 카본 블랙 공용사이즈 1203A497-001"
+              "link": "https://m.bunjang.co.kr/products/356429996?ref=검색결과",
+              "title": "Asics Gel-Kayano 14 DARK SHADOW/PURE 실버 | 브랜드 중고거래 플랫폼, 번개장터"
             }
           ],
-          "timestamp": "2025-11-14T11:44:26.863Z",
+          "timestamp": "2025-11-14T11:51:58.615Z",
           "candidateCount": 30,
           "selectionCount": 3
         },
@@ -96,28 +96,22 @@
             "skirt",
             "leg trousers"
           ],
-          "selectedLinks": [
-            {
-              "link": "https://fruitsfamily.com/product/m4v9/aop-bartack-cargo-pants-dust",
-              "title": "AOP Bartack cargo pants_Dust | 후루츠패밀리"
-            }
-          ],
-          "timestamp": "2025-11-14T11:44:44.418Z",
-          "candidateCount": 30,
-          "selectionCount": 1
+          "selectedLinks": [],
+          "timestamp": "2025-11-14T11:52:02.615Z",
+          "candidateCount": 29
         }
       },
       "timing": {
-        "full_image_search_seconds": 5.02,
-        "per_category_search_seconds": 26.41,
-        "gpt4_turbo_api_time_seconds": 6.55,
+        "full_image_search_seconds": 4.89,
+        "per_category_search_seconds": 11.63,
+        "gpt4_turbo_api_time_seconds": 6.24,
         "processing_overhead_seconds": 0,
-        "other_overhead_seconds": -6.55,
-        "wall_clock_seconds": 31.44,
-        "serper_api_time_seconds": 28.72,
+        "other_overhead_seconds": -6.24,
+        "wall_clock_seconds": 16.53,
+        "serper_api_time_seconds": 13,
         "serper_count": 2,
         "gpt4_turbo_count": 2,
-        "total_seconds": 31.44,
+        "total_seconds": 16.53,
         "categories_parallel": 2
       }
     }

@@ -1,12 +1,13 @@
 {
+  "status": "success",
   "phone": "821089485523",
-  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763120232696_Screenshot_20251112_154244_W.jpg",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763121511508_Screenshot_20251112_154244_W.jpg",
   "items": [
     {
       "category": "bottoms",
       "groundingdino_prompt": "brown skirt",
       "description": "dark brown mini skirt with a straight fit",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_brown_skirt_1763120273558.jpg",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_brown_skirt_1763121531518.jpg",
       "confidence": 0.822
     }
   ],
@@ -14,14 +15,9 @@
     "results": {
       "bottoms_1": [
         {
-          "link": "https://withmari.co.kr/product/겨울-따뜻-울-미디-스커트/20071/",
-          "thumbnail": "https://m.withmari.co.kr/web/product/extra/big/202411/37f86eb9f51d21d755c6696847248c21.jpg",
-          "title": "겨울 따뜻 울 미디 스커트"
-        },
-        {
-          "link": "https://www.farfetch.com/kr/shopping/women/parosh--item-30343563.aspx",
-          "thumbnail": "https://cdn-images.farfetch-contents.com/30/34/35/63/30343563_61783131_600.jpg",
-          "title": "P.A.R.O.S.H. 울 미니 스커트 | 브라운 | FARFETCH KR"
+          "link": "https://en.ssumj.com/product/premium-line-tess-wrap-skirt-2col/14693",
+          "thumbnail": "https://ssumj.com/web/ssumj_2025/10/01/3_251020_19.jpg",
+          "title": "Premium Line Tess Wrap Skirt 2col | SSUMJ"
         }
       ]
     },
@@ -47,30 +43,26 @@
           ],
           "selectedLinks": [
             {
-              "link": "https://withmari.co.kr/product/겨울-따뜻-울-미디-스커트/20071/",
-              "title": "겨울 따뜻 울 미디 스커트"
-            },
-            {
-              "link": "https://www.farfetch.com/kr/shopping/women/parosh--item-30343563.aspx",
-              "title": "P.A.R.O.S.H. 울 미니 스커트 | 브라운 | FARFETCH KR"
+              "link": "https://en.ssumj.com/product/premium-line-tess-wrap-skirt-2col/14693",
+              "title": "Premium Line Tess Wrap Skirt 2col | SSUMJ"
             }
           ],
-          "timestamp": "2025-11-14T11:38:21.112Z",
+          "timestamp": "2025-11-14T11:59:09.775Z",
           "candidateCount": 29,
-          "selectionCount": 2
+          "selectionCount": 1
         }
       },
       "timing": {
-        "full_image_search_seconds": 10.98,
-        "per_category_search_seconds": 15.7,
-        "gpt4_turbo_api_time_seconds": 2.8,
+        "full_image_search_seconds": 10.38,
+        "per_category_search_seconds": 6.37,
+        "gpt4_turbo_api_time_seconds": 2.77,
         "processing_overhead_seconds": 0,
-        "other_overhead_seconds": -2.79,
-        "wall_clock_seconds": 26.69,
-        "serper_api_time_seconds": 12.9,
+        "other_overhead_seconds": -2.76,
+        "wall_clock_seconds": 16.75,
+        "serper_api_time_seconds": 3.59,
         "serper_count": 1,
         "gpt4_turbo_count": 1,
-        "total_seconds": 26.69,
+        "total_seconds": 16.75,
         "categories_parallel": 1
       }
     }

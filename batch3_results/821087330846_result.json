@@ -1,19 +1,20 @@
 {
+  "status": "success",
   "phone": "821087330846",
-  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763120310531_Screenshot_20251114_172854.jpg",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763121558730_Screenshot_20251114_172854.jpg",
   "items": [
     {
       "category": "bottoms",
       "groundingdino_prompt": "brown pants",
       "description": "brown ribbed pants with white fleece lining and cuffs",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_brown_pants_1763120322830.jpg",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_brown_pants_1763121581382.jpg",
       "confidence": 0.438
     },
     {
       "category": "shoes",
       "groundingdino_prompt": "brown shoes",
       "description": "brown sneakers with white laces and thick white soles",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_brown_shoes_1763120323898.jpg",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_brown_shoes_1763121582559.jpg",
       "confidence": 0.781
     }
   ],
@@ -21,9 +22,9 @@
     "results": {
       "bottoms_1": [
         {
-          "link": "https://www.amazon.com/-/es/Leggings-cordero-pantalones-sueltos-térmicos/dp/B0DFLSDJGW",
-          "thumbnail": "https://m.media-amazon.com/images/I/81i0sZfP7BL._AC_UY350_.jpg",
-          "title": "Amazon.com: Leggings con forro polar para mujer, talla grande, cordero, color sólido, rayas, lana, pana, pantalones sueltos, pantalones térmicos para mujer, Marrón : Ropa, Zapatos y Joyería"
+          "link": "https://www.ebay.com/itm/193625036941",
+          "thumbnail": "https://i.ebayimg.com/00/s/ODAwWDgwMA==/z/RP8AAOSwMYJfJ7yx/$_10.JPG?set_id=880000500F",
+          "title": "Lady Corduroy Pants Trousers Fleece Lined Thick Warm Elastic Waist Casual Winter | eBay"
         },
         {
           "link": "https://www.aliexpress.com/item/1005008264279951.html",
@@ -33,19 +34,19 @@
       ],
       "shoes_2": [
         {
-          "link": "https://www.farfetch.com/kr/shopping/men/rhun-2020-item-28754347.aspx",
-          "thumbnail": "https://cdn-images.farfetch-contents.com/28/75/43/47/28754347_58034595_1000.jpg",
-          "title": "Rhun 2020 스니커즈 | 브라운 | FARFETCH KR"
+          "link": "https://www.farfetch.com/shopping/men/rhun-2020-sneakers-item-28754347.aspx",
+          "thumbnail": "https://cdn-images.farfetch-contents.com/28/75/43/47/28754347_58034595_600.jpg",
+          "title": "Rhun 2020 Sneakers | Brown | FARFETCH"
         },
         {
-          "link": "https://kream.co.kr/products/606239",
-          "thumbnail": "https://kream-phinf.pstatic.net/MjAyNTA5MTJfNSAg/MDAxNzU3NjU4NDc0ODcw.pBxTyTVojcOxvlfobP32x0ai1ntfuFwWD2Y4xZnAv6wg.4IsvBC6qOnT5pL-9xsQaT4K134zQFu8gzxKUFKt3ozYg.PNG/a_3b16d7efa81d450ca6d8ac8dcf412edd.png?type=l",
-          "title": "아미 캔버스 로우탑 스니커즈 브라운 | AMI | KREAM"
+          "link": "https://www.farfetch.com/eg/shopping/men/rhun-2020-sneakers-item-28754347.aspx",
+          "thumbnail": "https://cdn-images.farfetch-contents.com/28/75/43/47/28754347_58034605_1000.jpg",
+          "title": "Rhun 2020 Sneakers | Brown | FARFETCH EG"
         },
         {
-          "link": "https://www.farfetch.com/kr/shopping/men/rhun--item-29827946.aspx",
-          "thumbnail": "https://cdn-images.farfetch-contents.com/29/82/79/46/29827946_59159786_600.jpg",
-          "title": "Rhun 트레블 스니커즈 | 브라운 | FARFETCH KR"
+          "link": "https://www.musinsa.com/products/1552159",
+          "thumbnail": "https://image.msscdn.net/images/goods_img/20200818/1552159/1552159_1_500.jpg",
+          "title": "엑셀시오르(EXCELSIOR) BOLT LO 볼트 로우 시즈널 컬러 스니커즈 엠버브라운(FF_M6017CV_BR) - 사이즈 & 후기 | 무신사"
         }
       ]
     },
@@ -71,15 +72,15 @@
           ],
           "selectedLinks": [
             {
-              "link": "https://www.amazon.com/-/es/Leggings-cordero-pantalones-sueltos-térmicos/dp/B0DFLSDJGW",
-              "title": "Amazon.com: Leggings con forro polar para mujer, talla grande, cordero, color sólido, rayas, lana, pana, pantalones sueltos, pantalones térmicos para mujer, Marrón : Ropa, Zapatos y Joyería"
+              "link": "https://www.ebay.com/itm/193625036941",
+              "title": "Lady Corduroy Pants Trousers Fleece Lined Thick Warm Elastic Waist Casual Winter | eBay"
             },
             {
               "link": "https://www.aliexpress.com/item/1005008264279951.html",
               "title": "Autumn Winter Corduroy Wide Leg Pants For Women Loose Fit Extra Thick Warm Straight Joggers Sweatpants - AliExpress"
             }
           ],
-          "timestamp": "2025-11-14T11:39:03.534Z",
+          "timestamp": "2025-11-14T11:59:54.957Z",
           "candidateCount": 30,
           "selectionCount": 2
         },
@@ -98,34 +99,34 @@
           ],
           "selectedLinks": [
             {
-              "link": "https://www.farfetch.com/kr/shopping/men/rhun-2020-item-28754347.aspx",
-              "title": "Rhun 2020 스니커즈 | 브라운 | FARFETCH KR"
+              "link": "https://www.farfetch.com/shopping/men/rhun-2020-sneakers-item-28754347.aspx",
+              "title": "Rhun 2020 Sneakers | Brown | FARFETCH"
             },
             {
-              "link": "https://kream.co.kr/products/606239",
-              "title": "아미 캔버스 로우탑 스니커즈 브라운 | AMI | KREAM"
+              "link": "https://www.farfetch.com/eg/shopping/men/rhun-2020-sneakers-item-28754347.aspx",
+              "title": "Rhun 2020 Sneakers | Brown | FARFETCH EG"
             },
             {
-              "link": "https://www.farfetch.com/kr/shopping/men/rhun--item-29827946.aspx",
-              "title": "Rhun 트레블 스니커즈 | 브라운 | FARFETCH KR"
+              "link": "https://www.musinsa.com/products/1552159",
+              "title": "엑셀시오르(EXCELSIOR) BOLT LO 볼트 로우 시즈널 컬러 스니커즈 엠버브라운(FF_M6017CV_BR) - 사이즈 & 후기 | 무신사"
             }
           ],
-          "timestamp": "2025-11-14T11:39:05.720Z",
+          "timestamp": "2025-11-14T11:59:55.801Z",
           "candidateCount": 30,
           "selectionCount": 3
         }
       },
       "timing": {
-        "full_image_search_seconds": 4.44,
-        "per_category_search_seconds": 16.22,
-        "gpt4_turbo_api_time_seconds": 8.45,
+        "full_image_search_seconds": 4.46,
+        "per_category_search_seconds": 7.98,
+        "gpt4_turbo_api_time_seconds": 6.64,
         "processing_overhead_seconds": 0,
-        "other_overhead_seconds": -8.45,
-        "wall_clock_seconds": 20.67,
-        "serper_api_time_seconds": 21.8,
+        "other_overhead_seconds": -6.64,
+        "wall_clock_seconds": 12.44,
+        "serper_api_time_seconds": 8.46,
         "serper_count": 2,
         "gpt4_turbo_count": 2,
-        "total_seconds": 20.67,
+        "total_seconds": 12.44,
         "categories_parallel": 2
       }
     }

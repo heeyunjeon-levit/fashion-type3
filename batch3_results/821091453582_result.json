@@ -1,26 +1,27 @@
 {
+  "status": "success",
   "phone": "821091453582",
-  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763120195449_Screenshot_20251113_115821_Threads.jpg",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763121456597_Screenshot_20251113_115821_Threads.jpg",
   "items": [
     {
       "category": "tops",
       "groundingdino_prompt": "gray sweatshirt",
       "description": "light gray long sleeve sweatshirt with ribbed cuffs and a relaxed fit",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_gray_sweatshirt_1763120208783.jpg",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_gray_sweatshirt_1763121474131.jpg",
       "confidence": 0.494
     },
     {
       "category": "bottoms",
       "groundingdino_prompt": "gray skirt",
       "description": "light gray midi skirt with a drawstring waist and straight cut",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_gray_skirt_1763120209863.jpg",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_gray_skirt_1763121475107.jpg",
       "confidence": 0.832
     },
     {
       "category": "shoes",
       "groundingdino_prompt": "white sneakers",
-      "description": "white athletic sneakers with black accents and thick soles",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_white_sneakers_1763120210506.jpg",
+      "description": "white athletic sneakers with black accents and a chunky sole",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_white_sneakers_1763121475600.jpg",
       "confidence": 0.655
     }
   ],
@@ -29,7 +30,7 @@
       "tops_1": [
         {
           "link": "https://spao.elandmall.co.kr/i/item?itemNo=2407353753&lowerVendNo=LV16003626",
-          "thumbnail": "https://item.elandrs.com/r/image/item/2024-08-05/0be5c399-044a-4243-8df4-b33ae73ab63d.jpg",
+          "thumbnail": "https://item.elandrs.com/r/image/item/2024-08-05/0be5c399-044a-4243-8df4-b33ae73ab63d.jpg?w=750&h=&q=100",
           "title": "여성용] [프렌치테리] 베이직 스커트(기모)_SPWME4TG10- 스파오"
         },
         {
@@ -45,19 +46,19 @@
       ],
       "bottoms_2": [
         {
-          "link": "https://www.musinsa.com/products/4279211",
-          "thumbnail": "https://item.elandrs.com/r/image/item/2024-08-05/2e4b2e49-998f-4048-a93e-df12d8a6537c.jpg",
-          "title": "스파오(SPAO) [프렌치테리] 베이직 스커트(기모)_SPWME4TG10 - 사이즈 & 후기 | 무신사"
+          "link": "https://www.lululemon.com.hk/en-th/p/softstreme-bound-to-bliss-skirt/LW8AMES.html",
+          "thumbnail": "https://images.lululemon.com/is/image/lululemon/LW8AMES_032493_1?size=1200,1200",
+          "title": "Softstreme Bound to Bliss Skirt | lululemon TH"
         },
         {
-          "link": "https://www.asos.com/us/renee-studio/renee-studio-plus-exclusive-drawstring-waist-sweat-maxi-skirt-in-gray-part-of-a-set/prd/207216378",
-          "thumbnail": "https://images.asos-media.com/products/renee-studio-plus-exclusive-drawstring-waist-sweat-maxi-skirt-in-gray-part-of-a-set/207216378-2?$n_640w$&wid=513&fit=constrain",
-          "title": "Renee Studio Plus exclusive drawstring waist sweat maxi skirt in gray - part of a set | ASOS"
+          "link": "https://www.lululemon.com.hk/en-th/p/bound-to-bliss-skirt/LW8ABPS.html",
+          "thumbnail": "https://images.lululemon.com/is/image/lululemon/LW8ABPS_032493_1?size=1200,1200",
+          "title": "Bound to Bliss Skirt | lululemon TH"
         },
         {
-          "link": "https://www.musinsa.com/products/4916180",
-          "thumbnail": "https://img.ssfshop.com/cmd/LB_750x/src/img.ssfshop.com/goods/ECBR/25/02/26/GM0025022608028_4_THNAIL_ORGINL_20250318195908447.jpg",
-          "title": "샌드 사운드(SAND SOUND) (WOMEN) 스웻 롱 스커트 라이트 그레이 - 사이즈 & 후기 | 무신사"
+          "link": "https://www.coupang.com/vp/products/8329815752",
+          "thumbnail": "https://image.coupangcdn.com/image/vendor_inventory/ba8d/1b96cd81c5ff6ba4aab223a8119d2c8fae8201afe321710c104e99ff2f36.png",
+          "title": "셀리나에스 빅 포켓 밴딩 트레이닝 룩 롱 스커트 H라인 프리 - 스커트/치마 | 쿠팡"
         }
       ],
       "shoes_3": [
@@ -101,8 +102,8 @@
             "cardigan"
           ],
           "selectedLinks": [],
-          "timestamp": "2025-11-14T11:37:05.714Z",
-          "candidateCount": 27
+          "timestamp": "2025-11-14T11:58:18.222Z",
+          "candidateCount": 29
         },
         "bottoms_2": {
           "itemDescription": "item2 gray skirt",
@@ -118,19 +119,19 @@
           ],
           "selectedLinks": [
             {
-              "link": "https://www.musinsa.com/products/4279211",
-              "title": "스파오(SPAO) [프렌치테리] 베이직 스커트(기모)_SPWME4TG10 - 사이즈 & 후기 | 무신사"
+              "link": "https://www.lululemon.com.hk/en-th/p/softstreme-bound-to-bliss-skirt/LW8AMES.html",
+              "title": "Softstreme Bound to Bliss Skirt | lululemon TH"
             },
             {
-              "link": "https://www.asos.com/us/renee-studio/renee-studio-plus-exclusive-drawstring-waist-sweat-maxi-skirt-in-gray-part-of-a-set/prd/207216378",
-              "title": "Renee Studio Plus exclusive drawstring waist sweat maxi skirt in gray - part of a set | ASOS"
+              "link": "https://www.lululemon.com.hk/en-th/p/bound-to-bliss-skirt/LW8ABPS.html",
+              "title": "Bound to Bliss Skirt | lululemon TH"
             },
             {
-              "link": "https://www.musinsa.com/products/4916180",
-              "title": "샌드 사운드(SAND SOUND) (WOMEN) 스웻 롱 스커트 라이트 그레이 - 사이즈 & 후기 | 무신사"
+              "link": "https://www.coupang.com/vp/products/8329815752",
+              "title": "셀리나에스 빅 포켓 밴딩 트레이닝 룩 롱 스커트 H라인 프리 - 스커트/치마 | 쿠팡"
             }
           ],
-          "timestamp": "2025-11-14T11:37:06.211Z",
+          "timestamp": "2025-11-14T11:58:20.049Z",
           "candidateCount": 30,
           "selectionCount": 3
         },
@@ -161,22 +162,22 @@
               "title": "New Balance ML 408 V1 Sneakers | White | FARFETCH"
             }
           ],
-          "timestamp": "2025-11-14T11:37:07.915Z",
-          "candidateCount": 30,
+          "timestamp": "2025-11-14T11:58:26.707Z",
+          "candidateCount": 29,
           "selectionCount": 3
         }
       },
       "timing": {
-        "full_image_search_seconds": 4.08,
-        "per_category_search_seconds": 12.58,
-        "gpt4_turbo_api_time_seconds": 8.81,
+        "full_image_search_seconds": 15.64,
+        "per_category_search_seconds": 14.26,
+        "gpt4_turbo_api_time_seconds": 9.15,
         "processing_overhead_seconds": 0,
-        "other_overhead_seconds": -8.8,
-        "wall_clock_seconds": 16.66,
-        "serper_api_time_seconds": 24.99,
+        "other_overhead_seconds": -9.14,
+        "wall_clock_seconds": 29.92,
+        "serper_api_time_seconds": 18.47,
         "serper_count": 3,
         "gpt4_turbo_count": 3,
-        "total_seconds": 16.66,
+        "total_seconds": 29.93,
         "categories_parallel": 3
       }
     }

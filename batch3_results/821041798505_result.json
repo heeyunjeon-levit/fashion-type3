@@ -1,13 +1,13 @@
 {
   "status": "success",
   "phone": "821041798505",
-  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763120847209_Screenshot_20251114_164100.jpg",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763121411627_Screenshot_20251114_164100.jpg",
   "items": [
     {
       "category": "tops",
       "groundingdino_prompt": "beige jacket",
       "description": "beige quilted puffer jacket with a hood and front pockets",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_beige_jacket_1763120868343.jpg",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_beige_jacket_1763121443012.jpg",
       "confidence": 0.931
     }
   ],
@@ -15,19 +15,19 @@
     "results": {
       "tops_1": [
         {
-          "link": "https://www.amazon.com/-/es/acolchado-capucha-invierno-aislamiento-bolsillos/dp/B0DLBCFNJZ",
-          "thumbnail": "https://m.media-amazon.com/images/I/71e4Ed5X44L._AC_UY1000_.jpg",
-          "title": "Amazon.com: HGps8w Abrigo acolchado para mujer, ligero, casual, con capucha, cálido, para invierno, con aislamiento, con bolsillos, 01 Beige, Mediana : Ropa, Zapatos y Joyería"
+          "link": "https://www.amazon.com.mx/Adhdyuud-chamarra-acolchado-algodón-bolsillo/dp/B0CQVL6WLJ",
+          "thumbnail": "https://m.media-amazon.com/images/I/61FvXq+xQzL._AC_SY879_.jpg",
+          "title": "Adhdyuud - chamarra con capucha y cierre cálida para mujer, con bolsillo, informal, para invierno, algodón, color beige, talla M : Amazon.com.mx: Ropa, Zapatos y Accesorios"
         },
         {
-          "link": "https://www.coupang.com/vp/products/8406355124",
-          "thumbnail": "https://image.coupangcdn.com/image/vendor_inventory/0b81/1389a4224ef3f42de8a69eab114e2b38b4d8b0d88c427593924c333643b5.jpg",
-          "title": "AOKADA NEW 여성 경량패딩 가을자켓 누빔 웰론 패딩 점퍼 퀼팅자켓 후드 숏패딩"
+          "link": "https://www.amazon.com.au/Haitpant-Winter-Knitted-Spliced-Puffer/dp/B0CPVQQWMD",
+          "thumbnail": "https://m.media-amazon.com/images/I/61+AcqIfs5L._AC_SX342_.jpg",
+          "title": "Haitpant Winter False Two Piece Knitted Spliced Puffer Jacket Women Short Loose Hooded Parkas Casual 90% Duck Down Coat, Beige, Small : Amazon.com.au: Clothing, Shoes & Accessories"
         },
         {
-          "link": "https://www.luulla.com/product/1897889/quilted-womens-winter-jacket-with-hooded-warmth",
-          "thumbnail": "https://b5524bc4199c7b8181ec-a2640485f38efef7d1061bf2ed701b05.ssl.cf2.rackcdn.com/product-hugerect-3469238-504307-1729382564-90cb22cd0c326714cb568791bbfc324b.729382565_type_hugerect_nid_3469238_uid_504307_6",
-          "title": "Quilted Womens Winter Jacket With Hooded Warmth on Luulla"
+          "link": "https://www.amazon.com/Lmdudan-Cropped-Jackets-Outfits-Outerwear/dp/B0DLH41JN6",
+          "thumbnail": "https://m.media-amazon.com/images/I/61N4XouAfQL._AC_UY1000_.jpg",
+          "title": "Amazon.com: Lmdudan Winter Jacket for Women Cropped Warm Puffer Down Jackets Trendy Hooded Outfits Long Sleeve Casual Outerwear : Clothing, Shoes & Jewelry"
         }
       ]
     },
@@ -55,34 +55,34 @@
           ],
           "selectedLinks": [
             {
-              "link": "https://www.amazon.com/-/es/acolchado-capucha-invierno-aislamiento-bolsillos/dp/B0DLBCFNJZ",
-              "title": "Amazon.com: HGps8w Abrigo acolchado para mujer, ligero, casual, con capucha, cálido, para invierno, con aislamiento, con bolsillos, 01 Beige, Mediana : Ropa, Zapatos y Joyería"
+              "link": "https://www.amazon.com.mx/Adhdyuud-chamarra-acolchado-algodón-bolsillo/dp/B0CQVL6WLJ",
+              "title": "Adhdyuud - chamarra con capucha y cierre cálida para mujer, con bolsillo, informal, para invierno, algodón, color beige, talla M : Amazon.com.mx: Ropa, Zapatos y Accesorios"
             },
             {
-              "link": "https://www.coupang.com/vp/products/8406355124",
-              "title": "AOKADA NEW 여성 경량패딩 가을자켓 누빔 웰론 패딩 점퍼 퀼팅자켓 후드 숏패딩"
+              "link": "https://www.amazon.com.au/Haitpant-Winter-Knitted-Spliced-Puffer/dp/B0CPVQQWMD",
+              "title": "Haitpant Winter False Two Piece Knitted Spliced Puffer Jacket Women Short Loose Hooded Parkas Casual 90% Duck Down Coat, Beige, Small : Amazon.com.au: Clothing, Shoes & Accessories"
             },
             {
-              "link": "https://www.luulla.com/product/1897889/quilted-womens-winter-jacket-with-hooded-warmth",
-              "title": "Quilted Womens Winter Jacket With Hooded Warmth on Luulla"
+              "link": "https://www.amazon.com/Lmdudan-Cropped-Jackets-Outfits-Outerwear/dp/B0DLH41JN6",
+              "title": "Amazon.com: Lmdudan Winter Jacket for Women Cropped Warm Puffer Down Jackets Trendy Hooded Outfits Long Sleeve Casual Outerwear : Clothing, Shoes & Jewelry"
             }
           ],
-          "timestamp": "2025-11-14T11:48:03.146Z",
-          "candidateCount": 29,
+          "timestamp": "2025-11-14T11:57:43.261Z",
+          "candidateCount": 28,
           "selectionCount": 3
         }
       },
       "timing": {
-        "full_image_search_seconds": 4.68,
-        "per_category_search_seconds": 8.87,
-        "gpt4_turbo_api_time_seconds": 3.85,
+        "full_image_search_seconds": 3.57,
+        "per_category_search_seconds": 15.49,
+        "gpt4_turbo_api_time_seconds": 3.91,
         "processing_overhead_seconds": 0,
-        "other_overhead_seconds": -3.84,
-        "wall_clock_seconds": 13.55,
-        "serper_api_time_seconds": 5.01,
+        "other_overhead_seconds": -3.9,
+        "wall_clock_seconds": 19.07,
+        "serper_api_time_seconds": 11.59,
         "serper_count": 1,
         "gpt4_turbo_count": 1,
-        "total_seconds": 13.55,
+        "total_seconds": 19.07,
         "categories_parallel": 1
       }
     }

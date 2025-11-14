@@ -1,26 +1,27 @@
 {
+  "status": "success",
   "phone": "821027193710",
-  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763119980172_Screenshot_20251005_201843_Instagram.jpg",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763121194179_Screenshot_20251005_201843_Instagram.jpg",
   "items": [
     {
       "category": "tops",
       "groundingdino_prompt": "black coat",
       "description": "charcoal black long trench coat with buttons and a high neck",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_black_coat_1763119990432.jpg",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_black_coat_1763121215653.jpg",
       "confidence": 0.901
     },
     {
       "category": "bottoms",
       "groundingdino_prompt": "white skirt",
       "description": "white midi skirt with a simple, straight cut",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_white_skirt_1763119991752.jpg",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_white_skirt_1763121217002.jpg",
       "confidence": 0.846
     },
     {
       "category": "shoes",
       "groundingdino_prompt": "black shoes",
       "description": "black flat shoes with a rounded toe",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_black_shoes_1763119992337.jpg",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_black_shoes_1763121218285.jpg",
       "confidence": 0.704
     }
   ],
@@ -33,14 +34,14 @@
           "title": "뮤즈무드 트렌치코트 블랙 카라넥 바스락 루즈핏"
         },
         {
-          "link": "https://lordjohngrey.com/product/balmacaan-coat-black/904",
-          "thumbnail": "https://lordjohngrey.com/web/product/extra/small/202202/aa3c6284d732d1ff7162cd5f7ef98f5d.jpg",
-          "title": "balmacaan coat black - Lord John Grey"
+          "link": "https://www.29cm.co.kr/products/2964995",
+          "thumbnail": "https://img.29cm.co.kr/item/202509/11f09845587c466b93fb8b19348c6281.jpg?width=3840&format=webp",
+          "title": "riv padded coat (black) - 감도 깊은 취향 셀렉트샵 29CM"
         },
         {
-          "link": "https://www.musinsa.com/products/4594017",
-          "thumbnail": "https://image.msscdn.net/thumbnails/images/prd_img/20241106/4594017/detail_4594017_17369119725576_big.jpg?w=1000",
-          "title": "무신사 스탠다드(MUSINSA STANDARD) 오버사이즈 발마칸 트렌치 ..."
+          "link": "https://www.29cm.co.kr/products/3130769",
+          "thumbnail": "https://img.29cm.co.kr/item/202503/11effe2216bb477bacea9599096ed821.jpg?width=1200&format=webp",
+          "title": "Single Nylon Trench Coat, Charcoal - 감도 깊은 취향 셀렉트샵 29CM"
         }
       ],
       "bottoms_2": [
@@ -55,26 +56,26 @@
           "title": "Classic Trench by Mackintosh - La GarÁonne – La Garçonne"
         },
         {
-          "link": "https://www.ssense.com/en-in/women/product/6397/black-button-trench-coat/14937731",
-          "thumbnail": "https://img.ssensemedia.com/images/241446F059000_1/6397-black-button-trench-coat.jpg",
-          "title": "Black Button Trench Coat by 6397 on Sale"
+          "link": "https://www.shopboswell.us/products/r19-y-1-gill-coat-in-black-master-shield",
+          "thumbnail": "https://www.shopboswell.us/cdn/shop/files/shopboswellman-tleR19Y-1GILLCOATINBLACKMASTERSHIELD-8.jpg?v=1756564378&width=1000",
+          "title": "R19 Y-1 GILL COAT IN BLACK MASTER SHIELD"
         }
       ],
       "shoes_3": [
         {
-          "link": "https://www.aliexpress.com/item/1005007524208736.html",
-          "thumbnail": "https://ae01.alicdn.com/kf/S71955e0da3c9436daa22b733c950df7dd.jpg",
-          "title": "Pointed Toe Women Loafers Black Brown White Casual Mules Shoes New 2024 Fashion Shallow Slip on Low Flat Heel Party Dress Shoes - AliExpress"
+          "link": "https://www.na-kd.com/en/products/buckle-detail-mules-black-1720-000173-0002",
+          "thumbnail": "https://www.na-kd.com/cdn-cgi/image/width=300,quality=80,sharpen=0.3/globalassets/actusartem_1100-011896-0002_social.jpg?ref=E7FA59B6AE",
+          "title": "Buckle Detail Mules Black | NA-KD"
         },
         {
-          "link": "https://www.29cm.co.kr/products/2570634",
-          "thumbnail": "https://img.29cm.co.kr/item/202404/11eef194d462c31b88b15da6611fc0df.jpg?width=700&format=webp",
-          "title": "SENNE_black - 감도 깊은 취향 셀렉트샵 29CM"
+          "link": "https://zigzag.kr/catalog/products/100331439",
+          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/c/10/033/143/100331439-556120628996685821.jpeg?width=720&height=720&quality=80&format=jpeg",
+          "title": "슈마루 모코뾰족단화(1cm)"
         },
         {
-          "link": "https://m.common-unique.com/product/페일리-스퀘어-토-로퍼/20763/",
-          "thumbnail": "https://common-unique.com/date/2022/0112/a/2a-st-220112_05.jpg",
-          "title": "커먼유니크"
+          "link": "https://www.etsy.com/listing/1862857785/vintage-black-leather-wedge-flats-almond",
+          "thumbnail": "https://i.etsystatic.com/12941054/r/il/252b83/4619715220/il_570xN.4619715220_580w.jpg",
+          "title": "Vintage Black Leather Wedge Flats: Almond Toe Loafers, Size 6.5 UK - Etsy"
         }
       ]
     },
@@ -99,39 +100,8 @@
             "leg trousers"
           ],
           "selectedLinks": [],
-          "timestamp": "2025-11-14T11:33:23.167Z",
+          "timestamp": "2025-11-14T11:53:49.824Z",
           "candidateCount": 29
-        },
-        "shoes_3": {
-          "itemDescription": "item3 black shoes",
-          "searchTerms": [
-            "item3 black shoes",
-            "shoes",
-            "sneakers",
-            "boots",
-            "sandals",
-            "heels",
-            "flats",
-            "loafers",
-            "oxford"
-          ],
-          "selectedLinks": [
-            {
-              "link": "https://www.aliexpress.com/item/1005007524208736.html",
-              "title": "Pointed Toe Women Loafers Black Brown White Casual Mules Shoes New 2024 Fashion Shallow Slip on Low Flat Heel Party Dress Shoes - AliExpress"
-            },
-            {
-              "link": "https://www.29cm.co.kr/products/2570634",
-              "title": "SENNE_black - 감도 깊은 취향 셀렉트샵 29CM"
-            },
-            {
-              "link": "https://m.common-unique.com/product/페일리-스퀘어-토-로퍼/20763/",
-              "title": "커먼유니크"
-            }
-          ],
-          "timestamp": "2025-11-14T11:33:25.244Z",
-          "candidateCount": 30,
-          "selectionCount": 3
         },
         "tops_1": {
           "itemDescription": "item1 black coat",
@@ -153,30 +123,61 @@
               "title": "뮤즈무드 트렌치코트 블랙 카라넥 바스락 루즈핏"
             },
             {
-              "link": "https://lordjohngrey.com/product/balmacaan-coat-black/904",
-              "title": "balmacaan coat black - Lord John Grey"
+              "link": "https://www.29cm.co.kr/products/2964995",
+              "title": "riv padded coat (black) - 감도 깊은 취향 셀렉트샵 29CM"
             },
             {
-              "link": "https://www.musinsa.com/products/4594017",
-              "title": "무신사 스탠다드(MUSINSA STANDARD) 오버사이즈 발마칸 트렌치 ..."
+              "link": "https://www.29cm.co.kr/products/3130769",
+              "title": "Single Nylon Trench Coat, Charcoal - 감도 깊은 취향 셀렉트샵 29CM"
             }
           ],
-          "timestamp": "2025-11-14T11:33:31.971Z",
+          "timestamp": "2025-11-14T11:53:51.297Z",
+          "candidateCount": 29,
+          "selectionCount": 3
+        },
+        "shoes_3": {
+          "itemDescription": "item3 black shoes",
+          "searchTerms": [
+            "item3 black shoes",
+            "shoes",
+            "sneakers",
+            "boots",
+            "sandals",
+            "heels",
+            "flats",
+            "loafers",
+            "oxford"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.na-kd.com/en/products/buckle-detail-mules-black-1720-000173-0002",
+              "title": "Buckle Detail Mules Black | NA-KD"
+            },
+            {
+              "link": "https://zigzag.kr/catalog/products/100331439",
+              "title": "슈마루 모코뾰족단화(1cm)"
+            },
+            {
+              "link": "https://www.etsy.com/listing/1862857785/vintage-black-leather-wedge-flats-almond",
+              "title": "Vintage Black Leather Wedge Flats: Almond Toe Loafers, Size 6.5 UK - Etsy"
+            }
+          ],
+          "timestamp": "2025-11-14T11:53:51.905Z",
           "candidateCount": 30,
           "selectionCount": 3
         }
       },
       "timing": {
-        "full_image_search_seconds": 4.11,
-        "per_category_search_seconds": 14.53,
-        "gpt4_turbo_api_time_seconds": 7.86,
-        "processing_overhead_seconds": 0.01,
-        "other_overhead_seconds": -7.85,
-        "wall_clock_seconds": 18.66,
-        "serper_api_time_seconds": 20.16,
+        "full_image_search_seconds": 5.02,
+        "per_category_search_seconds": 7.92,
+        "gpt4_turbo_api_time_seconds": 7.67,
+        "processing_overhead_seconds": 0,
+        "other_overhead_seconds": -7.67,
+        "wall_clock_seconds": 12.95,
+        "serper_api_time_seconds": 13.37,
         "serper_count": 3,
         "gpt4_turbo_count": 3,
-        "total_seconds": 18.66,
+        "total_seconds": 12.95,
         "categories_parallel": 3
       }
     }

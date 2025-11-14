@@ -1,27 +1,27 @@
 {
   "status": "success",
   "phone": "821047850225",
-  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763120921835_Screenshot_20251114_164408_Instagram.jpg",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763121520148_Screenshot_20251114_164408_Instagram.jpg",
   "items": [
     {
       "category": "tops",
       "groundingdino_prompt": "beige cardigan",
-      "description": "beige knit cardigan with black trim and long sleeves",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_beige_cardigan_1763120956388.jpg",
+      "description": "beige cardigan with black trim and ribbed cuffs",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_beige_cardigan_1763121553585.jpg",
       "confidence": 0.734
     },
     {
       "category": "bottoms",
       "groundingdino_prompt": "beige pants",
       "description": "beige high-waisted pants with a straight fit",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_beige_pants_1763120958014.jpg",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_beige_pants_1763121555432.jpg",
       "confidence": 0.591
     },
     {
       "category": "bag",
       "groundingdino_prompt": "beige bag",
       "description": "large beige tote bag with handles",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_beige_bag_1763120959100.jpg",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_beige_bag_1763121556463.jpg",
       "confidence": 0.352
     }
   ],
@@ -39,9 +39,9 @@
           "title": "오아클 [부드러워요!/털빠짐X] 사요 퍼 루즈핏 브이넥 가디건"
         },
         {
-          "link": "https://m.ssfshop.com/Anne-Klein/GQIX25022845826/good",
-          "thumbnail": "https://ecimg.cafe24img.com/pg252b08802602047/annekleinkr/web/upload/NNEditor/20250404/80d148a33f5b421f5b391c17783becf9.jpg",
-          "title": "Anne Klein-[앤클라인]스티치 라인 가디건 O5HS15│삼성물산 온라인몰 SSF Shop"
+          "link": "https://www.coupang.com/vp/products/8341477288?itemId=24090269719&searchId=7252b0c6760849488f45991caac5d08a&sourceType=brandstore_sdp_atf-new_products&storeId=92919&subSourceType=brandstore_sdp_atf-new_products&vendorId=A00703837&vendorItemId=91109742167",
+          "thumbnail": "https://image.coupangcdn.com/image/vendor_inventory/d316/563f38fc170a6285bf2d08054d9a0da2a2995a2df10ba8593be2fee687e4.jpg",
+          "title": "앤유브라운 간절기 가디건 배색 가디건 여성 가을 카라가디건 여성 결혼식 하객룩 3컬러 - 카디건 | 쿠팡"
         }
       ],
       "bottoms_2": [
@@ -51,6 +51,11 @@
           "title": "essential v-neck pullover (camel) - 감도 깊은 취향 셀렉트샵 29CM"
         },
         {
+          "link": "https://global.musinsa.com/us/goods/4371809",
+          "thumbnail": "https://intimo93.cafe24.com/24FW/PO02/LAMB/5_101289_RE.jpg",
+          "title": "MUSINSA | UMARMUNG Pure saxon wool spread collar half zip pullover_Lamb"
+        },
+        {
           "link": "https://m.zardins.com/product/w-조끼-레이어드-cd/7692/",
           "thumbnail": "https://m.zardins.com/web/upload/NNEditor/20231213/ceb5999cbfa06ad6ac691027c6770153.jpg",
           "title": "W) 조끼 레이어드 CD - ZARDINS"
@@ -58,19 +63,19 @@
       ],
       "bag_3": [
         {
-          "link": "https://m.oh-car.co.kr/goods/goods_view.php?goodsNo=1000584046",
-          "thumbnail": "https://d2yvw3vh7zamx3.cloudfront.net/data/tuningContents/rlarkdls0928/ohcar_bi_12_223344411171.jpg",
-          "title": "카니발ka4 빌스콘티 램프 파손교체&베이지 시트 이염 제거 클리닝 후 가죽코팅 클리어!!~~ | 오늘의카 - 튜닝,정비 시공후기 모음 앱"
+          "link": "https://m.imim.kr/product/더뉴카니발-2열-열선시트-베이지/5505",
+          "thumbnail": "https://m.imim.kr/web/upload/NNEditor/20201118/mobile/d92a70f507e0541f977401dfdba48e9e_1605674473.jpg",
+          "title": "더뉴카니발 2열 열선시트 베이지 - 자동차부품 준준모터스"
         },
         {
-          "link": "https://m.oh-car.co.kr/goods/goods_view.php?goodsNo=1000579966",
-          "thumbnail": "https://d2yvw3vh7zamx3.cloudfront.net/data/tuningContents/dreamer_kim37/ohcar_bi_8_223856984070.jpg",
-          "title": "4세대 카니발 리무진시트 교체] 1열 운전석, 조수석 나파가죽 메모리폼 시트 착석감튜닝 작업기 / 남양주시 다산동 | 오늘의카 - 튜닝,정비 시공후기 모음 앱"
+          "link": "http://www.thevan.co.kr/data/file/company_03/2039799682_Sri2wL4V_EB8D94EBB0B4_EBB88CEBA19CEC8594.pdf",
+          "thumbnail": "x-raw-image:///6369e4d243819fb73e371ea515953cb9e958b9dbdb1bd47d90a379f7470a0990",
+          "title": "Untitled"
         },
         {
-          "link": "https://m.oh-car.co.kr/goods/goods_view.php?goodsNo=1000646441",
-          "thumbnail": "https://d2yvw3vh7zamx3.cloudfront.net/data/tuningContents/autocrew1389/ohcar_bi_7_223909906555.jpg",
-          "title": "자동차 시트에 커피 쏟았을때 대처법 시트 탈거 실내크리닝 / 경기 김포 | 오늘의카 - 튜닝,정비 시공후기 모음 앱"
+          "link": "https://imim.kr/product/더뉴카니발-2열-열선시트-베이지/5505",
+          "thumbnail": "https://m.imim.kr/web/upload/NNEditor/20201118/mobile/56f62d07af37d612b4c1e1295b581ad0_1605674473.jpg",
+          "title": "더뉴카니발 2열 열선시트 베이지 - 자동차부품 준준모터스"
         }
       ]
     },
@@ -95,7 +100,7 @@
             "leg trousers"
           ],
           "selectedLinks": [],
-          "timestamp": "2025-11-14T11:49:37.835Z",
+          "timestamp": "2025-11-14T11:59:32.067Z",
           "candidateCount": 30
         },
         "bag_3": {
@@ -113,7 +118,7 @@
             "wallet"
           ],
           "selectedLinks": [],
-          "timestamp": "2025-11-14T11:49:37.977Z",
+          "timestamp": "2025-11-14T11:59:33.073Z",
           "candidateCount": 30
         },
         "tops_1": {
@@ -140,26 +145,26 @@
               "title": "오아클 [부드러워요!/털빠짐X] 사요 퍼 루즈핏 브이넥 가디건"
             },
             {
-              "link": "https://m.ssfshop.com/Anne-Klein/GQIX25022845826/good",
-              "title": "Anne Klein-[앤클라인]스티치 라인 가디건 O5HS15│삼성물산 온라인몰 SSF Shop"
+              "link": "https://www.coupang.com/vp/products/8341477288?itemId=24090269719&searchId=7252b0c6760849488f45991caac5d08a&sourceType=brandstore_sdp_atf-new_products&storeId=92919&subSourceType=brandstore_sdp_atf-new_products&vendorId=A00703837&vendorItemId=91109742167",
+              "title": "앤유브라운 간절기 가디건 배색 가디건 여성 가을 카라가디건 여성 결혼식 하객룩 3컬러 - 카디건 | 쿠팡"
             }
           ],
-          "timestamp": "2025-11-14T11:49:39.118Z",
-          "candidateCount": 20,
+          "timestamp": "2025-11-14T11:59:34.397Z",
+          "candidateCount": 19,
           "selectionCount": 3
         }
       },
       "timing": {
-        "full_image_search_seconds": 12.75,
-        "per_category_search_seconds": 6.6,
-        "gpt4_turbo_api_time_seconds": 4.77,
+        "full_image_search_seconds": 8.94,
+        "per_category_search_seconds": 8.28,
+        "gpt4_turbo_api_time_seconds": 8.01,
         "processing_overhead_seconds": 0,
-        "other_overhead_seconds": -4.77,
-        "wall_clock_seconds": 19.35,
-        "serper_api_time_seconds": 12.58,
+        "other_overhead_seconds": -8.01,
+        "wall_clock_seconds": 17.22,
+        "serper_api_time_seconds": 13.14,
         "serper_count": 3,
         "gpt4_turbo_count": 3,
-        "total_seconds": 19.35,
+        "total_seconds": 17.22,
         "categories_parallel": 3
       }
     }

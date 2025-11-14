@@ -1,0 +1,132 @@
+{
+  "status": "success",
+  "phone": "821020247094",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763121353231_image.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "beige cardigan",
+      "description": "beige long sleeve cardigan with decorative buttons and a loose fit",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_beige_cardigan_1763121373270.jpg",
+      "confidence": 0.928
+    },
+    {
+      "category": "bag",
+      "groundingdino_prompt": "white bag",
+      "description": "white handbag with a simple strap design",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_white_bag_1763121375026.jpg",
+      "confidence": 0.584
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://zozo.jp/shop/douladoula/goods-sale/87190758/",
+          "thumbnail": "https://c.imgz.jp/758/88190758/88190758b_b_13_500.jpg",
+          "title": "セール】リボン釦ニットカーディガン（カーディガン/ボレロ）｜Girly Doll（ガーリードール）のファッション通販 - ZOZOTOWN"
+        },
+        {
+          "link": "https://fashionbykakao.com/catalog/products/146706473",
+          "thumbnail": "https://vanillamain.cafe24.com/web/product/extra/big/20240822/770e961ef1f8b4e8f269561a37ac4b1f.jpg",
+          "title": "패션 바이 카카오 | 베르소 트위드 자켓 3col 2024FW 가을하객룩 얼리어텀 가을신상 노카라 숏 버튼 라운드넥 오피스룩 데일리룩 간절기 봄 하객룩 고급스러운 국내제작"
+        },
+        {
+          "link": "https://www.coupang.com/vp/products/8296231738?itemId=23929003039&vendorItemId=90951121654",
+          "thumbnail": "https://thumbnail7.coupangcdn.com/thumbnails/remote/492x492ex/image/vendor_inventory/44e6/fdc35598c7153f358689ccf5607b8fc6f6a0a35a37dad6da44acb0c6b6a3.jpg",
+          "title": "ROYALBELLE 여성 쇠뿔단추 스웨터 가디건 라우드넥 니트 루즈핏 긴팔 편안한 캐주얼룩 Y081910 - 카디건 | 쿠팡"
+        }
+      ],
+      "bag_2": [
+        {
+          "link": "https://jp.mercari.com/item/m48007584296",
+          "thumbnail": "https://static.mercdn.net/item/detail/orig/photos/m48007584296_6.jpg?1713759180",
+          "title": "美品】ZARAザラ☆ プリーツ加工 ミニバケットバッグ ☆オフホワイト - メルカリ"
+        },
+        {
+          "link": "https://www.29cm.co.kr/products/1126883?id=3255357",
+          "thumbnail": "https://img.29cm.co.kr/item/202501/11efcbd46c91e2a4ad1b477bdbcf4a6d.jpg?width=3840&format=webp",
+          "title": "Lucky Pleats Knit M Vanilla - 감도 깊은 취향 셀렉트샵 29CM"
+        },
+        {
+          "link": "https://en.pleatsmama.com/all/?idx=940",
+          "thumbnail": "https://cdn.imweb.me/thumbnail/20250619/4beea0e06ea66.png",
+          "title": "Lite Shoulder Bag Ivory : PLEATSMAMA: Sustainable Knit Pleats Bag"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 1,
+        "fallback": 1,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "tops_1": {
+          "itemDescription": "item1 beige cardigan",
+          "searchTerms": [
+            "item1 beige cardigan",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-14T11:56:25.140Z",
+          "candidateCount": 18
+        },
+        "bag_2": {
+          "itemDescription": "item2 white bag",
+          "searchTerms": [
+            "item2 white bag",
+            "bag",
+            "backpack",
+            "handbag",
+            "tote bag",
+            "purse",
+            "clutch",
+            "messenger bag",
+            "shoulder bag",
+            "wallet"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://jp.mercari.com/item/m48007584296",
+              "title": "美品】ZARAザラ☆ プリーツ加工 ミニバケットバッグ ☆オフホワイト - メルカリ"
+            },
+            {
+              "link": "https://www.29cm.co.kr/products/1126883?id=3255357",
+              "title": "Lucky Pleats Knit M Vanilla - 감도 깊은 취향 셀렉트샵 29CM"
+            },
+            {
+              "link": "https://en.pleatsmama.com/all/?idx=940",
+              "title": "Lite Shoulder Bag Ivory : PLEATSMAMA: Sustainable Knit Pleats Bag"
+            }
+          ],
+          "timestamp": "2025-11-14T11:56:27.080Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 3.51,
+        "per_category_search_seconds": 7.78,
+        "gpt4_turbo_api_time_seconds": 4.85,
+        "processing_overhead_seconds": 0,
+        "other_overhead_seconds": -4.84,
+        "wall_clock_seconds": 11.3,
+        "serper_api_time_seconds": 8.73,
+        "serper_count": 2,
+        "gpt4_turbo_count": 2,
+        "total_seconds": 11.3,
+        "categories_parallel": 2
+      }
+    }
+  }
+}

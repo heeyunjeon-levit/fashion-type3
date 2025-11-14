@@ -1,0 +1,127 @@
+{
+  "status": "success",
+  "phone": "821030550242",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763121288133_image.jpg",
+  "items": [
+    {
+      "category": "shoes",
+      "groundingdino_prompt": "black shoes",
+      "description": "black pointed-toe heels with a glossy finish",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_black_shoes_1763121323030.jpg",
+      "confidence": 0.697
+    },
+    {
+      "category": "bag",
+      "groundingdino_prompt": "black bag",
+      "description": "black handbag with a gold chain strap and quilted design",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_black_bag_1763121324083.jpg",
+      "confidence": 0.835
+    }
+  ],
+  "search_results": {
+    "results": {
+      "shoes_1": [
+        {
+          "link": "https://www.zara.com/us/en/patent-finish-kitten-heel-slingbacks-p11254610.html",
+          "thumbnail": "https://static.zara.net/assets/public/e4f6/d29f/4ab7416a9c51/76a1ecfbc6a1/11254610800-e3/11254610800-e3.jpg?ts=1758010045529",
+          "title": "PATENT FINISH KITTEN HEEL SLINGBACKS - Black | ZARA United States"
+        },
+        {
+          "link": "https://www.charleskeith.com/kr/SL1-71720132_BLKPAT.html",
+          "thumbnail": "https://www.charleskeith.com/dw/image/v2/BCWJ_PRD/on/demandware.static/-/Sites-ck-products/default/dwf838b75c/images/hi-res/2025-L6-SL1-71720132-J5-7.jpg?sw=370&sh=494",
+          "title": "페이턴트 레더 젬-버클 포인티드-토 앵클-스트랩 플랫 - 블랙 페이턴트 | 슈즈 | 찰스앤키스 코리아"
+        }
+      ],
+      "bag_2": [
+        {
+          "link": "https://www.zara.com/kr/ko/락-플랩-숄더백-p16360615.html",
+          "thumbnail": "https://static.zara.net/assets/public/4aa1/15f6/08a840179805/eace3cd120ee/16360615040-e2/16360615040-e2.jpg?ts=1758887539518",
+          "title": "락 플랩 숄더백 - 블랙 | ZARA South Korea / 대한민국"
+        },
+        {
+          "link": "https://www.ebay.com/itm/374683793734",
+          "thumbnail": "https://i.ebayimg.com/images/g/WK4AAOSw0aBkWF4H/s-l1200.jpg",
+          "title": "GUESS womens leather Shoulder Bag, Black, cross shoulder One Size US | eBay"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 2,
+        "fallback": 0,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "shoes_1": {
+          "itemDescription": "item2 black shoes",
+          "searchTerms": [
+            "item2 black shoes",
+            "shoes",
+            "sneakers",
+            "boots",
+            "sandals",
+            "heels",
+            "flats",
+            "loafers",
+            "oxford"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.zara.com/us/en/patent-finish-kitten-heel-slingbacks-p11254610.html",
+              "title": "PATENT FINISH KITTEN HEEL SLINGBACKS - Black | ZARA United States"
+            },
+            {
+              "link": "https://www.charleskeith.com/kr/SL1-71720132_BLKPAT.html",
+              "title": "페이턴트 레더 젬-버클 포인티드-토 앵클-스트랩 플랫 - 블랙 페이턴트 | 슈즈 | 찰스앤키스 코리아"
+            }
+          ],
+          "timestamp": "2025-11-14T11:55:37.255Z",
+          "candidateCount": 30,
+          "selectionCount": 2
+        },
+        "bag_2": {
+          "itemDescription": "item3 black bag",
+          "searchTerms": [
+            "item3 black bag",
+            "bag",
+            "backpack",
+            "handbag",
+            "tote bag",
+            "purse",
+            "clutch",
+            "messenger bag",
+            "shoulder bag",
+            "wallet"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.zara.com/kr/ko/락-플랩-숄더백-p16360615.html",
+              "title": "락 플랩 숄더백 - 블랙 | ZARA South Korea / 대한민국"
+            },
+            {
+              "link": "https://www.ebay.com/itm/374683793734",
+              "title": "GUESS womens leather Shoulder Bag, Black, cross shoulder One Size US | eBay"
+            }
+          ],
+          "timestamp": "2025-11-14T11:55:47.653Z",
+          "candidateCount": 30,
+          "selectionCount": 2
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 4.9,
+        "per_category_search_seconds": 17.88,
+        "gpt4_turbo_api_time_seconds": 6.93,
+        "processing_overhead_seconds": 0,
+        "other_overhead_seconds": -6.93,
+        "wall_clock_seconds": 22.77,
+        "serper_api_time_seconds": 18.41,
+        "serper_count": 2,
+        "gpt4_turbo_count": 2,
+        "total_seconds": 22.78,
+        "categories_parallel": 2
+      }
+    }
+  }
+}

@@ -1,20 +1,20 @@
 {
   "status": "success",
   "phone": "821091805701",
-  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763120726797_IMG_2479.jpg",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763121172739_IMG_2479.jpg",
   "items": [
     {
       "category": "dress",
       "groundingdino_prompt": "white dress",
       "description": "white long sleeve dress with buttons and a loose fit",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_white_dress_1763120751109.jpg",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_white_dress_1763121198614.jpg",
       "confidence": 0.945
     },
     {
       "category": "bag",
       "groundingdino_prompt": "brown bag",
-      "description": "brown shoulder bag with a strap and metal buckle",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_brown_bag_1763120752146.jpg",
+      "description": "brown shoulder bag with a simple design",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_brown_bag_1763121199516.jpg",
       "confidence": 0.435
     }
   ],
@@ -22,9 +22,9 @@
     "results": {
       "dress_1": [
         {
-          "link": "https://zigzag.kr/catalog/products/148905545",
-          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/c/16/595/591/165955916-9144376734832867023.gif?width=400&height=400&quality=80&format=jpeg",
-          "title": "커먼유니크 루아네 링클 백 버튼 스트랩 롱 원피스 (가을/쉬폰/주름/허리끈/플레어/퍼프소매/셔링/러블리/페미닌/데이트룩/하객룩/오피스룩)"
+          "link": "https://zigzag.kr/catalog/products/166309544",
+          "thumbnail": "https://ecimg.cafe24img.com/pg1255b70082919088/uth0115/web/upload/NNEditor/20251023/ea6b580bcf0e15f4ba76ee55249ac641.jpg",
+          "title": "언더더힐 hug fw blouse (1color)"
         },
         {
           "link": "https://m.attrangs.co.kr/shop/view_slide_detail.php?index_no=165221",
@@ -32,9 +32,9 @@
           "title": "아뜨랑스 상세보기"
         },
         {
-          "link": "https://zigzag.kr/catalog/products/148261532",
-          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/d/2024/9/13/15489_202409131638190373_43522.jpeg?width=400&height=400&quality=80&format=webp",
-          "title": "에이치다 [BEST/여행룩] 보헤미안 셔링 플레어 봄 가을 레이어드 원피스 (미니/루즈핏/리본/긴팔)"
+          "link": "https://m.shopperland.co.kr/product/detail.html?product_no=20563&cate_no=129&display_group=0",
+          "thumbnail": "https://m.shopperland.co.kr/web/product/big/202404/9e83270b907a4b57793b5e7fc4ea48ce.jpg",
+          "title": "기획]라몬 레이스 셔링 리본 블라우스 (2color)쇼퍼랜드"
         }
       ],
       "bag_2": [
@@ -57,12 +57,28 @@
     },
     "meta": {
       "sourceCounts": {
-        "gpt": 2,
-        "fallback": 0,
+        "gpt": 1,
+        "fallback": 1,
         "none": 0,
         "error": 0
       },
       "gptReasoning": {
+        "dress_1": {
+          "itemDescription": "item1 white dress",
+          "searchTerms": [
+            "item1 white dress",
+            "dress",
+            "gown",
+            "maxi dress",
+            "midi dress",
+            "mini dress",
+            "cocktail dress",
+            "casual dress"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-14T11:53:29.589Z",
+          "candidateCount": 30
+        },
         "bag_2": {
           "itemDescription": "item2 brown bag",
           "searchTerms": [
@@ -91,52 +107,22 @@
               "title": "Juicy couture brown tote bag with rhinestone | Mercari"
             }
           ],
-          "timestamp": "2025-11-14T11:46:09.278Z",
-          "candidateCount": 30,
-          "selectionCount": 3
-        },
-        "dress_1": {
-          "itemDescription": "item1 white dress",
-          "searchTerms": [
-            "item1 white dress",
-            "dress",
-            "gown",
-            "maxi dress",
-            "midi dress",
-            "mini dress",
-            "cocktail dress",
-            "casual dress"
-          ],
-          "selectedLinks": [
-            {
-              "link": "https://zigzag.kr/catalog/products/148905545",
-              "title": "커먼유니크 루아네 링클 백 버튼 스트랩 롱 원피스 (가을/쉬폰/주름/허리끈/플레어/퍼프소매/셔링/러블리/페미닌/데이트룩/하객룩/오피스룩)"
-            },
-            {
-              "link": "https://m.attrangs.co.kr/shop/view_slide_detail.php?index_no=165221",
-              "title": "아뜨랑스 상세보기"
-            },
-            {
-              "link": "https://zigzag.kr/catalog/products/148261532",
-              "title": "에이치다 [BEST/여행룩] 보헤미안 셔링 플레어 봄 가을 레이어드 원피스 (미니/루즈핏/리본/긴팔)"
-            }
-          ],
-          "timestamp": "2025-11-14T11:46:13.285Z",
+          "timestamp": "2025-11-14T11:53:31.259Z",
           "candidateCount": 30,
           "selectionCount": 3
         }
       },
       "timing": {
-        "full_image_search_seconds": 8.02,
-        "per_category_search_seconds": 12.41,
-        "gpt4_turbo_api_time_seconds": 7.9,
+        "full_image_search_seconds": 4.13,
+        "per_category_search_seconds": 6.94,
+        "gpt4_turbo_api_time_seconds": 5.15,
         "processing_overhead_seconds": 0,
-        "other_overhead_seconds": -7.9,
-        "wall_clock_seconds": 20.43,
-        "serper_api_time_seconds": 12.89,
+        "other_overhead_seconds": -5.14,
+        "wall_clock_seconds": 11.07,
+        "serper_api_time_seconds": 7.04,
         "serper_count": 2,
         "gpt4_turbo_count": 2,
-        "total_seconds": 20.43,
+        "total_seconds": 11.07,
         "categories_parallel": 2
       }
     }

@@ -1,13 +1,13 @@
 {
   "status": "success",
   "phone": "821075046333",
-  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763120988347_Screenshot_20251105_133754_Instagram.jpg",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763121427169_Screenshot_20251105_133754_Instagram.jpg",
   "items": [
     {
       "category": "dress",
       "groundingdino_prompt": "green dress",
-      "description": "dark green sleeveless dress with layered tulle and colorful pom-pom decorations",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_green_dress_1763121024042.jpg",
+      "description": "dark green dress with layered tulle and colorful pom-pom decorations",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_green_dress_1763121453806.jpg",
       "confidence": 0.791
     }
   ],
@@ -16,13 +16,18 @@
       "dress_1": [
         {
           "link": "https://www.amazon.com/Toddler-Christmas-Outftis-Sleeveless-Layered/dp/B0DHNQ57MT",
-          "thumbnail": "https://m.media-amazon.com/images/S/aplus-media-library-service-media/26a72e56-89af-4d70-8e63-2da7e4cd2e2c.__CR0,0,970,600_PT0_SX970_V1___.png",
+          "thumbnail": "https://m.media-amazon.com/images/S/aplus-media-library-service-media/fb85d251-b9ce-4db0-b67d-31e16bea9b41.__CR0,0,970,600_PT0_SX970_V1___.jpg",
           "title": "Amazon.com: Toddler Baby Girl Christmas Outftis Star Sequin Sleeveless Layered Tulle Tutu Dress Plush Ball Green X-mas Tree Dress (Green, 1-2 Years): Clothing, Shoes & Jewelry"
         },
         {
-          "link": "https://www.aliexpress.com/item/1005007806963262.html",
-          "thumbnail": "https://ae01.alicdn.com/kf/S18e2879bd89742dcb684f6389404da59n.jpg",
-          "title": "Blotona Little Girl Christmas Dress Star Print Square Neck Sleeveless Layered Tulle Slip Dress with Plush Ball Christmas Hat - AliExpress"
+          "link": "https://www.amazon.co.uk/Toddler-Christmas-Outfit-Layered-Costume/dp/B0FQP5FRKZ",
+          "thumbnail": "https://m.media-amazon.com/images/I/81n0fWFNmOL._AC_UY350_.jpg",
+          "title": "Toddler Baby Girl Christmas Tutu Dress Christmas Tree Outfit Flying Sleeve Layered Tulle Dress Cake Smash Party Xmas Costume (Green Xmas Tree, 12-18 Months) : Amazon.co.uk: Fashion"
+        },
+        {
+          "link": "https://www.miniolie.com/products/toddler-green-tulle-colorful-bow-dress",
+          "thumbnail": "https://img-va.myshopline.com/image/store/1677748422329/d465f1fda8de427abdcdef612b36a1c3_1445x.jpg?w=800&h=800&q=80",
+          "title": "Toddler Green Tulle Colorful Bow Dress – MiniOlie"
         }
       ]
     },
@@ -52,26 +57,30 @@
               "title": "Amazon.com: Toddler Baby Girl Christmas Outftis Star Sequin Sleeveless Layered Tulle Tutu Dress Plush Ball Green X-mas Tree Dress (Green, 1-2 Years): Clothing, Shoes & Jewelry"
             },
             {
-              "link": "https://www.aliexpress.com/item/1005007806963262.html",
-              "title": "Blotona Little Girl Christmas Dress Star Print Square Neck Sleeveless Layered Tulle Slip Dress with Plush Ball Christmas Hat - AliExpress"
+              "link": "https://www.amazon.co.uk/Toddler-Christmas-Outfit-Layered-Costume/dp/B0FQP5FRKZ",
+              "title": "Toddler Baby Girl Christmas Tutu Dress Christmas Tree Outfit Flying Sleeve Layered Tulle Dress Cake Smash Party Xmas Costume (Green Xmas Tree, 12-18 Months) : Amazon.co.uk: Fashion"
+            },
+            {
+              "link": "https://www.miniolie.com/products/toddler-green-tulle-colorful-bow-dress",
+              "title": "Toddler Green Tulle Colorful Bow Dress – MiniOlie"
             }
           ],
-          "timestamp": "2025-11-14T11:50:54.790Z",
+          "timestamp": "2025-11-14T11:57:49.992Z",
           "candidateCount": 30,
-          "selectionCount": 2
+          "selectionCount": 3
         }
       },
       "timing": {
-        "full_image_search_seconds": 15.01,
-        "per_category_search_seconds": 13.59,
-        "gpt4_turbo_api_time_seconds": 4.34,
+        "full_image_search_seconds": 8.18,
+        "per_category_search_seconds": 6.91,
+        "gpt4_turbo_api_time_seconds": 3.28,
         "processing_overhead_seconds": 0,
-        "other_overhead_seconds": -4.34,
-        "wall_clock_seconds": 28.61,
-        "serper_api_time_seconds": 9.24,
+        "other_overhead_seconds": -3.28,
+        "wall_clock_seconds": 15.1,
+        "serper_api_time_seconds": 3.63,
         "serper_count": 1,
         "gpt4_turbo_count": 1,
-        "total_seconds": 28.61,
+        "total_seconds": 15.1,
         "categories_parallel": 1
       }
     }

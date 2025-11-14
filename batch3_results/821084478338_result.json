@@ -1,12 +1,13 @@
 {
+  "status": "success",
   "phone": "821084478338",
-  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763119865785_Screenshot_20251111_160852_NAVER.jpg",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763121068726_Screenshot_20251111_160852_NAVER.jpg",
   "items": [
     {
       "category": "tops",
       "groundingdino_prompt": "black jacket",
       "description": "black hooded puffer jacket with a belted waist and button closure",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_black_jacket_1763119880732.jpg",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_black_jacket_1763121087873.jpg",
       "confidence": 0.604
     }
   ],
@@ -20,7 +21,7 @@
         },
         {
           "link": "https://www.moncler.com/en-es/women/outerwear/lightweight-down-jackets/oredon-short-down-jacket-black-J10931A00090595FE999.html?size=5",
-          "thumbnail": "https://moncler-cdn.thron.com/delivery/public/image/moncler/K10931A00090595FE999_A/dpx6uv/std/0x0/K10931A00090595FE999_A.jpg",
+          "thumbnail": "https://moncler-cdn.thron.com/delivery/public/image/moncler/K10931A00090595FE999_B/dpx6uv/std/0x0/K10931A00090595FE999_B.jpg",
           "title": "Black Oredon Hooded Mid-Length Down Jacket - Short Down Jackets for Women | Moncler ES"
         },
         {
@@ -66,22 +67,22 @@
               "title": "Moncler Oredon Women's Down Jacket 1C00009 595FE 999 132353045 | eBay"
             }
           ],
-          "timestamp": "2025-11-14T11:31:34.432Z",
+          "timestamp": "2025-11-14T11:51:41.960Z",
           "candidateCount": 30,
           "selectionCount": 3
         }
       },
       "timing": {
-        "full_image_search_seconds": 2,
-        "per_category_search_seconds": 10.37,
-        "gpt4_turbo_api_time_seconds": 5.91,
+        "full_image_search_seconds": 3.3,
+        "per_category_search_seconds": 9.19,
+        "gpt4_turbo_api_time_seconds": 4.83,
         "processing_overhead_seconds": 0,
-        "other_overhead_seconds": -5.91,
-        "wall_clock_seconds": 12.37,
-        "serper_api_time_seconds": 4.45,
+        "other_overhead_seconds": -4.83,
+        "wall_clock_seconds": 12.5,
+        "serper_api_time_seconds": 4.35,
         "serper_count": 1,
         "gpt4_turbo_count": 1,
-        "total_seconds": 12.37,
+        "total_seconds": 12.5,
         "categories_parallel": 1
       }
     }

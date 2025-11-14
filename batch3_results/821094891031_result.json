@@ -1,0 +1,172 @@
+{
+  "status": "success",
+  "phone": "821094891031",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763121392319_image.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "black jacket",
+      "description": "black quilted jacket with a collar and button closure",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_black_jacket_1763121421963.jpg",
+      "confidence": 0.499
+    },
+    {
+      "category": "dress",
+      "groundingdino_prompt": "black dress",
+      "description": "black sleeveless dress with a simple, elegant design",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_black_dress_1763121423129.jpg",
+      "confidence": 0.541
+    },
+    {
+      "category": "bag",
+      "groundingdino_prompt": "black bag",
+      "description": "black leather handbag with a structured shape",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_black_bag_1763121424119.jpg",
+      "confidence": 0.414
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://m.gsshop.com/prd/prd.gs?prdid=1097959883&bnclick=prd-b02_prdb02A_apiPrdBrand&mseq=437159",
+          "thumbnail": "https://cocoblack00.diskn.com/cocoblack/2025/10/251023/251023_cbspd_29.jpg",
+          "title": "코코블랙] 까르 퀼팅 자켓-숏ver. - GS SHOP"
+        },
+        {
+          "link": "https://kream.co.kr/products/613658",
+          "thumbnail": "https://kream-phinf.pstatic.net/MjAyNTA5MjlfMTQ1/MDAxNzU5MTE2NTE1MzQ2.Lt_ECznHl2RVrDHsDNnrwmdCwf7Y1_GBLsJNUib0Cc0g.6kx-ABJZ3UvdKpofEIqeKryJhsdHq7fIsmoIivIJKmAg.JPEG/p_6f319568fa6047f087fbd31eb6ac299a.jpg?type=l",
+          "title": "W) 버버리 퀼팅 자켓 블랙 | Seller Week | KREAM"
+        },
+        {
+          "link": "https://www.trenbe.com/product/++140310881",
+          "thumbnail": "https://image-cdn.trenbe.com/productmain/1750318024772-a41314a3-c08e-43dd-bd9b-92039abfc37a.jpeg",
+          "title": "버버리(Burberry) | 브롬리 여성 퀼팅 후드 자켓 블랙 | 트렌비"
+        }
+      ],
+      "dress_2": [
+        {
+          "link": "https://m.melluce.com/product/수채화카라숏패딩-2colors/846",
+          "thumbnail": "https://ecimg.cafe24img.com/pg522b67604402084/melluce0703/web/upload/NNEditor/20251020/64508cb0e622a721775e2202b8a4d328.jpg",
+          "title": "멜루체 | 수채화카라숏패딩 귀여운 데일리 패딩"
+        },
+        {
+          "link": "https://web.joongna.com/product/220290836",
+          "thumbnail": "https://img2.joongna.com/media/original/2025/10/04/1759516739177Gob_0IH2J.jpg?impolicy=thumb&size=150",
+          "title": "택0,새상품) 이브니에 여성 잠옷 긴소매 상하 세트 | 중고나라 - 안심되는 중고거래"
+        },
+        {
+          "link": "https://posty.kr/products/166392052?from=category_result",
+          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/d/2025/10/27/53776_202510271341510539_95420.jpeg?width=720&height=720&quality=80&format=webp",
+          "title": "포스티 - [모노앳디] 월렛 트위드 퀼팅 경량 패딩"
+        }
+      ],
+      "bag_3": [
+        {
+          "link": "https://m.melluce.com/product/수채화카라숏패딩-2colors/846",
+          "thumbnail": "https://ecimg.cafe24img.com/pg522b67604402084/melluce0703/web/upload/NNEditor/20251020/64508cb0e622a721775e2202b8a4d328.jpg",
+          "title": "멜루체 | 수채화카라숏패딩 귀여운 데일리 패딩"
+        },
+        {
+          "link": "https://www.daangn.com/kr/buy-sell/공구-퀄팅-롱-숏-자켓-55-77-f9d8yw73kndh/",
+          "thumbnail": "https://img.kr.gcp-karroter.net/origin/article/202510/1761710565820ed49e743596e44d905a786578527b787adb7b5fa7a5448c3a7e4ae3535c048a30.webp?f=webp&q=95&s=1440x1440&t=inside",
+          "title": "공구)퀄팅 롱 숏 자켓 (55~77) | 여성의류 | 당근 중고거래"
+        },
+        {
+          "link": "https://web.joongna.com/product/220290836",
+          "thumbnail": "https://img2.joongna.com/media/original/2025/10/04/1759516739177Gob_0IH2J.jpg?impolicy=thumb&size=150",
+          "title": "택0,새상품) 이브니에 여성 잠옷 긴소매 상하 세트 | 중고나라 - 안심되는 중고거래"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 1,
+        "fallback": 2,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "dress_2": {
+          "itemDescription": "item2 black dress",
+          "searchTerms": [
+            "item2 black dress",
+            "dress",
+            "gown",
+            "maxi dress",
+            "midi dress",
+            "mini dress",
+            "cocktail dress",
+            "casual dress"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-14T11:57:13.855Z",
+          "candidateCount": 30
+        },
+        "bag_3": {
+          "itemDescription": "item3 black bag",
+          "searchTerms": [
+            "item3 black bag",
+            "bag",
+            "backpack",
+            "handbag",
+            "tote bag",
+            "purse",
+            "clutch",
+            "messenger bag",
+            "shoulder bag",
+            "wallet"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-14T11:57:14.873Z",
+          "candidateCount": 30
+        },
+        "tops_1": {
+          "itemDescription": "item1 black jacket",
+          "searchTerms": [
+            "item1 black jacket",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://m.gsshop.com/prd/prd.gs?prdid=1097959883&bnclick=prd-b02_prdb02A_apiPrdBrand&mseq=437159",
+              "title": "코코블랙] 까르 퀼팅 자켓-숏ver. - GS SHOP"
+            },
+            {
+              "link": "https://kream.co.kr/products/613658",
+              "title": "W) 버버리 퀼팅 자켓 블랙 | Seller Week | KREAM"
+            },
+            {
+              "link": "https://www.trenbe.com/product/++140310881",
+              "title": "버버리(Burberry) | 브롬리 여성 퀼팅 후드 자켓 블랙 | 트렌비"
+            }
+          ],
+          "timestamp": "2025-11-14T11:57:27.180Z",
+          "candidateCount": 29,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 3.59,
+        "per_category_search_seconds": 18.47,
+        "gpt4_turbo_api_time_seconds": 6.71,
+        "processing_overhead_seconds": 0.01,
+        "other_overhead_seconds": -6.71,
+        "wall_clock_seconds": 22.06,
+        "serper_api_time_seconds": 23.03,
+        "serper_count": 3,
+        "gpt4_turbo_count": 3,
+        "total_seconds": 22.06,
+        "categories_parallel": 3
+      }
+    }
+  }
+}

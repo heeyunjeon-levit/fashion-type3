@@ -1,12 +1,13 @@
 {
+  "status": "success",
   "phone": "821051321548",
-  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763120108046_Screenshot_20251112_164359_NAVER.jpg",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763121373341_Screenshot_20251112_164359_NAVER.jpg",
   "items": [
     {
       "category": "tops",
       "groundingdino_prompt": "multicolor jacket",
-      "description": "beige, yellow, brown, and navy color-block fleece jacket with a zip front and a chest pocket",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_multicolor_jacket_1763120134729.jpg",
+      "description": "beige, yellow, brown, and navy color-block fleece jacket with a front zipper and a navy chest pocket",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_multicolor_jacket_1763121394006.jpg",
       "confidence": 0.931
     }
   ],
@@ -14,19 +15,19 @@
     "results": {
       "tops_1": [
         {
-          "link": "https://www.coupang.com/vp/products/8358012591",
-          "thumbnail": "https://image.coupangcdn.com/image/vendor_inventory/38ff/68757aea7c3e48f85d3524a089f498e32473db884109cea5a559876879a3.jpg",
-          "title": "노스페이스키즈 아동 후리스 NJ4FQ51 키즈 로얄톤 플리스 자켓 KS LOYALTON FLEECE JACKET 캠핑 윈드브레이커 - 자켓/점퍼/조끼 | 쿠팡"
+          "link": "https://www.thenorthfacekorea.co.kr/product/NJ4FR50U",
+          "thumbnail": "https://image.thenorthfacekorea.co.kr/cmsstatic/product/4000054204/NJ4FR50U.jpg?zoom",
+          "title": "K'S CAMPOUT FLEECE JACKET - 노스페이스"
+        },
+        {
+          "link": "https://www.backcountry.com/the-north-face-forrest-fleece-mashup-jacket-boys",
+          "thumbnail": "https://www.backcountry.com/images/items/medium/TNF/TNFZCQ6/ALMBUT.jpg",
+          "title": "The North Face Forrest Fleece Mashup Jacket - Boys' - Kids"
         },
         {
           "link": "https://www.coupang.com/vp/products/8395174329?itemId=24267521359&vendorItemId=91504991738",
           "thumbnail": "https://thumbnail9.coupangcdn.com/thumbnails/remote/230x230ex/image/vendor_inventory/3ecc/040f31015500d4ea516ee14008919f637b117d3d0805a9c534f076c467ae.jpg",
           "title": "노스페이스 키즈 로얄톤 플리스 자켓 NJ4FQ51V - 자켓/점퍼 | 쿠팡"
-        },
-        {
-          "link": "https://www.bloomingdales.com/shop/product/the-north-face-unisex-kids-denali-jacket-cameo-pink-little-kid?ID=4290901",
-          "thumbnail": "https://images.bloomingdalesassets.com/is/image/BLM/products/0/optimized/12602700_fpx.tif",
-          "title": "The North Face® Unisex Kids' Denali Jacket Cameo Pink - Little Kid | Bloomingdale's"
         }
       ]
     },
@@ -54,34 +55,34 @@
           ],
           "selectedLinks": [
             {
-              "link": "https://www.coupang.com/vp/products/8358012591",
-              "title": "노스페이스키즈 아동 후리스 NJ4FQ51 키즈 로얄톤 플리스 자켓 KS LOYALTON FLEECE JACKET 캠핑 윈드브레이커 - 자켓/점퍼/조끼 | 쿠팡"
+              "link": "https://www.thenorthfacekorea.co.kr/product/NJ4FR50U",
+              "title": "K'S CAMPOUT FLEECE JACKET - 노스페이스"
+            },
+            {
+              "link": "https://www.backcountry.com/the-north-face-forrest-fleece-mashup-jacket-boys",
+              "title": "The North Face Forrest Fleece Mashup Jacket - Boys' - Kids"
             },
             {
               "link": "https://www.coupang.com/vp/products/8395174329?itemId=24267521359&vendorItemId=91504991738",
               "title": "노스페이스 키즈 로얄톤 플리스 자켓 NJ4FQ51V - 자켓/점퍼 | 쿠팡"
-            },
-            {
-              "link": "https://www.bloomingdales.com/shop/product/the-north-face-unisex-kids-denali-jacket-cameo-pink-little-kid?ID=4290901",
-              "title": "The North Face® Unisex Kids' Denali Jacket Cameo Pink - Little Kid | Bloomingdale's"
             }
           ],
-          "timestamp": "2025-11-14T11:36:02.213Z",
-          "candidateCount": 30,
+          "timestamp": "2025-11-14T11:56:47.210Z",
+          "candidateCount": 29,
           "selectionCount": 3
         }
       },
       "timing": {
-        "full_image_search_seconds": 3.89,
-        "per_category_search_seconds": 21.74,
-        "gpt4_turbo_api_time_seconds": 4.93,
+        "full_image_search_seconds": 3.79,
+        "per_category_search_seconds": 7.76,
+        "gpt4_turbo_api_time_seconds": 4.04,
         "processing_overhead_seconds": 0,
-        "other_overhead_seconds": -4.93,
-        "wall_clock_seconds": 25.64,
-        "serper_api_time_seconds": 16.8,
+        "other_overhead_seconds": -4.04,
+        "wall_clock_seconds": 11.56,
+        "serper_api_time_seconds": 3.71,
         "serper_count": 1,
         "gpt4_turbo_count": 1,
-        "total_seconds": 25.64,
+        "total_seconds": 11.56,
         "categories_parallel": 1
       }
     }

@@ -1,13 +1,13 @@
 {
   "status": "success",
   "phone": "821087797860",
-  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763120693926_IMG_8710.jpg",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763121133340_IMG_8710.jpg",
   "items": [
     {
       "category": "tops",
       "groundingdino_prompt": "white hoodie",
-      "description": "white fluffy hoodie with bunny ears on the hood and a cute bunny graphic on the front",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_white_hoodie_1763120709330.jpg",
+      "description": "white fluffy hoodie with bunny ears on the hood and a cartoon rabbit design on the front",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_white_hoodie_1763121154843.jpg",
       "confidence": 0.889
     }
   ],
@@ -15,14 +15,14 @@
     "results": {
       "tops_1": [
         {
-          "link": "https://m.coupang.com/vm/products/8529782244?itemId=24695484696&vendorItemId=91789649585",
-          "thumbnail": "https://thumbnail.coupangcdn.com/thumbnails/remote/492x492ex/image/vendor_inventory/eefd/e970b4e4af1082c3a4fd481e8fcf08e2a525350bc520f4363b3980d98cae.jpg",
-          "title": "베베드피노BP34JL104 티그레 베이비 덤블 퍼 후드 자켓 142119 - 색칠하기 | 쿠팡"
+          "link": "https://m.bunjang.co.kr/products/368746300?ref=검색결과",
+          "thumbnail": "https://media.bunjang.co.kr/product/368746300_2_1762909611_w360.jpg",
+          "title": "베베드피노 티그레 덤블퍼 상하 셋업 100 새상품 | 브랜드 중고거래 플랫폼, 번개장터"
         },
         {
-          "link": "https://m.akmall.com/goods/GoodsDetail.do?urlpath=0@0&goods_id=106009709",
-          "thumbnail": "https://photo.akmall.com/image4/goods/06/00/97/09/106009709_M_500.jpg",
-          "title": "상품상세 | 모바일 AK몰"
+          "link": "https://www.elandmall.co.kr/i/item?itemNo=2110803783&",
+          "thumbnail": "https://item.elandrs.com/upload/prd/orgimg/783/2110803783_0000001.jpg?w=750&h=&q=100",
+          "title": "베베드피노] 썬베어베이비보아퍼자켓_BP14JL103- 이랜드몰"
         },
         {
           "link": "https://m.lotteimall.com/goods/viewGoodsDetail.lotte?goods_no=3112435530&rccode=mo_r_detail5&t=1759078441787",
@@ -54,21 +54,21 @@
             "cardigan"
           ],
           "selectedLinks": [],
-          "timestamp": "2025-11-14T11:45:20.641Z",
-          "candidateCount": 17
+          "timestamp": "2025-11-14T11:52:46.404Z",
+          "candidateCount": 16
         }
       },
       "timing": {
-        "full_image_search_seconds": 4.05,
-        "per_category_search_seconds": 6.34,
+        "full_image_search_seconds": 4.88,
+        "per_category_search_seconds": 5.69,
         "gpt4_turbo_api_time_seconds": 1.4,
-        "processing_overhead_seconds": 0.01,
+        "processing_overhead_seconds": 0,
         "other_overhead_seconds": -1.39,
-        "wall_clock_seconds": 10.4,
-        "serper_api_time_seconds": 4.94,
+        "wall_clock_seconds": 10.58,
+        "serper_api_time_seconds": 4.28,
         "serper_count": 1,
         "gpt4_turbo_count": 1,
-        "total_seconds": 10.4,
+        "total_seconds": 10.58,
         "categories_parallel": 1
       }
     }

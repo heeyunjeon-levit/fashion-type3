@@ -1,34 +1,34 @@
 {
   "status": "success",
   "phone": "821063209765",
-  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763120779371_9F2377ED_ACF5_47EA_8F22_FC9AD85BC7B1.jpg",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763121217424_9F2377ED_ACF5_47EA_8F22_FC9AD85BC7B1.jpg",
   "items": [
     {
       "category": "tops",
       "groundingdino_prompt": "brown coat",
       "description": "long brown overcoat with a classic tailored fit",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_brown_coat_1763120805029.jpg",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_brown_coat_1763121243126.jpg",
       "confidence": 0.832
     },
     {
       "category": "tops",
       "groundingdino_prompt": "gray hoodie",
       "description": "light gray hoodie with a relaxed fit and visible hood",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_gray_hoodie_1763120806299.jpg",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_gray_hoodie_1763121244464.jpg",
       "confidence": 0.631
     },
     {
       "category": "bottoms",
       "groundingdino_prompt": "blue jeans",
-      "description": "dark blue wide-leg jeans with a casual style",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_blue_jeans_1763120807122.jpg",
+      "description": "dark blue wide-leg jeans with a casual fit",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_blue_jeans_1763121245327.jpg",
       "confidence": 0.583
     },
     {
       "category": "shoes",
       "groundingdino_prompt": "white sneakers",
-      "description": "white sneakers with a simple design and visible soles",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item4_white_sneakers_1763120807634.jpg",
+      "description": "white sneakers with a chunky sole and casual style",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item4_white_sneakers_1763121245887.jpg",
       "confidence": 0.763
     }
   ],
@@ -36,19 +36,19 @@
     "results": {
       "tops_1": [
         {
-          "link": "https://www.zara.com/ca/en/oversized-wool-coat-with-contrast-cuff-p08470384.html",
-          "thumbnail": "https://static.zara.net/assets/public/0e50/79f2/320c4776a8c3/4cde03ea0370/08470384742-p/08470384742-p.jpg?ts=1761834452339&w=744&f=auto",
-          "title": "OVERSIZED WOOL COAT WITH CONTRAST CUFF - Dark mink | ZARA Canada"
+          "link": "https://m.page27.co.kr/product/메르시-오버-울-더블코트4color/1629/",
+          "thumbnail": "https://m.page27.co.kr/web/product/big/201811/bc67475a8febb94119aeb2bd0cef625f.jpg",
+          "title": "메르시 오버 울 더블코트(4color) - 페이지27"
         },
         {
-          "link": "https://www.29cm.co.kr/products/2833531",
-          "thumbnail": "https://img.29cm.co.kr/item/202409/11ef70d532861e46a980e37ad9615f38.jpg?width=3840&format=webp",
-          "title": "STANDARD MAXI LONG COAT_BROWN - 감도 깊은 취향 셀렉트샵 29CM"
+          "link": "https://zigzag.kr/catalog/products/132656171",
+          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/c/13/265/617/132656171-4287460339053621739.jpeg?width=400&height=400&quality=80&format=webp",
+          "title": "오브더나인 제른 울 더블 롱코트"
         },
         {
-          "link": "https://global.musinsa.com/ca/goods/2071892",
-          "thumbnail": "https://ambient.diskn.com/detailimg/22FW/MEN/Coat/IM2B4CT23/beige/001373.jpg",
-          "title": "MUSINSA | INSILENCE MTR Cashmere Double Coat BEIGE"
+          "link": "https://m.freund.co.kr/product/브로큰-더블-롱-코트-4color/3969/",
+          "thumbnail": "https://m.freund.co.kr/web/upload/NNEditor/20201120/BROWN1_shop1_112428.jpg",
+          "title": "브로큰 더블 롱 코트 (4color) - 프로인드"
         }
       ],
       "tops_2": [
@@ -58,40 +58,55 @@
           "title": "여성용 우아한 화이트 코트, O-넥 긴팔 재킷, 2024 가을 겨울 패션, 얇고 루즈한 레이디 아웃웨어 - AliExpress"
         },
         {
-          "link": "https://www.aliexpress.com/item/1005007812865398.html",
-          "thumbnail": "https://ae01.alicdn.com/kf/S39046f32bfa041e4b4e5ef3067e54a87o.jpg",
-          "title": "Vintage Lapel Solid Long Coats Women Elegant Casual Brown Double-Breasted Woolen Coat Female Winter Chic Loose Street Outwear - AliExpress"
+          "link": "https://www.aliexpress.com/item/1005007606855582.html",
+          "thumbnail": "https://ae01.alicdn.com/kf/S4b3cd537f514462c9d217d576e8cb48bK.jpg_960x960.jpg",
+          "title": "Casual Solid Double-Breasted Long Coats Women Vintage Loose Turn-down Collar Brown Maxi Coats Lady Winter Elegant Street Outwear - AliExpress"
         },
         {
-          "link": "https://www.cos.com/en-us/women/womenswear/tops/longsleevetops/product/slim-merino-wool-top-taupe-mlange-1288664004",
-          "thumbnail": "https://media.cos.com/assets/001/fb/bc/fbbc06f56870907da9c05a96601a9bdb4f9b7d34_xxl-1.jpg?imwidth=2160",
-          "title": "SLIM MERINO WOOL SWEATER - TAUPE MELANGE | COS GB"
+          "link": "https://m.bunjang.co.kr/products/245979983",
+          "thumbnail": "https://media.bunjang.co.kr/product/251890398_1_1708088362_w{res}.jpg",
+          "title": "29cm 드로우핏우먼 캐시미어 코트 | 브랜드 중고거래 플랫폼, 번개장터"
         }
       ],
       "bottoms_3": [
         {
-          "link": "https://4910.kr/goods/47780306",
-          "thumbnail": "https://d3ha2047wt6x28.cloudfront.net/KkJXIzwzqlg/pr:NEW_GOODS_THUMB_STILL/czM6Ly9hYmx5LWltYWdlLWxlZ2FjeS9kYXRhL2dvb2RzL2YwY2FlYjllMmQ2NDNhM2MzODUzOGM4MDMxM2QyMjU3LmpwZWc",
-          "title": "룩브릿지 81 데미지 컷팅 버뮤다 데님팬츠 - 4910 | 패션이 쉬워지는 순간"
+          "link": "https://zigzag.kr/bridges/creator-lounge/pdp?product_id=149081012&shop_id=45208&share_type=AFFILIATE&referral_code=Jb8ZoV7Q&shop_id=45208&zz_source=zz_affiliate&zz_campaign=Jb8ZoV7Q&airbridge_referrer=airbridge=true&client_id=eeb19a50-478c-4fd9-8123-eb785cdf3f3e&event_uuid=dab1077d-33a6-4d02-b1d4-fa0450418400&referrer_timestamp=1748683035890&channel=affiliate&utm_source=affiliate&deeplink_url=zigzag://open/full_screen_simple_browser?product_id=149081012&shop_id=45208&url=https://store.zigzag.kr/bridges/creator-lounge/pdp?product_id=149081012&shop_id=45208&share_type=AFFILIATE&referral_code=Jb8ZoV7Q&shop_id=45208&zz_source=zz_affiliate&zz_campaign=Jb8ZoV7Q&fallback_desktop=https://zigzag.kr/bridges/creator-lounge/pdp?product_id=149081012&shop_id=45208&share_type=AFFILIATE&referral_code=Jb8ZoV7Q&shop_id=45208&zz_source=zz_affiliate&zz_campaign=Jb8ZoV7Q",
+          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/c/14/908/101/149081012-2159513649369334012.jpeg",
+          "title": "오뉴이 미토 벌룬 와이드 데님 팬츠"
         },
         {
-          "link": "https://zigzag.kr/catalog/products/149081012?airbridge_referrer=airbridge=true&client_id=ca12a234-0711-4102-a137-280517b37026&event_uuid=4955cf1e-a490-49be-8937-9b4c0f2b9f42&referrer_timestamp=1758310825567&channel=affiliate&utm_source=affiliate&deeplink_url=zigzag://open/product_detail?browsing_type=Z_BROWSER&shop_id=45208&catalog_product_id=149081012&url=https://store.zigzag.kr/catalog/products/149081012?shop_id=45208&shop_product_no=&catalog_product_id=149081012&share_type=AFFILIATE&referral_code=Jb8ZoV7Q&product_id=149081012&zz_source=zz_affiliate&zz_campaign=Jb8ZoV7Q&fallback_desktop=https://zigzag.kr/catalog/products/149081012",
-          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/c/14/908/101/149081012-2159513649369334012.jpeg?width=720&height=720&quality=80&format=jpeg",
-          "title": "오뉴이 미토 벌룬 와이드 데님 팬츠"
+          "link": "https://fruitsfamily.com/product/1vl4q/낫포너드-청바지",
+          "thumbnail": "https://image.production.fruitsfamily.com/public/product/resized@width1125/0nAuJm-UNx-13C1A1F6-77A7-41BA-86E1-27A874A2B22E.jpg",
+          "title": "낫포너드 청바지 | 후루츠패밀리"
+        },
+        {
+          "link": "https://www.29cm.co.kr/products/2902905",
+          "thumbnail": "https://img.29cm.co.kr/item/202410/11ef900bb191d8e9b8a27d931aec0c4b.jpg?width=1200&format=webp",
+          "title": "HEM CONTRAST WASHED DENIM PANTS (BLUE) - 감도 깊은 취향 셀렉트샵 29CM"
         }
       ],
       "shoes_4": [
         {
-          "link": "https://www.farfetch.com/shopping/men/dsquared2-rider-sneakers-item-30399507.aspx",
-          "thumbnail": "https://cdn-images.farfetch-contents.com/30/39/95/07/30399507_59589238_1000.jpg",
-          "title": "DSQUARED2 Rider Sneakers | White | FARFETCH"
+          "link": "https://www.farfetch.com/az/shopping/men/rick-owens-drkshdw-bolan-banana-zip-detail-jeans-item-29504278.aspx",
+          "thumbnail": "https://cdn-images.farfetch-contents.com/29/50/42/78/29504278_61783377_1000.jpg",
+          "title": "Rick Owens DRKSHDW Bolan Banana zip-detail Jeans | Grey | FARFETCH AZ"
+        },
+        {
+          "link": "https://www.farfetch.com/ao/shopping/women/ottolinger-draped-raw-cut-jeans-item-25792744.aspx",
+          "thumbnail": "https://cdn-images.farfetch-contents.com/25/79/27/44/25792744_56061774_1000.jpg",
+          "title": "Ottolinger Draped raw-cut Jeans | Neutrals | FARFETCH AO"
+        },
+        {
+          "link": "https://fruitsfamily.com/product/1cej0/hip-hop-carpenter-pants",
+          "thumbnail": "https://image.production.fruitsfamily.com/public/product/resized@width1125/S4vso7r8fI-1BB2A377-71FC-4F71-8CA0-E4874338A224.jpg",
+          "title": "Hip-Hop Carpenter Pants | 후루츠패밀리"
         }
       ]
     },
     "meta": {
       "sourceCounts": {
-        "gpt": 3,
-        "fallback": 1,
+        "gpt": 2,
+        "fallback": 2,
         "none": 0,
         "error": 0
       },
@@ -111,8 +126,8 @@
             "cardigan"
           ],
           "selectedLinks": [],
-          "timestamp": "2025-11-14T11:47:10.702Z",
-          "candidateCount": 10
+          "timestamp": "2025-11-14T11:54:16.501Z",
+          "candidateCount": 11
         },
         "shoes_4": {
           "itemDescription": "item4 white sneakers",
@@ -127,41 +142,9 @@
             "loafers",
             "oxford"
           ],
-          "selectedLinks": [
-            {
-              "link": "https://www.farfetch.com/shopping/men/dsquared2-rider-sneakers-item-30399507.aspx",
-              "title": "DSQUARED2 Rider Sneakers | White | FARFETCH"
-            }
-          ],
-          "timestamp": "2025-11-14T11:47:11.418Z",
-          "candidateCount": 29,
-          "selectionCount": 1
-        },
-        "bottoms_3": {
-          "itemDescription": "item3 blue jeans",
-          "searchTerms": [
-            "item3 blue jeans",
-            "shorts",
-            "slacks",
-            "pants",
-            "trousers",
-            "jeans",
-            "skirt",
-            "leg trousers"
-          ],
-          "selectedLinks": [
-            {
-              "link": "https://4910.kr/goods/47780306",
-              "title": "룩브릿지 81 데미지 컷팅 버뮤다 데님팬츠 - 4910 | 패션이 쉬워지는 순간"
-            },
-            {
-              "link": "https://zigzag.kr/catalog/products/149081012?airbridge_referrer=airbridge=true&client_id=ca12a234-0711-4102-a137-280517b37026&event_uuid=4955cf1e-a490-49be-8937-9b4c0f2b9f42&referrer_timestamp=1758310825567&channel=affiliate&utm_source=affiliate&deeplink_url=zigzag://open/product_detail?browsing_type=Z_BROWSER&shop_id=45208&catalog_product_id=149081012&url=https://store.zigzag.kr/catalog/products/149081012?shop_id=45208&shop_product_no=&catalog_product_id=149081012&share_type=AFFILIATE&referral_code=Jb8ZoV7Q&product_id=149081012&zz_source=zz_affiliate&zz_campaign=Jb8ZoV7Q&fallback_desktop=https://zigzag.kr/catalog/products/149081012",
-              "title": "오뉴이 미토 벌룬 와이드 데님 팬츠"
-            }
-          ],
-          "timestamp": "2025-11-14T11:47:16.631Z",
-          "candidateCount": 30,
-          "selectionCount": 2
+          "selectedLinks": [],
+          "timestamp": "2025-11-14T11:54:16.847Z",
+          "candidateCount": 29
         },
         "tops_1": {
           "itemDescription": "item1 brown coat",
@@ -179,34 +162,64 @@
           ],
           "selectedLinks": [
             {
-              "link": "https://www.zara.com/ca/en/oversized-wool-coat-with-contrast-cuff-p08470384.html",
-              "title": "OVERSIZED WOOL COAT WITH CONTRAST CUFF - Dark mink | ZARA Canada"
+              "link": "https://m.page27.co.kr/product/메르시-오버-울-더블코트4color/1629/",
+              "title": "메르시 오버 울 더블코트(4color) - 페이지27"
             },
             {
-              "link": "https://www.29cm.co.kr/products/2833531",
-              "title": "STANDARD MAXI LONG COAT_BROWN - 감도 깊은 취향 셀렉트샵 29CM"
+              "link": "https://zigzag.kr/catalog/products/132656171",
+              "title": "오브더나인 제른 울 더블 롱코트"
             },
             {
-              "link": "https://global.musinsa.com/ca/goods/2071892",
-              "title": "MUSINSA | INSILENCE MTR Cashmere Double Coat BEIGE"
+              "link": "https://m.freund.co.kr/product/브로큰-더블-롱-코트-4color/3969/",
+              "title": "브로큰 더블 롱 코트 (4color) - 프로인드"
             }
           ],
-          "timestamp": "2025-11-14T11:47:18.482Z",
+          "timestamp": "2025-11-14T11:54:26.036Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        },
+        "bottoms_3": {
+          "itemDescription": "item3 blue jeans",
+          "searchTerms": [
+            "item3 blue jeans",
+            "shorts",
+            "slacks",
+            "pants",
+            "trousers",
+            "jeans",
+            "skirt",
+            "leg trousers"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://zigzag.kr/bridges/creator-lounge/pdp?product_id=149081012&shop_id=45208&share_type=AFFILIATE&referral_code=Jb8ZoV7Q&shop_id=45208&zz_source=zz_affiliate&zz_campaign=Jb8ZoV7Q&airbridge_referrer=airbridge=true&client_id=eeb19a50-478c-4fd9-8123-eb785cdf3f3e&event_uuid=dab1077d-33a6-4d02-b1d4-fa0450418400&referrer_timestamp=1748683035890&channel=affiliate&utm_source=affiliate&deeplink_url=zigzag://open/full_screen_simple_browser?product_id=149081012&shop_id=45208&url=https://store.zigzag.kr/bridges/creator-lounge/pdp?product_id=149081012&shop_id=45208&share_type=AFFILIATE&referral_code=Jb8ZoV7Q&shop_id=45208&zz_source=zz_affiliate&zz_campaign=Jb8ZoV7Q&fallback_desktop=https://zigzag.kr/bridges/creator-lounge/pdp?product_id=149081012&shop_id=45208&share_type=AFFILIATE&referral_code=Jb8ZoV7Q&shop_id=45208&zz_source=zz_affiliate&zz_campaign=Jb8ZoV7Q",
+              "title": "오뉴이 미토 벌룬 와이드 데님 팬츠"
+            },
+            {
+              "link": "https://fruitsfamily.com/product/1vl4q/낫포너드-청바지",
+              "title": "낫포너드 청바지 | 후루츠패밀리"
+            },
+            {
+              "link": "https://www.29cm.co.kr/products/2902905",
+              "title": "HEM CONTRAST WASHED DENIM PANTS (BLUE) - 감도 깊은 취향 셀렉트샵 29CM"
+            }
+          ],
+          "timestamp": "2025-11-14T11:54:26.324Z",
           "candidateCount": 29,
           "selectionCount": 3
         }
       },
       "timing": {
-        "full_image_search_seconds": 16.16,
-        "per_category_search_seconds": 13.88,
-        "gpt4_turbo_api_time_seconds": 21.19,
-        "processing_overhead_seconds": 0,
-        "other_overhead_seconds": -21.19,
-        "wall_clock_seconds": 30.04,
-        "serper_api_time_seconds": 17.59,
+        "full_image_search_seconds": 4.52,
+        "per_category_search_seconds": 15.22,
+        "gpt4_turbo_api_time_seconds": 16.12,
+        "processing_overhead_seconds": 0.02,
+        "other_overhead_seconds": -16.12,
+        "wall_clock_seconds": 19.76,
+        "serper_api_time_seconds": 25.13,
         "serper_count": 4,
         "gpt4_turbo_count": 4,
-        "total_seconds": 30.04,
+        "total_seconds": 19.76,
         "categories_parallel": 4
       }
     }

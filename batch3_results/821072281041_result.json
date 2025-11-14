@@ -1,13 +1,13 @@
 {
   "status": "success",
   "phone": "821072281041",
-  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763120448219_IMG_8927.jpeg",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763121475002_IMG_8927.jpeg",
   "items": [
     {
       "category": "tops",
       "groundingdino_prompt": "pink bag",
       "description": "light pink leather handbag with a curved shape and top handles",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_pink_bag_1763120472745.jpg",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_pink_bag_1763121496782.jpg",
       "confidence": 0.89
     }
   ],
@@ -54,21 +54,21 @@
             "cardigan"
           ],
           "selectedLinks": [],
-          "timestamp": "2025-11-14T11:41:23.999Z",
+          "timestamp": "2025-11-14T11:58:28.564Z",
           "candidateCount": 30
         }
       },
       "timing": {
-        "full_image_search_seconds": 4,
-        "per_category_search_seconds": 5.78,
-        "gpt4_turbo_api_time_seconds": 1.4,
+        "full_image_search_seconds": 3.94,
+        "per_category_search_seconds": 6.2,
+        "gpt4_turbo_api_time_seconds": 1.38,
         "processing_overhead_seconds": 0,
-        "other_overhead_seconds": -1.4,
-        "wall_clock_seconds": 9.78,
-        "serper_api_time_seconds": 4.37,
+        "other_overhead_seconds": -1.38,
+        "wall_clock_seconds": 10.14,
+        "serper_api_time_seconds": 4.82,
         "serper_count": 1,
         "gpt4_turbo_count": 1,
-        "total_seconds": 9.78,
+        "total_seconds": 10.15,
         "categories_parallel": 1
       }
     }

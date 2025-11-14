@@ -1,12 +1,13 @@
 {
+  "status": "success",
   "phone": "821086891513",
-  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763119898634_Screenshot_20251112_170458_NAVER.jpg",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763121106199_Screenshot_20251112_170458_NAVER.jpg",
   "items": [
     {
       "category": "tops",
       "groundingdino_prompt": "black vest",
       "description": "black quilted long padded vest with a hood and waist drawstring",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_black_vest_1763119908700.jpg",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_black_vest_1763121122263.jpg",
       "confidence": 0.951
     }
   ],
@@ -48,22 +49,22 @@
               "title": "Chaleco largo para mujer, con cremallera, sin mangas, acolchado, con capucha, parte delantera abierta, con botones y bolsillos, Negro -, 3X-Grande : Ropa, Zapatos y Joyería - Amazon.com"
             }
           ],
-          "timestamp": "2025-11-14T11:32:07.387Z",
+          "timestamp": "2025-11-14T11:52:14.476Z",
           "candidateCount": 10,
           "selectionCount": 1
         }
       },
       "timing": {
-        "full_image_search_seconds": 4.4,
-        "per_category_search_seconds": 13.34,
-        "gpt4_turbo_api_time_seconds": 2.57,
+        "full_image_search_seconds": 4.9,
+        "per_category_search_seconds": 5.79,
+        "gpt4_turbo_api_time_seconds": 1.98,
         "processing_overhead_seconds": 0,
-        "other_overhead_seconds": -2.57,
-        "wall_clock_seconds": 17.74,
-        "serper_api_time_seconds": 10.76,
+        "other_overhead_seconds": -1.98,
+        "wall_clock_seconds": 10.7,
+        "serper_api_time_seconds": 3.81,
         "serper_count": 1,
         "gpt4_turbo_count": 1,
-        "total_seconds": 17.74,
+        "total_seconds": 10.7,
         "categories_parallel": 1
       }
     }

@@ -1,12 +1,13 @@
 {
+  "status": "success",
   "phone": "821076206818",
-  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763120167207_IMG_1797.jpg",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763121412044_IMG_1797.jpg",
   "items": [
     {
       "category": "bag",
       "groundingdino_prompt": "dark brown bag",
       "description": "dark brown woven leather mini bag with a crossbody strap",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_dark_brown_bag_1763120178217.jpg",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_dark_brown_bag_1763121432525.jpg",
       "confidence": 0.892
     }
   ],
@@ -14,19 +15,19 @@
     "results": {
       "bag_1": [
         {
-          "link": "https://www.bottegaveneta.com/en-us/mini-loop-dark-barolo-813980041.html",
-          "thumbnail": "https://bottega-veneta.dam.kering.com/asset/05dd2e28-2a88-4053-91f2-ad69e3f8751f/Thumbnail/723547V1G112262_A.jpg?v=2",
-          "title": "Women's Mini Loop in Dark barolo | Bottega Veneta US"
+          "link": "https://www.bottegaveneta.com/ko-kr/미니-루프-다크-바롤로-723547V1G112262.html",
+          "thumbnail": "https://bottega-veneta.dam.kering.com/asset/05dd2e28-2a88-4053-91f2-ad69e3f8751f/eCom/723547V1G112262_A.jpg?v=2",
+          "title": "미니 루프 에 대한 여성 에 다크 바롤로 | Bottega Veneta KR"
         },
         {
-          "link": "https://www.ssense.com/en-us/women/product/bottega-veneta/brown-mini-loop-camera-bag/16956861",
-          "thumbnail": "https://res.cloudinary.com/ssenseweb/image/upload/b_white,c_lpad,g_south,h_706,w_470/c_scale,h_480/v550/251798F048037_1.jpg",
-          "title": "Bottega Veneta: Brown Mini Loop Camera Bag | SSENSE"
+          "link": "https://kream.co.kr/products/625803",
+          "thumbnail": "https://kream-phinf.pstatic.net/MjAyNTA5MjlfMjkx/MDAxNzU5MTM0OTI5MzUy.4ufy-77v4f4ZjuaN-Lc6juTU-cD2RDZMm6hmfPImwLAg.NAdNCC9sH_dJ6ntEYUYFppydi48yZrzRwQ5WfH7oQ0Ug.PNG/a_7a08e709b7ce4a698b217f8ee7c019b6.png?type=l",
+          "title": "보테가 베네타 미니 루프 카메라백 바롤로 | Bottega Veneta | KREAM"
         },
         {
-          "link": "https://www.mytheresa.com/de/en/women/bottega-veneta-loop-small-leather-crossbody-bag-brown-p00808929",
-          "thumbnail": "https://www.mytheresa.com/media/356/402/30/43/P00808929.jpg",
-          "title": "Loop Intrecciato leather camera bag in brown - Bottega Veneta | Mytheresa"
+          "link": "https://www.tootsies.com/723547-V1G11-PF25-BOTTEGA-VENETA.html",
+          "thumbnail": "https://www.tootsies.com/dw/image/v2/BJZB_PRD/on/demandware.static/-/Sites-master-catalog/default/dw3aef26bd/images/products/723547-V1G11-PF25-BAROLO_v1.jpg?sw=760&sh=936&sm=fit",
+          "title": "Bottega Veneta Mini Loop Camera Bag | Tootsies"
         }
       ]
     },
@@ -54,34 +55,34 @@
           ],
           "selectedLinks": [
             {
-              "link": "https://www.bottegaveneta.com/en-us/mini-loop-dark-barolo-813980041.html",
-              "title": "Women's Mini Loop in Dark barolo | Bottega Veneta US"
+              "link": "https://www.bottegaveneta.com/ko-kr/미니-루프-다크-바롤로-723547V1G112262.html",
+              "title": "미니 루프 에 대한 여성 에 다크 바롤로 | Bottega Veneta KR"
             },
             {
-              "link": "https://www.ssense.com/en-us/women/product/bottega-veneta/brown-mini-loop-camera-bag/16956861",
-              "title": "Bottega Veneta: Brown Mini Loop Camera Bag | SSENSE"
+              "link": "https://kream.co.kr/products/625803",
+              "title": "보테가 베네타 미니 루프 카메라백 바롤로 | Bottega Veneta | KREAM"
             },
             {
-              "link": "https://www.mytheresa.com/de/en/women/bottega-veneta-loop-small-leather-crossbody-bag-brown-p00808929",
-              "title": "Loop Intrecciato leather camera bag in brown - Bottega Veneta | Mytheresa"
+              "link": "https://www.tootsies.com/723547-V1G11-PF25-BOTTEGA-VENETA.html",
+              "title": "Bottega Veneta Mini Loop Camera Bag | Tootsies"
             }
           ],
-          "timestamp": "2025-11-14T11:36:30.978Z",
+          "timestamp": "2025-11-14T11:57:32.126Z",
           "candidateCount": 30,
           "selectionCount": 3
         }
       },
       "timing": {
-        "full_image_search_seconds": 4.67,
-        "per_category_search_seconds": 6.85,
-        "gpt4_turbo_api_time_seconds": 3.13,
+        "full_image_search_seconds": 3.62,
+        "per_category_search_seconds": 15.08,
+        "gpt4_turbo_api_time_seconds": 3.36,
         "processing_overhead_seconds": 0,
-        "other_overhead_seconds": -3.13,
-        "wall_clock_seconds": 11.53,
-        "serper_api_time_seconds": 3.72,
+        "other_overhead_seconds": -3.36,
+        "wall_clock_seconds": 18.7,
+        "serper_api_time_seconds": 11.71,
         "serper_count": 1,
         "gpt4_turbo_count": 1,
-        "total_seconds": 11.53,
+        "total_seconds": 18.7,
         "categories_parallel": 1
       }
     }
