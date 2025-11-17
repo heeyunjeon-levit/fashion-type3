@@ -92,42 +92,12 @@ export async function GET(request: Request) {
       .eq('phone_number', phone)
       .order('created_at', { ascending: false });
 
-    // Get image uploads (match by timestamp around user's activity times)
-    const { data: storageFiles } = await supabase.storage
-      .from('images')
-      .list('', {
-        limit: 1000,
-        sortBy: { column: 'created_at', order: 'desc' }
-      });
-
-    // Collect all relevant timestamps for this user
-    const userActivityTimes = [
-      userCreateTime,
-      new Date(user.last_active_at).getTime()
-    ];
-
-    // Add GPT selection event times
-    const gptEventTimes = userEvents
-      .filter(e => e.event_type === 'gpt_product_selection')
-      .map(e => new Date(e.created_at).getTime());
-    
-    userActivityTimes.push(...gptEventTimes);
-
-    // Match uploads within 5 minutes of ANY user activity
-    const uploads = storageFiles?.filter(f => {
-      if (!f.name.startsWith('upload_')) return false;
-      const uploadTime = new Date(f.created_at).getTime();
-      return userActivityTimes.some(activityTime => 
-        Math.abs(uploadTime - activityTime) < 300000
-      );
-    }).map(f => {
-      const { data: { publicUrl } } = supabase.storage.from('images').getPublicUrl(f.name);
-      return {
-        filename: f.name,
-        url: publicUrl,
-        created_at: f.created_at
-      };
-    }) || [];
+    // Get image uploads from events table
+    const uploadEvents = userEvents.filter(e => e.event_type === 'image_upload');
+    const uploads = uploadEvents.map(e => ({
+      url: e.event_data?.imageUrl || '',
+      created_at: e.created_at
+    }));
 
     // Extract GPT product selections
     const gptSelections = userEvents
