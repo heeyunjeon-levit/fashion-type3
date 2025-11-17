@@ -27,8 +27,11 @@ export async function POST(request: NextRequest) {
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
     const supabase = createClient(supabaseUrl, supabaseKey)
 
-    // Get user agent from request headers
+    // Get user agent and IP from request headers
     const userAgent = request.headers.get('user-agent') || 'unknown'
+    const ipAddress = request.headers.get('x-forwarded-for')?.split(',')[0] 
+                      || request.headers.get('x-real-ip')
+                      || 'unknown'
 
     // Insert visit record
     const { data, error } = await supabase
@@ -38,6 +41,7 @@ export async function POST(request: NextRequest) {
         result_page_url: resultPageUrl || window.location?.href || null,
         session_id: sessionId,
         user_agent: userAgent,
+        ip_address: ipAddress,
         referrer: referrer || null,
         time_on_page_seconds: timeOnPage || null,
         clicked_products: clickedProducts || false,

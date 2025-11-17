@@ -752,10 +752,11 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links preferred) or
             }
           })
           
-          // Update reasoning data with selected links
+          // Update reasoning data with selected links (including thumbnails for analytics)
           gptReasoningData[resultKey].selectedLinks = linksWithThumbnails.map((item: any) => ({
             link: item.link,
-            title: item.title
+            title: item.title,
+            thumbnail: item.thumbnail
           }))
           gptReasoningData[resultKey].selectionCount = linksWithThumbnails.length
           
