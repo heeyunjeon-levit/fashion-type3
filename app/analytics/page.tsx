@@ -77,6 +77,8 @@ export default function AnalyticsDashboard() {
   const [liveActivity, setLiveActivity] = useState<Activity[]>([]);
   const [loading, setLoading] = useState(true);
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
+  const [searchPhone, setSearchPhone] = useState('');
+  const [filteredActivity, setFilteredActivity] = useState<Activity[]>([]);
 
   // Check password
   const handleLogin = () => {
@@ -129,6 +131,18 @@ export default function AnalyticsDashboard() {
       fetchData();
     }
   }, [isAuthenticated]);
+
+  // Filter activities based on search
+  useEffect(() => {
+    if (searchPhone.trim() === '') {
+      setFilteredActivity(liveActivity);
+    } else {
+      const filtered = liveActivity.filter(activity => 
+        activity.phone.toLowerCase().includes(searchPhone.toLowerCase())
+      );
+      setFilteredActivity(filtered);
+    }
+  }, [searchPhone, liveActivity]);
 
   // Login screen
   if (!isAuthenticated) {
@@ -244,12 +258,41 @@ export default function AnalyticsDashboard() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Live Activity Feed */}
           <div className="bg-gray-900 rounded-xl p-6 border border-gray-800">
-            <h2 className="text-xl font-bold mb-4">🔥 Live Activity Feed</h2>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold">🔥 Live Activity Feed</h2>
+              {searchPhone && (
+                <button
+                  onClick={() => setSearchPhone('')}
+                  className="text-xs text-gray-400 hover:text-white"
+                >
+                  Clear filter
+                </button>
+              )}
+            </div>
+            
+            {/* Search Input */}
+            <div className="mb-4">
+              <input
+                type="text"
+                placeholder="Search by phone number... (e.g., 01049971672)"
+                value={searchPhone}
+                onChange={(e) => setSearchPhone(e.target.value)}
+                className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+              {searchPhone && (
+                <p className="text-xs text-gray-400 mt-2">
+                  Showing {filteredActivity.length} {filteredActivity.length === 1 ? 'activity' : 'activities'} for "{searchPhone}"
+                </p>
+              )}
+            </div>
+            
             <div className="space-y-3 max-h-96 overflow-y-auto">
-              {liveActivity.length === 0 ? (
-                <p className="text-gray-500 text-center py-8">No recent activity</p>
+              {filteredActivity.length === 0 ? (
+                <p className="text-gray-500 text-center py-8">
+                  {searchPhone ? `No activities found for "${searchPhone}"` : 'No recent activity'}
+                </p>
               ) : (
-                liveActivity.map((activity) => (
+                filteredActivity.map((activity) => (
                   <ActivityItem key={activity.id} activity={activity} />
                 ))
               )}
@@ -259,9 +302,15 @@ export default function AnalyticsDashboard() {
           {/* Top Engaged Users */}
           <div className="bg-gray-900 rounded-xl p-6 border border-gray-800">
             <h2 className="text-xl font-bold mb-4">🏆 Top Engaged Users</h2>
+            <p className="text-xs text-gray-400 mb-4">Click on a user to see their journey</p>
             <div className="space-y-2 max-h-96 overflow-y-auto">
               {topUsers.slice(0, 5).map((user, idx) => (
-                <UserItem key={user.phone} user={user} rank={idx + 1} />
+                <UserItem 
+                  key={user.phone} 
+                  user={user} 
+                  rank={idx + 1}
+                  onClickUser={() => setSearchPhone(user.phone)}
+                />
               ))}
             </div>
           </div>
@@ -526,15 +575,18 @@ function ActivityItem({ activity }: { activity: Activity }) {
   );
 }
 
-function UserItem({ user, rank }: { user: TopUser; rank: number }) {
+function UserItem({ user, rank, onClickUser }: { user: TopUser; rank: number; onClickUser: () => void }) {
   const medals = ['🥇', '🥈', '🥉'];
   
   return (
-    <div className="flex items-center gap-3 p-3 bg-gray-800 rounded-lg hover:bg-gray-750 transition-all">
+    <button
+      onClick={onClickUser}
+      className="w-full flex items-center gap-3 p-3 bg-gray-800 rounded-lg hover:bg-gray-750 transition-all cursor-pointer hover:ring-2 hover:ring-purple-500"
+    >
       <div className="text-2xl w-8">
         {rank <= 3 ? medals[rank - 1] : rank}
       </div>
-      <div className="flex-1">
+      <div className="flex-1 text-left">
         <div className="font-mono text-sm">{user.phone}</div>
         <div className="text-xs text-gray-500">{user.source}</div>
       </div>
@@ -542,7 +594,7 @@ function UserItem({ user, rank }: { user: TopUser; rank: number }) {
         <div className="text-sm font-semibold">{user.productClicks} clicks</div>
         <div className="text-xs text-gray-500">{user.score} pts</div>
       </div>
-    </div>
+    </button>
   );
 }
 
