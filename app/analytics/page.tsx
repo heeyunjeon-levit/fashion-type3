@@ -79,6 +79,10 @@ export default function AnalyticsDashboard() {
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
   const [searchPhone, setSearchPhone] = useState('');
   const [filteredActivity, setFilteredActivity] = useState<Activity[]>([]);
+  const [userSearch, setUserSearch] = useState('');
+  const [userJourney, setUserJourney] = useState<any>(null);
+  const [loadingJourney, setLoadingJourney] = useState(false);
+  const [journeyError, setJourneyError] = useState('');
 
   // Check password
   const handleLogin = () => {
@@ -144,6 +148,36 @@ export default function AnalyticsDashboard() {
     }
   }, [searchPhone, liveActivity]);
 
+  // Fetch user journey
+  const fetchUserJourney = async (phone: string) => {
+    if (!phone.trim()) return;
+    
+    setLoadingJourney(true);
+    setJourneyError('');
+    
+    try {
+      const res = await fetch(`/api/analytics/user-journey?phone=${encodeURIComponent(phone)}`);
+      const data = await res.json();
+      
+      if (res.ok) {
+        setUserJourney(data);
+      } else {
+        setJourneyError(data.error || 'User not found');
+        setUserJourney(null);
+      }
+    } catch (error) {
+      setJourneyError('Failed to fetch user journey');
+      setUserJourney(null);
+    } finally {
+      setLoadingJourney(false);
+    }
+  };
+
+  const handleUserSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    fetchUserJourney(userSearch);
+  };
+
   // Login screen
   if (!isAuthenticated) {
     return (
@@ -201,6 +235,73 @@ export default function AnalyticsDashboard() {
               🔄 Refresh
             </button>
           </div>
+        </div>
+
+        {/* User Journey Search */}
+        <div className="bg-gradient-to-r from-purple-900/30 to-blue-900/30 rounded-xl p-6 border border-purple-700/50 mb-8">
+          <h2 className="text-2xl font-bold mb-4">🔍 Search User Journey</h2>
+          <form onSubmit={handleUserSearchSubmit} className="mb-4">
+            <div className="flex gap-3">
+              <input
+                type="text"
+                placeholder="Enter phone number (e.g. 01049971672)"
+                value={userSearch}
+                onChange={(e) => setUserSearch(e.target.value)}
+                className="flex-1 px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+              <button
+                type="submit"
+                disabled={loadingJourney}
+                className="px-6 py-3 bg-purple-600 hover:bg-purple-700 rounded-lg font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loadingJourney ? 'Searching...' : 'Search'}
+              </button>
+            </div>
+          </form>
+
+          {journeyError && (
+            <div className="bg-red-500/20 border border-red-500/50 rounded-lg p-4 text-red-400">
+              {journeyError}
+            </div>
+          )}
+
+          {userJourney && (
+            <div className="space-y-6">
+              {/* User Info */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="bg-gray-800 rounded-lg p-4">
+                  <div className="text-gray-400 text-sm mb-1">Phone</div>
+                  <div className="font-mono text-lg">{userJourney.user.phone}</div>
+                </div>
+                <div className="bg-gray-800 rounded-lg p-4">
+                  <div className="text-gray-400 text-sm mb-1">Total Searches</div>
+                  <div className="text-2xl font-bold text-purple-400">{userJourney.stats.total_searches}</div>
+                </div>
+                <div className="bg-gray-800 rounded-lg p-4">
+                  <div className="text-gray-400 text-sm mb-1">Product Clicks</div>
+                  <div className="text-2xl font-bold text-green-400">{userJourney.stats.total_clicks}</div>
+                </div>
+                <div className="bg-gray-800 rounded-lg p-4">
+                  <div className="text-gray-400 text-sm mb-1">Source</div>
+                  <div className="text-sm">{userJourney.user.conversion_source || 'Unknown'}</div>
+                </div>
+              </div>
+
+              {/* Timeline */}
+              <div>
+                <h3 className="text-lg font-bold mb-3">📅 Complete Timeline</h3>
+                <div className="space-y-3 max-h-96 overflow-y-auto">
+                  {userJourney.timeline.length === 0 ? (
+                    <p className="text-gray-500 text-center py-4">No activity found</p>
+                  ) : (
+                    userJourney.timeline.map((item: any, idx: number) => (
+                      <TimelineItem key={idx} item={item} />
+                    ))
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Metrics Cards */}
@@ -570,6 +671,81 @@ function ActivityItem({ activity }: { activity: Activity }) {
           <span>{labels[activity.type]}</span>
         </div>
         <div className="text-xs text-gray-500">{activity.timeAgo}</div>
+      </div>
+    </div>
+  );
+}
+
+function TimelineItem({ item }: { item: any }) {
+  const icons: Record<string, string> = {
+    upload: '📸',
+    search: '🎯',
+    click: '🛍️',
+    result_visit: '👁️',
+    app_visit: '📱',
+    feedback: '💬'
+  };
+
+  const labels: Record<string, string> = {
+    upload: 'Uploaded image',
+    search: 'Viewed search results',
+    click: 'Clicked product',
+    result_visit: 'Visited result page',
+    app_visit: 'Visited app page',
+    feedback: 'Submitted feedback'
+  };
+
+  return (
+    <div className="bg-gray-800 rounded-lg p-4 border border-gray-700 hover:border-purple-500 transition-all">
+      <div className="flex items-start gap-3">
+        <div className="text-2xl">{icons[item.type]}</div>
+        <div className="flex-1">
+          <div className="flex items-center justify-between mb-2">
+            <span className="font-semibold">{labels[item.type]}</span>
+            <span className="text-xs text-gray-400">{item.timeAgo}</span>
+          </div>
+          
+          {item.type === 'upload' && item.data.url && (
+            <img src={item.data.url} alt="Upload" className="w-24 h-24 object-cover rounded mt-2" />
+          )}
+          
+          {item.type === 'search' && (
+            <div className="text-sm text-gray-300 space-y-1">
+              <div>{item.data.itemsDetected} items • {item.data.totalProducts} products found</div>
+              {item.data.itemDetails.map((detail: any, idx: number) => (
+                <div key={idx} className="text-xs text-gray-400">
+                  • {detail.description}: {detail.productCount} products
+                </div>
+              ))}
+            </div>
+          )}
+          
+          {item.type === 'click' && (
+            <div className="text-sm space-y-1">
+              <div className="text-purple-300">{item.data.item_category}: {item.data.item_description}</div>
+              <div className="text-gray-400 text-xs line-clamp-1">{item.data.product_title}</div>
+            </div>
+          )}
+          
+          {item.type === 'feedback' && (
+            <div className="text-sm text-gray-300">
+              <div>Rating: {item.data.satisfaction_rating}/5</div>
+              {item.data.reason && <div className="text-xs text-gray-400 mt-1">Reason: {item.data.reason}</div>}
+            </div>
+          )}
+          
+          {item.type === 'result_visit' && (
+            <div className="text-sm text-gray-400">
+              Time on page: {item.data.time_on_page_seconds || 0}s
+            </div>
+          )}
+          
+          {item.type === 'app_visit' && (
+            <div className="text-sm text-gray-400">
+              Page: {item.data.page_path}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
