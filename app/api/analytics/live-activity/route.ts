@@ -62,7 +62,9 @@ export async function GET() {
       'session_1763364199414_0mnwdw6y6',
       'session_1763366515564_xaicg5l8g',
       'session_1763122923543_nair7n15h',
-      'session_1763122898201_9brucc4o0'
+      'session_1763122898201_9brucc4o0',
+      // Nov 17 late night testing session
+      'session_1763396695521_y8l0ggm5e'
     ]; // Owner's testing sessions
     
     // Exclude owner's recent test uploads by filename
