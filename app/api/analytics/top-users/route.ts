@@ -8,6 +8,10 @@ const supabase = createClient(
 
 export async function GET() {
   try {
+    // Exclude owner's phone numbers
+    const excludedPhones = ['01090848563', '821090848563'];
+    const excludedUserId = 'fc878118-43dd-4363-93cf-d31e453df81e';
+    
     // Get all users with their clicks and page visits
     const { data: users } = await supabase
       .from('users')
@@ -15,7 +19,9 @@ export async function GET() {
         id,
         phone_number,
         conversion_source
-      `);
+      `)
+      .not('phone_number', 'in', `(${excludedPhones.join(',')})`)
+      .neq('id', excludedUserId);
 
     if (!users) {
       return NextResponse.json([]);
@@ -57,9 +63,6 @@ export async function GET() {
         ?.filter(bv => normalizePhone(bv.phone_number) === normalizedUserPhone)
         .reduce((max, bv) => Math.max(max, bv.time_on_page_seconds || 0), 0) || 0;
 
-      // Calculate engagement score
-      const score = (userClicks * 10) + (appTime / 60) + (batchTime / 10);
-
       // Get source icon
       const sourceMap: Record<string, string> = {
         'colleague': '💼 Colleague',
@@ -74,13 +77,13 @@ export async function GET() {
         productClicks: userClicks,
         appTime: Math.round(appTime / 60), // Convert to minutes
         batchTime,
-        score: Math.round(score)
+        score: userClicks // Score is now just clicks for backwards compatibility
       };
     });
 
-    // Sort by score and return top 10
+    // Sort by product clicks and return top 10
     const topUsers = userMetrics
-      .sort((a, b) => b.score - a.score)
+      .sort((a, b) => b.productClicks - a.productClicks)
       .slice(0, 10);
 
     return NextResponse.json(topUsers);
