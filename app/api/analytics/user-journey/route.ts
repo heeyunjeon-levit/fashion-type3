@@ -27,6 +27,12 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: 'Phone number required' }, { status: 400 });
     }
 
+    // Exclude owner's phone numbers from search
+    const excludedPhones = ['01090848563', '821090848563'];
+    if (excludedPhones.includes(phone)) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
     // Get user info
     const { data: user } = await supabase
       .from('users')
@@ -35,6 +41,12 @@ export async function GET(request: Request) {
       .single();
 
     if (!user) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
+    // Double-check user ID exclusion
+    const excludedUserIds = ['fc878118-43dd-4363-93cf-d31e453df81e'];
+    if (excludedUserIds.includes(user.id)) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
