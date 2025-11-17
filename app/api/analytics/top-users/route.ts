@@ -63,6 +63,11 @@ export async function GET() {
         ?.filter(bv => normalizePhone(bv.phone_number) === normalizedUserPhone)
         .reduce((max, bv) => Math.max(max, bv.time_on_page_seconds || 0), 0) || 0;
 
+      // Calculate comprehensive engagement score
+      // Clicks are weighted 10x higher than before to be the dominant factor
+      // Time components provide tie-breakers and recognize sustained engagement
+      const score = (userClicks * 100) + (appTime / 60) + (batchTime / 60);
+
       // Get source icon
       const sourceMap: Record<string, string> = {
         'colleague': '💼 Colleague',
@@ -77,13 +82,13 @@ export async function GET() {
         productClicks: userClicks,
         appTime: Math.round(appTime / 60), // Convert to minutes
         batchTime,
-        score: userClicks // Score is now just clicks for backwards compatibility
+        score: Math.round(score)
       };
     });
 
-    // Sort by product clicks and return top 10
+    // Sort by comprehensive score and return top 10
     const topUsers = userMetrics
-      .sort((a, b) => b.productClicks - a.productClicks)
+      .sort((a, b) => b.score - a.score)
       .slice(0, 10);
 
     return NextResponse.json(topUsers);
