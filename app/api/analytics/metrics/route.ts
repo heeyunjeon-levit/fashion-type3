@@ -54,7 +54,12 @@ export async function GET() {
 
     // Calculate metrics
     const batchSMSSent = 116; // Your total
-    const linksVisited = batchVisits?.length || 0;
+    
+    // Count UNIQUE phone numbers that visited (not total visit records)
+    const uniqueVisitors = new Set(
+      batchVisits?.map(v => normalizePhone(v.phone_number)) || []
+    );
+    const linksVisited = uniqueVisitors.size;
     
     // Count converts (batch_interview + batch_button_click)
     const converts = users?.filter(

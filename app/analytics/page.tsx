@@ -363,7 +363,7 @@ export default function AnalyticsDashboard() {
             <h2 className="text-xl font-bold mb-4">🏆 Top Engaged Users</h2>
             <p className="text-xs text-gray-400 mb-4">Click on a user to see their journey</p>
             <div className="space-y-2 max-h-96 overflow-y-auto">
-              {topUsers.slice(0, 5).map((user, idx) => (
+              {topUsers.map((user, idx) => (
                 <UserItem 
                   key={user.phone} 
                   user={user} 
