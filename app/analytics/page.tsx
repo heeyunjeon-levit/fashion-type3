@@ -274,14 +274,14 @@ export default function AnalyticsDashboard() {
             <div className="mb-4">
               <input
                 type="text"
-                placeholder="Search by phone number... (e.g., 01049971672)"
+                placeholder="Search by phone number... (e.g. 01049971672)"
                 value={searchPhone}
                 onChange={(e) => setSearchPhone(e.target.value)}
                 className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
               {searchPhone && (
                 <p className="text-xs text-gray-400 mt-2">
-                  Showing {filteredActivity.length} {filteredActivity.length === 1 ? 'activity' : 'activities'} for "{searchPhone}"
+                  Showing {filteredActivity.length} {filteredActivity.length === 1 ? 'activity' : 'activities'} for &ldquo;{searchPhone}&rdquo;
                 </p>
               )}
             </div>
@@ -289,7 +289,7 @@ export default function AnalyticsDashboard() {
             <div className="space-y-3 max-h-96 overflow-y-auto">
               {filteredActivity.length === 0 ? (
                 <p className="text-gray-500 text-center py-8">
-                  {searchPhone ? `No activities found for "${searchPhone}"` : 'No recent activity'}
+                  {searchPhone ? `No activities found for ${searchPhone}` : 'No recent activity'}
                 </p>
               ) : (
                 filteredActivity.map((activity) => (
