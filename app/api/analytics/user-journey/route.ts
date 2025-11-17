@@ -80,7 +80,7 @@ export async function GET(request: Request) {
       .eq('phone_number', phone)
       .order('created_at', { ascending: false });
 
-    // Get image uploads (match by timestamp)
+    // Get image uploads (match by timestamp around user's activity times)
     const { data: storageFiles } = await supabase.storage
       .from('images')
       .list('', {
@@ -88,9 +88,26 @@ export async function GET(request: Request) {
         sortBy: { column: 'created_at', order: 'desc' }
       });
 
+    // Collect all relevant timestamps for this user
+    const userActivityTimes = [
+      userCreateTime,
+      new Date(user.last_active_at).getTime()
+    ];
+
+    // Add GPT selection event times
+    const gptEventTimes = userEvents
+      .filter(e => e.event_type === 'gpt_product_selection')
+      .map(e => new Date(e.created_at).getTime());
+    
+    userActivityTimes.push(...gptEventTimes);
+
+    // Match uploads within 5 minutes of ANY user activity
     const uploads = storageFiles?.filter(f => {
+      if (!f.name.startsWith('upload_')) return false;
       const uploadTime = new Date(f.created_at).getTime();
-      return Math.abs(uploadTime - userCreateTime) < 300000 && f.name.startsWith('upload_');
+      return userActivityTimes.some(activityTime => 
+        Math.abs(uploadTime - activityTime) < 300000
+      );
     }).map(f => {
       const { data: { publicUrl } } = supabase.storage.from('images').getPublicUrl(f.name);
       return {
