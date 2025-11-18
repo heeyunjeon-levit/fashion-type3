@@ -162,9 +162,9 @@ export default function UsersAnalytics() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white flex">
+    <div className="h-screen bg-black text-white flex overflow-hidden">
       {/* Left Sidebar - User List */}
-      <div className="w-80 border-r border-gray-800 flex flex-col">
+      <div className="w-80 border-r border-gray-800 flex flex-col overflow-hidden">
         {/* Sidebar Header */}
         <div className="p-4 border-b border-gray-800">
           <Link 
@@ -283,7 +283,7 @@ export default function UsersAnalytics() {
       </div>
 
       {/* Right Side - User Journey */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto overflow-x-hidden">
         {!selectedUser ? (
           <div className="flex items-center justify-center h-full text-gray-500">
             Select a user to view their journey
