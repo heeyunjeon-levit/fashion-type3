@@ -181,19 +181,17 @@ export async function GET() {
       });
       
       if (matchedUser) {
-        // Matched user - check if not excluded
-        if (!excludedPhones.includes(matchedUser.phone_number) && 
-            !excludedUserIds.includes(matchedUser.id)) {
-          activities.push({
-            id: `upload-${file.name}`,
-            type: 'upload',
-            phone: matchedUser.phone_number,
-            timestamp: file.created_at,
-            timeAgo: timeAgo(new Date(file.created_at)),
-            uploadedImageUrl: publicUrl,
-            isAnonymous: false
-          });
-        }
+        // Show all uploads (including owner's) - important for monitoring
+        // Owner's test visits to result pages are still filtered elsewhere
+        activities.push({
+          id: `upload-${file.name}`,
+          type: 'upload',
+          phone: matchedUser.phone_number,
+          timestamp: file.created_at,
+          timeAgo: timeAgo(new Date(file.created_at)),
+          uploadedImageUrl: publicUrl,
+          isAnonymous: false
+        });
       } else {
         // No matching user - show as anonymous (user still in progress)
         activities.push({
@@ -261,9 +259,8 @@ export async function GET() {
         const event = item.event;
         const matchedUser = item.user;
         
-        if (excludedPhones.includes(phone) || excludedUserIds.includes(matchedUser.id)) {
-          return;
-        }
+        // Show all search results (including owner's) for monitoring
+        // Only result page visits are filtered to reduce testing noise
         
         const eventData = event.event_data as any;
         const reasoning = eventData?.reasoning || {};
