@@ -99,7 +99,7 @@ export async function GET(request: Request) {
       created_at: e.created_at
     }));
 
-    // Extract GPT product selections
+    // Extract GPT product selections (what GPT selected)
     const gptSelections = userEvents
       .filter(e => e.event_type === 'gpt_product_selection')
       .map(e => {
@@ -125,7 +125,43 @@ export async function GET(request: Request) {
           timeAgo: timeAgo(new Date(e.created_at)),
           itemsDetected: items.length,
           itemDetails,
-          totalProducts: itemDetails.reduce((sum, item) => sum + item.productCount, 0)
+          totalProducts: itemDetails.reduce((sum, item) => sum + item.productCount, 0),
+          source: 'gpt_selection'
+        };
+      });
+
+    // Extract FINAL RESULTS DISPLAYED (what user actually saw, including fallback)
+    const finalResults = userEvents
+      .filter(e => e.event_type === 'final_results_displayed')
+      .map(e => {
+        const displayed = e.event_data.displayedProducts || {};
+        const summary = e.event_data.summary || {};
+        const categories = Object.keys(displayed);
+        const categoryDetails = categories.map(categoryKey => {
+          const category = displayed[categoryKey];
+          return {
+            category: categoryKey,
+            productCount: category.count || 0,
+            source: category.source || 'unknown', // 'gpt' or 'fallback'
+            products: (category.products || []).map((p: any) => ({
+              position: p.position,
+              title: p.title,
+              link: p.link,
+              thumbnail: p.thumbnail
+            }))
+          };
+        });
+
+        return {
+          id: e.id,
+          created_at: e.created_at,
+          timeAgo: timeAgo(new Date(e.created_at)),
+          totalProducts: summary.totalProducts || 0,
+          gptProducts: summary.gptProducts || 0,
+          fallbackProducts: summary.fallbackProducts || 0,
+          categoriesWithFallback: summary.categoriesWithFallback || 0,
+          categoryDetails,
+          source: 'final_displayed'
         };
       });
 
@@ -142,13 +178,23 @@ export async function GET(request: Request) {
       });
     });
 
-    // Add searches
+    // Add searches (GPT selections - what GPT filtered)
     gptSelections.forEach(search => {
       timeline.push({
         type: 'search',
         timestamp: search.created_at,
         timeAgo: search.timeAgo,
         data: search
+      });
+    });
+
+    // Add final results displayed (what user actually saw, including fallback)
+    finalResults.forEach(result => {
+      timeline.push({
+        type: 'final_results',
+        timestamp: result.created_at,
+        timeAgo: result.timeAgo,
+        data: result
       });
     });
 

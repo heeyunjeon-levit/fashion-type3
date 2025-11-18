@@ -1,51 +1,39 @@
 {
   "status": "success",
   "phone": "821027825295",
-  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763121320207_IMG_3093.jpg",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763121751629_IMG_3093.jpg",
   "items": [
     {
       "category": "tops",
       "groundingdino_prompt": "green jacket",
-      "description": "olive green oversized hooded jacket with button details",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_green_jacket_1763121335967.jpg",
+      "description": "oversized green hooded jacket with a relaxed fit and button details",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_green_jacket_1763121800970.jpg",
       "confidence": 0.824
     },
     {
       "category": "tops",
       "groundingdino_prompt": "white shirt",
       "description": "white fitted sleeveless top",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_white_shirt_1763121337473.jpg",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_white_shirt_1763121802340.jpg",
       "confidence": 0.782
     },
     {
       "category": "bottoms",
       "groundingdino_prompt": "black shorts",
-      "description": "black high-waisted shorts with grommet belt",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_black_shorts_1763121338006.jpg",
+      "description": "black high-waisted shorts with grommet belt details",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_black_shorts_1763121802890.jpg",
       "confidence": 0.766
     },
     {
       "category": "shoes",
       "groundingdino_prompt": "brown boots",
-      "description": "dark brown knee-high leather boots",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item4_brown_boots_1763121338511.jpg",
+      "description": "tall brown leather boots with a rugged style",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item4_brown_boots_1763121803411.jpg",
       "confidence": 0.681
     }
   ],
   "search_results": {
     "results": {
-      "tops_1": [
-        {
-          "link": "https://zigzag.kr/catalog/products/137120828",
-          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/c/16/364/560/163645606-3302955799343287260.gif?width=400&height=400&quality=80&format=jpeg",
-          "title": "나이니 오스넬 사파리 후드 야상 점퍼"
-        },
-        {
-          "link": "https://m.kimis.co.kr/product/detail.html?product_no=369&cate_no=0&display_group=",
-          "thumbnail": "https://cafe24img.poxo.com/gmtln03299/web/upload/NNEditor/20220902/1d861e295ccd080ef143e6d798b9d28b.jpg",
-          "title": "재진행/UNISEX]빈티지 워싱 포켓 야상 점퍼(khaki) - 키미스"
-        }
-      ],
       "tops_2": [
         {
           "link": "https://m.on-go.kr/product/새틴-스트라이프-미디-스커트/2342/",
@@ -62,48 +50,14 @@
           "thumbnail": "https://cf.product-image.s.zigzag.kr/original/c/16/647/084/166470841-2586675568331858568.gif?width=400&height=400&quality=80&format=jpeg",
           "title": "미루엘 [슬림핏보장/쫀쫀스판👍] 벨로즈 랩버튼 스커트 부츠컷 스판 팬츠-PT008"
         }
-      ],
-      "bottoms_3": [
-        {
-          "link": "https://nomadicenigma.com/products/mag-stud-lace-flare-pants",
-          "thumbnail": "https://nomadicenigma.com/cdn/shop/files/5ecd4472-f3ce-4549-8a3f-297437c65838_-_Copy.jpg?crop=center&height=800&v=1748981342&width=800",
-          "title": "Mag Stud-Lace Flare Pants – Nomadic Enigma"
-        },
-        {
-          "link": "https://www.wrongweather.net/pr/shop/product/231-m315a-10032-0099-big-pants-with-ey-elets-in-elastic-10032-black",
-          "thumbnail": "https://cdn.wrongweather.net/media/products/product_detail/a9670ae8-4d76-4110-ad08-96f9d381bccf.jpeg",
-          "title": "RAF SIMONS Eyelets Big Jeans - Wrong Weather"
-        },
-        {
-          "link": "https://www.scubasams.com/item/20798685",
-          "thumbnail": "https://u-mercari-images.mercdn.net/photos/m98856215632_7.jpg",
-          "title": "RE/DONE Eyelet embellished stretch cotton jersey mini dress"
-        }
-      ],
-      "shoes_4": [
-        {
-          "link": "https://www.famousfootwear.com/product/blowfish-malibu-womens-verona-mid-calf-boot-1058743",
-          "thumbnail": "https://www.famousfootwear.com/blob/product-images/20000/73/60/2/73602_back_feed1000.jpg",
-          "title": "Blowfish Malibu Women's Verona Mid Calf Boot | Famous Footwear"
-        },
-        {
-          "link": "https://www.kikkiline.it/en/products/womens-brown-biker-boots-with-buckles-and-side-zip-made-in-italy",
-          "thumbnail": "https://www.kikkiline.it/cdn/shop/files/DSC_0067_cab39f87-ff1c-43d8-bfed-5939338a39db.jpg?v=1692782268&width=450",
-          "title": "Women's Brown Biker Boots with Buckles and Side Zip Made in Italy – KikkiLine Calzature"
-        },
-        {
-          "link": "https://us.vestiairecollective.com/women-shoes/boots/harley-davidson/brown-leather-harley-davidson-boots-40201529.shtml",
-          "thumbnail": "https://images.vestiairecollective.com/images/resized/w=1246,q=75,f=auto,/produit/brown-leather-harley-davidson-boots-40201529-10_4.jpg",
-          "title": "Leather biker boots HARLEY DAVIDSON Brown size 38 EU in Leather - 40201529"
-        }
       ]
     },
     "meta": {
       "sourceCounts": {
-        "gpt": 2,
-        "fallback": 2,
+        "gpt": 0,
+        "fallback": 1,
         "none": 0,
-        "error": 0
+        "error": 3
       },
       "gptReasoning": {
         "tops_2": {
@@ -121,96 +75,21 @@
             "cardigan"
           ],
           "selectedLinks": [],
-          "timestamp": "2025-11-14T11:55:49.963Z",
-          "candidateCount": 25
-        },
-        "bottoms_3": {
-          "itemDescription": "item3 black shorts",
-          "searchTerms": [
-            "item3 black shorts",
-            "shorts",
-            "slacks",
-            "pants",
-            "trousers",
-            "jeans",
-            "skirt",
-            "leg trousers"
-          ],
-          "selectedLinks": [],
-          "timestamp": "2025-11-14T11:55:52.609Z",
-          "candidateCount": 20
-        },
-        "tops_1": {
-          "itemDescription": "item1 green jacket",
-          "searchTerms": [
-            "item1 green jacket",
-            "jacket",
-            "coat",
-            "outerwear",
-            "shirt",
-            "sweater",
-            "blouse",
-            "top",
-            "blazer",
-            "cardigan"
-          ],
-          "selectedLinks": [
-            {
-              "link": "https://zigzag.kr/catalog/products/137120828",
-              "title": "나이니 오스넬 사파리 후드 야상 점퍼"
-            },
-            {
-              "link": "https://m.kimis.co.kr/product/detail.html?product_no=369&cate_no=0&display_group=",
-              "title": "재진행/UNISEX]빈티지 워싱 포켓 야상 점퍼(khaki) - 키미스"
-            }
-          ],
-          "timestamp": "2025-11-14T11:55:53.238Z",
-          "candidateCount": 27,
-          "selectionCount": 2
-        },
-        "shoes_4": {
-          "itemDescription": "item4 brown boots",
-          "searchTerms": [
-            "item4 brown boots",
-            "shoes",
-            "sneakers",
-            "boots",
-            "sandals",
-            "heels",
-            "flats",
-            "loafers",
-            "oxford"
-          ],
-          "selectedLinks": [
-            {
-              "link": "https://www.famousfootwear.com/product/blowfish-malibu-womens-verona-mid-calf-boot-1058743",
-              "title": "Blowfish Malibu Women's Verona Mid Calf Boot | Famous Footwear"
-            },
-            {
-              "link": "https://www.kikkiline.it/en/products/womens-brown-biker-boots-with-buckles-and-side-zip-made-in-italy",
-              "title": "Women's Brown Biker Boots with Buckles and Side Zip Made in Italy – KikkiLine Calzature"
-            },
-            {
-              "link": "https://us.vestiairecollective.com/women-shoes/boots/harley-davidson/brown-leather-harley-davidson-boots-40201529.shtml",
-              "title": "Leather biker boots HARLEY DAVIDSON Brown size 38 EU in Leather - 40201529"
-            }
-          ],
-          "timestamp": "2025-11-14T11:55:53.801Z",
-          "candidateCount": 25,
-          "selectionCount": 3
+          "timestamp": "2025-11-14T12:03:35.484Z",
+          "candidateCount": 26
         }
       },
       "timing": {
-        "full_image_search_seconds": 5.02,
-        "per_category_search_seconds": 9.59,
-        "gpt4_turbo_api_time_seconds": 12.54,
+        "full_image_search_seconds": 4.42,
+        "per_category_search_seconds": 16.74,
+        "gpt4_turbo_api_time_seconds": 2.57,
         "processing_overhead_seconds": 0,
-        "other_overhead_seconds": -12.53,
-        "wall_clock_seconds": 14.61,
-        "serper_api_time_seconds": 20.18,
+        "other_overhead_seconds": -2.57,
+        "wall_clock_seconds": 21.16,
+        "serper_api_time_seconds": 30.88,
         "serper_count": 4,
-        "gpt4_turbo_count": 4,
-        "total_seconds": 14.61,
+        "gpt4_turbo_count": 1,
+        "total_seconds": 21.16,
         "categories_parallel": 4
       }
     }

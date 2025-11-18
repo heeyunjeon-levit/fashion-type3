@@ -1,90 +1,9 @@
 {
   "status": "success",
   "phone": "821041798505",
-  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763121411627_Screenshot_20251114_164100.jpg",
-  "items": [
-    {
-      "category": "tops",
-      "groundingdino_prompt": "beige jacket",
-      "description": "beige quilted puffer jacket with a hood and front pockets",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_beige_jacket_1763121443012.jpg",
-      "confidence": 0.931
-    }
-  ],
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763121871126_Screenshot_20251114_164100.jpg",
+  "items": [],
   "search_results": {
-    "results": {
-      "tops_1": [
-        {
-          "link": "https://www.amazon.com.mx/Adhdyuud-chamarra-acolchado-algodón-bolsillo/dp/B0CQVL6WLJ",
-          "thumbnail": "https://m.media-amazon.com/images/I/61FvXq+xQzL._AC_SY879_.jpg",
-          "title": "Adhdyuud - chamarra con capucha y cierre cálida para mujer, con bolsillo, informal, para invierno, algodón, color beige, talla M : Amazon.com.mx: Ropa, Zapatos y Accesorios"
-        },
-        {
-          "link": "https://www.amazon.com.au/Haitpant-Winter-Knitted-Spliced-Puffer/dp/B0CPVQQWMD",
-          "thumbnail": "https://m.media-amazon.com/images/I/61+AcqIfs5L._AC_SX342_.jpg",
-          "title": "Haitpant Winter False Two Piece Knitted Spliced Puffer Jacket Women Short Loose Hooded Parkas Casual 90% Duck Down Coat, Beige, Small : Amazon.com.au: Clothing, Shoes & Accessories"
-        },
-        {
-          "link": "https://www.amazon.com/Lmdudan-Cropped-Jackets-Outfits-Outerwear/dp/B0DLH41JN6",
-          "thumbnail": "https://m.media-amazon.com/images/I/61N4XouAfQL._AC_UY1000_.jpg",
-          "title": "Amazon.com: Lmdudan Winter Jacket for Women Cropped Warm Puffer Down Jackets Trendy Hooded Outfits Long Sleeve Casual Outerwear : Clothing, Shoes & Jewelry"
-        }
-      ]
-    },
-    "meta": {
-      "sourceCounts": {
-        "gpt": 1,
-        "fallback": 0,
-        "none": 0,
-        "error": 0
-      },
-      "gptReasoning": {
-        "tops_1": {
-          "itemDescription": "item1 beige jacket",
-          "searchTerms": [
-            "item1 beige jacket",
-            "jacket",
-            "coat",
-            "outerwear",
-            "shirt",
-            "sweater",
-            "blouse",
-            "top",
-            "blazer",
-            "cardigan"
-          ],
-          "selectedLinks": [
-            {
-              "link": "https://www.amazon.com.mx/Adhdyuud-chamarra-acolchado-algodón-bolsillo/dp/B0CQVL6WLJ",
-              "title": "Adhdyuud - chamarra con capucha y cierre cálida para mujer, con bolsillo, informal, para invierno, algodón, color beige, talla M : Amazon.com.mx: Ropa, Zapatos y Accesorios"
-            },
-            {
-              "link": "https://www.amazon.com.au/Haitpant-Winter-Knitted-Spliced-Puffer/dp/B0CPVQQWMD",
-              "title": "Haitpant Winter False Two Piece Knitted Spliced Puffer Jacket Women Short Loose Hooded Parkas Casual 90% Duck Down Coat, Beige, Small : Amazon.com.au: Clothing, Shoes & Accessories"
-            },
-            {
-              "link": "https://www.amazon.com/Lmdudan-Cropped-Jackets-Outfits-Outerwear/dp/B0DLH41JN6",
-              "title": "Amazon.com: Lmdudan Winter Jacket for Women Cropped Warm Puffer Down Jackets Trendy Hooded Outfits Long Sleeve Casual Outerwear : Clothing, Shoes & Jewelry"
-            }
-          ],
-          "timestamp": "2025-11-14T11:57:43.261Z",
-          "candidateCount": 28,
-          "selectionCount": 3
-        }
-      },
-      "timing": {
-        "full_image_search_seconds": 3.57,
-        "per_category_search_seconds": 15.49,
-        "gpt4_turbo_api_time_seconds": 3.91,
-        "processing_overhead_seconds": 0,
-        "other_overhead_seconds": -3.9,
-        "wall_clock_seconds": 19.07,
-        "serper_api_time_seconds": 11.59,
-        "serper_count": 1,
-        "gpt4_turbo_count": 1,
-        "total_seconds": 19.07,
-        "categories_parallel": 1
-      }
-    }
+    "results": {}
   }
 }

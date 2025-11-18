@@ -1,115 +1,58 @@
 {
   "status": "success",
   "phone": "821086400818",
-  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763121263439_Screenshot_20251114_164203_Instagram.jpg",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763121697586_Screenshot_20251114_164203_Instagram.jpg",
   "items": [
     {
       "category": "tops",
       "groundingdino_prompt": "beige top",
       "description": "beige long sleeve henley top with a fitted style and button details",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_beige_top_1763121294746.jpg",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_beige_top_1763121716552.jpg",
       "confidence": 0.586
     },
     {
       "category": "bottoms",
       "groundingdino_prompt": "blue jeans",
-      "description": "light blue wide-leg jeans with a high waist and relaxed fit",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_blue_jeans_1763121295307.jpg",
+      "description": "light blue wide-leg jeans with a high waist and a relaxed fit",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_blue_jeans_1763121717118.jpg",
       "confidence": 0.897
     },
     {
       "category": "shoes",
       "groundingdino_prompt": "black sandals",
       "description": "black open-toe sandals with a simple strap design",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_black_sandals_1763121295900.jpg",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_black_sandals_1763121717635.jpg",
       "confidence": 0.626
     }
   ],
   "search_results": {
     "results": {
-      "tops_1": [
-        {
-          "link": "https://www.everlane.com/products/womens-pima-rib-long-sleeve-henley-hthr-tan",
-          "thumbnail": "http://www.everlane.com/cdn/shop/files/4ba1b9be_bd9a.jpg?v=1753411644",
-          "title": "The Luxe Rib Henley | Heathered Tan – Everlane"
-        },
-        {
-          "link": "https://www.next.us/en/style/su028408/n01229",
-          "thumbnail": "https://xcdn.next.co.uk/common/items/default/default/itemimages/3_4Ratio/product/lge/N01229s2.jpg?im=Resize,width=750",
-          "title": "Buy Taupe Brown Ribbed Button Detail Long Sleeve Henley Top from Next USA"
-        }
-      ],
       "bottoms_2": [
         {
-          "link": "https://www.farfetch.com/my/shopping/women/7-for-all-mankind-willow-wide-jeans-item-28538266.aspx",
-          "thumbnail": "https://cdn-images.farfetch-contents.com/28/53/82/66/28538266_57966411_1000.jpg",
-          "title": "7 For All Mankind Willow Wide Jeans | Blue | FARFETCH MY"
+          "link": "https://cottonholic.com/product/블리크-후들-하이웨스트청바지-와이드청바지/1217",
+          "thumbnail": "https://shop-phinf.pstatic.net/20250427_165/17457286053768LKPQ_JPEG/KakaoTalk_20250427_130921471_22.jpg",
+          "title": "블리크 후들 하이웨스트청바지 와이드청바지 | cottonholic"
         },
         {
-          "link": "https://kr.bestdealplus.com/product/103792057/하이웨이스트-연청색-퇴색-루즈핏-A라인-와이드-레그-여성-청바지",
-          "thumbnail": "https://ae-pic-a1.aliexpress-media.com/kf/Sb5ec4200ee844c01bea5fe74586513f5J.jpg",
-          "title": "하이웨이스트 연청색 퇴색 루즈핏 A라인 와이드 레그 여성 청바지 / 청바지(신품)"
+          "link": "https://www.amazon.com/TaoZiPeach-Casual-Wide-leg-Female-Trousers/dp/B0D75T1GR3",
+          "thumbnail": "https://m.media-amazon.com/images/I/612tgCoQXUL._AC_UY1000_.jpg",
+          "title": "TaoZiPeach Women Casual Jeans Waist Loose Wide-Leg Pants Female Street Button Long Trousers s1 Blue XS at Amazon Women's Jeans store"
         },
         {
-          "link": "https://ko.codibook.net/product/MAENIQUE/Rado-Split-wide-jeans/888481",
-          "thumbnail": "https://i3.codibook.net/files/1981071619209/33f366ff0038aa53/945863967.jpg",
-          "title": "MAENIQUE - 라도 절개 와이드 청바지 - 코디북"
+          "link": "https://zigzag.kr/catalog/products/127801254",
+          "thumbnail": "https://image.onesell.kr/files/64dd97a521e0636c484260e7/202308/cllexl0wc031xi8150wkso1be.jpg",
+          "title": "이유엔 여성 와이드청바지 하이웨스트 진청 통바지 워싱 사계절 ..."
         }
       ]
     },
     "meta": {
       "sourceCounts": {
-        "gpt": 2,
+        "gpt": 1,
         "fallback": 0,
-        "none": 1,
-        "error": 0
+        "none": 0,
+        "error": 2
       },
       "gptReasoning": {
-        "shoes_3": {
-          "itemDescription": "item3 black sandals",
-          "searchTerms": [
-            "item3 black sandals",
-            "shoes",
-            "sneakers",
-            "boots",
-            "sandals",
-            "heels",
-            "flats",
-            "loafers",
-            "oxford"
-          ],
-          "selectedLinks": [],
-          "timestamp": "2025-11-14T11:55:05.676Z",
-          "candidateCount": 4
-        },
-        "tops_1": {
-          "itemDescription": "item1 beige top",
-          "searchTerms": [
-            "item1 beige top",
-            "jacket",
-            "coat",
-            "outerwear",
-            "shirt",
-            "sweater",
-            "blouse",
-            "top",
-            "blazer",
-            "cardigan"
-          ],
-          "selectedLinks": [
-            {
-              "link": "https://www.everlane.com/products/womens-pima-rib-long-sleeve-henley-hthr-tan",
-              "title": "The Luxe Rib Henley | Heathered Tan – Everlane"
-            },
-            {
-              "link": "https://www.next.us/en/style/su028408/n01229",
-              "title": "Buy Taupe Brown Ribbed Button Detail Long Sleeve Henley Top from Next USA"
-            }
-          ],
-          "timestamp": "2025-11-14T11:55:08.575Z",
-          "candidateCount": 30,
-          "selectionCount": 2
-        },
         "bottoms_2": {
           "itemDescription": "item2 blue jeans",
           "searchTerms": [
@@ -124,34 +67,34 @@
           ],
           "selectedLinks": [
             {
-              "link": "https://www.farfetch.com/my/shopping/women/7-for-all-mankind-willow-wide-jeans-item-28538266.aspx",
-              "title": "7 For All Mankind Willow Wide Jeans | Blue | FARFETCH MY"
+              "link": "https://cottonholic.com/product/블리크-후들-하이웨스트청바지-와이드청바지/1217",
+              "title": "블리크 후들 하이웨스트청바지 와이드청바지 | cottonholic"
             },
             {
-              "link": "https://kr.bestdealplus.com/product/103792057/하이웨이스트-연청색-퇴색-루즈핏-A라인-와이드-레그-여성-청바지",
-              "title": "하이웨이스트 연청색 퇴색 루즈핏 A라인 와이드 레그 여성 청바지 / 청바지(신품)"
+              "link": "https://www.amazon.com/TaoZiPeach-Casual-Wide-leg-Female-Trousers/dp/B0D75T1GR3",
+              "title": "TaoZiPeach Women Casual Jeans Waist Loose Wide-Leg Pants Female Street Button Long Trousers s1 Blue XS at Amazon Women's Jeans store"
             },
             {
-              "link": "https://ko.codibook.net/product/MAENIQUE/Rado-Split-wide-jeans/888481",
-              "title": "MAENIQUE - 라도 절개 와이드 청바지 - 코디북"
+              "link": "https://zigzag.kr/catalog/products/127801254",
+              "title": "이유엔 여성 와이드청바지 하이웨스트 진청 통바지 워싱 사계절 ..."
             }
           ],
-          "timestamp": "2025-11-14T11:55:14.840Z",
-          "candidateCount": 30,
+          "timestamp": "2025-11-14T12:02:26.119Z",
+          "candidateCount": 29,
           "selectionCount": 3
         }
       },
       "timing": {
-        "full_image_search_seconds": 5.05,
-        "per_category_search_seconds": 13.23,
-        "gpt4_turbo_api_time_seconds": 9.1,
-        "processing_overhead_seconds": 0.01,
-        "other_overhead_seconds": -9.1,
-        "wall_clock_seconds": 18.29,
-        "serper_api_time_seconds": 15.14,
+        "full_image_search_seconds": 3.18,
+        "per_category_search_seconds": 24.65,
+        "gpt4_turbo_api_time_seconds": 3.89,
+        "processing_overhead_seconds": 0,
+        "other_overhead_seconds": -3.89,
+        "wall_clock_seconds": 27.84,
+        "serper_api_time_seconds": 28.98,
         "serper_count": 3,
-        "gpt4_turbo_count": 3,
-        "total_seconds": 18.29,
+        "gpt4_turbo_count": 1,
+        "total_seconds": 27.84,
         "categories_parallel": 3
       }
     }

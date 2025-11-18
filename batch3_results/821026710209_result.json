@@ -1,75 +1,9 @@
 {
+  "status": "success",
   "phone": "821026710209",
-  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763120430917_IMG_8879.jpg",
-  "items": [
-    {
-      "category": "tops",
-      "groundingdino_prompt": "white jacket",
-      "description": "white fleece jacket with blue cat pattern and a blue hood",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_white_jacket_1763120440952.jpg",
-      "confidence": 0.501
-    }
-  ],
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763122096131_IMG_8879.jpg",
+  "items": [],
   "search_results": {
-    "results": {
-      "tops_1": [
-        {
-          "link": "https://www.elandmall.co.kr/i/item?itemNo=2410520281&chnl_no=GSW",
-          "thumbnail": "https://item.elandrs.com/r/image/item/2024-10-11/b015718c-092e-429f-a303-4798fd3d58f9.jpg?w=750&h=&q=100",
-          "title": "래핑차일드 애니멀 퍼리 자켓 84C26-160-32 33- 이랜드몰"
-        },
-        {
-          "link": "https://kidikidi.elandmall.co.kr/i/item?itemNo=2410517193&lowerVendNo=LV22036019",
-          "thumbnail": "https://item.elandrs.com/r/image/item/2024-10-18/f1e4ef70-a774-4f6c-b264-c93a86f0b4ad.jpg",
-          "title": "버니 뽀글이 점퍼- KIDIKIDI"
-        },
-        {
-          "link": "https://bobochoses.com/en-fr/products/b225si006-tic-tac-toe-color-block-bag",
-          "thumbnail": "https://bobochoses.com/cdn/shop/files/B225SC003_8_29908c4a-db7e-4474-8dbf-a8a91453f07c.webp?v=1756208496&width=720",
-          "title": "Tic Tac Toe color block bag | Bobo Choses"
-        }
-      ]
-    },
-    "meta": {
-      "sourceCounts": {
-        "gpt": 0,
-        "fallback": 1,
-        "none": 0,
-        "error": 0
-      },
-      "gptReasoning": {
-        "tops_1": {
-          "itemDescription": "item1 white jacket",
-          "searchTerms": [
-            "item1 white jacket",
-            "jacket",
-            "coat",
-            "outerwear",
-            "shirt",
-            "sweater",
-            "blouse",
-            "top",
-            "blazer",
-            "cardigan"
-          ],
-          "selectedLinks": [],
-          "timestamp": "2025-11-14T11:41:05.644Z",
-          "candidateCount": 27
-        }
-      },
-      "timing": {
-        "full_image_search_seconds": 17.11,
-        "per_category_search_seconds": 5.97,
-        "gpt4_turbo_api_time_seconds": 1.25,
-        "processing_overhead_seconds": 0.01,
-        "other_overhead_seconds": -1.25,
-        "wall_clock_seconds": 23.08,
-        "serper_api_time_seconds": 4.71,
-        "serper_count": 1,
-        "gpt4_turbo_count": 1,
-        "total_seconds": 23.08,
-        "categories_parallel": 1
-      }
-    }
+    "results": {}
   }
 }

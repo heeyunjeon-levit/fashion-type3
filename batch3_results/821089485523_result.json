@@ -1,70 +1,9 @@
 {
   "status": "success",
   "phone": "821089485523",
-  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763121511508_Screenshot_20251112_154244_W.jpg",
-  "items": [
-    {
-      "category": "bottoms",
-      "groundingdino_prompt": "brown skirt",
-      "description": "dark brown mini skirt with a straight fit",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_brown_skirt_1763121531518.jpg",
-      "confidence": 0.822
-    }
-  ],
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763122043118_Screenshot_20251112_154244_W.jpg",
+  "items": [],
   "search_results": {
-    "results": {
-      "bottoms_1": [
-        {
-          "link": "https://en.ssumj.com/product/premium-line-tess-wrap-skirt-2col/14693",
-          "thumbnail": "https://ssumj.com/web/ssumj_2025/10/01/3_251020_19.jpg",
-          "title": "Premium Line Tess Wrap Skirt 2col | SSUMJ"
-        }
-      ]
-    },
-    "meta": {
-      "sourceCounts": {
-        "gpt": 1,
-        "fallback": 0,
-        "none": 0,
-        "error": 0
-      },
-      "gptReasoning": {
-        "bottoms_1": {
-          "itemDescription": "item2 brown skirt",
-          "searchTerms": [
-            "item2 brown skirt",
-            "shorts",
-            "slacks",
-            "pants",
-            "trousers",
-            "jeans",
-            "skirt",
-            "leg trousers"
-          ],
-          "selectedLinks": [
-            {
-              "link": "https://en.ssumj.com/product/premium-line-tess-wrap-skirt-2col/14693",
-              "title": "Premium Line Tess Wrap Skirt 2col | SSUMJ"
-            }
-          ],
-          "timestamp": "2025-11-14T11:59:09.775Z",
-          "candidateCount": 29,
-          "selectionCount": 1
-        }
-      },
-      "timing": {
-        "full_image_search_seconds": 10.38,
-        "per_category_search_seconds": 6.37,
-        "gpt4_turbo_api_time_seconds": 2.77,
-        "processing_overhead_seconds": 0,
-        "other_overhead_seconds": -2.76,
-        "wall_clock_seconds": 16.75,
-        "serper_api_time_seconds": 3.59,
-        "serper_count": 1,
-        "gpt4_turbo_count": 1,
-        "total_seconds": 16.75,
-        "categories_parallel": 1
-      }
-    }
+    "results": {}
   }
 }

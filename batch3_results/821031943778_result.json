@@ -1,87 +1,9 @@
 {
+  "status": "success",
   "phone": "821031943778",
-  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763120687197_Screenshot_20251113_000358_Instagram.jpg",
-  "items": [
-    {
-      "category": "dress",
-      "groundingdino_prompt": "white dress",
-      "description": "white short sleeve dress with a square neckline and a long, flowing fit",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_white_dress_1763120699957.jpg",
-      "confidence": 0.925
-    }
-  ],
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763122168723_Screenshot_20251113_000358_Instagram.jpg",
+  "items": [],
   "search_results": {
-    "results": {
-      "dress_1": [
-        {
-          "link": "https://www.coupang.com/vp/products/7326001303?itemId=18798764390&vendorItemId=85929582625",
-          "thumbnail": "https://thumbnail.coupangcdn.com/thumbnails/remote/230x230ex/image/vendor_inventory/882d/d865ab013ecacae313eafb2c9b4b57a4e84c0f09fbe52c3c3bb3324f52e7.jpg",
-          "title": "무슈봉 셀프웨딩 트위드 반팔 롱원피스 - 원피스 | 쿠팡"
-        },
-        {
-          "link": "https://www.musinsa.com/products/5061335",
-          "thumbnail": "https://gyd19886.openhost.cafe24.com/img/celina_creambeige_06.jpg",
-          "title": "미케네(MICANE) 셀리나 플레어 롱 드레스 - 사이즈 & 후기 | 무신사"
-        },
-        {
-          "link": "https://serendute.com/ko/products/square-neck-dress-for-womens-2023-summer-new-french-waist-waist-slim-and-gentle-style-milk-white-long-dress",
-          "thumbnail": "https://serendute.com/cdn/shop/products/O1CN01ihdHTe1aKUCQOJOfO__2459043311.jpg?v=1692805161&width=1445",
-          "title": "우유 흰색 슬림 드레스 | 성인 귀여운 원피스 드레스 – Serendute"
-        }
-      ]
-    },
-    "meta": {
-      "sourceCounts": {
-        "gpt": 1,
-        "fallback": 0,
-        "none": 0,
-        "error": 0
-      },
-      "gptReasoning": {
-        "dress_1": {
-          "itemDescription": "item1 white dress",
-          "searchTerms": [
-            "item1 white dress",
-            "dress",
-            "gown",
-            "maxi dress",
-            "midi dress",
-            "mini dress",
-            "cocktail dress",
-            "casual dress"
-          ],
-          "selectedLinks": [
-            {
-              "link": "https://www.coupang.com/vp/products/7326001303?itemId=18798764390&vendorItemId=85929582625",
-              "title": "무슈봉 셀프웨딩 트위드 반팔 롱원피스 - 원피스 | 쿠팡"
-            },
-            {
-              "link": "https://www.musinsa.com/products/5061335",
-              "title": "미케네(MICANE) 셀리나 플레어 롱 드레스 - 사이즈 & 후기 | 무신사"
-            },
-            {
-              "link": "https://serendute.com/ko/products/square-neck-dress-for-womens-2023-summer-new-french-waist-waist-slim-and-gentle-style-milk-white-long-dress",
-              "title": "우유 흰색 슬림 드레스 | 성인 귀여운 원피스 드레스 – Serendute"
-            }
-          ],
-          "timestamp": "2025-11-14T11:45:13.122Z",
-          "candidateCount": 30,
-          "selectionCount": 3
-        }
-      },
-      "timing": {
-        "full_image_search_seconds": 4.9,
-        "per_category_search_seconds": 7.05,
-        "gpt4_turbo_api_time_seconds": 3.68,
-        "processing_overhead_seconds": 0,
-        "other_overhead_seconds": -3.68,
-        "wall_clock_seconds": 11.95,
-        "serper_api_time_seconds": 3.36,
-        "serper_count": 1,
-        "gpt4_turbo_count": 1,
-        "total_seconds": 11.95,
-        "categories_parallel": 1
-      }
-    }
+    "results": {}
   }
 }

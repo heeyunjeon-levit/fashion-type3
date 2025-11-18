@@ -1,20 +1,20 @@
 {
   "status": "success",
   "phone": "821071953780",
-  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763121132827_IMG_7721.jpg",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763121571777_IMG_7721.jpg",
   "items": [
     {
       "category": "bottoms",
       "groundingdino_prompt": "beige pants",
       "description": "beige wide-leg pants with a relaxed fit",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_beige_pants_1763121144792.jpg",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_beige_pants_1763121595073.jpg",
       "confidence": 0.535
     },
     {
       "category": "shoes",
       "groundingdino_prompt": "black shoes",
       "description": "black suede sneakers with a thick sole and velcro straps",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_black_shoes_1763121146361.jpg",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_black_shoes_1763121595902.jpg",
       "confidence": 0.696
     }
   ],
@@ -28,30 +28,20 @@
         },
         {
           "link": "https://m.nbkorea.com/product/productDetail.action?styleCode=NBNVE3W612&colCode=35&review=Y",
-          "thumbnail": "https://image.nbkorea.com/NBRB_Product/20240326/NB20240326091738924001.jpg",
-          "title": "New Balance Korea - WOMEN FROZEN 우븐 스트레치 4부 숏팬츠(STANDARD FIT)"
+          "thumbnail": "https://image.nbkorea.com/NBRB_Product/20240326/NB20240326091741369001.jpg",
+          "title": "New Balance Korea - WOMEN FROZEN 우븐 스트레치 4부 숏팬츠 ..."
         },
         {
           "link": "https://www.trenbe.com/product/++119434615",
           "thumbnail": "https://image-cdn.trenbe.com/product-images/1732673751508_839403c023c1bfc33e8f4234355579b2_8.jpeg",
-          "title": "뉴발란스(New Balance) | 뉴발란스 WOMEN 후디 세미 크롭 패딩 자켓 - (35)Beige | 트렌비"
+          "title": "뉴발란스(New Balance) | 뉴발란스 WOMEN 후디 세미 크롭 패딩 ..."
         }
       ],
       "shoes_2": [
         {
-          "link": "https://www.daangn.com/kr/buy-sell/뉴발란스-윈터브리즈-블랙-230-새상품-6zkbi3s66os9/",
-          "thumbnail": "https://img.kr.gcp-karroter.net/origin/article/202511/176293629548912c78355d16ebbc4801c7949a34b75caea048652ef44e75011d70b583e6a6ce50.webp?f=webp&q=95&s=1440x1440&t=inside",
-          "title": "뉴발란스 윈터브리즈 블랙 230 새상품 | 여성잡화 | 당근 중고거래"
-        },
-        {
           "link": "https://www.29cm.co.kr/products/2979115",
           "thumbnail": "https://img.29cm.co.kr/item/202412/11efb6dc88939b8f85210d08aa49ae94.jpg?width=3840&format=webp",
-          "title": "TWIN VELCRO MARY JANE SNEAKERS / BLACK - 감도 깊은 취향 셀렉트샵 29CM"
-        },
-        {
-          "link": "https://m.nbkorea.com/product/productDetail.action?styleCode=NBRJFF010B&colCode=19&review=Y",
-          "thumbnail": "https://image.nbkorea.com/NBRB_Product/20251002/NB20251002143836092001.jpg",
-          "title": "New Balance Korea - WINTER Breeze / SD2205BK"
+          "title": "TWIN VELCRO MARY JANE SNEAKERS / BLACK - 감도 깊은 취향 ..."
         }
       ]
     },
@@ -76,8 +66,8 @@
             "leg trousers"
           ],
           "selectedLinks": [],
-          "timestamp": "2025-11-14T11:52:41.094Z",
-          "candidateCount": 26
+          "timestamp": "2025-11-14T12:00:15.500Z",
+          "candidateCount": 27
         },
         "shoes_2": {
           "itemDescription": "item2 black shoes",
@@ -94,34 +84,26 @@
           ],
           "selectedLinks": [
             {
-              "link": "https://www.daangn.com/kr/buy-sell/뉴발란스-윈터브리즈-블랙-230-새상품-6zkbi3s66os9/",
-              "title": "뉴발란스 윈터브리즈 블랙 230 새상품 | 여성잡화 | 당근 중고거래"
-            },
-            {
               "link": "https://www.29cm.co.kr/products/2979115",
-              "title": "TWIN VELCRO MARY JANE SNEAKERS / BLACK - 감도 깊은 취향 셀렉트샵 29CM"
-            },
-            {
-              "link": "https://m.nbkorea.com/product/productDetail.action?styleCode=NBRJFF010B&colCode=19&review=Y",
-              "title": "New Balance Korea - WINTER Breeze / SD2205BK"
+              "title": "TWIN VELCRO MARY JANE SNEAKERS / BLACK - 감도 깊은 취향 ..."
             }
           ],
-          "timestamp": "2025-11-14T11:52:47.791Z",
+          "timestamp": "2025-11-14T12:00:22.054Z",
           "candidateCount": 30,
-          "selectionCount": 3
+          "selectionCount": 1
         }
       },
       "timing": {
-        "full_image_search_seconds": 7.99,
-        "per_category_search_seconds": 11.76,
-        "gpt4_turbo_api_time_seconds": 5.38,
-        "processing_overhead_seconds": 0.01,
-        "other_overhead_seconds": -5.37,
-        "wall_clock_seconds": 19.75,
-        "serper_api_time_seconds": 11.41,
+        "full_image_search_seconds": 9.52,
+        "per_category_search_seconds": 15.91,
+        "gpt4_turbo_api_time_seconds": 7.4,
+        "processing_overhead_seconds": 0,
+        "other_overhead_seconds": -7.39,
+        "wall_clock_seconds": 25.44,
+        "serper_api_time_seconds": 17.87,
         "serper_count": 2,
         "gpt4_turbo_count": 2,
-        "total_seconds": 19.76,
+        "total_seconds": 25.44,
         "categories_parallel": 2
       }
     }

@@ -1,87 +1,9 @@
 {
+  "status": "success",
   "phone": "821066636856",
-  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763120350743_Screenshot_20251114_173210.jpg",
-  "items": [
-    {
-      "category": "bottoms",
-      "groundingdino_prompt": "black skirt",
-      "description": "black pleated mini skirt with a textured fabric",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_black_skirt_1763120363171.jpg",
-      "confidence": 0.709
-    }
-  ],
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763122070330_Screenshot_20251114_173210.jpg",
+  "items": [],
   "search_results": {
-    "results": {
-      "bottoms_1": [
-        {
-          "link": "https://urban-sheek.com/en-kr/products/maillard-hot-girl-cake-skirt",
-          "thumbnail": "https://urban-sheek.com/cdn/shop/files/batch_O1CN01NEzi7c27BDgNwKKSD__2213131707758.jpg?v=1730767015&width=1946",
-          "title": "마이야르 핫 걸 케이크 치마 – UrbanSheek"
-        },
-        {
-          "link": "https://zigzag.kr/catalog/products/147210279",
-          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/c/14/721/027/147210279-5029184668789087199.jpeg?width=400&height=400&quality=80&format=webp",
-          "title": "댄스걸 레더 주름 스커트"
-        },
-        {
-          "link": "https://kr.revolve.com/mobile/isabel-marant-etoile-picadilia-skirt-in-black/dp/ISAR-WQ49/",
-          "thumbnail": "https://is4.revolveassets.com/images/p4/n/tv/LESH-WQ326_V1.jpg",
-          "title": "Isabel Marant Etoile PICADILIA 스커트 in Black | REVOLVE"
-        }
-      ]
-    },
-    "meta": {
-      "sourceCounts": {
-        "gpt": 1,
-        "fallback": 0,
-        "none": 0,
-        "error": 0
-      },
-      "gptReasoning": {
-        "bottoms_1": {
-          "itemDescription": "item1 black skirt",
-          "searchTerms": [
-            "item1 black skirt",
-            "shorts",
-            "slacks",
-            "pants",
-            "trousers",
-            "jeans",
-            "skirt",
-            "leg trousers"
-          ],
-          "selectedLinks": [
-            {
-              "link": "https://urban-sheek.com/en-kr/products/maillard-hot-girl-cake-skirt",
-              "title": "마이야르 핫 걸 케이크 치마 – UrbanSheek"
-            },
-            {
-              "link": "https://zigzag.kr/catalog/products/147210279",
-              "title": "댄스걸 레더 주름 스커트"
-            },
-            {
-              "link": "https://kr.revolve.com/mobile/isabel-marant-etoile-picadilia-skirt-in-black/dp/ISAR-WQ49/",
-              "title": "Isabel Marant Etoile PICADILIA 스커트 in Black | REVOLVE"
-            }
-          ],
-          "timestamp": "2025-11-14T11:39:36.645Z",
-          "candidateCount": 26,
-          "selectionCount": 3
-        }
-      },
-      "timing": {
-        "full_image_search_seconds": 3.44,
-        "per_category_search_seconds": 9,
-        "gpt4_turbo_api_time_seconds": 4.97,
-        "processing_overhead_seconds": 0,
-        "other_overhead_seconds": -4.97,
-        "wall_clock_seconds": 12.44,
-        "serper_api_time_seconds": 4.02,
-        "serper_count": 1,
-        "gpt4_turbo_count": 1,
-        "total_seconds": 12.45,
-        "categories_parallel": 1
-      }
-    }
+    "results": {}
   }
 }

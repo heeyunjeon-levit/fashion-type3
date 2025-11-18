@@ -1,90 +1,9 @@
 {
   "status": "success",
   "phone": "821076206818",
-  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763121412044_IMG_1797.jpg",
-  "items": [
-    {
-      "category": "bag",
-      "groundingdino_prompt": "dark brown bag",
-      "description": "dark brown woven leather mini bag with a crossbody strap",
-      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_dark_brown_bag_1763121432525.jpg",
-      "confidence": 0.892
-    }
-  ],
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763122019030_IMG_1797.jpg",
+  "items": [],
   "search_results": {
-    "results": {
-      "bag_1": [
-        {
-          "link": "https://www.bottegaveneta.com/ko-kr/미니-루프-다크-바롤로-723547V1G112262.html",
-          "thumbnail": "https://bottega-veneta.dam.kering.com/asset/05dd2e28-2a88-4053-91f2-ad69e3f8751f/eCom/723547V1G112262_A.jpg?v=2",
-          "title": "미니 루프 에 대한 여성 에 다크 바롤로 | Bottega Veneta KR"
-        },
-        {
-          "link": "https://kream.co.kr/products/625803",
-          "thumbnail": "https://kream-phinf.pstatic.net/MjAyNTA5MjlfMjkx/MDAxNzU5MTM0OTI5MzUy.4ufy-77v4f4ZjuaN-Lc6juTU-cD2RDZMm6hmfPImwLAg.NAdNCC9sH_dJ6ntEYUYFppydi48yZrzRwQ5WfH7oQ0Ug.PNG/a_7a08e709b7ce4a698b217f8ee7c019b6.png?type=l",
-          "title": "보테가 베네타 미니 루프 카메라백 바롤로 | Bottega Veneta | KREAM"
-        },
-        {
-          "link": "https://www.tootsies.com/723547-V1G11-PF25-BOTTEGA-VENETA.html",
-          "thumbnail": "https://www.tootsies.com/dw/image/v2/BJZB_PRD/on/demandware.static/-/Sites-master-catalog/default/dw3aef26bd/images/products/723547-V1G11-PF25-BAROLO_v1.jpg?sw=760&sh=936&sm=fit",
-          "title": "Bottega Veneta Mini Loop Camera Bag | Tootsies"
-        }
-      ]
-    },
-    "meta": {
-      "sourceCounts": {
-        "gpt": 1,
-        "fallback": 0,
-        "none": 0,
-        "error": 0
-      },
-      "gptReasoning": {
-        "bag_1": {
-          "itemDescription": "item1 dark brown bag",
-          "searchTerms": [
-            "item1 dark brown bag",
-            "bag",
-            "backpack",
-            "handbag",
-            "tote bag",
-            "purse",
-            "clutch",
-            "messenger bag",
-            "shoulder bag",
-            "wallet"
-          ],
-          "selectedLinks": [
-            {
-              "link": "https://www.bottegaveneta.com/ko-kr/미니-루프-다크-바롤로-723547V1G112262.html",
-              "title": "미니 루프 에 대한 여성 에 다크 바롤로 | Bottega Veneta KR"
-            },
-            {
-              "link": "https://kream.co.kr/products/625803",
-              "title": "보테가 베네타 미니 루프 카메라백 바롤로 | Bottega Veneta | KREAM"
-            },
-            {
-              "link": "https://www.tootsies.com/723547-V1G11-PF25-BOTTEGA-VENETA.html",
-              "title": "Bottega Veneta Mini Loop Camera Bag | Tootsies"
-            }
-          ],
-          "timestamp": "2025-11-14T11:57:32.126Z",
-          "candidateCount": 30,
-          "selectionCount": 3
-        }
-      },
-      "timing": {
-        "full_image_search_seconds": 3.62,
-        "per_category_search_seconds": 15.08,
-        "gpt4_turbo_api_time_seconds": 3.36,
-        "processing_overhead_seconds": 0,
-        "other_overhead_seconds": -3.36,
-        "wall_clock_seconds": 18.7,
-        "serper_api_time_seconds": 11.71,
-        "serper_count": 1,
-        "gpt4_turbo_count": 1,
-        "total_seconds": 18.7,
-        "categories_parallel": 1
-      }
-    }
+    "results": {}
   }
 }

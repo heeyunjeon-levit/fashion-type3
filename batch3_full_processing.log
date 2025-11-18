@@ -1,0 +1,1184 @@
+
+================================================================================
+BATCH 3 FINAL - PROCESSING 58 USERS
+================================================================================
+API: https://fashionsource.vercel.app
+================================================================================
+
+📊 Total users: 58
+
+
+Progress: 1/58
+
+================================================================================
+User 821082830425
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 2 items
+     - tops: pink jacket
+     - accessory: white hat
+  🔍 Searching products...
+  ✅ Found 6 shopping links
+
+  ✅ SUCCESS
+     Items: 2
+     Links: 6
+     ID: 1ca804945577
+     URL: https://fashionsource.vercel.app/results/1ca804945577.html
+
+Progress: 2/58
+
+================================================================================
+User 821064868350
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+
+  ❌ FAILED: 413 Client Error: Request Entity Too Large for url: https://fashionsource.vercel.app/api/upload
+
+Progress: 3/58
+
+================================================================================
+User 821030550242
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+
+  ❌ FAILED: 413 Client Error: Request Entity Too Large for url: https://fashionsource.vercel.app/api/upload
+
+Progress: 4/58
+
+================================================================================
+User 821050965822
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 2 items
+     - tops: gray shirt
+     - bottoms: blue jeans
+  🔍 Searching products...
+  ✅ Found 6 shopping links
+
+  ✅ SUCCESS
+     Items: 2
+     Links: 6
+     ID: 29472b749cd1
+     URL: https://fashionsource.vercel.app/results/29472b749cd1.html
+
+Progress: 5/58
+
+================================================================================
+User 821030090886
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 3 items
+     - tops: brown jacket
+     - bottoms: beige skirt
+     - shoes: brown boots
+  🔍 Searching products...
+  ✅ Found 6 shopping links
+
+  ✅ SUCCESS
+     Items: 3
+     Links: 6
+     ID: cf74ed9d661f
+     URL: https://fashionsource.vercel.app/results/cf74ed9d661f.html
+
+Progress: 6/58
+
+================================================================================
+User 821088749957
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 3 items
+     - tops: white sweatshirt
+     - bottoms: blue skirt
+     - shoes: red shoes
+  🔍 Searching products...
+  ✅ Found 9 shopping links
+
+  ✅ SUCCESS
+     Items: 3
+     Links: 9
+     ID: e5cf9c807a8b
+     URL: https://fashionsource.vercel.app/results/e5cf9c807a8b.html
+
+Progress: 7/58
+
+================================================================================
+User 821091581688
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 1 items
+     - bag: black bag
+  🔍 Searching products...
+  ✅ Found 3 shopping links
+
+  ✅ SUCCESS
+     Items: 1
+     Links: 3
+     ID: 01fe0b5b2332
+     URL: https://fashionsource.vercel.app/results/01fe0b5b2332.html
+
+Progress: 8/58
+
+================================================================================
+User 821022625467
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 3 items
+     - tops: brown fur coat
+     - tops: white shirt
+     - bottoms: blue jeans
+  🔍 Searching products...
+  ✅ Found 9 shopping links
+
+  ✅ SUCCESS
+     Items: 3
+     Links: 9
+     ID: 1c17f26b66c0
+     URL: https://fashionsource.vercel.app/results/1c17f26b66c0.html
+
+Progress: 9/58
+
+================================================================================
+User 821090730739
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 1 items
+     - tops: gray jacket
+  🔍 Searching products...
+  ✅ Found 3 shopping links
+
+  ✅ SUCCESS
+     Items: 1
+     Links: 3
+     ID: bf191fafe338
+     URL: https://fashionsource.vercel.app/results/bf191fafe338.html
+
+Progress: 10/58
+
+================================================================================
+User 821027283468
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 2 items
+     - tops: white hoodie
+     - bottoms: plaid skirt
+  🔍 Searching products...
+  ✅ Found 6 shopping links
+
+  ✅ SUCCESS
+     Items: 2
+     Links: 6
+     ID: 458cdbdc6b0c
+     URL: https://fashionsource.vercel.app/results/458cdbdc6b0c.html
+
+Progress: 11/58
+
+================================================================================
+User 821020247094
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+
+  ❌ FAILED: 413 Client Error: Request Entity Too Large for url: https://fashionsource.vercel.app/api/upload
+
+Progress: 12/58
+
+================================================================================
+User 821093218593
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 4 items
+     - bottoms: red dress
+     - bottoms: green dress
+     - tops: red beret
+     - tops: green beret
+  🔍 Searching products...
+  ✅ Found 12 shopping links
+
+  ✅ SUCCESS
+     Items: 4
+     Links: 12
+     ID: 34a5dcee0533
+     URL: https://fashionsource.vercel.app/results/34a5dcee0533.html
+
+Progress: 13/58
+
+================================================================================
+User 821042714453
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 4 items
+     - tops: beige coat
+     - bottoms: blue jeans
+     - shoes: white sneakers
+     - accessory: gray scarf
+  🔍 Searching products...
+  ✅ Found 8 shopping links
+
+  ✅ SUCCESS
+     Items: 4
+     Links: 8
+     ID: 3da4520b9a34
+     URL: https://fashionsource.vercel.app/results/3da4520b9a34.html
+
+Progress: 14/58
+
+================================================================================
+User 821090940472
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 2 items
+     - tops: black cardigan
+     - bag: brown bag
+  🔍 Searching products...
+  ✅ Found 5 shopping links
+
+  ✅ SUCCESS
+     Items: 2
+     Links: 5
+     ID: 2a0cd1b276c3
+     URL: https://fashionsource.vercel.app/results/2a0cd1b276c3.html
+
+Progress: 15/58
+
+================================================================================
+User 821042161317
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 3 items
+     - tops: cream sweater
+     - bottoms: navy pants
+     - bag: brown bag
+  🔍 Searching products...
+  ✅ Found 7 shopping links
+
+  ✅ SUCCESS
+     Items: 3
+     Links: 7
+     ID: b4c3030efbd7
+     URL: https://fashionsource.vercel.app/results/b4c3030efbd7.html
+
+Progress: 16/58
+
+================================================================================
+User 821067702145
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 2 items
+     - bottoms: gray pants
+     - shoes: black shoes
+  🔍 Searching products...
+  ✅ Found 5 shopping links
+
+  ✅ SUCCESS
+     Items: 2
+     Links: 5
+     ID: 2386c199f86d
+     URL: https://fashionsource.vercel.app/results/2386c199f86d.html
+
+Progress: 17/58
+
+================================================================================
+User 821094891031
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+
+  ❌ FAILED: 413 Client Error: Request Entity Too Large for url: https://fashionsource.vercel.app/api/upload
+
+Progress: 18/58
+
+================================================================================
+User 821087797860
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 1 items
+     - tops: white hoodie
+  🔍 Searching products...
+  ✅ Found 3 shopping links
+
+  ✅ SUCCESS
+     Items: 1
+     Links: 3
+     ID: c524a906ed0f
+     URL: https://fashionsource.vercel.app/results/c524a906ed0f.html
+
+Progress: 19/58
+
+================================================================================
+User 821091805701
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 2 items
+     - dress: white dress
+     - bag: brown bag
+  🔍 Searching products...
+  ✅ Found 6 shopping links
+
+  ✅ SUCCESS
+     Items: 2
+     Links: 6
+     ID: cf117844633b
+     URL: https://fashionsource.vercel.app/results/cf117844633b.html
+
+Progress: 20/58
+
+================================================================================
+User 821063209765
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 4 items
+     - tops: brown coat
+     - tops: gray hoodie
+     - bottoms: blue jeans
+     - shoes: white sneakers
+  🔍 Searching products...
+  ✅ Found 10 shopping links
+
+  ✅ SUCCESS
+     Items: 4
+     Links: 10
+     ID: 764db12ba915
+     URL: https://fashionsource.vercel.app/results/764db12ba915.html
+
+Progress: 21/58
+
+================================================================================
+User 821094116936
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 3 items
+     - tops: beige coat
+     - bottoms: black pants
+     - bag: brown bag
+  🔍 Searching products...
+  ✅ Found 7 shopping links
+
+  ✅ SUCCESS
+     Items: 3
+     Links: 7
+     ID: 9adec817263b
+     URL: https://fashionsource.vercel.app/results/9adec817263b.html
+
+Progress: 22/58
+
+================================================================================
+User 821088814276
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 3 items
+     - tops: gray sweater
+     - bottoms: white skirt
+     - shoes: black boots
+  🔍 Searching products...
+  ✅ Found 8 shopping links
+
+  ✅ SUCCESS
+     Items: 3
+     Links: 8
+     ID: 772b73accb80
+     URL: https://fashionsource.vercel.app/results/772b73accb80.html
+
+Progress: 23/58
+
+================================================================================
+User 821089903592
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 2 items
+     - tops: white jacket
+     - tops: white shirt
+  🔍 Searching products...
+  ✅ Found 5 shopping links
+
+  ✅ SUCCESS
+     Items: 2
+     Links: 5
+     ID: 6b0b6034d6be
+     URL: https://fashionsource.vercel.app/results/6b0b6034d6be.html
+
+Progress: 24/58
+
+================================================================================
+User 821075046333
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 1 items
+     - dress: green dress
+  🔍 Searching products...
+  ✅ Found 3 shopping links
+
+  ✅ SUCCESS
+     Items: 1
+     Links: 3
+     ID: d392bcc0d33f
+     URL: https://fashionsource.vercel.app/results/d392bcc0d33f.html
+
+Progress: 25/58
+
+================================================================================
+User 821072281041
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 1 items
+     - tops: pink bag
+  🔍 Searching products...
+  ✅ Found 3 shopping links
+
+  ✅ SUCCESS
+     Items: 1
+     Links: 3
+     ID: 2b75143c8c88
+     URL: https://fashionsource.vercel.app/results/2b75143c8c88.html
+
+Progress: 26/58
+
+================================================================================
+User 821077642614
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 2 items
+     - tops: gray jacket
+     - tops: white shirt
+  🔍 Searching products...
+  ✅ Found 6 shopping links
+
+  ✅ SUCCESS
+     Items: 2
+     Links: 6
+     ID: e35b197ab236
+     URL: https://fashionsource.vercel.app/results/e35b197ab236.html
+
+Progress: 27/58
+
+================================================================================
+User 821071953780
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 2 items
+     - bottoms: beige pants
+     - shoes: black shoes
+  🔍 Searching products...
+  ✅ Found 6 shopping links
+
+  ✅ SUCCESS
+     Items: 2
+     Links: 6
+     ID: be436a4d7c44
+     URL: https://fashionsource.vercel.app/results/be436a4d7c44.html
+
+Progress: 28/58
+
+================================================================================
+User 821039499595
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 3 items
+     - tops: black coat
+     - tops: black shoes
+     - bag: black bag
+  🔍 Searching products...
+  ✅ Found 9 shopping links
+
+  ✅ SUCCESS
+     Items: 3
+     Links: 9
+     ID: 58c235ec8dcf
+     URL: https://fashionsource.vercel.app/results/58c235ec8dcf.html
+
+Progress: 29/58
+
+================================================================================
+User 821067339175
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 1 items
+     - tops: black sneakers
+  🔍 Searching products...
+  ✅ Found 3 shopping links
+
+  ✅ SUCCESS
+     Items: 1
+     Links: 3
+     ID: 199c4521f9a0
+     URL: https://fashionsource.vercel.app/results/199c4521f9a0.html
+
+Progress: 30/58
+
+================================================================================
+User 821086400818
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 3 items
+     - tops: beige top
+     - bottoms: blue jeans
+     - shoes: black sandals
+  🔍 Searching products...
+  ✅ Found 5 shopping links
+
+  ✅ SUCCESS
+     Items: 3
+     Links: 5
+     ID: 766fad3aa53e
+     URL: https://fashionsource.vercel.app/results/766fad3aa53e.html
+
+Progress: 31/58
+
+================================================================================
+User 821027825295
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 3 items
+     - tops: green jacket
+     - tops: white top
+     - shoes: brown boots
+  🔍 Searching products...
+  ✅ Found 8 shopping links
+
+  ✅ SUCCESS
+     Items: 3
+     Links: 8
+     ID: 80bd881c1433
+     URL: https://fashionsource.vercel.app/results/80bd881c1433.html
+
+Progress: 32/58
+
+================================================================================
+User 821031981119
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 1 items
+     - shoes: silver shoes
+  🔍 Searching products...
+  ✅ Found 3 shopping links
+
+  ✅ SUCCESS
+     Items: 1
+     Links: 3
+     ID: e60c4a7149fd
+     URL: https://fashionsource.vercel.app/results/e60c4a7149fd.html
+
+Progress: 33/58
+
+================================================================================
+User 821041798505
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 1 items
+     - tops: beige jacket
+  🔍 Searching products...
+  ✅ Found 3 shopping links
+
+  ✅ SUCCESS
+     Items: 1
+     Links: 3
+     ID: 3575021aebb2
+     URL: https://fashionsource.vercel.app/results/3575021aebb2.html
+
+Progress: 34/58
+
+================================================================================
+User 821082289421
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 3 items
+     - tops: black coat
+     - tops: beige sweater
+     - bottoms: black skirt
+  🔍 Searching products...
+  ✅ Found 9 shopping links
+
+  ✅ SUCCESS
+     Items: 3
+     Links: 9
+     ID: 557ead451fb4
+     URL: https://fashionsource.vercel.app/results/557ead451fb4.html
+
+Progress: 35/58
+
+================================================================================
+User 821047850225
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 3 items
+     - tops: beige cardigan
+     - bottoms: beige pants
+     - bag: beige bag
+  🔍 Searching products...
+  ✅ Found 8 shopping links
+
+  ✅ SUCCESS
+     Items: 3
+     Links: 8
+     ID: 8294bd3678fb
+     URL: https://fashionsource.vercel.app/results/8294bd3678fb.html
+
+Progress: 36/58
+
+================================================================================
+User 821054444954
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 3 items
+     - tops: gray sweater
+     - bottoms: black skirt
+     - shoes: black shoes
+  🔍 Searching products...
+  ✅ Found 8 shopping links
+
+  ✅ SUCCESS
+     Items: 3
+     Links: 8
+     ID: 31a0978731fa
+     URL: https://fashionsource.vercel.app/results/31a0978731fa.html
+
+Progress: 37/58
+
+================================================================================
+User 821084478338
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 1 items
+     - tops: black jacket
+  🔍 Searching products...
+  ✅ Found 3 shopping links
+
+  ✅ SUCCESS
+     Items: 1
+     Links: 3
+     ID: ce63314af11b
+     URL: https://fashionsource.vercel.app/results/ce63314af11b.html
+
+Progress: 38/58
+
+================================================================================
+User 821086891513
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 1 items
+     - tops: black vest
+  🔍 Searching products...
+  ✅ Found 1 shopping links
+
+  ✅ SUCCESS
+     Items: 1
+     Links: 1
+     ID: 7d97891d0733
+     URL: https://fashionsource.vercel.app/results/7d97891d0733.html
+
+Progress: 39/58
+
+================================================================================
+User 821055918655
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+
+  ❌ FAILED: 413 Client Error: Request Entity Too Large for url: https://fashionsource.vercel.app/api/upload
+
+Progress: 40/58
+
+================================================================================
+User 821077239124
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 3 items
+     - tops: black blouse
+     - bottoms: beige skirt
+     - tops: black handbag
+  🔍 Searching products...
+  ✅ Found 8 shopping links
+
+  ✅ SUCCESS
+     Items: 3
+     Links: 8
+     ID: 9c769f90c58a
+     URL: https://fashionsource.vercel.app/results/9c769f90c58a.html
+
+Progress: 41/58
+
+================================================================================
+User 821027193710
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 3 items
+     - tops: black coat
+     - bottoms: white skirt
+     - shoes: black shoes
+  🔍 Searching products...
+  ✅ Found 9 shopping links
+
+  ✅ SUCCESS
+     Items: 3
+     Links: 9
+     ID: 4d9cedfdb292
+     URL: https://fashionsource.vercel.app/results/4d9cedfdb292.html
+
+Progress: 42/58
+
+================================================================================
+User 821092555340
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 3 items
+     - tops: blue sweatshirt
+     - shoes: brown shoes
+     - shoes: white shoes
+  🔍 Searching products...
+  ✅ Found 9 shopping links
+
+  ✅ SUCCESS
+     Items: 3
+     Links: 9
+     ID: c76c3f470914
+     URL: https://fashionsource.vercel.app/results/c76c3f470914.html
+
+Progress: 43/58
+
+================================================================================
+User 821063457946
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 3 items
+     - tops: black shirt
+     - bottoms: gray skirt
+     - bag: black bag
+  🔍 Searching products...
+  ✅ Found 7 shopping links
+
+  ✅ SUCCESS
+     Items: 3
+     Links: 7
+     ID: 4c02724ef532
+     URL: https://fashionsource.vercel.app/results/4c02724ef532.html
+
+Progress: 44/58
+
+================================================================================
+User 821051321548
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 1 items
+     - tops: multicolor jacket
+  🔍 Searching products...
+  ✅ Found 3 shopping links
+
+  ✅ SUCCESS
+     Items: 1
+     Links: 3
+     ID: 520f74722392
+     URL: https://fashionsource.vercel.app/results/520f74722392.html
+
+Progress: 45/58
+
+================================================================================
+User 821076206818
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 1 items
+     - bag: dark brown bag
+  🔍 Searching products...
+  ✅ Found 3 shopping links
+
+  ✅ SUCCESS
+     Items: 1
+     Links: 3
+     ID: 8729379777fc
+     URL: https://fashionsource.vercel.app/results/8729379777fc.html
+
+Progress: 46/58
+
+================================================================================
+User 821091453582
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 3 items
+     - tops: gray sweatshirt
+     - bottoms: gray skirt
+     - shoes: white sneakers
+  🔍 Searching products...
+  ✅ Found 9 shopping links
+
+  ✅ SUCCESS
+     Items: 3
+     Links: 9
+     ID: 25e6cc4e25e4
+     URL: https://fashionsource.vercel.app/results/25e6cc4e25e4.html
+
+Progress: 47/58
+
+================================================================================
+User 821089485523
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 1 items
+     - bottoms: brown skirt
+  🔍 Searching products...
+  ✅ Found 1 shopping links
+
+  ✅ SUCCESS
+     Items: 1
+     Links: 1
+     ID: 4f957f69cdec
+     URL: https://fashionsource.vercel.app/results/4f957f69cdec.html
+
+Progress: 48/58
+
+================================================================================
+User 821030224499
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+
+  ❌ FAILED: 413 Client Error: Request Entity Too Large for url: https://fashionsource.vercel.app/api/upload
+
+Progress: 49/58
+
+================================================================================
+User 821087330846
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 2 items
+     - bottoms: brown pants
+     - shoes: brown shoes
+  🔍 Searching products...
+  ✅ Found 5 shopping links
+
+  ✅ SUCCESS
+     Items: 2
+     Links: 5
+     ID: 3601823ed8ff
+     URL: https://fashionsource.vercel.app/results/3601823ed8ff.html
+
+Progress: 50/58
+
+================================================================================
+User 821066636856
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 1 items
+     - bottoms: black skirt
+  🔍 Searching products...
+  ✅ Found 3 shopping links
+
+  ✅ SUCCESS
+     Items: 1
+     Links: 3
+     ID: 615f51e2ba59
+     URL: https://fashionsource.vercel.app/results/615f51e2ba59.html
+
+Progress: 51/58
+
+================================================================================
+User 821077456078
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 1 items
+     - dress: gray dress
+  🔍 Searching products...
+  ✅ Found 2 shopping links
+
+  ✅ SUCCESS
+     Items: 1
+     Links: 2
+     ID: 2aba999be868
+     URL: https://fashionsource.vercel.app/results/2aba999be868.html
+
+Progress: 52/58
+
+================================================================================
+User 821026710209
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 1 items
+     - tops: white jacket
+  🔍 Searching products...
+  ✅ Found 3 shopping links
+
+  ✅ SUCCESS
+     Items: 1
+     Links: 3
+     ID: cb39692e151b
+     URL: https://fashionsource.vercel.app/results/cb39692e151b.html
+
+Progress: 53/58
+
+================================================================================
+User 821089070741
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 0 items
+
+  ✅ SUCCESS
+     Items: 0
+     Links: 0
+     ID: b61da48dba21
+     URL: https://fashionsource.vercel.app/results/b61da48dba21.html
+
+Progress: 54/58
+
+================================================================================
+User 821094843653
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 2 items
+     - tops: black jacket
+     - bottoms: purple pants
+  🔍 Searching products...
+  ✅ Found 0 shopping links
+
+  ✅ SUCCESS
+     Items: 2
+     Links: 0
+     ID: c012bb8c22e6
+     URL: https://fashionsource.vercel.app/results/c012bb8c22e6.html
+
+Progress: 55/58
+
+================================================================================
+User 821032011545
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 0 items
+
+  ✅ SUCCESS
+     Items: 0
+     Links: 0
+     ID: f29d1f299099
+     URL: https://fashionsource.vercel.app/results/f29d1f299099.html
+
+Progress: 56/58
+
+================================================================================
+User 821092095887
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 2 items
+     - tops: blue striped shirt
+     - bottoms: white pants
+  🔍 Searching products...
+  ✅ Found 3 shopping links
+
+  ✅ SUCCESS
+     Items: 2
+     Links: 3
+     ID: 6f8179c9d7e5
+     URL: https://fashionsource.vercel.app/results/6f8179c9d7e5.html
+
+Progress: 57/58
+
+================================================================================
+User 821088219700
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 0 items
+
+  ✅ SUCCESS
+     Items: 0
+     Links: 0
+     ID: 990b699380c5
+     URL: https://fashionsource.vercel.app/results/990b699380c5.html
+
+Progress: 58/58
+
+================================================================================
+User 821031943778
+================================================================================
+  📥 Downloading image...
+  📤 Uploading to API...
+  ✅ Uploaded
+  🤖 Analyzing with AI...
+  ✅ Found 0 items
+
+  ✅ SUCCESS
+     Items: 0
+     Links: 0
+     ID: c28c8d794505
+     URL: https://fashionsource.vercel.app/results/c28c8d794505.html
+
+================================================================================
+BATCH 3 FINAL - COMPLETE
+================================================================================
+✅ Successful: 52
+❌ Failed: 6
+📊 Total: 58
+
+📁 Summary: batch3_results/batch3_final_summary_20251114_210500.json
+================================================================================
+
+
+⚠️  Failed users:
+   - 821064868350: 413 Client Error: Request Entity Too Large for url: https://fashionsource.vercel.app/api/upload
+   - 821030550242: 413 Client Error: Request Entity Too Large for url: https://fashionsource.vercel.app/api/upload
+   - 821020247094: 413 Client Error: Request Entity Too Large for url: https://fashionsource.vercel.app/api/upload
+   - 821094891031: 413 Client Error: Request Entity Too Large for url: https://fashionsource.vercel.app/api/upload
+   - 821055918655: 413 Client Error: Request Entity Too Large for url: https://fashionsource.vercel.app/api/upload
+   - 821030224499: 413 Client Error: Request Entity Too Large for url: https://fashionsource.vercel.app/api/upload
+
+
+✅ 52 successful links ready!
+Sample links:
+   - 821082830425: https://fashionsource.vercel.app/results/1ca804945577.html
+   - 821050965822: https://fashionsource.vercel.app/results/29472b749cd1.html
+   - 821030090886: https://fashionsource.vercel.app/results/cf74ed9d661f.html
+   - 821088749957: https://fashionsource.vercel.app/results/e5cf9c807a8b.html
+   - 821091581688: https://fashionsource.vercel.app/results/01fe0b5b2332.html
+
+🎉 Batch 3 processing complete!
+📤 Ready to deploy HTML files and send links to users
+

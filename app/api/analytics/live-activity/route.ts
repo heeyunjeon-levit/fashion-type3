@@ -209,11 +209,12 @@ export async function GET() {
       }
     });
 
-    // Get recent "results viewed" events from events table (gpt_product_selection)
+    // Get recent "results viewed" events from events table (final_results_displayed)
+    // This shows what users ACTUALLY saw, including fallback products
     const { data: resultEvents } = await supabase
       .from('events')
       .select('id, session_id, created_at, event_data')
-      .eq('event_type', 'gpt_product_selection')
+      .eq('event_type', 'final_results_displayed')
       .gte('created_at', new Date(Date.now() - 86400000).toISOString())
       .order('created_at', { ascending: false })
       .limit(50);
@@ -266,32 +267,34 @@ export async function GET() {
         // Only result page visits are filtered to reduce testing noise
         
         const eventData = event.event_data as any;
-        const reasoning = eventData?.reasoning || {};
-        const items = Object.keys(reasoning);
+        const displayedProducts = eventData?.displayedProducts || {};
+        const summary = eventData?.summary || {};
+        const categories = Object.keys(displayedProducts);
         
-        // Skip if no items
-        if (items.length === 0) return;
+        // Skip if no categories
+        if (categories.length === 0) return;
         
-        // Extract item descriptions and product counts
-        const itemDetails = items.map(itemKey => {
-          const item = reasoning[itemKey];
+        // Extract category details with fallback information
+        const itemDetails = categories.map(categoryKey => {
+          const category = displayedProducts[categoryKey];
           return {
-            category: itemKey,
-            description: item.itemDescription || 'unknown item',
-            productCount: item.selectedLinks?.length || 0,
-            products: item.selectedLinks || []
+            category: categoryKey,
+            productCount: category.count || 0,
+            source: category.source || 'unknown', // 'gpt' or 'fallback'
+            products: category.products || []
           };
         });
         
-        // Flatten all products for easy display
-        const allProducts = items.flatMap(itemKey => {
-          const item = reasoning[itemKey];
-          return (item.selectedLinks || []).map((link: any) => ({
-            title: link.title,
-            link: link.link,
-            thumbnail: link.thumbnail,
-            category: itemKey,
-            itemDescription: item.itemDescription
+        // Flatten all products for easy display with source info
+        const allProducts = categories.flatMap(categoryKey => {
+          const category = displayedProducts[categoryKey];
+          return (category.products || []).map((p: any) => ({
+            title: p.title,
+            link: p.link,
+            thumbnail: p.thumbnail,
+            category: categoryKey,
+            source: category.source, // 'gpt' or 'fallback'
+            position: p.position
           }));
         });
         
@@ -301,10 +304,13 @@ export async function GET() {
           phone: phone,
           timestamp: event.created_at,
           timeAgo: timeAgo(new Date(event.created_at)),
-          itemsDetected: items.length,
+          itemsDetected: categories.length,
           itemDetails: itemDetails,
           allProducts: allProducts,
-          totalProducts: allProducts.length,
+          totalProducts: summary.totalProducts || allProducts.length,
+          gptProducts: summary.gptProducts || 0,
+          fallbackProducts: summary.fallbackProducts || 0,
+          categoriesWithFallback: summary.categoriesWithFallback || 0,
           sourceCounts: eventData?.sourceCounts,
           searchNumber: searchIndex + 1,
           totalSearches: totalSearches

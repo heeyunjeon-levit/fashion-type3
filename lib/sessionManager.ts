@@ -182,13 +182,17 @@ export class SessionManager {
       resultCount: Object.keys(results).length,
     })
     
-    // Log GPT reasoning as a separate detailed event
+    // Log GPT reasoning as a separate detailed event (what GPT selected)
     if (meta.gptReasoning && Object.keys(meta.gptReasoning).length > 0) {
       await this.logEvent('gpt_product_selection', {
         reasoning: meta.gptReasoning,
         sourceCounts: meta.sourceCounts,
       })
     }
+    
+    // Log FINAL RESULTS DISPLAYED (including fallback products)
+    // This captures what the user ACTUALLY sees, not just what GPT selected
+    await this.logFinalResultsDisplayed(results, meta)
     
     // Log detailed timing breakdown as a separate event
     if (meta.timing) {
@@ -214,6 +218,58 @@ export class SessionManager {
       search_results: results,
       gpt_selection_reasoning: meta.gptReasoning || {},
       searched_at: new Date().toISOString(),
+    })
+  }
+
+  // Log final results displayed to user (including fallback products)
+  async logFinalResultsDisplayed(results: any, meta: any = {}) {
+    // Extract what the user actually sees
+    const displayedProducts: Record<string, any> = {}
+    let totalProducts = 0
+    let gptProducts = 0
+    let fallbackProducts = 0
+    
+    // Parse through results and identify sources
+    Object.entries(results).forEach(([category, products]: [string, any]) => {
+      if (Array.isArray(products) && products.length > 0) {
+        totalProducts += products.length
+        
+        // Check if this category used fallback (from gptReasoning)
+        const categoryInfo = meta.gptReasoning?.[category]
+        const usedFallback = categoryInfo?.selectedLinks?.length === 0 && products.length > 0
+        
+        displayedProducts[category] = {
+          count: products.length,
+          source: usedFallback ? 'fallback' : 'gpt',
+          products: products.map((p: any, idx: number) => ({
+            position: idx + 1,
+            title: p.title,
+            link: p.link,
+            thumbnail: p.thumbnail,
+          }))
+        }
+        
+        if (usedFallback) {
+          fallbackProducts += products.length
+        } else {
+          gptProducts += products.length
+        }
+      }
+    })
+    
+    console.log(`📊 Final Results Displayed: ${totalProducts} products (GPT: ${gptProducts}, Fallback: ${fallbackProducts})`)
+    
+    await this.logEvent('final_results_displayed', {
+      displayedProducts,
+      summary: {
+        totalProducts,
+        gptProducts,
+        fallbackProducts,
+        categoriesWithFallback: Object.values(displayedProducts).filter((d: any) => d.source === 'fallback').length,
+        totalCategories: Object.keys(displayedProducts).length,
+      },
+      sourceCounts: meta.sourceCounts,
+      timestamp: new Date().toISOString(),
     })
   }
 
