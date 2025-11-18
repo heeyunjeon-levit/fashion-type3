@@ -39,7 +39,8 @@ export class SessionManager {
 
   private async initializeSession() {
     try {
-      await fetch('/api/log/session/init', {
+      console.log('🔄 Initializing session in database:', this.sessionId)
+      const response = await fetch('/api/log/session/init', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -48,8 +49,16 @@ export class SessionManager {
           phoneNumber: this.phoneNumber,
         }),
       })
+      
+      const data = await response.json()
+      
+      if (response.ok) {
+        console.log('✅ Session initialized successfully:', data)
+      } else {
+        console.error('❌ Session initialization failed:', data)
+      }
     } catch (error) {
-      console.error('Failed to initialize session:', error)
+      console.error('❌ Failed to initialize session:', error)
     }
   }
 
@@ -82,7 +91,8 @@ export class SessionManager {
   // Log an event
   async logEvent(eventType: string, eventData: any = {}) {
     try {
-      await fetch('/api/log/event', {
+      console.log(`📝 Logging event: ${eventType}, sessionId: ${this.sessionId}, userId: ${this.userId}`)
+      const response = await fetch('/api/log/event', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -93,8 +103,15 @@ export class SessionManager {
           timestamp: new Date().toISOString(),
         }),
       })
+      
+      if (!response.ok) {
+        const error = await response.json()
+        console.error(`❌ Failed to log event ${eventType}:`, error)
+      } else {
+        console.log(`✅ Event ${eventType} logged successfully`)
+      }
     } catch (error) {
-      console.error('Failed to log event:', error)
+      console.error('❌ Failed to log event:', error)
     }
   }
 
