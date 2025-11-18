@@ -134,6 +134,17 @@ export default function AnalyticsDashboard() {
     }
   }, [isAuthenticated]);
 
+  // Auto-refresh data every 30 seconds for live feed
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    
+    const interval = setInterval(() => {
+      fetchData();
+    }, 30000); // 30 seconds
+
+    return () => clearInterval(interval);
+  }, [isAuthenticated]);
+
   // Fetch user journey
   const fetchUserJourney = async (phone: string) => {
     if (!phone.trim()) return;
@@ -345,7 +356,21 @@ export default function AnalyticsDashboard() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Live Activity Feed */}
           <div className="bg-gray-900 rounded-xl p-6 border border-gray-800">
-            <h2 className="text-xl font-bold mb-4">🔥 Live Activity Feed</h2>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold">🔥 Live Activity Feed</h2>
+              <div className="flex items-center gap-3">
+                <span className="text-xs text-gray-500">
+                  Updated {lastUpdated.toLocaleTimeString()}
+                </span>
+                <button
+                  onClick={fetchData}
+                  disabled={loading}
+                  className="text-xs px-3 py-1 bg-gray-800 hover:bg-gray-700 rounded-lg border border-gray-700 transition-colors disabled:opacity-50"
+                >
+                  {loading ? '...' : '🔄 Refresh'}
+                </button>
+              </div>
+            </div>
             
             <div className="space-y-3 max-h-96 overflow-y-auto">
               {liveActivity.length === 0 ? (
