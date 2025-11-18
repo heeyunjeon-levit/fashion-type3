@@ -101,7 +101,8 @@ export async function GET() {
       
       clicks.forEach(click => {
         const phone = userMap.get(click.user_id);
-        if (phone && !excludedPhones.includes(phone) && !excludedUserIds.includes(click.user_id)) {
+        // Show all product clicks (including owner's) for monitoring
+        if (phone) {
           activities.push({
             id: `click-${click.id}`,
             type: 'click',
@@ -217,12 +218,12 @@ export async function GET() {
       .order('created_at', { ascending: false })
       .limit(50);
 
-    // Get all recent users to match by timestamp
+    // Get all recent users to match by timestamp (active OR created in last 24h)
     const { data: allRecentUsers } = await supabase
       .from('users')
       .select('id, phone_number, created_at, last_active_at')
-      .gte('created_at', new Date(Date.now() - 86400000).toISOString())
-      .order('created_at', { ascending: false});
+      .or(`created_at.gte.${new Date(Date.now() - 86400000).toISOString()},last_active_at.gte.${new Date(Date.now() - 86400000).toISOString()}`)
+      .order('last_active_at', { ascending: false, nullsFirst: false });
 
     // Group events by user to count searches per user
     const userSearchCounts = new Map<string, number>();
