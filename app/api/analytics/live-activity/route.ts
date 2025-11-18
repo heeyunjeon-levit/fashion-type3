@@ -337,8 +337,14 @@ export async function GET() {
       new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
     );
 
-    // Return top 40 most recent (to show more activity including anonymous uploads)
-    return NextResponse.json(activities.slice(0, 40));
+    // Return top 40 most recent with no-cache headers
+    return NextResponse.json(activities.slice(0, 40), {
+      headers: {
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      }
+    });
   } catch (error) {
     console.error('Live activity error:', error);
     return NextResponse.json(

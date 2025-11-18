@@ -105,18 +105,26 @@ export default function AnalyticsDashboard() {
     try {
       setLoading(true);
       
+      const timestamp = Date.now();
+      const fetchOptions = {
+        cache: 'no-store' as RequestCache,
+        headers: {
+          'Cache-Control': 'no-cache'
+        }
+      };
+      
       // Fetch metrics
-      const metricsRes = await fetch('/api/analytics/metrics');
+      const metricsRes = await fetch('/api/analytics/metrics?t=' + timestamp, fetchOptions);
       const metricsData = await metricsRes.json();
       setMetrics(metricsData);
 
       // Fetch top users
-      const usersRes = await fetch('/api/analytics/top-users');
+      const usersRes = await fetch('/api/analytics/top-users?t=' + timestamp, fetchOptions);
       const usersData = await usersRes.json();
       setTopUsers(usersData);
 
       // Fetch live activity
-      const activityRes = await fetch('/api/analytics/live-activity');
+      const activityRes = await fetch('/api/analytics/live-activity?t=' + timestamp, fetchOptions);
       const activityData = await activityRes.json();
       setLiveActivity(activityData);
 
@@ -131,10 +139,17 @@ export default function AnalyticsDashboard() {
   // Fetch only live activity (for auto-refresh, no loading state)
   const fetchLiveActivityOnly = async () => {
     try {
-      const activityRes = await fetch('/api/analytics/live-activity');
+      // Add cache-busting and force fresh data
+      const activityRes = await fetch('/api/analytics/live-activity?t=' + Date.now(), {
+        cache: 'no-store',
+        headers: {
+          'Cache-Control': 'no-cache'
+        }
+      });
       const activityData = await activityRes.json();
       setLiveActivity(activityData);
       setLastUpdated(new Date());
+      console.log('🔄 Live activity refreshed at', new Date().toLocaleTimeString());
     } catch (error) {
       console.error('Failed to fetch live activity:', error);
     }
