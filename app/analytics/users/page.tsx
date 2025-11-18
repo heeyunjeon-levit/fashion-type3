@@ -25,6 +25,16 @@ interface UserSummary {
   };
 }
 
+// Hash phone number for privacy-safe URLs
+async function hashPhone(phone: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(phone);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  return hashHex.substring(0, 16); // Use first 16 chars for shorter URL
+}
+
 export default function UsersAnalytics() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -37,6 +47,7 @@ export default function UsersAnalytics() {
   const [selectedUser, setSelectedUser] = useState<UserSummary | null>(null);
   const [userJourney, setUserJourney] = useState<any>(null);
   const [loadingJourney, setLoadingJourney] = useState(false);
+  const [phoneHashMap, setPhoneHashMap] = useState<Map<string, string>>(new Map());
 
   // Check password
   const handleLogin = () => {
@@ -77,11 +88,12 @@ export default function UsersAnalytics() {
   };
 
   // Handle user selection
-  const handleSelectUser = (user: UserSummary) => {
+  const handleSelectUser = async (user: UserSummary) => {
     setSelectedUser(user);
     fetchUserJourney(user.phone);
-    // Update URL with phone parameter (shareable link!)
-    router.push(`/analytics/users?phone=${encodeURIComponent(user.phone)}`, { scroll: false });
+    // Update URL with hashed user ID (privacy-safe shareable link!)
+    const hash = await hashPhone(user.phone);
+    router.push(`/analytics/users?u=${hash}`, { scroll: false });
   };
 
   // Fetch all users
@@ -95,17 +107,27 @@ export default function UsersAnalytics() {
         const data = await res.json();
         setUsers(data);
         
-        // Check if there's a phone parameter in URL
-        const phoneParam = searchParams.get('phone');
+        // Build hash map for all users (hash -> phone)
+        const hashMap = new Map<string, string>();
+        for (const user of data) {
+          const hash = await hashPhone(user.phone);
+          hashMap.set(hash, user.phone);
+        }
+        setPhoneHashMap(hashMap);
         
-        if (phoneParam && data.length > 0) {
-          // Try to find user from URL parameter
-          const userFromUrl = data.find((u: UserSummary) => u.phone === phoneParam);
+        // Check if there's a user hash parameter in URL
+        const userHashParam = searchParams.get('u');
+        
+        if (userHashParam && data.length > 0) {
+          // Try to find user from hashed URL parameter
+          const phoneNumber = hashMap.get(userHashParam);
+          const userFromUrl = phoneNumber ? data.find((u: UserSummary) => u.phone === phoneNumber) : null;
+          
           if (userFromUrl) {
             setSelectedUser(userFromUrl);
             fetchUserJourney(userFromUrl.phone);
           } else {
-            // Phone not found, select first user
+            // Hash not found, select first user
             setSelectedUser(data[0]);
             fetchUserJourney(data[0].phone);
           }
