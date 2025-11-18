@@ -157,12 +157,12 @@ export async function GET() {
       return created > oneDayAgo && f.name.startsWith('upload_');
     }) || [];
 
-    // Get users created around the same time as uploads
+    // Get users active in the last 24 hours (by last_active_at OR created_at)
     const { data: recentUsers } = await supabase
       .from('users')
-      .select('id, phone_number, created_at')
-      .gte('created_at', new Date(oneDayAgo).toISOString())
-      .order('created_at', { ascending: false });
+      .select('id, phone_number, created_at, last_active_at')
+      .or(`created_at.gte.${new Date(oneDayAgo).toISOString()},last_active_at.gte.${new Date(oneDayAgo).toISOString()}`)
+      .order('last_active_at', { ascending: false, nullsFirst: false });
 
     // Match uploads with users by timestamp (within 5 minutes)
     recentUploads.forEach(file => {
@@ -174,10 +174,12 @@ export async function GET() {
       const { data: { publicUrl } } = supabase.storage.from('images').getPublicUrl(file.name);
       const uploadTime = new Date(file.created_at).getTime();
       
-      // Find user created within 5 minutes of upload
+      // Find user active within 5 minutes of upload (check both created_at and last_active_at)
       const matchedUser = recentUsers?.find(user => {
-        const userTime = new Date(user.created_at).getTime();
-        return Math.abs(uploadTime - userTime) < 300000; // Within 5 minutes
+        const userCreateTime = new Date(user.created_at).getTime();
+        const userActiveTime = user.last_active_at ? new Date(user.last_active_at).getTime() : userCreateTime;
+        return Math.abs(uploadTime - userCreateTime) < 300000 || 
+               Math.abs(uploadTime - userActiveTime) < 300000; // Within 5 minutes
       });
       
       if (matchedUser) {
