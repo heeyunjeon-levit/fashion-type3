@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Update session with user info
-    await supabase
+    const { data: updatedSession } = await supabase
       .from('sessions')
       .update({
         user_id: userId,
@@ -51,6 +51,32 @@ export async function POST(request: NextRequest) {
         phone_collected_at: new Date().toISOString(),
       })
       .eq('session_id', sessionId)
+      .select('id')
+      .single()
+
+    // CRITICAL FIX: Backfill user_id on all events from this session
+    if (updatedSession) {
+      const { error: eventsUpdateError } = await supabase
+        .from('events')
+        .update({ user_id: userId })
+        .eq('session_id', updatedSession.id)
+      
+      if (eventsUpdateError) {
+        console.error('Failed to backfill events with user_id:', eventsUpdateError)
+      } else {
+        console.log(`✅ Backfilled user_id ${userId} on events for session ${sessionId}`)
+      }
+
+      // Also backfill user_id on link_clicks from this session
+      const { error: clicksUpdateError } = await supabase
+        .from('link_clicks')
+        .update({ user_id: userId })
+        .eq('session_id', updatedSession.id)
+      
+      if (clicksUpdateError) {
+        console.error('Failed to backfill clicks with user_id:', clicksUpdateError)
+      }
+    }
 
     return NextResponse.json({
       success: true,

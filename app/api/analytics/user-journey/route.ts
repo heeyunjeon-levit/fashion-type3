@@ -50,26 +50,36 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    // Get all events for this user
-    const userCreateTime = new Date(user.created_at).getTime();
-    const { data: allEvents } = await supabase
-      .from('events')
+    // Get sessions for this user first (primary source)
+    const { data: sessions } = await supabase
+      .from('sessions')
       .select('*')
+      .eq('phone_number', phone)
       .order('created_at', { ascending: false });
 
-    // Match events by timestamp (within 5 minutes of user creation or activity)
-    const userEvents = allEvents?.filter(e => {
-      const eventTime = new Date(e.created_at).getTime();
-      return Math.abs(eventTime - userCreateTime) < 300000 || 
-             Math.abs(eventTime - new Date(user.last_active_at).getTime()) < 300000;
-    }) || [];
+    // Get session UUIDs (events.session_id references sessions.id, NOT sessions.session_id!)
+    const sessionUUIDs = sessions?.map(s => s.id) || [];
 
-    // Get all product clicks
-    const { data: clicks } = await supabase
+    // Get events for this user (match by user_id OR session UUID)
+    const { data: allUserEvents } = await supabase
+      .from('events')
+      .select('*')
+      .order('created_at', { ascending: false});
+
+    // Filter events that belong to this user (by user_id or session UUID)
+    const userEvents = allUserEvents?.filter(e => 
+      e.user_id === user.id || sessionUUIDs.includes(e.session_id)
+    ) || [];
+
+    // Get all product clicks (match by user_id or session UUID)
+    const { data: allClicks } = await supabase
       .from('link_clicks')
       .select('*')
-      .eq('user_id', user.id)
       .order('clicked_at', { ascending: false });
+    
+    const clicks = allClicks?.filter(c => 
+      c.user_id === user.id || sessionUUIDs.includes(c.session_id)
+    ) || [];
 
     // Get result page visits
     const { data: resultVisits } = await supabase
@@ -92,17 +102,68 @@ export async function GET(request: Request) {
       .eq('phone_number', phone)
       .order('created_at', { ascending: false });
 
-    // Get image uploads from events table
-    const uploadEvents = userEvents.filter(e => e.event_type === 'image_upload');
+    // Get image uploads from events table (sessions already fetched above)
+    const uploadEvents = userEvents?.filter(e => e.event_type === 'image_upload') || [];
     const uploads = uploadEvents.map(e => ({
       url: e.event_data?.imageUrl || '',
       created_at: e.created_at
     }));
 
+    // ALSO get uploads from items_cropped events (newer pattern)
+    const croppedEvents = userEvents?.filter(e => e.event_type === 'items_cropped') || [];
+    croppedEvents.forEach(e => {
+      const items = e.event_data?.items || [];
+      items.forEach((item: any) => {
+        if (item.croppedImageUrl) {
+          const alreadyExists = uploads.some(u => u.url === item.croppedImageUrl);
+          if (!alreadyExists) {
+            uploads.push({
+              url: item.croppedImageUrl,
+              created_at: e.created_at
+            });
+          }
+        }
+      });
+    });
+
+    // ALSO get uploads from items_selected events (alternative pattern)
+    const selectedEvents = userEvents?.filter(e => e.event_type === 'items_selected') || [];
+    selectedEvents.forEach(e => {
+      const items = e.event_data?.items || [];
+      items.forEach((item: any) => {
+        if (item.croppedImageUrl) {
+          const alreadyExists = uploads.some(u => u.url === item.croppedImageUrl);
+          if (!alreadyExists) {
+            uploads.push({
+              url: item.croppedImageUrl,
+              created_at: e.created_at
+            });
+          }
+        }
+      });
+    });
+
+    // Also add uploads from sessions table (in case they weren't logged as events)
+    sessions?.forEach(session => {
+      if (session.uploaded_image_url && session.uploaded_at) {
+        // Check if this image isn't already in uploads (avoid duplicates)
+        const alreadyExists = uploads.some(u => u.url === session.uploaded_image_url);
+        if (!alreadyExists) {
+          uploads.push({
+            url: session.uploaded_image_url,
+            created_at: session.uploaded_at
+          });
+        }
+      }
+    });
+
     // Extract GPT product selections (what GPT selected)
-    const gptSelections = userEvents
+    const gptSelections: any[] = [];
+    
+    // Pattern 1: gpt_product_selection events (has reasoning with selectedLinks)
+    (userEvents || [])
       .filter(e => e.event_type === 'gpt_product_selection')
-      .map(e => {
+      .forEach(e => {
         const reasoning = e.event_data.reasoning || {};
         const items = Object.keys(reasoning);
         const itemDetails = items.map(itemKey => {
@@ -119,7 +180,7 @@ export async function GET(request: Request) {
           };
         });
 
-        return {
+        gptSelections.push({
           id: e.id,
           created_at: e.created_at,
           timeAgo: timeAgo(new Date(e.created_at)),
@@ -127,11 +188,36 @@ export async function GET(request: Request) {
           itemDetails,
           totalProducts: itemDetails.reduce((sum, item) => sum + item.productCount, 0),
           source: 'gpt_selection'
-        };
+        });
+      });
+    
+    // Pattern 2: items_selected events (has items array with category/description)
+    (userEvents || [])
+      .filter(e => e.event_type === 'items_selected')
+      .forEach(e => {
+        const items = e.event_data?.items || [];
+        if (items.length > 0) {
+          const itemDetails = items.map((item: any) => ({
+            category: item.category || 'unknown',
+            description: item.description || 'unknown item',
+            productCount: 0, // items_selected doesn't have product links yet
+            products: []
+          }));
+
+          gptSelections.push({
+            id: e.id,
+            created_at: e.created_at,
+            timeAgo: timeAgo(new Date(e.created_at)),
+            itemsDetected: items.length,
+            itemDetails,
+            totalProducts: 0,
+            source: 'items_selected'
+          });
+        }
       });
 
     // Extract FINAL RESULTS DISPLAYED (what user actually saw, including fallback)
-    const finalResults = userEvents
+    const finalResults = (userEvents || [])
       .filter(e => e.event_type === 'final_results_displayed')
       .map(e => {
         const displayed = e.event_data.displayedProducts || {};
