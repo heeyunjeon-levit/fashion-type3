@@ -102,48 +102,15 @@ export async function GET(request: Request) {
       .eq('phone_number', phone)
       .order('created_at', { ascending: false });
 
-    // Get image uploads from events table (sessions already fetched above)
+    // Get ONLY original image uploads (not cropped images)
+    // Only from image_upload events and sessions table
     const uploadEvents = userEvents?.filter(e => e.event_type === 'image_upload') || [];
     const uploads = uploadEvents.map(e => ({
       url: e.event_data?.imageUrl || '',
       created_at: e.created_at
     }));
 
-    // ALSO get uploads from items_cropped events (newer pattern)
-    const croppedEvents = userEvents?.filter(e => e.event_type === 'items_cropped') || [];
-    croppedEvents.forEach(e => {
-      const items = e.event_data?.items || [];
-      items.forEach((item: any) => {
-        if (item.croppedImageUrl) {
-          const alreadyExists = uploads.some(u => u.url === item.croppedImageUrl);
-          if (!alreadyExists) {
-            uploads.push({
-              url: item.croppedImageUrl,
-              created_at: e.created_at
-            });
-          }
-        }
-      });
-    });
-
-    // ALSO get uploads from items_selected events (alternative pattern)
-    const selectedEvents = userEvents?.filter(e => e.event_type === 'items_selected') || [];
-    selectedEvents.forEach(e => {
-      const items = e.event_data?.items || [];
-      items.forEach((item: any) => {
-        if (item.croppedImageUrl) {
-          const alreadyExists = uploads.some(u => u.url === item.croppedImageUrl);
-          if (!alreadyExists) {
-            uploads.push({
-              url: item.croppedImageUrl,
-              created_at: e.created_at
-            });
-          }
-        }
-      });
-    });
-
-    // Also add uploads from sessions table (in case they weren't logged as events)
+    // Also add uploads from sessions table (original uploaded image)
     sessions?.forEach(session => {
       if (session.uploaded_image_url && session.uploaded_at) {
         // Check if this image isn't already in uploads (avoid duplicates)
@@ -156,6 +123,9 @@ export async function GET(request: Request) {
         }
       }
     });
+
+    // NOTE: We intentionally DON'T include cropped images from items_cropped or items_selected
+    // Those are internal system artifacts, not user uploads
 
     // Extract GPT product selections (what GPT selected)
     const gptSelections: any[] = [];

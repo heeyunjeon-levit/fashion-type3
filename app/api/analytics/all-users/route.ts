@@ -63,22 +63,10 @@ export async function GET() {
       }
 
       // Count uploads from events
-      let uploadsFromEvents = 0;
-      const userUploadEvents = (userEvents || []).filter(e => 
-        e.event_type === 'image_upload' || 
-        e.event_type === 'items_cropped' || 
-        e.event_type === 'items_selected'
-      );
-      
-      userUploadEvents.forEach(e => {
-        if (e.event_type === 'image_upload') {
-          uploadsFromEvents += 1;
-        } else if (e.event_type === 'items_cropped' || e.event_type === 'items_selected') {
-          // Count number of items in the event
-          const items = e.event_data?.items || [];
-          uploadsFromEvents += items.length;
-        }
-      });
+      // Count ONLY original uploads (not cropped images)
+      const uploadsFromEvents = (userEvents || []).filter(e => 
+        e.event_type === 'image_upload'
+      ).length;
 
       const uploads = Math.max(uploadsFromEvents, uploadsFromSessions);
 
