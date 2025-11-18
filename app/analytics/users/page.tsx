@@ -425,7 +425,7 @@ function UserJourneyView({ user, journey }: { user: UserSummary; journey: any })
               <div className="text-yellow-400 text-4xl mb-3">⚠️</div>
               <div className="font-semibold mb-2">Legacy User - Incomplete Data</div>
               <div className="text-sm">
-                This user completed {journey.user.total_searches} search{journey.user.total_searches > 1 ? 'es' : ''} but events weren't logged.
+                This user completed {journey.user.total_searches} search{journey.user.total_searches > 1 ? 'es' : ''} but events weren&apos;t logged.
                 <br />
                 They used the app before comprehensive event tracking was implemented.
               </div>
