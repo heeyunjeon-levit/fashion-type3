@@ -71,15 +71,17 @@ export async function GET(request: Request) {
       e.user_id === user.id || sessionUUIDs.includes(e.session_id)
     ) || [];
 
-    // Get all product clicks (match by user_id or session UUID)
-    const { data: allClicks } = await supabase
-      .from('link_clicks')
-      .select('*')
-      .order('clicked_at', { ascending: false });
-    
-    const clicks = allClicks?.filter(c => 
-      c.user_id === user.id || sessionUUIDs.includes(c.session_id)
-    ) || [];
+    // Get product clicks ONLY from sessions matching this phone number
+    // Don't match by user_id alone - that would include clicks from other phone numbers
+    let clicks: any[] = [];
+    if (sessionUUIDs.length > 0) {
+      const { data } = await supabase
+        .from('link_clicks')
+        .select('*')
+        .in('session_id', sessionUUIDs)
+        .order('clicked_at', { ascending: false });
+      clicks = data || [];
+    }
 
     // Get result page visits
     const { data: resultVisits } = await supabase
