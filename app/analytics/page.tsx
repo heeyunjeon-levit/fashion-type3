@@ -100,7 +100,7 @@ export default function AnalyticsDashboard() {
     }
   }, []);
 
-  // Fetch data
+  // Fetch all data (used on initial load and manual refresh)
   const fetchData = async () => {
     try {
       setLoading(true);
@@ -128,18 +128,30 @@ export default function AnalyticsDashboard() {
     }
   };
 
+  // Fetch only live activity (for auto-refresh, no loading state)
+  const fetchLiveActivityOnly = async () => {
+    try {
+      const activityRes = await fetch('/api/analytics/live-activity');
+      const activityData = await activityRes.json();
+      setLiveActivity(activityData);
+      setLastUpdated(new Date());
+    } catch (error) {
+      console.error('Failed to fetch live activity:', error);
+    }
+  };
+
   useEffect(() => {
     if (isAuthenticated) {
       fetchData();
     }
   }, [isAuthenticated]);
 
-  // Auto-refresh data every 30 seconds for live feed
+  // Auto-refresh ONLY live activity every 30 seconds (no flicker)
   useEffect(() => {
     if (!isAuthenticated) return;
     
     const interval = setInterval(() => {
-      fetchData();
+      fetchLiveActivityOnly();
     }, 30000); // 30 seconds
 
     return () => clearInterval(interval);
