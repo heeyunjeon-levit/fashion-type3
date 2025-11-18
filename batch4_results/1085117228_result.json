@@ -1,0 +1,170 @@
+{
+  "phone": "1085117228",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763458689141_Screenshot_20251117_224414_Temu.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "black jacket",
+      "description": "black tailored jacket with brown lapels and gold buttons",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_black_jacket_1763458710684.jpg",
+      "confidence": 0.953
+    },
+    {
+      "category": "tops",
+      "groundingdino_prompt": "white shirt",
+      "description": "white button-up shirt with a classic collar",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_white_shirt_1763458720332.jpg",
+      "confidence": 0.71
+    },
+    {
+      "category": "bottoms",
+      "groundingdino_prompt": "blue jeans",
+      "description": "dark blue fitted jeans with a textured finish",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_blue_jeans_1763458728417.jpg",
+      "confidence": 0.71
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://meindl-fashion.de/en/produkt/deer-leather-jacket-women-ginger-old-black/",
+          "thumbnail": "https://meindl-fashion.de/wp-content/uploads/2022/01/Ginger-Da.-Jacket-saem.-Reh-406-altschwarz-6818A-406-190_VT.jpg",
+          "title": "Deer Leather Jacket Women “Ginger”, old black - Meindl Fashion"
+        },
+        {
+          "link": "https://www.amazon.com/Anne-Klein-Button-Front-Leather-Jacket-Black-S/dp/B0CKLYNGDB",
+          "thumbnail": "https://images-na.ssl-images-amazon.com/images/I/710Yk5+21TL._AC_UL600_SR600,600_.jpg",
+          "title": "Anne Klein Women's Button-Front Leather Jacket-Black-S at ..."
+        },
+        {
+          "link": "https://www.westleyrichards.com/meindl-ladies-leather-yukon-jacket",
+          "thumbnail": "https://www.westleyrichards.com/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/m/e/meindl_jackets-10112-edit.jpg",
+          "title": "Meindl - Ladies Leather Yukon Jacket"
+        }
+      ],
+      "tops_2": [
+        {
+          "link": "https://thefooddepartment.nl/products/5395646/",
+          "thumbnail": "https://di2ponv0v5otw.cloudfront.net/posts/2025/06/17/6851b280ff353a9e58a63358/m_wp_6851b29b49e17b86e92f834b.webp",
+          "title": "Brass and silver French Kande Comite necklace"
+        },
+        {
+          "link": "https://www.extasia.com/product-page/butterscotch-intaglio-statement-necklace",
+          "thumbnail": "https://static.wixstatic.com/media/ae3d40_5e64c6d918c045d7a3bdf93afea8e750~mv2.jpeg/v1/fit/w_500,h_500,q_90/file.jpg",
+          "title": "Butterscotch Intaglio Statement Necklace | Extasia Jewelry"
+        },
+        {
+          "link": "https://www.urbanoutfitters.com/shop/ravello-ring-pendant-cord-necklace?color=070",
+          "thumbnail": "https://images.urbndata.com/is/image/UrbanOutfitters/97774491_070_b?$xlarge$&fit=constrain&qlt=80&wid=640",
+          "title": "Ravello Ring Pendant Cord Necklace | Urban Outfitters"
+        }
+      ],
+      "bottoms_3": [
+        {
+          "link": "https://www.inven.co.kr/board/webzine/2097/458723",
+          "thumbnail": "https://upload2.inven.co.kr/upload/2015/09/30/bbs/i13597614994.png?MW=800",
+          "title": "여자들이 혐오하는 남자패션 10 | 웹진 인벤"
+        },
+        {
+          "link": "https://www.asiae.co.kr/article/2015032116411637126&mobile=Y",
+          "thumbnail": "https://cphoto.asiae.co.kr/listimglink/1/2015032116411637126_1.jpg",
+          "title": "잔티젠, 홍경천 주원료로 한 '트리플슬림400' 롯데 홈쇼핑 론칭 - 아시아경제"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 1,
+        "fallback": 2,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "bottoms_3": {
+          "itemDescription": "item3 blue jeans",
+          "searchTerms": [
+            "item3 blue jeans",
+            "shorts",
+            "slacks",
+            "pants",
+            "trousers",
+            "jeans",
+            "skirt",
+            "leg trousers"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-18T09:39:08.559Z",
+          "candidateCount": 29
+        },
+        "tops_2": {
+          "itemDescription": "item2 white shirt",
+          "searchTerms": [
+            "item2 white shirt",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-18T09:39:09.074Z",
+          "candidateCount": 30
+        },
+        "tops_1": {
+          "itemDescription": "item1 black jacket",
+          "searchTerms": [
+            "item1 black jacket",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://meindl-fashion.de/en/produkt/deer-leather-jacket-women-ginger-old-black/",
+              "title": "Deer Leather Jacket Women “Ginger”, old black - Meindl Fashion",
+              "thumbnail": "https://meindl-fashion.de/wp-content/uploads/2022/01/Ginger-Da.-Jacket-saem.-Reh-406-altschwarz-6818A-406-190_VT.jpg"
+            },
+            {
+              "link": "https://www.amazon.com/Anne-Klein-Button-Front-Leather-Jacket-Black-S/dp/B0CKLYNGDB",
+              "title": "Anne Klein Women's Button-Front Leather Jacket-Black-S at ...",
+              "thumbnail": "https://images-na.ssl-images-amazon.com/images/I/710Yk5+21TL._AC_UL600_SR600,600_.jpg"
+            },
+            {
+              "link": "https://www.westleyrichards.com/meindl-ladies-leather-yukon-jacket",
+              "title": "Meindl - Ladies Leather Yukon Jacket",
+              "thumbnail": "https://www.westleyrichards.com/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/m/e/meindl_jackets-10112-edit.jpg"
+            }
+          ],
+          "timestamp": "2025-11-18T09:39:15.039Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 7.7,
+        "per_category_search_seconds": 18.23,
+        "gpt4_turbo_api_time_seconds": 7.25,
+        "processing_overhead_seconds": 0.01,
+        "other_overhead_seconds": -7.25,
+        "wall_clock_seconds": 25.94,
+        "serper_api_time_seconds": 34.95,
+        "serper_count": 3,
+        "gpt4_turbo_count": 3,
+        "total_seconds": 25.94,
+        "categories_parallel": 3
+      }
+    }
+  },
+  "status": "success"
+}

@@ -1,0 +1,137 @@
+{
+  "phone": "1039450882",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763456959692_IMG_4568.jpg",
+  "items": [
+    {
+      "category": "bottoms",
+      "groundingdino_prompt": "red striped outfit",
+      "description": "red and white striped long sleeve onesie with green cuffs and matching pants",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_red_striped_outfit_1763456977404.jpg",
+      "confidence": 0.715
+    },
+    {
+      "category": "accessory",
+      "groundingdino_prompt": "white hat",
+      "description": "white hat with red pom-pom and brown antlers",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_white_hat_1763456985935.jpg",
+      "confidence": 0.627
+    }
+  ],
+  "search_results": {
+    "results": {
+      "bottoms_1": [
+        {
+          "link": "https://www.etsy.com/listing/563129968/elf-costume-3-6-mo-45t-santas-little",
+          "thumbnail": "https://i.etsystatic.com/5350345/r/il/30378e/1363801722/il_570xN.1363801722_4dyo.jpg",
+          "title": "Elf Costume, 3-6 Mo ~ 4/5T Santa's Little Helper Christmas Outfit, Red&white Stripe Hoodie AND Harem Pants, Elf Outfit, Christmas Pajamas - Etsy"
+        },
+        {
+          "link": "https://objectuu.com/products/baby-elf-pajamas",
+          "thumbnail": "https://objectuu.com/cdn/shop/files/rtjhSff9b17aec11147608df70674f5bd3467K_2400x.jpg?v=1729825153",
+          "title": "Baby Elf Pajamas – OBJECTUU"
+        },
+        {
+          "link": "https://www.aliexpress.com/i/1005009501933716.html",
+          "thumbnail": "https://ae01.alicdn.com/kf/Scd91583939e7453a9f4c90678caff76cG.jpg",
+          "title": "Toddler Infant Baby Girls Christmas Striped Cotton Footed ..."
+        }
+      ],
+      "accessory_2": [
+        {
+          "link": "https://www.coupang.com/vp/products/7704605995",
+          "thumbnail": "https://image.coupangcdn.com/image/vendor_inventory/6735/06b49a7ca3e23d08a428e68f2d39918c820ad5ab304638ab475565ca7046.jpg",
+          "title": "겨울 신생아 아기 보넷 모자 - 퐁퐁이보넷 - 잡화 | 쿠팡"
+        },
+        {
+          "link": "https://ettoimall.com/product/에뜨와-겨울스노우보넷cream/2809/",
+          "thumbnail": "https://ecimg.cafe24img.com/pg1870b34287294029/ettoimall/web/product/big/20250916/8db24bb252b0fcd2429e71fe57fcbb96.jpg",
+          "title": "에뜨와 겨울]스노우보넷(CREAM) - 에뜨와몰"
+        },
+        {
+          "link": "https://www.taobao.com/list/product/小丑帽子黄金.htm",
+          "thumbnail": "https://img.alicdn.com/imgextra/i3/2219776031198/O1CN01iJ7xbg1KijZnNWmFO_!!4611686018427386334-0-item_pic.jpg_q50s50.jpg",
+          "title": "小丑帽子黄金- Top 1000件小丑帽子黄金- 2025年11月更新- Taobao"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 1,
+        "fallback": 1,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "accessory_2": {
+          "itemDescription": "item2 white hat",
+          "searchTerms": [
+            "item2 white hat",
+            "accessory",
+            "jewelry",
+            "watch",
+            "necklace",
+            "earrings",
+            "bracelet",
+            "ring",
+            "hat",
+            "cap",
+            "beanie",
+            "belt",
+            "scarf",
+            "sunglasses"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-18T09:10:23.615Z",
+          "candidateCount": 29
+        },
+        "bottoms_1": {
+          "itemDescription": "item1 red striped outfit",
+          "searchTerms": [
+            "item1 red striped outfit",
+            "shorts",
+            "slacks",
+            "pants",
+            "trousers",
+            "jeans",
+            "skirt",
+            "leg trousers"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.etsy.com/listing/563129968/elf-costume-3-6-mo-45t-santas-little",
+              "title": "Elf Costume, 3-6 Mo ~ 4/5T Santa's Little Helper Christmas Outfit, Red&white Stripe Hoodie AND Harem Pants, Elf Outfit, Christmas Pajamas - Etsy",
+              "thumbnail": "https://i.etsystatic.com/5350345/r/il/30378e/1363801722/il_570xN.1363801722_4dyo.jpg"
+            },
+            {
+              "link": "https://objectuu.com/products/baby-elf-pajamas",
+              "title": "Baby Elf Pajamas – OBJECTUU",
+              "thumbnail": "https://objectuu.com/cdn/shop/files/rtjhSff9b17aec11147608df70674f5bd3467K_2400x.jpg?v=1729825153"
+            },
+            {
+              "link": "https://www.aliexpress.com/i/1005009501933716.html",
+              "title": "Toddler Infant Baby Girls Christmas Striped Cotton Footed ...",
+              "thumbnail": "https://ae01.alicdn.com/kf/Scd91583939e7453a9f4c90678caff76cG.jpg"
+            }
+          ],
+          "timestamp": "2025-11-18T09:10:31.948Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 22.71,
+        "per_category_search_seconds": 22.09,
+        "gpt4_turbo_api_time_seconds": 5.72,
+        "processing_overhead_seconds": 0.01,
+        "other_overhead_seconds": -5.72,
+        "wall_clock_seconds": 44.81,
+        "serper_api_time_seconds": 30.11,
+        "serper_count": 2,
+        "gpt4_turbo_count": 2,
+        "total_seconds": 44.81,
+        "categories_parallel": 2
+      }
+    }
+  },
+  "status": "success"
+}

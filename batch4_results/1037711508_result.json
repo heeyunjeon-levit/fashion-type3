@@ -1,0 +1,182 @@
+{
+  "phone": "1037711508",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763456162941_Screenshot_20251117_133349.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "beige jacket",
+      "description": "beige quilted puffer jacket with a button-up front and oversized fit",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_beige_jacket_1763456182168.jpg",
+      "confidence": 0.806
+    },
+    {
+      "category": "bottoms",
+      "groundingdino_prompt": "gray skirt",
+      "description": "gray pleated midi skirt with a ribbed texture",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_gray_skirt_1763456190590.jpg",
+      "confidence": 0.75
+    },
+    {
+      "category": "bag",
+      "groundingdino_prompt": "black bag",
+      "description": "small black round handbag with a silver chain strap",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_black_bag_1763456199337.jpg",
+      "confidence": 0.508
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://www.dailytee.co.kr/goods/goods_view.php?goodsNo=1000001316",
+          "thumbnail": "https://godomall.speedycdn.net/9b6a1925f166adca31fbc221b55f6731/goods/1000001316/image/detail/1000001316_detail_093.jpg",
+          "title": "경량 패딩 웰론 누빔 자켓 깔깔이 집업 퀼팅 점퍼 URPJ-003"
+        },
+        {
+          "link": "https://www.coupang.com/vp/products/6768399432?itemId=15884521370&vendorItemId=83092899660",
+          "thumbnail": "https://image.coupangcdn.com/image/vendor_inventory/b9aa/253caf45d451b9f0aa75ce7bc3b6ba7cc34322179320836cccc042e762e0.jpg",
+          "title": "깅엄 패딩 여성 겨울 패딩 점퍼 3J120 - 아우터류 | 쿠팡"
+        }
+      ],
+      "bottoms_2": [
+        {
+          "link": "https://cottonholic.com/product/블리스-폴라-울-니트투피스/1007/",
+          "thumbnail": "https://ecimg.cafe24img.com/pg667b80404296028/cottonholic1/web/product/extra/big/20241114/f2c07db23724e4ccae10aa2c838cdf14.jpg",
+          "title": "블리스 폴라 울 니트투피스 - cottonholic"
+        },
+        {
+          "link": "https://baddiary.com/product/퍼카라-스트링-웰론-패딩퍼탈착가능/28783",
+          "thumbnail": "https://baddiary.com/web/page3/251029ou_s_17.jpg",
+          "title": "악녀일기 | 퍼카라 스트링 웰론 패딩"
+        },
+        {
+          "link": "https://www.daangn.com/kr/buy-sell/아이보리-오리털패딩-wzwcw3sexn7m/",
+          "thumbnail": "https://img.kr.gcp-karroter.net/origin/article/202510/60bc079ff7f9075976ca53a76f6e8d9f383819bb1280807ad9b1d75616babb1e_0.webp?f=webp&q=95&s=1440x1440&t=inside",
+          "title": "아이보리 오리털패딩 | 여성의류 | 당근 중고거래"
+        }
+      ],
+      "bag_3": [
+        {
+          "link": "https://www.farfetch.com/uz/shopping/women/chanel-pre-owned-2002-2003-faux-fur-shoulder-bag-item-23037454.aspx",
+          "thumbnail": "https://cdn-images.farfetch-contents.com/23/03/74/54/23037454_53243037_1000.jpg",
+          "title": "CHANEL Pre-Owned 2002-2003 faux-fur Shoulder Bag | Black | FARFETCH UZ"
+        },
+        {
+          "link": "https://poshmark.com/listing/CHANEL-Chain-Shoulder-Bag-Black-CC-6826d54ee48e8658a1898eda",
+          "thumbnail": "https://di2ponv0v5otw.cloudfront.net/posts/2025/05/15/6826d54ee48e8658a1898eda/s_wp_6826d5e6a9a448dd3b9aebf7.webp",
+          "title": "CHANEL | Bags | Chanel Chain Shoulder Bag Black Cc | Poshmark"
+        },
+        {
+          "link": "https://nuir-vintage.com/en/products/chanel-chain-rabbit-fur-silver-coco-mark-shoulder-bag-black-ws11952",
+          "thumbnail": "https://nuir-vintage.com/cdn/shop/files/WS11952-4_178f25e9-8435-46a6-b794-9ee8789fcb6e_large.jpg?v=1737771445",
+          "title": "Chanel Chain Rabbit Fur Silver Coco Mark Shoulder Bag Black WS11952 – NUIR VINTAGE"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 2,
+        "fallback": 1,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "bag_3": {
+          "itemDescription": "item3 black bag",
+          "searchTerms": [
+            "item3 black bag",
+            "bag",
+            "backpack",
+            "handbag",
+            "tote bag",
+            "purse",
+            "clutch",
+            "messenger bag",
+            "shoulder bag",
+            "wallet"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.farfetch.com/uz/shopping/women/chanel-pre-owned-2002-2003-faux-fur-shoulder-bag-item-23037454.aspx",
+              "title": "CHANEL Pre-Owned 2002-2003 faux-fur Shoulder Bag | Black | FARFETCH UZ",
+              "thumbnail": "https://cdn-images.farfetch-contents.com/23/03/74/54/23037454_53243037_1000.jpg"
+            },
+            {
+              "link": "https://poshmark.com/listing/CHANEL-Chain-Shoulder-Bag-Black-CC-6826d54ee48e8658a1898eda",
+              "title": "CHANEL | Bags | Chanel Chain Shoulder Bag Black Cc | Poshmark",
+              "thumbnail": "https://di2ponv0v5otw.cloudfront.net/posts/2025/05/15/6826d54ee48e8658a1898eda/s_wp_6826d5e6a9a448dd3b9aebf7.webp"
+            },
+            {
+              "link": "https://nuir-vintage.com/en/products/chanel-chain-rabbit-fur-silver-coco-mark-shoulder-bag-black-ws11952",
+              "title": "Chanel Chain Rabbit Fur Silver Coco Mark Shoulder Bag Black WS11952 – NUIR VINTAGE",
+              "thumbnail": "https://nuir-vintage.com/cdn/shop/files/WS11952-4_178f25e9-8435-46a6-b794-9ee8789fcb6e_large.jpg?v=1737771445"
+            }
+          ],
+          "timestamp": "2025-11-18T08:56:59.451Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        },
+        "tops_1": {
+          "itemDescription": "item1 beige jacket",
+          "searchTerms": [
+            "item1 beige jacket",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.dailytee.co.kr/goods/goods_view.php?goodsNo=1000001316",
+              "title": "경량 패딩 웰론 누빔 자켓 깔깔이 집업 퀼팅 점퍼 URPJ-003",
+              "thumbnail": "https://godomall.speedycdn.net/9b6a1925f166adca31fbc221b55f6731/goods/1000001316/image/detail/1000001316_detail_093.jpg"
+            },
+            {
+              "link": "https://www.coupang.com/vp/products/6768399432?itemId=15884521370&vendorItemId=83092899660",
+              "title": "깅엄 패딩 여성 겨울 패딩 점퍼 3J120 - 아우터류 | 쿠팡",
+              "thumbnail": "https://image.coupangcdn.com/image/vendor_inventory/b9aa/253caf45d451b9f0aa75ce7bc3b6ba7cc34322179320836cccc042e762e0.jpg"
+            }
+          ],
+          "timestamp": "2025-11-18T08:57:06.476Z",
+          "candidateCount": 30,
+          "selectionCount": 2
+        },
+        "bottoms_2": {
+          "itemDescription": "item2 gray skirt",
+          "searchTerms": [
+            "item2 gray skirt",
+            "shorts",
+            "slacks",
+            "pants",
+            "trousers",
+            "jeans",
+            "skirt",
+            "leg trousers"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-18T08:57:09.320Z",
+          "candidateCount": 30
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 9.91,
+        "per_category_search_seconds": 19.56,
+        "gpt4_turbo_api_time_seconds": 8.9,
+        "processing_overhead_seconds": 0,
+        "other_overhead_seconds": -8.9,
+        "wall_clock_seconds": 29.48,
+        "serper_api_time_seconds": 37.04,
+        "serper_count": 3,
+        "gpt4_turbo_count": 3,
+        "total_seconds": 29.48,
+        "categories_parallel": 3
+      }
+    }
+  },
+  "status": "success"
+}

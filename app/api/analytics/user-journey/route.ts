@@ -33,21 +33,56 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    // Get user info
-    const { data: user } = await supabase
+    // Get user info (may not exist for batch users who only visited result page)
+    const { data: existingUser } = await supabase
       .from('users')
       .select('*')
       .eq('phone_number', phone)
-      .single();
-
-    if (!user) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 });
-    }
+      .maybeSingle();
 
     // Double-check user ID exclusion
     const excludedUserIds = ['fc878118-43dd-4363-93cf-d31e453df81e'];
-    if (excludedUserIds.includes(user.id)) {
+    if (existingUser && excludedUserIds.includes(existingUser.id)) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
+    // Create synthetic batch user if doesn't exist in users table
+    let user = existingUser;
+    
+    if (!user) {
+      // Batch user - hasn't used main app yet, but may have visited result page or given feedback
+      const { data: firstVisit } = await supabase
+        .from('result_page_visits')
+        .select('*')
+        .eq('phone_number', phone)
+        .order('visit_timestamp', { ascending: true })
+        .limit(1)
+        .single();
+      
+      const { data: firstFeedback } = await supabase
+        .from('user_feedback')
+        .select('*')
+        .eq('phone_number', phone)
+        .order('created_at', { ascending: true })
+        .limit(1)
+        .single();
+      
+      const firstActivity = firstVisit?.visit_timestamp || firstFeedback?.created_at;
+      
+      if (!firstActivity) {
+        return NextResponse.json({ error: 'User not found' }, { status: 404 });
+      }
+      
+      // Create synthetic user object
+      user = {
+        id: `batch_${phone}`,
+        phone_number: phone,
+        created_at: firstActivity,
+        last_active_at: firstActivity,
+        total_searches: 0,
+        conversion_source: null,
+        country_code: null
+      };
     }
 
     // Get sessions for this user first (primary source)
@@ -61,15 +96,33 @@ export async function GET(request: Request) {
     const sessionUUIDs = sessions?.map(s => s.id) || [];
 
     // Get events for this user (match by user_id OR session UUID)
-    const { data: allUserEvents } = await supabase
-      .from('events')
-      .select('*')
-      .order('created_at', { ascending: false});
+    // For batch users (synthetic ID), only match by sessions
+    const isBatchUser = user.id.toString().startsWith('batch_');
+    
+    let userEvents: any[] = [];
+    
+    if (isBatchUser) {
+      // Batch user - only get events from their sessions (if any)
+      if (sessionUUIDs.length > 0) {
+        const { data } = await supabase
+          .from('events')
+          .select('*')
+          .in('session_id', sessionUUIDs)
+          .order('created_at', { ascending: false});
+        userEvents = data || [];
+      }
+    } else {
+      // Real user - match by user_id OR session UUID
+      const { data: allUserEvents } = await supabase
+        .from('events')
+        .select('*')
+        .order('created_at', { ascending: false});
 
-    // Filter events that belong to this user (by user_id or session UUID)
-    const userEvents = allUserEvents?.filter(e => 
-      e.user_id === user.id || sessionUUIDs.includes(e.session_id)
-    ) || [];
+      // Filter events that belong to this user (by user_id or session UUID)
+      userEvents = allUserEvents?.filter(e => 
+        e.user_id === user.id || sessionUUIDs.includes(e.session_id)
+      ) || [];
+    }
 
     // Get product clicks ONLY from sessions matching this phone number
     // Don't match by user_id alone - that would include clicks from other phone numbers

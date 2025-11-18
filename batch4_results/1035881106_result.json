@@ -1,0 +1,208 @@
+{
+  "phone": "1035881106",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763457768947_Screenshot_20251117_223742_NAVER.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "beige jacket",
+      "description": "beige shearling jacket with a cropped fit and button closure",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_beige_jacket_1763457789729.jpg",
+      "confidence": 0.938
+    },
+    {
+      "category": "bottoms",
+      "groundingdino_prompt": "blue jeans",
+      "description": "blue denim jeans with a straight leg cut",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_blue_jeans_1763457797911.jpg",
+      "confidence": 0.852
+    },
+    {
+      "category": "shoes",
+      "groundingdino_prompt": "black shoes",
+      "description": "black leather pointed-toe shoes",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_black_shoes_1763457805437.jpg",
+      "confidence": 0.826
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://4910.kr/goods/54139913",
+          "thumbnail": "https://shoplex-image.gcdn.ntruss.com/product/102511/mCZfSFYkr6.jpg",
+          "title": "자라 리버서블 무스탕 테크니컬 하이넥 자켓 6318/254 CAMEL ..."
+        },
+        {
+          "link": "https://www.zara.com/sa/en/reversible-double-faced-jacket-p06318254.html",
+          "thumbnail": "https://static.zara.net/assets/public/2e90/0c7e/dc9f4f35bc39/d4ad4c6353ec/06318254704-a2/06318254704-a2.jpg?ts=1758618996417",
+          "title": "REVERSIBLE DOUBLE-FACED JACKET - camel | ZARA Saudi Arabia"
+        },
+        {
+          "link": "https://24thspoke.in/products/sherpa-reversible-double-faced-jacket",
+          "thumbnail": "http://24thspoke.in/cdn/shop/files/rn-image_picker_lib_temp_596f94fd-2430-4673-92da-6cc6fe340fac.jpg?v=1760335668",
+          "title": "Sherpa Reversible Double Faced Jacket – 24th Spoke"
+        }
+      ],
+      "bottoms_2": [
+        {
+          "link": "https://www.zara.com/us/en/z1975-mid-rise-seam-flare-jeans-p07223224.html",
+          "thumbnail": "https://static.zara.net/assets/public/0b76/7423/72374977a027/7b0eeccbb9f9/07223224445-a1/07223224445-a1.jpg?ts=1758205074402",
+          "title": "Z1975 MID-RISE SEAM FLARE JEANS - Blue / Green | ZARA United States"
+        },
+        {
+          "link": "https://www2.hm.com/en_us/productpage.1276764001.html",
+          "thumbnail": "https://image.hm.com/assets/hm/62/f4/62f4a694ce19dadd936248e535ab37ec5f98faba.jpg",
+          "title": "Flared High Jeans - Light denim blue - Ladies | H&M US"
+        },
+        {
+          "link": "https://www.amazon.com/-/es/Denim-Vaqueros-Mujer-Pantalón-Pierna/dp/B0BGVTQQGH",
+          "thumbnail": "https://images-na.ssl-images-amazon.com/images/I/51eXwFUomuL._AC_UL600_SR600,600_.jpg",
+          "title": "Amazon.com: Rock & Roll Denim Vaqueros para Mujer y Pantalón Pierna Azul 28W x 38L, Azul : Ropa, Zapatos y Joyería"
+        }
+      ],
+      "shoes_3": [
+        {
+          "link": "https://fruitsfamily.com/product/3epwx/정품-구찌구두265",
+          "thumbnail": "https://image.production.fruitsfamily.com/public/product/resized@width1125/6Sa0VBHIoj-C96A37F5-F57D-4051-8298-2276E0B0DA27.jpg",
+          "title": "정품)구찌구두265 | 후루츠패밀리"
+        },
+        {
+          "link": "https://m.bunjang.co.kr/products/270340784",
+          "thumbnail": "https://media.bunjang.co.kr/product/270340784_7_1717812433_w360.jpg",
+          "title": "소다 블랙 구두 230 | 브랜드 중고거래 플랫폼, 번개장터"
+        },
+        {
+          "link": "https://fruitsfamily.com/product/3vd2d/닥터마틴-슈프림-1461-260사이즈-판매-및-교환원함-270연락주세오",
+          "thumbnail": "https://image.production.fruitsfamily.com/public/product/resized@width1125/zDMV56bBqL-54DD7A54-CCFC-4967-825B-6A2A30DDA346.jpg",
+          "title": "닥터마틴 슈프림 1461 260사이즈 판매 및 교환원함(270연락주세오) | 후루츠패밀리"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 3,
+        "fallback": 0,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "bottoms_2": {
+          "itemDescription": "item2 blue jeans",
+          "searchTerms": [
+            "item2 blue jeans",
+            "shorts",
+            "slacks",
+            "pants",
+            "trousers",
+            "jeans",
+            "skirt",
+            "leg trousers"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.zara.com/us/en/z1975-mid-rise-seam-flare-jeans-p07223224.html",
+              "title": "Z1975 MID-RISE SEAM FLARE JEANS - Blue / Green | ZARA United States",
+              "thumbnail": "https://static.zara.net/assets/public/0b76/7423/72374977a027/7b0eeccbb9f9/07223224445-a1/07223224445-a1.jpg?ts=1758205074402"
+            },
+            {
+              "link": "https://www2.hm.com/en_us/productpage.1276764001.html",
+              "title": "Flared High Jeans - Light denim blue - Ladies | H&M US",
+              "thumbnail": "https://image.hm.com/assets/hm/62/f4/62f4a694ce19dadd936248e535ab37ec5f98faba.jpg"
+            },
+            {
+              "link": "https://www.amazon.com/-/es/Denim-Vaqueros-Mujer-Pantalón-Pierna/dp/B0BGVTQQGH",
+              "title": "Amazon.com: Rock & Roll Denim Vaqueros para Mujer y Pantalón Pierna Azul 28W x 38L, Azul : Ropa, Zapatos y Joyería",
+              "thumbnail": "https://images-na.ssl-images-amazon.com/images/I/51eXwFUomuL._AC_UL600_SR600,600_.jpg"
+            }
+          ],
+          "timestamp": "2025-11-18T09:23:46.907Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        },
+        "shoes_3": {
+          "itemDescription": "item3 black shoes",
+          "searchTerms": [
+            "item3 black shoes",
+            "shoes",
+            "sneakers",
+            "boots",
+            "sandals",
+            "heels",
+            "flats",
+            "loafers",
+            "oxford"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://fruitsfamily.com/product/3epwx/정품-구찌구두265",
+              "title": "정품)구찌구두265 | 후루츠패밀리",
+              "thumbnail": "https://image.production.fruitsfamily.com/public/product/resized@width1125/6Sa0VBHIoj-C96A37F5-F57D-4051-8298-2276E0B0DA27.jpg"
+            },
+            {
+              "link": "https://m.bunjang.co.kr/products/270340784",
+              "title": "소다 블랙 구두 230 | 브랜드 중고거래 플랫폼, 번개장터",
+              "thumbnail": "https://media.bunjang.co.kr/product/270340784_7_1717812433_w360.jpg"
+            },
+            {
+              "link": "https://fruitsfamily.com/product/3vd2d/닥터마틴-슈프림-1461-260사이즈-판매-및-교환원함-270연락주세오",
+              "title": "닥터마틴 슈프림 1461 260사이즈 판매 및 교환원함(270연락주세오) | 후루츠패밀리",
+              "thumbnail": "https://image.production.fruitsfamily.com/public/product/resized@width1125/zDMV56bBqL-54DD7A54-CCFC-4967-825B-6A2A30DDA346.jpg"
+            }
+          ],
+          "timestamp": "2025-11-18T09:23:49.769Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        },
+        "tops_1": {
+          "itemDescription": "item1 beige jacket",
+          "searchTerms": [
+            "item1 beige jacket",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://4910.kr/goods/54139913",
+              "title": "자라 리버서블 무스탕 테크니컬 하이넥 자켓 6318/254 CAMEL ...",
+              "thumbnail": "https://shoplex-image.gcdn.ntruss.com/product/102511/mCZfSFYkr6.jpg"
+            },
+            {
+              "link": "https://www.zara.com/sa/en/reversible-double-faced-jacket-p06318254.html",
+              "title": "REVERSIBLE DOUBLE-FACED JACKET - camel | ZARA Saudi Arabia",
+              "thumbnail": "https://static.zara.net/assets/public/2e90/0c7e/dc9f4f35bc39/d4ad4c6353ec/06318254704-a2/06318254704-a2.jpg?ts=1758618996417"
+            },
+            {
+              "link": "https://24thspoke.in/products/sherpa-reversible-double-faced-jacket",
+              "title": "Sherpa Reversible Double Faced Jacket – 24th Spoke",
+              "thumbnail": "http://24thspoke.in/cdn/shop/files/rn-image_picker_lib_temp_596f94fd-2430-4673-92da-6cc6fe340fac.jpg?v=1760335668"
+            }
+          ],
+          "timestamp": "2025-11-18T09:23:55.184Z",
+          "candidateCount": 29,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 9.1,
+        "per_category_search_seconds": 20.22,
+        "gpt4_turbo_api_time_seconds": 11.3,
+        "processing_overhead_seconds": 0.01,
+        "other_overhead_seconds": -11.3,
+        "wall_clock_seconds": 29.33,
+        "serper_api_time_seconds": 35.64,
+        "serper_count": 3,
+        "gpt4_turbo_count": 3,
+        "total_seconds": 29.33,
+        "categories_parallel": 3
+      }
+    }
+  },
+  "status": "success"
+}

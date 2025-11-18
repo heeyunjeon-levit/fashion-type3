@@ -11,18 +11,70 @@ export async function GET() {
     // Exclude owner's phone numbers
     const excludedPhones = ['01090848563', '821090848563'];
 
-    // Get all users
+    // Get all users from users table
     const { data: users } = await supabase
       .from('users')
       .select('*')
       .order('last_active_at', { ascending: false });
 
-    if (!users) {
-      return NextResponse.json([]);
-    }
+    // ALSO get batch users (from result_page_visits and user_feedback)
+    const { data: resultVisits } = await supabase
+      .from('result_page_visits')
+      .select('phone_number, visit_timestamp')
+      .order('visit_timestamp', { ascending: false });
+
+    const { data: feedbacks } = await supabase
+      .from('user_feedback')
+      .select('phone_number, created_at')
+      .order('created_at', { ascending: false });
+
+    // Collect all unique phone numbers (users + batch users)
+    const allPhoneNumbers = new Set<string>();
+    
+    // Add users from users table
+    users?.forEach(u => allPhoneNumbers.add(u.phone_number));
+    
+    // Add batch users from result_page_visits
+    resultVisits?.forEach(v => {
+      if (v.phone_number && !excludedPhones.includes(v.phone_number)) {
+        allPhoneNumbers.add(v.phone_number);
+      }
+    });
+    
+    // Add batch users from user_feedback
+    feedbacks?.forEach(f => {
+      if (f.phone_number && !excludedPhones.includes(f.phone_number)) {
+        allPhoneNumbers.add(f.phone_number);
+      }
+    });
+
+    // Create user objects for all phone numbers
+    const allUsers = Array.from(allPhoneNumbers).map(phoneNumber => {
+      // Find existing user or create synthetic batch user
+      const existingUser = users?.find(u => u.phone_number === phoneNumber);
+      
+      if (existingUser) {
+        return existingUser;
+      }
+      
+      // Synthetic batch user (hasn't used main app yet)
+      const firstVisit = resultVisits?.find(v => v.phone_number === phoneNumber);
+      const firstFeedback = feedbacks?.find(f => f.phone_number === phoneNumber);
+      const firstActivity = firstVisit?.visit_timestamp || firstFeedback?.created_at || new Date().toISOString();
+      
+      return {
+        id: `batch_${phoneNumber}`, // Synthetic ID
+        phone_number: phoneNumber,
+        created_at: firstActivity,
+        last_active_at: firstActivity,
+        total_searches: 0,
+        conversion_source: null,
+        country_code: null
+      };
+    });
 
     // Filter out excluded users
-    const filteredUsers = users.filter(u => 
+    const filteredUsers = allUsers.filter(u => 
       !excludedPhones.includes(u.phone_number) &&
       u.id !== 'fc878118-43dd-4363-93cf-d31e453df81e'
     );

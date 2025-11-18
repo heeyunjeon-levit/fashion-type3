@@ -100,3 +100,4 @@ WHERE u.norm_phone IN (SELECT norm_phone FROM normalized_batch)
   AND u.phone_number != '01048545690'  -- Exclude the button convert
 ORDER BY COALESCE(lc.clicks, 0) DESC;
 
+

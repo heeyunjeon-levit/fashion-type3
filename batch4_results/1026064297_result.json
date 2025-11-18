@@ -1,0 +1,76 @@
+{
+  "phone": "1026064297",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763457500787_IMG_8038.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "red coat",
+      "description": "red hooded coat with white polka dots and white trim, featuring a tie closure",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_red_coat_1763457525931.jpg",
+      "confidence": 0.576
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://dancinggrandma.co.kr/dancinggrandma_Restock",
+          "thumbnail": "https://cdn-optimized.imweb.me/upload/S20240709e963451a0c549/fd41c04df0d1c.jpg",
+          "title": "댄싱그랜마 DANCING GRANDMA"
+        },
+        {
+          "link": "https://www.aliexpress.com/item/1005007119445522.html",
+          "thumbnail": "https://ae01.alicdn.com/kf/Sf48ff815832b4f11a98c118808e6eb56E.jpg",
+          "title": "Girls' Polka Dot Summer Beautiful Cute Hooded Jacket ..."
+        },
+        {
+          "link": "https://www.meesho.com/sweater-for-baby-boy-and-girl-in-cherry-red-colour-with-stylish-design-trending-sweater-this-sweater-is-comfortable-for-baby-girls-and-boys-in-soft-and-acrylic-wool-febric-western-wear-trending-sweater/p/9rpr1a",
+          "thumbnail": "https://images.meesho.com/images/products/590746654/w2pbu_512.jpg",
+          "title": "Sweater for baby boy and girl in cherry red colour with ..."
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 0,
+        "fallback": 1,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "tops_1": {
+          "itemDescription": "item1 red coat",
+          "searchTerms": [
+            "item1 red coat",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-18T09:19:20.543Z",
+          "candidateCount": 5
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 21.69,
+        "per_category_search_seconds": 11.02,
+        "gpt4_turbo_api_time_seconds": 1.21,
+        "processing_overhead_seconds": 0,
+        "other_overhead_seconds": -1.21,
+        "wall_clock_seconds": 32.71,
+        "serper_api_time_seconds": 9.8,
+        "serper_count": 1,
+        "gpt4_turbo_count": 1,
+        "total_seconds": 32.71,
+        "categories_parallel": 1
+      }
+    }
+  },
+  "status": "success"
+}

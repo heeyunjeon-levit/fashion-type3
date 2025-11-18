@@ -33,3 +33,4 @@ LEFT JOIN users u ON normalize_phone(rpv.phone_number) = normalize_phone(u.phone
 WHERE u.id IS NOT NULL  -- Only those who joined the app
 ORDER BY u.conversion_source, u.phone_number;
 
+

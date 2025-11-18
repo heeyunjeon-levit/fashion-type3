@@ -1,0 +1,191 @@
+{
+  "phone": "1092864378",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763460391116_Screenshot_20251017_201416_Instagram.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "gray hoodie",
+      "description": "oversized gray zip-up hoodie with a hood and front pockets",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_gray_hoodie_1763460407923.jpg",
+      "confidence": 0.833
+    },
+    {
+      "category": "bottoms",
+      "groundingdino_prompt": "black leggings",
+      "description": "tight-fitting black leggings",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_black_leggings_1763460416561.jpg",
+      "confidence": 0.401
+    },
+    {
+      "category": "shoes",
+      "groundingdino_prompt": "black boots",
+      "description": "black ankle boots with a thick white sole",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_black_boots_1763460424662.jpg",
+      "confidence": 0.739
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://www.musinsa.com/products/4290815",
+          "thumbnail": "https://image.msscdn.net/images/prd_img/202408231611556135399784166c8363b95cab.jpg",
+          "title": "디그노루시르(DIGNOLUCIR) 레터링 오버핏 기모 후드집업(gray ..."
+        },
+        {
+          "link": "https://zigzag.kr/catalog/products/157583044",
+          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/c/15/758/304/157583044-5854269326995225167.jpeg?width=720&height=720&quality=80&format=jpeg",
+          "title": "다루리 루리 기본 여성 후드집업 (2Color)"
+        },
+        {
+          "link": "https://m.bokplace.com/product/4color기모안감-오버핏-박시-데일리-무지-후드집업/247/",
+          "thumbnail": "https://ecimg.cafe24img.com/pg160b49951219002/chajiyoon21/web/product/big/20221026/2dbf31f6d7b11f9490c9be55a8c1fd24.gif",
+          "title": "4Color]기모안감 오버핏 박시 데일리 무지 후드집업 | BOK PLACE"
+        }
+      ],
+      "bottoms_2": [
+        {
+          "link": "https://www.dhgate.com/product/large-capacity-knitted-handbags-polyester/1018352638.html",
+          "thumbnail": "https://img4.dhresource.com/webp/m/0x0/f3/albu/jc/g/10/5164bdf9-5920-4880-980d-0794ae4e3027.jpg",
+          "title": "Large Capacity Knitted Handbags Polyester Casual Tote Woven Shoulder Bag Handle Women Ladies Daily Handbag Contrast Color 240910 From Camebag, $11.34 | DHgate.Com"
+        },
+        {
+          "link": "https://www.alibaba.com/product-detail/Minimalist-Large-Capacity-Women-s-Tote_1601403287396.html",
+          "thumbnail": "https://s.alicdn.com/@sc04/kf/H8ff6a23546c34cb8a61c6db53fd5d4294.jpg",
+          "title": "Minimalist Large Capacity Women's Tote Bag Fashion Letter Graphic Crochet Satchel Shoulder Knitted Handbag Downtown Overnight| Alibaba.com"
+        },
+        {
+          "link": "https://he.aliexpress.com/item/1005009124583291.html",
+          "thumbnail": "https://ae01.alicdn.com/kf/Sd00758589d2e4205954a8ddce74b75a2R.jpg",
+          "title": "X90D Casual Knitted Shoulder Bag Top-handle Tote Bag Handbag for Women Lady Girl - AliExpress"
+        }
+      ],
+      "shoes_3": [
+        {
+          "link": "https://www.amazon.com/YDYCG-Autumn-Stretch-Fabrics-Increasing/dp/B09MTVTYGR",
+          "thumbnail": "https://m.media-amazon.com/images/I/61cI9xGPkML._AC_UF350,350_QL80_.jpg",
+          "title": "Amazon.com: YDYCG Women Autumn Winter Casual Long Boots Stretch Fabrics Over The Knee Boots Snow Boots Height Increasing Round Toe Women Shoes (Color : Black, Shoe Size : 5) : Clothing, Shoes & Jewelry"
+        },
+        {
+          "link": "https://www.ebay.com/itm/356710052021",
+          "thumbnail": "https://i.ebayimg.com/images/g/mGEAAOSwhlBlSaIP/s-l400.png",
+          "title": "NEW FITFLOP BLACK F-MODE SUEDE PLATFORM CHELSEA BOOTS ..."
+        },
+        {
+          "link": "https://www.ssg.com/item/itemView.ssg?itemId=1000566439123",
+          "thumbnail": "https://cyzang.speedgabia.com/shoes4/JD9001_17.jpg",
+          "title": "잭앤질X메이듀 천연소가죽 턴업 니트부츠(JD9001) - SSG.COM"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 2,
+        "fallback": 1,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "bottoms_2": {
+          "itemDescription": "item2 black leggings",
+          "searchTerms": [
+            "item2 black leggings",
+            "shorts",
+            "slacks",
+            "pants",
+            "trousers",
+            "jeans",
+            "skirt",
+            "leg trousers"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-18T10:07:21.157Z",
+          "candidateCount": 30
+        },
+        "shoes_3": {
+          "itemDescription": "item3 black boots",
+          "searchTerms": [
+            "item3 black boots",
+            "shoes",
+            "sneakers",
+            "boots",
+            "sandals",
+            "heels",
+            "flats",
+            "loafers",
+            "oxford"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.amazon.com/YDYCG-Autumn-Stretch-Fabrics-Increasing/dp/B09MTVTYGR",
+              "title": "Amazon.com: YDYCG Women Autumn Winter Casual Long Boots Stretch Fabrics Over The Knee Boots Snow Boots Height Increasing Round Toe Women Shoes (Color : Black, Shoe Size : 5) : Clothing, Shoes & Jewelry",
+              "thumbnail": "https://m.media-amazon.com/images/I/61cI9xGPkML._AC_UF350,350_QL80_.jpg"
+            },
+            {
+              "link": "https://www.ebay.com/itm/356710052021",
+              "title": "NEW FITFLOP BLACK F-MODE SUEDE PLATFORM CHELSEA BOOTS ...",
+              "thumbnail": "https://i.ebayimg.com/images/g/mGEAAOSwhlBlSaIP/s-l400.png"
+            },
+            {
+              "link": "https://www.ssg.com/item/itemView.ssg?itemId=1000566439123",
+              "title": "잭앤질X메이듀 천연소가죽 턴업 니트부츠(JD9001) - SSG.COM",
+              "thumbnail": "https://cyzang.speedgabia.com/shoes4/JD9001_17.jpg"
+            }
+          ],
+          "timestamp": "2025-11-18T10:07:27.752Z",
+          "candidateCount": 15,
+          "selectionCount": 3
+        },
+        "tops_1": {
+          "itemDescription": "item1 gray hoodie",
+          "searchTerms": [
+            "item1 gray hoodie",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.musinsa.com/products/4290815",
+              "title": "디그노루시르(DIGNOLUCIR) 레터링 오버핏 기모 후드집업(gray ...",
+              "thumbnail": "https://image.msscdn.net/images/prd_img/202408231611556135399784166c8363b95cab.jpg"
+            },
+            {
+              "link": "https://zigzag.kr/catalog/products/157583044",
+              "title": "다루리 루리 기본 여성 후드집업 (2Color)",
+              "thumbnail": "https://cf.product-image.s.zigzag.kr/original/c/15/758/304/157583044-5854269326995225167.jpeg?width=720&height=720&quality=80&format=jpeg"
+            },
+            {
+              "link": "https://m.bokplace.com/product/4color기모안감-오버핏-박시-데일리-무지-후드집업/247/",
+              "title": "4Color]기모안감 오버핏 박시 데일리 무지 후드집업 | BOK PLACE",
+              "thumbnail": "https://ecimg.cafe24img.com/pg160b49951219002/chajiyoon21/web/product/big/20221026/2dbf31f6d7b11f9490c9be55a8c1fd24.gif"
+            }
+          ],
+          "timestamp": "2025-11-18T10:07:36.268Z",
+          "candidateCount": 26,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 8.51,
+        "per_category_search_seconds": 22.02,
+        "gpt4_turbo_api_time_seconds": 8.2,
+        "processing_overhead_seconds": 0.01,
+        "other_overhead_seconds": -8.2,
+        "wall_clock_seconds": 30.54,
+        "serper_api_time_seconds": 34.19,
+        "serper_count": 3,
+        "gpt4_turbo_count": 3,
+        "total_seconds": 30.54,
+        "categories_parallel": 3
+      }
+    }
+  },
+  "status": "success"
+}

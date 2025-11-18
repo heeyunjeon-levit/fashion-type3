@@ -62,3 +62,4 @@ FROM link_clicks lc
 JOIN normalized_users u ON lc.user_id::text = u.id::text
 WHERE u.norm_phone IN (SELECT norm_phone FROM normalized_batch);
 
+

@@ -1,0 +1,208 @@
+{
+  "phone": "1048309321",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763458059465_Screenshot_20251117_223840.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "gray hoodie",
+      "description": "light gray hoodie with black lettering on the front and a relaxed fit",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_gray_hoodie_1763458077824.jpg",
+      "confidence": 0.609
+    },
+    {
+      "category": "bottoms",
+      "groundingdino_prompt": "gray pants",
+      "description": "light gray jogger pants with elastic cuffs and a comfortable fit",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_gray_pants_1763458084632.jpg",
+      "confidence": 0.755
+    },
+    {
+      "category": "shoes",
+      "groundingdino_prompt": "white shoes",
+      "description": "white sneakers with black accents and a casual style",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_white_shoes_1763458091380.jpg",
+      "confidence": 0.711
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://www.farfetch.com/bn/shopping/women/ami-paris-logo-print-organic-cotton-hoodie-item-18036828.aspx",
+          "thumbnail": "https://cdn-images.farfetch-contents.com/18/03/68/28/18036828_41554744_300.jpg",
+          "title": "AMI Paris logo-print Organic Cotton Hoodie | Grey | FARFETCH BN"
+        },
+        {
+          "link": "https://www2.hm.com/en_us/productpage.1262263001.html",
+          "thumbnail": "https://image.hm.com/assets/hm/cf/5c/cf5cec0b4ea852e705cc4b3c86149ef7ff4bddb7.jpg?imwidth=768",
+          "title": "Text-Motif Hoodie - Light gray melange/Paris - Ladies | H&M US"
+        },
+        {
+          "link": "https://www.ssense.com/en-ae/women/product/ami-alexandre-mattiussi/gray-ami-paris-hoodie/16253411",
+          "thumbnail": "https://img.ssensemedia.com/images/242482F097003_1/ami-alexandre-mattiussi-gray-ami-paris-hoodie.jpg",
+          "title": "Gray 'Ami Paris' Hoodie by AMI Paris on Sale"
+        }
+      ],
+      "bottoms_2": [
+        {
+          "link": "https://www.ssg.com/item/itemView.ssg?itemId=1000628115587",
+          "thumbnail": "https://fabstyle1.godohosting.com/product/Isabelmarant/24FW/PA0105FA A3L75E 02LY/2.jpg",
+          "title": "이자벨마랑 여성 키라 조거팬츠 라이트그레이 PA0105FA A3L75E ..."
+        },
+        {
+          "link": "https://www.amazon.sa/-/en/Calvin-Klein-Jeans-INSTITUTIONAL-Pants/dp/B0C6R4YDJ4",
+          "thumbnail": "https://m.media-amazon.com/images/I/31AWw7qrSSL._SY350_QL15_.jpg",
+          "title": "Calvin Klein Jeans Men INSTITUTIONAL HWK PANT Knit Pants ..."
+        },
+        {
+          "link": "https://www.amazon.com/URBANJ-Fleece-Jogger-Sweatpants-Active/dp/B07XQ341FF",
+          "thumbnail": "https://m.media-amazon.com/images/I/518LHgyhAUL._AC_UY1000_.jpg",
+          "title": "Amazon.com: URBANJ Men's Heavyweight Baggy Sweatpants Loose ..."
+        }
+      ],
+      "shoes_3": [
+        {
+          "link": "https://www.feelway.com/gv_Off_White_4270604673.html",
+          "thumbnail": "https://img020.feelway.com/4270/bd258pd4270604673ed3.jpg?cd=1757170800",
+          "title": "오프화이트 에로우 런웨이 HG러너 블랙 화이트 | Off White : 스니커즈 : fW4270604673 - 명품의 가치를 더하다 : 필웨이"
+        },
+        {
+          "link": "https://www.something4u.kr/goods/goods_view.php?goodsNo=1000005247",
+          "thumbnail": "https://mblogthumb-phinf.pstatic.net/MjAyMzA0MDZfMjMg/MDAxNjgwNzUxMDU3MzM2.gdt4t44R54gnou49B_4tZO0dYo1WH7r3x5XLp-MIZZ8g.zh3fVNylJolG3--cfkrWChgAxs5xhkQM82pM9P-NADEg.JPEG.junpark5114/thumb04.jpg?type=w800",
+          "title": "골든구스 RUNNING-SOLE 레더 크리스탈 스타 여성 스니커즈 WB"
+        },
+        {
+          "link": "https://www.balaan.co.kr/products/62641576",
+          "thumbnail": "https://i.balaan.io/images/3e/3e5557/3e555796f2c6ce80aac66c195f5c1dce1f6fad5b3be9ea18e84da24bdea61203.jpg",
+          "title": "발란｜BALAAN"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 3,
+        "fallback": 0,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "shoes_3": {
+          "itemDescription": "item3 white shoes",
+          "searchTerms": [
+            "item3 white shoes",
+            "shoes",
+            "sneakers",
+            "boots",
+            "sandals",
+            "heels",
+            "flats",
+            "loafers",
+            "oxford"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.feelway.com/gv_Off_White_4270604673.html",
+              "title": "오프화이트 에로우 런웨이 HG러너 블랙 화이트 | Off White : 스니커즈 : fW4270604673 - 명품의 가치를 더하다 : 필웨이",
+              "thumbnail": "https://img020.feelway.com/4270/bd258pd4270604673ed3.jpg?cd=1757170800"
+            },
+            {
+              "link": "https://www.something4u.kr/goods/goods_view.php?goodsNo=1000005247",
+              "title": "골든구스 RUNNING-SOLE 레더 크리스탈 스타 여성 스니커즈 WB",
+              "thumbnail": "https://mblogthumb-phinf.pstatic.net/MjAyMzA0MDZfMjMg/MDAxNjgwNzUxMDU3MzM2.gdt4t44R54gnou49B_4tZO0dYo1WH7r3x5XLp-MIZZ8g.zh3fVNylJolG3--cfkrWChgAxs5xhkQM82pM9P-NADEg.JPEG.junpark5114/thumb04.jpg?type=w800"
+            },
+            {
+              "link": "https://www.balaan.co.kr/products/62641576",
+              "title": "발란｜BALAAN",
+              "thumbnail": "https://i.balaan.io/images/3e/3e5557/3e555796f2c6ce80aac66c195f5c1dce1f6fad5b3be9ea18e84da24bdea61203.jpg"
+            }
+          ],
+          "timestamp": "2025-11-18T09:28:25.381Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        },
+        "tops_1": {
+          "itemDescription": "item1 gray hoodie",
+          "searchTerms": [
+            "item1 gray hoodie",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.farfetch.com/bn/shopping/women/ami-paris-logo-print-organic-cotton-hoodie-item-18036828.aspx",
+              "title": "AMI Paris logo-print Organic Cotton Hoodie | Grey | FARFETCH BN",
+              "thumbnail": "https://cdn-images.farfetch-contents.com/18/03/68/28/18036828_41554744_300.jpg"
+            },
+            {
+              "link": "https://www2.hm.com/en_us/productpage.1262263001.html",
+              "title": "Text-Motif Hoodie - Light gray melange/Paris - Ladies | H&M US",
+              "thumbnail": "https://image.hm.com/assets/hm/cf/5c/cf5cec0b4ea852e705cc4b3c86149ef7ff4bddb7.jpg?imwidth=768"
+            },
+            {
+              "link": "https://www.ssense.com/en-ae/women/product/ami-alexandre-mattiussi/gray-ami-paris-hoodie/16253411",
+              "title": "Gray 'Ami Paris' Hoodie by AMI Paris on Sale",
+              "thumbnail": "https://img.ssensemedia.com/images/242482F097003_1/ami-alexandre-mattiussi-gray-ami-paris-hoodie.jpg"
+            }
+          ],
+          "timestamp": "2025-11-18T09:28:31.414Z",
+          "candidateCount": 22,
+          "selectionCount": 3
+        },
+        "bottoms_2": {
+          "itemDescription": "item2 gray pants",
+          "searchTerms": [
+            "item2 gray pants",
+            "shorts",
+            "slacks",
+            "pants",
+            "trousers",
+            "jeans",
+            "skirt",
+            "leg trousers"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.ssg.com/item/itemView.ssg?itemId=1000628115587",
+              "title": "이자벨마랑 여성 키라 조거팬츠 라이트그레이 PA0105FA A3L75E ...",
+              "thumbnail": "https://fabstyle1.godohosting.com/product/Isabelmarant/24FW/PA0105FA A3L75E 02LY/2.jpg"
+            },
+            {
+              "link": "https://www.amazon.sa/-/en/Calvin-Klein-Jeans-INSTITUTIONAL-Pants/dp/B0C6R4YDJ4",
+              "title": "Calvin Klein Jeans Men INSTITUTIONAL HWK PANT Knit Pants ...",
+              "thumbnail": "https://m.media-amazon.com/images/I/31AWw7qrSSL._SY350_QL15_.jpg"
+            },
+            {
+              "link": "https://www.amazon.com/URBANJ-Fleece-Jogger-Sweatpants-Active/dp/B07XQ341FF",
+              "title": "Amazon.com: URBANJ Men's Heavyweight Baggy Sweatpants Loose ...",
+              "thumbnail": "https://m.media-amazon.com/images/I/518LHgyhAUL._AC_UY1000_.jpg"
+            }
+          ],
+          "timestamp": "2025-11-18T09:28:33.159Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 5.26,
+        "per_category_search_seconds": 15.92,
+        "gpt4_turbo_api_time_seconds": 10.31,
+        "processing_overhead_seconds": 0.07,
+        "other_overhead_seconds": -10.31,
+        "wall_clock_seconds": 21.25,
+        "serper_api_time_seconds": 27.87,
+        "serper_count": 3,
+        "gpt4_turbo_count": 3,
+        "total_seconds": 21.25,
+        "categories_parallel": 3
+      }
+    }
+  },
+  "status": "success"
+}

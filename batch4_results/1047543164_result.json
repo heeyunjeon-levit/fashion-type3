@@ -1,0 +1,83 @@
+{
+  "phone": "1047543164",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763460005376_Screenshot_20251118_063742.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "gray cardigan",
+      "description": "dark gray knit cardigan with colorful floral embroidery and wooden buttons",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_gray_cardigan_1763460022211.jpg",
+      "confidence": 0.908
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://danefae.dk/products/danefondue-wool-cardigan-blue-grey",
+          "thumbnail": "http://danefae.dk/cdn/shop/files/Danefae_LADIES_STUDIO_FW24-574.jpg?v=1712131678",
+          "title": "Danefondue Wool Cardigan Blue Grey – Danefæ"
+        },
+        {
+          "link": "https://www.broraonline.com/uk/wool-fair-isle-yoke-cardigan-charcoal-slc9003gh2157",
+          "thumbnail": "https://brora.sirv.com/media/catalog/product/s/l/slc9003_gh2157_3.jpg",
+          "title": "Charcoal Women's Wool Fair Isle Yoke Cardigan | Brora UK"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 1,
+        "fallback": 0,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "tops_1": {
+          "itemDescription": "item1 gray cardigan",
+          "searchTerms": [
+            "item1 gray cardigan",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://danefae.dk/products/danefondue-wool-cardigan-blue-grey",
+              "title": "Danefondue Wool Cardigan Blue Grey – Danefæ",
+              "thumbnail": "http://danefae.dk/cdn/shop/files/Danefae_LADIES_STUDIO_FW24-574.jpg?v=1712131678"
+            },
+            {
+              "link": "https://www.broraonline.com/uk/wool-fair-isle-yoke-cardigan-charcoal-slc9003gh2157",
+              "title": "Charcoal Women's Wool Fair Isle Yoke Cardigan | Brora UK",
+              "thumbnail": "https://brora.sirv.com/media/catalog/product/s/l/slc9003_gh2157_3.jpg"
+            }
+          ],
+          "timestamp": "2025-11-18T10:00:47.856Z",
+          "candidateCount": 23,
+          "selectionCount": 2
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 12.74,
+        "per_category_search_seconds": 11.02,
+        "gpt4_turbo_api_time_seconds": 3.51,
+        "processing_overhead_seconds": 0.01,
+        "other_overhead_seconds": -3.51,
+        "wall_clock_seconds": 23.77,
+        "serper_api_time_seconds": 7.5,
+        "serper_count": 1,
+        "gpt4_turbo_count": 1,
+        "total_seconds": 23.77,
+        "categories_parallel": 1
+      }
+    }
+  },
+  "status": "success"
+}

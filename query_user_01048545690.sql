@@ -74,3 +74,4 @@ SELECT
 FROM app_page_visits
 WHERE referrer LIKE '%48545690%' AND clicked_search = true;
 
+

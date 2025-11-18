@@ -1,0 +1,721 @@
+{
+  "batch": "batch4",
+  "timestamp": "20251118_191938",
+  "total_processed": 89,
+  "successful": 89,
+  "failed": 0,
+  "results": [
+    {
+      "phone": "1072747575",
+      "status": "success",
+      "items_detected": 2,
+      "total_links": 6,
+      "hashed_id": "45922aed8f81",
+      "link": "https://fashionsource.vercel.app/results/45922aed8f81.html"
+    },
+    {
+      "phone": "1096789935",
+      "status": "success",
+      "items_detected": 2,
+      "total_links": 4,
+      "hashed_id": "6da1092462c4",
+      "link": "https://fashionsource.vercel.app/results/6da1092462c4.html"
+    },
+    {
+      "phone": "1020622894",
+      "status": "success",
+      "items_detected": 3,
+      "total_links": 9,
+      "hashed_id": "43a1c07888ff",
+      "link": "https://fashionsource.vercel.app/results/43a1c07888ff.html"
+    },
+    {
+      "phone": "1033940466",
+      "status": "success",
+      "items_detected": 1,
+      "total_links": 3,
+      "hashed_id": "b1d113df2e2d",
+      "link": "https://fashionsource.vercel.app/results/b1d113df2e2d.html"
+    },
+    {
+      "phone": "1027082516",
+      "status": "success",
+      "items_detected": 1,
+      "total_links": 0,
+      "hashed_id": "7401b75389ad",
+      "link": "https://fashionsource.vercel.app/results/7401b75389ad.html"
+    },
+    {
+      "phone": "1028600976",
+      "status": "success",
+      "items_detected": 4,
+      "total_links": 12,
+      "hashed_id": "e2f60a4efe19",
+      "link": "https://fashionsource.vercel.app/results/e2f60a4efe19.html"
+    },
+    {
+      "phone": "1062674266",
+      "status": "success",
+      "items_detected": 1,
+      "total_links": 3,
+      "hashed_id": "0e5bb98f5960",
+      "link": "https://fashionsource.vercel.app/results/0e5bb98f5960.html"
+    },
+    {
+      "phone": "1041469934",
+      "status": "success",
+      "items_detected": 3,
+      "total_links": 9,
+      "hashed_id": "4148badf1229",
+      "link": "https://fashionsource.vercel.app/results/4148badf1229.html"
+    },
+    {
+      "phone": "1024691099",
+      "status": "success",
+      "items_detected": 1,
+      "total_links": 1,
+      "hashed_id": "b0878a5e940d",
+      "link": "https://fashionsource.vercel.app/results/b0878a5e940d.html"
+    },
+    {
+      "phone": "1037711508",
+      "status": "success",
+      "items_detected": 3,
+      "total_links": 8,
+      "hashed_id": "abbbc695aab7",
+      "link": "https://fashionsource.vercel.app/results/abbbc695aab7.html"
+    },
+    {
+      "phone": "1099299909",
+      "status": "success",
+      "items_detected": 1,
+      "total_links": 3,
+      "hashed_id": "4b1d39c290f7",
+      "link": "https://fashionsource.vercel.app/results/4b1d39c290f7.html"
+    },
+    {
+      "phone": "1062817190",
+      "status": "success",
+      "items_detected": 1,
+      "total_links": 3,
+      "hashed_id": "b9de1ee3645e",
+      "link": "https://fashionsource.vercel.app/results/b9de1ee3645e.html"
+    },
+    {
+      "phone": "1095833136",
+      "status": "success",
+      "items_detected": 1,
+      "total_links": 3,
+      "hashed_id": "6818af4e31a7",
+      "link": "https://fashionsource.vercel.app/results/6818af4e31a7.html"
+    },
+    {
+      "phone": "1067784238",
+      "status": "success",
+      "items_detected": 2,
+      "total_links": 5,
+      "hashed_id": "106bb837fc74",
+      "link": "https://fashionsource.vercel.app/results/106bb837fc74.html"
+    },
+    {
+      "phone": "1040556207",
+      "status": "success",
+      "items_detected": 3,
+      "total_links": 9,
+      "hashed_id": "820174942eb1",
+      "link": "https://fashionsource.vercel.app/results/820174942eb1.html"
+    },
+    {
+      "phone": "1082882364",
+      "status": "success",
+      "items_detected": 3,
+      "total_links": 8,
+      "hashed_id": "d8875650e7a1",
+      "link": "https://fashionsource.vercel.app/results/d8875650e7a1.html"
+    },
+    {
+      "phone": "1065448754",
+      "status": "success",
+      "items_detected": 1,
+      "total_links": 3,
+      "hashed_id": "f33ae69c2fad",
+      "link": "https://fashionsource.vercel.app/results/f33ae69c2fad.html"
+    },
+    {
+      "phone": "1066586577",
+      "status": "success",
+      "items_detected": 3,
+      "total_links": 9,
+      "hashed_id": "84b9271991a2",
+      "link": "https://fashionsource.vercel.app/results/84b9271991a2.html"
+    },
+    {
+      "phone": "1041046493",
+      "status": "success",
+      "items_detected": 2,
+      "total_links": 6,
+      "hashed_id": "d0930170a904",
+      "link": "https://fashionsource.vercel.app/results/d0930170a904.html"
+    },
+    {
+      "phone": "1045247039",
+      "status": "success",
+      "items_detected": 1,
+      "total_links": 3,
+      "hashed_id": "0e01cb09a798",
+      "link": "https://fashionsource.vercel.app/results/0e01cb09a798.html"
+    },
+    {
+      "phone": "1057981633",
+      "status": "success",
+      "items_detected": 2,
+      "total_links": 6,
+      "hashed_id": "4f87122600cb",
+      "link": "https://fashionsource.vercel.app/results/4f87122600cb.html"
+    },
+    {
+      "phone": "1092077226",
+      "status": "success",
+      "items_detected": 2,
+      "total_links": 4,
+      "hashed_id": "dc6d6ffd7ef8",
+      "link": "https://fashionsource.vercel.app/results/dc6d6ffd7ef8.html"
+    },
+    {
+      "phone": "1039450882",
+      "status": "success",
+      "items_detected": 2,
+      "total_links": 6,
+      "hashed_id": "d17f494548f9",
+      "link": "https://fashionsource.vercel.app/results/d17f494548f9.html"
+    },
+    {
+      "phone": "1066236990",
+      "status": "success",
+      "items_detected": 3,
+      "total_links": 7,
+      "hashed_id": "4e4e05f69359",
+      "link": "https://fashionsource.vercel.app/results/4e4e05f69359.html"
+    },
+    {
+      "phone": "1084460419",
+      "status": "success",
+      "items_detected": 0,
+      "total_links": 0,
+      "hashed_id": "022957040169",
+      "link": "https://fashionsource.vercel.app/results/022957040169.html"
+    },
+    {
+      "phone": "1085123569",
+      "status": "success",
+      "items_detected": 3,
+      "total_links": 7,
+      "hashed_id": "3db0147e0d8f",
+      "link": "https://fashionsource.vercel.app/results/3db0147e0d8f.html"
+    },
+    {
+      "phone": "1033623030",
+      "status": "success",
+      "items_detected": 1,
+      "total_links": 3,
+      "hashed_id": "7adcfe8618ef",
+      "link": "https://fashionsource.vercel.app/results/7adcfe8618ef.html"
+    },
+    {
+      "phone": "1063799098",
+      "status": "success",
+      "items_detected": 4,
+      "total_links": 11,
+      "hashed_id": "b9e2710b737e",
+      "link": "https://fashionsource.vercel.app/results/b9e2710b737e.html"
+    },
+    {
+      "phone": "1091921620",
+      "status": "success",
+      "items_detected": 2,
+      "total_links": 6,
+      "hashed_id": "8c499b4906f7",
+      "link": "https://fashionsource.vercel.app/results/8c499b4906f7.html"
+    },
+    {
+      "phone": "1022827140",
+      "status": "success",
+      "items_detected": 2,
+      "total_links": 6,
+      "hashed_id": "ec59920cbdff",
+      "link": "https://fashionsource.vercel.app/results/ec59920cbdff.html"
+    },
+    {
+      "phone": "1026064297",
+      "status": "success",
+      "items_detected": 1,
+      "total_links": 3,
+      "hashed_id": "b97e6b39e524",
+      "link": "https://fashionsource.vercel.app/results/b97e6b39e524.html"
+    },
+    {
+      "phone": "1028464746",
+      "status": "success",
+      "items_detected": 3,
+      "total_links": 8,
+      "hashed_id": "cda9405f33f9",
+      "link": "https://fashionsource.vercel.app/results/cda9405f33f9.html"
+    },
+    {
+      "phone": "1033990176",
+      "status": "success",
+      "items_detected": 2,
+      "total_links": 4,
+      "hashed_id": "4c7faf8eefbc",
+      "link": "https://fashionsource.vercel.app/results/4c7faf8eefbc.html"
+    },
+    {
+      "phone": "1089947666",
+      "status": "success",
+      "items_detected": 2,
+      "total_links": 6,
+      "hashed_id": "f1a0487cc7f3",
+      "link": "https://fashionsource.vercel.app/results/f1a0487cc7f3.html"
+    },
+    {
+      "phone": "1035881106",
+      "status": "success",
+      "items_detected": 3,
+      "total_links": 9,
+      "hashed_id": "fd1274574564",
+      "link": "https://fashionsource.vercel.app/results/fd1274574564.html"
+    },
+    {
+      "phone": "1034849453",
+      "status": "success",
+      "items_detected": 2,
+      "total_links": 6,
+      "hashed_id": "f1e815029b4f",
+      "link": "https://fashionsource.vercel.app/results/f1e815029b4f.html"
+    },
+    {
+      "phone": "1050116342",
+      "status": "success",
+      "items_detected": 1,
+      "total_links": 3,
+      "hashed_id": "e7c3b669e45f",
+      "link": "https://fashionsource.vercel.app/results/e7c3b669e45f.html"
+    },
+    {
+      "phone": "1065932367",
+      "status": "success",
+      "items_detected": 1,
+      "total_links": 3,
+      "hashed_id": "2a8b7ba45bb6",
+      "link": "https://fashionsource.vercel.app/results/2a8b7ba45bb6.html"
+    },
+    {
+      "phone": "1064870642",
+      "status": "success",
+      "items_detected": 2,
+      "total_links": 6,
+      "hashed_id": "4ee621f1f239",
+      "link": "https://fashionsource.vercel.app/results/4ee621f1f239.html"
+    },
+    {
+      "phone": "1048309321",
+      "status": "success",
+      "items_detected": 3,
+      "total_links": 9,
+      "hashed_id": "eb14d79b39e8",
+      "link": "https://fashionsource.vercel.app/results/eb14d79b39e8.html"
+    },
+    {
+      "phone": "1063817283",
+      "status": "success",
+      "items_detected": 3,
+      "total_links": 9,
+      "hashed_id": "0b5865b0d7d7",
+      "link": "https://fashionsource.vercel.app/results/0b5865b0d7d7.html"
+    },
+    {
+      "phone": "1022442104",
+      "status": "success",
+      "items_detected": 3,
+      "total_links": 8,
+      "hashed_id": "3b0f2b17296b",
+      "link": "https://fashionsource.vercel.app/results/3b0f2b17296b.html"
+    },
+    {
+      "phone": "1056659190",
+      "status": "success",
+      "items_detected": 2,
+      "total_links": 3,
+      "hashed_id": "6ac42616ea7b",
+      "link": "https://fashionsource.vercel.app/results/6ac42616ea7b.html"
+    },
+    {
+      "phone": "1038060744",
+      "status": "success",
+      "items_detected": 1,
+      "total_links": 3,
+      "hashed_id": "ed9468206d6f",
+      "link": "https://fashionsource.vercel.app/results/ed9468206d6f.html"
+    },
+    {
+      "phone": "1093805721",
+      "status": "success",
+      "items_detected": 3,
+      "total_links": 4,
+      "hashed_id": "7ed518d85fa9",
+      "link": "https://fashionsource.vercel.app/results/7ed518d85fa9.html"
+    },
+    {
+      "phone": "1094459744",
+      "status": "success",
+      "items_detected": 3,
+      "total_links": 9,
+      "hashed_id": "4df0bb5f2277",
+      "link": "https://fashionsource.vercel.app/results/4df0bb5f2277.html"
+    },
+    {
+      "phone": "1050292415",
+      "status": "success",
+      "items_detected": 1,
+      "total_links": 0,
+      "hashed_id": "5139351972ac",
+      "link": "https://fashionsource.vercel.app/results/5139351972ac.html"
+    },
+    {
+      "phone": "1081546291",
+      "status": "success",
+      "items_detected": 1,
+      "total_links": 2,
+      "hashed_id": "e3d19839bb82",
+      "link": "https://fashionsource.vercel.app/results/e3d19839bb82.html"
+    },
+    {
+      "phone": "1025765210",
+      "status": "success",
+      "items_detected": 1,
+      "total_links": 3,
+      "hashed_id": "1665ee74add0",
+      "link": "https://fashionsource.vercel.app/results/1665ee74add0.html"
+    },
+    {
+      "phone": "1085117228",
+      "status": "success",
+      "items_detected": 3,
+      "total_links": 8,
+      "hashed_id": "6ef858aa28b9",
+      "link": "https://fashionsource.vercel.app/results/6ef858aa28b9.html"
+    },
+    {
+      "phone": "1094618582",
+      "status": "success",
+      "items_detected": 2,
+      "total_links": 5,
+      "hashed_id": "873bfb12ed1f",
+      "link": "https://fashionsource.vercel.app/results/873bfb12ed1f.html"
+    },
+    {
+      "phone": "1038851796",
+      "status": "success",
+      "items_detected": 2,
+      "total_links": 4,
+      "hashed_id": "dfefeaf431f6",
+      "link": "https://fashionsource.vercel.app/results/dfefeaf431f6.html"
+    },
+    {
+      "phone": "1094679188",
+      "status": "success",
+      "items_detected": 1,
+      "total_links": 3,
+      "hashed_id": "75872dbf01d3",
+      "link": "https://fashionsource.vercel.app/results/75872dbf01d3.html"
+    },
+    {
+      "phone": "1056569998",
+      "status": "success",
+      "items_detected": 1,
+      "total_links": 3,
+      "hashed_id": "ba82de4f9a5f",
+      "link": "https://fashionsource.vercel.app/results/ba82de4f9a5f.html"
+    },
+    {
+      "phone": "1046078918",
+      "status": "success",
+      "items_detected": 4,
+      "total_links": 12,
+      "hashed_id": "b58a028911c8",
+      "link": "https://fashionsource.vercel.app/results/b58a028911c8.html"
+    },
+    {
+      "phone": "1068783933",
+      "status": "success",
+      "items_detected": 1,
+      "total_links": 3,
+      "hashed_id": "8423f135c3b6",
+      "link": "https://fashionsource.vercel.app/results/8423f135c3b6.html"
+    },
+    {
+      "phone": "1093686375",
+      "status": "success",
+      "items_detected": 2,
+      "total_links": 6,
+      "hashed_id": "5e1d5af2e2d5",
+      "link": "https://fashionsource.vercel.app/results/5e1d5af2e2d5.html"
+    },
+    {
+      "phone": "1020757285",
+      "status": "success",
+      "items_detected": 2,
+      "total_links": 5,
+      "hashed_id": "6d781fa37eba",
+      "link": "https://fashionsource.vercel.app/results/6d781fa37eba.html"
+    },
+    {
+      "phone": "1025915173",
+      "status": "success",
+      "items_detected": 3,
+      "total_links": 9,
+      "hashed_id": "2b4e8e6b9a84",
+      "link": "https://fashionsource.vercel.app/results/2b4e8e6b9a84.html"
+    },
+    {
+      "phone": "1091622559",
+      "status": "success",
+      "items_detected": 4,
+      "total_links": 12,
+      "hashed_id": "d123bd439a2c",
+      "link": "https://fashionsource.vercel.app/results/d123bd439a2c.html"
+    },
+    {
+      "phone": "1094988957",
+      "status": "success",
+      "items_detected": 2,
+      "total_links": 6,
+      "hashed_id": "b3280b7c2f50",
+      "link": "https://fashionsource.vercel.app/results/b3280b7c2f50.html"
+    },
+    {
+      "phone": "1095992419",
+      "status": "success",
+      "items_detected": 1,
+      "total_links": 3,
+      "hashed_id": "f2b6888e8319",
+      "link": "https://fashionsource.vercel.app/results/f2b6888e8319.html"
+    },
+    {
+      "phone": "1085800971",
+      "status": "success",
+      "items_detected": 1,
+      "total_links": 3,
+      "hashed_id": "fff0587cb61a",
+      "link": "https://fashionsource.vercel.app/results/fff0587cb61a.html"
+    },
+    {
+      "phone": "1066678106",
+      "status": "success",
+      "items_detected": 2,
+      "total_links": 6,
+      "hashed_id": "45c91fe50c7b",
+      "link": "https://fashionsource.vercel.app/results/45c91fe50c7b.html"
+    },
+    {
+      "phone": "1063579638",
+      "status": "success",
+      "items_detected": 1,
+      "total_links": 2,
+      "hashed_id": "4e05a718a6a5",
+      "link": "https://fashionsource.vercel.app/results/4e05a718a6a5.html"
+    },
+    {
+      "phone": "1039965529",
+      "status": "success",
+      "items_detected": 1,
+      "total_links": 3,
+      "hashed_id": "a8b299d78ae2",
+      "link": "https://fashionsource.vercel.app/results/a8b299d78ae2.html"
+    },
+    {
+      "phone": "1085484601",
+      "status": "success",
+      "items_detected": 1,
+      "total_links": 3,
+      "hashed_id": "cceffafc8001",
+      "link": "https://fashionsource.vercel.app/results/cceffafc8001.html"
+    },
+    {
+      "phone": "1085283683",
+      "status": "success",
+      "items_detected": 1,
+      "total_links": 3,
+      "hashed_id": "f21954e9e4e3",
+      "link": "https://fashionsource.vercel.app/results/f21954e9e4e3.html"
+    },
+    {
+      "phone": "1073633269",
+      "status": "success",
+      "items_detected": 2,
+      "total_links": 6,
+      "hashed_id": "0ab741f51fed",
+      "link": "https://fashionsource.vercel.app/results/0ab741f51fed.html"
+    },
+    {
+      "phone": "1096558331",
+      "status": "success",
+      "items_detected": 3,
+      "total_links": 8,
+      "hashed_id": "c254f209b8d2",
+      "link": "https://fashionsource.vercel.app/results/c254f209b8d2.html"
+    },
+    {
+      "phone": "1066326795",
+      "status": "success",
+      "items_detected": 1,
+      "total_links": 3,
+      "hashed_id": "2cd532c4b7f6",
+      "link": "https://fashionsource.vercel.app/results/2cd532c4b7f6.html"
+    },
+    {
+      "phone": "1047543164",
+      "status": "success",
+      "items_detected": 1,
+      "total_links": 2,
+      "hashed_id": "b463cd0291c3",
+      "link": "https://fashionsource.vercel.app/results/b463cd0291c3.html"
+    },
+    {
+      "phone": "1024871108",
+      "status": "success",
+      "items_detected": 2,
+      "total_links": 5,
+      "hashed_id": "8e09e0da3a94",
+      "link": "https://fashionsource.vercel.app/results/8e09e0da3a94.html"
+    },
+    {
+      "phone": "1082809936",
+      "status": "success",
+      "items_detected": 3,
+      "total_links": 8,
+      "hashed_id": "c3823c883f97",
+      "link": "https://fashionsource.vercel.app/results/c3823c883f97.html"
+    },
+    {
+      "phone": "1023408573",
+      "status": "success",
+      "items_detected": 3,
+      "total_links": 9,
+      "hashed_id": "3c7dc007e0ea",
+      "link": "https://fashionsource.vercel.app/results/3c7dc007e0ea.html"
+    },
+    {
+      "phone": "1083541560",
+      "status": "success",
+      "items_detected": 2,
+      "total_links": 6,
+      "hashed_id": "f68c5e5ce132",
+      "link": "https://fashionsource.vercel.app/results/f68c5e5ce132.html"
+    },
+    {
+      "phone": "1024741565",
+      "status": "success",
+      "items_detected": 3,
+      "total_links": 9,
+      "hashed_id": "eebb6c68cb6c",
+      "link": "https://fashionsource.vercel.app/results/eebb6c68cb6c.html"
+    },
+    {
+      "phone": "1092864378",
+      "status": "success",
+      "items_detected": 3,
+      "total_links": 9,
+      "hashed_id": "0af27a1e9467",
+      "link": "https://fashionsource.vercel.app/results/0af27a1e9467.html"
+    },
+    {
+      "phone": "1094005209",
+      "status": "success",
+      "items_detected": 4,
+      "total_links": 10,
+      "hashed_id": "36aab50b6b93",
+      "link": "https://fashionsource.vercel.app/results/36aab50b6b93.html"
+    },
+    {
+      "phone": "1024776083",
+      "status": "success",
+      "items_detected": 4,
+      "total_links": 12,
+      "hashed_id": "44904930c3a4",
+      "link": "https://fashionsource.vercel.app/results/44904930c3a4.html"
+    },
+    {
+      "phone": "1097556113",
+      "status": "success",
+      "items_detected": 2,
+      "total_links": 6,
+      "hashed_id": "a25ac82efdf1",
+      "link": "https://fashionsource.vercel.app/results/a25ac82efdf1.html"
+    },
+    {
+      "phone": "1056631324",
+      "status": "success",
+      "items_detected": 3,
+      "total_links": 9,
+      "hashed_id": "520d5ac9c54b",
+      "link": "https://fashionsource.vercel.app/results/520d5ac9c54b.html"
+    },
+    {
+      "phone": "1020821708",
+      "status": "success",
+      "items_detected": 1,
+      "total_links": 3,
+      "hashed_id": "264bacb25104",
+      "link": "https://fashionsource.vercel.app/results/264bacb25104.html"
+    },
+    {
+      "phone": "1024450277",
+      "status": "success",
+      "items_detected": 2,
+      "total_links": 5,
+      "hashed_id": "1701d81fb493",
+      "link": "https://fashionsource.vercel.app/results/1701d81fb493.html"
+    },
+    {
+      "phone": "1026874241",
+      "status": "success",
+      "items_detected": 3,
+      "total_links": 9,
+      "hashed_id": "e7103b046095",
+      "link": "https://fashionsource.vercel.app/results/e7103b046095.html"
+    },
+    {
+      "phone": "1054004922",
+      "status": "success",
+      "items_detected": 3,
+      "total_links": 7,
+      "hashed_id": "8f8973053836",
+      "link": "https://fashionsource.vercel.app/results/8f8973053836.html"
+    },
+    {
+      "phone": "1091026051",
+      "status": "success",
+      "items_detected": 1,
+      "total_links": 3,
+      "hashed_id": "9d1f0d63b6c6",
+      "link": "https://fashionsource.vercel.app/results/9d1f0d63b6c6.html"
+    },
+    {
+      "phone": "1027690199",
+      "status": "success",
+      "items_detected": 2,
+      "total_links": 3,
+      "hashed_id": "2cfa8513068f",
+      "link": "https://fashionsource.vercel.app/results/2cfa8513068f.html"
+    },
+    {
+      "phone": "1035600418",
+      "status": "success",
+      "items_detected": 3,
+      "total_links": 9,
+      "hashed_id": "9694bc7af0b9",
+      "link": "https://fashionsource.vercel.app/results/9694bc7af0b9.html"
+    }
+  ]
+}

@@ -1,0 +1,93 @@
+{
+  "phone": "1033623030",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763457243007_IMG_1321.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "black jacket",
+      "description": "black puffer jacket with a hood and a front zipper",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_black_jacket_1763457261352.jpg",
+      "confidence": 0.938
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://www.oakley.com/en-us/product/FOA406103",
+          "thumbnail": "https://assets2.oakley.com/cdn-record-files-pi/e16062cf-83c5-494d-ab6c-b0850113d80c/c8cffc26-5173-44c4-8e15-b0a9013959b0/FOA406103__02E.png",
+          "title": "Oakley Drift O-Puff Jacket - Blackout | Oakley® US"
+        },
+        {
+          "link": "https://us.amazon.com/dp/B098JQHT5S?ref=emc_b_5_mob_i",
+          "thumbnail": "https://images-na.ssl-images-amazon.com/images/I/61Onj8N6m2L._AC_UL600_SR600,600_.jpg",
+          "title": "Volcom Men's SCORTCH Insulated Snow Jacket, Acid Black, X-Small at Amazon Men's Clothing store"
+        },
+        {
+          "link": "https://www.amazon.com/Oakley-Mens-Drift-O-Puff-Jacket/dp/B0DV92591F",
+          "thumbnail": "https://m.media-amazon.com/images/I/61Onj8N6m2L._AC_UY1000_.jpg",
+          "title": "Amazon.com: Oakley Mens Drift O-Puff Jacket, Blackout, X ..."
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 1,
+        "fallback": 0,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "tops_1": {
+          "itemDescription": "item1 black jacket",
+          "searchTerms": [
+            "item1 black jacket",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.oakley.com/en-us/product/FOA406103",
+              "title": "Oakley Drift O-Puff Jacket - Blackout | Oakley® US",
+              "thumbnail": "https://assets2.oakley.com/cdn-record-files-pi/e16062cf-83c5-494d-ab6c-b0850113d80c/c8cffc26-5173-44c4-8e15-b0a9013959b0/FOA406103__02E.png"
+            },
+            {
+              "link": "https://us.amazon.com/dp/B098JQHT5S?ref=emc_b_5_mob_i",
+              "title": "Volcom Men's SCORTCH Insulated Snow Jacket, Acid Black, X-Small at Amazon Men's Clothing store",
+              "thumbnail": "https://images-na.ssl-images-amazon.com/images/I/61Onj8N6m2L._AC_UL600_SR600,600_.jpg"
+            },
+            {
+              "link": "https://www.amazon.com/Oakley-Mens-Drift-O-Puff-Jacket/dp/B0DV92591F",
+              "title": "Amazon.com: Oakley Mens Drift O-Puff Jacket, Blackout, X ...",
+              "thumbnail": "https://m.media-amazon.com/images/I/61Onj8N6m2L._AC_UY1000_.jpg"
+            }
+          ],
+          "timestamp": "2025-11-18T09:14:38.903Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 7.58,
+        "per_category_search_seconds": 8.29,
+        "gpt4_turbo_api_time_seconds": 3.5,
+        "processing_overhead_seconds": 0.02,
+        "other_overhead_seconds": -3.5,
+        "wall_clock_seconds": 15.88,
+        "serper_api_time_seconds": 4.78,
+        "serper_count": 1,
+        "gpt4_turbo_count": 1,
+        "total_seconds": 15.88,
+        "categories_parallel": 1
+      }
+    }
+  },
+  "status": "success"
+}

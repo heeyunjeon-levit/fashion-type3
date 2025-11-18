@@ -149,3 +149,4 @@ WHERE event_type = 'final_results_displayed'
 ORDER BY created_at DESC
 LIMIT 1;
 
+

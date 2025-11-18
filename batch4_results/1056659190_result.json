@@ -1,0 +1,98 @@
+{
+  "phone": "1056659190",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763458277165_Screenshot_20251117_223954_Instagram.jpg",
+  "items": [
+    {
+      "category": "bottoms",
+      "groundingdino_prompt": "black skirt",
+      "description": "black mini skirt with a simple design",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_black_skirt_1763458305488.jpg",
+      "confidence": 0.399
+    },
+    {
+      "category": "shoes",
+      "groundingdino_prompt": "brown boots",
+      "description": "brown knee-high boots with a sleek design",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_brown_boots_1763458313412.jpg",
+      "confidence": 0.541
+    }
+  ],
+  "search_results": {
+    "results": {
+      "shoes_2": [
+        {
+          "link": "https://aitchbasic.com/product/detail.html?product_no=415",
+          "thumbnail": "https://shop-phinf.pstatic.net/20240704_61/1720070577499p4jEP_GIF/하이리스크_이지코튼팬츠_(1).gif",
+          "title": "남자여름와이드팬츠 남자통바지 남자밴딩바지 - 에이치베이직"
+        },
+        {
+          "link": "https://m.bunjang.co.kr/products/96076114",
+          "thumbnail": "https://media.bunjang.co.kr/product/96076114_3_1552908738_w360.jpg",
+          "title": "발렌티노 루디 오버니삭스(4color) | 브랜드 중고거래 플랫폼 ..."
+        },
+        {
+          "link": "https://fashionbykakao.com/catalog/products/155352541",
+          "thumbnail": "https://dresscodehd.com/web/product/extra/big/202412/376a79c64674c21430b2c787dcea6b51.jpg",
+          "title": "패션 바이 카카오 | [당일출고] 기모 착시 니하이 오버니삭스 ..."
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 0,
+        "fallback": 1,
+        "none": 1,
+        "error": 0
+      },
+      "gptReasoning": {
+        "shoes_2": {
+          "itemDescription": "item3 brown boots",
+          "searchTerms": [
+            "item3 brown boots",
+            "shoes",
+            "sneakers",
+            "boots",
+            "sandals",
+            "heels",
+            "flats",
+            "loafers",
+            "oxford"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-18T09:32:25.160Z",
+          "candidateCount": 28
+        },
+        "bottoms_1": {
+          "itemDescription": "item2 black skirt",
+          "searchTerms": [
+            "item2 black skirt",
+            "shorts",
+            "slacks",
+            "pants",
+            "trousers",
+            "jeans",
+            "skirt",
+            "leg trousers"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-18T09:32:35.693Z",
+          "candidateCount": 1
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 11.87,
+        "per_category_search_seconds": 29.41,
+        "gpt4_turbo_api_time_seconds": 3.93,
+        "processing_overhead_seconds": 0,
+        "other_overhead_seconds": -3.93,
+        "wall_clock_seconds": 41.29,
+        "serper_api_time_seconds": 44.34,
+        "serper_count": 2,
+        "gpt4_turbo_count": 2,
+        "total_seconds": 41.29,
+        "categories_parallel": 2
+      }
+    }
+  },
+  "status": "success"
+}

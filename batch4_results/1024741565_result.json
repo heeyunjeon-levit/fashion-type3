@@ -1,0 +1,191 @@
+{
+  "phone": "1024741565",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763460306738_1812.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "blue sweater",
+      "description": "blue knit sweater with a contrasting plaid collar and button details",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_blue_sweater_1763460326502.jpg",
+      "confidence": 0.724
+    },
+    {
+      "category": "bottoms",
+      "groundingdino_prompt": "dark jeans",
+      "description": "dark blue fitted jeans with a high waist",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_dark_jeans_1763460335143.jpg",
+      "confidence": 0.683
+    },
+    {
+      "category": "shoes",
+      "groundingdino_prompt": "black boots",
+      "description": "black ankle boots with a block heel",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_black_boots_1763460343669.jpg",
+      "confidence": 0.704
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://www.coupang.com/vp/products/8452334528?itemId=24455235134&vendorItemId=91469005480",
+          "thumbnail": "https://thumbnail7.coupangcdn.com/thumbnails/remote/230x230ex/image/vendor_inventory/5452/2d35b393146bbf7b51bec65e838c569a44603044853c55c0f88bd22001f5.jpg",
+          "title": "코발트블루니트 스웨터 블루 파란 크롭 루즈핏 - 비치웨어 | 쿠팡"
+        },
+        {
+          "link": "https://en.beidelli.com/product/same-day-shipping-madewool-containing-favorite-patch-loose-fit-round-k/3521",
+          "thumbnail": "https://cafe24img.poxo.com/eb970604/web/upload/NNEditor/20230214/983ec35ae36bd1da08fb5be7e87c55c9.jpg",
+          "title": "Beidelli"
+        },
+        {
+          "link": "https://www.musinsa.com/products/2795806",
+          "thumbnail": "https://image.msscdn.net/images/goods_img/20220915/2795806/2795806_1_500.jpg",
+          "title": "로에일(LOEIL) 리브드 울 카라 가디건 - 차콜 - 사이즈 & 후기 | 무신사"
+        }
+      ],
+      "bottoms_2": [
+        {
+          "link": "https://www.katespade.com/products/evelyn-sequin-tweed-small-shoulder-crossbody/KA031.html",
+          "thumbnail": "https://katespade.scene7.com/is/image/KateSpade/KA031_001_1",
+          "title": "Evelyn Sequin Tweed Small Shoulder Crossbody | Kate Spade New York"
+        },
+        {
+          "link": "https://www.therealreal.com/products/women/handbags/shoulder-bags/chanel-tweed-medium-19-flap-p7h5h",
+          "thumbnail": "https://product-images.therealreal.com/CHA1209037_2_enlarged.jpg",
+          "title": "Chanel Tweed Medium 19 Flap - Blue Shoulder Bags, Handbags - CHA1209037 | The RealReal"
+        },
+        {
+          "link": "https://www.katespade.com/products/evelyn-tweed-medium-convertible-shoulder-bag/K9934.html",
+          "thumbnail": "https://katespade.scene7.com/is/image/KateSpade/K9934_001",
+          "title": "Evelyn Tweed Medium Convertible Shoulder Bag | Kate Spade New York"
+        }
+      ],
+      "shoes_3": [
+        {
+          "link": "https://www.amazon.com/Gentle-Souls-Kenneth-Cole-Fashion/dp/B0FJKGNC6Q",
+          "thumbnail": "https://m.media-amazon.com/images/I/61eJeoFqloL.jpg_BO30,255,255,255_UF900,850_SR1910,1000,0,C_QL100_.jpg",
+          "title": "Amazon.com | Gentle Souls by Kenneth Cole EMILY BLACK SUEDE 5 | Ankle & Bootie"
+        },
+        {
+          "link": "https://www.musinsa.com/products/1147948",
+          "thumbnail": "https://image.msscdn.net/images/goods_img/20190909/1147948/1147948_1_500.jpg",
+          "title": "프리플라(FRI FLA) 19B506 black ankle - 사이즈 & 후기 | 무신사"
+        },
+        {
+          "link": "https://www.coupang.com/vp/products/2202326193?itemId=3745131332&vendorItemId=91507965854",
+          "thumbnail": "https://thumbnail.coupangcdn.com/thumbnails/remote/492x492ex/image/retail/images/2024/11/21/9/9/7250d92d-51d6-4d2c-9310-c63a4d6ea82d.jpg",
+          "title": "무중력깔창 Vol 2 배러 몰드창 스판 삭스 스웨이드 부츠 6cm ..."
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 2,
+        "fallback": 1,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "shoes_3": {
+          "itemDescription": "item3 black boots",
+          "searchTerms": [
+            "item3 black boots",
+            "shoes",
+            "sneakers",
+            "boots",
+            "sandals",
+            "heels",
+            "flats",
+            "loafers",
+            "oxford"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.amazon.com/Gentle-Souls-Kenneth-Cole-Fashion/dp/B0FJKGNC6Q",
+              "title": "Amazon.com | Gentle Souls by Kenneth Cole EMILY BLACK SUEDE 5 | Ankle & Bootie",
+              "thumbnail": "https://m.media-amazon.com/images/I/61eJeoFqloL.jpg_BO30,255,255,255_UF900,850_SR1910,1000,0,C_QL100_.jpg"
+            },
+            {
+              "link": "https://www.musinsa.com/products/1147948",
+              "title": "프리플라(FRI FLA) 19B506 black ankle - 사이즈 & 후기 | 무신사",
+              "thumbnail": "https://image.msscdn.net/images/goods_img/20190909/1147948/1147948_1_500.jpg"
+            },
+            {
+              "link": "https://www.coupang.com/vp/products/2202326193?itemId=3745131332&vendorItemId=91507965854",
+              "title": "무중력깔창 Vol 2 배러 몰드창 스판 삭스 스웨이드 부츠 6cm ...",
+              "thumbnail": "https://thumbnail.coupangcdn.com/thumbnails/remote/492x492ex/image/retail/images/2024/11/21/9/9/7250d92d-51d6-4d2c-9310-c63a4d6ea82d.jpg"
+            }
+          ],
+          "timestamp": "2025-11-18T10:06:14.935Z",
+          "candidateCount": 18,
+          "selectionCount": 3
+        },
+        "tops_1": {
+          "itemDescription": "item1 blue sweater",
+          "searchTerms": [
+            "item1 blue sweater",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.coupang.com/vp/products/8452334528?itemId=24455235134&vendorItemId=91469005480",
+              "title": "코발트블루니트 스웨터 블루 파란 크롭 루즈핏 - 비치웨어 | 쿠팡",
+              "thumbnail": "https://thumbnail7.coupangcdn.com/thumbnails/remote/230x230ex/image/vendor_inventory/5452/2d35b393146bbf7b51bec65e838c569a44603044853c55c0f88bd22001f5.jpg"
+            },
+            {
+              "link": "https://en.beidelli.com/product/same-day-shipping-madewool-containing-favorite-patch-loose-fit-round-k/3521",
+              "title": "Beidelli",
+              "thumbnail": "https://cafe24img.poxo.com/eb970604/web/upload/NNEditor/20230214/983ec35ae36bd1da08fb5be7e87c55c9.jpg"
+            },
+            {
+              "link": "https://www.musinsa.com/products/2795806",
+              "title": "로에일(LOEIL) 리브드 울 카라 가디건 - 차콜 - 사이즈 & 후기 | 무신사",
+              "thumbnail": "https://image.msscdn.net/images/goods_img/20220915/2795806/2795806_1_500.jpg"
+            }
+          ],
+          "timestamp": "2025-11-18T10:06:16.100Z",
+          "candidateCount": 27,
+          "selectionCount": 3
+        },
+        "bottoms_2": {
+          "itemDescription": "item2 dark jeans",
+          "searchTerms": [
+            "item2 dark jeans",
+            "shorts",
+            "slacks",
+            "pants",
+            "trousers",
+            "jeans",
+            "skirt",
+            "leg trousers"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-18T10:06:27.470Z",
+          "candidateCount": 30
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 14.32,
+        "per_category_search_seconds": 29.01,
+        "gpt4_turbo_api_time_seconds": 8.45,
+        "processing_overhead_seconds": 0.01,
+        "other_overhead_seconds": -8.45,
+        "wall_clock_seconds": 43.34,
+        "serper_api_time_seconds": 54.63,
+        "serper_count": 3,
+        "gpt4_turbo_count": 3,
+        "total_seconds": 43.34,
+        "categories_parallel": 3
+      }
+    }
+  },
+  "status": "success"
+}

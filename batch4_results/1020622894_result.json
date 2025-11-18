@@ -1,0 +1,194 @@
+{
+  "phone": "1020622894",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763455695214_IMG_0443.jpeg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "orange jacket",
+      "description": "orange jacket with a black heart patch and white fleece lining",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_orange_jacket_1763455715819.jpg",
+      "confidence": 0.662
+    },
+    {
+      "category": "tops",
+      "groundingdino_prompt": "beige jacket",
+      "description": "beige jacket with a red heart patch and white fleece lining",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_beige_jacket_1763455726067.jpg",
+      "confidence": 0.539
+    },
+    {
+      "category": "tops",
+      "groundingdino_prompt": "navy jacket",
+      "description": "navy jacket with a red heart patch and white fleece lining",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_navy_jacket_1763455735967.jpg",
+      "confidence": 0.656
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://lerayonfrais.fr/products/play-k-way-zip-jacket-orange-black",
+          "thumbnail": "https://lerayonfrais.fr/cdn/shop/files/3_1_0661f1e3-c781-405c-8cc3-ea86de3dd049_large.jpg?v=1691574984",
+          "title": "PLAY K-WAY ZIP JACKET ORANGE/BLACK – Le Rayon Frais"
+        },
+        {
+          "link": "https://www.footy.com/p/comme-des-garcons-play-mens-x-k-way-half-zip-block-colour-jacket-orange-black/667abc9de5572e8fc48c1bd2/",
+          "thumbnail": "https://productimages.footy.com/667abc9de5572e8fc48c1bd2/4/640.webp",
+          "title": "Comme des Garçons Play Men's x K-Way Half Zip Block Colour ..."
+        },
+        {
+          "link": "https://store.shopping.yahoo.co.jp/s-musee/350908005.html",
+          "thumbnail": "https://item-shopping.c.yimg.jp/i/n/s-musee_350908005_14_d_20240208181435",
+          "title": "COMME des GARCONS PLAY GARCONS× K-WAY プレイ ..."
+        }
+      ],
+      "tops_2": [
+        {
+          "link": "https://www.farfetch.com/shopping/kids/comme-des-garcons-play-kids-x-k-way-heart-logo-half-zip-jacket-item-31834168.aspx",
+          "thumbnail": "https://cdn-images.farfetch-contents.com/31/83/41/68/31834168_61364028_600.jpg",
+          "title": "Comme Des Garçons Play Kids x K-Way heart-logo half-zip Jacket | Orange | FARFETCH"
+        },
+        {
+          "link": "https://www.cettire.com/products/comme-des-garons-play-x-k-way-claude-colour-block-jacket-945561143/cmVhY3Rpb24vcHJvZHVjdDpQemZ5NXJFM0ZQYUFFRk13Rw==?lng=en",
+          "thumbnail": "https://d3vfig6e0r0snz.cloudfront.net/rcYjnYuenaTH5vyDF/images/products/1515ebaa3cad1621f9a4c60b15a3ad20.jpg",
+          "title": "Comme des Garçons Play X K-Way Claude Colour-Block Jacket – Cettire"
+        },
+        {
+          "link": "https://tres-bien.com/en-us/products/comme-des-garcons-play-x-k-way-half-zip-jacket-orange-p1j502-1",
+          "thumbnail": "https://tres-bien.com/cdn/shop/files/CDG-Play_240624_035.jpg?v=1756732521",
+          "title": "Comme des Garçons Play x K-Way Half Zip Jacket Orange – Très Bien"
+        }
+      ],
+      "tops_3": [
+        {
+          "link": "https://kidikidi.elandmall.co.kr/i/item?itemNo=2508020088&chnl_no=KDGW",
+          "thumbnail": "https://item.elandrs.com/r/image/oa/2025-08-01/ea7b19d7-c6dc-456f-94f5-c03863fb2725.jpg?w=750&h=&q=100",
+          "title": "컬러 블럭 윈드자켓 민트- KIDIKIDI"
+        },
+        {
+          "link": "https://jgy850911.shop.blogpay.co.kr/good/product_view?goodNum=204253833",
+          "thumbnail": "https://jgy850911.blogpay.io/img/g/jgy850911/0061752001756892995.jpg",
+          "title": "러 블 리"
+        },
+        {
+          "link": "https://www.smarttaitai.com/products/2502656",
+          "thumbnail": "https://shoplineimg.com/601226c2393e870020e3f2fc/69116f5019b7730014ab0e10/720x.jpeg?",
+          "title": "兒童愛心刺繡高領加厚加絨拉鏈外套- 2502656"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 2,
+        "fallback": 1,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "tops_2": {
+          "itemDescription": "item2 beige jacket",
+          "searchTerms": [
+            "item2 beige jacket",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.farfetch.com/shopping/kids/comme-des-garcons-play-kids-x-k-way-heart-logo-half-zip-jacket-item-31834168.aspx",
+              "title": "Comme Des Garçons Play Kids x K-Way heart-logo half-zip Jacket | Orange | FARFETCH",
+              "thumbnail": "https://cdn-images.farfetch-contents.com/31/83/41/68/31834168_61364028_600.jpg"
+            },
+            {
+              "link": "https://www.cettire.com/products/comme-des-garons-play-x-k-way-claude-colour-block-jacket-945561143/cmVhY3Rpb24vcHJvZHVjdDpQemZ5NXJFM0ZQYUFFRk13Rw==?lng=en",
+              "title": "Comme des Garçons Play X K-Way Claude Colour-Block Jacket – Cettire",
+              "thumbnail": "https://d3vfig6e0r0snz.cloudfront.net/rcYjnYuenaTH5vyDF/images/products/1515ebaa3cad1621f9a4c60b15a3ad20.jpg"
+            },
+            {
+              "link": "https://tres-bien.com/en-us/products/comme-des-garcons-play-x-k-way-half-zip-jacket-orange-p1j502-1",
+              "title": "Comme des Garçons Play x K-Way Half Zip Jacket Orange – Très Bien",
+              "thumbnail": "https://tres-bien.com/cdn/shop/files/CDG-Play_240624_035.jpg?v=1756732521"
+            }
+          ],
+          "timestamp": "2025-11-18T08:49:20.106Z",
+          "candidateCount": 27,
+          "selectionCount": 3
+        },
+        "tops_3": {
+          "itemDescription": "item3 navy jacket",
+          "searchTerms": [
+            "item3 navy jacket",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-18T08:49:31.298Z",
+          "candidateCount": 28
+        },
+        "tops_1": {
+          "itemDescription": "item1 orange jacket",
+          "searchTerms": [
+            "item1 orange jacket",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://lerayonfrais.fr/products/play-k-way-zip-jacket-orange-black",
+              "title": "PLAY K-WAY ZIP JACKET ORANGE/BLACK – Le Rayon Frais",
+              "thumbnail": "https://lerayonfrais.fr/cdn/shop/files/3_1_0661f1e3-c781-405c-8cc3-ea86de3dd049_large.jpg?v=1691574984"
+            },
+            {
+              "link": "https://www.footy.com/p/comme-des-garcons-play-mens-x-k-way-half-zip-block-colour-jacket-orange-black/667abc9de5572e8fc48c1bd2/",
+              "title": "Comme des Garçons Play Men's x K-Way Half Zip Block Colour ...",
+              "thumbnail": "https://productimages.footy.com/667abc9de5572e8fc48c1bd2/4/640.webp"
+            },
+            {
+              "link": "https://store.shopping.yahoo.co.jp/s-musee/350908005.html",
+              "title": "COMME des GARCONS PLAY GARCONS× K-WAY プレイ ...",
+              "thumbnail": "https://item-shopping.c.yimg.jp/i/n/s-musee_350908005_14_d_20240208181435"
+            }
+          ],
+          "timestamp": "2025-11-18T08:49:31.658Z",
+          "candidateCount": 28,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 12.81,
+        "per_category_search_seconds": 21.84,
+        "gpt4_turbo_api_time_seconds": 10.39,
+        "processing_overhead_seconds": 0.03,
+        "other_overhead_seconds": -10.39,
+        "wall_clock_seconds": 34.68,
+        "serper_api_time_seconds": 43.17,
+        "serper_count": 3,
+        "gpt4_turbo_count": 3,
+        "total_seconds": 34.68,
+        "categories_parallel": 3
+      }
+    }
+  },
+  "status": "success"
+}

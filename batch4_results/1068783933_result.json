@@ -1,0 +1,93 @@
+{
+  "phone": "1068783933",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763459036842_BandPhoto_2025_10_23_14_00_52.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "black jacket",
+      "description": "black puffer jacket with a high collar and zip closure",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_black_jacket_1763459051465.jpg",
+      "confidence": 0.937
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://www.prada.com/it/en/p/cropped-re-nylon-down-jacket/29D056_1WQ8_F0002_S_OOO",
+          "thumbnail": "https://www.prada.com/content/dam/pradabkg_products/2/29D/29D056/1WQ8F0002/29D056_1WQ8_F0002_S_OOO_SLF.jpg/_jcr_content/renditions/cq5dam.web.hebebed.600.600.jpg",
+          "title": "Black Cropped Re-Nylon down jacket | PRADA"
+        },
+        {
+          "link": "https://us.vestiairecollective.com/women-clothing/jackets/burberry/black-denim-jeans-burberry-jacket-53267080.shtml",
+          "thumbnail": "https://images.vestiairecollective.com/images/resized/w=1246,q=75,f=auto,/produit/black-polyester-prada-jacket-59586270-1_2.jpg",
+          "title": "Jacket Burberry Black size XXS International in Denim - Jeans - 53267080"
+        },
+        {
+          "link": "https://www.farfetch.com/ao/shopping/women/prada-re-nylon-cropped-jacket-item-25338800.aspx",
+          "thumbnail": "https://cdn-images.farfetch-contents.com/25/33/88/00/25338800_55540770_322.jpg",
+          "title": "Prada Re-Nylon Cropped Jacket | Black | FARFETCH AO"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 1,
+        "fallback": 0,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "tops_1": {
+          "itemDescription": "item1 black jacket",
+          "searchTerms": [
+            "item1 black jacket",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.prada.com/it/en/p/cropped-re-nylon-down-jacket/29D056_1WQ8_F0002_S_OOO",
+              "title": "Black Cropped Re-Nylon down jacket | PRADA",
+              "thumbnail": "https://www.prada.com/content/dam/pradabkg_products/2/29D/29D056/1WQ8F0002/29D056_1WQ8_F0002_S_OOO_SLF.jpg/_jcr_content/renditions/cq5dam.web.hebebed.600.600.jpg"
+            },
+            {
+              "link": "https://us.vestiairecollective.com/women-clothing/jackets/burberry/black-denim-jeans-burberry-jacket-53267080.shtml",
+              "title": "Jacket Burberry Black size XXS International in Denim - Jeans - 53267080",
+              "thumbnail": "https://images.vestiairecollective.com/images/resized/w=1246,q=75,f=auto,/produit/black-polyester-prada-jacket-59586270-1_2.jpg"
+            },
+            {
+              "link": "https://www.farfetch.com/ao/shopping/women/prada-re-nylon-cropped-jacket-item-25338800.aspx",
+              "title": "Prada Re-Nylon Cropped Jacket | Black | FARFETCH AO",
+              "thumbnail": "https://cdn-images.farfetch-contents.com/25/33/88/00/25338800_55540770_322.jpg"
+            }
+          ],
+          "timestamp": "2025-11-18T09:44:39.184Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 5.79,
+        "per_category_search_seconds": 20.06,
+        "gpt4_turbo_api_time_seconds": 4.41,
+        "processing_overhead_seconds": 0.01,
+        "other_overhead_seconds": -4.41,
+        "wall_clock_seconds": 25.86,
+        "serper_api_time_seconds": 15.64,
+        "serper_count": 1,
+        "gpt4_turbo_count": 1,
+        "total_seconds": 25.86,
+        "categories_parallel": 1
+      }
+    }
+  },
+  "status": "success"
+}

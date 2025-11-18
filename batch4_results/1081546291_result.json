@@ -1,0 +1,83 @@
+{
+  "phone": "1081546291",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763458588443_Screenshot_20251117_224115.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "white jacket",
+      "description": "white quilted jacket with button closure and ribbed cuffs",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_white_jacket_1763458604720.jpg",
+      "confidence": 0.934
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://www.ssg.com/item/itemView.ssg?itemId=1000634201688",
+          "thumbnail": "https://sitem.ssgcdn.com/88/16/20/item/1000634201688_i1_250.jpg",
+          "title": "여성 누빔 퀼팅 데일리 패딩 점퍼 SIS-712 - SSG.COM"
+        },
+        {
+          "link": "https://m.gsshop.com/prd/prd.gs?prdid=1067094381",
+          "thumbnail": "https://asset.m-gs.kr/prod/1067094381/1/2000",
+          "title": "여성 경량패딩 깔깔이 퀼팅 점퍼 - GS SHOP"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 1,
+        "fallback": 0,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "tops_1": {
+          "itemDescription": "item1 white jacket",
+          "searchTerms": [
+            "item1 white jacket",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.ssg.com/item/itemView.ssg?itemId=1000634201688",
+              "title": "여성 누빔 퀼팅 데일리 패딩 점퍼 SIS-712 - SSG.COM",
+              "thumbnail": "https://sitem.ssgcdn.com/88/16/20/item/1000634201688_i1_250.jpg"
+            },
+            {
+              "link": "https://m.gsshop.com/prd/prd.gs?prdid=1067094381",
+              "title": "여성 경량패딩 깔깔이 퀼팅 점퍼 - GS SHOP",
+              "thumbnail": "https://asset.m-gs.kr/prod/1067094381/1/2000"
+            }
+          ],
+          "timestamp": "2025-11-18T09:37:05.428Z",
+          "candidateCount": 30,
+          "selectionCount": 2
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 9.69,
+        "per_category_search_seconds": 9.72,
+        "gpt4_turbo_api_time_seconds": 4.76,
+        "processing_overhead_seconds": 0,
+        "other_overhead_seconds": -4.76,
+        "wall_clock_seconds": 19.41,
+        "serper_api_time_seconds": 4.95,
+        "serper_count": 1,
+        "gpt4_turbo_count": 1,
+        "total_seconds": 19.41,
+        "categories_parallel": 1
+      }
+    }
+  },
+  "status": "success"
+}

@@ -1,0 +1,140 @@
+{
+  "phone": "1020757285",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763459136087_IMG_6928.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "white sweater",
+      "description": "white long sleeve turtleneck sweater with a fitted style",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_white_sweater_1763459157397.jpg",
+      "confidence": 0.454
+    },
+    {
+      "category": "bottoms",
+      "groundingdino_prompt": "blue jeans",
+      "description": "blue high-waisted jeans with a classic denim look",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_blue_jeans_1763459166330.jpg",
+      "confidence": 0.92
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://www.amazon.com/Solid-High-Neck-Sweater-Color/dp/B0CQR52MTZ",
+          "thumbnail": "https://m.media-amazon.com/images/I/81o+qpangCL._AC_UF350,350_QL80_.jpg",
+          "title": "Amazon.com: Solid High Neck Sweater (Color : Beige, Size ..."
+        },
+        {
+          "link": "https://www.yesstyle.com/es/dibi-mock-neck-plain-ribbed-sweater/info.html/pid.1125843992",
+          "thumbnail": "https://d1flfk77wl2xk4.cloudfront.net/Assets/81/559/XL_p0201755981.jpg",
+          "title": "DiBi - Mock Neck Plain Ribbed Sweater | YesStyle"
+        },
+        {
+          "link": "https://www.brandi.co.kr/products/11835438",
+          "thumbnail": "http://dangosister.diskn.com/1S3w4WReYe",
+          "title": "루미돌돌폴라니트(5c)"
+        }
+      ],
+      "bottoms_2": [
+        {
+          "link": "https://zigzag.kr/catalog/products/119730177",
+          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/c/11/973/017/119730177-1702238969104640005.jpeg",
+          "title": "고고싱 [오늘출발]코지 스트레이트 데님(난스판,와이드,YKK,기장별)"
+        },
+        {
+          "link": "https://zigzag.kr/catalog/products/153814873",
+          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/d/2024/11/24/10039_202411242322180811_84927.jpeg?width=720&height=720&quality=80&format=jpeg",
+          "title": "아비엘르 [기모🔥] 하이웨스트 중청 크랙워싱 롱 와이드 일자 ..."
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 2,
+        "fallback": 0,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "tops_1": {
+          "itemDescription": "item1 white sweater",
+          "searchTerms": [
+            "item1 white sweater",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.amazon.com/Solid-High-Neck-Sweater-Color/dp/B0CQR52MTZ",
+              "title": "Amazon.com: Solid High Neck Sweater (Color : Beige, Size ...",
+              "thumbnail": "https://m.media-amazon.com/images/I/81o+qpangCL._AC_UF350,350_QL80_.jpg"
+            },
+            {
+              "link": "https://www.yesstyle.com/es/dibi-mock-neck-plain-ribbed-sweater/info.html/pid.1125843992",
+              "title": "DiBi - Mock Neck Plain Ribbed Sweater | YesStyle",
+              "thumbnail": "https://d1flfk77wl2xk4.cloudfront.net/Assets/81/559/XL_p0201755981.jpg"
+            },
+            {
+              "link": "https://www.brandi.co.kr/products/11835438",
+              "title": "루미돌돌폴라니트(5c)",
+              "thumbnail": "http://dangosister.diskn.com/1S3w4WReYe"
+            }
+          ],
+          "timestamp": "2025-11-18T09:46:32.774Z",
+          "candidateCount": 27,
+          "selectionCount": 3
+        },
+        "bottoms_2": {
+          "itemDescription": "item2 blue jeans",
+          "searchTerms": [
+            "item2 blue jeans",
+            "shorts",
+            "slacks",
+            "pants",
+            "trousers",
+            "jeans",
+            "skirt",
+            "leg trousers"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://zigzag.kr/catalog/products/119730177",
+              "title": "고고싱 [오늘출발]코지 스트레이트 데님(난스판,와이드,YKK,기장별)",
+              "thumbnail": "https://cf.product-image.s.zigzag.kr/original/c/11/973/017/119730177-1702238969104640005.jpeg"
+            },
+            {
+              "link": "https://zigzag.kr/catalog/products/153814873",
+              "title": "아비엘르 [기모🔥] 하이웨스트 중청 크랙워싱 롱 와이드 일자 ...",
+              "thumbnail": "https://cf.product-image.s.zigzag.kr/original/d/2024/11/24/10039_202411242322180811_84927.jpeg?width=720&height=720&quality=80&format=jpeg"
+            }
+          ],
+          "timestamp": "2025-11-18T09:46:39.842Z",
+          "candidateCount": 30,
+          "selectionCount": 2
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 11.65,
+        "per_category_search_seconds": 19.98,
+        "gpt4_turbo_api_time_seconds": 6.34,
+        "processing_overhead_seconds": 0.01,
+        "other_overhead_seconds": -6.34,
+        "wall_clock_seconds": 31.64,
+        "serper_api_time_seconds": 26.53,
+        "serper_count": 2,
+        "gpt4_turbo_count": 2,
+        "total_seconds": 31.64,
+        "categories_parallel": 2
+      }
+    }
+  },
+  "status": "success"
+}

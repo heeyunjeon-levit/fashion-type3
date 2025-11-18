@@ -1,0 +1,93 @@
+{
+  "phone": "1045247039",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763456789126_Screenshot_2025_11_17_22_32_59_057_com.instagram.android.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "navy sweater",
+      "description": "navy blue hooded sweater with a zip-up front and intricate green and white geometric patterns",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_navy_sweater_1763456806980.jpg",
+      "confidence": 0.707
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://www.musinsa.com/products/5348567",
+          "thumbnail": "https://image.msscdn.net/images/prd_img/202509041419140074817352368b9215201d44.jpg",
+          "title": "어반디타입(URBANDTYPE) 노르딕 휘게 후디드 가디건_네이비 ..."
+        },
+        {
+          "link": "https://shop-ourhope.com/1324274148/?idx=670",
+          "thumbnail": "https://cdn.imweb.me/thumbnail/20241028/c3213b739238b.jpg",
+          "title": "Margaret Jacquard Hood Zip Up Knit - Navy : [아워호프] 당신 ..."
+        },
+        {
+          "link": "https://www.29cm.co.kr/products/2910263",
+          "thumbnail": "https://img.29cm.co.kr/next-product/2024/10/23/0d651f6cc34e4176a3a64e2a970a2b8c_20241023212548.jpg?width=1200&format=webp",
+          "title": "Margaret Jacquard Hood Zip Up Knit - Navy - 감도 깊은 취향 셀렉트샵 29CM"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 1,
+        "fallback": 0,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "tops_1": {
+          "itemDescription": "item1 navy sweater",
+          "searchTerms": [
+            "item1 navy sweater",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.musinsa.com/products/5348567",
+              "title": "어반디타입(URBANDTYPE) 노르딕 휘게 후디드 가디건_네이비 ...",
+              "thumbnail": "https://image.msscdn.net/images/prd_img/202509041419140074817352368b9215201d44.jpg"
+            },
+            {
+              "link": "https://shop-ourhope.com/1324274148/?idx=670",
+              "title": "Margaret Jacquard Hood Zip Up Knit - Navy : [아워호프] 당신 ...",
+              "thumbnail": "https://cdn.imweb.me/thumbnail/20241028/c3213b739238b.jpg"
+            },
+            {
+              "link": "https://www.29cm.co.kr/products/2910263",
+              "title": "Margaret Jacquard Hood Zip Up Knit - Navy - 감도 깊은 취향 셀렉트샵 29CM",
+              "thumbnail": "https://img.29cm.co.kr/next-product/2024/10/23/0d651f6cc34e4176a3a64e2a970a2b8c_20241023212548.jpg?width=1200&format=webp"
+            }
+          ],
+          "timestamp": "2025-11-18T09:07:09.879Z",
+          "candidateCount": 19,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 7.82,
+        "per_category_search_seconds": 13.13,
+        "gpt4_turbo_api_time_seconds": 3.81,
+        "processing_overhead_seconds": 0.01,
+        "other_overhead_seconds": -3.8,
+        "wall_clock_seconds": 20.96,
+        "serper_api_time_seconds": 9.31,
+        "serper_count": 1,
+        "gpt4_turbo_count": 1,
+        "total_seconds": 20.96,
+        "categories_parallel": 1
+      }
+    }
+  },
+  "status": "success"
+}

@@ -84,3 +84,4 @@ WHERE lc.user_id IN (SELECT id FROM your_user)
 ORDER BY lc.clicked_at DESC
 LIMIT 20;
 
+

@@ -1,0 +1,93 @@
+{
+  "phone": "1062674266",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763455989171_Screenshot_20251115_145424_Gallery.jpg",
+  "items": [
+    {
+      "category": "bag",
+      "groundingdino_prompt": "beige bag",
+      "description": "beige crocodile-embossed leather handbag with structured handles",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_beige_bag_1763456008600.jpg",
+      "confidence": 0.928
+    }
+  ],
+  "search_results": {
+    "results": {
+      "bag_1": [
+        {
+          "link": "https://us.vestiairecollective.com/women-bags/handbags/saint-laurent/beige-leather-sac-de-jour-saint-laurent-handbag-36956453.shtml",
+          "thumbnail": "https://images.vestiairecollective.com/images/resized/w=1024,h=1024,q=75,f=auto,/produit/36956453-1_5.jpg",
+          "title": "Sac de jour leather tote Saint Laurent Beige in Leather - 36956453"
+        },
+        {
+          "link": "https://www.1stdibs.com/fashion/handbags-purses-bags/tote-bags/saint-laurent-beige-croc-embossed-leather-nano-classic-sac-de-jour-tote/id-v_21223132/",
+          "thumbnail": "https://a.1stdibscdn.com/saint-laurent-beige-croc-embossed-leather-nano-classic-sac-de-jour-tote-for-sale/v_13101/v_212231321701746745262/v_21223132_1701746746100_bg_processed.jpg?width=768",
+          "title": "Saint Laurent Beige Croc Embossed Leather Nano Classic Sac De Jour Tote at 1stDibs"
+        },
+        {
+          "link": "https://touchedvintage.com/designer-bags/saint-laurent-sac-de-jour-nano-taupe-croc/",
+          "thumbnail": "https://touchedvintage.com/wp-content/uploads/2023/06/DSC_0927_clipped_rev_1-1000x1500.jpeg",
+          "title": "Saint Laurent Sac De Jour Nano Taupe Croc - Touched Vintage"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 1,
+        "fallback": 0,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "bag_1": {
+          "itemDescription": "item1 beige bag",
+          "searchTerms": [
+            "item1 beige bag",
+            "bag",
+            "backpack",
+            "handbag",
+            "tote bag",
+            "purse",
+            "clutch",
+            "messenger bag",
+            "shoulder bag",
+            "wallet"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://us.vestiairecollective.com/women-bags/handbags/saint-laurent/beige-leather-sac-de-jour-saint-laurent-handbag-36956453.shtml",
+              "title": "Sac de jour leather tote Saint Laurent Beige in Leather - 36956453",
+              "thumbnail": "https://images.vestiairecollective.com/images/resized/w=1024,h=1024,q=75,f=auto,/produit/36956453-1_5.jpg"
+            },
+            {
+              "link": "https://www.1stdibs.com/fashion/handbags-purses-bags/tote-bags/saint-laurent-beige-croc-embossed-leather-nano-classic-sac-de-jour-tote/id-v_21223132/",
+              "title": "Saint Laurent Beige Croc Embossed Leather Nano Classic Sac De Jour Tote at 1stDibs",
+              "thumbnail": "https://a.1stdibscdn.com/saint-laurent-beige-croc-embossed-leather-nano-classic-sac-de-jour-tote-for-sale/v_13101/v_212231321701746745262/v_21223132_1701746746100_bg_processed.jpg?width=768"
+            },
+            {
+              "link": "https://touchedvintage.com/designer-bags/saint-laurent-sac-de-jour-nano-taupe-croc/",
+              "title": "Saint Laurent Sac De Jour Nano Taupe Croc - Touched Vintage",
+              "thumbnail": "https://touchedvintage.com/wp-content/uploads/2023/06/DSC_0927_clipped_rev_1-1000x1500.jpeg"
+            }
+          ],
+          "timestamp": "2025-11-18T08:53:57.114Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 15.62,
+        "per_category_search_seconds": 11.42,
+        "gpt4_turbo_api_time_seconds": 6.18,
+        "processing_overhead_seconds": 0.09,
+        "other_overhead_seconds": -6.18,
+        "wall_clock_seconds": 27.14,
+        "serper_api_time_seconds": 5.15,
+        "serper_count": 1,
+        "gpt4_turbo_count": 1,
+        "total_seconds": 27.14,
+        "categories_parallel": 1
+      }
+    }
+  },
+  "status": "success"
+}

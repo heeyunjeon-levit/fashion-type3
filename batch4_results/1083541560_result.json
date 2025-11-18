@@ -1,0 +1,139 @@
+{
+  "phone": "1083541560",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763460249452_Screenshot_20251118_071606_Instagram.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "gray sweater",
+      "description": "light gray oversized sweater with black polka dots",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_gray_sweater_1763460268070.jpg",
+      "confidence": 0.918
+    },
+    {
+      "category": "accessory",
+      "groundingdino_prompt": "gray scarf",
+      "description": "light gray knitted scarf wrapped around the neck",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_gray_scarf_1763460277051.jpg",
+      "confidence": 0.659
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://www.elandmall.co.kr/i/item?itemNo=2011312292&lowerVendNo=LV20026091",
+          "thumbnail": "https://item.elandrs.com/upload/prd/orgimg/292/2011312292_0000001.jpg?w=750&h=&q=100",
+          "title": "7197도트니트 스웨터- 이랜드몰"
+        },
+        {
+          "link": "https://www.dhgate.com/product/autumn-and-winter-new-lazy-style-pullover/1010792870.html",
+          "thumbnail": "https://img4.dhresource.com/webp/m/0x0/f3/albu/jc/j/09/a9dd9ccd-ce5c-4be3-8f20-3e4af2e3749f.jpg",
+          "title": "Womens Autumn & Winter Lazy Style Polka Dot Knit Sweater Loose Fit, Round Neck, Casual Outerwear From Girl_legend, $26.53 | DHgate.Com"
+        },
+        {
+          "link": "https://www.objectci.com/en-fr/knitted-pullover-23048994_Birch_1272768.html",
+          "thumbnail": "https://www.objectci.com/dw/image/v2/BDTC_PRD/on/demandware.static/-/Sites-pim-catalog/default/dwb8957be3/pim-static/OC/23048994/23048994_Birch_1272768_006.jpg?sw=900&sh=1200&strip=false",
+          "title": "KNITTED PULLOVER | Grey | .OBJECT CI France"
+        }
+      ],
+      "accessory_2": [
+        {
+          "link": "https://byhans.kr/product/도트-루즈니트-머플러세트/3786",
+          "thumbnail": "https://byhans.kr/web/product/extra/big/202501/cdef49e34748e9b6b1067c422730a9c4.jpg",
+          "title": "도트 루즈니트 (머플러세트) | BYHANS"
+        },
+        {
+          "link": "https://www.aliexpress.com/item/1005008058404125.html",
+          "thumbnail": "https://ae01.alicdn.com/kf/S33df468e39d140ab80c4fc10d0e1cae0m.jpg",
+          "title": "Women Sweaters Winter Loose Casual Polka Dot Pullovers Autumn Winter Women's Long Sleeve Top New Oversized Sweater For Outerwear - AliExpress"
+        },
+        {
+          "link": "https://www.coupang.com/vp/products/2183285227",
+          "thumbnail": "https://thumbnail.coupangcdn.com/thumbnails/remote/230x230ex/image/vendor_inventory/d631/0c975957737a73ca26bf56f137f327b22a950cce54a792d25383c46944e0.jpg",
+          "title": "현블러썸 칸쵸땡땡니트 땡땡이 도트 기본 학생 20대 10대 귀여운 간절기 베이직 청순 여리여리 - 스웨터/니트 | 쿠팡"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 1,
+        "fallback": 1,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "accessory_2": {
+          "itemDescription": "item2 gray scarf",
+          "searchTerms": [
+            "item2 gray scarf",
+            "accessory",
+            "jewelry",
+            "watch",
+            "necklace",
+            "earrings",
+            "bracelet",
+            "ring",
+            "hat",
+            "cap",
+            "beanie",
+            "belt",
+            "scarf",
+            "sunglasses"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-18T10:04:50.657Z",
+          "candidateCount": 30
+        },
+        "tops_1": {
+          "itemDescription": "item1 gray sweater",
+          "searchTerms": [
+            "item1 gray sweater",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.elandmall.co.kr/i/item?itemNo=2011312292&lowerVendNo=LV20026091",
+              "title": "7197도트니트 스웨터- 이랜드몰",
+              "thumbnail": "https://item.elandrs.com/upload/prd/orgimg/292/2011312292_0000001.jpg?w=750&h=&q=100"
+            },
+            {
+              "link": "https://www.dhgate.com/product/autumn-and-winter-new-lazy-style-pullover/1010792870.html",
+              "title": "Womens Autumn & Winter Lazy Style Polka Dot Knit Sweater Loose Fit, Round Neck, Casual Outerwear From Girl_legend, $26.53 | DHgate.Com",
+              "thumbnail": "https://img4.dhresource.com/webp/m/0x0/f3/albu/jc/j/09/a9dd9ccd-ce5c-4be3-8f20-3e4af2e3749f.jpg"
+            },
+            {
+              "link": "https://www.objectci.com/en-fr/knitted-pullover-23048994_Birch_1272768.html",
+              "title": "KNITTED PULLOVER | Grey | .OBJECT CI France",
+              "thumbnail": "https://www.objectci.com/dw/image/v2/BDTC_PRD/on/demandware.static/-/Sites-pim-catalog/default/dwb8957be3/pim-static/OC/23048994/23048994_Birch_1272768_006.jpg?sw=900&sh=1200&strip=false"
+            }
+          ],
+          "timestamp": "2025-11-18T10:05:03.248Z",
+          "candidateCount": 29,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 5.41,
+        "per_category_search_seconds": 19.86,
+        "gpt4_turbo_api_time_seconds": 6.33,
+        "processing_overhead_seconds": 0.02,
+        "other_overhead_seconds": -6.33,
+        "wall_clock_seconds": 25.28,
+        "serper_api_time_seconds": 20.77,
+        "serper_count": 2,
+        "gpt4_turbo_count": 2,
+        "total_seconds": 25.28,
+        "categories_parallel": 2
+      }
+    }
+  },
+  "status": "success"
+}

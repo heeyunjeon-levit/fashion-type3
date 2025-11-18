@@ -1,0 +1,191 @@
+{
+  "phone": "1056631324",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763460698220_IMG_5966.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "brown coat",
+      "description": "brown faux fur coat with a loose fit",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_brown_coat_1763460717044.jpg",
+      "confidence": 0.932
+    },
+    {
+      "category": "bottoms",
+      "groundingdino_prompt": "blue jeans",
+      "description": "light blue relaxed fit jeans",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_blue_jeans_1763460725397.jpg",
+      "confidence": 0.68
+    },
+    {
+      "category": "shoes",
+      "groundingdino_prompt": "black boots",
+      "description": "black knee-high leather boots",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_black_boots_1763460732540.jpg",
+      "confidence": 0.691
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://www.ebay.com/itm/396101213450",
+          "thumbnail": "https://i.ebayimg.com/images/g/AZYAAOSwe1lnfAHk/s-l400.jpg",
+          "title": "Retro Era, Thickened Faux Fur Jacket Thermal Coat, Short Lapel Women's Top Brown | eBay"
+        },
+        {
+          "link": "https://www.aliexpress.com/item/1005008238394103.html",
+          "thumbnail": "https://ae01.alicdn.com/kf/Sbe3f74f1c2d146209da11daeb6e36c94L.jpg",
+          "title": "Retro Brown Oversized Lapel Faux Fur Women's Coat Female Luxury Long Sleeve Flurry Jacket 2024 Women Fashion Winter Streetwear - AliExpress"
+        },
+        {
+          "link": "https://us.shein.com/New-Autumn-Winter-Fashion-Fluffy-Long-Coat,-Elegant-Lady-Furry-Parka-Outerwear-p-41934356.html",
+          "thumbnail": "https://img.ltwebstatic.com/images3_pi/2024/09/02/a1/172524839593f160ba2756f6a693eee14c94f8a19a_thumbnail_405x552.jpg",
+          "title": "Anewsta New Autumn Winter Fashion Fluffy Long Coat, Elegant Lady Furry Parka Outerwear | SHEIN USA"
+        }
+      ],
+      "bottoms_2": [
+        {
+          "link": "https://m.bunjang.co.kr/products/220613340",
+          "thumbnail": "https://media.bunjang.co.kr/product/220613340_2_1681597639_w360.jpg",
+          "title": "유니클로 슬림스트레이트 청바지 30 | 브랜드 중고거래 플랫폼 ..."
+        },
+        {
+          "link": "https://global.musinsa.com/id/goods/3353080",
+          "thumbnail": "https://image.msscdn.net/thumbnails/data/estimate/3353080_0/gallery_6503e5b579808.jpg",
+          "title": "MUSINSA | LABEL ARCHIVE New Baggy Jeans Light Blue Wash"
+        },
+        {
+          "link": "https://www.ebay.com/itm/285835046547",
+          "thumbnail": "https://i.ebayimg.com/images/g/KXgAAOSw0-xmLoeD/s-l1200.jpg",
+          "title": "Rockies Jeans Womens 12 Long Relaxed Low-Rise Blue Denim ..."
+        }
+      ],
+      "shoes_3": [
+        {
+          "link": "https://m.2-plan.co.kr/amp/board/read.html?board_no=4&no=70425",
+          "thumbnail": "https://m.2-plan.co.kr/file_data/joseph9102/2024/02/29/d75ecbc3eda3e4bab0c9bae376dea540.jpg",
+          "title": "미싱불량 터짐니다 수선ㅏ였으나 계속 같은부위 터짐 상품후기 - 투플랜"
+        },
+        {
+          "link": "https://m.graychic.co.kr/article/상품-사용후기/4/1595510",
+          "thumbnail": "https://cafe24img.poxo.com/sungya522/file_data/sungya522//2025/07/10/f233e885d084879d87e2a91d0049f756.jpg",
+          "title": "무심한듯 시크하게, GRAYCHIC!"
+        },
+        {
+          "link": "https://kream.co.kr/products/100238?size=M",
+          "thumbnail": "https://kream-phinf.pstatic.net/MjAyNDAxMjFfMjEy/MDAxNzA1ODA5ODA1NDU0.dv-s1yXtp8-oJrozBN_pwqNdcRdcYWb_8QD1fKFER74g.gPf67f3Qwfby8N2utg8oxb1soeVRQl6mqUHluBHUtWsg.JPEG/p_9e41bda757c444acaf8b6ac75c5f12fd.jpeg",
+          "title": "나이키 NSW 클럽 플리스 팬츠 블랙 | Nike | KREAM"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 2,
+        "fallback": 1,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "shoes_3": {
+          "itemDescription": "item3 black boots",
+          "searchTerms": [
+            "item3 black boots",
+            "shoes",
+            "sneakers",
+            "boots",
+            "sandals",
+            "heels",
+            "flats",
+            "loafers",
+            "oxford"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-18T10:12:33.327Z",
+          "candidateCount": 27
+        },
+        "tops_1": {
+          "itemDescription": "item1 brown coat",
+          "searchTerms": [
+            "item1 brown coat",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.ebay.com/itm/396101213450",
+              "title": "Retro Era, Thickened Faux Fur Jacket Thermal Coat, Short Lapel Women's Top Brown | eBay",
+              "thumbnail": "https://i.ebayimg.com/images/g/AZYAAOSwe1lnfAHk/s-l400.jpg"
+            },
+            {
+              "link": "https://www.aliexpress.com/item/1005008238394103.html",
+              "title": "Retro Brown Oversized Lapel Faux Fur Women's Coat Female Luxury Long Sleeve Flurry Jacket 2024 Women Fashion Winter Streetwear - AliExpress",
+              "thumbnail": "https://ae01.alicdn.com/kf/Sbe3f74f1c2d146209da11daeb6e36c94L.jpg"
+            },
+            {
+              "link": "https://us.shein.com/New-Autumn-Winter-Fashion-Fluffy-Long-Coat,-Elegant-Lady-Furry-Parka-Outerwear-p-41934356.html",
+              "title": "Anewsta New Autumn Winter Fashion Fluffy Long Coat, Elegant Lady Furry Parka Outerwear | SHEIN USA",
+              "thumbnail": "https://img.ltwebstatic.com/images3_pi/2024/09/02/a1/172524839593f160ba2756f6a693eee14c94f8a19a_thumbnail_405x552.jpg"
+            }
+          ],
+          "timestamp": "2025-11-18T10:12:34.910Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        },
+        "bottoms_2": {
+          "itemDescription": "item2 blue jeans",
+          "searchTerms": [
+            "item2 blue jeans",
+            "shorts",
+            "slacks",
+            "pants",
+            "trousers",
+            "jeans",
+            "skirt",
+            "leg trousers"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://m.bunjang.co.kr/products/220613340",
+              "title": "유니클로 슬림스트레이트 청바지 30 | 브랜드 중고거래 플랫폼 ...",
+              "thumbnail": "https://media.bunjang.co.kr/product/220613340_2_1681597639_w360.jpg"
+            },
+            {
+              "link": "https://global.musinsa.com/id/goods/3353080",
+              "title": "MUSINSA | LABEL ARCHIVE New Baggy Jeans Light Blue Wash",
+              "thumbnail": "https://image.msscdn.net/thumbnails/data/estimate/3353080_0/gallery_6503e5b579808.jpg"
+            },
+            {
+              "link": "https://www.ebay.com/itm/285835046547",
+              "title": "Rockies Jeans Womens 12 Long Relaxed Low-Rise Blue Denim ...",
+              "thumbnail": "https://i.ebayimg.com/images/g/KXgAAOSw0-xmLoeD/s-l1200.jpg"
+            }
+          ],
+          "timestamp": "2025-11-18T10:12:41.558Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 13.66,
+        "per_category_search_seconds": 14.9,
+        "gpt4_turbo_api_time_seconds": 7.65,
+        "processing_overhead_seconds": 0.01,
+        "other_overhead_seconds": -7.65,
+        "wall_clock_seconds": 28.56,
+        "serper_api_time_seconds": 22.11,
+        "serper_count": 3,
+        "gpt4_turbo_count": 3,
+        "total_seconds": 28.57,
+        "categories_parallel": 3
+      }
+    }
+  },
+  "status": "success"
+}

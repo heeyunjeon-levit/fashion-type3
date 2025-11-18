@@ -1,0 +1,269 @@
+{
+  "phone": "1046078918",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763458958732_Screenshot_20251117_225659_N_.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "gray coat",
+      "description": "long gray wool coat with a tailored fit and button closure",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_gray_coat_1763458976981.jpg",
+      "confidence": 0.94
+    },
+    {
+      "category": "tops",
+      "groundingdino_prompt": "white shirt",
+      "description": "white collared shirt with a classic design worn under the coat",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_white_shirt_1763458984796.jpg",
+      "confidence": 0.583
+    },
+    {
+      "category": "shoes",
+      "groundingdino_prompt": "black shoes",
+      "description": "black loafers with a polished finish and decorative tassels",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_black_shoes_1763458992126.jpg",
+      "confidence": 0.771
+    },
+    {
+      "category": "bag",
+      "groundingdino_prompt": "black bag",
+      "description": "large black leather handbag with a red scarf draped over it",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item4_black_bag_1763458999695.jpg",
+      "confidence": 0.544
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://dunststudio.com/product/exclusive-essential-cashmere-single-coat-melange-grey/7911",
+          "thumbnail": "https://dunststudio.com/web/product/extra/small/202509/bf6efc3452d07e9a7d11524f2a5bc679.jpg",
+          "title": "던스트 - Dunst"
+        },
+        {
+          "link": "https://en.dunststudio.com/product/unisex-2-way-3-button-cashmere-coat-melange-grey/8006",
+          "thumbnail": "https://en.dunststudio.com/web/product/big/202509/b9b1f92750431850db9812e6fea55b6d.jpg",
+          "title": "DUNST"
+        },
+        {
+          "link": "https://www.coupang.com/vp/products/8536545454?itemId=24712667515&vendorItemId=92300313857",
+          "thumbnail": "https://image.coupangcdn.com/image/vendor_inventory/6896/52a6080ef41ec84f90c8855088d3326bd778e44c2d211850c6df366cca6f.jpg",
+          "title": "무신사스탠다드 여성 울 블렌드 다이애그널 체스터 롱 코트 그레이 - 코트 | 쿠팡"
+        }
+      ],
+      "tops_2": [
+        {
+          "link": "https://www.ebay.com/itm/405442945345",
+          "thumbnail": "https://i.ebayimg.com/images/g/aN0AAOSwDCRmARZ6/s-l1200.jpg",
+          "title": "TB Long Sleeve Blouse Pleated Skirt for Women | eBay"
+        },
+        {
+          "link": "https://m.gsshop.com/prd/prd.gs?prdid=1051256717",
+          "thumbnail": "https://asset.m-gs.kr/prod/1051256717/1/550",
+          "title": "코튼 페이크셔츠 라운드 목카라 화이트 - GS SHOP"
+        },
+        {
+          "link": "https://www.aliexpress.com/item/1005008850967832.html",
+          "thumbnail": "https://ae01.alicdn.com/kf/Se7014c54fee840d88e004f82566e9e95g.jpg",
+          "title": "White Stand Collars Detachable Fake Collar Simplicity Fashion Faux False Collar for Women Girls - AliExpress"
+        }
+      ],
+      "shoes_3": [
+        {
+          "link": "https://www.farfetch.com/jo/shopping/women/hereu-soller-sport-leather-loafers-item-21856264.aspx",
+          "thumbnail": "https://cdn-images.farfetch-contents.com/21/85/62/64/21856264_51734313_1000.jpg",
+          "title": "Hereu Soller Sport Leather Loafers | Black | FARFETCH JO"
+        },
+        {
+          "link": "https://lagarconne.com/products/ps25tre07-the-row-soft-loafer-black",
+          "thumbnail": "https://lagarconne.com/cdn/shop/files/Feb2021Session46682_TMHILHPS20_S_5dddfaa0-3d89-4b93-8da0-3a4934487137_4096x4096.jpg?v=1731609383",
+          "title": "Soft Loafer — Black – La Garçonne"
+        },
+        {
+          "link": "https://www.farfetch.com/shopping/women/hereu-maqueda-loafers-item-25507606.aspx",
+          "thumbnail": "https://cdn-images.farfetch-contents.com/25/50/76/06/25507606_55716883_600.jpg",
+          "title": "Hereu Maqueda Loafers | Black | FARFETCH"
+        }
+      ],
+      "bag_4": [
+        {
+          "link": "https://www.musinsa.com/products/5461088",
+          "thumbnail": "https://image.msscdn.net/images/goods_img/20250915/5461088/5461088_17586986221735_500.jpg",
+          "title": "오브이알엘(OVRL) Tove Bowling bag (black) - 사이즈 & 후기 | 무신사"
+        },
+        {
+          "link": "https://www.kurly.com/goods/1000866003",
+          "thumbnail": "https://3p-image.kurly.com/hdims/resize/^>720x>936/cropcenter/720x936/quality/85/src/files/878f9210-5a1b-4817-a589-8031b426c2c4/df63c108-da34-40a0-9389-edd35d93d58b.jpg",
+          "title": "드메이커] 베티버백-블랙 - 마켓컬리"
+        },
+        {
+          "link": "https://zigzag.kr/catalog/products/157977852",
+          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/d/2025/2/17/46334_202502172222430906_90536.jpeg?width=720&height=720&quality=80&format=jpeg",
+          "title": "에버 [인기상품/사계절]원통숄더백 바게트백 포켓백 원기둥백 원통가방 데일리룩 출근룩 마실룩 휘뚜루마뚜루 숄더백 블랙 베이지 브라운 데이트룩"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 4,
+        "fallback": 0,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "shoes_3": {
+          "itemDescription": "item3 black shoes",
+          "searchTerms": [
+            "item3 black shoes",
+            "shoes",
+            "sneakers",
+            "boots",
+            "sandals",
+            "heels",
+            "flats",
+            "loafers",
+            "oxford"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.farfetch.com/jo/shopping/women/hereu-soller-sport-leather-loafers-item-21856264.aspx",
+              "title": "Hereu Soller Sport Leather Loafers | Black | FARFETCH JO",
+              "thumbnail": "https://cdn-images.farfetch-contents.com/21/85/62/64/21856264_51734313_1000.jpg"
+            },
+            {
+              "link": "https://lagarconne.com/products/ps25tre07-the-row-soft-loafer-black",
+              "title": "Soft Loafer — Black – La Garçonne",
+              "thumbnail": "https://lagarconne.com/cdn/shop/files/Feb2021Session46682_TMHILHPS20_S_5dddfaa0-3d89-4b93-8da0-3a4934487137_4096x4096.jpg?v=1731609383"
+            },
+            {
+              "link": "https://www.farfetch.com/shopping/women/hereu-maqueda-loafers-item-25507606.aspx",
+              "title": "Hereu Maqueda Loafers | Black | FARFETCH",
+              "thumbnail": "https://cdn-images.farfetch-contents.com/25/50/76/06/25507606_55716883_600.jpg"
+            }
+          ],
+          "timestamp": "2025-11-18T09:43:47.526Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        },
+        "bag_4": {
+          "itemDescription": "item4 black bag",
+          "searchTerms": [
+            "item4 black bag",
+            "bag",
+            "backpack",
+            "handbag",
+            "tote bag",
+            "purse",
+            "clutch",
+            "messenger bag",
+            "shoulder bag",
+            "wallet"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.musinsa.com/products/5461088",
+              "title": "오브이알엘(OVRL) Tove Bowling bag (black) - 사이즈 & 후기 | 무신사",
+              "thumbnail": "https://image.msscdn.net/images/goods_img/20250915/5461088/5461088_17586986221735_500.jpg"
+            },
+            {
+              "link": "https://www.kurly.com/goods/1000866003",
+              "title": "드메이커] 베티버백-블랙 - 마켓컬리",
+              "thumbnail": "https://3p-image.kurly.com/hdims/resize/^>720x>936/cropcenter/720x936/quality/85/src/files/878f9210-5a1b-4817-a589-8031b426c2c4/df63c108-da34-40a0-9389-edd35d93d58b.jpg"
+            },
+            {
+              "link": "https://zigzag.kr/catalog/products/157977852",
+              "title": "에버 [인기상품/사계절]원통숄더백 바게트백 포켓백 원기둥백 원통가방 데일리룩 출근룩 마실룩 휘뚜루마뚜루 숄더백 블랙 베이지 브라운 데이트룩",
+              "thumbnail": "https://cf.product-image.s.zigzag.kr/original/d/2025/2/17/46334_202502172222430906_90536.jpeg?width=720&height=720&quality=80&format=jpeg"
+            }
+          ],
+          "timestamp": "2025-11-18T09:43:49.471Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        },
+        "tops_1": {
+          "itemDescription": "item1 gray coat",
+          "searchTerms": [
+            "item1 gray coat",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://dunststudio.com/product/exclusive-essential-cashmere-single-coat-melange-grey/7911",
+              "title": "던스트 - Dunst",
+              "thumbnail": "https://dunststudio.com/web/product/extra/small/202509/bf6efc3452d07e9a7d11524f2a5bc679.jpg"
+            },
+            {
+              "link": "https://en.dunststudio.com/product/unisex-2-way-3-button-cashmere-coat-melange-grey/8006",
+              "title": "DUNST",
+              "thumbnail": "https://en.dunststudio.com/web/product/big/202509/b9b1f92750431850db9812e6fea55b6d.jpg"
+            },
+            {
+              "link": "https://www.coupang.com/vp/products/8536545454?itemId=24712667515&vendorItemId=92300313857",
+              "title": "무신사스탠다드 여성 울 블렌드 다이애그널 체스터 롱 코트 그레이 - 코트 | 쿠팡",
+              "thumbnail": "https://image.coupangcdn.com/image/vendor_inventory/6896/52a6080ef41ec84f90c8855088d3326bd778e44c2d211850c6df366cca6f.jpg"
+            }
+          ],
+          "timestamp": "2025-11-18T09:43:49.526Z",
+          "candidateCount": 29,
+          "selectionCount": 3
+        },
+        "tops_2": {
+          "itemDescription": "item2 white shirt",
+          "searchTerms": [
+            "item2 white shirt",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.ebay.com/itm/405442945345",
+              "title": "TB Long Sleeve Blouse Pleated Skirt for Women | eBay",
+              "thumbnail": "https://i.ebayimg.com/images/g/aN0AAOSwDCRmARZ6/s-l1200.jpg"
+            },
+            {
+              "link": "https://m.gsshop.com/prd/prd.gs?prdid=1051256717",
+              "title": "코튼 페이크셔츠 라운드 목카라 화이트 - GS SHOP",
+              "thumbnail": "https://asset.m-gs.kr/prod/1051256717/1/550"
+            },
+            {
+              "link": "https://www.aliexpress.com/item/1005008850967832.html",
+              "title": "White Stand Collars Detachable Fake Collar Simplicity Fashion Faux False Collar for Women Girls - AliExpress",
+              "thumbnail": "https://ae01.alicdn.com/kf/Se7014c54fee840d88e004f82566e9e95g.jpg"
+            }
+          ],
+          "timestamp": "2025-11-18T09:43:53.700Z",
+          "candidateCount": 21,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 15.56,
+        "per_category_search_seconds": 17.96,
+        "gpt4_turbo_api_time_seconds": 14.41,
+        "processing_overhead_seconds": 0.01,
+        "other_overhead_seconds": -14.41,
+        "wall_clock_seconds": 33.54,
+        "serper_api_time_seconds": 42.82,
+        "serper_count": 4,
+        "gpt4_turbo_count": 4,
+        "total_seconds": 33.54,
+        "categories_parallel": 4
+      }
+    }
+  },
+  "status": "success"
+}

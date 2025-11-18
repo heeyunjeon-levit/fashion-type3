@@ -1,0 +1,93 @@
+{
+  "phone": "1095992419",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763459420566_IMG_3915.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "white jacket",
+      "description": "white faux fur jacket with a plush texture and wide collar",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_white_jacket_1763459438999.jpg",
+      "confidence": 0.948
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://byronandbarclay.com/clothing/fernanda-faux-fur-coat-white",
+          "thumbnail": "https://images.squarespace-cdn.com/content/v1/54e9518ee4b0c31341b3cc98/fa21f42a-37db-4f52-a36d-2d2ee4af0861/fern5.jpeg?format=2500w",
+          "title": "Fernanda Faux Fur Coat White — Byron & Barclay"
+        },
+        {
+          "link": "https://www.farfetch.com/lb/shopping/women/fabiana-filippi-shearling-coat-item-31886968.aspx",
+          "thumbnail": "https://cdn-images.farfetch-contents.com/31/88/69/68/31886968_61527376_1000.jpg",
+          "title": "Fabiana Filippi Shearling Coat | White | FARFETCH LB"
+        },
+        {
+          "link": "https://www.musinsa.com/products/3600066",
+          "thumbnail": "https://image.msscdn.net/thumbnails/images/goods_img/20231002/3600066/3600066_16962238029328_big.jpg?w=1000",
+          "title": "해브레스(HAVELESS) MIA FAUX FUR JACKET WHITE - 사이즈 & 후기 | 무신사"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 1,
+        "fallback": 0,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "tops_1": {
+          "itemDescription": "item1 white jacket",
+          "searchTerms": [
+            "item1 white jacket",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://byronandbarclay.com/clothing/fernanda-faux-fur-coat-white",
+              "title": "Fernanda Faux Fur Coat White — Byron & Barclay",
+              "thumbnail": "https://images.squarespace-cdn.com/content/v1/54e9518ee4b0c31341b3cc98/fa21f42a-37db-4f52-a36d-2d2ee4af0861/fern5.jpeg?format=2500w"
+            },
+            {
+              "link": "https://www.farfetch.com/lb/shopping/women/fabiana-filippi-shearling-coat-item-31886968.aspx",
+              "title": "Fabiana Filippi Shearling Coat | White | FARFETCH LB",
+              "thumbnail": "https://cdn-images.farfetch-contents.com/31/88/69/68/31886968_61527376_1000.jpg"
+            },
+            {
+              "link": "https://www.musinsa.com/products/3600066",
+              "title": "해브레스(HAVELESS) MIA FAUX FUR JACKET WHITE - 사이즈 & 후기 | 무신사",
+              "thumbnail": "https://image.msscdn.net/thumbnails/images/goods_img/20231002/3600066/3600066_16962238029328_big.jpg?w=1000"
+            }
+          ],
+          "timestamp": "2025-11-18T09:51:10.197Z",
+          "candidateCount": 29,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 20.59,
+        "per_category_search_seconds": 8.9,
+        "gpt4_turbo_api_time_seconds": 3.36,
+        "processing_overhead_seconds": 0.01,
+        "other_overhead_seconds": -3.36,
+        "wall_clock_seconds": 29.5,
+        "serper_api_time_seconds": 5.52,
+        "serper_count": 1,
+        "gpt4_turbo_count": 1,
+        "total_seconds": 29.5,
+        "categories_parallel": 1
+      }
+    }
+  },
+  "status": "success"
+}

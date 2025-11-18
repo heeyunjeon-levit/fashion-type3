@@ -1,0 +1,17 @@
+{
+  "batch": "batch4",
+  "timestamp": "20251118_173916",
+  "total_processed": 1,
+  "successful": 1,
+  "failed": 0,
+  "results": [
+    {
+      "phone": "1072747575",
+      "status": "success",
+      "items_detected": 2,
+      "total_links": 6,
+      "hashed_id": "45922aed8f81",
+      "link": "https://mvp-a82ltr8pq-heeyun-jeons-projects.vercel.app/results/45922aed8f81.html"
+    }
+  ]
+}

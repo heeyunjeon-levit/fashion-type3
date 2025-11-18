@@ -1,0 +1,93 @@
+{
+  "phone": "1025765210",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763458629333_IMG_3957.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "brown jacket",
+      "description": "brown shearling-lined jacket with large buttons and front pockets",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_brown_jacket_1763458656537.jpg",
+      "confidence": 0.931
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://laurenhi.com/product/전품목어텀세일🎉lauatelier-hunt-half-mustang-beige/30364/",
+          "thumbnail": "https://cafe24img.poxo.com/ohkongjoo/web/product/big/202412/c50523e4beef57ea8c71f6bbfc65f1b0.jpg",
+          "title": "로렌하이 | Hunt Half Mustang - Beige"
+        },
+        {
+          "link": "https://lake-studio.co.kr/product/당일배송-fake-suede-half-mustangbeige/163",
+          "thumbnail": "https://ecimg.cafe24img.com/pg1050b68182173085/lake4852/web/upload/NNEditor/20250820/mobile/93b3dd0328130e831158830a380b8100_1755688634.jpg",
+          "title": "당일배송) Fake Suede Half Mustang_Beige | Lake studio"
+        },
+        {
+          "link": "https://uniformbridge.com/product/reversible-shearling-coat-brown/10642",
+          "thumbnail": "https://cafe24img.poxo.com/ubridge001/web/product/big/202510/5e0e83f4ae82fe9ea1c9dff8464e0690.jpg",
+          "title": "reversible shearling coat brown - UNIFORM BRIDGE"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 1,
+        "fallback": 0,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "tops_1": {
+          "itemDescription": "item1 brown jacket",
+          "searchTerms": [
+            "item1 brown jacket",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://laurenhi.com/product/전품목어텀세일🎉lauatelier-hunt-half-mustang-beige/30364/",
+              "title": "로렌하이 | Hunt Half Mustang - Beige",
+              "thumbnail": "https://cafe24img.poxo.com/ohkongjoo/web/product/big/202412/c50523e4beef57ea8c71f6bbfc65f1b0.jpg"
+            },
+            {
+              "link": "https://lake-studio.co.kr/product/당일배송-fake-suede-half-mustangbeige/163",
+              "title": "당일배송) Fake Suede Half Mustang_Beige | Lake studio",
+              "thumbnail": "https://ecimg.cafe24img.com/pg1050b68182173085/lake4852/web/upload/NNEditor/20250820/mobile/93b3dd0328130e831158830a380b8100_1755688634.jpg"
+            },
+            {
+              "link": "https://uniformbridge.com/product/reversible-shearling-coat-brown/10642",
+              "title": "reversible shearling coat brown - UNIFORM BRIDGE",
+              "thumbnail": "https://cafe24img.poxo.com/ubridge001/web/product/big/202510/5e0e83f4ae82fe9ea1c9dff8464e0690.jpg"
+            }
+          ],
+          "timestamp": "2025-11-18T09:38:05.475Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 12.39,
+        "per_category_search_seconds": 13.81,
+        "gpt4_turbo_api_time_seconds": 4.73,
+        "processing_overhead_seconds": 0.01,
+        "other_overhead_seconds": -4.73,
+        "wall_clock_seconds": 26.2,
+        "serper_api_time_seconds": 9.06,
+        "serper_count": 1,
+        "gpt4_turbo_count": 1,
+        "total_seconds": 26.2,
+        "categories_parallel": 1
+      }
+    }
+  },
+  "status": "success"
+}

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 
 interface Metrics {
   batchSMSSent: number;
@@ -81,6 +82,23 @@ export default function AnalyticsDashboard() {
   const [userJourney, setUserJourney] = useState<any>(null);
   const [loadingJourney, setLoadingJourney] = useState(false);
   const [journeyError, setJourneyError] = useState('');
+
+  // Check for search parameter in URL
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const searchParam = params.get('search');
+      if (searchParam && isAuthenticated) {
+        setUserSearch(searchParam);
+        fetchUserJourney(searchParam);
+        // Scroll to user journey section
+        setTimeout(() => {
+          const element = document.getElementById('user-journey-section');
+          element?.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+      }
+    }
+  }, [isAuthenticated]);
 
   // Check password
   const handleLogin = () => {
@@ -252,6 +270,12 @@ export default function AnalyticsDashboard() {
               <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
               <span className="font-semibold">LIVE</span>
             </div>
+            <Link
+              href="/analytics/users"
+              className="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg transition-all font-semibold"
+            >
+              👥 View All Users
+            </Link>
             <button
               onClick={fetchData}
               className="bg-gray-800 px-4 py-2 rounded-lg hover:bg-gray-700 transition-all"
@@ -262,7 +286,7 @@ export default function AnalyticsDashboard() {
         </div>
 
         {/* User Journey Search */}
-        <div className="bg-gradient-to-r from-purple-900/30 to-blue-900/30 rounded-xl p-6 border border-purple-700/50 mb-8">
+        <div id="user-journey-section" className="bg-gradient-to-r from-purple-900/30 to-blue-900/30 rounded-xl p-6 border border-purple-700/50 mb-8">
           <h2 className="text-2xl font-bold mb-4">🔍 Search User Journey</h2>
           <form onSubmit={handleUserSearchSubmit} className="mb-4">
             <div className="flex gap-3">
@@ -292,29 +316,125 @@ export default function AnalyticsDashboard() {
           {userJourney && (
             <div className="space-y-6">
               {/* User Info */}
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="bg-gray-800 rounded-lg p-4">
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
                   <div className="text-gray-400 text-sm mb-1">Phone</div>
                   <div className="font-mono text-lg">{userJourney.user.phone}</div>
                 </div>
-                <div className="bg-gray-800 rounded-lg p-4">
+                <div className="bg-gray-800 rounded-lg p-4 border border-purple-500/50">
                   <div className="text-gray-400 text-sm mb-1">Total Searches</div>
                   <div className="text-2xl font-bold text-purple-400">{userJourney.stats.total_searches}</div>
                 </div>
-                <div className="bg-gray-800 rounded-lg p-4">
+                <div className="bg-gray-800 rounded-lg p-4 border border-green-500/50">
                   <div className="text-gray-400 text-sm mb-1">Product Clicks</div>
                   <div className="text-2xl font-bold text-green-400">{userJourney.stats.total_clicks}</div>
                 </div>
-                <div className="bg-gray-800 rounded-lg p-4">
+                <div className="bg-gray-800 rounded-lg p-4 border border-blue-500/50">
+                  <div className="text-gray-400 text-sm mb-1">Page Visits</div>
+                  <div className="text-2xl font-bold text-blue-400">
+                    {userJourney.stats.total_result_visits + userJourney.stats.total_app_visits}
+                  </div>
+                </div>
+                <div className="bg-gray-800 rounded-lg p-4 border border-pink-500/50">
                   <div className="text-gray-400 text-sm mb-1">Source</div>
-                  <div className="text-sm">{userJourney.user.conversion_source || 'Unknown'}</div>
+                  <div className="text-sm font-semibold text-pink-300">{userJourney.user.conversion_source || 'Unknown'}</div>
+                  {userJourney.stats.total_feedback > 0 && (
+                    <div className="text-xs text-gray-400 mt-1">💬 {userJourney.stats.total_feedback} feedback</div>
+                  )}
                 </div>
               </div>
 
+              {/* Additional User Details */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                  <div className="text-gray-400 text-xs mb-2">ACCOUNT CREATED</div>
+                  <div className="text-sm text-white">
+                    {new Date(userJourney.user.created_at).toLocaleString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })}
+                  </div>
+                </div>
+                <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                  <div className="text-gray-400 text-xs mb-2">LAST ACTIVE</div>
+                  <div className="text-sm text-white">
+                    {new Date(userJourney.user.last_active_at).toLocaleString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })}
+                  </div>
+                </div>
+              </div>
+
+              {userJourney.user.notes && (
+                <div className="bg-yellow-900/20 border border-yellow-600/50 rounded-lg p-4">
+                  <div className="text-yellow-400 text-xs font-semibold mb-2">📝 NOTES</div>
+                  <div className="text-sm text-yellow-100">{userJourney.user.notes}</div>
+                </div>
+              )}
+
+              {/* Feedback Summary */}
+              {userJourney.stats.total_feedback > 0 && (
+                <div className="bg-gradient-to-r from-pink-900/30 to-purple-900/30 border border-pink-500/50 rounded-lg p-5">
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="text-2xl">💬</span>
+                    <h3 className="text-lg font-bold text-pink-300">User Feedback ({userJourney.stats.total_feedback})</h3>
+                  </div>
+                  <div className="space-y-3">
+                    {userJourney.timeline
+                      .filter((item: any) => item.type === 'feedback')
+                      .map((item: any, idx: number) => (
+                        <div key={idx} className="bg-gray-800/60 rounded-lg p-4 border border-pink-400/30">
+                          <div className="flex items-start justify-between mb-2">
+                            <div className="flex items-center gap-2">
+                              {item.data.satisfaction === '만족' ? (
+                                <span className="text-3xl">😊</span>
+                              ) : (
+                                <span className="text-3xl">😞</span>
+                              )}
+                              <span className={`text-lg font-bold ${
+                                item.data.satisfaction === '만족' ? 'text-green-400' : 'text-red-400'
+                              }`}>
+                                {item.data.satisfaction}
+                              </span>
+                            </div>
+                            <span className="text-xs text-gray-400">{item.timeAgo}</span>
+                          </div>
+                          {item.data.comment && (
+                            <div className="mt-2 bg-gray-900/50 rounded px-3 py-2">
+                              <div className="text-xs text-gray-400 mb-1">Comment:</div>
+                              <div className="text-sm text-white">{item.data.comment}</div>
+                            </div>
+                          )}
+                          {item.data.result_page_url && (
+                            <div className="mt-2 text-xs text-gray-500">
+                              Page: {item.data.result_page_url.split('/').pop()}
+                            </div>
+                          )}
+                          {item.data.page_load_time && (
+                            <div className="mt-1 text-xs text-gray-500">
+                              Submitted after {item.data.page_load_time}s
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              )}
+
               {/* Timeline */}
               <div>
-                <h3 className="text-lg font-bold mb-3">📅 Complete Timeline</h3>
-                <div className="space-y-3 max-h-96 overflow-y-auto">
+                <h3 className="text-lg font-bold mb-3 flex items-center justify-between">
+                  <span>📅 Complete Timeline</span>
+                  <span className="text-sm font-normal text-gray-400">{userJourney.timeline.length} events</span>
+                </h3>
+                <div className="space-y-4 max-h-[800px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-purple-600 scrollbar-track-gray-800">
                   {userJourney.timeline.length === 0 ? (
                     <p className="text-gray-500 text-center py-4">No activity found</p>
                   ) : (
@@ -693,6 +813,7 @@ function TimelineItem({ item }: { item: any }) {
   const icons: Record<string, string> = {
     upload: '📸',
     search: '🎯',
+    final_results: '✨',
     click: '🛍️',
     result_visit: '👁️',
     app_visit: '📱',
@@ -701,63 +822,380 @@ function TimelineItem({ item }: { item: any }) {
 
   const labels: Record<string, string> = {
     upload: 'Uploaded image',
-    search: 'Viewed search results',
+    search: 'GPT filtered products',
+    final_results: 'Final results displayed',
     click: 'Clicked product',
     result_visit: 'Visited result page',
     app_visit: 'Visited app page',
     feedback: 'Submitted feedback'
   };
 
-  return (
-    <div className="bg-gray-800 rounded-lg p-4 border border-gray-700 hover:border-purple-500 transition-all">
-      <div className="flex items-start gap-3">
-        <div className="text-2xl">{icons[item.type]}</div>
-        <div className="flex-1">
-          <div className="flex items-center justify-between mb-2">
-            <span className="font-semibold">{labels[item.type]}</span>
-            <span className="text-xs text-gray-400">{item.timeAgo}</span>
+  // UPLOAD - Show large image
+  if (item.type === 'upload' && item.data.url) {
+    return (
+      <div className="bg-gray-800 rounded-lg p-5 border border-gray-700 hover:border-yellow-500 transition-all">
+        <div className="flex items-start gap-4">
+          <div className="text-3xl">{icons[item.type]}</div>
+          <div className="flex-1">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-lg font-semibold text-yellow-400">{labels[item.type]}</span>
+              <span className="text-xs text-gray-400">{item.timeAgo}</span>
+            </div>
+            <img 
+              src={item.data.url} 
+              alt="Upload" 
+              className="w-full max-w-md h-auto object-cover rounded-lg shadow-lg border border-gray-600" 
+            />
           </div>
-          
-          {item.type === 'upload' && item.data.url && (
-            <img src={item.data.url} alt="Upload" className="w-24 h-24 object-cover rounded mt-2" />
-          )}
-          
-          {item.type === 'search' && (
-            <div className="text-sm text-gray-300 space-y-1">
-              <div>{item.data.itemsDetected} items • {item.data.totalProducts} products found</div>
+        </div>
+      </div>
+    );
+  }
+
+  // SEARCH RESULTS (GPT Selection) - Show all products with images in a grid
+  if (item.type === 'search' && item.data.itemDetails) {
+    const allProducts = item.data.itemDetails.flatMap((detail: any) => 
+      (detail.products || []).map((p: any) => ({
+        ...p,
+        category: detail.category,
+        description: detail.description
+      }))
+    );
+
+    return (
+      <div className="bg-gradient-to-br from-purple-900/40 to-blue-900/40 rounded-lg p-5 border border-purple-500/50 hover:border-purple-400 transition-all">
+        <div className="flex items-start gap-4 mb-4">
+          <div className="text-3xl">{icons[item.type]}</div>
+          <div className="flex-1">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-lg font-semibold text-purple-300">{labels[item.type]}</span>
+              <span className="text-xs text-gray-400">{item.timeAgo}</span>
+            </div>
+            <div className="text-sm text-purple-200 mb-3">
+              {item.data.itemsDetected} items detected • {item.data.totalProducts} products found
+            </div>
+            
+            {/* Items detected details */}
+            <div className="space-y-2 mb-4">
               {item.data.itemDetails.map((detail: any, idx: number) => (
-                <div key={idx} className="text-xs text-gray-400">
-                  • {detail.description}: {detail.productCount} products
+                <div key={idx} className="bg-gray-800/60 rounded-lg px-3 py-2 border border-purple-400/30">
+                  <span className="text-sm font-semibold text-purple-300">{detail.category}:</span>{' '}
+                  <span className="text-sm text-gray-200">{detail.description}</span>
+                  <span className="text-xs text-gray-400 ml-2">({detail.productCount} products)</span>
                 </div>
               ))}
             </div>
-          )}
-          
-          {item.type === 'click' && (
-            <div className="text-sm space-y-1">
-              <div className="text-purple-300">{item.data.item_category}: {item.data.item_description}</div>
-              <div className="text-gray-400 text-xs line-clamp-1">{item.data.product_title}</div>
+          </div>
+        </div>
+
+        {/* Product Grid - Show ALL products */}
+        {allProducts.length > 0 && (
+          <div className="mt-4">
+            <div className="text-xs font-semibold text-purple-300 mb-3 uppercase tracking-wide">
+              All {allProducts.length} Products Selected by AI
             </div>
-          )}
-          
-          {item.type === 'feedback' && (
-            <div className="text-sm text-gray-300">
-              <div>Rating: {item.data.satisfaction_rating}/5</div>
-              {item.data.reason && <div className="text-xs text-gray-400 mt-1">Reason: {item.data.reason}</div>}
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+              {allProducts.map((product: any, idx: number) => (
+                <a
+                  key={idx}
+                  href={product.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-gray-800/80 rounded-lg overflow-hidden hover:ring-2 hover:ring-purple-400 transition-all group shadow-lg hover:shadow-purple-500/50"
+                >
+                  {product.thumbnail && (
+                    <img 
+                      src={product.thumbnail} 
+                      alt={product.title}
+                      className="w-full h-40 object-cover"
+                    />
+                  )}
+                  <div className="p-2">
+                    <div className="text-xs text-purple-300 font-semibold mb-1">
+                      {product.description}
+                    </div>
+                    <div className="text-xs text-white line-clamp-2 group-hover:text-purple-300 transition-colors">
+                      {product.title}
+                    </div>
+                  </div>
+                </a>
+              ))}
             </div>
-          )}
-          
-          {item.type === 'result_visit' && (
-            <div className="text-sm text-gray-400">
-              Time on page: {item.data.time_on_page_seconds || 0}s
+          </div>
+        )}
+
+        {allProducts.length === 0 && (
+          <div className="text-sm text-gray-500 italic text-center py-4">No products selected by AI</div>
+        )}
+      </div>
+    );
+  }
+
+  // FINAL RESULTS DISPLAYED - Show what user actually saw (including fallback)
+  if (item.type === 'final_results' && item.data.categoryDetails) {
+    const allProducts = item.data.categoryDetails.flatMap((cat: any) => 
+      (cat.products || []).map((p: any) => ({
+        ...p,
+        category: cat.category,
+        source: cat.source,
+        productCount: cat.productCount
+      }))
+    );
+
+    return (
+      <div className="bg-gradient-to-br from-green-900/40 to-emerald-900/40 rounded-lg p-5 border border-green-500/50 hover:border-green-400 transition-all">
+        <div className="flex items-start gap-4 mb-4">
+          <div className="text-3xl">{icons[item.type]}</div>
+          <div className="flex-1">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-lg font-semibold text-green-300">{labels[item.type]}</span>
+              <span className="text-xs text-gray-400">{item.timeAgo}</span>
             </div>
-          )}
-          
-          {item.type === 'app_visit' && (
-            <div className="text-sm text-gray-400">
-              Page: {item.data.page_path}
+            <div className="text-sm text-green-200 mb-3">
+              {item.data.totalProducts} total products displayed
+              {item.data.gptProducts > 0 && (
+                <span className="ml-2 text-purple-300">({item.data.gptProducts} from AI)</span>
+              )}
+              {item.data.fallbackProducts > 0 && (
+                <span className="ml-2 text-orange-300">({item.data.fallbackProducts} fallback)</span>
+              )}
             </div>
-          )}
+            
+            {/* Category breakdown */}
+            <div className="space-y-2 mb-4">
+              {item.data.categoryDetails.map((cat: any, idx: number) => (
+                <div key={idx} className="bg-gray-800/60 rounded-lg px-3 py-2 border border-green-400/30">
+                  <span className="text-sm font-semibold text-green-300">{cat.category}:</span>{' '}
+                  <span className="text-sm text-gray-200">{cat.productCount} products</span>
+                  <span className={`ml-2 text-xs px-2 py-0.5 rounded ${
+                    cat.source === 'gpt' 
+                      ? 'bg-purple-600/50 text-purple-200' 
+                      : 'bg-orange-600/50 text-orange-200'
+                  }`}>
+                    {cat.source === 'gpt' ? 'AI Selected' : 'Fallback'}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Product Grid - Show ALL displayed products */}
+        {allProducts.length > 0 && (
+          <div className="mt-4">
+            <div className="text-xs font-semibold text-green-300 mb-3 uppercase tracking-wide">
+              All {allProducts.length} Products User Saw
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+              {allProducts.map((product: any, idx: number) => (
+                <a
+                  key={idx}
+                  href={product.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`rounded-lg overflow-hidden hover:ring-2 transition-all group shadow-lg relative ${
+                    product.source === 'gpt'
+                      ? 'bg-purple-900/40 hover:ring-purple-400 hover:shadow-purple-500/50'
+                      : 'bg-orange-900/40 hover:ring-orange-400 hover:shadow-orange-500/50'
+                  }`}
+                >
+                  {product.thumbnail && (
+                    <img 
+                      src={product.thumbnail} 
+                      alt={product.title}
+                      className="w-full h-40 object-cover"
+                    />
+                  )}
+                  <div className="absolute top-2 right-2">
+                    <span className={`text-xs px-2 py-1 rounded font-semibold ${
+                      product.source === 'gpt'
+                        ? 'bg-purple-600 text-white'
+                        : 'bg-orange-600 text-white'
+                    }`}>
+                      #{product.position}
+                    </span>
+                  </div>
+                  <div className="p-2">
+                    <div className="text-xs text-green-300 font-semibold mb-1">
+                      {product.category}
+                    </div>
+                    <div className="text-xs text-white line-clamp-2 group-hover:text-green-300 transition-colors">
+                      {product.title}
+                    </div>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // PRODUCT CLICK - Show clicked product with image
+  if (item.type === 'click') {
+    return (
+      <div className="bg-gray-800 rounded-lg p-5 border border-gray-700 hover:border-green-500 transition-all">
+        <div className="flex items-start gap-4">
+          <div className="text-3xl">{icons[item.type]}</div>
+          <div className="flex-1">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-lg font-semibold text-green-400">{labels[item.type]}</span>
+              <span className="text-xs text-gray-400">{item.timeAgo}</span>
+            </div>
+            
+            {item.data.product_thumbnail && (
+              <img 
+                src={item.data.product_thumbnail} 
+                alt={item.data.product_title}
+                className="w-full max-w-xs h-48 object-cover rounded-lg mb-3 shadow-lg"
+              />
+            )}
+            
+            <div className="space-y-2">
+              {item.data.item_category && (
+                <div className="text-sm">
+                  <span className="text-purple-400 font-semibold">{item.data.item_category}:</span>{' '}
+                  <span className="text-gray-300">{item.data.item_description}</span>
+                </div>
+              )}
+              <div className="text-sm text-white font-semibold">
+                {item.data.product_title}
+              </div>
+              {item.data.product_link && (
+                <a 
+                  href={item.data.product_link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block text-xs text-blue-400 hover:underline mt-2"
+                >
+                  View product →
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // FEEDBACK - Show detailed feedback
+  if (item.type === 'feedback') {
+    const isSatisfied = item.data.satisfaction === '만족';
+    
+    return (
+      <div className={`rounded-lg p-5 border transition-all ${
+        isSatisfied 
+          ? 'bg-green-900/20 border-green-500/50 hover:border-green-400' 
+          : 'bg-red-900/20 border-red-500/50 hover:border-red-400'
+      }`}>
+        <div className="flex items-start gap-4">
+          <div className="text-4xl">{isSatisfied ? '😊' : '😞'}</div>
+          <div className="flex-1">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-3">
+                <span className="text-lg font-semibold text-pink-400">{labels[item.type]}</span>
+                <span className={`text-2xl font-bold ${
+                  isSatisfied ? 'text-green-400' : 'text-red-400'
+                }`}>
+                  {item.data.satisfaction}
+                </span>
+              </div>
+              <span className="text-xs text-gray-400">{item.timeAgo}</span>
+            </div>
+            
+            {item.data.comment && (
+              <div className="bg-gray-800/60 rounded-lg px-4 py-3 mb-3">
+                <div className="text-xs text-gray-400 font-semibold mb-2">💬 Comment:</div>
+                <div className="text-sm text-white leading-relaxed">{item.data.comment}</div>
+              </div>
+            )}
+            
+            <div className="flex flex-wrap gap-3 text-xs text-gray-400">
+              {item.data.result_page_url && (
+                <div className="flex items-center gap-1">
+                  <span>📄</span>
+                  <span>Page: {item.data.result_page_url.split('/').pop()?.replace('.html', '')}</span>
+                </div>
+              )}
+              {item.data.page_load_time && (
+                <div className="flex items-center gap-1">
+                  <span>⏱️</span>
+                  <span>Submitted after {item.data.page_load_time}s</span>
+                </div>
+              )}
+              {item.data.user_agent && (
+                <div className="flex items-center gap-1">
+                  <span>{item.data.user_agent.includes('Mobile') ? '📱' : '💻'}</span>
+                  <span>{item.data.user_agent.includes('Mobile') ? 'Mobile' : 'Desktop'}</span>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // RESULT VISIT
+  if (item.type === 'result_visit') {
+    return (
+      <div className="bg-gray-800 rounded-lg p-5 border border-gray-700 hover:border-blue-500 transition-all">
+        <div className="flex items-start gap-4">
+          <div className="text-3xl">{icons[item.type]}</div>
+          <div className="flex-1">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-lg font-semibold text-blue-400">{labels[item.type]}</span>
+              <span className="text-xs text-gray-400">{item.timeAgo}</span>
+            </div>
+            <div className="text-sm text-gray-300 space-y-1">
+              <div>Time on page: <span className="text-white font-semibold">{item.data.time_on_page_seconds || 0} seconds</span></div>
+              {item.data.session_hash && (
+                <div className="text-xs text-gray-500">Session: {item.data.session_hash.slice(0, 8)}...</div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // APP VISIT
+  if (item.type === 'app_visit') {
+    return (
+      <div className="bg-gray-800 rounded-lg p-5 border border-gray-700 hover:border-cyan-500 transition-all">
+        <div className="flex items-start gap-4">
+          <div className="text-3xl">{icons[item.type]}</div>
+          <div className="flex-1">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-lg font-semibold text-cyan-400">{labels[item.type]}</span>
+              <span className="text-xs text-gray-400">{item.timeAgo}</span>
+            </div>
+            <div className="text-sm text-gray-300 space-y-1">
+              <div>Page: <span className="text-white font-mono">{item.data.page_path}</span></div>
+              {item.data.user_agent && (
+                <div className="text-xs text-gray-500">Device: {item.data.user_agent.includes('Mobile') ? '📱 Mobile' : '💻 Desktop'}</div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // FALLBACK for any other types
+  return (
+    <div className="bg-gray-800 rounded-lg p-4 border border-gray-700 hover:border-purple-500 transition-all">
+      <div className="flex items-start gap-3">
+        <div className="text-2xl">{icons[item.type] || '❓'}</div>
+        <div className="flex-1">
+          <div className="flex items-center justify-between mb-2">
+            <span className="font-semibold">{labels[item.type] || item.type}</span>
+            <span className="text-xs text-gray-400">{item.timeAgo}</span>
+          </div>
+          <div className="text-sm text-gray-400">
+            {JSON.stringify(item.data)}
+          </div>
         </div>
       </div>
     </div>

@@ -1,0 +1,93 @@
+{
+  "phone": "1085484601",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763459720479_Screenshot_20251118_002136.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "beige sweater",
+      "description": "beige ribbed knit sweater with large buttons and a wide collar",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_beige_sweater_1763459737876.jpg",
+      "confidence": 0.896
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://www.yesstyle.com/en/beaustreet-collared-plain-cardigan/info.html/pid.1124954822",
+          "thumbnail": "https://d1flfk77wl2xk4.cloudfront.net/Assets/32/497/l_p0199449732.jpg",
+          "title": "Beaustreet - Collared Plain Cardigan | YesStyle"
+        },
+        {
+          "link": "https://www.imfieldcashmere.com/Thick-cropped-cashmere-polo-cardigans-sweater-pd713538988.html",
+          "thumbnail": "https://5lrorwxhloilrij.leadongcdn.com/cloud/klBprKjjRikSjqlpijlpi/O1CN01dL12VF26HnkF6GG03_-3420507637-jpg_-460-460.jpeg",
+          "title": "Thick cropped cashmere polo cardigans sweater - Buy ..."
+        },
+        {
+          "link": "https://www.treenza.com/products/elegantni-i-mekani-kasmirski-dzemper-s-reverima-i-kopcanjem-na-gumbe",
+          "thumbnail": "http://img.staticdj.com/69c9a756d7750d399f33e0f7cac802e9.jpeg",
+          "title": "Elegantni i mekani kašmirski džemper s reverima i kopčanjem ..."
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 1,
+        "fallback": 0,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "tops_1": {
+          "itemDescription": "item1 beige sweater",
+          "searchTerms": [
+            "item1 beige sweater",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.yesstyle.com/en/beaustreet-collared-plain-cardigan/info.html/pid.1124954822",
+              "title": "Beaustreet - Collared Plain Cardigan | YesStyle",
+              "thumbnail": "https://d1flfk77wl2xk4.cloudfront.net/Assets/32/497/l_p0199449732.jpg"
+            },
+            {
+              "link": "https://www.imfieldcashmere.com/Thick-cropped-cashmere-polo-cardigans-sweater-pd713538988.html",
+              "title": "Thick cropped cashmere polo cardigans sweater - Buy ...",
+              "thumbnail": "https://5lrorwxhloilrij.leadongcdn.com/cloud/klBprKjjRikSjqlpijlpi/O1CN01dL12VF26HnkF6GG03_-3420507637-jpg_-460-460.jpeg"
+            },
+            {
+              "link": "https://www.treenza.com/products/elegantni-i-mekani-kasmirski-dzemper-s-reverima-i-kopcanjem-na-gumbe",
+              "title": "Elegantni i mekani kašmirski džemper s reverima i kopčanjem ...",
+              "thumbnail": "http://img.staticdj.com/69c9a756d7750d399f33e0f7cac802e9.jpeg"
+            }
+          ],
+          "timestamp": "2025-11-18T09:56:13.905Z",
+          "candidateCount": 24,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 5.48,
+        "per_category_search_seconds": 28.7,
+        "gpt4_turbo_api_time_seconds": 4.46,
+        "processing_overhead_seconds": 0.02,
+        "other_overhead_seconds": -4.46,
+        "wall_clock_seconds": 34.2,
+        "serper_api_time_seconds": 24.23,
+        "serper_count": 1,
+        "gpt4_turbo_count": 1,
+        "total_seconds": 34.2,
+        "categories_parallel": 1
+      }
+    }
+  },
+  "status": "success"
+}

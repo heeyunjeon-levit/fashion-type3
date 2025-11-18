@@ -230,3 +230,4 @@ WHERE lc.user_id = target_user.user_id
 GROUP BY item_category
 ORDER BY COUNT(*) DESC;
 
+

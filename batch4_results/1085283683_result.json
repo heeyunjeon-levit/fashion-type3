@@ -1,0 +1,76 @@
+{
+  "phone": "1085283683",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763459777074_Screenshot_20251118_002839_Instagram.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "black bag",
+      "description": "black leather handbag with a structured design and top handles",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_black_bag_1763459791105.jpg",
+      "confidence": 0.966
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://global.musinsa.com/th/goods/4755892",
+          "thumbnail": "https://image.msscdn.net/thumbnails/images/goods_img/20250204/4755892/4755892_17557418455568_big.jpg",
+          "title": "MUSINSA | MARHEN.J DEFT"
+        },
+        {
+          "link": "https://www.ssgdfs.com/kr/dispctg/brand/MARHEN.J?wisetracker_yn=N",
+          "thumbnail": "https://img.ssgdfs.com/upload/C00001/goos/org/885/250812000893885.jpg?RS=270",
+          "title": "신세계인터넷면세점"
+        },
+        {
+          "link": "https://www.farfetch.com/vn/shopping/women/zadigvoltaire-sunny-medium-shoulder-bag-item-23969594.aspx",
+          "thumbnail": "https://cdn-images.farfetch-contents.com/23/96/95/94/23969594_54057259_1000.jpg",
+          "title": "Zadig&Voltaire Sunny Medium Shoulder Bag | Black | FARFETCH VN"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 0,
+        "fallback": 1,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "tops_1": {
+          "itemDescription": "item1 black bag",
+          "searchTerms": [
+            "item1 black bag",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-18T09:57:02.433Z",
+          "candidateCount": 30
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 5.24,
+        "per_category_search_seconds": 24.71,
+        "gpt4_turbo_api_time_seconds": 1.83,
+        "processing_overhead_seconds": 0.01,
+        "other_overhead_seconds": -1.82,
+        "wall_clock_seconds": 29.96,
+        "serper_api_time_seconds": 22.88,
+        "serper_count": 1,
+        "gpt4_turbo_count": 1,
+        "total_seconds": 29.96,
+        "categories_parallel": 1
+      }
+    }
+  },
+  "status": "success"
+}

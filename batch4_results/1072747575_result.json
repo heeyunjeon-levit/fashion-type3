@@ -1,0 +1,152 @@
+{
+  "phone": "1072747575",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763455534437_Screenshot_20251114_201038_Instagram.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "blue shirt",
+      "description": "blue long sleeve henley shirt with buttons and a fitted style",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_blue_shirt_1763455559542.jpg",
+      "confidence": 0.939
+    },
+    {
+      "category": "tops",
+      "groundingdino_prompt": "white top",
+      "description": "white lace-trimmed camisole worn underneath the shirt",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_white_top_1763455574564.jpg",
+      "confidence": 0.368
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://www.pacsun.com/john-galt/navy-zelly-henley-long-sleeve-top-0704601600943.html",
+          "thumbnail": "https://www.pacsun.com/dw/image/v2/AAJE_PRD/on/demandware.static/-/Sites-pacsun_storefront_catalog/default/dw1b92d078/product_images/0704601600943NEW_01_041.jpg?sw=600",
+          "title": "John Galt Navy Zelly Henley Long Sleeve Top | PacSun"
+        },
+        {
+          "link": "https://www.amazon.com/Yuemengxuan-Henley-Sleeve-Aesthetic-Layering/dp/B09NVTRT5D",
+          "thumbnail": "https://m.media-amazon.com/images/I/71s2Vk8B4qL._AC_UY1000_.jpg",
+          "title": "Henley Shirt for Women Long Sleeve Scoop Neck Fitted Tee 90s Sexy Aesthetic Grunge Tee Y2k Layering Shirt (Blue, XL) at Amazon Women's Clothing store"
+        },
+        {
+          "link": "https://poshmark.com/listing/American-Eagle-True-Vintage-y2k-Cornflower-Blue-Softest-Henley-Size-M-651416f597b5d0de4dcb53ad",
+          "thumbnail": "https://di2ponv0v5otw.cloudfront.net/posts/2023/09/27/651416f597b5d0de4dcb53ad/m_wp_6514171f7dfcc203770b98d2.webp",
+          "title": "American Eagle Outfitters | Tops | American Eagle True Vintage Y2k Cornflower Blue Softest Henley Size M | Poshmark"
+        }
+      ],
+      "tops_2": [
+        {
+          "link": "https://www.subdued.com/eu_en/lace-chester-t-shirt-ts0huff",
+          "thumbnail": "https://www.subdued.com/media/catalog/product/t/s/ts0huffcol19n-2.jpg?optimize=high&fit=bounds&height=110&width=88&canvas=88:110",
+          "title": "Lace chester t-shirt | Collection 2023| Subdued"
+        },
+        {
+          "link": "https://whoau.elandmall.co.kr/i/item?itemNo=2506960916&lowerVendNo=LV16003623",
+          "thumbnail": "https://item.elandrs.com/r/image/item/2025-07-04/93c29c85-301a-4a88-adab-8ff18dd53a0f.jpg?w=750&h=&q=100",
+          "title": "Layered Henry Neck Long Sleeve T-Shirt/WHLAF4891F- 후아유"
+        },
+        {
+          "link": "https://www.amazon.com/Yuemengxuan-Henley-Sleeve-Aesthetic-Layering/dp/B09NVTRT5D",
+          "thumbnail": "https://m.media-amazon.com/images/I/71s2Vk8B4qL._AC_UY1000_.jpg",
+          "title": "Henley Shirt for Women Long Sleeve Scoop Neck Fitted Tee 90s Sexy Aesthetic Grunge Tee Y2k Layering Shirt (Blue, XL) at Amazon Women's Clothing store"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 2,
+        "fallback": 0,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "tops_1": {
+          "itemDescription": "item1 blue shirt",
+          "searchTerms": [
+            "item1 blue shirt",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.pacsun.com/john-galt/navy-zelly-henley-long-sleeve-top-0704601600943.html",
+              "title": "John Galt Navy Zelly Henley Long Sleeve Top | PacSun",
+              "thumbnail": "https://www.pacsun.com/dw/image/v2/AAJE_PRD/on/demandware.static/-/Sites-pacsun_storefront_catalog/default/dw1b92d078/product_images/0704601600943NEW_01_041.jpg?sw=600"
+            },
+            {
+              "link": "https://www.amazon.com/Yuemengxuan-Henley-Sleeve-Aesthetic-Layering/dp/B09NVTRT5D",
+              "title": "Henley Shirt for Women Long Sleeve Scoop Neck Fitted Tee 90s Sexy Aesthetic Grunge Tee Y2k Layering Shirt (Blue, XL) at Amazon Women's Clothing store",
+              "thumbnail": "https://m.media-amazon.com/images/I/71s2Vk8B4qL._AC_UY1000_.jpg"
+            },
+            {
+              "link": "https://poshmark.com/listing/American-Eagle-True-Vintage-y2k-Cornflower-Blue-Softest-Henley-Size-M-651416f597b5d0de4dcb53ad",
+              "title": "American Eagle Outfitters | Tops | American Eagle True Vintage Y2k Cornflower Blue Softest Henley Size M | Poshmark",
+              "thumbnail": "https://di2ponv0v5otw.cloudfront.net/posts/2023/09/27/651416f597b5d0de4dcb53ad/m_wp_6514171f7dfcc203770b98d2.webp"
+            }
+          ],
+          "timestamp": "2025-11-18T08:46:56.842Z",
+          "candidateCount": 29,
+          "selectionCount": 3
+        },
+        "tops_2": {
+          "itemDescription": "item2 white top",
+          "searchTerms": [
+            "item2 white top",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.subdued.com/eu_en/lace-chester-t-shirt-ts0huff",
+              "title": "Lace chester t-shirt | Collection 2023| Subdued",
+              "thumbnail": "https://www.subdued.com/media/catalog/product/t/s/ts0huffcol19n-2.jpg?optimize=high&fit=bounds&height=110&width=88&canvas=88:110"
+            },
+            {
+              "link": "https://whoau.elandmall.co.kr/i/item?itemNo=2506960916&lowerVendNo=LV16003623",
+              "title": "Layered Henry Neck Long Sleeve T-Shirt/WHLAF4891F- 후아유",
+              "thumbnail": "https://item.elandrs.com/r/image/item/2025-07-04/93c29c85-301a-4a88-adab-8ff18dd53a0f.jpg?w=750&h=&q=100"
+            },
+            {
+              "link": "https://www.amazon.com/Yuemengxuan-Henley-Sleeve-Aesthetic-Layering/dp/B09NVTRT5D",
+              "title": "Henley Shirt for Women Long Sleeve Scoop Neck Fitted Tee 90s Sexy Aesthetic Grunge Tee Y2k Layering Shirt (Blue, XL) at Amazon Women's Clothing store",
+              "thumbnail": "https://m.media-amazon.com/images/I/71s2Vk8B4qL._AC_UY1000_.jpg"
+            }
+          ],
+          "timestamp": "2025-11-18T08:47:02.520Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 27.59,
+        "per_category_search_seconds": 18.75,
+        "gpt4_turbo_api_time_seconds": 9.47,
+        "processing_overhead_seconds": 0,
+        "other_overhead_seconds": -9.47,
+        "wall_clock_seconds": 46.34,
+        "serper_api_time_seconds": 22.31,
+        "serper_count": 2,
+        "gpt4_turbo_count": 2,
+        "total_seconds": 46.34,
+        "categories_parallel": 2
+      }
+    }
+  },
+  "status": "success"
+}

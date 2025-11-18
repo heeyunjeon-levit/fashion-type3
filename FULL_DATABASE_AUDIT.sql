@@ -229,3 +229,4 @@ SELECT
     COUNT(DISTINCT session_id)
 FROM app_page_visits;
 
+

@@ -1,0 +1,250 @@
+{
+  "phone": "1024776083",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763460551384_IMG_5578.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "brown vest",
+      "description": "brown quilted puffer vest with a zipper front",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_brown_vest_1763460572444.jpg",
+      "confidence": 0.532
+    },
+    {
+      "category": "tops",
+      "groundingdino_prompt": "gray sweater",
+      "description": "dark gray long sleeve sweater with a crew neck",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_gray_sweater_1763460580146.jpg",
+      "confidence": 0.555
+    },
+    {
+      "category": "bottoms",
+      "groundingdino_prompt": "black pants",
+      "description": "black loose-fitting pants with a straight leg",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_black_pants_1763460587190.jpg",
+      "confidence": 0.598
+    },
+    {
+      "category": "shoes",
+      "groundingdino_prompt": "checkered shoes",
+      "description": "black and white checkered slip-on shoes",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item4_checkered_shoes_1763460594223.jpg",
+      "confidence": 0.553
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://www.zara.com/us/en/technical-quilted-vest-p05320308.html",
+          "thumbnail": "https://static.zara.net/assets/public/ccc5/35f2/cdf74a5b9881/ba4f45d0db63/05320308700-e1/05320308700-e1.jpg?ts=1759481889667",
+          "title": "TECHNICAL QUILTED VEST - Brown | ZARA United States"
+        },
+        {
+          "link": "https://www2.hm.com/en_ca/productpage.1274643002.html",
+          "thumbnail": "https://image.hm.com/assets/hm/f0/4e/f04eb19d9595d5f6c1fd34bf058586cf064e5ef6.jpg?imwidth=768",
+          "title": "Men's Dark brown Padded Vest | H&M CA"
+        },
+        {
+          "link": "https://www.prada.com/sg/en/p/re-nylon-vest/SGB033_1WQ9_F0324_S_OOO",
+          "thumbnail": "https://www.prada.com/content/dam/pradabkg_products/S/SGB/SGB033/1WQ9F0324/SGB033_1WQ9_F0324_S_OOO_MDB.jpg",
+          "title": "Cocoa Brown Re-Nylon vest | PRADA"
+        }
+      ],
+      "tops_2": [
+        {
+          "link": "https://www.gap.com/browse/product.do?pid=498996002",
+          "thumbnail": "https://www.gap.com/webcontent/0056/786/762/cn56786762.jpg",
+          "title": "Recycled Lightweight Quilted Puff Vest | Gap"
+        },
+        {
+          "link": "https://www.ebay.com/shop/cabelas-down-vest?_nkw=cabelas+down+vest",
+          "thumbnail": "https://i.ebayimg.com/images/g/x98AAeSwFPNoxuvF/s-l300.jpg",
+          "title": "Cabelas Down Vest | eBay"
+        },
+        {
+          "link": "https://www.therealreal.com/products/women/clothing/jackets/moncler-down-jacket-reid0",
+          "thumbnail": "https://product-images.therealreal.com/MOC163874_2_enlarged.jpg",
+          "title": "Moncler Vest - Grey Jackets, Clothing - MOC163874 | The RealReal"
+        }
+      ],
+      "bottoms_3": [
+        {
+          "link": "https://www.musinsa.com/products/4091318",
+          "thumbnail": "https://image.msscdn.net/images/prd_img/202504141808341272691252867fcd0921f12e.jpg",
+          "title": "르아브(LEARVE) 클레멘테 나일론 와이드 팬츠 빈티지블랙 - 사이즈 & 후기 | 무신사"
+        },
+        {
+          "link": "https://www.29cm.co.kr/products/1920310",
+          "thumbnail": "https://img.29cm.co.kr/next-product/2023/02/15/65ae1174a28445808c38e514339674b9_20230215155933.jpg?width=1200&format=webp",
+          "title": "SNOW PANTS - BLACK - 감도 깊은 취향 셀렉트샵 29CM"
+        },
+        {
+          "link": "https://www.musinsa.com/products/4760347",
+          "thumbnail": "https://image.msscdn.net/images/goods_img/20250205/4760347/4760347_17387426368479_500.jpg",
+          "title": "마크엠(MARKM) PARACHUTE PANTS-BLACK - 사이즈 & 후기 | 무신사"
+        }
+      ],
+      "shoes_4": [
+        {
+          "link": "https://poshmark.com/listing/Vans-All-over-BW-checkerboard-slip-on-Shoes-682d033c310f1cdc16565d92",
+          "thumbnail": "https://di2ponv0v5otw.cloudfront.net/posts/2025/05/20/682d033c310f1cdc16565d92/m_wp_682d0500dc3b46949918811f.webp",
+          "title": "Vans | Shoes | Vans All Over Bw Checkerboard Slip On Shoes | Poshmark"
+        },
+        {
+          "link": "https://www.coupang.com/vp/products/8437198096",
+          "thumbnail": "https://image.coupangcdn.com/image/vendor_inventory/1d9c/5f41c10fcee450480eedf6b5cd3337fae58d9445ae019399f7d5c5dcd935.jpg",
+          "title": "슈몬스터) 반스 스니커즈 컴피쿠시 원 체커보드 블랙 마쉬멜로우 운동화 - 운동화 | 쿠팡"
+        },
+        {
+          "link": "https://www.ssg.com/item/itemView.ssg?itemId=1000307549734",
+          "thumbnail": "https://sitem.ssgcdn.com/34/97/54/item/1000307549734_i1_250.jpg",
+          "title": "VANS ComfyCush One 반스 컴피쿠시 원 체커보드 블랙 / VN0A45J5R6R - SSG.COM"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 3,
+        "fallback": 1,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "tops_2": {
+          "itemDescription": "item2 gray sweater",
+          "searchTerms": [
+            "item2 gray sweater",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-18T10:10:21.594Z",
+          "candidateCount": 26
+        },
+        "tops_1": {
+          "itemDescription": "item1 brown vest",
+          "searchTerms": [
+            "item1 brown vest",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.zara.com/us/en/technical-quilted-vest-p05320308.html",
+              "title": "TECHNICAL QUILTED VEST - Brown | ZARA United States",
+              "thumbnail": "https://static.zara.net/assets/public/ccc5/35f2/cdf74a5b9881/ba4f45d0db63/05320308700-e1/05320308700-e1.jpg?ts=1759481889667"
+            },
+            {
+              "link": "https://www2.hm.com/en_ca/productpage.1274643002.html",
+              "title": "Men's Dark brown Padded Vest | H&M CA",
+              "thumbnail": "https://image.hm.com/assets/hm/f0/4e/f04eb19d9595d5f6c1fd34bf058586cf064e5ef6.jpg?imwidth=768"
+            },
+            {
+              "link": "https://www.prada.com/sg/en/p/re-nylon-vest/SGB033_1WQ9_F0324_S_OOO",
+              "title": "Cocoa Brown Re-Nylon vest | PRADA",
+              "thumbnail": "https://www.prada.com/content/dam/pradabkg_products/S/SGB/SGB033/1WQ9F0324/SGB033_1WQ9_F0324_S_OOO_MDB.jpg"
+            }
+          ],
+          "timestamp": "2025-11-18T10:10:24.691Z",
+          "candidateCount": 23,
+          "selectionCount": 3
+        },
+        "bottoms_3": {
+          "itemDescription": "item3 black pants",
+          "searchTerms": [
+            "item3 black pants",
+            "shorts",
+            "slacks",
+            "pants",
+            "trousers",
+            "jeans",
+            "skirt",
+            "leg trousers"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.musinsa.com/products/4091318",
+              "title": "르아브(LEARVE) 클레멘테 나일론 와이드 팬츠 빈티지블랙 - 사이즈 & 후기 | 무신사",
+              "thumbnail": "https://image.msscdn.net/images/prd_img/202504141808341272691252867fcd0921f12e.jpg"
+            },
+            {
+              "link": "https://www.29cm.co.kr/products/1920310",
+              "title": "SNOW PANTS - BLACK - 감도 깊은 취향 셀렉트샵 29CM",
+              "thumbnail": "https://img.29cm.co.kr/next-product/2023/02/15/65ae1174a28445808c38e514339674b9_20230215155933.jpg?width=1200&format=webp"
+            },
+            {
+              "link": "https://www.musinsa.com/products/4760347",
+              "title": "마크엠(MARKM) PARACHUTE PANTS-BLACK - 사이즈 & 후기 | 무신사",
+              "thumbnail": "https://image.msscdn.net/images/goods_img/20250205/4760347/4760347_17387426368479_500.jpg"
+            }
+          ],
+          "timestamp": "2025-11-18T10:10:25.016Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        },
+        "shoes_4": {
+          "itemDescription": "item4 checkered shoes",
+          "searchTerms": [
+            "item4 checkered shoes",
+            "shoes",
+            "sneakers",
+            "boots",
+            "sandals",
+            "heels",
+            "flats",
+            "loafers",
+            "oxford"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://poshmark.com/listing/Vans-All-over-BW-checkerboard-slip-on-Shoes-682d033c310f1cdc16565d92",
+              "title": "Vans | Shoes | Vans All Over Bw Checkerboard Slip On Shoes | Poshmark",
+              "thumbnail": "https://di2ponv0v5otw.cloudfront.net/posts/2025/05/20/682d033c310f1cdc16565d92/m_wp_682d0500dc3b46949918811f.webp"
+            },
+            {
+              "link": "https://www.coupang.com/vp/products/8437198096",
+              "title": "슈몬스터) 반스 스니커즈 컴피쿠시 원 체커보드 블랙 마쉬멜로우 운동화 - 운동화 | 쿠팡",
+              "thumbnail": "https://image.coupangcdn.com/image/vendor_inventory/1d9c/5f41c10fcee450480eedf6b5cd3337fae58d9445ae019399f7d5c5dcd935.jpg"
+            },
+            {
+              "link": "https://www.ssg.com/item/itemView.ssg?itemId=1000307549734",
+              "title": "VANS ComfyCush One 반스 컴피쿠시 원 체커보드 블랙 / VN0A45J5R6R - SSG.COM",
+              "thumbnail": "https://sitem.ssgcdn.com/34/97/54/item/1000307549734_i1_250.jpg"
+            }
+          ],
+          "timestamp": "2025-11-18T10:10:34.110Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 19.24,
+        "per_category_search_seconds": 20.14,
+        "gpt4_turbo_api_time_seconds": 15.02,
+        "processing_overhead_seconds": 0.01,
+        "other_overhead_seconds": -15.02,
+        "wall_clock_seconds": 39.39,
+        "serper_api_time_seconds": 34.48,
+        "serper_count": 4,
+        "gpt4_turbo_count": 4,
+        "total_seconds": 39.4,
+        "categories_parallel": 4
+      }
+    }
+  },
+  "status": "success"
+}

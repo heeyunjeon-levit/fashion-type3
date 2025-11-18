@@ -104,3 +104,4 @@ WHERE user_id = 'fc878118-43dd-4363-93cf-d31e453df81e'
 GROUP BY EXTRACT(HOUR FROM clicked_at)
 ORDER BY hour_of_day;
 
+

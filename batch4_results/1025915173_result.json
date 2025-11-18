@@ -1,0 +1,209 @@
+{
+  "phone": "1025915173",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763459203995_IMG_3505.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "gray jacket",
+      "description": "dark gray tailored jacket with buttons and structured fit",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_gray_jacket_1763459225551.jpg",
+      "confidence": 0.85
+    },
+    {
+      "category": "bottoms",
+      "groundingdino_prompt": "black pants",
+      "description": "black straight-leg pants with a fitted silhouette",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_black_pants_1763459234162.jpg",
+      "confidence": 0.859
+    },
+    {
+      "category": "bag",
+      "groundingdino_prompt": "black bag",
+      "description": "black handbag with a structured shape and short handles",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_black_bag_1763459242389.jpg",
+      "confidence": 0.682
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://m.gsshop.com/prd/prd.gs?prdid=1047055676",
+          "thumbnail": "https://asset.m-gs.kr/prod/1047055676/1/550",
+          "title": "라운드넥 벨티드 린 페플럼 자켓_2color - GS SHOP"
+        },
+        {
+          "link": "https://zigzag.kr/catalog/products/166350811",
+          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/d/2023/11/29/18432_202311290442250917_43335.jpeg?width=400&height=400&quality=80&format=jpeg",
+          "title": "봉구 2컬러 박시핏 하이넥 미니 포켓백 하프 트윅 레더자켓"
+        },
+        {
+          "link": "https://m.blackhole-j.com/product/detail.html?product_no=7929&cate_no=78&display_group=1",
+          "thumbnail": "https://cafe24.poxo.com/ec01/blackholeaj/jNWAR67N/rbqGfE/mXzgXc19ZLWieb7iSe/EjPs4iQ0WsqHvwQtCBg86LGnwo+Q4mZHM0P+CSejjao1lhWebew==/_/web/upload/1 updating/OUTER2402/gloin_tweed_jk_list_16.jpg",
+          "title": "프리미엄/하객룩] 글로인 트위드 자켓 (2color) - 블랙홀제이"
+        }
+      ],
+      "bottoms_2": [
+        {
+          "link": "https://www.amazon.com/Thapower-Bootcut-Stretch-Business-Trousers/dp/B0D9Y78WGF",
+          "thumbnail": "https://m.media-amazon.com/images/I/31kOMNeLtRL.jpg",
+          "title": "Thapower Women's Dress Pants Bootcut Stretch Work Pants ..."
+        },
+        {
+          "link": "https://www.musinsa.com/products/5237070",
+          "thumbnail": "https://image.msscdn.net/images/goods_img/20250709/5237070/5237070_17524582469220_500.jpg",
+          "title": "젝시믹스(XEXYMIX) 매직밴딩 우먼즈 트윌플러피 부츠컷 슬랙스 블랙 XTFPT01J3_XTFPT03J3 - 사이즈 & 후기 | 무신사"
+        },
+        {
+          "link": "https://www.amazon.de/HISKYWIN-Womens-Stretch-Business-Pockets/dp/B0DK1G1VS9",
+          "thumbnail": "https://m.media-amazon.com/images/I/31MdQT5SLqL._AC_.jpg",
+          "title": "HISKYWIN Damen-Hose, Stretch, für Arbeit, Büro, Business, Bequeme Yoga-Golfhose mit Taschen, Schwarz, S : Amazon.de"
+        }
+      ],
+      "bag_3": [
+        {
+          "link": "https://www.zara.com/us/en/minimalist-bucket-bag-p16009510.html",
+          "thumbnail": "https://static.zara.net/assets/public/3abf/51f3/7ff5498ebaaa/37bbedf80492/16009510800-e1/16009510800-e1.jpg?ts=1737457800488",
+          "title": "MINIMALIST BUCKET BAG - Black | ZARA United States"
+        },
+        {
+          "link": "https://www.musinsa.com/app/goods/4370772",
+          "thumbnail": "https://images.kolonmall.com/upload/products/10003176/2024/tinymce-custom-upload/c0176ee4-cc45-4ae4-93ac-a70e4926f628/4e880299-82ed-407d-b379-25839e4e933e.jpg",
+          "title": "제이마크뉴욕(JMARKNEWYORK) Layla tote bag - Black - 사이즈 & 후기 | 무신사"
+        },
+        {
+          "link": "https://enmassemacau.com/products/two-tone-hobo-black",
+          "thumbnail": "https://enmassemacau.com/cdn/shop/files/2CEB7F64-2482-4FB5-9C5B-E9E36023F8FA_065628a7-0311-4932-b9ee-bd1f86b19d18_345x430_crop_center.jpg?v=1716286991",
+          "title": "Two-Tone Hobo – BLACK – En Masse"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 3,
+        "fallback": 0,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "bag_3": {
+          "itemDescription": "item3 black bag",
+          "searchTerms": [
+            "item3 black bag",
+            "bag",
+            "backpack",
+            "handbag",
+            "tote bag",
+            "purse",
+            "clutch",
+            "messenger bag",
+            "shoulder bag",
+            "wallet"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.zara.com/us/en/minimalist-bucket-bag-p16009510.html",
+              "title": "MINIMALIST BUCKET BAG - Black | ZARA United States",
+              "thumbnail": "https://static.zara.net/assets/public/3abf/51f3/7ff5498ebaaa/37bbedf80492/16009510800-e1/16009510800-e1.jpg?ts=1737457800488"
+            },
+            {
+              "link": "https://www.musinsa.com/app/goods/4370772",
+              "title": "제이마크뉴욕(JMARKNEWYORK) Layla tote bag - Black - 사이즈 & 후기 | 무신사",
+              "thumbnail": "https://images.kolonmall.com/upload/products/10003176/2024/tinymce-custom-upload/c0176ee4-cc45-4ae4-93ac-a70e4926f628/4e880299-82ed-407d-b379-25839e4e933e.jpg"
+            },
+            {
+              "link": "https://enmassemacau.com/products/two-tone-hobo-black",
+              "title": "Two-Tone Hobo – BLACK – En Masse",
+              "thumbnail": "https://enmassemacau.com/cdn/shop/files/2CEB7F64-2482-4FB5-9C5B-E9E36023F8FA_065628a7-0311-4932-b9ee-bd1f86b19d18_345x430_crop_center.jpg?v=1716286991"
+            }
+          ],
+          "timestamp": "2025-11-18T09:47:35.446Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        },
+        "tops_1": {
+          "itemDescription": "item1 gray jacket",
+          "searchTerms": [
+            "item1 gray jacket",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://m.gsshop.com/prd/prd.gs?prdid=1047055676",
+              "title": "라운드넥 벨티드 린 페플럼 자켓_2color - GS SHOP",
+              "thumbnail": "https://asset.m-gs.kr/prod/1047055676/1/550"
+            },
+            {
+              "link": "https://zigzag.kr/catalog/products/166350811",
+              "title": "봉구 2컬러 박시핏 하이넥 미니 포켓백 하프 트윅 레더자켓",
+              "thumbnail": "https://cf.product-image.s.zigzag.kr/original/d/2023/11/29/18432_202311290442250917_43335.jpeg?width=400&height=400&quality=80&format=jpeg"
+            },
+            {
+              "link": "https://m.blackhole-j.com/product/detail.html?product_no=7929&cate_no=78&display_group=1",
+              "title": "프리미엄/하객룩] 글로인 트위드 자켓 (2color) - 블랙홀제이",
+              "thumbnail": "https://cafe24.poxo.com/ec01/blackholeaj/jNWAR67N/rbqGfE/mXzgXc19ZLWieb7iSe/EjPs4iQ0WsqHvwQtCBg86LGnwo+Q4mZHM0P+CSejjao1lhWebew==/_/web/upload/1 updating/OUTER2402/gloin_tweed_jk_list_16.jpg"
+            }
+          ],
+          "timestamp": "2025-11-18T09:47:40.409Z",
+          "candidateCount": 23,
+          "selectionCount": 3
+        },
+        "bottoms_2": {
+          "itemDescription": "item2 black pants",
+          "searchTerms": [
+            "item2 black pants",
+            "shorts",
+            "slacks",
+            "pants",
+            "trousers",
+            "jeans",
+            "skirt",
+            "leg trousers"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.amazon.com/Thapower-Bootcut-Stretch-Business-Trousers/dp/B0D9Y78WGF",
+              "title": "Thapower Women's Dress Pants Bootcut Stretch Work Pants ...",
+              "thumbnail": "https://m.media-amazon.com/images/I/31kOMNeLtRL.jpg"
+            },
+            {
+              "link": "https://www.musinsa.com/products/5237070",
+              "title": "젝시믹스(XEXYMIX) 매직밴딩 우먼즈 트윌플러피 부츠컷 슬랙스 블랙 XTFPT01J3_XTFPT03J3 - 사이즈 & 후기 | 무신사",
+              "thumbnail": "https://image.msscdn.net/images/goods_img/20250709/5237070/5237070_17524582469220_500.jpg"
+            },
+            {
+              "link": "https://www.amazon.de/HISKYWIN-Womens-Stretch-Business-Pockets/dp/B0DK1G1VS9",
+              "title": "HISKYWIN Damen-Hose, Stretch, für Arbeit, Büro, Business, Bequeme Yoga-Golfhose mit Taschen, Schwarz, S : Amazon.de",
+              "thumbnail": "https://m.media-amazon.com/images/I/31MdQT5SLqL._AC_.jpg"
+            }
+          ],
+          "timestamp": "2025-11-18T09:47:41.155Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 4.84,
+        "per_category_search_seconds": 13.43,
+        "gpt4_turbo_api_time_seconds": 10.98,
+        "processing_overhead_seconds": 0.01,
+        "other_overhead_seconds": -10.98,
+        "wall_clock_seconds": 18.28,
+        "serper_api_time_seconds": 22.82,
+        "serper_count": 3,
+        "gpt4_turbo_count": 3,
+        "total_seconds": 18.28,
+        "categories_parallel": 3
+      }
+    }
+  },
+  "status": "success"
+}

@@ -1,0 +1,133 @@
+{
+  "phone": "1057981633",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763456833343_Screenshot_20250915_070001_Instagram.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "white cardigan",
+      "description": "white short sleeve knit cardigan with a button-up front and textured pattern",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_white_cardigan_1763456854159.jpg",
+      "confidence": 0.823
+    },
+    {
+      "category": "bottoms",
+      "groundingdino_prompt": "blue jeans",
+      "description": "light blue wide-leg denim jeans with a high waist",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_blue_jeans_1763456862580.jpg",
+      "confidence": 0.915
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://m.lotteimall.com/goods/viewGoodsDetail.lotte?goods_no=2975432191",
+          "thumbnail": "https://image2.lotteimall.com/goods/91/21/43/2975432191_1.jpg/dims/resizemc/550x550/optimize",
+          "title": "상품상세 - 롯데홈쇼핑"
+        },
+        {
+          "link": "https://m.bunjang.co.kr/products/340411080",
+          "thumbnail": "https://media.bunjang.co.kr/product/340411080_1_1751005135_w360.jpg",
+          "title": "그물 니트 후드집업 에이블리 | 브랜드 중고거래 플랫폼, 번개장터"
+        },
+        {
+          "link": "https://zigzag.kr/catalog/products/146300853",
+          "thumbnail": "https://d2qe5g6jeya2bi.cloudfront.net/product/cfahwnuudi/A00386/capture/all_1_0_ksRow.jpg?time=1723879354",
+          "title": "비엑스투 [구멍이송송송💗/투웨이] 코우 워머 매쉬 오버핏 네트 ..."
+        }
+      ],
+      "bottoms_2": [
+        {
+          "link": "https://www.coupang.com/vp/products/8017733299",
+          "thumbnail": "https://thumbnail.coupangcdn.com/thumbnails/remote/492x492ex/image/rs_quotation_api/lufmmbxi/a9850ea8404c4939b4277a40cace6e5c.jpg",
+          "title": "잘빠진 여성용 팬시 스판 밴딩 와이드 데님 팬츠 - 청바지 | 쿠팡"
+        },
+        {
+          "link": "https://zigzag.kr/catalog/products/147107764",
+          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/d/2024/12/3/46304_202412031036550292_90908.png?width=400&height=400&quality=80&format=webp",
+          "title": "데일리그로우 [6컬러/2단기장/S~XL]가을 인생핏 색감 깡패 와이드 데님"
+        },
+        {
+          "link": "https://lovesome-one.com/product/융기모-루애니-기모-융털-하이웨스트-와이드-연청-데님-팬츠/13927",
+          "thumbnail": "https://lovesome-one.com/web/upload/NNEditor/20250819/d569df8fd4b2ba9b3043e538b21b2c07.webp",
+          "title": "융기모) 루애니 기모 융털 하이웨스트 와이드 연청 데님 팬츠 - 러브썸원"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 1,
+        "fallback": 1,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "bottoms_2": {
+          "itemDescription": "item2 blue jeans",
+          "searchTerms": [
+            "item2 blue jeans",
+            "shorts",
+            "slacks",
+            "pants",
+            "trousers",
+            "jeans",
+            "skirt",
+            "leg trousers"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.coupang.com/vp/products/8017733299",
+              "title": "잘빠진 여성용 팬시 스판 밴딩 와이드 데님 팬츠 - 청바지 | 쿠팡",
+              "thumbnail": "https://thumbnail.coupangcdn.com/thumbnails/remote/492x492ex/image/rs_quotation_api/lufmmbxi/a9850ea8404c4939b4277a40cace6e5c.jpg"
+            },
+            {
+              "link": "https://zigzag.kr/catalog/products/147107764",
+              "title": "데일리그로우 [6컬러/2단기장/S~XL]가을 인생핏 색감 깡패 와이드 데님",
+              "thumbnail": "https://cf.product-image.s.zigzag.kr/original/d/2024/12/3/46304_202412031036550292_90908.png?width=400&height=400&quality=80&format=webp"
+            },
+            {
+              "link": "https://lovesome-one.com/product/융기모-루애니-기모-융털-하이웨스트-와이드-연청-데님-팬츠/13927",
+              "title": "융기모) 루애니 기모 융털 하이웨스트 와이드 연청 데님 팬츠 - 러브썸원",
+              "thumbnail": "https://lovesome-one.com/web/upload/NNEditor/20250819/d569df8fd4b2ba9b3043e538b21b2c07.webp"
+            }
+          ],
+          "timestamp": "2025-11-18T09:08:09.620Z",
+          "candidateCount": 29,
+          "selectionCount": 3
+        },
+        "tops_1": {
+          "itemDescription": "item1 white cardigan",
+          "searchTerms": [
+            "item1 white cardigan",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-18T09:08:09.813Z",
+          "candidateCount": 20
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 12.39,
+        "per_category_search_seconds": 14.14,
+        "gpt4_turbo_api_time_seconds": 6.25,
+        "processing_overhead_seconds": 0.01,
+        "other_overhead_seconds": -6.25,
+        "wall_clock_seconds": 26.54,
+        "serper_api_time_seconds": 21.81,
+        "serper_count": 2,
+        "gpt4_turbo_count": 2,
+        "total_seconds": 26.54,
+        "categories_parallel": 2
+      }
+    }
+  },
+  "status": "success"
+}

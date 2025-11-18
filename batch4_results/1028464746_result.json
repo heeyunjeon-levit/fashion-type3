@@ -1,0 +1,181 @@
+{
+  "phone": "1028464746",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763457564020_Screenshot_20251013_180617_NAVER.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "gray shirt",
+      "description": "light gray short sleeve t-shirt with a cartoon graphic on the front",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_gray_shirt_1763457588525.jpg",
+      "confidence": 0.617
+    },
+    {
+      "category": "bottoms",
+      "groundingdino_prompt": "blue jeans",
+      "description": "dark blue wide-leg jeans with a high waist and classic five-pocket design",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_blue_jeans_1763457601561.jpg",
+      "confidence": 0.865
+    },
+    {
+      "category": "shoes",
+      "groundingdino_prompt": "white shoes",
+      "description": "white sneakers with a beige sole and simple design",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_white_shoes_1763457614677.jpg",
+      "confidence": 0.51
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://courtmerch.com/products/loves-to-trash-talk-womens-tennis-t-shirt",
+          "thumbnail": "https://courtmerch.com/cdn/shop/files/womens-relaxed-t-shirt-heather-prism-natural-right-front-65d404e27f7bb.jpg?v=1708393763&width=1946",
+          "title": "Loves To Trash Talk\" Women's T-Shirt – CourtMerch"
+        },
+        {
+          "link": "https://www.snowpeak.com/products/camping-graphic-t-shirt",
+          "thumbnail": "https://www.snowpeak.com/cdn/shop/files/TS-25AU0081128_h_0115.jpg?v=1755638855&width=1200",
+          "title": "Camping Graphic T-Shirt | Snow Peak"
+        },
+        {
+          "link": "https://www.hottopic.com/product/disney-winnie-the-pooh-eeyore-introvert-girls-baby-tee/35320168.html",
+          "thumbnail": "https://cdn.media.amplience.net/s/hottopic/35320168_hi?h=630",
+          "title": "Disney Winnie The Pooh Eeyore Introvert Girls Baby Tee - WHITE | Hot Topic"
+        }
+      ],
+      "bottoms_2": [
+        {
+          "link": "https://store.zigzag.kr/catalog/products/132122340?referrer=shopppable-zigzag",
+          "thumbnail": "https://cf.product-image.s.zigzag.kr/original/c/13/212/234/132122340-5085433256291164713.gif?width=400&height=400&quality=80&format=jpeg",
+          "title": "레이디무브 코어 진청 사이드 절개라인 벌룬 와이드 롱 데님 팬츠 3size"
+        },
+        {
+          "link": "https://www.aliexpress.com/item/1005005178365139.html",
+          "thumbnail": "https://ae01.alicdn.com/kf/S206be1349b514496b0cd1cbc444397e3B.jpg",
+          "title": "ZHISILAO New Wide Leg Straight Jeans Women Classic Retro Boyfriend Cotton Full Length Denim Pants 2023 Streetwear - AliExpress"
+        }
+      ],
+      "shoes_3": [
+        {
+          "link": "https://www.acnestudios.com/kr/en/bars-m/BD0319-AO0.html",
+          "thumbnail": "https://www.acnestudios.com/dw/image/v2/AAXV_PRD/on/demandware.static/-/Sites-acne-product-catalog/default/dw77d6fcf6/images/BD/BD0319-/2000x/BD0319-AO0_C.jpg?sw=1120&sh=1680",
+          "title": "Acne Studios - Lace-up sneakers - White/brown"
+        },
+        {
+          "link": "https://www.musinsa.com/products/1368384",
+          "thumbnail": "https://image.msscdn.net/images/goods_img/20200325/1368384/1368384_2_500.jpg",
+          "title": "커먼스탠다드(COMMON STANDARD) 독일군 스니커즈 [화이트/네이비] - 사이즈 & 후기 | 무신사"
+        },
+        {
+          "link": "https://www.farfetch.com/ge/shopping/women/maison-margiela-replica-sneakers-item-26435023.aspx",
+          "thumbnail": "https://cdn-images.farfetch-contents.com/26/43/50/23/26435023_56075124_1000.jpg",
+          "title": "Maison Margiela Replica Sneakers | White | FARFETCH GE"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 2,
+        "fallback": 1,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "bottoms_2": {
+          "itemDescription": "item2 blue jeans",
+          "searchTerms": [
+            "item2 blue jeans",
+            "shorts",
+            "slacks",
+            "pants",
+            "trousers",
+            "jeans",
+            "skirt",
+            "leg trousers"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://store.zigzag.kr/catalog/products/132122340?referrer=shopppable-zigzag",
+              "title": "레이디무브 코어 진청 사이드 절개라인 벌룬 와이드 롱 데님 팬츠 3size",
+              "thumbnail": "https://cf.product-image.s.zigzag.kr/original/c/13/212/234/132122340-5085433256291164713.gif?width=400&height=400&quality=80&format=jpeg"
+            },
+            {
+              "link": "https://www.aliexpress.com/item/1005005178365139.html",
+              "title": "ZHISILAO New Wide Leg Straight Jeans Women Classic Retro Boyfriend Cotton Full Length Denim Pants 2023 Streetwear - AliExpress",
+              "thumbnail": "https://ae01.alicdn.com/kf/S206be1349b514496b0cd1cbc444397e3B.jpg"
+            }
+          ],
+          "timestamp": "2025-11-18T09:20:30.885Z",
+          "candidateCount": 30,
+          "selectionCount": 2
+        },
+        "tops_1": {
+          "itemDescription": "item1 gray shirt",
+          "searchTerms": [
+            "item1 gray shirt",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-18T09:20:32.385Z",
+          "candidateCount": 30
+        },
+        "shoes_3": {
+          "itemDescription": "item3 white shoes",
+          "searchTerms": [
+            "item3 white shoes",
+            "shoes",
+            "sneakers",
+            "boots",
+            "sandals",
+            "heels",
+            "flats",
+            "loafers",
+            "oxford"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.acnestudios.com/kr/en/bars-m/BD0319-AO0.html",
+              "title": "Acne Studios - Lace-up sneakers - White/brown",
+              "thumbnail": "https://www.acnestudios.com/dw/image/v2/AAXV_PRD/on/demandware.static/-/Sites-acne-product-catalog/default/dw77d6fcf6/images/BD/BD0319-/2000x/BD0319-AO0_C.jpg?sw=1120&sh=1680"
+            },
+            {
+              "link": "https://www.musinsa.com/products/1368384",
+              "title": "커먼스탠다드(COMMON STANDARD) 독일군 스니커즈 [화이트/네이비] - 사이즈 & 후기 | 무신사",
+              "thumbnail": "https://image.msscdn.net/images/goods_img/20200325/1368384/1368384_2_500.jpg"
+            },
+            {
+              "link": "https://www.farfetch.com/ge/shopping/women/maison-margiela-replica-sneakers-item-26435023.aspx",
+              "title": "Maison Margiela Replica Sneakers | White | FARFETCH GE",
+              "thumbnail": "https://cdn-images.farfetch-contents.com/26/43/50/23/26435023_56075124_1000.jpg"
+            }
+          ],
+          "timestamp": "2025-11-18T09:20:38.707Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 5.58,
+        "per_category_search_seconds": 17.54,
+        "gpt4_turbo_api_time_seconds": 10.4,
+        "processing_overhead_seconds": 0.01,
+        "other_overhead_seconds": -10.4,
+        "wall_clock_seconds": 23.13,
+        "serper_api_time_seconds": 27.86,
+        "serper_count": 3,
+        "gpt4_turbo_count": 3,
+        "total_seconds": 23.13,
+        "categories_parallel": 3
+      }
+    }
+  },
+  "status": "success"
+}

@@ -1,0 +1,154 @@
+{
+  "phone": "1093805721",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763458392982_Screenshot_20251117_224238_Samsung_Internet.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "beige sweater",
+      "description": "beige ribbed long sleeve sweater with a fitted design",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_beige_sweater_1763458411079.jpg",
+      "confidence": 0.815
+    },
+    {
+      "category": "bottoms",
+      "groundingdino_prompt": "blue jeans",
+      "description": "blue high-waisted bootcut jeans with a faded wash",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_blue_jeans_1763458417635.jpg",
+      "confidence": 0.934
+    },
+    {
+      "category": "shoes",
+      "groundingdino_prompt": "white shoes",
+      "description": "white sneakers with a beige sole and simple design",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_white_shoes_1763458424495.jpg",
+      "confidence": 0.655
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://www.acnestudios.com/us/en/layered-silk-cardigan-sand-beige/A60599-AE0.html",
+          "thumbnail": "https://www.acnestudios.com/dw/image/v2/AAXV_PRD/on/demandware.static/-/Sites-acne-product-catalog/default/dw312dc389/images/A6/A60599-/2000x/A60599-AE0_A.jpg?sw=1120&sh=1680",
+          "title": "Acne Studios - Layered silk cardigan - Sand beige"
+        },
+        {
+          "link": "https://www.zara.com/ie/en/plain-knit-jumper-p06236103.html",
+          "thumbnail": "https://static.zara.net/assets/public/777a/ada3/c13b44dd8182/050fc294019e/06236103700-p/06236103700-p.jpg?ts=1760697201121&w=744&f=auto",
+          "title": "PLAIN KNIT JUMPER - Brown | ZARA Ireland"
+        }
+      ],
+      "bottoms_2": [
+        {
+          "link": "https://www.musinsa.com/products/5615707",
+          "thumbnail": "https://image.msscdn.net/thumbnails/images/goods_img/20251020/5615707/5615707_17609469937647_big.jpg?w=1000",
+          "title": "와르(WAAR) [-6cm 숏버전 추가] W1102 WIDE DENIM PANTS (3COLORS) - 사이즈 & 후기 | 무신사"
+        },
+        {
+          "link": "https://www.coupang.com/vp/products/9036906959",
+          "thumbnail": "https://thumbnail.coupangcdn.com/thumbnails/remote/492x492ex/image/vendor_inventory/9682/6bb37a411b67826d1e1498d9647969b485c1c61df59bc27f6656ca6f6624.jpg",
+          "title": "데일리앤 싱글 S~2XL 기장선택 가을 와이드 부츠컷 데님 속밴딩 팬츠 빅사이즈 키작녀 여성 캐주얼 청바지 - 청바지 | 쿠팡"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 2,
+        "fallback": 0,
+        "none": 1,
+        "error": 0
+      },
+      "gptReasoning": {
+        "shoes_3": {
+          "itemDescription": "item3 white shoes",
+          "searchTerms": [
+            "item3 white shoes",
+            "shoes",
+            "sneakers",
+            "boots",
+            "sandals",
+            "heels",
+            "flats",
+            "loafers",
+            "oxford"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-18T09:34:00.288Z",
+          "candidateCount": 2
+        },
+        "tops_1": {
+          "itemDescription": "item1 beige sweater",
+          "searchTerms": [
+            "item1 beige sweater",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.acnestudios.com/us/en/layered-silk-cardigan-sand-beige/A60599-AE0.html",
+              "title": "Acne Studios - Layered silk cardigan - Sand beige",
+              "thumbnail": "https://www.acnestudios.com/dw/image/v2/AAXV_PRD/on/demandware.static/-/Sites-acne-product-catalog/default/dw312dc389/images/A6/A60599-/2000x/A60599-AE0_A.jpg?sw=1120&sh=1680"
+            },
+            {
+              "link": "https://www.zara.com/ie/en/plain-knit-jumper-p06236103.html",
+              "title": "PLAIN KNIT JUMPER - Brown | ZARA Ireland",
+              "thumbnail": "https://static.zara.net/assets/public/777a/ada3/c13b44dd8182/050fc294019e/06236103700-p/06236103700-p.jpg?ts=1760697201121&w=744&f=auto"
+            }
+          ],
+          "timestamp": "2025-11-18T09:34:02.801Z",
+          "candidateCount": 28,
+          "selectionCount": 2
+        },
+        "bottoms_2": {
+          "itemDescription": "item2 blue jeans",
+          "searchTerms": [
+            "item2 blue jeans",
+            "shorts",
+            "slacks",
+            "pants",
+            "trousers",
+            "jeans",
+            "skirt",
+            "leg trousers"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.musinsa.com/products/5615707",
+              "title": "와르(WAAR) [-6cm 숏버전 추가] W1102 WIDE DENIM PANTS (3COLORS) - 사이즈 & 후기 | 무신사",
+              "thumbnail": "https://image.msscdn.net/thumbnails/images/goods_img/20251020/5615707/5615707_17609469937647_big.jpg?w=1000"
+            },
+            {
+              "link": "https://www.coupang.com/vp/products/9036906959",
+              "title": "데일리앤 싱글 S~2XL 기장선택 가을 와이드 부츠컷 데님 속밴딩 팬츠 빅사이즈 키작녀 여성 캐주얼 청바지 - 청바지 | 쿠팡",
+              "thumbnail": "https://thumbnail.coupangcdn.com/thumbnails/remote/492x492ex/image/vendor_inventory/9682/6bb37a411b67826d1e1498d9647969b485c1c61df59bc27f6656ca6f6624.jpg"
+            }
+          ],
+          "timestamp": "2025-11-18T09:34:08.723Z",
+          "candidateCount": 29,
+          "selectionCount": 2
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 8.55,
+        "per_category_search_seconds": 14.68,
+        "gpt4_turbo_api_time_seconds": 7.66,
+        "processing_overhead_seconds": 0.01,
+        "other_overhead_seconds": -7.66,
+        "wall_clock_seconds": 23.24,
+        "serper_api_time_seconds": 21.99,
+        "serper_count": 3,
+        "gpt4_turbo_count": 3,
+        "total_seconds": 23.24,
+        "categories_parallel": 3
+      }
+    }
+  },
+  "status": "success"
+}

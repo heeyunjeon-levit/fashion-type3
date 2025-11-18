@@ -1,0 +1,155 @@
+{
+  "phone": "1054004922",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763460938183_Screenshot_20251117_190450_Chrome.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "red jacket",
+      "description": "red zip-up jacket with ribbed cuffs and hem, featuring front pockets",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_red_jacket_1763460959267.jpg",
+      "confidence": 0.942
+    },
+    {
+      "category": "tops",
+      "groundingdino_prompt": "blue shirt",
+      "description": "blue plaid button-up shirt with a collar, worn underneath the jacket",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_blue_shirt_1763460966846.jpg",
+      "confidence": 0.668
+    },
+    {
+      "category": "bottoms",
+      "groundingdino_prompt": "brown skirt",
+      "description": "brown patterned skirt with a flowy design",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_brown_skirt_1763460974496.jpg",
+      "confidence": 0.825
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://www2.hm.com/en_ca/productpage.1321524001.html",
+          "thumbnail": "https://image.hm.com/assets/hm/22/5f/225f8da18ec64905d10f6a04e3d9a6dd84af1ca1.jpg",
+          "title": "Women's Bright red Cardigan with Zipper - Regular fit - Regular length - Long sleeve | H&M CA"
+        }
+      ],
+      "tops_2": [
+        {
+          "link": "https://dailyjou.com/product/라이틀링-하이넥-비조-니트-집업/20705/",
+          "thumbnail": "https://cafe24.poxo.com/ec01/cocomimi93/Kcc0fQ0DsTHpcxHYW7fqLaBIC/o2a/jM6bRPEprGgUE2Ahi38o9n6QY5e//FBcVGbltRbal2kV5zxlu1744asA==/_/web/product/extra/small/202501/2411af52d634e5bab568cf2a5cd3ac0d.jpg",
+          "title": "데일리쥬"
+        },
+        {
+          "link": "https://174.co.kr/product/키큰여자보튼비조하이넥투웨이니트집업/16398",
+          "thumbnail": "https://www.174.co.kr/web/00 designer/Jmin/2025/01/10/10cd_s_02.jpg",
+          "title": "키큰여자]보튼*비조하이넥투웨이니트집업 - 키큰여자 아름다운174"
+        },
+        {
+          "link": "https://m.bunjang.co.kr/products/307092396",
+          "thumbnail": "https://media.bunjang.co.kr/product/307092396_1_1738304065_w360.jpg",
+          "title": "새상품>크리스마스 하이넥 니트 집업 판매합니다 9만원 | 브랜드 ..."
+        }
+      ],
+      "bottoms_3": [
+        {
+          "link": "https://www.musinsa.com/products/5700256",
+          "thumbnail": "https://image.msscdn.net/images/goods_img/20251107/5700256/5700256_17624914293621_500.jpg",
+          "title": "피그먼트(PIGMENT) 피치프릴플라워스커트 (KYSK2508141) - 사이즈 & 후기 | 무신사"
+        },
+        {
+          "link": "https://secret-sister.co.kr/product/캐닛-플라워블라우스/4850/",
+          "thumbnail": "https://m.secret-sister.co.kr/web/product/extra/big/202302/fc465f5164f9922c96370c20db7a72d1.png",
+          "title": "캐닛 플라워블라우스 - 시크릿 언니"
+        },
+        {
+          "link": "https://vivatrade.co.kr/product/jpn-폴리-도트-롱스커트-28-inch/458674/",
+          "thumbnail": "https://vivatrade.co.kr/web/product/big/202511/d7d42c363106cdb404953d5d295002ee.jpg",
+          "title": "JPN"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 1,
+        "fallback": 2,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "tops_1": {
+          "itemDescription": "item1 red jacket",
+          "searchTerms": [
+            "item1 red jacket",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www2.hm.com/en_ca/productpage.1321524001.html",
+              "title": "Women's Bright red Cardigan with Zipper - Regular fit - Regular length - Long sleeve | H&M CA",
+              "thumbnail": "https://image.hm.com/assets/hm/22/5f/225f8da18ec64905d10f6a04e3d9a6dd84af1ca1.jpg"
+            }
+          ],
+          "timestamp": "2025-11-18T10:16:43.377Z",
+          "candidateCount": 11,
+          "selectionCount": 1
+        },
+        "tops_2": {
+          "itemDescription": "item2 blue shirt",
+          "searchTerms": [
+            "item2 blue shirt",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-18T10:16:48.109Z",
+          "candidateCount": 14
+        },
+        "bottoms_3": {
+          "itemDescription": "item3 brown skirt",
+          "searchTerms": [
+            "item3 brown skirt",
+            "shorts",
+            "slacks",
+            "pants",
+            "trousers",
+            "jeans",
+            "skirt",
+            "leg trousers"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-18T10:16:51.263Z",
+          "candidateCount": 30
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 16.07,
+        "per_category_search_seconds": 19.74,
+        "gpt4_turbo_api_time_seconds": 5.08,
+        "processing_overhead_seconds": 0.01,
+        "other_overhead_seconds": -5.08,
+        "wall_clock_seconds": 35.82,
+        "serper_api_time_seconds": 42.97,
+        "serper_count": 3,
+        "gpt4_turbo_count": 3,
+        "total_seconds": 35.82,
+        "categories_parallel": 3
+      }
+    }
+  },
+  "status": "success"
+}

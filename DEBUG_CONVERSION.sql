@@ -140,3 +140,4 @@ JOIN (
 ) rpv ON RIGHT(u.phone_number, 8) = RIGHT(rpv.phone_number, 8)
 ORDER BY u.total_searches DESC;
 
+

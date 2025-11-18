@@ -1,0 +1,181 @@
+{
+  "phone": "1085123569",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763457134236_IMG_1248.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "brown jacket",
+      "description": "brown suede jacket with a wide collar and button closure",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_brown_jacket_1763457189105.jpg",
+      "confidence": 0.801
+    },
+    {
+      "category": "bottoms",
+      "groundingdino_prompt": "black pants",
+      "description": "black tailored pants with a straight fit",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_black_pants_1763457198108.jpg",
+      "confidence": 0.684
+    },
+    {
+      "category": "shoes",
+      "groundingdino_prompt": "black boots",
+      "description": "black leather ankle boots with a sleek design",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_black_boots_1763457206631.jpg",
+      "confidence": 0.611
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://www.prada.com/kr/ko/p/스웨이드-카방-재킷/UPS694_173B_F0324_S_OOO",
+          "thumbnail": "https://www.prada.com/content/dam/pradabkg_products/U/UPS/UPS694/173BF0324/UPS694_173B_F0324_S_OOO_MDF.jpg",
+          "title": "스웨이드 카방 재킷 코코아 브라운 | PRADA"
+        },
+        {
+          "link": "https://m.dude9.com/product/detail.html?product_no=3611&cate_no=1&display_group=3",
+          "thumbnail": "https://m.dude9.com/web/dudemade/cv_arnaud_work_jacket-brown-MODEL2.jpg",
+          "title": "아르노 캐시미어 코튼 워크 자켓 ( CHOCO BROWN ) | 듀드나인"
+        },
+        {
+          "link": "https://www.neimanmarcus.com/p/prada-mp-suede-caban-jacket-prod286350038",
+          "thumbnail": "https://media.neimanmarcus.com/f_auto,q_auto/01/nm_5503797_100244_m",
+          "title": "Prada Men's Suede Leather-Collar Caban Jacket | Neiman Marcus"
+        }
+      ],
+      "bottoms_2": [
+        {
+          "link": "https://www.ssense.com/en-us/men/product/courreges/black-light-twill-bootcut-trousers/18302701",
+          "thumbnail": "https://img.ssensemedia.com/images/252783M191004_1/courreges-black-light-twill-bootcut-trousers.jpg",
+          "title": "Courrèges: Black Light Twill Bootcut Trousers | SSENSE"
+        },
+        {
+          "link": "https://www.mytheresa.com/us/en/men/prada-cotton-pants-black-p00632806",
+          "thumbnail": "https://www.mytheresa.com/media/1094/1238/100/9d/P00632806_d1.jpg",
+          "title": "Cotton pants in black - Prada | Mytheresa"
+        },
+        {
+          "link": "https://www.farfetch.com/shopping/men/amiri-logo-plaque-straight-leg-trousers-item-22233426.aspx",
+          "thumbnail": "https://cdn-images.farfetch-contents.com/22/23/34/26/22233426_52104923_600.jpg",
+          "title": "AMIRI logo-plaque straight-leg Trousers | Black | FARFETCH"
+        }
+      ],
+      "shoes_3": [
+        {
+          "link": "https://www.millie.co.kr/v3/post/470012?nav_hidden=y",
+          "thumbnail": "https://img.millie.co.kr/200x/service/cover/179528659/31449d3659ee47748de17ca878f7e042.jpg",
+          "title": "채팅형 소설 7월 3주 NEW 끝은 새로운 시작 | 밀리의서재"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 2,
+        "fallback": 1,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "shoes_3": {
+          "itemDescription": "item3 black boots",
+          "searchTerms": [
+            "item3 black boots",
+            "shoes",
+            "sneakers",
+            "boots",
+            "sandals",
+            "heels",
+            "flats",
+            "loafers",
+            "oxford"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-18T09:13:49.271Z",
+          "candidateCount": 28
+        },
+        "tops_1": {
+          "itemDescription": "item1 brown jacket",
+          "searchTerms": [
+            "item1 brown jacket",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.prada.com/kr/ko/p/스웨이드-카방-재킷/UPS694_173B_F0324_S_OOO",
+              "title": "스웨이드 카방 재킷 코코아 브라운 | PRADA",
+              "thumbnail": "https://www.prada.com/content/dam/pradabkg_products/U/UPS/UPS694/173BF0324/UPS694_173B_F0324_S_OOO_MDF.jpg"
+            },
+            {
+              "link": "https://m.dude9.com/product/detail.html?product_no=3611&cate_no=1&display_group=3",
+              "title": "아르노 캐시미어 코튼 워크 자켓 ( CHOCO BROWN ) | 듀드나인",
+              "thumbnail": "https://m.dude9.com/web/dudemade/cv_arnaud_work_jacket-brown-MODEL2.jpg"
+            },
+            {
+              "link": "https://www.neimanmarcus.com/p/prada-mp-suede-caban-jacket-prod286350038",
+              "title": "Prada Men's Suede Leather-Collar Caban Jacket | Neiman Marcus",
+              "thumbnail": "https://media.neimanmarcus.com/f_auto,q_auto/01/nm_5503797_100244_m"
+            }
+          ],
+          "timestamp": "2025-11-18T09:13:57.755Z",
+          "candidateCount": 27,
+          "selectionCount": 3
+        },
+        "bottoms_2": {
+          "itemDescription": "item2 black pants",
+          "searchTerms": [
+            "item2 black pants",
+            "shorts",
+            "slacks",
+            "pants",
+            "trousers",
+            "jeans",
+            "skirt",
+            "leg trousers"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.ssense.com/en-us/men/product/courreges/black-light-twill-bootcut-trousers/18302701",
+              "title": "Courrèges: Black Light Twill Bootcut Trousers | SSENSE",
+              "thumbnail": "https://img.ssensemedia.com/images/252783M191004_1/courreges-black-light-twill-bootcut-trousers.jpg"
+            },
+            {
+              "link": "https://www.mytheresa.com/us/en/men/prada-cotton-pants-black-p00632806",
+              "title": "Cotton pants in black - Prada | Mytheresa",
+              "thumbnail": "https://www.mytheresa.com/media/1094/1238/100/9d/P00632806_d1.jpg"
+            },
+            {
+              "link": "https://www.farfetch.com/shopping/men/amiri-logo-plaque-straight-leg-trousers-item-22233426.aspx",
+              "title": "AMIRI logo-plaque straight-leg Trousers | Black | FARFETCH",
+              "thumbnail": "https://cdn-images.farfetch-contents.com/22/23/34/26/22233426_52104923_600.jpg"
+            }
+          ],
+          "timestamp": "2025-11-18T09:13:59.418Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 12.85,
+        "per_category_search_seconds": 19.5,
+        "gpt4_turbo_api_time_seconds": 11.96,
+        "processing_overhead_seconds": 0.01,
+        "other_overhead_seconds": -11.96,
+        "wall_clock_seconds": 32.37,
+        "serper_api_time_seconds": 34.71,
+        "serper_count": 3,
+        "gpt4_turbo_count": 3,
+        "total_seconds": 32.37,
+        "categories_parallel": 3
+      }
+    }
+  },
+  "status": "success"
+}

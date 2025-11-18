@@ -1,0 +1,76 @@
+{
+  "phone": "1039965529",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763459663798_Screenshot_20251011_120604.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "navy sweatshirt",
+      "description": "navy blue sweatshirt with a white collar and printed text on the front",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_navy_sweatshirt_1763459680106.jpg",
+      "confidence": 0.938
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://www.musinsa.com/products/4827411",
+          "thumbnail": "https://image.msscdn.net/images/goods_img/20250225/4827411/4827411_17521125283005_500.jpg",
+          "title": "샐리(SELLY'S) 카라배색집업레터링맨투맨_I5A-CTS021 - 사이즈 ..."
+        },
+        {
+          "link": "https://wanchuu.com/product/아레스-카라-레터링-맨투맨/6038/",
+          "thumbnail": "https://i.vimeocdn.com/video/1736614991-44264d3060e42c881373aa69d1cd6961e85818e3626516c42ced63cf196ecdb6-d?f=webp",
+          "title": "아레스 카라 레터링 맨투맨 - 완츄"
+        },
+        {
+          "link": "https://www.kolonmall.com/Brands/alvinclo/Product/K1693819006208026NA01",
+          "thumbnail": "https://images.kolonmall.com/Prod_Img/10002294/2023/LM1/K1693819006208026NA01_LM1.jpg",
+          "title": "ALVINCLO] [DE LUXE] 앨빈클로 FELICITY 반집업 배색 카라 ..."
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 0,
+        "fallback": 1,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "tops_1": {
+          "itemDescription": "item1 navy sweatshirt",
+          "searchTerms": [
+            "item1 navy sweatshirt",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [],
+          "timestamp": "2025-11-18T09:55:17.162Z",
+          "candidateCount": 15
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 20.24,
+        "per_category_search_seconds": 15.74,
+        "gpt4_turbo_api_time_seconds": 1.4,
+        "processing_overhead_seconds": 0.01,
+        "other_overhead_seconds": -1.4,
+        "wall_clock_seconds": 36,
+        "serper_api_time_seconds": 14.33,
+        "serper_count": 1,
+        "gpt4_turbo_count": 1,
+        "total_seconds": 36,
+        "categories_parallel": 1
+      }
+    }
+  },
+  "status": "success"
+}

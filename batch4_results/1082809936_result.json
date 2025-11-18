@@ -1,0 +1,199 @@
+{
+  "phone": "1082809936",
+  "original_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763460109362_Screenshot_20251019_120742_G.jpg",
+  "items": [
+    {
+      "category": "tops",
+      "groundingdino_prompt": "white sweater",
+      "description": "white knit sweater with textured patterns and a relaxed fit",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item1_white_sweater_1763460128946.jpg",
+      "confidence": 0.492
+    },
+    {
+      "category": "bottoms",
+      "groundingdino_prompt": "beige pants",
+      "description": "beige wide-leg pants with pleats",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item2_beige_pants_1763460138524.jpg",
+      "confidence": 0.561
+    },
+    {
+      "category": "bag",
+      "groundingdino_prompt": "brown bag",
+      "description": "brown leather handbag with fringe detail",
+      "croppedImageUrl": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/accessories_item3_brown_bag_1763460147258.jpg",
+      "confidence": 0.442
+    }
+  ],
+  "search_results": {
+    "results": {
+      "tops_1": [
+        {
+          "link": "https://www.ssg.com/item/itemView.ssg?itemId=1000570806302",
+          "thumbnail": "https://sitem.ssgcdn.com/02/63/80/item/1000570806302_i1_750.jpg",
+          "title": "캐롤라 하이엔드 니트 스웨터 - SSG.COM"
+        },
+        {
+          "link": "https://m.moodfranc.co.kr/product/detail.html?product_no=2191",
+          "thumbnail": "https://m.moodfranc.co.kr/web/product/extra/big/20241217/2d3db5415bc526da70bd45db7d474139.jpg",
+          "title": "클로딘 자가드 울 빈티지 오버핏 박시 겨울 니트 - 무드프랑"
+        },
+        {
+          "link": "https://www.daangn.com/kr/buy-sell/아이보리-니트-스웨터-9tkqk17s9f42/",
+          "thumbnail": "https://img.kr.gcp-karroter.net/origin/article/202511/3c87b3b9c8304ca85abdff6d5ca8874bb95ecf902d159a21e3eb864924f3a58f_0.webp?f=webp&q=95&s=1200x630&t=cover",
+          "title": "아이보리 니트 스웨터 | 여성의류 | 당근 중고거래"
+        }
+      ],
+      "bottoms_2": [
+        {
+          "link": "https://m.heylady.co.kr/product/미도리-핀턱-와이드-코튼팬츠/16051/",
+          "thumbnail": "https://m.heylady.co.kr/web/product/big/202407/432893fe6fc6b55e6dc1272dbe6fecc8.jpg",
+          "title": "미도리 핀턱 와이드 코튼팬츠 - 헤이레이디"
+        },
+        {
+          "link": "https://www.ssg.com/item/itemView.ssg?itemId=1000211135440",
+          "thumbnail": "https://sitem.ssgcdn.com/40/54/13/item/1000211135440_i1_750.jpg",
+          "title": "여성 슬랙스 와이드 핀턱 롱 팬츠 바지 데일리 폰프트 - SSG.COM"
+        }
+      ],
+      "bag_3": [
+        {
+          "link": "https://www.farfetch.com/az/shopping/women/yuzefi-top-handle-tote-bag-item-31966858.aspx",
+          "thumbnail": "https://cdn-images.farfetch-contents.com/31/96/68/58/31966858_61861592_600.jpg",
+          "title": "Yuzefi top-handle Tote Bag | Brown | FARFETCH AZ"
+        },
+        {
+          "link": "https://www.therow.com/en-au/products/small-day-luxe-deep-brown-ans",
+          "thumbnail": "https://www.therow.com/cdn/shop/files/W1561L72DEOSR_14144028-0522-44af-83b2-2a3a76b204b6_1200x.jpg?v=1757613836",
+          "title": "Small Day Luxe Bag Brown in Leather – The Row"
+        },
+        {
+          "link": "https://www.therow.com/products/marlo-17-deep-brown-ans-3",
+          "thumbnail": "https://www.therow.com/cdn/shop/files/W1904ML133DEOSF_1200x.jpg?v=1752715795",
+          "title": "Marlo 17 Bag Brown in Leather – The Row"
+        }
+      ]
+    },
+    "meta": {
+      "sourceCounts": {
+        "gpt": 3,
+        "fallback": 0,
+        "none": 0,
+        "error": 0
+      },
+      "gptReasoning": {
+        "tops_1": {
+          "itemDescription": "item1 white sweater",
+          "searchTerms": [
+            "item1 white sweater",
+            "jacket",
+            "coat",
+            "outerwear",
+            "shirt",
+            "sweater",
+            "blouse",
+            "top",
+            "blazer",
+            "cardigan"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.ssg.com/item/itemView.ssg?itemId=1000570806302",
+              "title": "캐롤라 하이엔드 니트 스웨터 - SSG.COM",
+              "thumbnail": "https://sitem.ssgcdn.com/02/63/80/item/1000570806302_i1_750.jpg"
+            },
+            {
+              "link": "https://m.moodfranc.co.kr/product/detail.html?product_no=2191",
+              "title": "클로딘 자가드 울 빈티지 오버핏 박시 겨울 니트 - 무드프랑",
+              "thumbnail": "https://m.moodfranc.co.kr/web/product/extra/big/20241217/2d3db5415bc526da70bd45db7d474139.jpg"
+            },
+            {
+              "link": "https://www.daangn.com/kr/buy-sell/아이보리-니트-스웨터-9tkqk17s9f42/",
+              "title": "아이보리 니트 스웨터 | 여성의류 | 당근 중고거래",
+              "thumbnail": "https://img.kr.gcp-karroter.net/origin/article/202511/3c87b3b9c8304ca85abdff6d5ca8874bb95ecf902d159a21e3eb864924f3a58f_0.webp?f=webp&q=95&s=1200x630&t=cover"
+            }
+          ],
+          "timestamp": "2025-11-18T10:02:49.408Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        },
+        "bag_3": {
+          "itemDescription": "item3 brown bag",
+          "searchTerms": [
+            "item3 brown bag",
+            "bag",
+            "backpack",
+            "handbag",
+            "tote bag",
+            "purse",
+            "clutch",
+            "messenger bag",
+            "shoulder bag",
+            "wallet"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://www.farfetch.com/az/shopping/women/yuzefi-top-handle-tote-bag-item-31966858.aspx",
+              "title": "Yuzefi top-handle Tote Bag | Brown | FARFETCH AZ",
+              "thumbnail": "https://cdn-images.farfetch-contents.com/31/96/68/58/31966858_61861592_600.jpg"
+            },
+            {
+              "link": "https://www.therow.com/en-au/products/small-day-luxe-deep-brown-ans",
+              "title": "Small Day Luxe Bag Brown in Leather – The Row",
+              "thumbnail": "https://www.therow.com/cdn/shop/files/W1561L72DEOSR_14144028-0522-44af-83b2-2a3a76b204b6_1200x.jpg?v=1757613836"
+            },
+            {
+              "link": "https://www.therow.com/products/marlo-17-deep-brown-ans-3",
+              "title": "Marlo 17 Bag Brown in Leather – The Row",
+              "thumbnail": "https://www.therow.com/cdn/shop/files/W1904ML133DEOSF_1200x.jpg?v=1752715795"
+            }
+          ],
+          "timestamp": "2025-11-18T10:02:51.958Z",
+          "candidateCount": 30,
+          "selectionCount": 3
+        },
+        "bottoms_2": {
+          "itemDescription": "item2 beige pants",
+          "searchTerms": [
+            "item2 beige pants",
+            "shorts",
+            "slacks",
+            "pants",
+            "trousers",
+            "jeans",
+            "skirt",
+            "leg trousers"
+          ],
+          "selectedLinks": [
+            {
+              "link": "https://m.heylady.co.kr/product/미도리-핀턱-와이드-코튼팬츠/16051/",
+              "title": "미도리 핀턱 와이드 코튼팬츠 - 헤이레이디",
+              "thumbnail": "https://m.heylady.co.kr/web/product/big/202407/432893fe6fc6b55e6dc1272dbe6fecc8.jpg"
+            },
+            {
+              "link": "https://www.ssg.com/item/itemView.ssg?itemId=1000211135440",
+              "title": "여성 슬랙스 와이드 핀턱 롱 팬츠 바지 데일리 폰프트 - SSG.COM",
+              "thumbnail": "https://sitem.ssgcdn.com/40/54/13/item/1000211135440_i1_750.jpg"
+            }
+          ],
+          "timestamp": "2025-11-18T10:02:56.581Z",
+          "candidateCount": 30,
+          "selectionCount": 2
+        }
+      },
+      "timing": {
+        "full_image_search_seconds": 10.22,
+        "per_category_search_seconds": 18.6,
+        "gpt4_turbo_api_time_seconds": 11.75,
+        "processing_overhead_seconds": 0.01,
+        "other_overhead_seconds": -11.75,
+        "wall_clock_seconds": 28.82,
+        "serper_api_time_seconds": 32.22,
+        "serper_count": 3,
+        "gpt4_turbo_count": 3,
+        "total_seconds": 28.82,
+        "categories_parallel": 3
+      }
+    }
+  },
+  "status": "success"
+}

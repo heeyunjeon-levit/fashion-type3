@@ -212,3 +212,4 @@ ORDER BY timestamp DESC;
 
 Open **Supabase SQL Editor** and run `query_user_journey_01090848563.sql` to see your complete journey! 🚀
 
+
