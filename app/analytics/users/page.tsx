@@ -48,6 +48,7 @@ export default function UsersAnalytics() {
   const [userJourney, setUserJourney] = useState<any>(null);
   const [loadingJourney, setLoadingJourney] = useState(false);
   const [phoneHashMap, setPhoneHashMap] = useState<Map<string, string>>(new Map());
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Check password
   const handleLogin = () => {
@@ -149,6 +150,12 @@ export default function UsersAnalytics() {
   // Filter and sort users
   const filteredUsers = users
     .filter(user => {
+      // Filter by search query first
+      if (searchQuery.trim()) {
+        return user.phone.includes(searchQuery.trim());
+      }
+      
+      // Then filter by category
       if (filter === 'all') return true;
       if (filter === 'feedback') return user.total_feedback > 0;
       if (filter === 'converts') return user.conversion_source !== 'unknown' && user.conversion_source !== null;
@@ -216,6 +223,27 @@ export default function UsersAnalytics() {
             ← Dashboard
           </Link>
           <h2 className="text-xl font-bold mb-3">👥 All Users</h2>
+          
+          {/* Search Bar */}
+          <div className="mb-3">
+            <div className="relative">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="🔍 Search phone number..."
+                className="w-full px-3 py-2 bg-gray-800 text-white rounded-lg border border-gray-700 focus:outline-none focus:border-purple-500 text-sm placeholder-gray-500"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+          </div>
           
           {/* Filters */}
           <div className="space-y-2 mb-3">
