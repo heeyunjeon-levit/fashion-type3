@@ -30,6 +30,9 @@ export class SessionManager {
       sessionId = this.generateSessionId()
       sessionStorage.setItem('sessionId', sessionId)
       
+      // Set this.sessionId BEFORE initializing (fix timing bug)
+      this.sessionId = sessionId
+      
       // Initialize session in database
       this.initializeSession()
     }
