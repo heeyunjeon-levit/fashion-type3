@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 interface UserSummary {
@@ -25,6 +26,8 @@ interface UserSummary {
 }
 
 export default function UsersAnalytics() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [password, setPassword] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [users, setUsers] = useState<UserSummary[]>([]);
@@ -77,6 +80,8 @@ export default function UsersAnalytics() {
   const handleSelectUser = (user: UserSummary) => {
     setSelectedUser(user);
     fetchUserJourney(user.phone);
+    // Update URL with phone parameter (shareable link!)
+    router.push(`/analytics/users?phone=${encodeURIComponent(user.phone)}`, { scroll: false });
   };
 
   // Fetch all users
@@ -89,8 +94,23 @@ export default function UsersAnalytics() {
         const res = await fetch('/api/analytics/all-users');
         const data = await res.json();
         setUsers(data);
-        // Auto-select first user
-        if (data.length > 0) {
+        
+        // Check if there's a phone parameter in URL
+        const phoneParam = searchParams.get('phone');
+        
+        if (phoneParam && data.length > 0) {
+          // Try to find user from URL parameter
+          const userFromUrl = data.find((u: UserSummary) => u.phone === phoneParam);
+          if (userFromUrl) {
+            setSelectedUser(userFromUrl);
+            fetchUserJourney(userFromUrl.phone);
+          } else {
+            // Phone not found, select first user
+            setSelectedUser(data[0]);
+            fetchUserJourney(data[0].phone);
+          }
+        } else if (data.length > 0) {
+          // No URL param, auto-select first user
           setSelectedUser(data[0]);
           fetchUserJourney(data[0].phone);
         }
@@ -102,7 +122,7 @@ export default function UsersAnalytics() {
     };
 
     fetchUsers();
-  }, [isAuthenticated]);
+  }, [isAuthenticated, searchParams]);
 
   // Filter and sort users
   const filteredUsers = users
