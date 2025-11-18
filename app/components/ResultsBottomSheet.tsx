@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import PhoneModal from './PhoneModal'
+import FeedbackModal from './FeedbackModal'
 import { getSessionManager } from '../../lib/sessionManager'
 
 interface ProductOption {
@@ -39,6 +40,14 @@ export default function ResultsBottomSheet({
   const [dragStartY, setDragStartY] = useState(0)
   const [currentY, setCurrentY] = useState(0)
   const [isDragging, setIsDragging] = useState(false)
+  
+  // Feedback modal
+  const feedbackModalRef = useRef<any>(null)
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
+  const [userPhoneNumber, setUserPhoneNumber] = useState<string>('')
+  const feedbackTimerRef = useRef<NodeJS.Timeout | null>(null)
+  const scrollTimerRef = useRef<NodeJS.Timeout | null>(null)
+  const productClickTimeKey = 'product_click_time_main_app'
 
   // Initialize session manager
   useEffect(() => {
@@ -56,6 +65,22 @@ export default function ResultsBottomSheet({
       const result = await sessionManager.logPhoneNumber(phoneNumber)
       setPhoneSubmitted(true)
       setShowPhoneModal(false)
+      setUserPhoneNumber(phoneNumber)
+      
+      console.log('📱 Phone submitted:', phoneNumber)
+      console.log('🎯 FeedbackModal will render with phone:', phoneNumber)
+      
+      // Start 45-second fallback timer for feedback modal
+      feedbackTimerRef.current = setTimeout(() => {
+        console.log('⏰ 45s fallback - attempting to show feedback modal')
+        console.log('📍 feedbackModalRef.current:', feedbackModalRef.current)
+        if (feedbackModalRef.current) {
+          console.log('✅ Ref exists, calling show()')
+          feedbackModalRef.current.show()
+        } else {
+          console.error('❌ feedbackModalRef.current is null!')
+        }
+      }, 45000)
       
       if (result.isReturningUser) {
         console.log(`환영합니다! 총 ${result.totalSearches}번 방문하셨습니다.`)
@@ -88,6 +113,14 @@ export default function ResultsBottomSheet({
       productThumbnail: productThumbnail || undefined,
       linkPosition,
     })
+    
+    // Save product click timestamp for feedback modal trigger
+    if (typeof window !== 'undefined') {
+      const timestamp = Date.now().toString()
+      localStorage.setItem(productClickTimeKey, timestamp)
+      console.log('🖱️ Product clicked, timestamp saved:', timestamp)
+      console.log('💡 When you return to this page, modal should show after 3s')
+    }
   }
 
   // Drag handlers
@@ -192,6 +225,108 @@ export default function ResultsBottomSheet({
       document.body.style.overscrollBehavior = ''
     }
   }, [isDragging])
+
+  // Feedback modal: Check for product click on page return
+  useEffect(() => {
+    if (!userPhoneNumber) return
+
+    const handleVisibilityChange = () => {
+      console.log('👁️ Visibility changed:', document.visibilityState)
+      
+      if (document.visibilityState === 'visible') {
+        console.log('✅ Page became visible, checking for product click...')
+        const clickTime = localStorage.getItem(productClickTimeKey)
+        console.log('🔍 Product click timestamp:', clickTime)
+        
+        if (clickTime) {
+          const timeSinceClick = Date.now() - parseInt(clickTime)
+          const fiveMinutes = 5 * 60 * 1000
+          
+          console.log(`⏱️ Time since product click: ${Math.round(timeSinceClick / 1000)}s`)
+          
+          if (timeSinceClick < fiveMinutes) {
+            console.log('👋 User returned from product page, showing feedback modal in 3s')
+            console.log('📍 feedbackModalRef.current:', feedbackModalRef.current)
+            setTimeout(() => {
+              console.log('⏰ 3s elapsed, calling show()')
+              feedbackModalRef.current?.show()
+            }, 3000)
+            
+            // Clear the timestamp so we don't show again
+            localStorage.removeItem(productClickTimeKey)
+          } else {
+            console.log('⏭️ Product click was too long ago (>5min)')
+          }
+        } else {
+          console.log('ℹ️ No product click timestamp found')
+        }
+      }
+    }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+    }
+  }, [userPhoneNumber, productClickTimeKey])
+
+  // Feedback modal: Detect scroll to bottom
+  useEffect(() => {
+    if (!userPhoneNumber || !scrollContainerRef.current) return
+
+    const handleScroll = () => {
+      const container = scrollContainerRef.current
+      if (!container) return
+
+      const scrollTop = container.scrollTop
+      const scrollHeight = container.scrollHeight
+      const clientHeight = container.clientHeight
+      const distanceFromBottom = scrollHeight - scrollTop - clientHeight
+
+      console.log('📜 Scroll detected, distance from bottom:', Math.round(distanceFromBottom), 'px')
+
+      // If within 50px of bottom
+      if (distanceFromBottom < 50) {
+        console.log('✅ Near bottom! Starting 3s timer for feedback modal')
+        
+        // Clear any existing timer
+        if (scrollTimerRef.current) {
+          clearTimeout(scrollTimerRef.current)
+        }
+
+        // Show modal after 3 seconds at bottom
+        scrollTimerRef.current = setTimeout(() => {
+          console.log('📜 User stayed at bottom for 3s, showing feedback modal')
+          console.log('📍 feedbackModalRef.current:', feedbackModalRef.current)
+          feedbackModalRef.current?.show()
+        }, 3000)
+      } else {
+        // Clear timer if user scrolls away from bottom
+        if (scrollTimerRef.current) {
+          console.log('⏹️ Scrolled away from bottom, canceling timer')
+          clearTimeout(scrollTimerRef.current)
+          scrollTimerRef.current = null
+        }
+      }
+    }
+
+    const container = scrollContainerRef.current
+    container.addEventListener('scroll', handleScroll)
+    return () => {
+      container.removeEventListener('scroll', handleScroll)
+    }
+  }, [userPhoneNumber])
+
+  // Cleanup timers on unmount
+  useEffect(() => {
+    return () => {
+      if (feedbackTimerRef.current) {
+        clearTimeout(feedbackTimerRef.current)
+      }
+      if (scrollTimerRef.current) {
+        clearTimeout(scrollTimerRef.current)
+      }
+    }
+  }, [])
 
   // Prevent pull-to-refresh globally on this page (but not on input fields, scrollable content, or horizontal scrolls)
   useEffect(() => {
@@ -361,6 +496,7 @@ export default function ResultsBottomSheet({
 
         {/* Content */}
         <div 
+          ref={scrollContainerRef}
           className="overflow-y-auto h-full pb-24 px-4"
           style={{ 
             touchAction: 'auto',
@@ -509,6 +645,15 @@ export default function ResultsBottomSheet({
           </div>
         )}
       </div>
+
+      {/* Feedback Modal */}
+      {userPhoneNumber && (
+        <FeedbackModal
+          ref={feedbackModalRef}
+          phoneNumber={userPhoneNumber}
+          resultPageUrl="main_app_result_page"
+        />
+      )}
 
       {/* Global styles */}
       <style jsx global>{`

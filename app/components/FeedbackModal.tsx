@@ -22,6 +22,8 @@ const FeedbackModal = forwardRef<FeedbackModalRef, FeedbackModalProps>(({ phoneN
 
   // Check if feedback was already submitted
   useEffect(() => {
+    console.log('🎬 FeedbackModal MOUNTED for phone:', phoneNumber)
+    
     const feedbackKey = `feedback_submitted_${phoneNumber}`
     const tabStateKey = `feedback_tab_state_${phoneNumber}`
     const autoShownKey = `feedback_auto_shown_${phoneNumber}`
@@ -34,12 +36,16 @@ const FeedbackModal = forwardRef<FeedbackModalRef, FeedbackModalProps>(({ phoneN
       setShowTab(true)
     }
 
-    console.log('🔍 Feedback Modal Debug:', {
+    console.log('🔍 Feedback Modal State Check:', {
       feedbackSubmitted: !!alreadySubmitted,
       modalShownThisSession: !!autoShownThisSession,
       tabVisible: tabShouldShow,
       phoneNumber: phoneNumber
     })
+    
+    return () => {
+      console.log('🔚 FeedbackModal UNMOUNTED')
+    }
   }, [phoneNumber])
 
   // Show modal programmatically (called by parent via ref)
