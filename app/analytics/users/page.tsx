@@ -49,6 +49,7 @@ export default function UsersAnalytics() {
   const [loadingJourney, setLoadingJourney] = useState(false);
   const [phoneHashMap, setPhoneHashMap] = useState<Map<string, string>>(new Map());
   const [searchQuery, setSearchQuery] = useState('');
+  const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
   const userListRef = useRef<HTMLDivElement>(null);
 
   // Check password
@@ -109,25 +110,32 @@ export default function UsersAnalytics() {
     }, 0);
   };
 
-  // Fetch all users
-  useEffect(() => {
-    if (!isAuthenticated) return;
-    
-    const fetchUsers = async () => {
-      try {
-        setLoading(true);
-        const res = await fetch('/api/analytics/all-users');
-        const data = await res.json();
-        setUsers(data);
-        
-        // Build hash map for all users (hash -> phone)
-        const hashMap = new Map<string, string>();
-        for (const user of data) {
-          const hash = await hashPhone(user.phone);
-          hashMap.set(hash, user.phone);
+  // Fetch all users (initial load with loading state)
+  const fetchUsers = async (showLoading: boolean = true) => {
+    try {
+      if (showLoading) setLoading(true);
+      
+      const timestamp = Date.now();
+      const res = await fetch(`/api/analytics/all-users?t=${timestamp}`, {
+        cache: 'no-store',
+        headers: {
+          'Cache-Control': 'no-cache'
         }
-        setPhoneHashMap(hashMap);
-        
+      });
+      const data = await res.json();
+      setUsers(data);
+      
+      // Build hash map for all users (hash -> phone)
+      const hashMap = new Map<string, string>();
+      for (const user of data) {
+        const hash = await hashPhone(user.phone);
+        hashMap.set(hash, user.phone);
+      }
+      setPhoneHashMap(hashMap);
+      setLastUpdated(new Date());
+      
+      // Only auto-select on initial load (when showLoading is true)
+      if (showLoading) {
         // Check if there's a user hash parameter in URL
         const userHashParam = searchParams.get('u');
         
@@ -149,15 +157,34 @@ export default function UsersAnalytics() {
           setSelectedUser(data[0]);
           fetchUserJourney(data[0].phone);
         }
-      } catch (error) {
-        console.error('Failed to fetch users:', error);
-      } finally {
-        setLoading(false);
       }
-    };
+      
+      if (!showLoading) {
+        console.log('🔄 User list refreshed at', new Date().toLocaleTimeString());
+      }
+    } catch (error) {
+      console.error('Failed to fetch users:', error);
+    } finally {
+      if (showLoading) setLoading(false);
+    }
+  };
 
-    fetchUsers();
+  // Initial fetch on mount
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    fetchUsers(true);
   }, [isAuthenticated, searchParams]);
+
+  // Auto-refresh user list every 30 seconds (no loading flicker)
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    
+    const interval = setInterval(() => {
+      fetchUsers(false);
+    }, 30000); // 30 seconds
+
+    return () => clearInterval(interval);
+  }, [isAuthenticated]);
 
   // Filter and sort users
   const filteredUsers = users
@@ -238,7 +265,12 @@ export default function UsersAnalytics() {
           >
             ← Dashboard
           </Link>
-          <h2 className="text-xl font-bold mb-3">👥 All Users</h2>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-xl font-bold">👥 All Users</h2>
+            <div className="text-xs text-gray-500">
+              {lastUpdated.toLocaleTimeString()}
+            </div>
+          </div>
           
           {/* Search Bar */}
           <div className="mb-3">
