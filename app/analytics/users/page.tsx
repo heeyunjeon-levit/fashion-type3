@@ -132,6 +132,14 @@ export default function UsersAnalytics() {
         }
       });
       const data = await res.json();
+      
+      // Debug: Log top 3 users to verify correct data
+      console.log('📊 Top 3 users from API:', data.slice(0, 3).map((u: any) => ({
+        phone: u.phone,
+        last_active_at: u.last_active_at,
+        activities: `U:${u.total_uploads} S:${u.total_searches} C:${u.total_clicks} F:${u.total_feedback}`
+      })));
+      
       setUsers(data);
       
       // Build hash map for all users (hash -> phone)
@@ -199,7 +207,15 @@ export default function UsersAnalytics() {
         return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
       } else if (sortBy === 'recent') {
         // Most recent activity first
-        return new Date(b.last_active_at).getTime() - new Date(a.last_active_at).getTime();
+        const aTime = new Date(a.last_active_at).getTime();
+        const bTime = new Date(b.last_active_at).getTime();
+        
+        // Debug first 3 comparisons
+        if (sortBy === 'recent' && users.indexOf(a) < 3 && users.indexOf(b) < 3) {
+          console.log(`🔀 Comparing: ${a.phone} (${a.last_active_at}) vs ${b.phone} (${b.last_active_at})`);
+        }
+        
+        return bTime - aTime;
       } else if (sortBy === 'clicks') {
         return b.total_clicks - a.total_clicks;
       } else {
@@ -209,6 +225,14 @@ export default function UsersAnalytics() {
         return bScore - aScore;
       }
     });
+
+  // Debug: Log final sorted result
+  if (filteredUsers.length > 0 && sortBy === 'recent') {
+    console.log('✅ Final top 3 after sort:', filteredUsers.slice(0, 3).map(u => ({
+      phone: u.phone,
+      last_active_at: u.last_active_at
+    })));
+  }
 
   // Login screen
   if (!isAuthenticated) {
