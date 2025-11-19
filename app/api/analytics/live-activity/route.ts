@@ -66,11 +66,6 @@ export async function GET() {
       // Nov 17 late night testing session
       'session_1763396695521_y8l0ggm5e'
     ]; // Owner's testing sessions
-    
-    // Exclude owner's recent test uploads by filename
-    const excludedUploadFiles = [
-      'upload_1763381333449_Resized_Screenshot_20251028_112857_Coupang.jpeg'
-    ];
 
     // Get recent product clicks (last 24 hours) with full product details
     const { data: clicks } = await supabase
@@ -142,130 +137,123 @@ export async function GET() {
       }
     });
 
-    // Get recent image uploads from Supabase Storage
-    const { data: storageFiles } = await supabase.storage
-      .from('images')
-      .list('', {
-        limit: 50,
-        offset: 0,
-        sortBy: { column: 'created_at', order: 'desc' }
-      });
+    // Get recent image uploads directly from sessions table (MUCH MORE RELIABLE)
+    // This uses actual database relationships instead of timestamp guessing
+    const oneDayAgo = new Date(Date.now() - 86400000).toISOString();
     
-    // Filter for recent uploads (last 24h) and get public URLs
-    const oneDayAgo = Date.now() - 86400000;
-    const recentUploads = storageFiles?.filter(f => {
-      const created = new Date(f.created_at).getTime();
-      return created > oneDayAgo && f.name.startsWith('upload_');
-    }) || [];
+    const { data: recentSessions } = await supabase
+      .from('sessions')
+      .select('uploaded_image_url, uploaded_at, phone_number, user_id, session_id')
+      .not('uploaded_image_url', 'is', null)
+      .not('uploaded_at', 'is', null)
+      .gte('uploaded_at', oneDayAgo)
+      .order('uploaded_at', { ascending: false })
+      .limit(50);
 
-    // Get users active in the last 24 hours (by last_active_at OR created_at)
-    const { data: recentUsers } = await supabase
-      .from('users')
-      .select('id, phone_number, created_at, last_active_at')
-      .or(`created_at.gte.${new Date(oneDayAgo).toISOString()},last_active_at.gte.${new Date(oneDayAgo).toISOString()}`)
-      .order('last_active_at', { ascending: false, nullsFirst: false });
+    // Get user phone numbers for sessions that don't have phone_number yet
+    const sessionsNeedingPhone = recentSessions?.filter(s => !s.phone_number && s.user_id) || [];
+    let userPhoneMap = new Map<string, string>();
+    
+    if (sessionsNeedingPhone.length > 0) {
+      const userIds = [...new Set(sessionsNeedingPhone.map(s => s.user_id))];
+      const { data: users } = await supabase
+        .from('users')
+        .select('id, phone_number')
+        .in('id', userIds);
+      
+      userPhoneMap = new Map(users?.map(u => [u.id, u.phone_number]) || []);
+    }
 
-    // Match uploads with users by timestamp (within 5 minutes)
-    recentUploads.forEach(file => {
-      // Skip if this file is in the exclusion list
-      if (excludedUploadFiles.includes(file.name)) {
+    // Add uploads from sessions
+    recentSessions?.forEach(session => {
+      // Get phone from session or user
+      const phone = session.phone_number || (session.user_id ? userPhoneMap.get(session.user_id) : null);
+      
+      // Skip excluded sessions and phones
+      if (excludedSessions.includes(session.session_id) || (phone && excludedPhones.includes(phone))) {
         return;
       }
       
-      const { data: { publicUrl } } = supabase.storage.from('images').getPublicUrl(file.name);
-      const uploadTime = new Date(file.created_at).getTime();
-      
-      // Find user active within 5 minutes of upload (check both created_at and last_active_at)
-      const matchedUser = recentUsers?.find(user => {
-        const userCreateTime = new Date(user.created_at).getTime();
-        const userActiveTime = user.last_active_at ? new Date(user.last_active_at).getTime() : userCreateTime;
-        return Math.abs(uploadTime - userCreateTime) < 300000 || 
-               Math.abs(uploadTime - userActiveTime) < 300000; // Within 5 minutes
+      activities.push({
+        id: `upload-${session.session_id}`,
+        type: 'upload',
+        phone: phone || 'In Progress',
+        timestamp: session.uploaded_at,
+        timeAgo: timeAgo(new Date(session.uploaded_at)),
+        uploadedImageUrl: session.uploaded_image_url,
+        isAnonymous: !phone
       });
-      
-      if (matchedUser) {
-        // Show all uploads (including owner's) - important for monitoring
-        // Owner's test visits to result pages are still filtered elsewhere
-        activities.push({
-          id: `upload-${file.name}`,
-          type: 'upload',
-          phone: matchedUser.phone_number,
-          timestamp: file.created_at,
-          timeAgo: timeAgo(new Date(file.created_at)),
-          uploadedImageUrl: publicUrl,
-          isAnonymous: false
-        });
-      } else {
-        // No matching user - show as anonymous (user still in progress)
-        activities.push({
-          id: `upload-${file.name}`,
-          type: 'upload',
-          phone: 'In Progress',
-          timestamp: file.created_at,
-          timeAgo: timeAgo(new Date(file.created_at)),
-          uploadedImageUrl: publicUrl,
-          isAnonymous: true
-        });
-      }
     });
 
     // Get recent "results viewed" events from events table (final_results_displayed)
     // This shows what users ACTUALLY saw, including fallback products
+    // Use user_id directly instead of timestamp matching!
     const { data: resultEvents } = await supabase
       .from('events')
-      .select('id, session_id, created_at, event_data')
+      .select('id, session_id, created_at, event_data, user_id')
       .eq('event_type', 'final_results_displayed')
-      .gte('created_at', new Date(Date.now() - 86400000).toISOString())
+      .gte('created_at', oneDayAgo)
       .order('created_at', { ascending: false })
-      .limit(50);
+      .limit(100);
 
-    // Get all recent users to match by timestamp (active OR created in last 24h)
-    const { data: allRecentUsers } = await supabase
-      .from('users')
-      .select('id, phone_number, created_at, last_active_at')
-      .or(`created_at.gte.${new Date(Date.now() - 86400000).toISOString()},last_active_at.gte.${new Date(Date.now() - 86400000).toISOString()}`)
-      .order('last_active_at', { ascending: false, nullsFirst: false });
+    // Get user phone numbers for all result events
+    const resultUserIds = [...new Set(resultEvents?.map(e => e.user_id).filter(Boolean) || [])];
+    const resultSessionIds = [...new Set(resultEvents?.map(e => e.session_id).filter(Boolean) || [])];
+    
+    let resultUserPhoneMap = new Map<string, string>();
+    let resultSessionPhoneMap = new Map<string, string>();
+    
+    // Get phones from users table
+    if (resultUserIds.length > 0) {
+      const { data: resultUsers } = await supabase
+        .from('users')
+        .select('id, phone_number')
+        .in('id', resultUserIds);
+      
+      resultUserPhoneMap = new Map(resultUsers?.map(u => [u.id, u.phone_number]) || []);
+    }
+    
+    // Get phones from sessions table (fallback for events without user_id)
+    if (resultSessionIds.length > 0) {
+      const { data: resultSessions } = await supabase
+        .from('sessions')
+        .select('id, phone_number')
+        .in('id', resultSessionIds)
+        .not('phone_number', 'is', null);
+      
+      resultSessionPhoneMap = new Map(resultSessions?.map(s => [s.id, s.phone_number]) || []);
+    }
 
-    // Group events by user to count searches per user
-    const userSearchCounts = new Map<string, number>();
+    // Group events by user phone to count searches per user
     const userEventMap = new Map<string, any[]>();
 
-    // First pass: match all events to users and count
+    // Match all events to phone numbers using actual relationships
     resultEvents?.forEach(event => {
-      const eventTime = new Date(event.created_at).getTime();
-      const matchedUser = allRecentUsers?.find(user => {
-        const userCreateTime = new Date(user.created_at).getTime();
-        const userActiveTime = new Date(user.last_active_at).getTime();
-        // Within 5 minutes of user creation or last active
-        return Math.abs(eventTime - userCreateTime) < 300000 || 
-               Math.abs(eventTime - userActiveTime) < 300000;
-      });
+      // Try to get phone from user_id first, then session_id
+      const phone = event.user_id ? resultUserPhoneMap.get(event.user_id) : 
+                    event.session_id ? resultSessionPhoneMap.get(event.session_id) : null;
       
-      if (matchedUser) {
-        const phone = matchedUser.phone_number;
+      if (phone) {
         if (!userEventMap.has(phone)) {
           userEventMap.set(phone, []);
         }
-        userEventMap.get(phone)!.push({ event, user: matchedUser });
+        userEventMap.get(phone)!.push(event);
       }
     });
 
     // Second pass: create activities with search numbers
     userEventMap.forEach((userEvents, phone) => {
+      // Skip excluded phones
+      if (excludedPhones.includes(phone)) return;
+      
       // Sort events chronologically for this user
       userEvents.sort((a, b) => 
-        new Date(a.event.created_at).getTime() - new Date(b.event.created_at).getTime()
+        new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
       );
       
       const totalSearches = userEvents.length;
       
-      userEvents.forEach((item, searchIndex) => {
-        const event = item.event;
-        const matchedUser = item.user;
-        
-        // Show all search results (including owner's) for monitoring
-        // Only result page visits are filtered to reduce testing noise
-        
+      userEvents.forEach((event, searchIndex) => {
         const eventData = event.event_data as any;
         const displayedProducts = eventData?.displayedProducts || {};
         const summary = eventData?.summary || {};
