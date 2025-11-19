@@ -216,10 +216,52 @@ export async function GET() {
       // Use users.total_searches as source of truth (handles legacy users before event logging)
       const totalSearches = Math.max(user.total_searches || 0, searches);
       
+      // Calculate ACTUAL last activity timestamp from all sources
+      const activityTimestamps: number[] = [];
+      
+      // Add user's last_active_at
+      if (user.last_active_at) {
+        activityTimestamps.push(new Date(user.last_active_at).getTime());
+      }
+      
+      // Add session uploads
+      (userSessions || []).forEach(s => {
+        if (s.uploaded_at) activityTimestamps.push(new Date(s.uploaded_at).getTime());
+        if (s.created_at) activityTimestamps.push(new Date(s.created_at).getTime());
+      });
+      
+      // Add events
+      (userEvents || []).forEach(e => {
+        if (e.created_at) activityTimestamps.push(new Date(e.created_at).getTime());
+      });
+      
+      // Add clicks
+      (userClicks || []).forEach(c => {
+        if (c.clicked_at) activityTimestamps.push(new Date(c.clicked_at).getTime());
+      });
+      
+      // Add visits
+      (resultVisits || []).forEach(v => {
+        if (v.visit_timestamp) activityTimestamps.push(new Date(v.visit_timestamp).getTime());
+      });
+      (appVisits || []).forEach(v => {
+        if (v.visit_timestamp) activityTimestamps.push(new Date(v.visit_timestamp).getTime());
+      });
+      
+      // Add feedback
+      (userFeedback || []).forEach(f => {
+        if (f.created_at) activityTimestamps.push(new Date(f.created_at).getTime());
+      });
+      
+      // Get the most recent timestamp
+      const mostRecentActivity = activityTimestamps.length > 0 
+        ? new Date(Math.max(...activityTimestamps)).toISOString()
+        : user.last_active_at || user.created_at;
+      
       return {
         phone: user.phone_number,
         created_at: user.created_at,
-        last_active_at: user.last_active_at,
+        last_active_at: mostRecentActivity, // Now uses actual most recent activity!
         conversion_source: user.conversion_source,
         total_searches: totalSearches,
         total_uploads: uploads,
