@@ -18,26 +18,43 @@ function timeAgo(date: Date): string {
   return `${days} day${days > 1 ? 's' : ''} ago`;
 }
 
+// Normalize phone number (remove leading 0 for consistency)
+function normalizePhone(phone: string): string {
+  if (!phone) return phone;
+  return phone.startsWith('0') ? phone.substring(1) : phone;
+}
+
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const phone = searchParams.get('phone');
+    const phoneParam = searchParams.get('phone');
 
-    if (!phone) {
+    if (!phoneParam) {
       return NextResponse.json({ error: 'Phone number required' }, { status: 400 });
     }
 
-    // Exclude owner's phone numbers from search
-    const excludedPhones = ['01090848563', '821090848563'];
-    if (excludedPhones.includes(phone)) {
+    // Normalize the phone number
+    const phone = normalizePhone(phoneParam);
+
+    // Exclude owner's phone numbers from search (check all variants)
+    const excludedPhones = ['01090848563', '821090848563', '1090848563'];
+    if (excludedPhones.includes(phone) || excludedPhones.includes(phoneParam)) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
+    
+    // Generate phone variants for querying (with and without leading 0)
+    const phoneVariants = [
+      phone,
+      phone.startsWith('0') ? phone : '0' + phone,
+      phone.startsWith('0') ? phone.substring(1) : phone
+    ];
 
     // Get user info (may not exist for batch users who only visited result page)
+    // Check all phone variants
     const { data: existingUser } = await supabase
       .from('users')
       .select('*')
-      .eq('phone_number', phone)
+      .in('phone_number', phoneVariants)
       .maybeSingle();
 
     // Double-check user ID exclusion
@@ -54,7 +71,7 @@ export async function GET(request: Request) {
       const { data: firstVisit } = await supabase
         .from('result_page_visits')
         .select('*')
-        .eq('phone_number', phone)
+        .in('phone_number', phoneVariants)
         .order('visit_timestamp', { ascending: true })
         .limit(1)
         .single();
@@ -62,7 +79,7 @@ export async function GET(request: Request) {
       const { data: firstFeedback } = await supabase
         .from('user_feedback')
         .select('*')
-        .eq('phone_number', phone)
+        .in('phone_number', phoneVariants)
         .order('created_at', { ascending: true })
         .limit(1)
         .single();
@@ -86,10 +103,11 @@ export async function GET(request: Request) {
     }
 
     // Get sessions for this user first (primary source)
+    // Check all phone variants to catch sessions with different formats
     const { data: sessions } = await supabase
       .from('sessions')
       .select('*')
-      .eq('phone_number', phone)
+      .or(`phone_number.in.(${phoneVariants.join(',')}),user_id.eq.${user.id}`)
       .order('created_at', { ascending: false });
 
     // Get session UUIDs (events.session_id references sessions.id, NOT sessions.session_id!)
@@ -140,21 +158,21 @@ export async function GET(request: Request) {
     const { data: resultVisits } = await supabase
       .from('result_page_visits')
       .select('*')
-      .eq('phone_number', phone)
+      .in('phone_number', phoneVariants)
       .order('visit_timestamp', { ascending: false });
 
     // Get app page visits
     const { data: appVisits } = await supabase
       .from('app_page_visits')
       .select('*')
-      .eq('user_phone', phone)
+      .in('user_phone', phoneVariants)
       .order('visit_timestamp', { ascending: false });
 
     // Get feedback
     const { data: feedback } = await supabase
       .from('user_feedback')
       .select('*')
-      .eq('phone_number', phone)
+      .in('phone_number', phoneVariants)
       .order('created_at', { ascending: false });
 
     // Get ONLY original image uploads (not cropped images)

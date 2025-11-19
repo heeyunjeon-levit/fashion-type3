@@ -6,10 +6,17 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
+// Normalize phone number (remove leading 0 for consistency)
+function normalizePhone(phone: string): string {
+  if (!phone) return phone;
+  // Remove leading 0 if present (Korean numbers)
+  return phone.startsWith('0') ? phone.substring(1) : phone;
+}
+
 export async function GET() {
   try {
     // Exclude owner's phone numbers
-    const excludedPhones = ['01090848563', '821090848563'];
+    const excludedPhones = ['01090848563', '821090848563', '1090848563'];
 
     // Get all users from users table
     const { data: users } = await supabase
@@ -29,42 +36,74 @@ export async function GET() {
       .order('created_at', { ascending: false });
 
     // Collect all unique phone numbers (users + batch users)
+    // Use normalized phone numbers to prevent duplicates (01XXX vs 1XXX)
     const allPhoneNumbers = new Set<string>();
+    const phoneToOriginal = new Map<string, string>(); // normalized -> first original seen
     
     // Add users from users table
-    users?.forEach(u => allPhoneNumbers.add(u.phone_number));
+    users?.forEach(u => {
+      const normalized = normalizePhone(u.phone_number);
+      if (!phoneToOriginal.has(normalized)) {
+        phoneToOriginal.set(normalized, u.phone_number);
+      }
+      allPhoneNumbers.add(normalized);
+    });
     
     // Add batch users from result_page_visits
     resultVisits?.forEach(v => {
-      if (v.phone_number && !excludedPhones.includes(v.phone_number)) {
-        allPhoneNumbers.add(v.phone_number);
+      if (v.phone_number) {
+        const normalized = normalizePhone(v.phone_number);
+        if (!excludedPhones.includes(normalized) && !excludedPhones.includes(v.phone_number)) {
+          if (!phoneToOriginal.has(normalized)) {
+            phoneToOriginal.set(normalized, v.phone_number);
+          }
+          allPhoneNumbers.add(normalized);
+        }
       }
     });
     
     // Add batch users from user_feedback
     feedbacks?.forEach(f => {
-      if (f.phone_number && !excludedPhones.includes(f.phone_number)) {
-        allPhoneNumbers.add(f.phone_number);
+      if (f.phone_number) {
+        const normalized = normalizePhone(f.phone_number);
+        if (!excludedPhones.includes(normalized) && !excludedPhones.includes(f.phone_number)) {
+          if (!phoneToOriginal.has(normalized)) {
+            phoneToOriginal.set(normalized, f.phone_number);
+          }
+          allPhoneNumbers.add(normalized);
+        }
       }
     });
 
-    // Create user objects for all phone numbers
-    const allUsers = Array.from(allPhoneNumbers).map(phoneNumber => {
-      // Find existing user or create synthetic batch user
-      const existingUser = users?.find(u => u.phone_number === phoneNumber);
+    // Create user objects for all phone numbers (using normalized numbers)
+    const allUsers = Array.from(allPhoneNumbers).map(normalizedPhone => {
+      // Find existing user by normalized OR original phone number
+      const existingUser = users?.find(u => 
+        normalizePhone(u.phone_number) === normalizedPhone
+      );
       
       if (existingUser) {
-        return existingUser;
+        // Return with normalized phone for consistency
+        return {
+          ...existingUser,
+          phone_number: normalizedPhone
+        };
       }
       
       // Synthetic batch user (hasn't used main app yet)
-      const firstVisit = resultVisits?.find(v => v.phone_number === phoneNumber);
-      const firstFeedback = feedbacks?.find(f => f.phone_number === phoneNumber);
+      // Check with both normalized and original versions
+      const originalPhone = phoneToOriginal.get(normalizedPhone) || normalizedPhone;
+      const firstVisit = resultVisits?.find(v => 
+        normalizePhone(v.phone_number) === normalizedPhone
+      );
+      const firstFeedback = feedbacks?.find(f => 
+        normalizePhone(f.phone_number) === normalizedPhone
+      );
       const firstActivity = firstVisit?.visit_timestamp || firstFeedback?.created_at || new Date().toISOString();
       
       return {
-        id: `batch_${phoneNumber}`, // Synthetic ID
-        phone_number: phoneNumber,
+        id: `batch_${normalizedPhone}`, // Synthetic ID
+        phone_number: normalizedPhone, // Use normalized
         created_at: firstActivity,
         last_active_at: firstActivity,
         total_searches: 0,
@@ -84,11 +123,17 @@ export async function GET() {
 
     // Build summary for each user by querying their specific data
     const usersSummary = await Promise.all(filteredUsers.map(async (user) => {
-      // Get sessions for this specific user
+      // Get sessions for this specific user (check both normalized and with leading 0)
+      const phoneVariants = [
+        user.phone_number,
+        user.phone_number.startsWith('0') ? user.phone_number : '0' + user.phone_number,
+        user.phone_number.startsWith('0') ? user.phone_number.substring(1) : user.phone_number
+      ];
+      
       const { data: userSessions } = await supabase
         .from('sessions')
         .select('*')
-        .or(`phone_number.eq.${user.phone_number},user_id.eq.${user.id}`);
+        .or(`phone_number.in.(${phoneVariants.join(',')}),user_id.eq.${user.id}`);
       
       // IMPORTANT: events.session_id references sessions.id (UUID), NOT sessions.session_id (TEXT)!
       const sessionUUIDs = (userSessions || []).map(s => s.id);

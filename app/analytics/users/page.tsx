@@ -43,7 +43,7 @@ export default function UsersAnalytics() {
   const [users, setUsers] = useState<UserSummary[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'all' | 'feedback' | 'converts' | 'clicks' | 'batch'>('all');
-  const [sortBy, setSortBy] = useState<'recent' | 'clicks' | 'engagement'>('recent');
+  const [sortBy, setSortBy] = useState<'first' | 'recent' | 'clicks' | 'engagement'>('first');
   const [selectedUser, setSelectedUser] = useState<UserSummary | null>(null);
   const [userJourney, setUserJourney] = useState<any>(null);
   const [loadingJourney, setLoadingJourney] = useState(false);
@@ -164,7 +164,11 @@ export default function UsersAnalytics() {
       return true;
     })
     .sort((a, b) => {
-      if (sortBy === 'recent') {
+      if (sortBy === 'first') {
+        // Earliest first (oldest created_at on top)
+        return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+      } else if (sortBy === 'recent') {
+        // Most recent activity first
         return new Date(b.last_active_at).getTime() - new Date(a.last_active_at).getTime();
       } else if (sortBy === 'clicks') {
         return b.total_clicks - a.total_clicks;
@@ -295,6 +299,7 @@ export default function UsersAnalytics() {
             onChange={(e) => setSortBy(e.target.value as any)}
             className="w-full px-3 py-2 bg-gray-800 text-white rounded-lg border border-gray-700 focus:outline-none focus:border-purple-500 text-sm"
           >
+            <option value="first">⏰ First Activity</option>
             <option value="recent">📅 Most Recent</option>
             <option value="clicks">🛍️ Most Clicks</option>
             <option value="engagement">⭐ Most Engaged</option>
