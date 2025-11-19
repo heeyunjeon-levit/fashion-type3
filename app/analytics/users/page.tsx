@@ -110,11 +110,12 @@ export default function UsersAnalytics() {
     }, 0);
   };
 
-  // Fetch all users (initial load with loading state)
-  const fetchUsers = async (showLoading: boolean = true) => {
+  // Fetch all users (fresh data on page load/refresh)
+  const fetchUsers = async () => {
     try {
-      if (showLoading) setLoading(true);
+      setLoading(true);
       
+      // Cache-busting to ensure fresh data
       const timestamp = Date.now();
       const res = await fetch(`/api/analytics/all-users?t=${timestamp}`, {
         cache: 'no-store',
@@ -134,57 +135,39 @@ export default function UsersAnalytics() {
       setPhoneHashMap(hashMap);
       setLastUpdated(new Date());
       
-      // Only auto-select on initial load (when showLoading is true)
-      if (showLoading) {
-        // Check if there's a user hash parameter in URL
-        const userHashParam = searchParams.get('u');
+      // Check if there's a user hash parameter in URL
+      const userHashParam = searchParams.get('u');
+      
+      if (userHashParam && data.length > 0) {
+        // Try to find user from hashed URL parameter
+        const phoneNumber = hashMap.get(userHashParam);
+        const userFromUrl = phoneNumber ? data.find((u: UserSummary) => u.phone === phoneNumber) : null;
         
-        if (userHashParam && data.length > 0) {
-          // Try to find user from hashed URL parameter
-          const phoneNumber = hashMap.get(userHashParam);
-          const userFromUrl = phoneNumber ? data.find((u: UserSummary) => u.phone === phoneNumber) : null;
-          
-          if (userFromUrl) {
-            setSelectedUser(userFromUrl);
-            fetchUserJourney(userFromUrl.phone);
-          } else {
-            // Hash not found, select first user
-            setSelectedUser(data[0]);
-            fetchUserJourney(data[0].phone);
-          }
-        } else if (data.length > 0) {
-          // No URL param, auto-select first user
+        if (userFromUrl) {
+          setSelectedUser(userFromUrl);
+          fetchUserJourney(userFromUrl.phone);
+        } else {
+          // Hash not found, select first user
           setSelectedUser(data[0]);
           fetchUserJourney(data[0].phone);
         }
-      }
-      
-      if (!showLoading) {
-        console.log('🔄 User list refreshed at', new Date().toLocaleTimeString());
+      } else if (data.length > 0) {
+        // No URL param, auto-select first user
+        setSelectedUser(data[0]);
+        fetchUserJourney(data[0].phone);
       }
     } catch (error) {
       console.error('Failed to fetch users:', error);
     } finally {
-      if (showLoading) setLoading(false);
+      setLoading(false);
     }
   };
 
-  // Initial fetch on mount
+  // Fetch users on mount or when URL params change
   useEffect(() => {
     if (!isAuthenticated) return;
-    fetchUsers(true);
+    fetchUsers();
   }, [isAuthenticated, searchParams]);
-
-  // Auto-refresh user list every 30 seconds (no loading flicker)
-  useEffect(() => {
-    if (!isAuthenticated) return;
-    
-    const interval = setInterval(() => {
-      fetchUsers(false);
-    }, 30000); // 30 seconds
-
-    return () => clearInterval(interval);
-  }, [isAuthenticated]);
 
   // Filter and sort users
   const filteredUsers = users
