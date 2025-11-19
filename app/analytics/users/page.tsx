@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 
@@ -43,12 +43,13 @@ export default function UsersAnalytics() {
   const [users, setUsers] = useState<UserSummary[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'all' | 'feedback' | 'converts' | 'clicks' | 'batch'>('all');
-  const [sortBy, setSortBy] = useState<'first' | 'recent' | 'clicks' | 'engagement'>('first');
+  const [sortBy, setSortBy] = useState<'first' | 'recent' | 'clicks' | 'engagement'>('recent');
   const [selectedUser, setSelectedUser] = useState<UserSummary | null>(null);
   const [userJourney, setUserJourney] = useState<any>(null);
   const [loadingJourney, setLoadingJourney] = useState(false);
   const [phoneHashMap, setPhoneHashMap] = useState<Map<string, string>>(new Map());
   const [searchQuery, setSearchQuery] = useState('');
+  const userListRef = useRef<HTMLDivElement>(null);
 
   // Check password
   const handleLogin = () => {
@@ -90,11 +91,22 @@ export default function UsersAnalytics() {
 
   // Handle user selection
   const handleSelectUser = async (user: UserSummary) => {
+    // Save current scroll position
+    const currentScroll = userListRef.current?.scrollTop || 0;
+    
     setSelectedUser(user);
     fetchUserJourney(user.phone);
+    
     // Update URL with hashed user ID (privacy-safe shareable link!)
     const hash = await hashPhone(user.phone);
     router.push(`/analytics/users?u=${hash}`, { scroll: false });
+    
+    // Restore scroll position after state update
+    setTimeout(() => {
+      if (userListRef.current) {
+        userListRef.current.scrollTop = currentScroll;
+      }
+    }, 0);
   };
 
   // Fetch all users
@@ -299,15 +311,15 @@ export default function UsersAnalytics() {
             onChange={(e) => setSortBy(e.target.value as any)}
             className="w-full px-3 py-2 bg-gray-800 text-white rounded-lg border border-gray-700 focus:outline-none focus:border-purple-500 text-sm"
           >
-            <option value="first">⏰ First Activity</option>
             <option value="recent">📅 Most Recent</option>
+            <option value="first">⏰ First Activity</option>
             <option value="clicks">🛍️ Most Clicks</option>
             <option value="engagement">⭐ Most Engaged</option>
           </select>
         </div>
 
         {/* User List */}
-        <div className="flex-1 overflow-y-auto">
+        <div ref={userListRef} className="flex-1 overflow-y-auto">
           {filteredUsers.length === 0 ? (
             <div className="text-center text-gray-500 py-8 px-4 text-sm">
               No users found
