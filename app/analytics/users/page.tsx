@@ -51,6 +51,7 @@ export default function UsersAnalytics() {
   const [searchQuery, setSearchQuery] = useState('');
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
   const userListRef = useRef<HTMLDivElement>(null);
+  const savedScrollRef = useRef<number>(0);
 
   // Check password
   const handleLogin = () => {
@@ -92,8 +93,8 @@ export default function UsersAnalytics() {
 
   // Handle user selection
   const handleSelectUser = async (user: UserSummary) => {
-    // Save current scroll position
-    const currentScroll = userListRef.current?.scrollTop || 0;
+    // Save current scroll position to ref (persists across renders)
+    savedScrollRef.current = userListRef.current?.scrollTop || 0;
     
     setSelectedUser(user);
     fetchUserJourney(user.phone);
@@ -101,14 +102,21 @@ export default function UsersAnalytics() {
     // Update URL with hashed user ID (privacy-safe shareable link!)
     const hash = await hashPhone(user.phone);
     router.push(`/analytics/users?u=${hash}`, { scroll: false });
-    
-    // Restore scroll position after state update
-    setTimeout(() => {
-      if (userListRef.current) {
-        userListRef.current.scrollTop = currentScroll;
-      }
-    }, 0);
   };
+
+  // Restore scroll position after user selection
+  useEffect(() => {
+    if (selectedUser && savedScrollRef.current > 0) {
+      // Use multiple requestAnimationFrame to ensure DOM is fully updated
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          if (userListRef.current) {
+            userListRef.current.scrollTop = savedScrollRef.current;
+          }
+        });
+      });
+    }
+  }, [selectedUser]);
 
   // Fetch all users (fresh data on page load/refresh)
   const fetchUsers = async () => {
@@ -334,7 +342,7 @@ export default function UsersAnalytics() {
         </div>
 
         {/* User List */}
-        <div ref={userListRef} className="flex-1 overflow-y-auto">
+        <div ref={userListRef} className="flex-1 overflow-y-auto" style={{ scrollBehavior: 'auto' }}>
           {filteredUsers.length === 0 ? (
             <div className="text-center text-gray-500 py-8 px-4 text-sm">
               No users found
