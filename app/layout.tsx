@@ -1,7 +1,8 @@
 import './globals.css'
+import { LanguageProvider } from './contexts/LanguageContext'
 
 export const metadata = {
-  title: 'Image Search MVP',
+  title: 'Fashion Search MVP',
   description: 'Upload an image and find similar products',
 }
 
@@ -12,7 +13,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <LanguageProvider>
+          {children}
+        </LanguageProvider>
+      </body>
     </html>
   )
 }

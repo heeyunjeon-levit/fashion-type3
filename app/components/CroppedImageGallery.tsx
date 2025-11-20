@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { categories } from '../constants/categories'
+import { useLanguage } from '../contexts/LanguageContext'
 
 export interface DetectedItem {
   category: string
@@ -24,6 +25,7 @@ export default function CroppedImageGallery({
   onItemsSelected,
   onBack,
 }: CroppedImageGalleryProps) {
+  const { t, language } = useLanguage()
   // Track selected items (pre-select all by default)
   const [selectedIndices, setSelectedIndices] = useState<Set<number>>(new Set())
 
@@ -52,24 +54,25 @@ export default function CroppedImageGallery({
     }
   }
 
-  // Get category label in Korean
+  // Get category label in current language
   const getCategoryLabel = (categoryId: string) => {
     const category = categories.find(c => c.id === categoryId)
-    return category?.label || categoryId
+    if (!category) return categoryId
+    return language === 'en' ? category.englishLabel : category.label
   }
 
   return (
     <div className="max-w-4xl mx-auto mt-8">
       <h1 className="text-4xl font-bold text-gray-900 mb-2 text-center">
-        발견된 아이템
+        {t('gallery.title')}
       </h1>
       <p className="text-gray-600 text-center mb-2">
-        검색할 아이템을 선택하세요
+        {t('gallery.subtitle')}
       </p>
       {detectedItems.length > 0 && (
         <div className="bg-green-50 border border-green-200 rounded-lg p-3 mb-6 text-center">
           <p className="text-green-700 font-medium">
-            🤖 AI가 {detectedItems.length}개의 아이템을 찾았어요!
+            {t('gallery.aiFound').replace('{count}', detectedItems.length.toString())}
           </p>
         </div>
       )}
@@ -77,7 +80,7 @@ export default function CroppedImageGallery({
       <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
         {/* Original Image */}
         <div className="mb-8">
-          <h3 className="text-lg font-semibold text-gray-700 mb-3">원본 이미지</h3>
+          <h3 className="text-lg font-semibold text-gray-700 mb-3">{t('gallery.original')}</h3>
           <img
             src={imageUrl}
             alt="Original"
@@ -87,12 +90,12 @@ export default function CroppedImageGallery({
 
         {detectedItems.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-gray-500 text-lg">아이템을 찾지 못했어요</p>
+            <p className="text-gray-500 text-lg">{t('gallery.noItems')}</p>
             <button
               onClick={onBack}
               className="mt-6 bg-gray-100 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-colors"
             >
-              다시 업로드
+              {t('gallery.reupload')}
             </button>
           </div>
         ) : (
@@ -100,7 +103,7 @@ export default function CroppedImageGallery({
             {/* Cropped Items Grid */}
             <div className="mb-6">
               <h3 className="text-lg font-semibold text-gray-700 mb-4">
-                자른 아이템 ({detectedItems.length}개)
+                {t('gallery.croppedItems').replace('{count}', detectedItems.length.toString())}
               </h3>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {detectedItems.map((item, idx) => {
@@ -180,14 +183,14 @@ export default function CroppedImageGallery({
                 onClick={onBack}
                 className="flex-1 bg-gray-100 text-gray-700 py-4 rounded-lg font-semibold hover:bg-gray-200 transition-colors"
               >
-                뒤로가기
+                {t('gallery.back')}
               </button>
               <button
                 onClick={handleContinue}
                 disabled={selectedIndices.size === 0}
                 className="flex-2 bg-black text-white py-4 px-8 rounded-lg font-semibold hover:bg-gray-800 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                선택한 {selectedIndices.size}개 아이템 검색
+                {t('gallery.search').replace('{count}', selectedIndices.size.toString())}
               </button>
             </div>
           </>

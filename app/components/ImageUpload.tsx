@@ -2,12 +2,14 @@
 
 import { useState, useRef } from 'react'
 import imageCompression from 'browser-image-compression'
+import { useLanguage } from '../contexts/LanguageContext'
 
 interface ImageUploadProps {
   onImageUploaded: (imageUrl: string, uploadTimeSeconds?: number) => void
 }
 
 export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
+  const { t } = useLanguage()
   const [image, setImage] = useState<File | null>(null)
   const [preview, setPreview] = useState<string>('')
   const [isUploading, setIsUploading] = useState(false)
@@ -172,8 +174,8 @@ export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
 
   return (
     <div className="max-w-2xl mx-auto mt-8">
-      <h1 className="text-4xl font-bold text-gray-900 mb-8 text-center leading-relaxed">
-        원하시는 옷<br />찾아드려요!
+      <h1 className="text-4xl font-bold text-gray-900 mb-8 text-center leading-relaxed whitespace-pre-line">
+        {t('upload.title')}
       </h1>
       
       <div className="bg-white rounded-2xl shadow-2xl p-8 border border-gray-100">
@@ -181,13 +183,13 @@ export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
           {isConverting ? (
             <div className="space-y-4">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black mx-auto"></div>
-              <p className="text-gray-600">HEIC를 JPEG로 변환하는 중...</p>
+              <p className="text-gray-600">{t('upload.converting')}</p>
             </div>
           ) : preview ? (
             <div className="space-y-4">
               <img
                 src={preview}
-                alt="미리보기"
+                alt={t('upload.preview')}
                 className="max-h-64 mx-auto rounded-lg shadow-md"
               />
               <button
@@ -200,7 +202,7 @@ export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
                 }}
                 className="text-gray-600 hover:text-gray-800 underline"
               >
-                이미지 변경
+                {t('upload.change')}
               </button>
             </div>
           ) : (
@@ -218,12 +220,12 @@ export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
                   strokeLinejoin="round"
                 />
               </svg>
-              <p className="text-gray-600">이미지를 업로드하여 시작하세요</p>
+              <p className="text-gray-600">{t('upload.placeholder')}</p>
               <button
                 onClick={() => fileInputRef.current?.click()}
                 className="bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors font-medium"
               >
-                이미지 선택
+                {t('upload.select')}
               </button>
             </div>
           )}
@@ -243,7 +245,7 @@ export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
             disabled={isUploading || isConverting}
             className="mt-6 w-full bg-black text-white py-4 rounded-lg font-semibold hover:bg-gray-800 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isUploading ? '업로드 중...' : '계속하기'}
+            {isUploading ? t('upload.uploading') : t('upload.continue')}
           </button>
         )}
       </div>

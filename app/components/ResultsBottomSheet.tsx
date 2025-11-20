@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import PhoneModal from './PhoneModal'
 import FeedbackModal from './FeedbackModal'
 import { getSessionManager } from '../../lib/sessionManager'
+import { useLanguage } from '../contexts/LanguageContext'
 
 interface ProductOption {
   link: string
@@ -32,6 +33,7 @@ export default function ResultsBottomSheet({
   onResearch,
   selectedItems
 }: ResultsBottomSheetProps) {
+  const { t, language } = useLanguage()
   const [showPhoneModal, setShowPhoneModal] = useState(true)
   const [phoneSubmitted, setPhoneSubmitted] = useState(false)
   const [isReturningUser, setIsReturningUser] = useState(false)
@@ -378,13 +380,16 @@ export default function ResultsBottomSheet({
     }
   }, [])
 
-  const categoryNames: Record<string, string> = {
-    tops: '상의',
-    bottoms: '하의',
-    bag: '가방',
-    shoes: '신발',
-    accessory: '악세사리',
-    dress: '드레스',
+  const getCategoryName = (categoryKey: string): string => {
+    const categoryMap: Record<string, string> = {
+      tops: language === 'en' ? 'Top' : '상의',
+      bottoms: language === 'en' ? 'Bottom' : '하의',
+      bag: language === 'en' ? 'Bag' : '가방',
+      shoes: language === 'en' ? 'Shoes' : '신발',
+      accessory: language === 'en' ? 'Accessory' : '악세사리',
+      dress: language === 'en' ? 'Dress' : '드레스',
+    }
+    return categoryMap[categoryKey] || categoryKey
   }
 
   const isBlurred = !phoneSubmitted
@@ -415,7 +420,7 @@ export default function ResultsBottomSheet({
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
         <div className="bg-white rounded-2xl p-8">
           <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-black mx-auto"></div>
-          <p className="text-gray-800 mt-4 font-medium">제품 검색 중...</p>
+          <p className="text-gray-800 mt-4 font-medium">{t('results.searching')}</p>
         </div>
       </div>
     )
@@ -453,7 +458,7 @@ export default function ResultsBottomSheet({
       <button
         onClick={onBack || onReset}
         className="fixed top-6 left-6 z-40 bg-white/90 backdrop-blur-sm rounded-full p-3 shadow-lg hover:bg-white transition-colors"
-        title="뒤로가기"
+        title={t('results.back')}
       >
         <svg className="w-6 h-6 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -477,8 +482,8 @@ export default function ResultsBottomSheet({
         {isBlurred && (
           <div className="absolute inset-0 backdrop-blur-sm bg-white/30 z-50 flex items-center justify-center rounded-t-3xl">
             <div className="bg-yellow-100 rounded-2xl p-6 shadow-2xl transform rotate-2 max-w-xs mx-4">
-              <p className="text-gray-800 font-bold text-center text-lg">
-                🔒 전화번호 입력 후<br />상품 링크를 확인하세요!
+              <p className="text-gray-800 font-bold text-center text-lg whitespace-pre-line">
+                {t('phone.locked')}
               </p>
             </div>
           </div>
@@ -506,7 +511,7 @@ export default function ResultsBottomSheet({
         >
           {Object.keys(results).length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16">
-              <p className="text-gray-600 text-lg mb-4">결과를 찾을 수 없습니다</p>
+              <p className="text-gray-600 text-lg mb-4">{t('results.noResults')}</p>
               <div className="flex gap-3 justify-center">
                 <button
                   onClick={onReset}
@@ -515,13 +520,13 @@ export default function ResultsBottomSheet({
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                   </svg>
-                  처음부터
+                  {t('results.startOver')}
                 </button>
                 <button
                   onClick={onResearch || onReset}
                   className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all active:scale-95"
                 >
-                  다시 검색하기
+                  {t('results.searchAgain')}
                 </button>
               </div>
             </div>
@@ -530,7 +535,7 @@ export default function ResultsBottomSheet({
               {/* Each category = one section */}
               {Object.entries(results).map(([category, links]) => {
                 const categoryKey = category.split('_')[0]
-                const displayName = categoryNames[categoryKey] || categoryKey
+                const displayName = getCategoryName(categoryKey)
                 const itemNumber = category.split('_')[1] || '1'
 
                 return (
@@ -550,7 +555,7 @@ export default function ResultsBottomSheet({
                         <h3 className="text-xl font-bold text-gray-900">
                           {displayName} {Object.keys(results).length > 1 && `#${itemNumber}`}
                         </h3>
-                        <p className="text-sm text-gray-500">{links.length}개 상품</p>
+                        <p className="text-sm text-gray-500">{t('results.products').replace('{count}', links.length.toString())}</p>
                       </div>
                     </div>
 
@@ -615,7 +620,7 @@ export default function ResultsBottomSheet({
             <button
               onClick={onReset}
               className="flex-shrink-0 bg-gray-100 text-gray-700 p-3 rounded-xl font-semibold hover:bg-gray-200 transition-colors active:scale-95"
-              title="처음부터 다시"
+              title={t('results.startOver')}
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
@@ -625,13 +630,13 @@ export default function ResultsBottomSheet({
               onClick={onResearch || onReset}
               className="flex-1 bg-gray-100 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-200 transition-colors active:scale-95"
             >
-              다시 검색
+              {t('results.searchAgain')}
             </button>
             <button
               onClick={() => setSheetPosition(sheetPosition === 'full' ? 'half' : 'full')}
               className="flex-1 bg-black text-white py-3 rounded-xl font-semibold hover:bg-gray-800 transition-all shadow-lg active:scale-95"
             >
-              {sheetPosition === 'full' ? '접기' : '전체보기'}
+              {sheetPosition === 'full' ? t('results.collapse') : t('results.viewAll')}
             </button>
           </div>
         )}
@@ -640,7 +645,7 @@ export default function ResultsBottomSheet({
         {sheetPosition === 'peek' && (
           <div className="absolute bottom-4 left-0 right-0 flex justify-center pointer-events-none">
             <div className="bg-black text-white px-6 py-2 rounded-full text-sm font-semibold shadow-lg">
-              ↑ 위로 드래그하여 상품 보기
+              {t('results.dragHint')}
             </div>
           </div>
         )}

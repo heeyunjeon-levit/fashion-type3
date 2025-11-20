@@ -4,8 +4,10 @@ import { useState, useEffect } from 'react'
 import ImageUpload from './components/ImageUpload'
 import CroppedImageGallery from './components/CroppedImageGallery'
 import ResultsBottomSheet from './components/ResultsBottomSheet'
+import LanguageToggle from './components/LanguageToggle'
 import { getSessionManager } from '../lib/sessionManager'
 import { usePageTracking } from '../lib/hooks/usePageTracking'
+import { useLanguage } from './contexts/LanguageContext'
 
 export interface DetectedItem {
   category: string
@@ -16,6 +18,7 @@ export interface DetectedItem {
 }
 
 export default function Home() {
+  const { t } = useLanguage()
   const [currentStep, setCurrentStep] = useState<'upload' | 'analyzing' | 'gallery' | 'searching' | 'results'>('upload')
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string>('')
   const [detectedItems, setDetectedItems] = useState<DetectedItem[]>([])
@@ -229,6 +232,9 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-white">
+      {/* Language Toggle - show on all pages except results */}
+      {currentStep !== 'results' && <LanguageToggle />}
+      
       <div className="container mx-auto px-4 py-8">
         {currentStep === 'upload' && (
           <ImageUpload onImageUploaded={handleImageUploaded} />
@@ -257,8 +263,8 @@ export default function Home() {
 
                 {/* Text */}
                 <div className="space-y-2">
-                  <h2 className="text-2xl font-bold text-black">AI 분석중...</h2>
-                  <p className="text-gray-600">이미지에서 아이템을 찾고 있어요</p>
+                  <h2 className="text-2xl font-bold text-black">{t('analyzing.title')}</h2>
+                  <p className="text-gray-600">{t('analyzing.subtitle')}</p>
                 </div>
               </div>
             </div>
@@ -277,7 +283,7 @@ export default function Home() {
             <div className="bg-white rounded-2xl shadow-xl p-12 border border-gray-100">
               <div className="text-center space-y-6">
                 <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-black mx-auto"></div>
-                <h2 className="text-2xl font-bold text-black">AI가 요청하신 상품을 찾고 있어요</h2>
+                <h2 className="text-2xl font-bold text-black">{t('searching.title')}</h2>
               </div>
             </div>
           </div>

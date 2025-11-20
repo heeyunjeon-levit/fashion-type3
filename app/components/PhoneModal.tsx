@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useLanguage } from '../contexts/LanguageContext'
 
 interface PhoneModalProps {
   onPhoneSubmit: (phoneNumber: string) => void
@@ -9,6 +10,7 @@ interface PhoneModalProps {
 }
 
 export default function PhoneModal({ onPhoneSubmit, onClose, isReturningUser }: PhoneModalProps) {
+  const { t, language } = useLanguage()
   const [phoneNumber, setPhoneNumber] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState('')
@@ -17,17 +19,26 @@ export default function PhoneModal({ onPhoneSubmit, onClose, isReturningUser }: 
     e.preventDefault()
     setError('')
 
-    // Validate Korean phone number (010-XXXX-XXXX or 01012345678)
+    // Validate phone number based on language
     const cleanedPhone = phoneNumber.replace(/[^0-9]/g, '')
     
-    if (cleanedPhone.length !== 11 && cleanedPhone.length !== 10) {
-      setError('올바른 전화번호를 입력해주세요 (예: 010-1234-5678)')
-      return
-    }
+    if (language === 'ko') {
+      // Korean phone validation (010-XXXX-XXXX or 01012345678)
+      if (cleanedPhone.length !== 11 && cleanedPhone.length !== 10) {
+        setError(t('phone.error'))
+        return
+      }
 
-    if (!cleanedPhone.startsWith('010')) {
-      setError('010으로 시작하는 전화번호를 입력해주세요')
-      return
+      if (!cleanedPhone.startsWith('010')) {
+        setError(t('phone.errorPrefix'))
+        return
+      }
+    } else {
+      // English phone validation (more lenient, 10+ digits)
+      if (cleanedPhone.length < 10) {
+        setError(t('phone.error'))
+        return
+      }
     }
 
     setIsSubmitting(true)
@@ -35,21 +46,32 @@ export default function PhoneModal({ onPhoneSubmit, onClose, isReturningUser }: 
     try {
       await onPhoneSubmit(cleanedPhone)
     } catch (err) {
-      setError('전화번호 저장에 실패했습니다. 다시 시도해주세요.')
+      setError('Failed to save phone number. Please try again.')
       setIsSubmitting(false)
     }
   }
 
   const formatPhoneNumber = (value: string) => {
-    // Auto-format as user types: 010-1234-5678
     const cleaned = value.replace(/[^0-9]/g, '')
     
-    if (cleaned.length <= 3) {
-      return cleaned
-    } else if (cleaned.length <= 7) {
-      return `${cleaned.slice(0, 3)}-${cleaned.slice(3)}`
+    if (language === 'ko') {
+      // Korean format: 010-1234-5678
+      if (cleaned.length <= 3) {
+        return cleaned
+      } else if (cleaned.length <= 7) {
+        return `${cleaned.slice(0, 3)}-${cleaned.slice(3)}`
+      } else {
+        return `${cleaned.slice(0, 3)}-${cleaned.slice(3, 7)}-${cleaned.slice(7, 11)}`
+      }
     } else {
-      return `${cleaned.slice(0, 3)}-${cleaned.slice(3, 7)}-${cleaned.slice(7, 11)}`
+      // US format: 555-123-4567
+      if (cleaned.length <= 3) {
+        return cleaned
+      } else if (cleaned.length <= 6) {
+        return `${cleaned.slice(0, 3)}-${cleaned.slice(3)}`
+      } else {
+        return `${cleaned.slice(0, 3)}-${cleaned.slice(3, 6)}-${cleaned.slice(6, 10)}`
+      }
     }
   }
 
@@ -85,25 +107,12 @@ export default function PhoneModal({ onPhoneSubmit, onClose, isReturningUser }: 
 
           {/* Title */}
           <h2 className="text-2xl font-bold text-gray-800 text-center mb-2">
-            {isReturningUser ? '다시 찾아주셨네요! 👋' : '잠깐만요! 📱'}
+            {isReturningUser ? t('phone.returning') : t('phone.title')}
           </h2>
 
           {/* Description */}
-          <p className="text-gray-700 text-center mb-6 leading-relaxed">
-            {isReturningUser ? (
-              <>
-                재방문 감사합니다!<br />
-                전화번호를 다시 입력해주세요
-              </>
-            ) : (
-              <>
-                상품 링크를 확인하려면<br />
-                전화번호를 입력해주세요<br />
-                <span className="text-sm text-gray-600 mt-2 block">
-                  (더 좋은 서비스를 위한 사용자 인터뷰에 활용됩니다)
-                </span>
-              </>
-            )}
+          <p className="text-gray-700 text-center mb-6 leading-relaxed whitespace-pre-line">
+            {isReturningUser ? t('phone.returningDesc') : t('phone.desc')}
           </p>
 
           {/* Form */}
@@ -113,7 +122,7 @@ export default function PhoneModal({ onPhoneSubmit, onClose, isReturningUser }: 
                 type="tel"
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(formatPhoneNumber(e.target.value))}
-                placeholder="010-1234-5678"
+                placeholder={t('phone.placeholder')}
                 className="w-full px-4 py-3 border-2 border-yellow-800/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-600 focus:border-transparent bg-white/80 text-gray-800 placeholder-gray-500 text-center text-lg font-medium"
                 style={{ touchAction: 'auto' }}
                 maxLength={13}
@@ -133,14 +142,13 @@ export default function PhoneModal({ onPhoneSubmit, onClose, isReturningUser }: 
               disabled={isSubmitting || phoneNumber.length < 10}
               className="w-full bg-gradient-to-r from-yellow-600 to-amber-600 text-white py-3 rounded-xl font-bold text-lg hover:from-yellow-700 hover:to-amber-700 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95"
             >
-              {isSubmitting ? '처리중...' : '링크 확인하기 🔗'}
+              {isSubmitting ? t('phone.submitting') : t('phone.submit')}
             </button>
           </form>
 
           {/* Privacy note */}
-          <p className="text-xs text-gray-600 text-center mt-4 leading-relaxed">
-            🔒 전화번호는 안전하게 보관되며<br />
-            사용자 인터뷰 목적으로만 사용됩니다
+          <p className="text-xs text-gray-600 text-center mt-4 leading-relaxed whitespace-pre-line">
+            {t('phone.privacy')}
           </p>
         </div>
       </div>

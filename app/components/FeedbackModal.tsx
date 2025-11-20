@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, forwardRef, useImperativeHandle } from 'react'
+import { useLanguage } from '../contexts/LanguageContext'
 
 interface FeedbackModalProps {
   phoneNumber: string
@@ -13,9 +14,10 @@ export interface FeedbackModalRef {
 }
 
 const FeedbackModal = forwardRef<FeedbackModalRef, FeedbackModalProps>(({ phoneNumber, resultPageUrl = 'main_app_result_page', onClose }, ref) => {
+  const { t, language } = useLanguage()
   const [isVisible, setIsVisible] = useState(false)
   const [showTab, setShowTab] = useState(false)
-  const [selectedSatisfaction, setSelectedSatisfaction] = useState<'만족' | '불만족' | null>(null)
+  const [selectedSatisfaction, setSelectedSatisfaction] = useState<string | null>(null)
   const [comment, setComment] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [pageLoadTime, setPageLoadTime] = useState(Date.now())
@@ -91,7 +93,7 @@ const FeedbackModal = forwardRef<FeedbackModalRef, FeedbackModalProps>(({ phoneN
     localStorage.removeItem(tabStateKey)
   }
 
-  const handleSatisfactionClick = (satisfaction: '만족' | '불만족') => {
+  const handleSatisfactionClick = (satisfaction: string) => {
     setSelectedSatisfaction(satisfaction)
   }
 
@@ -145,33 +147,33 @@ const FeedbackModal = forwardRef<FeedbackModalRef, FeedbackModalProps>(({ phoneN
           <div className="bg-white rounded-2xl shadow-2xl w-[90%] max-w-md mx-4 p-6 animate-in zoom-in-95 duration-200">
             {/* Title */}
             <h3 className="text-xl font-bold text-gray-900 mb-2">
-              결과가 만족스러우셨나요?
+              {t('feedback.title')}
             </h3>
             <p className="text-sm text-gray-600 mb-6">
-              여러분의 소중한 의견을 들려주세요 💭
+              {t('feedback.subtitle')}
             </p>
 
             {/* Satisfaction Buttons */}
             <div className="flex gap-3 mb-6">
               <button
-                onClick={() => handleSatisfactionClick('만족')}
+                onClick={() => handleSatisfactionClick(language === 'en' ? 'satisfied' : '만족')}
                 className={`flex-1 py-4 px-6 rounded-xl font-semibold transition-all ${
-                  selectedSatisfaction === '만족'
+                  selectedSatisfaction === (language === 'en' ? 'satisfied' : '만족')
                     ? 'bg-green-500 text-white shadow-lg scale-105'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
               >
-                😊 만족
+                {t('feedback.satisfied')}
               </button>
               <button
-                onClick={() => handleSatisfactionClick('불만족')}
+                onClick={() => handleSatisfactionClick(language === 'en' ? 'unsatisfied' : '불만족')}
                 className={`flex-1 py-4 px-6 rounded-xl font-semibold transition-all ${
-                  selectedSatisfaction === '불만족'
+                  selectedSatisfaction === (language === 'en' ? 'unsatisfied' : '불만족')
                     ? 'bg-red-500 text-white shadow-lg scale-105'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
               >
-                😞 불만족
+                {t('feedback.unsatisfied')}
               </button>
             </div>
 
@@ -179,7 +181,7 @@ const FeedbackModal = forwardRef<FeedbackModalRef, FeedbackModalProps>(({ phoneN
             <textarea
               value={comment}
               onChange={(e) => setComment(e.target.value)}
-              placeholder="자세한 의견을 남겨주세요 (선택사항)"
+              placeholder={t('feedback.comment')}
               className="w-full p-4 border border-gray-300 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent mb-4"
               rows={3}
             />
@@ -190,7 +192,7 @@ const FeedbackModal = forwardRef<FeedbackModalRef, FeedbackModalProps>(({ phoneN
                 onClick={handleClose}
                 className="flex-1 py-3 px-4 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-colors"
               >
-                아직 결과를 다 못봤어요!
+                {t('feedback.notDone')}
               </button>
               <button
                 onClick={handleSubmit}
@@ -201,7 +203,7 @@ const FeedbackModal = forwardRef<FeedbackModalRef, FeedbackModalProps>(({ phoneN
                     : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                 }`}
               >
-                {isSubmitting ? '전송중...' : '확인'}
+                {isSubmitting ? t('feedback.submitting') : t('feedback.submit')}
               </button>
             </div>
           </div>
@@ -215,7 +217,7 @@ const FeedbackModal = forwardRef<FeedbackModalRef, FeedbackModalProps>(({ phoneN
           className="fixed right-0 top-1/2 -translate-y-1/2 bg-black text-white px-3 py-6 rounded-l-xl font-semibold shadow-lg z-[9998] hover:bg-gray-800 transition-all hover:pr-4 text-sm"
           style={{ writingMode: 'vertical-rl' }}
         >
-          피드백 💭
+          {t('feedback.tab')}
         </button>
       )}
     </>
