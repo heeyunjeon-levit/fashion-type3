@@ -1,0 +1,2761 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brand Images Processing Results</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            color: #2d3748;
+            margin-bottom: 20px;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 3em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        
+        .category-breakdown {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .category-badge {
+            background: #e2e8f0;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            color: #4a5568;
+        }
+        
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 25px;
+        }
+        
+        .result-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .result-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.15);
+        }
+        
+        .image-container {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            overflow: hidden;
+            background: #f7fafc;
+        }
+        
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .image-number {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        
+        .content {
+            padding: 25px;
+        }
+        
+        .filename {
+            font-size: 0.8em;
+            color: #718096;
+            margin-bottom: 15px;
+            word-break: break-all;
+        }
+        
+        .items-section {
+            margin-bottom: 20px;
+        }
+        
+        .section-title {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .item {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .item-category {
+            font-weight: bold;
+            color: #667eea;
+            text-transform: capitalize;
+            margin-bottom: 5px;
+        }
+        
+        .item-description {
+            color: #4a5568;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+        
+        .products-section {
+            margin-top: 20px;
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        
+        .product-card {
+            background: #fff;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .product-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 120px;
+            background: #f7fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .product-image.no-image {
+            color: #cbd5e0;
+            font-size: 2em;
+        }
+        
+        .product-title {
+            padding: 10px;
+            font-size: 0.75em;
+            color: #4a5568;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .no-products {
+            text-align: center;
+            padding: 20px;
+            color: #a0aec0;
+            font-style: italic;
+        }
+        
+        .processing-time {
+            display: inline-block;
+            background: #48bb78;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            margin-top: 10px;
+        }
+        
+        .footer {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 30px;
+            text-align: center;
+            color: #718096;
+        }
+        
+        @media (max-width: 768px) {
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎨 Brand Images Processing Results</h1>
+            <p style="color: #718096; font-size: 1.1em; margin-top: 10px;">
+                Processed 24 images through AI fashion detection pipeline
+            </p>
+            
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number">22</div>
+                    <div class="stat-label">Successful Images</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">53</div>
+                    <div class="stat-label">Fashion Items Detected</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">144</div>
+                    <div class="stat-label">Product Links Found</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">91.7%</div>
+                    <div class="stat-label">Success Rate</div>
+                </div>
+            </div>
+            
+            <div class="category-breakdown">
+                <span style="color: #2d3748; font-weight: bold;">Categories detected:</span>
+                <span class="category-badge">Tops: 21</span>
+                <span class="category-badge">Bottoms: 11</span>
+                <span class="category-badge">Bag: 9</span>
+                <span class="category-badge">Shoes: 5</span>
+                <span class="category-badge">Accessory: 3</span>
+                <span class="category-badge">Dress: 2</span>
+            </div>
+        </div>
+        
+        <div class="results-grid">
+
+            <div class="result-card">
+                <div class="image-container">
+                    <img src="https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763681113720_36d2e0eeb84b-Screenshot_20250922_181119_Instagram_.jpg" alt="36d2e0eeb84b-Screenshot_20250922_181119_Instagram 복사본.jpg">
+                    <div class="image-number">#1</div>
+                </div>
+                <div class="content">
+                    <div class="filename">36d2e0eeb84b-Screenshot_20250922_181119_Instagram 복사본.jpg</div>
+                    
+                    <div class="items-section">
+                        <div class="section-title">
+                            🔍 1 Item Detected
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">bottoms</div>
+                            <div class="item-description">dark gray wide-leg pants with a loose fit and high waist</div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="products-section">
+                        <div class="section-title">
+                            🛍️ Product Matches
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Bottoms 1
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://global.musinsa.com/vn/goods/3730368" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://image.musinsa.com/thumbnails/images/prd_img/2024020608231600000091573.jpg?w=780" alt="MUSINSA STANDARD WOMAN Women's Bright Nylon Parachute Pants [Dark Grey] - MUSINSA">
+
+                                    </div>
+                                    <div class="product-title">MUSINSA STANDARD WOMAN Women's Bright Nylon Parachute Pants [Dark Grey] - MUSINSA</div>
+                                </a>
+
+                                <a href="https://www.musinsa.com/products/3730368" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://image.msscdn.net/thumbnails/images/prd_img/20231123/3730368/detail_3730368_17071165738559_big.jpg?w=1000" alt="무신사 스탠다드 우먼(MUSINSA STANDARD WOMAN) 우먼즈 브라이트 나일론 파라슈트 팬츠 [다크 그레이] - 사이즈 & 후기 | 무신사">
+
+                                    </div>
+                                    <div class="product-title">무신사 스탠다드 우먼(MUSINSA STANDARD WOMAN) 우먼즈 브라이트 나일론 파라슈트 팬츠 [다크 그레이] - 사이즈 & 후기 | 무신사</div>
+                                </a>
+
+                                <a href="https://m.gopeople.co.kr/product/버클-쿨-나일론-팬츠4color/6872" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://i.vimeocdn.com/video/1886754713-1a560ac76f24abdc4d1bbb8b640dff575bc58799cdf1925f32bf90cd0b476e30-d?f=webp" alt="버클 쿨 나일론 팬츠(4color) - 고피플">
+
+                                    </div>
+                                    <div class="product-title">버클 쿨 나일론 팬츠(4color) - 고피플</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="processing-time">⏱️ 55.0s</div>
+                </div>
+            </div>
+
+            <div class="result-card">
+                <div class="image-container">
+                    <img src="https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763681170716_393bb2de055b-Screenshot_20250922_210538_Instagram_.jpg" alt="393bb2de055b-Screenshot_20250922_210538_Instagram 복사본.jpg">
+                    <div class="image-number">#2</div>
+                </div>
+                <div class="content">
+                    <div class="filename">393bb2de055b-Screenshot_20250922_210538_Instagram 복사본.jpg</div>
+                    
+                    <div class="items-section">
+                        <div class="section-title">
+                            🔍 4 Items Detected
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">tops</div>
+                            <div class="item-description">black oversized jacket with a zipper and button details</div>
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">tops</div>
+                            <div class="item-description">light blue button-up shirt with a classic collar</div>
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">bottoms</div>
+                            <div class="item-description">gray tailored shorts with a knee-length fit</div>
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">bag</div>
+                            <div class="item-description">small white handbag with a structured design and short handle</div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="products-section">
+                        <div class="section-title">
+                            🛍️ Product Matches
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Tops 1
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://m.siyazu.co.kr/product/siot4134-오버-핏-코튼-필드-자켓black/2062/" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://m.siyazu.co.kr/web/product/big/202501/85cdc57e233de58a04db4e4495037d19.jpg" alt="SIOT4134 오버 핏 코튼 필드 자켓_Black - 시야쥬(Siyazu)">
+
+                                    </div>
+                                    <div class="product-title">SIOT4134 오버 핏 코튼 필드 자켓_Black - 시야쥬(Siyazu)</div>
+                                </a>
+
+                                <a href="https://www.kurly.com/goods/1001100269" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://3p-image.kurly.com/hdims/resize/^>720x>936/cropcenter/720x936/quality/85/src/files/0e876dee-6560-4a59-9378-450f835bb714/d63cec56-ce6d-4527-80c7-8c97ec8789b9.jpg" alt="시야쥬] 오버 핏 와샤 필드 자켓_블랙(SIOT4142) - 마켓컬리">
+
+                                    </div>
+                                    <div class="product-title">시야쥬] 오버 핏 와샤 필드 자켓_블랙(SIOT4142) - 마켓컬리</div>
+                                </a>
+
+                                <a href="https://heute.kr/product/S3JP002BK" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://contents.sixshop.com/thumbnails/uploadedFiles/195723/product/image_1678704617815_750.jpg" alt="23SS OVERSIZED BOMBER JACKET (BLACK)">
+
+                                    </div>
+                                    <div class="product-title">23SS OVERSIZED BOMBER JACKET (BLACK)</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Tops 2
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://www.eqlstore.com/product/GP6Z25020354060/detail" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://cdn.eqlstore.com/goods/EQBR/25/02/03/GP6Z25020354060_0_ORGINL_1738554899582.jpg?RS=750" alt="한섬 EQL">
+
+                                    </div>
+                                    <div class="product-title">한섬 EQL</div>
+                                </a>
+
+                                <a href="https://mixxo.elandmall.co.kr/i/item?itemNo=2401953774&lowerVendNo=LV16003594" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://item.elandrs.com/r/image/item/2024-02-15/f5664c28-f055-428e-a300-85c7ae2809a7.jpg?w=750&h=&q=100" alt="하이넥 미디 점퍼_MIWJJE303G- 미쏘">
+
+                                    </div>
+                                    <div class="product-title">하이넥 미디 점퍼_MIWJJE303G- 미쏘</div>
+                                </a>
+
+                                <a href="https://www.kurly.com/goods/1001100269" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://3p-image.kurly.com/hdims/resize/^>720x>936/cropcenter/720x936/quality/85/src/files/0e876dee-6560-4a59-9378-450f835bb714/d63cec56-ce6d-4527-80c7-8c97ec8789b9.jpg" alt="시야쥬] 오버 핏 와샤 필드 자켓_블랙(SIOT4142) - 마켓컬리">
+
+                                    </div>
+                                    <div class="product-title">시야쥬] 오버 핏 와샤 필드 자켓_블랙(SIOT4142) - 마켓컬리</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Bottoms 3
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://www.hiver.co.kr/products/91490433" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://image.brandi.co.kr/cproduct/2023/02/08/SB000000000084335399_1675838649_image5_S.webp" alt="핫멜트 후드 트렌치코트 (PCNAA7363)">
+
+                                    </div>
+                                    <div class="product-title">핫멜트 후드 트렌치코트 (PCNAA7363)</div>
+                                </a>
+
+                                <a href="https://chamber-online.co.kr/product/markaware-2019-springsummer/633/display/1/" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://chamber-online.co.kr/web/upload/NNEditor/20190127/mobile/97ad16513618798ae5e0b98c7b5bbfe8_1548565570.jpg" alt="THE ARTFUL STORE | MARKAWARE 2019 SPRING/SUMMER">
+
+                                    </div>
+                                    <div class="product-title">THE ARTFUL STORE | MARKAWARE 2019 SPRING/SUMMER</div>
+                                </a>
+
+                                <a href="https://m.okmall.com/products/view?no=805499" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://okimg.okmall.com/other805000/img805499_other7_big.JPG?t=1750993740/okresize/resize/500" alt="AMI]아미 드 꾀흐 패딩 오버셔츠 (HJK248 PA0009 001) | 오케이몰">
+
+                                    </div>
+                                    <div class="product-title">AMI]아미 드 꾀흐 패딩 오버셔츠 (HJK248 PA0009 001) | 오케이몰</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Bag 4
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://kr.vestiairecollective.com/women-bags/handbags/polene/white-leather-numero-huit-polene-handbag-50350164.shtml" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://images.vestiairecollective.com/images/resized/w=1246,q=75,f=auto,/produit/white-leather-numero-huit-polene-handbag-50350164-1_2.jpg" alt="Numéro huit 핸드백 가죽 Polene 화이트 가죽 안에 - 50350164">
+
+                                    </div>
+                                    <div class="product-title">Numéro huit 핸드백 가죽 Polene 화이트 가죽 안에 - 50350164</div>
+                                </a>
+
+                                <a href="https://www.thenorthfacekorea.co.kr/product/NN2PR65M" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://www.thenorthfacekorea.co.kr/cmsstatic/product/4000054556/NN2PR65M.png" alt="BONNEY BUCKET BAG MINI - 노스페이스">
+
+                                    </div>
+                                    <div class="product-title">BONNEY BUCKET BAG MINI - 노스페이스</div>
+                                </a>
+
+                                <a href="https://www.vestiairecollective.com/women-bags/handbags/polene/white-leather-numero-huit-polene-handbag-44096537.shtml" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://images.vestiairecollective.com/images/resized/w=1246,q=75,f=auto,/produit/white-leather-numero-huit-polene-handbag-44096537-7_2.jpg" alt="Numéro huit leather handbag Polene White in Leather - 44096537">
+
+                                    </div>
+                                    <div class="product-title">Numéro huit leather handbag Polene White in Leather - 44096537</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="processing-time">⏱️ 70.7s</div>
+                </div>
+            </div>
+
+            <div class="result-card">
+                <div class="image-container">
+                    <img src="https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763681243417_5d96eff1ccb9-IMG_1740_.jpg" alt="5d96eff1ccb9-IMG_1740 복사본.png">
+                    <div class="image-number">#3</div>
+                </div>
+                <div class="content">
+                    <div class="filename">5d96eff1ccb9-IMG_1740 복사본.png</div>
+                    
+                    <div class="items-section">
+                        <div class="section-title">
+                            🔍 3 Items Detected
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">tops</div>
+                            <div class="item-description">light blue and white striped long sleeve button-up shirt with a relaxed fit</div>
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">bottoms</div>
+                            <div class="item-description">black fitted shorts with a simple design</div>
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">bag</div>
+                            <div class="item-description">black handbag with short handles and a sleek design</div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="products-section">
+                        <div class="section-title">
+                            🛍️ Product Matches
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Tops 1
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://www.musinsa.com/products/5439076" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://image.msscdn.net/images/goods_img/20250910/5439076/5439076_17574964305310_500.jpg" alt="논앤논(NON AND NON) MUN STRIPED COTTON SHIRT_NFSH5285 - 사이즈 & 후기 | 무신사">
+
+                                    </div>
+                                    <div class="product-title">논앤논(NON AND NON) MUN STRIPED COTTON SHIRT_NFSH5285 - 사이즈 & 후기 | 무신사</div>
+                                </a>
+
+                                <a href="https://www2.hm.com/en_my/productpage.1271715003.html" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://image.hm.com/assets/hm/18/57/1857c249062311ce08278963827008d82105e395.jpg?imwidth=768" alt="Loose Fit Utility shirt - Light blue/Striped - Men | H&M MY">
+
+                                    </div>
+                                    <div class="product-title">Loose Fit Utility shirt - Light blue/Striped - Men | H&M MY</div>
+                                </a>
+
+                                <a href="https://www.zara.com/us/en/zw-collection-striped-pocket-shirt-p08396350.html" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://static.zara.net/assets/public/253f/f3df/ab4f4c2daa51/65f3deb0d77d/08396350104-a3/08396350104-a3.jpg?ts=1756394471257" alt="ZW COLLECTION STRIPED POCKET SHIRT - striped | ZARA United States">
+
+                                    </div>
+                                    <div class="product-title">ZW COLLECTION STRIPED POCKET SHIRT - striped | ZARA United States</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Bag 3
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://www.musinsa.com/products/4168708" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://image.msscdn.net/images/prd_img/20240530225034571698607086658842a8b93c.jpg" alt="실른(SILN) Shirring nylon shoulder bag (BLACK) - 사이즈 & 후기 | 무신사">
+
+                                    </div>
+                                    <div class="product-title">실른(SILN) Shirring nylon shoulder bag (BLACK) - 사이즈 & 후기 | 무신사</div>
+                                </a>
+
+                                <a href="https://www.ebay.com/itm/316002990633" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://i.ebayimg.com/images/g/~eYAAOSwrllnRqNp/s-l400.png" alt="Kate Spade Vintage Shoulder Bag Stevie Hobo Leather Nylon Black Purse New York | eBay">
+
+                                    </div>
+                                    <div class="product-title">Kate Spade Vintage Shoulder Bag Stevie Hobo Leather Nylon Black Purse New York | eBay</div>
+                                </a>
+
+                                <a href="https://www.musinsa.com/products/3262419" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://pinkisisters.cafe24.com/web/2023/Ride-Black-messengerbag2_02.jpg" alt="바이모스(BYMOSS) 라이드 블랙 메신저백 - 사이즈 & 후기 | 무신사">
+
+                                    </div>
+                                    <div class="product-title">바이모스(BYMOSS) 라이드 블랙 메신저백 - 사이즈 & 후기 | 무신사</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="processing-time">⏱️ 75.9s</div>
+                </div>
+            </div>
+
+            <div class="result-card">
+                <div class="image-container">
+                    <img src="https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763681370836_6b5e9533d2ee-Screenshot_20250922_205736_Instagram_.jpg" alt="6b5e9533d2ee-Screenshot_20250922_205736_Instagram 복사본.jpg">
+                    <div class="image-number">#4</div>
+                </div>
+                <div class="content">
+                    <div class="filename">6b5e9533d2ee-Screenshot_20250922_205736_Instagram 복사본.jpg</div>
+                    
+                    <div class="items-section">
+                        <div class="section-title">
+                            🔍 2 Items Detected
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">tops</div>
+                            <div class="item-description">beige leather handbag with a top handle and flap closure</div>
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">tops</div>
+                            <div class="item-description">brown leather handbag with a top handle and flap closure</div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="products-section">
+                        <div class="section-title">
+                            🛍️ Product Matches
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Tops 1
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://narui.ai.kr/product/크로스-바게트-스퀘어백/67/" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://ecimg.cafe24img.com/pg1917b49257541004/dubaero01/web/product/extra/big/20250703/60fb2c2a65edf6ec7a773e4b2d8e7d76.jpg" alt="크로스 바게트 스퀘어백">
+
+                                    </div>
+                                    <div class="product-title">크로스 바게트 스퀘어백</div>
+                                </a>
+
+                                <a href="https://www.missguided.com/product/MISSGUIDED-Structured-Box-Shoulder-Bag-With-Top-Handle-11668150842804928" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="http://img.ltwebstatic.com/v4/j/pi/2025/08/20/67/1755673168d69d8a073c6b143855d1470bd28fa66f.jpg" alt="MISSGUIDED Structured Box Shoulder Bag With Top Handle｜MISSGUIDED">
+
+                                    </div>
+                                    <div class="product-title">MISSGUIDED Structured Box Shoulder Bag With Top Handle｜MISSGUIDED</div>
+                                </a>
+
+                                <a href="https://www.aliexpress.com/item/1005005909246821.html" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://ae01.alicdn.com/kf/S81dd0f78f2bb408eb6f0792bc99898283.jpg" alt="New PU Handbag Fashion Trend Square Bag Ins Korean Style Chain Shoulder Bag Ladies nightclub Cross-body For Female - AliExpress">
+
+                                    </div>
+                                    <div class="product-title">New PU Handbag Fashion Trend Square Bag Ins Korean Style Chain Shoulder Bag Ladies nightclub Cross-body For Female - AliExpress</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Tops 2
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://narui.ai.kr/product/크로스-바게트-스퀘어백/67/" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://ecimg.cafe24img.com/pg1917b49257541004/dubaero01/web/product/extra/big/20250703/60fb2c2a65edf6ec7a773e4b2d8e7d76.jpg" alt="크로스 바게트 스퀘어백">
+
+                                    </div>
+                                    <div class="product-title">크로스 바게트 스퀘어백</div>
+                                </a>
+
+                                <a href="https://www.aliexpress.com/item/1005007347390362.html" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://ae01.alicdn.com/kf/S417f65092ac1441d84aa7eaf7916964dP.jpg" alt="Pu Leather Shoulder Bag for Women Handbag Fashion ...">
+
+                                    </div>
+                                    <div class="product-title">Pu Leather Shoulder Bag for Women Handbag Fashion ...</div>
+                                </a>
+
+                                <a href="https://www.myntra.com/Handbags/KPOP/KPOP-PU-Structured-Sling-Bag/37296104/buy" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://assets.myntassets.com/w_412,q_30,dpr_3,fl_progressive,f_webp/assets/images/2025/OCTOBER/1/VBRL7Xsa_6c759836e5b84e6f94b56c33ee2cf393.jpg" alt="Buy KPOP Women Solid Baguette Handheld Bag - Handbags for ...">
+
+                                    </div>
+                                    <div class="product-title">Buy KPOP Women Solid Baguette Handheld Bag - Handbags for ...</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="processing-time">⏱️ 91.4s</div>
+                </div>
+            </div>
+
+            <div class="result-card">
+                <div class="image-container">
+                    <img src="https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763681464239_6bf49d4a9c81-IMG_6003_.jpg" alt="6bf49d4a9c81-IMG_6003 복사본.png">
+                    <div class="image-number">#5</div>
+                </div>
+                <div class="content">
+                    <div class="filename">6bf49d4a9c81-IMG_6003 복사본.png</div>
+                    
+                    <div class="items-section">
+                        <div class="section-title">
+                            🔍 1 Item Detected
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">tops</div>
+                            <div class="item-description">black long sleeve fitted shirt</div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="products-section">
+                        <div class="section-title">
+                            🛍️ Product Matches
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Tops 1
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://www.vivnluv.co.kr/m/product.html?branduid=12237537&xcode=013&mcode=002&scode=001&type=Y&sort=manual&cur_code=013&search=&GfDT=bmx8W1lD" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="http://lovelybbb.img8.kr/202411/01/mk/1_02_03.jpg" alt="VIVNLUV - 라인 배색 티셔츠">
+
+                                    </div>
+                                    <div class="product-title">VIVNLUV - 라인 배색 티셔츠</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="processing-time">⏱️ 105.5s</div>
+                </div>
+            </div>
+
+            <div class="result-card">
+                <div class="image-container">
+                    <img src="https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763681571742_731d24e62d99-IMG_3357_.jpg" alt="731d24e62d99-IMG_3357 복사본.png">
+                    <div class="image-number">#6</div>
+                </div>
+                <div class="content">
+                    <div class="filename">731d24e62d99-IMG_3357 복사본.png</div>
+                    
+                    <div class="items-section">
+                        <div class="section-title">
+                            🔍 3 Items Detected
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">tops</div>
+                            <div class="item-description">blue and black striped long sleeve shirt with a relaxed fit</div>
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">bottoms</div>
+                            <div class="item-description">blue denim wide-leg pants with front pockets</div>
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">shoes</div>
+                            <div class="item-description">black leather shoes with lace-up detail</div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="products-section">
+                        <div class="section-title">
+                            🛍️ Product Matches
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Tops 1
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://m.yemomile.com/product/🔥파격할인한정수량🚨-다빈-카라-티셔츠/960" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://cafe24.poxo.com/ec01/yemomile/HOvhRhvOk+Cp2KY4JuusAtoFxPB3eDE+eJ+tjYMJ+kFtqOkUqFfh/iWgejELoOT1d8HVIDzMTuHbRitjHSsGtQ==/_/web/product/big/202109/e912278883666c242859bc9a8afb2af5.gif" alt="예모마일">
+
+                                    </div>
+                                    <div class="product-title">예모마일</div>
+                                </a>
+
+                                <a href="https://zigzag.kr/catalog/products/146334423" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://cf.product-image.s.zigzag.kr/original/c/14/633/442/146334423-7629309918657707561.jpeg?width=720&height=720&quality=80&format=jpeg" alt="온도 바이브 셔츠 2col 2024FW 얼리어텀 가을신상 스트라이프 가을 간절기 스트라이프셔츠 블루 브라운 데일리룩 오피스룩 일상룩 단가라 배색 레이어드 룩">
+
+                                    </div>
+                                    <div class="product-title">온도 바이브 셔츠 2col 2024FW 얼리어텀 가을신상 스트라이프 가을 간절기 스트라이프셔츠 블루 브라운 데일리룩 오피스룩 일상룩 단가라 배색 레이어드 룩</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Bottoms 2
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://www.aliexpress.com/item/1005003975956490.html" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://ae01.alicdn.com/kf/Seb9078a264c041c2ba1016e03f08954ay.jpg_960x960.jpg" alt="REALEFT 2022 New Women's Jeans High Waist Denim Wide Leg Pants Retro Washed Streetwear Straight Blue Trousers Female Summer - AliExpress">
+
+                                    </div>
+                                    <div class="product-title">REALEFT 2022 New Women's Jeans High Waist Denim Wide Leg Pants Retro Washed Streetwear Straight Blue Trousers Female Summer - AliExpress</div>
+                                </a>
+
+                                <a href="https://www.shopsunchild.com/products/arc-pants-blue-denim" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://www.shopsunchild.com/cdn/shop/files/ScreenShot2023-11-08at10.43.51PM_890x.png?v=1717381980" alt="Le Bon Shoppe - Arc Pants, Blue Denim | Sunchild®">
+
+                                    </div>
+                                    <div class="product-title">Le Bon Shoppe - Arc Pants, Blue Denim | Sunchild®</div>
+                                </a>
+
+                                <a href="https://yz-store.com/ko/products/front-pocket-denim-pants-ht1008" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://yz-store.com/cdn/shop/products/S__46751801_800x.jpg?v=1670589298" alt="HTH 프론트 포켓 데님 바지 – YZ">
+
+                                    </div>
+                                    <div class="product-title">HTH 프론트 포켓 데님 바지 – YZ</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Shoes 3
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://www.musinsa.com/products/5150889" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://image.msscdn.net/thumbnails/images/prd_img/20250527/5150889/detail_5150889_17500383467821_big.jpg?w=1000" alt="킨치(KINCHI) BOATY - 844 (a) / BLACK - 사이즈 & 후기 | 무신사">
+
+                                    </div>
+                                    <div class="product-title">킨치(KINCHI) BOATY - 844 (a) / BLACK - 사이즈 & 후기 | 무신사</div>
+                                </a>
+
+                                <a href="https://poshmark.com/listing/Mens-Ortho-Feet-Black-Shoes-626adf5e800f640775db36ff" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://di2ponv0v5otw.cloudfront.net/posts/2022/04/28/626adf5e800f640775db36ff/m_wp_626adf96da1041b52c2caf69.webp" alt="Orthofeet | Shoes | Mens Ortho Feet Black Shoes | Poshmark">
+
+                                    </div>
+                                    <div class="product-title">Orthofeet | Shoes | Mens Ortho Feet Black Shoes | Poshmark</div>
+                                </a>
+
+                                <a href="https://www.ebay.com/itm/115714177231" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://i.ebayimg.com/images/g/1fsAAOSwaBdj9vKP/s-l1200.jpg" alt="Timberland Black Leather Moc Toe Oxfords Men's 9 1/2M | eBay">
+
+                                    </div>
+                                    <div class="product-title">Timberland Black Leather Moc Toe Oxfords Men's 9 1/2M | eBay</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="processing-time">⏱️ 80.3s</div>
+                </div>
+            </div>
+
+            <div class="result-card">
+                <div class="image-container">
+                    <img src="https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763681654026_78d08ac79404-Screenshot_20250922_222922_Instagram_.jpg" alt="78d08ac79404-Screenshot_20250922_222922_Instagram 복사본.jpg">
+                    <div class="image-number">#7</div>
+                </div>
+                <div class="content">
+                    <div class="filename">78d08ac79404-Screenshot_20250922_222922_Instagram 복사본.jpg</div>
+                    
+                    <div class="items-section">
+                        <div class="section-title">
+                            🔍 4 Items Detected
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">bag</div>
+                            <div class="item-description">light pink backpack with colorful animal prints including flamingos and toucans</div>
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">tops</div>
+                            <div class="item-description">navy blue backpack with marine-themed prints featuring whales and octopuses</div>
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">bag</div>
+                            <div class="item-description">green backpack with dinosaur prints in various colors</div>
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">bag</div>
+                            <div class="item-description">white backpack with safari animal prints including lions and zebras</div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="products-section">
+                        <div class="section-title">
+                            🛍️ Product Matches
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Bag 1
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://www.petit-bazaar.com/zh/products/lund-london-little-lund-backpack-birds-clothing-wear-fashion-accessories-lund-7563" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://www.petit-bazaar.com/cdn/shop/files/lund-london-little-lund-backpack-birds-lund-7563_7_1100x.jpg?v=1731730617" alt="Lund London Little Lund Backpack - Birds – Petit Bazaar">
+
+                                    </div>
+                                    <div class="product-title">Lund London Little Lund Backpack - Birds – Petit Bazaar</div>
+                                </a>
+
+                                <a href="https://www.yougibaby.com/lund-london-little-lund-backpack-birds-4122" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://static.ticimax.cloud/cdn-cgi/image/width=-,quality=85/62391/uploads/urunresimleri/buyuk/lund-london-little-lund-backpack-birds-9f88-1.jpg" alt="LUND LONDON Little Lund BackPack Birds">
+
+                                    </div>
+                                    <div class="product-title">LUND LONDON Little Lund BackPack Birds</div>
+                                </a>
+
+                                <a href="https://www.weenydew.com/shop/on-the-go/kids-bags-backpacks/backpack-birds-littlelund/" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://www.weenydew.com/wp-content/uploads/2025/09/LittleLund-Sxoliki-Tsanta-Birds1-1-860x717-1.jpg" alt="Backpack – Birds – Liitle Lund – Weenydew: Baby & Kid's Store">
+
+                                    </div>
+                                    <div class="product-title">Backpack – Birds – Liitle Lund – Weenydew: Baby & Kid's Store</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Tops 2
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://baby-valley.gr/product-category/littlelund/" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://baby-valley.gr/wp-content/uploads/2025/07/LittleLund-Sxoliki-Tsanta-Ocean1-1.jpg" alt="Little Lund Archives - Baby Valley">
+
+                                    </div>
+                                    <div class="product-title">Little Lund Archives - Baby Valley</div>
+                                </a>
+
+                                <a href="https://museumofthefuture.ae/en/shop/products/lund-backpack-ocean" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://cdn.shopify.com/s/files/1/0603/7533/5145/files/7559_LittleLundOceanBackpack_side.jpg?v=1717136765" alt="LUND BACKPACK | OCEAN">
+
+                                    </div>
+                                    <div class="product-title">LUND BACKPACK | OCEAN</div>
+                                </a>
+
+                                <a href="https://www.maisonette.com/product/little-lund-backpack-ocean" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://assets.maisonette.com/spree/images/attachments/001/054/761/product_large/km4xklnvukmgvkh0xgaj.jpg?1719334431" alt="Little Lund Backpack, Ocean - Lund London Bags | Maisonette">
+
+                                    </div>
+                                    <div class="product-title">Little Lund Backpack, Ocean - Lund London Bags | Maisonette</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Bag 3
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://www.amazon.com.au/Morwealth-Kinderrucksack-Brustgurt-Kindergarten-Schulrucksack/dp/B0CB3CJDR6" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://m.media-amazon.com/images/I/51B4zA0OkEL._AC_SY350_.jpg" alt="Morwealth Children's Backpack with Chest Strap, Nursery Backpack Children for Boys/Girls Children's Backpack 3-8 Years, 10L School Backpack, Green : Amazon.com.au: Clothing, Shoes & Accessories">
+
+                                    </div>
+                                    <div class="product-title">Morwealth Children's Backpack with Chest Strap, Nursery Backpack Children for Boys/Girls Children's Backpack 3-8 Years, 10L School Backpack, Green : Amazon.com.au: Clothing, Shoes & Accessories</div>
+                                </a>
+
+                                <a href="https://www.amazon.com.be/-/en/backpack-kindergarten-daypack-nursery-Dinosaur/dp/B0BRRZ5DV4" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://images-eu.ssl-images-amazon.com/images/I/71VMmRtVN1L._AC_UL600_SR600,600_.jpg" alt="Mnsruu kids backpack kindergarten daypack backpack kids backpack kids backpack kids backpack kids backpack kids backpack nursery backpack travel bag for boys girls, Dinosaur Plant, S, Daypack : Amazon.com.be: Fashion">
+
+                                    </div>
+                                    <div class="product-title">Mnsruu kids backpack kindergarten daypack backpack kids backpack kids backpack kids backpack kids backpack kids backpack nursery backpack travel bag for boys girls, Dinosaur Plant, S, Daypack : Amazon.com.be: Fashion</div>
+                                </a>
+
+                                <a href="https://www.amazon.com.be/-/en/TODREMOU-Kindergarten-Backpack-Boys-Girls/dp/B0CQYKWRVT" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://m.media-amazon.com/images/I/41gkGto9bPL._AC_SY350_.jpg" alt="TODREMOU Kindergarten Backpack for Boys and Girls - Casual Backpack, Green : Amazon.com.be: Fashion">
+
+                                    </div>
+                                    <div class="product-title">TODREMOU Kindergarten Backpack for Boys and Girls - Casual Backpack, Green : Amazon.com.be: Fashion</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Bag 4
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://www.amazon.com/ALINUOYQ-Corduroy-Lightweight-Aesthetic-Backpack/dp/B0DDHDYLKS" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://m.media-amazon.com/images/I/71P5Asc3iwL._AC_UY200_.jpg" alt="Amazon.com: ALINUOYQ Cute Cherry Print Preppy Bag Large Corduroy Bookbag Lightweight 17-In Laptop Bag Women Travel Aesthetic Backpack : Electronics">
+
+                                    </div>
+                                    <div class="product-title">Amazon.com: ALINUOYQ Cute Cherry Print Preppy Bag Large Corduroy Bookbag Lightweight 17-In Laptop Bag Women Travel Aesthetic Backpack : Electronics</div>
+                                </a>
+
+                                <a href="https://www.ebay.com/itm/305400690903?itmmeta=01JTF4662DMPPCJV73E2V157YD&hash=item471b4cb8d7:g:3A8AAOSwFoNl4En4&itmprp=enc:AQAKAAAAwMHg7L1Zz0LA5DYYmRTS30k6do0D9U6/oUWrpQ7FU/eH0/gBMJP+k7u/ErUJAvFSP2L1yk/CqxKiBGtyHxq9h8zoPlxD6bK8J03VuKXKhhRQ/6KLKXepTs3uk12158gzS4wYBqSSR3JzP5++eUWDp2XLtGT1kYNg3aEv5XR6/Pii9tbybPdL5r0bqy2iw8kZwkCn+XnJMtOg5loHDhRzHIq1SmW6hFSMAuiJczTG+667PMeqeiurAIR0RQWEEJyPmQ==|tkp:Bk9SR7bhmOTTZQ&var=604327552655" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://i.ebayimg.com/images/g/gRcAAOSwsAVl4Epf/s-l400.jpg" alt="Girls NEXT Rucksack School Bag PVC Backpack Unicorn Rainbow Pink Drink Pocket | eBay">
+
+                                    </div>
+                                    <div class="product-title">Girls NEXT Rucksack School Bag PVC Backpack Unicorn Rainbow Pink Drink Pocket | eBay</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="processing-time">⏱️ 69.6s</div>
+                </div>
+            </div>
+
+            <div class="result-card">
+                <div class="image-container">
+                    <img src="https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763681725668_8e6db17fb30f-IMG_0762_.jpg" alt="8e6db17fb30f-IMG_0762 복사본.png">
+                    <div class="image-number">#8</div>
+                </div>
+                <div class="content">
+                    <div class="filename">8e6db17fb30f-IMG_0762 복사본.png</div>
+                    
+                    <div class="items-section">
+                        <div class="section-title">
+                            🔍 1 Item Detected
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">tops</div>
+                            <div class="item-description">black polka dot jacket with a button-up front and a classic collar</div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="products-section">
+                        <div class="section-title">
+                            🛍️ Product Matches
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Tops 1
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://www.musinsa.com/products/3902196" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://image.msscdn.net/thumbnails/images/goods_img/20240226/3902196/3902196_17089564461236_big.jpg?w=1000" alt="쿠키시(KOOKEESEE) 쿠키시 도트 야상 자켓 (피그먼트 블랙) - 사이즈 & 후기 | 무신사">
+
+                                    </div>
+                                    <div class="product-title">쿠키시(KOOKEESEE) 쿠키시 도트 야상 자켓 (피그먼트 블랙) - 사이즈 & 후기 | 무신사</div>
+                                </a>
+
+                                <a href="https://global.musinsa.com/ca/goods/3902196" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://image.musinsa.com/thumbnails/images/prd_img/2024022623061500000037928.png?w=780" alt="MUSINSA | KOOKEESEE Cookie City Dot Field Jacket (Pigment Black)">
+
+                                    </div>
+                                    <div class="product-title">MUSINSA | KOOKEESEE Cookie City Dot Field Jacket (Pigment Black)</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="processing-time">⏱️ 51.0s</div>
+                </div>
+            </div>
+
+            <div class="result-card">
+                <div class="image-container">
+                    <img src="https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763681778641_8ed1599931de-Screenshot_20250919_120231_Instagram_.jpg" alt="8ed1599931de-Screenshot_20250919_120231_Instagram 복사본.jpg">
+                    <div class="image-number">#9</div>
+                </div>
+                <div class="content">
+                    <div class="filename">8ed1599931de-Screenshot_20250919_120231_Instagram 복사본.jpg</div>
+                    
+                    <div class="items-section">
+                        <div class="section-title">
+                            🔍 3 Items Detected
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">tops</div>
+                            <div class="item-description">light blue denim button-up shirt with long sleeves and a relaxed fit</div>
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">bottoms</div>
+                            <div class="item-description">black high-waist skirt with a simple, straight cut</div>
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">bag</div>
+                            <div class="item-description">brown leather crossbody bag with a knotted strap and a white logo patch</div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="products-section">
+                        <div class="section-title">
+                            🛍️ Product Matches
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Tops 1
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://m.depound.com/product/box-logo-denim-shirts-light-blue/5973" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://cafe24img.poxo.com/depound/web/product/extra/small/202508/f14fb31650ef7a6c17b80dca341c7438.jpg" alt="일상에 감성을 더하다" 드파운드">
+
+                                    </div>
+                                    <div class="product-title">일상에 감성을 더하다" 드파운드</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Bottoms 2
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://www.dhgate.com/goods/1019450741.html" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://img4.dhresource.com/webp/m/260x260/f3/albu/jc/l/22/7345f613-d162-479a-975e-ad68e628b5d7.jpg" alt="Shoulder Bags Women Leather Bag Versatile Hobo And Clutch Soft Handbag Set Satchel Shopping from Dhgate Shoulder Bags - price 13.45">
+
+                                    </div>
+                                    <div class="product-title">Shoulder Bags Women Leather Bag Versatile Hobo And Clutch Soft Handbag Set Satchel Shopping from Dhgate Shoulder Bags - price 13.45</div>
+                                </a>
+
+                                <a href="https://noihsafbazaar.com/item/mmq63p-baggu-leather-tote" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://transforms.noihsafbazaar.com/production/products/2023/04/09/3CFFD96A-D56C-4D5D-ADEE-E55FD5C33D21.jpeg?w=1200&h=1600&q=60&auto=format&fit=crop&crop=top&dm=1681065359&s=e058237544e2bbc10f29da0a3f642e41" alt="Baggu Leather Tote | Used, Secondhand, Resell | Noihsaf Bazaar">
+
+                                    </div>
+                                    <div class="product-title">Baggu Leather Tote | Used, Secondhand, Resell | Noihsaf Bazaar</div>
+                                </a>
+
+                                <a href="https://globalbunjang.com/product/323430856" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://media.bunjang.co.kr/product/324349121_1_1742710576_w1200.jpg?crop=0" alt="409 leather crossbody bag women's bag men's bag vintage bag vintage shop women's bag #여자가방,#여성가방,#크로스가방,#토트백,#크로스백 on Bunjang Global Site.">
+
+                                    </div>
+                                    <div class="product-title">409 leather crossbody bag women's bag men's bag vintage bag vintage shop women's bag #여자가방,#여성가방,#크로스가방,#토트백,#크로스백 on Bunjang Global Site.</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Bag 3
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://www.uniqlo.com/kr/ko/products/E479644-000/00" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://image.uniqlo.com/UQ/ST3/kr/imagesgoods/481388/item/krgoods_61_481388_3x4.jpg?width=250" alt="샴브레이오버셔츠(긴팔) | UNIQLO KR">
+
+                                    </div>
+                                    <div class="product-title">샴브레이오버셔츠(긴팔) | UNIQLO KR</div>
+                                </a>
+
+                                <a href="https://www.musinsa.com/products/2392759" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://image.msscdn.net/thumbnails/images/goods_img/20220302/2392759/2392759_16800703603984_big.jpg?w=1000" alt="파르티멘토(PARTIMENTO) 오버사이즈 스톤 워싱 데님 셔츠 블루 - 사이즈 & 후기 | 무신사">
+
+                                    </div>
+                                    <div class="product-title">파르티멘토(PARTIMENTO) 오버사이즈 스톤 워싱 데님 셔츠 블루 - 사이즈 & 후기 | 무신사</div>
+                                </a>
+
+                                <a href="https://fetching.co.kr/product/00043820240" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://img.mytheresa.com/512/512/66/jpeg/catalog/product/10/P00798318_d4.jpg" alt="케일라 데님 셔츠 | 씨티즌 오브 휴머니티 | 페칭 FETCHING">
+
+                                    </div>
+                                    <div class="product-title">케일라 데님 셔츠 | 씨티즌 오브 휴머니티 | 페칭 FETCHING</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="processing-time">⏱️ 62.4s</div>
+                </div>
+            </div>
+
+            <div class="result-card">
+                <div class="image-container">
+                    <img src="https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763681843090_9c9b7d5f941e-IMG_7594_.jpg" alt="9c9b7d5f941e-IMG_7594 복사본.png">
+                    <div class="image-number">#10</div>
+                </div>
+                <div class="content">
+                    <div class="filename">9c9b7d5f941e-IMG_7594 복사본.png</div>
+                    
+                    <div class="items-section">
+                        <div class="section-title">
+                            🔍 4 Items Detected
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">tops</div>
+                            <div class="item-description">bright blue cable knit cardigan with round neck and buttons</div>
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">tops</div>
+                            <div class="item-description">white blouse with a solid ribbon tie and voluminous sleeves</div>
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">bottoms</div>
+                            <div class="item-description">navy turn-up denim pants with a relaxed fit</div>
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">shoes</div>
+                            <div class="item-description">black chunky lace-up shoes with a thick sole</div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="products-section">
+                        <div class="section-title">
+                            🛍️ Product Matches
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Tops 1
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://www.elandmall.co.kr/i/item?itemNo=2410538824&lowerVendNo=LV22036583" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://item.elandrs.com/r/image/item/2024-10-22/3cd6b7ad-02d0-45c7-8615-b5b6ec2f7336.jpg?w=750&h=&q=100" alt="플라스틱아일랜드하트단추가디건PQ7XD005- 이랜드몰">
+
+                                    </div>
+                                    <div class="product-title">플라스틱아일랜드하트단추가디건PQ7XD005- 이랜드몰</div>
+                                </a>
+
+                                <a href="https://globalbunjang.com/product/362950547" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://media.bunjang.co.kr/product/362950547_1_1761941719_w1200.jpg" alt="New Product) Imported High-Quality Twisted Cardigan (Blue) on Bunjang Global Site.">
+
+                                    </div>
+                                    <div class="product-title">New Product) Imported High-Quality Twisted Cardigan (Blue) on Bunjang Global Site.</div>
+                                </a>
+
+                                <a href="https://m.wegohigh.co.kr/product/단독기획-칸토-버튼-골지가디건/2841/" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://m.wegohigh.co.kr/web/product/small/202309/f99666dcdccd28522a922cdb8b0fdc88.gif" alt="단독기획) 칸토 버튼 골지가디건 - 고하이">
+
+                                    </div>
+                                    <div class="product-title">단독기획) 칸토 버튼 골지가디건 - 고하이</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Tops 2
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://www.elandmall.co.kr/i/item?itemNo=2410538824&lowerVendNo=LV22036583" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://item.elandrs.com/r/image/item/2024-10-22/3cd6b7ad-02d0-45c7-8615-b5b6ec2f7336.jpg" alt="플라스틱아일랜드하트단추가디건PQ7XD005- 이랜드몰">
+
+                                    </div>
+                                    <div class="product-title">플라스틱아일랜드하트단추가디건PQ7XD005- 이랜드몰</div>
+                                </a>
+
+                                <a href="https://ko.aliexpress.com/item/1005004718413290.html" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://ae01.alicdn.com/kf/Se354665d22194117a3846da993a612677.jpg" alt="단색 버튼 니트 카디건 스웨터, 한국 패션, 여성 의류, 2022 ...">
+
+                                    </div>
+                                    <div class="product-title">단색 버튼 니트 카디건 스웨터, 한국 패션, 여성 의류, 2022 ...</div>
+                                </a>
+
+                                <a href="https://dept.sfcmall.com/item/itemView.ssg?itemId=1000616606451&siteNo=6009&salestrNo=1008&tlidSrchWd=뷰어니트&srchPgNo=1&src_area=sdlist" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://sitem.ssgcdn.com/51/64/60/item/1000616606451_i9_1200.jpg" alt="앞 오픈 꽈배기 니트 가디건 (ZNKCO902) - 신세계백화점">
+
+                                    </div>
+                                    <div class="product-title">앞 오픈 꽈배기 니트 가디건 (ZNKCO902) - 신세계백화점</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Bottoms 3
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://sblog.i-scream.co.kr/bdmaljigi/17229" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://sblog.i-scream.co.kr/datafiles/ssamblog/17647/202505260453492841.png" alt="i-Scream 쌤블로그">
+
+                                    </div>
+                                    <div class="product-title">i-Scream 쌤블로그</div>
+                                </a>
+
+                                <a href="https://www.yna.co.kr/view/AKR20160722163000797" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://img3.yna.co.kr/etc/inner/KR/2016/07/22/AKR20160722163000797_12_i_P4.jpg" alt="카드뉴스> '자르면 그만'인 전자발찌? 시민 불안 없애려면 ...">
+
+                                    </div>
+                                    <div class="product-title">카드뉴스> '자르면 그만'인 전자발찌? 시민 불안 없애려면 ...</div>
+                                </a>
+
+                                <a href="https://www.ssg.com/item/itemView.ssg?itemId=1000536293975" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://gi.esmplus.com/noha24/linkssocks/A_1.jpg" alt="국내생산 링크스 신사 정장 양말 국민양말 남성 장목 5켤레 ...">
+
+                                    </div>
+                                    <div class="product-title">국내생산 링크스 신사 정장 양말 국민양말 남성 장목 5켤레 ...</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Shoes 4
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://www.amazon.com/Yoelir-Womens-Chunky-Platform-Shoes/dp/B0F4XWK18G" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://m.media-amazon.com/images/I/61o9FOc1qVL._AC_UY900_.jpg" alt="Amazon.com | Yoelir Women's Black Chunky Platform Shoes ...">
+
+                                    </div>
+                                    <div class="product-title">Amazon.com | Yoelir Women's Black Chunky Platform Shoes ...</div>
+                                </a>
+
+                                <a href="https://us.shein.com/Women's-Multi-Layer-Platform-Round-Toe-Dark-Punk-PU-Black-Mid-Calf-Boots,-Casual-Street-Punk-Campus-Style-Valentine-Gift-p-50989018.html" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://img.ltwebstatic.com/images3_pi/2025/04/02/b2/1743589562ea84050b710d76ca8f05790ec41cf8fa_thumbnail_750x999.jpg" alt="ROMWE Grunge Punk Women's Multi-Layer Platform Round Toe Dark Punk PU Black Mid-Calf Boots, Casual Street Punk Campus Style Spring Shoes | SHEIN USA">
+
+                                    </div>
+                                    <div class="product-title">ROMWE Grunge Punk Women's Multi-Layer Platform Round Toe Dark Punk PU Black Mid-Calf Boots, Casual Street Punk Campus Style Spring Shoes | SHEIN USA</div>
+                                </a>
+
+                                <a href="https://www.amazon.ca/Womens-Platform-Combat-Halloween-Motorcycle/dp/B0B87TLPT7" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://m.media-amazon.com/images/I/710xwiiYaML._AC_UY300_.jpg" alt="Womens Platform Ankle Boots Round Toe Lace Up Combat Boots Goth Punk PU Leather Motorcycle Boots : Amazon.ca: Clothing, Shoes & Accessories">
+
+                                    </div>
+                                    <div class="product-title">Womens Platform Ankle Boots Round Toe Lace Up Combat Boots Goth Punk PU Leather Motorcycle Boots : Amazon.ca: Clothing, Shoes & Accessories</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="processing-time">⏱️ 52.7s</div>
+                </div>
+            </div>
+
+            <div class="result-card">
+                <div class="image-container">
+                    <img src="https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763681897802_9d31b5d98ff0-Screenshot_20250622_134811_Instagram_.jpg" alt="9d31b5d98ff0-Screenshot_20250622_134811_Instagram 복사본.jpg">
+                    <div class="image-number">#11</div>
+                </div>
+                <div class="content">
+                    <div class="filename">9d31b5d98ff0-Screenshot_20250622_134811_Instagram 복사본.jpg</div>
+                    
+                    <div class="items-section">
+                        <div class="section-title">
+                            🔍 3 Items Detected
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">tops</div>
+                            <div class="item-description">black oversized short sleeve top with a loose fit</div>
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">bottoms</div>
+                            <div class="item-description">white wide-leg pants with a flowing silhouette</div>
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">shoes</div>
+                            <div class="item-description">black flat sandals with a simple thong design</div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="products-section">
+                        <div class="section-title">
+                            🛍️ Product Matches
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Tops 1
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://us.shein.com/Solid-Drop-Shoulder-Oversized-Tee-p-15549572-cat-1738.html?onelink=1/2le5i4o3yec0&requestId=olw-56ask2sazbvl&lang=uses&url_from=adplasw2302246469529222S_LES" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://img.ltwebstatic.com/images3_pi/2024/11/19/21/17319808898f62c46f53744667f3c62f43fef9868b_thumbnail_405x552.jpg" alt="INAWLY Solid Drop Shoulder Oversized Tee, Unisex | SHEIN USA">
+
+                                    </div>
+                                    <div class="product-title">INAWLY Solid Drop Shoulder Oversized Tee, Unisex | SHEIN USA</div>
+                                </a>
+
+                                <a href="https://www.coupang.com/vp/products/7230008916?itemId=18343501340&vendorItemId=85487663147" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://thumbnail.coupangcdn.com/thumbnails/remote/492x492ex/image/vendor_inventory/3b37/3d070295e18c001e7f545bad78c58f9fb5945457eb80dc65a004bf978129.jpg" alt="코코세븐]빅사이즈 여자 브이넥 루즈핏 반팔 오버핏 박시티셔츠 - 티셔츠 | 쿠팡">
+
+                                    </div>
+                                    <div class="product-title">코코세븐]빅사이즈 여자 브이넥 루즈핏 반팔 오버핏 박시티셔츠 - 티셔츠 | 쿠팡</div>
+                                </a>
+
+                                <a href="https://www.ssg.com/item/itemView.ssg?itemId=1000555607746" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://okshoes.diskn.com/드레스허그/HUD230729/01 230712/230712_QD09/10.jpg" alt="쿨 필링 러플 레이디스 스타일 탑_P344550353 - SSG.COM">
+
+                                    </div>
+                                    <div class="product-title">쿨 필링 러플 레이디스 스타일 탑_P344550353 - SSG.COM</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Bottoms 2
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://www.farfetch.com/au/shopping/women/the-garment-avelino-trousers-item-28155738.aspx" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://cdn-images.farfetch-contents.com/28/15/57/38/28155738_57695394_600.jpg" alt="The Garment Avelino Trousers | White | FARFETCH AU">
+
+                                    </div>
+                                    <div class="product-title">The Garment Avelino Trousers | White | FARFETCH AU</div>
+                                </a>
+
+                                <a href="https://www.mytheresa.com/us/en/women/chloe-high-rise-cotton-canvas-flared-pants-white-p01049398" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://www.mytheresa.com/media/1094/1238/100/63/P01049398_d2.jpg" alt="High-rise cotton canvas flared pants in white - Chloe | Mytheresa">
+
+                                    </div>
+                                    <div class="product-title">High-rise cotton canvas flared pants in white - Chloe | Mytheresa</div>
+                                </a>
+
+                                <a href="https://www.massimodutti.com/us/straightfit-trousers-with-buckle-detail-l05016551" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://static.massimodutti.net/assets/public/c85b/d9d3/93b84493b647/e97a52635225/05016551251-o8/05016551251-o8.jpg?ts=1752057051277" alt="Straight-fit trousers with buckle detail · Off White · Trousers | Massimo Dutti">
+
+                                    </div>
+                                    <div class="product-title">Straight-fit trousers with buckle detail · Off White · Trousers | Massimo Dutti</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="processing-time">⏱️ 82.6s</div>
+                </div>
+            </div>
+
+            <div class="result-card">
+                <div class="image-container">
+                    <img src="https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763681982365_a196d9a098f1-IMG_2210_.jpg" alt="a196d9a098f1-IMG_2210 복사본.png">
+                    <div class="image-number">#12</div>
+                </div>
+                <div class="content">
+                    <div class="filename">a196d9a098f1-IMG_2210 복사본.png</div>
+                    
+                    <div class="items-section">
+                        <div class="section-title">
+                            🔍 4 Items Detected
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">tops</div>
+                            <div class="item-description">black oversized utility jacket with a relaxed fit</div>
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">tops</div>
+                            <div class="item-description">white short sleeve t-shirt with a simple design</div>
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">bottoms</div>
+                            <div class="item-description">white high-waisted wide-leg pants with a clean finish</div>
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">bag</div>
+                            <div class="item-description">black nylon hobo bag with a classic button detail</div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="products-section">
+                        <div class="section-title">
+                            🛍️ Product Matches
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Tops 1
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://www.coupang.com/vp/products/8708034591" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://thumbnail.coupangcdn.com/thumbnails/remote/492x492ex/image/vendor_inventory/98cf/904c8234a5c95e84487f2fd61138cd35500bfc6841a7b483210fe2accfe6.jpg" alt="VANCAR 베이직 싱글 캐주얼 여성자켓 봄자켓 워크자켓 - 재킷 | 쿠팡">
+
+                                    </div>
+                                    <div class="product-title">VANCAR 베이직 싱글 캐주얼 여성자켓 봄자켓 워크자켓 - 재킷 | 쿠팡</div>
+                                </a>
+
+                                <a href="https://m.dodry.net/skin-mobile39/product/bj17731-노카라-라운드-포켓-자켓/36028/" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://cafe24img.poxo.com/odak1/2021/12345678931689jk17.jpg" alt="☆도드리☆ 블랙프라이데이 최대84%세일!!">
+
+                                    </div>
+                                    <div class="product-title">☆도드리☆ 블랙프라이데이 최대84%세일!!</div>
+                                </a>
+
+                                <a href="https://zigzag.kr/catalog/products/158004862" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://cf.product-image.s.zigzag.kr/original/d/2025/2/18/42400_202502181442590566_46477.jpeg?width=720&height=720&quality=80&format=jpeg" alt="더롯 (당일) (재진행) [vergamot] 베르가못 코니 워싱 하프 트렌치 코트 싱글 자켓(2color) 하객룩/데이트룩/출근룩/데일리룩/카라/코튼/재킷">
+
+                                    </div>
+                                    <div class="product-title">더롯 (당일) (재진행) [vergamot] 베르가못 코니 워싱 하프 트렌치 코트 싱글 자켓(2color) 하객룩/데이트룩/출근룩/데일리룩/카라/코튼/재킷</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Tops 2
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://www.coupang.com/vp/products/7862162410" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://image.coupangcdn.com/image/vendor_inventory/b503/38106f5403e78f9eaa1096fc7d539e210c92681ed4fba5dc5417b0df6508.jpg" alt="페이스오프 남자 여자 뿔테 안경 블루라이트 차단 패션 명품 투명 안경테 - 안경테 | 쿠팡">
+
+                                    </div>
+                                    <div class="product-title">페이스오프 남자 여자 뿔테 안경 블루라이트 차단 패션 명품 투명 안경테 - 안경테 | 쿠팡</div>
+                                </a>
+
+                                <a href="https://fruitsfamily.com/product/tw1d/젠틀몬스터-쿠보01" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://image.production.fruitsfamily.com/public/product/resized@width1125/_iCOJIqQco-245F4010-498B-460C-8B41-60C22479E859.jpg" alt="젠틀몬스터 쿠보01 | 후루츠패밀리">
+
+                                    </div>
+                                    <div class="product-title">젠틀몬스터 쿠보01 | 후루츠패밀리</div>
+                                </a>
+
+                                <a href="https://global.musinsa.com/th/goods/2408873" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://h2cdesign1.cafe24.com/knouun/product/2022/10/1025_code_201_b_gr_2_03.jpg" alt="MUSINSA | KNOUUN Rectangular acetate men's and women's horn frame CODE. 201. B Gray">
+
+                                    </div>
+                                    <div class="product-title">MUSINSA | KNOUUN Rectangular acetate men's and women's horn frame CODE. 201. B Gray</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Bottoms 3
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://globalbunjang.com/product/351312291" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://media.bunjang.co.kr/product/351312291_2_1757391568_w1200.jpg" alt="Paul Newah] Mini Bateau Bag / Bag on Bunjang Global Site.">
+
+                                    </div>
+                                    <div class="product-title">Paul Newah] Mini Bateau Bag / Bag on Bunjang Global Site.</div>
+                                </a>
+
+                                <a href="https://m.bunjang.co.kr/products/348441127?ref=검색결과" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://media.bunjang.co.kr/product/348441127_1_1755075261_w180.jpg" alt="조이그라이슨 준 호보백 나일론 미디움 블랙 | 브랜드 중고거래 플랫폼, 번개장터">
+
+                                    </div>
+                                    <div class="product-title">조이그라이슨 준 호보백 나일론 미디움 블랙 | 브랜드 중고거래 플랫폼, 번개장터</div>
+                                </a>
+
+                                <a href="https://www.daangn.com/kr/buy-sell/레더리-숄더백-h9gbv1y8bvma/" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://img.kr.gcp-karroter.net/origin/article/202504/1744255294494898ad9813fe14aa379af480c9573e1da123679efcd1e1f40299a48b75a3c0e6d0.jpg?f=webp&q=95&s=1440x1440&t=inside" alt="레더리 숄더백 | 여성잡화 | 당근 중고거래">
+
+                                    </div>
+                                    <div class="product-title">레더리 숄더백 | 여성잡화 | 당근 중고거래</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Bag 4
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://shop.lululemon.com/p/bags/City-Essentials-Shoulder-Bag/_/prod11870629" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://images.lululemon.com/is/image/lululemon/LW9FRTS_0001_1" alt="City Essentials Shoulder Bag 4L | Women's Bags,Purses,Wallets | lululemon">
+
+                                    </div>
+                                    <div class="product-title">City Essentials Shoulder Bag 4L | Women's Bags,Purses,Wallets | lululemon</div>
+                                </a>
+
+                                <a href="https://mondemonde.com/product/classic-button-half-moon-nylon-bag-black5월-12일-예약-배송/143/" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://mondemonde.com/web/product/big/202410/f99838ba27925e67fe514f656252d1ca.png" alt="Classic button half moon nylon bag Black - mondemonde">
+
+                                    </div>
+                                    <div class="product-title">Classic button half moon nylon bag Black - mondemonde</div>
+                                </a>
+
+                                <a href="https://www.amazon.com/LuyaVogue-Capacity-Bag-Durable-Shoulder-Adjustable/dp/B0D9JZWJ55" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://images-na.ssl-images-amazon.com/images/I/51wKlqTkRtL._AC_UL600_SR600,600_.jpg" alt="LuyaVogue Large Capacity Bucket Bag-Durable Shoulder Bag with Adjustable Strap for Work and Travel,4 Color Choices (Black): Handbags: Amazon.com">
+
+                                    </div>
+                                    <div class="product-title">LuyaVogue Large Capacity Bucket Bag-Durable Shoulder Bag with Adjustable Strap for Work and Travel,4 Color Choices (Black): Handbags: Amazon.com</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="processing-time">⏱️ 60.8s</div>
+                </div>
+            </div>
+
+            <div class="result-card">
+                <div class="image-container">
+                    <img src="https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763682045174_ac674c645e5b-IMG_6015_.jpg" alt="ac674c645e5b-IMG_6015 복사본.png">
+                    <div class="image-number">#13</div>
+                </div>
+                <div class="content">
+                    <div class="filename">ac674c645e5b-IMG_6015 복사본.png</div>
+                    
+                    <div class="items-section">
+                        <div class="section-title">
+                            🔍 2 Items Detected
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">accessory</div>
+                            <div class="item-description">dark green baseball cap with white embroidered text</div>
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">tops</div>
+                            <div class="item-description">light pink button-up shirt with white vertical stripes and a relaxed fit</div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="products-section">
+                        <div class="section-title">
+                            🛍️ Product Matches
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Accessory 1
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://en.wooyoungmi.com/product/green-logo-graphic-ball-cap/6912" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://cafe24img.poxo.com/wymonlinestore/web/product/extra/small/202507/3445348dd28f2ff14858912770f4e352.jpg" alt="Green Logo Graphic Ball Cap - WOOYOUNGMI">
+
+                                    </div>
+                                    <div class="product-title">Green Logo Graphic Ball Cap - WOOYOUNGMI</div>
+                                </a>
+
+                                <a href="https://en.sienneboutique.com/product/letter-ball-cap-green/3280/" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://cafe24img.poxo.com/sansoys/web/product/big/202508/32f653758e2347b81fc71076442b0d87.jpg" alt="Letter Ball Cap (Green) - sienne">
+
+                                    </div>
+                                    <div class="product-title">Letter Ball Cap (Green) - sienne</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Tops 2
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://www.zara.com/us/en/striped-cotton-shirt-p09406802.html" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://static.zara.net/assets/public/43f1/96d0/fbb34a4e8dd3/20eb5a033077/09406802046-e3/09406802046-e3.jpg?ts=1752654681301" alt="STRIPED COTTON SHIRT - Pink / White | ZARA United States">
+
+                                    </div>
+                                    <div class="product-title">STRIPED COTTON SHIRT - Pink / White | ZARA United States</div>
+                                </a>
+
+                                <a href="https://www.musinsa.com/products/4959883" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://image.msscdn.net/images/goods_img/20250328/4959883/4959883_17472957461150_500.jpg" alt="이알에이(ERA) UNISEX ERA CLASSIC SHIRTS - PINK STRIPE - 사이즈 & 후기 | 무신사">
+
+                                    </div>
+                                    <div class="product-title">이알에이(ERA) UNISEX ERA CLASSIC SHIRTS - PINK STRIPE - 사이즈 & 후기 | 무신사</div>
+                                </a>
+
+                                <a href="https://www.deldio.co.kr/product/women-stripe-shirt-pink" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://contents.sixshop.com/thumbnails/uploadedFiles/115414/product/image_1727442038821_750.jpg" alt="WOMEN'S COTTON STRIPE COMFORT SHIRT (PINK)">
+
+                                    </div>
+                                    <div class="product-title">WOMEN'S COTTON STRIPE COMFORT SHIRT (PINK)</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="processing-time">⏱️ 60.0s</div>
+                </div>
+            </div>
+
+            <div class="result-card">
+                <div class="image-container">
+                    <img src="https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763682107192_be1e0b23fea1-Screenshot_20240907_115420_Instagram_.jpg" alt="be1e0b23fea1-Screenshot_20240907_115420_Instagram 복사본.jpg">
+                    <div class="image-number">#14</div>
+                </div>
+                <div class="content">
+                    <div class="filename">be1e0b23fea1-Screenshot_20240907_115420_Instagram 복사본.jpg</div>
+                    
+                    <div class="items-section">
+                        <div class="section-title">
+                            🔍 1 Item Detected
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">dress</div>
+                            <div class="item-description">black halter neck dress with embellished neckline and waist</div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="products-section">
+                        <div class="section-title">
+                            🛍️ Product Matches
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Dress 1
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://www.amazon.com/WomenS-Glitter-Crystal-Mermaid-Evening/dp/B0D8KH2Y9H" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://m.media-amazon.com/images/I/61i6WvwhDcL._AC_UY1000_.jpg" alt="Amazon.com: Women's Black Luxury Glitter Crystal Slim Fit ...">
+
+                                    </div>
+                                    <div class="product-title">Amazon.com: Women's Black Luxury Glitter Crystal Slim Fit ...</div>
+                                </a>
+
+                                <a href="https://www.macloth.com/products/macloth-halter-mermaid-black-velvet-long-prom-dress-elegant-formal-evening-gown" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://www.macloth.com/cdn/shop/products/Macloth-10778_1024x1024.jpg?v=1571439121" alt="MACloth Halter Mermaid Black Velvet Long Prom Dress Elegant Formal Eve">
+
+                                    </div>
+                                    <div class="product-title">MACloth Halter Mermaid Black Velvet Long Prom Dress Elegant Formal Eve</div>
+                                </a>
+
+                                <a href="https://wonderlandbylilian.com/de/products/crystal-black-velvet-high-neck-sleeveless-mermaid-formal-dress-with-bow-tie-plus-size" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://wonderlandbylilian.com/cdn/shop/products/crystal-black-velvet-high-neck-sleeveless-mermaid-formal-dress-with-bow-tie-plus-size-375813_1800x1800.jpg?v=1673866210" alt="Crystal Black Velvet High-neck Sleeveless Mermaid Formal ...">
+
+                                    </div>
+                                    <div class="product-title">Crystal Black Velvet High-neck Sleeveless Mermaid Formal ...</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="processing-time">⏱️ 54.3s</div>
+                </div>
+            </div>
+
+            <div class="result-card">
+                <div class="image-container">
+                    <img src="https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763682163482_cb722aa4c65d-Screenshot_20250922_180144_Instagram_.jpg" alt="cb722aa4c65d-Screenshot_20250922_180144_Instagram 복사본.jpg">
+                    <div class="image-number">#15</div>
+                </div>
+                <div class="content">
+                    <div class="filename">cb722aa4c65d-Screenshot_20250922_180144_Instagram 복사본.jpg</div>
+                    
+                    <div class="items-section">
+                        <div class="section-title">
+                            🔍 2 Items Detected
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">bag</div>
+                            <div class="item-description">beige handbag with a structured design, featuring a woven texture and gold hardware</div>
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">tops</div>
+                            <div class="item-description">dark gray jacket with a smooth fabric and visible stitching details</div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="products-section">
+                        <div class="section-title">
+                            🛍️ Product Matches
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Bag 1
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://www.temu.com/ng/womens-vintage-mini-handbag-beige--like-texture-with-adjustable-strap--hardware-polyester-lining-compact-19-81cm-x-11-94cm-x-8-89cm-purse-beige-with-golden--closure-edge-paint-detail-elegant-everyday-formal-bag-for-women-durable-small-wallet-purse-for-casual-formal-events-retro-style-with--hardware-smooth-pu-material-secure--closure-versatile-for-everyday-use-vintage-handbags-for-women-small-purse-g-601102370988466.html" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://img.kwcdn.com/product/fancy/4be578e2-3765-45eb-8e0a-ebf19da1c483.jpg?imageMogr2/auto-orient|imageView2/2/w/800/q/70/format/webp" alt="women's vintage mini handbag - beige & golden-tone -like texture with adjustable strap, golden-tone hardware">
+
+                                    </div>
+                                    <div class="product-title">women's vintage mini handbag - beige & golden-tone -like texture with adjustable strap, golden-tone hardware</div>
+                                </a>
+
+                                <a href="https://www.etsy.com/listing/4320543021/handcrafted-vintage-crossbody-with" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://i.etsystatic.com/60259822/r/il/3e545d/6945369680/il_fullxfull.6945369680_a7vc.jpg" alt="Handcrafted Vintage Crossbody With Fabric Flap & Gold Buckle in Cognac – Premium Vegan Leather, Stylish and Compact, Eye‑catcher - Etsy">
+
+                                    </div>
+                                    <div class="product-title">Handcrafted Vintage Crossbody With Fabric Flap & Gold Buckle in Cognac – Premium Vegan Leather, Stylish and Compact, Eye‑catcher - Etsy</div>
+                                </a>
+
+                                <a href="https://www.temu.com/ph/chic-beige-womens-crossbody-bag-small-square-design-with--hardware-detachable-strap-zipper-closure-stylish-shoulder-purse-for-everyday-use-crossbody-purse-shoulder-handbag-stylish-womens-purse--bag-g-601100819437269.html" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://img.kwcdn.com/product/open/c976251f2081434faafaabca8b4191ec-goods.jpeg" alt="chic beige women s crossbody bag small square design golden - Temu Philippines">
+
+                                    </div>
+                                    <div class="product-title">chic beige women s crossbody bag small square design golden - Temu Philippines</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Tops 2
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://www.dhgate.com/goods/1060784148.html" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://img4.dhresource.com/webp/m/0x0/f3/albu/ys/y/06/d7efcd98-aa4b-4949-a48e-0a90d33c7c1c.jpg" alt="Retro Box Bag: Luxury Designer Shell Bag for Women - High-End, Versatile Shoulder Crossbody, Niche Fashion, from Dhgate Shoulder Bags - price 30.46">
+
+                                    </div>
+                                    <div class="product-title">Retro Box Bag: Luxury Designer Shell Bag for Women - High-End, Versatile Shoulder Crossbody, Niche Fashion, from Dhgate Shoulder Bags - price 30.46</div>
+                                </a>
+
+                                <a href="https://www.aliexpress.com/item/1005007990351929.html" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://ae01.alicdn.com/kf/S1f3d2db631c4484fb6b09b149c78d49aa.jpg" alt="Simple Fashion Mini Square Women Crossbody Bags 2024 Luxury Designer Purses And Handbags Box Shape Pure Color Shoulder Satchels - AliExpress">
+
+                                    </div>
+                                    <div class="product-title">Simple Fashion Mini Square Women Crossbody Bags 2024 Luxury Designer Purses And Handbags Box Shape Pure Color Shoulder Satchels - AliExpress</div>
+                                </a>
+
+                                <a href="https://shopee.ph/GUSTAVA-Shoulder-Bag-Box-Shape-Leather-Square-Crossbody-Bags-Chic-Solid-Color-Large-Capacity-Flap-Handbag-Women-Evening-i.1251609466.40759323178" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://down-ph.img.susercontent.com/file/sg-11134201-7rfhd-m9s6wv23kzfdf9" alt="GUSTAVA Shoulder Bag, Box Shape Leather Square Crossbody Bags, Chic Solid Color Large Capacity Flap Handbag Women Evening | Shopee Philippines">
+
+                                    </div>
+                                    <div class="product-title">GUSTAVA Shoulder Bag, Box Shape Leather Square Crossbody Bags, Chic Solid Color Large Capacity Flap Handbag Women Evening | Shopee Philippines</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="processing-time">⏱️ 56.0s</div>
+                </div>
+            </div>
+
+            <div class="result-card">
+                <div class="image-container">
+                    <img src="https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763682221469_cde72f5374e5-Screenshot_20250918_110202_Instagram_.jpg" alt="cde72f5374e5-Screenshot_20250918_110202_Instagram 복사본.jpg">
+                    <div class="image-number">#16</div>
+                </div>
+                <div class="content">
+                    <div class="filename">cde72f5374e5-Screenshot_20250918_110202_Instagram 복사본.jpg</div>
+                    
+                    <div class="items-section">
+                        <div class="section-title">
+                            🔍 2 Items Detected
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">tops</div>
+                            <div class="item-description">white long sleeve sweater with a relaxed fit</div>
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">bottoms</div>
+                            <div class="item-description">blue wide-leg denim jeans with a high waist</div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="products-section">
+                        <div class="section-title">
+                            🛍️ Product Matches
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Tops 1
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://store.inpock.co.kr/product/90907" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://d32rratnkhh4zp.cloudfront.net/media/images/2023/3/9/thumb@1080_1678358360-8d30c9c6-5724-404d-8767-3295304396bc.jpg" alt="무지티 맨투맨 | 제이아이엔제이 X INPOCK">
+
+                                    </div>
+                                    <div class="product-title">무지티 맨투맨 | 제이아이엔제이 X INPOCK</div>
+                                </a>
+
+                                <a href="https://zigzag.kr/catalog/products/148427933" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://cf.product-image.s.zigzag.kr/original/c/14/842/793/148427933-7355839962230808460.jpeg?width=400&height=400&quality=80&format=webp" alt="위드후이린 [기획특가] 3단쭈리 루즈핏 맨투맨 (8color)">
+
+                                    </div>
+                                    <div class="product-title">위드후이린 [기획특가] 3단쭈리 루즈핏 맨투맨 (8color)</div>
+                                </a>
+
+                                <a href="https://m.batisoti.com/product/데일리-얇은-세미-크롭-여자-오버핏-맨투맨-티셔츠-간절기/748/" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://m.batisoti.com/web/product/extra/big/202408/415bf9f844173114cd4d13d9b1a5dfd2.jpg" alt="데일리 얇은 세미 크롭 여자 오버핏 맨투맨 티셔츠 간절기">
+
+                                    </div>
+                                    <div class="product-title">데일리 얇은 세미 크롭 여자 오버핏 맨투맨 티셔츠 간절기</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Bottoms 2
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://4910.kr/goods/26627665" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://d3ha2047wt6x28.cloudfront.net/ql1pvnGoqRk/pr:GOODS_INFORMATION/czM6Ly9hYmx5LWltYWdlLWxlZ2FjeS9kYXRhL2VkaXRvci8yMDI0MDgyNl8xNzI0NjYwMjA0NjA2ODQ3bC5qcGc" alt="피팅남 남자 노소 봄 가을 사계절 더블턱 와이드 청바지 데님 팬츠 - 4910 | 패션이 쉬워지는 순간">
+
+                                    </div>
+                                    <div class="product-title">피팅남 남자 노소 봄 가을 사계절 더블턱 와이드 청바지 데님 팬츠 - 4910 | 패션이 쉬워지는 순간</div>
+                                </a>
+
+                                <a href="https://www.coupang.com/vp/products/8334109208" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://image.coupangcdn.com/image/vendor_inventory/748d/01b362038cb30b81aa0e5dcbb706244772d7ee30eb05f4931a413e3b1412.png" alt="3단기장/~3XL] 펌킨 벌룬핏 실버스냅 단추 사선 스티치 와이드 워싱 데님 팬츠 바지 - 청바지 | 쿠팡">
+
+                                    </div>
+                                    <div class="product-title">3단기장/~3XL] 펌킨 벌룬핏 실버스냅 단추 사선 스티치 와이드 워싱 데님 팬츠 바지 - 청바지 | 쿠팡</div>
+                                </a>
+
+                                <a href="https://g-room.kr/product/반밴딩-연청-와이드-데님-팬츠/75" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://shop-phinf.pstatic.net/20221026_42/1666781143805N961P_JPEG/모델정보_복사.jpg" alt="반밴딩] 연청 와이드 데님 팬츠 | 그룸">
+
+                                    </div>
+                                    <div class="product-title">반밴딩] 연청 와이드 데님 팬츠 | 그룸</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="processing-time">⏱️ 67.1s</div>
+                </div>
+            </div>
+
+            <div class="result-card">
+                <div class="image-container">
+                    <img src="https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763682314131_ef9719b4f59c-Screenshot_20250724_125307_Instagram_.jpg" alt="ef9719b4f59c-Screenshot_20250724_125307_Instagram 복사본.jpg">
+                    <div class="image-number">#17</div>
+                </div>
+                <div class="content">
+                    <div class="filename">ef9719b4f59c-Screenshot_20250724_125307_Instagram 복사본.jpg</div>
+                    
+                    <div class="items-section">
+                        <div class="section-title">
+                            🔍 3 Items Detected
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">tops</div>
+                            <div class="item-description">emerald green short sleeve fitted top</div>
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">bottoms</div>
+                            <div class="item-description">white flared mini skirt with a high waist</div>
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">shoes</div>
+                            <div class="item-description">white lace-up sneakers with a chunky sole</div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="products-section">
+                        <div class="section-title">
+                            🛍️ Product Matches
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Tops 1
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://www.anthropologie.com/shop/beth-puff-sleeved-cashmere-cardigan" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://images.urbndata.com/is/image/Anthropologie/4113086690017_033_b4?$a15-pdp-detail-shot$&fit=constrain&qlt=80&wid=640" alt="Maeve Beth Puff-Sleeved Cashmere Cardigan | Anthropologie">
+
+                                    </div>
+                                    <div class="product-title">Maeve Beth Puff-Sleeved Cashmere Cardigan | Anthropologie</div>
+                                </a>
+
+                                <a href="https://www.amazon.ae/Peppercorn-Sleeve-Pullover-Jumpers-Spring/dp/B09MS4TWKN" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://m.media-amazon.com/images/I/516kkMxcGZL._AC_SY350_.jpg" alt="Peppercorn Tana Round Neck 3/4 Sleeve Knit Pullover, Green Jumpers For Women Uk, Spring Ladies Jumpers, Size XL: Buy Online at Best Price in UAE - Amazon.ae">
+
+                                    </div>
+                                    <div class="product-title">Peppercorn Tana Round Neck 3/4 Sleeve Knit Pullover, Green Jumpers For Women Uk, Spring Ladies Jumpers, Size XL: Buy Online at Best Price in UAE - Amazon.ae</div>
+                                </a>
+
+                                <a href="https://www.musinsa.com/app/goods/4122466" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://image.msscdn.net/images/goods_img/20240510/4122466/4122466_17153257450668_500.jpg" alt="플레이부(PLAYBOO) VISCOSE SUMMER COOL KNIT_Green - 사이즈 & 후기 | 무신사">
+
+                                    </div>
+                                    <div class="product-title">플레이부(PLAYBOO) VISCOSE SUMMER COOL KNIT_Green - 사이즈 & 후기 | 무신사</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Bottoms 2
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://www.amazon.in/SAFFE-Women-Flared-Casual-Pleated/dp/B0DYNXB6VG" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://m.media-amazon.com/images/I/71NkOsNfZIL._AC_UY350_.jpg" alt="Buy SAFFE Girl's/Women's Casual Trendy Stretchy Flared White ...">
+
+                                    </div>
+                                    <div class="product-title">Buy SAFFE Girl's/Women's Casual Trendy Stretchy Flared White ...</div>
+                                </a>
+
+                                <a href="https://www.kooding.com/moria-pintuck-flare-mini-skirt/p/560177" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://cdn-images.kooding.com/productDetailImage/560177-2/2f3c0a4a275cf07f8b5ba105f7e97e1f38ea4abb.gif" alt="TWEE Moria Pintuck Flare Mini Skirt | KOODING">
+
+                                    </div>
+                                    <div class="product-title">TWEE Moria Pintuck Flare Mini Skirt | KOODING</div>
+                                </a>
+
+                                <a href="https://www.unique21.com/products/solid-pleated-skirt" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://www.unique21.com/cdn/shop/products/168350969659be7af74116151a35fd72b3d0db2db7_73615e3d-1c0f-43fe-98db-8fca5ded976d.jpg?v=1685423361&width=1000" alt="Solid Pleated Skirt – UNIQUE21">
+
+                                    </div>
+                                    <div class="product-title">Solid Pleated Skirt – UNIQUE21</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Shoes 3
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://www.etsy.com/listing/1276419502/white-leather-sneakers-custom-sneakers" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://i.etsystatic.com/20172043/r/il/ebb8e9/4146248985/il_fullxfull.4146248985_b52n.jpg" alt="White Leather Sneakers, Custom Sneakers, Genuine Leather Shoes Women, Autumnshoes, Women Sneakers, Gift for Her, Handmade Shoes - Etsy">
+
+                                    </div>
+                                    <div class="product-title">White Leather Sneakers, Custom Sneakers, Genuine Leather Shoes Women, Autumnshoes, Women Sneakers, Gift for Her, Handmade Shoes - Etsy</div>
+                                </a>
+
+                                <a href="https://www.zara.com/us/en/topstitching-detail-sneakers-p15415610.html" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://static.zara.net/assets/public/fb9b/f3d9/5ff54ef5afd5/23f9efedba30/15415610001-a1/15415610001-a1.jpg?ts=1751455531249" alt="TOPSTITCHING DETAIL SNEAKERS - White | ZARA United States">
+
+                                    </div>
+                                    <div class="product-title">TOPSTITCHING DETAIL SNEAKERS - White | ZARA United States</div>
+                                </a>
+
+                                <a href="https://nothingnew.com/products/mens-refresh-low-top-sneaker-white" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://nothingnew.com/cdn/shop/products/1024x1024-Mens-Refresh-White-121922-Rear_1024x1024.jpg?v=1676325498" alt="Men's Refresh Low Top Sneaker in White - Nothing New®">
+
+                                    </div>
+                                    <div class="product-title">Men's Refresh Low Top Sneaker in White - Nothing New®</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="processing-time">⏱️ 52.3s</div>
+                </div>
+            </div>
+
+            <div class="result-card">
+                <div class="image-container">
+                    <img src="https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763682368483_f2254a73eb94-IMG_6533_.jpg" alt="f2254a73eb94-IMG_6533 복사본.png">
+                    <div class="image-number">#18</div>
+                </div>
+                <div class="content">
+                    <div class="filename">f2254a73eb94-IMG_6533 복사본.png</div>
+                    
+                    <div class="items-section">
+                        <div class="section-title">
+                            🔍 2 Items Detected
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">dress</div>
+                            <div class="item-description">sleeveless white dress with a v-neck and a fitted waist</div>
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">accessory</div>
+                            <div class="item-description">black cord necklace with a large silver pendant</div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="products-section">
+                        <div class="section-title">
+                            🛍️ Product Matches
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Dress 1
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://faithfullthebrand.com/products/daiane-mini-dress-white" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://faithfullthebrand.com/cdn/shop/files/S19-FF3576-WHT-24834-FaithfullTheBrand-0214.webp?v=1729666769&width=640" alt="Daiane Mini Dress White - Final Sale – Faithfull the Brand">
+
+                                    </div>
+                                    <div class="product-title">Daiane Mini Dress White - Final Sale – Faithfull the Brand</div>
+                                </a>
+
+                                <a href="https://zigzag.kr/catalog/products/140667543" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://cf.product-image.s.zigzag.kr/original/d/2024/5/8/39634_202405081404020734_64630.jpeg" alt="에크미 [롱원피스/ 화이트원피스/ 휴양지원피스/ 여리여리룩] 레이 원피스">
+
+                                    </div>
+                                    <div class="product-title">에크미 [롱원피스/ 화이트원피스/ 휴양지원피스/ 여리여리룩] 레이 원피스</div>
+                                </a>
+
+                                <a href="https://shop.mango.com/ne/en/p/women/dresses-and-jumpsuits/dresses/dress-with-pockets-and-belt_77023272" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://shop.mango.com/assets/rcs/pics/static/T7/fotos/S/77023272_02_D3.jpg?imwidth=2048&imdensity=1&ts=1722247463546" alt="Dress with pockets and belt - Women | MANGO Niger">
+
+                                    </div>
+                                    <div class="product-title">Dress with pockets and belt - Women | MANGO Niger</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Accessory 2
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://www.aliexpress.com/item/1005007946236516.html" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://ae01.alicdn.com/kf/Sbdf559134b624553aac5859b962a7498b.png" alt="U-shaped Metal Necklace for Women's Long Black Rope Adjustable Sweater Chain Autumn and Winter Jewelry Accessories - AliExpress">
+
+                                    </div>
+                                    <div class="product-title">U-shaped Metal Necklace for Women's Long Black Rope Adjustable Sweater Chain Autumn and Winter Jewelry Accessories - AliExpress</div>
+                                </a>
+
+                                <a href="https://zigzag.kr/catalog/products/167054089" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://cf.product-image.s.zigzag.kr/original/c/16/393/367/163933676-177440782021409794.gif?width=400&height=400&quality=80&format=jpeg" alt="베네노 [베네노제작] 92.5 실버 오브제 타원 블랙 오닉스 원석 레자 가죽 롱 목걸이">
+
+                                    </div>
+                                    <div class="product-title">베네노 [베네노제작] 92.5 실버 오브제 타원 블랙 오닉스 원석 레자 가죽 롱 목걸이</div>
+                                </a>
+
+                                <a href="https://www.amazon.com/Xduargs-Chunky-Necklace-Choker-Pendant/dp/B0DHNV77QQ" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://images-na.ssl-images-amazon.com/images/I/516Gy1QYamL._AC_UL600_SR600,600_.jpg" alt="Amazon.com: Xduargs Punk Chunky Link Chain Necklace Chunky Heart Necklace Choker Large Heart Necklace Chain Thick Heart Pendant Necklace Gothic Chunky Chain Choker Necklace for Women : Clothing, Shoes & Jewelry">
+
+                                    </div>
+                                    <div class="product-title">Amazon.com: Xduargs Punk Chunky Link Chain Necklace Chunky Heart Necklace Choker Large Heart Necklace Chain Thick Heart Pendant Necklace Gothic Chunky Chain Choker Necklace for Women : Clothing, Shoes & Jewelry</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="processing-time">⏱️ 59.9s</div>
+                </div>
+            </div>
+
+            <div class="result-card">
+                <div class="image-container">
+                    <img src="https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763682430335_f40c483c87a8-Screenshot_20250922_212029_Instagram_.jpg" alt="f40c483c87a8-Screenshot_20250922_212029_Instagram 복사본.jpg">
+                    <div class="image-number">#19</div>
+                </div>
+                <div class="content">
+                    <div class="filename">f40c483c87a8-Screenshot_20250922_212029_Instagram 복사본.jpg</div>
+                    
+                    <div class="items-section">
+                        <div class="section-title">
+                            🔍 2 Items Detected
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">bottoms</div>
+                            <div class="item-description">black short sleeve dress with a fitted bodice and flared midi skirt</div>
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">shoes</div>
+                            <div class="item-description">black patent leather ballet flats with a bow detail</div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="products-section">
+                        <div class="section-title">
+                            🛍️ Product Matches
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Bottoms 1
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://ko.codibook.net/product/RIRINCO?sort=recent&characteristic=curve&page=26" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://i3.codibook.net/files/1982091749803/61224924c75d68aa/1436929595.jpg" alt="RIRINCO - 코디북">
+
+                                    </div>
+                                    <div class="product-title">RIRINCO - 코디북</div>
+                                </a>
+
+                                <a href="https://www.daangn.com/kr/buy-sell/하객룩-원피스-j5xsk27ixjfz/?in=북삼동-1952" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://img.kr.gcp-karroter.net/origin/article/202509/1758001701166976a8d946fb907e238b3239961530dd0da29538de8c11e3b1ca7d1519bcd74c00.webp?f=webp&q=95&s=1440x1440&t=inside" alt="하객룩 원피스 | 여성의류 | 당근 중고거래">
+
+                                    </div>
+                                    <div class="product-title">하객룩 원피스 | 여성의류 | 당근 중고거래</div>
+                                </a>
+
+                                <a href="https://www.daangn.com/kr/buy-sell/가을-원피스-ousxjzyuxwwz/?in=북삼동-1952" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://img.kr.gcp-karroter.net/origin/article/202509/1758001701166976a8d946fb907e238b3239961530dd0da29538de8c11e3b1ca7d1519bcd74c00.webp?q=82&s=300x300&t=crop&f=webp" alt="가을 원피스 | 여성의류 | 당근 중고거래">
+
+                                    </div>
+                                    <div class="product-title">가을 원피스 | 여성의류 | 당근 중고거래</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Shoes 2
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://www.charleskeith.com/us/CK1-70920177_BLKPAT.html" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://www.charleskeith.com/dw/image/v2/BCWJ_PRD/on/demandware.static/-/Sites-ck-products/default/dw8d332005/images/hi-res/2025-L3-CK1-70920177-J5-3.jpg?sw=756&sh=1008" alt="Black Patent Crossover Buckled Slingback Flats - Black Patent - Shoes - CHARLES & KEITH US">
+
+                                    </div>
+                                    <div class="product-title">Black Patent Crossover Buckled Slingback Flats - Black Patent - Shoes - CHARLES & KEITH US</div>
+                                </a>
+
+                                <a href="https://www.charleskeith.com/us/CK1-61720194_BLKPAT.html" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://www.charleskeith.com/dw/image/v2/BCWJ_PRD/on/demandware.static/-/Sites-ck-products/default/dw21f50807/images/hi-res/2024-L3-CK1-61720194-J5-7.jpg?sw=756&sh=1008" alt="Black Dorri Double-Bow Slingback Pumps - Black Patent - Sale - CHARLES & KEITH US">
+
+                                    </div>
+                                    <div class="product-title">Black Dorri Double-Bow Slingback Pumps - Black Patent - Sale - CHARLES & KEITH US</div>
+                                </a>
+
+                                <a href="https://www.charleskeith.com/us/CK1-60361558_BLKPAT.html" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://www.charleskeith.com/dw/image/v2/BCWJ_PRD/on/demandware.static/-/Sites-ck-products/default/dw2ed9ad07/images/hi-res/2025-L3-CK1-60361558-J5-3.jpg?sw=370&sh=494" alt="Black Patent Bow Crystal-Pearl Slingback Mary Jane Pumps - Black Patent - Shoes - CHARLES & KEITH US">
+
+                                    </div>
+                                    <div class="product-title">Black Patent Bow Crystal-Pearl Slingback Mary Jane Pumps - Black Patent - Shoes - CHARLES & KEITH US</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="processing-time">⏱️ 37.0s</div>
+                </div>
+            </div>
+
+            <div class="result-card">
+                <div class="image-container">
+                    <img src="https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763682469356_f62504d2513d-Screenshot_20250922_050551_Instagram_.jpg" alt="f62504d2513d-Screenshot_20250922_050551_Instagram 복사본.jpg">
+                    <div class="image-number">#20</div>
+                </div>
+                <div class="content">
+                    <div class="filename">f62504d2513d-Screenshot_20250922_050551_Instagram 복사본.jpg</div>
+                    
+                    <div class="items-section">
+                        <div class="section-title">
+                            🔍 1 Item Detected
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">bag</div>
+                            <div class="item-description">black triangular handbag with a structured design and a small front pocket</div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="products-section">
+                        <div class="section-title">
+                            🛍️ Product Matches
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Bag 1
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://m.bunjang.co.kr/products/359975307?ref=검색결과" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://media.bunjang.co.kr/product/359975307_5_1759326076_w360.jpg" alt="봉긋 삼각김밥bag (블랙) 새상품 가방 | 브랜드 중고거래 플랫폼 ...">
+
+                                    </div>
+                                    <div class="product-title">봉긋 삼각김밥bag (블랙) 새상품 가방 | 브랜드 중고거래 플랫폼 ...</div>
+                                </a>
+
+                                <a href="https://www.mlb-korea.com/product-detail/3ACRM025N-50BKS" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://static-resource.mlb-korea.com/cdn-cgi/image/q=75,w=1236,format=auto,fit=scale-down,onerror=redirect/images/goods/ec/M25N3ACRM025N50BKS/A48E59D0FC4F4F219850163AD4395AE3.jpg" alt="MLB 다이아 모노그램 스포티브 미니 크로스백 뉴욕양키스 (BLACK)">
+
+                                    </div>
+                                    <div class="product-title">MLB 다이아 모노그램 스포티브 미니 크로스백 뉴욕양키스 (BLACK)</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="processing-time">⏱️ 50.4s</div>
+                </div>
+            </div>
+
+            <div class="result-card">
+                <div class="image-container">
+                    <img src="https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763682521753_f8907dc5d73c-Screenshot_20250923_085216_Instagram_.jpg" alt="f8907dc5d73c-Screenshot_20250923_085216_Instagram 복사본.jpg">
+                    <div class="image-number">#21</div>
+                </div>
+                <div class="content">
+                    <div class="filename">f8907dc5d73c-Screenshot_20250923_085216_Instagram 복사본.jpg</div>
+                    
+                    <div class="items-section">
+                        <div class="section-title">
+                            🔍 4 Items Detected
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">tops</div>
+                            <div class="item-description">brown cropped jacket with wide sleeves and a collar</div>
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">tops</div>
+                            <div class="item-description">striped shirt with maroon, white, and navy horizontal stripes</div>
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">bottoms</div>
+                            <div class="item-description">light blue pleated mini skirt with a high waist</div>
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">shoes</div>
+                            <div class="item-description">brown athletic shoes with a chunky sole and white socks</div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="products-section">
+                        <div class="section-title">
+                            🛍️ Product Matches
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Tops 1
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://www.zara.com/ca/en/pleated-fleece-bomber-jacket-p04174674.html" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://static.zara.net/assets/public/f620/6f5d/b9d747fe8078/918f00f9d771/04174674717-e1/04174674717-e1.jpg?ts=1757349266176" alt="PLEATED FLEECE BOMBER JACKET - Chocolate | ZARA Canada">
+
+                                    </div>
+                                    <div class="product-title">PLEATED FLEECE BOMBER JACKET - Chocolate | ZARA Canada</div>
+                                </a>
+
+                                <a href="https://www.asos.com/us/asos-design/asos-design-clean-formal-bomber-jacket-in-chocolate/prd/206055329" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://images.asos-media.com/products/asos-design-clean-formal-bomber-jacket-in-chocolate/206055329-1-chocolate?$n_750w$&wid=750&hei=750&fit=crop" alt="ASOS DESIGN clean formal bomber jacket in chocolate | ASOS">
+
+                                    </div>
+                                    <div class="product-title">ASOS DESIGN clean formal bomber jacket in chocolate | ASOS</div>
+                                </a>
+
+                                <a href="https://www2.hm.com/en_hk/productpage.1298601003.html" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://image.hm.com/assets/hm/85/02/8502e112b75ebc1f5bece45c8f8de720725f1a9c.jpg?imwidth=768" alt="Oversized biker jacket - Dark brown - Ladies | H&M HK">
+
+                                    </div>
+                                    <div class="product-title">Oversized biker jacket - Dark brown - Ladies | H&M HK</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Tops 2
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://shop.mango.com/zm/en/p/women/trench-coats-and-parkas/parkas/denim-parka-with-faux-effect-collar_17055821" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://shop.mango.com/assets/rcs/pics/static/T1/fotos/S/17055821_32_D1.jpg?imwidth=2048&imdensity=1&ts=1754298321038" alt="Denim parka with faux-effect collar | MANGO Zambia">
+
+                                    </div>
+                                    <div class="product-title">Denim parka with faux-effect collar | MANGO Zambia</div>
+                                </a>
+
+                                <a href="https://global.musinsa.com/th/goods/3116444" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://img.bstyle.kr/raive/detail/2023/SS/VL3SM120_94_02.jpg" alt="MUSINSA | RAIVE Faux Leather Cropped Blouson Jacket in D/Brown VL3SM120-94">
+
+                                    </div>
+                                    <div class="product-title">MUSINSA | RAIVE Faux Leather Cropped Blouson Jacket in D/Brown VL3SM120-94</div>
+                                </a>
+
+                                <a href="https://zigzag.kr/catalog/products/109948016" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://cf.product-image.s.zigzag.kr/original/d/2024/9/27/18402_202409271130130153_92617.jpeg?width=400&height=400&quality=80&format=jpeg" alt="저스트메리드 브라운 카라 심플 데일리룩 레자 가죽 레더 자켓 J20">
+
+                                    </div>
+                                    <div class="product-title">저스트메리드 브라운 카라 심플 데일리룩 레자 가죽 레더 자켓 J20</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Bottoms 3
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://www.yesstyle.com/en/avauntgardo-high-waist-plain-ruffle-trim-a-line-mini-skirt/info.html/pid.1132444280" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://d1flfk77wl2xk4.cloudfront.net/Assets/55/207/l_p0214820755.jpg" alt="Avauntgardo - High Waist Plain Ruffle Trim A-Line Mini Skirt | YesStyle">
+
+                                    </div>
+                                    <div class="product-title">Avauntgardo - High Waist Plain Ruffle Trim A-Line Mini Skirt | YesStyle</div>
+                                </a>
+
+                                <a href="https://finesse.us/products/evalina-blue-pleated-mini-skirt" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://finesse.us/cdn/shop/files/DORY-3D-ECOMM_7_7fb5d5dd-5402-4995-bcc3-798819855fd9.jpg?v=1720741509&width=1946" alt="Evalina Blue Pleated Mini Skirt – FINESSE">
+
+                                    </div>
+                                    <div class="product-title">Evalina Blue Pleated Mini Skirt – FINESSE</div>
+                                </a>
+
+                                <a href="https://www.etsy.com/listing/1559018864/vintage-pleated-blue-mini-skirt-36-waist" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://i.etsystatic.com/17573431/r/il/84d263/5322847322/il_fullxfull.5322847322_8r9p.jpg" alt="Vintage Pleated Blue Mini Skirt 36” Waist / Fall Fashion / Vintage Mini Skirt / Fun Fashion - Etsy">
+
+                                    </div>
+                                    <div class="product-title">Vintage Pleated Blue Mini Skirt 36” Waist / Fall Fashion / Vintage Mini Skirt / Fun Fashion - Etsy</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Shoes 4
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://kream.co.kr/products/366477" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://kream-phinf.pstatic.net/MjAyNTA0MzBfMjIw/MDAxNzQ1OTkwNTI1NTQ0.tb-y63KxIYfVZjqekxhWtAD_rC4wPve02kswjWKqbpkg.CVeNBT-7D8yyJMMss1g1RGTvyjrBmA9sdx6Ak2qXGAMg.PNG/a_5f263e81f2cc490db5ef870e8bd4755d.png" alt="미즈노 LG 60S 2K 브라운 | Mizuno | KREAM">
+
+                                    </div>
+                                    <div class="product-title">미즈노 LG 60S 2K 브라운 | Mizuno | KREAM</div>
+                                </a>
+
+                                <a href="https://www.coupang.com/vp/products/8719485941" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://thumbnail.coupangcdn.com/thumbnails/remote/492x492ex/image/vendor_inventory/a54b/38df6f831a473efb98c1b42278c244dc01005f58f77501daf203198cf26e.jpg" alt="정품아닐시3배보상] 미즈노 LG 60S 2K 브라운 Mizuno LG 60S 2K ...">
+
+                                    </div>
+                                    <div class="product-title">정품아닐시3배보상] 미즈노 LG 60S 2K 브라운 Mizuno LG 60S 2K ...</div>
+                                </a>
+
+                                <a href="https://www.ssg.com/item/itemView.ssg?itemId=1000649438578" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://sitem.ssgcdn.com/78/85/43/item/1000649438578_i1_250.jpg" alt="미즈노 LG 60S 2K 브라운 Mizuno LG 60S 2K Brown - SSG.COM">
+
+                                    </div>
+                                    <div class="product-title">미즈노 LG 60S 2K 브라운 Mizuno LG 60S 2K Brown - SSG.COM</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="processing-time">⏱️ 66.3s</div>
+                </div>
+            </div>
+
+            <div class="result-card">
+                <div class="image-container">
+                    <img src="https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763683149270_69e143fdcf4f-Screenshot_20250404_183603_Instagram_.jpg" alt="69e143fdcf4f-Screenshot_20250404_183603_Instagram 복사본.jpg">
+                    <div class="image-number">#22</div>
+                </div>
+                <div class="content">
+                    <div class="filename">69e143fdcf4f-Screenshot_20250404_183603_Instagram 복사본.jpg</div>
+                    
+                    <div class="items-section">
+                        <div class="section-title">
+                            🔍 1 Item Detected
+                        </div>
+
+                        <div class="item">
+                            <div class="item-category">accessory</div>
+                            <div class="item-description">gold ring with diamond accents and intricate design</div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="products-section">
+                        <div class="section-title">
+                            🛍️ Product Matches
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-size: 0.9em; color: #667eea; font-weight: bold; margin-bottom: 10px;">
+                                Accessory 1
+                            </div>
+                            <div class="products-grid">
+
+                                <a href="https://gift.kakao.com/product/11244782" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://st.kakaocdn.net/product/gift/product/Ojh0f1eyU5kdb0Qw_lDT7g/KG7Vf10htN1DdHhda32Qk9LYFFezNbqykYxvLzHbiFg.jpg" alt="신제품 FRED 포스텐 라이즈 링 (핑크골드-S) 4B1020 : 선물하기">
+
+                                    </div>
+                                    <div class="product-title">신제품 FRED 포스텐 라이즈 링 (핑크골드-S) 4B1020 : 선물하기</div>
+                                </a>
+
+                                <a href="https://goldnring.com/shop_view/291" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://cdn.imweb.me/thumbnail/20250907/f2020b47ae65c.png" alt="vr151 : Gold & Ring">
+
+                                    </div>
+                                    <div class="product-title">vr151 : Gold & Ring</div>
+                                </a>
+
+                                <a href="https://www.lepage.fr/en/23774-fred-force-10-rise-ring-in-rose-gold-and-diamonds-4b1020.html" target="_blank" class="product-card">
+                                    <div class="product-image">
+                                        <img src="https://www.lepage.fr/88923/fred-force-10-rise-ring-in-rose-gold-and-diamonds.jpg" alt="FRED Force 10 Rise ring in rose gold and diamonds – Lepage">
+
+                                    </div>
+                                    <div class="product-title">FRED Force 10 Rise ring in rose gold and diamonds – Lepage</div>
+                                </a>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="processing-time">⏱️ 49.8s</div>
+                </div>
+            </div>
+
+        </div>
+        
+        <div class="footer">
+            <p><strong>Generated:</strong> 2025-11-21 09:03:15</p>
+            <p style="margin-top: 10px;">AI Fashion Detection Pipeline • GPT-4o + GroundingDINO + Serper + GPT-4 Turbo</p>
+        </div>
+    </div>
+</body>
+</html>
