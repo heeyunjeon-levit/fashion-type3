@@ -81,17 +81,24 @@ def search_products(analyzed_data, original_image_url):
     try:
         # Build categories and cropped images from analyzed data
         items = analyzed_data.get('items', [])
-        categories = [item.get('category') for item in items]
         
-        # Build cropped images map
-        cropped_images = {}
-        for idx, item in enumerate(items):
-            category = item.get('category')
-            cropped_url = item.get('croppedImageUrl')
-            if cropped_url:
-                # Use unique key for each item (category_1, category_2, etc.)
-                key = f"{category}_{idx + 1}"
-                cropped_images[key] = cropped_url
+        # If no items detected, still search with fallback mode
+        if len(items) == 0:
+            print(f"⚠️  No items detected - using FALLBACK mode (full image search)")
+            categories = []
+            cropped_images = {}
+        else:
+            categories = [item.get('category') for item in items]
+            
+            # Build cropped images map
+            cropped_images = {}
+            for idx, item in enumerate(items):
+                category = item.get('category')
+                cropped_url = item.get('croppedImageUrl')
+                if cropped_url:
+                    # Use unique key for each item (category_1, category_2, etc.)
+                    key = f"{category}_{idx + 1}"
+                    cropped_images[key] = cropped_url
         
         response = requests.post(
             f"{API_BASE_URL}/api/search",
@@ -147,6 +154,8 @@ def process_single_image(image_path, image_number, total_images):
             result['error'] = 'Analysis failed'
             return result
         result['analysis'] = analyzed_data
+        
+        # Note: Even if 0 items detected, we continue to search (fallback mode)
         
         # Step 3: Search for products
         search_data = search_products(analyzed_data, image_url)

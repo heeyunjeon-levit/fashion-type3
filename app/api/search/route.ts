@@ -27,6 +27,189 @@ const categoryLabels: Record<string, string> = {
   dress: '드레스 (dress - dresses, gowns)',
 }
 
+// Fallback search handler when no items are detected
+async function handleFallbackSearch(originalImageUrl: string, requestStartTime: number) {
+  console.log('🔍 FALLBACK: Starting full image search...')
+  
+  const timingData = {
+    serper_api_time: 0,
+    gpt4_turbo_api_time: 0,
+    processing_time: 0
+  }
+  
+  try {
+    // Run full image search multiple times for better coverage
+    const fullImagePromises = Array.from({ length: 3 }, (_, i) => {
+      console.log(`   Fallback run ${i + 1}/3...`)
+      return fetch('https://google.serper.dev/lens', {
+        method: 'POST',
+        headers: {
+          'X-API-KEY': process.env.SERPER_API_KEY!,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          url: originalImageUrl,
+          gl: 'kr',
+          hl: 'ko',
+        }),
+      })
+    })
+
+    const serperStart = Date.now()
+    const fullImageResponses = await Promise.all(fullImagePromises)
+    timingData.serper_api_time = (Date.now() - serperStart) / 1000
+    console.log(`   ⏱️  Fallback Serper (3x): ${timingData.serper_api_time.toFixed(2)}s`)
+    
+    // Aggregate all results
+    const allResults: any[] = []
+    for (let i = 0; i < fullImageResponses.length; i++) {
+      if (fullImageResponses[i].ok) {
+        const data = await fullImageResponses[i].json()
+        if (data.organic) {
+          allResults.push(...data.organic)
+        }
+      }
+    }
+    
+    // Deduplicate
+    const uniqueResults = Array.from(
+      new Map(allResults.map(item => [item.link, item])).values()
+    )
+    
+    console.log(`📊 Fallback: Found ${uniqueResults.length} unique results`)
+    
+    if (uniqueResults.length === 0) {
+      console.log('❌ Fallback: No results found')
+      return NextResponse.json({
+        results: {},
+        meta: {
+          fallbackMode: true,
+          success: false,
+          message: 'No products found in fallback search'
+        }
+      })
+    }
+    
+    // Use GPT-4 Turbo to analyze and categorize the results
+    const topResults = uniqueResults.slice(0, 30)
+    
+    const prompt = `You are analyzing image search results for a fashion product where automatic detection failed.
+
+The user uploaded an image but our AI couldn't detect specific items. These are visual search results from the full image.
+
+Your task: Analyze these results and extract the TOP 3-5 BEST product links that match what you see.
+
+CRITICAL RULES:
+1. ✅ MUST be fashion items (clothing, shoes, bags, accessories)
+2. ✅ MUST be actual product pages (not category pages, not social media)
+3. ✅ Prefer reputable retailers and e-commerce sites
+4. ✅ Look for consistent product types across results (what is this image showing?)
+5. ❌ REJECT: Instagram, TikTok, Pinterest, YouTube, blogs, forums
+6. ❌ REJECT: Category/search/listing pages
+7. ❌ REJECT: Non-shopping sites
+
+Determine what type of fashion item this is based on the search results, then select the best product matches.
+
+Search results:
+${JSON.stringify(topResults, null, 2)}
+
+Respond with JSON:
+{
+  "detected_category": "tops|bottoms|shoes|bag|accessory|dress|unknown",
+  "product_links": ["url1", "url2", "url3"],
+  "reasoning": "brief explanation of what you detected"
+}
+
+Return TOP 3-5 BEST matches only. Quality over quantity.`
+
+    const openai = getOpenAIClient()
+    const gptStart = Date.now()
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-4-turbo-preview',
+      messages: [
+        {
+          role: 'system',
+          content: 'You are a fashion product analyzer. Return only valid JSON.',
+        },
+        { role: 'user', content: prompt },
+      ],
+      temperature: 0,
+    })
+    timingData.gpt4_turbo_api_time = (Date.now() - gptStart) / 1000
+    console.log(`   ⏱️  Fallback GPT-4 Turbo: ${timingData.gpt4_turbo_api_time.toFixed(2)}s`)
+
+    const responseText = completion.choices[0].message.content || '{}'
+    const cleaned = responseText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim()
+    const jsonMatch = cleaned.match(/\{[\s\S]*\}/)
+    const gptResult = jsonMatch ? JSON.parse(jsonMatch[0]) : JSON.parse(cleaned)
+    
+    console.log(`📋 Fallback GPT detected: ${gptResult.detected_category}`)
+    console.log(`📋 Fallback GPT reasoning: ${gptResult.reasoning}`)
+    
+    // Filter and format results
+    const validLinks = (gptResult.product_links || []).filter((link: string) => {
+      return typeof link === 'string' && link.startsWith('http')
+    })
+    
+    if (validLinks.length === 0) {
+      console.log('❌ Fallback: GPT found no valid products')
+      return NextResponse.json({
+        results: {},
+        meta: {
+          fallbackMode: true,
+          success: false,
+          message: 'No valid products found after analysis'
+        }
+      })
+    }
+    
+    // Format results
+    const products = validLinks.slice(0, 3).map((link: string) => {
+      const resultItem = uniqueResults.find((item: any) => item.link === link)
+      return {
+        link,
+        thumbnail: resultItem?.thumbnail || resultItem?.image || null,
+        title: resultItem?.title || 'Product'
+      }
+    })
+    
+    const category = gptResult.detected_category === 'unknown' ? 'general_item' : `${gptResult.detected_category}_1`
+    
+    const totalTime = (Date.now() - requestStartTime) / 1000
+    
+    console.log(`✅ Fallback SUCCESS: ${products.length} products found`)
+    console.log(`⏱️  Fallback total time: ${totalTime.toFixed(2)}s`)
+    
+    return NextResponse.json({
+      results: {
+        [category]: products
+      },
+      meta: {
+        fallbackMode: true,
+        success: true,
+        detectedCategory: gptResult.detected_category,
+        reasoning: gptResult.reasoning,
+        timing: {
+          serper_api_seconds: timingData.serper_api_time,
+          gpt4_turbo_seconds: timingData.gpt4_turbo_api_time,
+          total_seconds: totalTime
+        }
+      }
+    })
+    
+  } catch (error) {
+    console.error('❌ Fallback search error:', error)
+    return NextResponse.json({
+      results: {},
+      meta: {
+        fallbackMode: true,
+        success: false,
+        error: 'Fallback search failed'
+      }
+    })
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const requestStartTime = Date.now()
@@ -37,11 +220,20 @@ export async function POST(request: NextRequest) {
     console.log('📤 Cropped images:', Object.keys(croppedImages || {}))
     console.log('🖼️ Original image URL:', originalImageUrl || 'none')
 
-    if (!categories || categories.length === 0 || !croppedImages) {
+    // Check if we need to use fallback mode (no items detected)
+    const useFallbackMode = !categories || categories.length === 0 || !croppedImages || Object.keys(croppedImages).length === 0
+    
+    if (useFallbackMode && !originalImageUrl) {
       return NextResponse.json(
         { error: 'Missing required parameters' },
         { status: 400 }
       )
+    }
+    
+    // FALLBACK MODE: If no items detected, search using full image
+    if (useFallbackMode) {
+      console.log('⚠️ FALLBACK MODE: No items detected, using full image search')
+      return await handleFallbackSearch(originalImageUrl, requestStartTime)
     }
 
     const allResults: Record<string, Array<{ link: string; thumbnail: string | null; title: string | null }>> = {}
