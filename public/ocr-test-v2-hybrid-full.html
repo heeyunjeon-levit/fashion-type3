@@ -1,0 +1,1479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full Hybrid Test - With Original Images</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+            color: #1d1d1f;
+        }
+        .container { max-width: 1800px; margin: 0 auto; }
+        .header {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 42px;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 48px;
+            font-weight: 700;
+            color: #667eea;
+        }
+        .stat-label {
+            font-size: 13px;
+            color: #6e6e73;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 8px;
+        }
+        .image-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .image-header {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+            align-items: flex-start;
+        }
+        .original-image-container {
+            flex: 0 0 350px;
+        }
+        .original-image {
+            width: 100%;
+            height: auto;
+            max-height: 500px;
+            object-fit: contain;
+            border-radius: 15px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            background: #f5f5f7;
+        }
+        .image-info {
+            flex: 1;
+        }
+        .image-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        .badge-success {
+            background: #d1f4e0;
+            color: #00814d;
+        }
+        .badge-fail {
+            background: #ffd3d3;
+            color: #c41e3a;
+        }
+        .detected-items {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f5f5f7;
+            border-radius: 12px;
+        }
+        .detected-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        .detected-item {
+            margin-bottom: 12px;
+            padding: 12px;
+            background: white;
+            border-radius: 8px;
+            border-left: 3px solid #667eea;
+        }
+        .detected-brand {
+            font-weight: 600;
+            font-size: 15px;
+            margin-bottom: 5px;
+        }
+        .detected-text {
+            font-size: 13px;
+            color: #6e6e73;
+            line-height: 1.5;
+        }
+        .product-section {
+            margin-top: 30px;
+            padding: 25px;
+            background: #fafafa;
+            border-radius: 15px;
+            border: 2px solid #e5e5e7;
+        }
+        .product-brand {
+            font-size: 20px;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        .product-text {
+            font-size: 14px;
+            color: #6e6e73;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        .mini-stats {
+            display: flex;
+            gap: 20px;
+            font-size: 12px;
+            color: #6e6e73;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .mini-stat {
+            padding: 8px 12px;
+            background: white;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #1d1d1f;
+        }
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .result-card {
+            background: white;
+            border: 2px solid #e5e5e7;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        .result-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            border-color: #667eea;
+        }
+        .result-image {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            background: #f5f5f7;
+        }
+        .result-content { padding: 15px; }
+        .result-title {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 10px;
+            line-height: 1.4;
+            min-height: 40px;
+        }
+        .result-link {
+            font-size: 12px;
+            color: #667eea;
+            text-decoration: none;
+            word-break: break-all;
+            display: block;
+            margin-bottom: 8px;
+        }
+        .result-link:hover { text-decoration: underline; }
+        .no-results {
+            padding: 40px;
+            text-align: center;
+            color: #c41e3a;
+            font-weight: 500;
+            background: #ffd3d3;
+            border-radius: 12px;
+        }
+        @media (max-width: 768px) {
+            .image-header {
+                flex-direction: column;
+            }
+            .original-image-container {
+                flex: 1;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Full Hybrid Test Results</h1>
+            <p style="color: #6e6e73; margin-top: 10px; font-size: 16px;">2025-11-21 09:23:42</p>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">24</div>
+                    <div class="stat-label">Images Tested</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">27</div>
+                    <div class="stat-label">Total Products</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">20</div>
+                    <div class="stat-label">Found</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">74.1%</div>
+                    <div class="stat-label">Success Rate</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">31 min</div>
+                    <div class="stat-label">Total Time</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="image-card">
+            <div class="image-header">
+                <div class="original-image-container">
+                    <img src="../brands/0214d4bd3a05-IMG_6128 복사본.png" alt="Original" class="original-image" onerror="this.alt='Image not found'">
+                </div>
+                <div class="image-info">
+                    <div class="image-title">#1 0214d4bd3a05-IMG_6128 복사본.png</div>
+                    <div><span class="badge badge-fail">✗ Partial</span></div>
+                    <div style="margin-top: 10px; font-size: 14px; color: #6e6e73;">
+                        1 product(s) detected • 0 found
+                    </div>
+                    
+                    <div class="detected-items">
+                        <div class="detected-title">🔍 Detected Products:</div>
+
+                        <div class="detected-item">
+                            <div class="detected-brand">CLOHNTIN</div>
+                            <div class="detected-text">여성용 스타일리시 하운드투스 토트백 - 대용량 캐주얼 핸드백, 지퍼 클로저 &amp; 고정 숄더 스트립...</div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-section">
+                <div class="product-brand">📦 CLOHNTIN</div>
+                <div class="mini-stats">
+                    <span class="mini-stat">🖼️ Visual: 30</span>
+                    <span class="mini-stat">📝 Text: 10</span>
+                    <span class="mini-stat">🔗 Combined: 40</span>
+                    <span class="mini-stat">✅ Selected: 0</span>
+                </div>
+                
+                <div class="section-title">🛍️ Product Matches:</div>
+<div class="no-results">❌ No matches found</div></div></div>
+        <div class="image-card">
+            <div class="image-header">
+                <div class="original-image-container">
+                    <img src="../brands/36d2e0eeb84b-Screenshot_20250922_181119_Instagram 복사본.jpg" alt="Original" class="original-image" onerror="this.alt='Image not found'">
+                </div>
+                <div class="image-info">
+                    <div class="image-title">#2 36d2e0eeb84b-Screenshot_20250922_181119_</div>
+                    <div><span class="badge badge-success">✓ All Found</span></div>
+                    <div style="margin-top: 10px; font-size: 14px; color: #6e6e73;">
+                        1 product(s) detected • 1 found
+                    </div>
+                    
+                    <div class="detected-items">
+                        <div class="detected-title">🔍 Detected Products:</div>
+
+                        <div class="detected-item">
+                            <div class="detected-brand">무신사 스탠다드</div>
+                            <div class="detected-text">브라이트 나일론 파라슈트 팬츠 [다크 그레이]...</div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-section">
+                <div class="product-brand">📦 무신사 스탠다드</div>
+                <div class="mini-stats">
+                    <span class="mini-stat">🖼️ Visual: 30</span>
+                    <span class="mini-stat">📝 Text: 10</span>
+                    <span class="mini-stat">🔗 Combined: 39</span>
+                    <span class="mini-stat">✅ Selected: 3</span>
+                </div>
+                
+                <div class="section-title">🛍️ Product Matches:</div>
+<div class="results-grid">
+                    <div class="result-card">
+                        <img src="" alt="Product" class="result-image" onerror="this.style.display='none'">
+                        <div class="result-content">
+                            <div class="result-title">무신사 스탠다드 우먼(MUSINSA STANDARD WOMAN) 우먼즈 브라이트 ......</div>
+                            <a href="https://www.musinsa.com/products/3730368" target="_blank" class="result-link">🔗 View Product</a>
+                        </div>
+                    </div>
+
+                    <div class="result-card">
+                        <img src="" alt="Product" class="result-image" onerror="this.style.display='none'">
+                        <div class="result-content">
+                            <div class="result-title">무신사 스탠다드(MUSINSA STANDARD) 나일론 파라슈트 팬츠 ......</div>
+                            <a href="https://www.musinsa.com/products/3411541" target="_blank" class="result-link">🔗 View Product</a>
+                        </div>
+                    </div>
+
+                    <div class="result-card">
+                        <img src="" alt="Product" class="result-image" onerror="this.style.display='none'">
+                        <div class="result-content">
+                            <div class="result-title">무신사 스탠다드 우먼즈 브라이트 나일론 파라슈트 팬츠 [다크 ......</div>
+                            <a href="https://www.wishbucket.io/items/2096102" target="_blank" class="result-link">🔗 View Product</a>
+                        </div>
+                    </div>
+</div></div></div>
+        <div class="image-card">
+            <div class="image-header">
+                <div class="original-image-container">
+                    <img src="../brands/393bb2de055b-Screenshot_20250922_210538_Instagram 복사본.jpg" alt="Original" class="original-image" onerror="this.alt='Image not found'">
+                </div>
+                <div class="image-info">
+                    <div class="image-title">#3 393bb2de055b-Screenshot_20250922_210538_</div>
+                    <div><span class="badge badge-success">✓ All Found</span></div>
+                    <div style="margin-top: 10px; font-size: 14px; color: #6e6e73;">
+                        1 product(s) detected • 1 found
+                    </div>
+                    
+                    <div class="detected-items">
+                        <div class="detected-title">🔍 Detected Products:</div>
+
+                        <div class="detected-item">
+                            <div class="detected-brand">시아쥬</div>
+                            <div class="detected-text">시아쥬 바람막이...</div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-section">
+                <div class="product-brand">📦 시아쥬</div>
+                <div class="mini-stats">
+                    <span class="mini-stat">🖼️ Visual: 30</span>
+                    <span class="mini-stat">📝 Text: 10</span>
+                    <span class="mini-stat">🔗 Combined: 39</span>
+                    <span class="mini-stat">✅ Selected: 3</span>
+                </div>
+                
+                <div class="section-title">🛍️ Product Matches:</div>
+<div class="results-grid">
+                    <div class="result-card">
+                        <img src="" alt="Product" class="result-image" onerror="this.style.display='none'">
+                        <div class="result-content">
+                            <div class="result-title">SIOT4134 오버 핏 코튼 필드 자켓_Black - 시야쥬(Siyazu)...</div>
+                            <a href="https://m.siyazu.co.kr/product/siot4134-오버-핏-코튼-필드-자켓black/2062/" target="_blank" class="result-link">🔗 View Product</a>
+                        </div>
+                    </div>
+
+                    <div class="result-card">
+                        <img src="" alt="Product" class="result-image" onerror="this.style.display='none'">
+                        <div class="result-content">
+                            <div class="result-title">시야쥬] 오버 핏 와샤 필드 자켓_블랙(SIOT4142) - 마켓컬리...</div>
+                            <a href="https://www.kurly.com/goods/1001100269" target="_blank" class="result-link">🔗 View Product</a>
+                        </div>
+                    </div>
+
+                    <div class="result-card">
+                        <img src="" alt="Product" class="result-image" onerror="this.style.display='none'">
+                        <div class="result-content">
+                            <div class="result-title">시야쥬 바람막이...</div>
+                            <a href="https://fruitsfamily.com/product/3le1c/%EC%8B%9C%EC%95%BC%EC%A5%AC-%EB%B0%94%EB%9E%8C%EB%A7%89%EC%9D%B4?srsltid=AfmBOoqFPZGZGNBo4bYmxDENf-LdHZci4Hv6MfkTclHws5q-zQxOrp9p" target="_blank" class="result-link">🔗 View Product</a>
+                        </div>
+                    </div>
+</div></div></div>
+        <div class="image-card">
+            <div class="image-header">
+                <div class="original-image-container">
+                    <img src="../brands/5d96eff1ccb9-IMG_1740 복사본.png" alt="Original" class="original-image" onerror="this.alt='Image not found'">
+                </div>
+                <div class="image-info">
+                    <div class="image-title">#4 5d96eff1ccb9-IMG_1740 복사본.png</div>
+                    <div><span class="badge badge-success">✓ All Found</span></div>
+                    <div style="margin-top: 10px; font-size: 14px; color: #6e6e73;">
+                        1 product(s) detected • 1 found
+                    </div>
+                    
+                    <div class="detected-items">
+                        <div class="detected-title">🔍 Detected Products:</div>
+
+                        <div class="detected-item">
+                            <div class="detected-brand">LOOKNONE</div>
+                            <div class="detected-text">가을 셔츠 모음.zip...</div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-section">
+                <div class="product-brand">📦 LOOKNONE</div>
+                <div class="mini-stats">
+                    <span class="mini-stat">🖼️ Visual: 30</span>
+                    <span class="mini-stat">📝 Text: 10</span>
+                    <span class="mini-stat">🔗 Combined: 40</span>
+                    <span class="mini-stat">✅ Selected: 1</span>
+                </div>
+                
+                <div class="section-title">🛍️ Product Matches:</div>
+<div class="results-grid">
+                    <div class="result-card">
+                        <img src="" alt="Product" class="result-image" onerror="this.style.display='none'">
+                        <div class="result-content">
+                            <div class="result-title">르안 스트라이프 오버핏 셔츠 (3color) 0961-[룩넌]...</div>
+                            <a href="https://looknone.co.kr/product/르안-스트라이프-오버핏-셔츠-3color-0961/15514" target="_blank" class="result-link">🔗 View Product</a>
+                        </div>
+                    </div>
+</div></div></div>
+        <div class="image-card">
+            <div class="image-header">
+                <div class="original-image-container">
+                    <img src="../brands/69e143fdcf4f-Screenshot_20250404_183603_Instagram 복사본.jpg" alt="Original" class="original-image" onerror="this.alt='Image not found'">
+                </div>
+                <div class="image-info">
+                    <div class="image-title">#5 69e143fdcf4f-Screenshot_20250404_183603_</div>
+                    <div><span class="badge badge-success">✓ All Found</span></div>
+                    <div style="margin-top: 10px; font-size: 14px; color: #6e6e73;">
+                        1 product(s) detected • 1 found
+                    </div>
+                    
+                    <div class="detected-items">
+                        <div class="detected-title">🔍 Detected Products:</div>
+
+                        <div class="detected-item">
+                            <div class="detected-brand">FRED</div>
+                            <div class="detected-text">THE SUNSHINE JEWELER...</div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-section">
+                <div class="product-brand">📦 FRED</div>
+                <div class="mini-stats">
+                    <span class="mini-stat">🖼️ Visual: 30</span>
+                    <span class="mini-stat">📝 Text: 10</span>
+                    <span class="mini-stat">🔗 Combined: 40</span>
+                    <span class="mini-stat">✅ Selected: 1</span>
+                </div>
+                
+                <div class="section-title">🛍️ Product Matches:</div>
+<div class="results-grid">
+                    <div class="result-card">
+                        <img src="" alt="Product" class="result-image" onerror="this.style.display='none'">
+                        <div class="result-content">
+                            <div class="result-title">신제품 FRED 포스텐 라이즈 링 (화이트골드-S) 4B1021 : 선물하기...</div>
+                            <a href="https://gift.kakao.com/product/11244783?banner_id=288&amp;campaign_code=231204_santa" target="_blank" class="result-link">🔗 View Product</a>
+                        </div>
+                    </div>
+</div></div></div>
+        <div class="image-card">
+            <div class="image-header">
+                <div class="original-image-container">
+                    <img src="../brands/6b5e9533d2ee-Screenshot_20250922_205736_Instagram 복사본.jpg" alt="Original" class="original-image" onerror="this.alt='Image not found'">
+                </div>
+                <div class="image-info">
+                    <div class="image-title">#6 6b5e9533d2ee-Screenshot_20250922_205736_</div>
+                    <div><span class="badge badge-success">✓ All Found</span></div>
+                    <div style="margin-top: 10px; font-size: 14px; color: #6e6e73;">
+                        1 product(s) detected • 1 found
+                    </div>
+                    
+                    <div class="detected-items">
+                        <div class="detected-title">🔍 Detected Products:</div>
+
+                        <div class="detected-item">
+                            <div class="detected-brand">NARUI</div>
+                            <div class="detected-text">숄더백 백팩 크로스백 도트백 모자...</div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-section">
+                <div class="product-brand">📦 NARUI</div>
+                <div class="mini-stats">
+                    <span class="mini-stat">🖼️ Visual: 30</span>
+                    <span class="mini-stat">📝 Text: 10</span>
+                    <span class="mini-stat">🔗 Combined: 40</span>
+                    <span class="mini-stat">✅ Selected: 1</span>
+                </div>
+                
+                <div class="section-title">🛍️ Product Matches:</div>
+<div class="results-grid">
+                    <div class="result-card">
+                        <img src="" alt="Product" class="result-image" onerror="this.style.display='none'">
+                        <div class="result-content">
+                            <div class="result-title">크로스 바게트 스퀘어백...</div>
+                            <a href="https://narui.ai.kr/product/크로스-바게트-스퀘어백/67/" target="_blank" class="result-link">🔗 View Product</a>
+                        </div>
+                    </div>
+</div></div></div>
+        <div class="image-card">
+            <div class="image-header">
+                <div class="original-image-container">
+                    <img src="../brands/6bf49d4a9c81-IMG_6003 복사본.png" alt="Original" class="original-image" onerror="this.alt='Image not found'">
+                </div>
+                <div class="image-info">
+                    <div class="image-title">#7 6bf49d4a9c81-IMG_6003 복사본.png</div>
+                    <div><span class="badge badge-success">✓ All Found</span></div>
+                    <div style="margin-top: 10px; font-size: 14px; color: #6e6e73;">
+                        1 product(s) detected • 1 found
+                    </div>
+                    
+                    <div class="detected-items">
+                        <div class="detected-title">🔍 Detected Products:</div>
+
+                        <div class="detected-item">
+                            <div class="detected-brand">MIXXO</div>
+                            <div class="detected-text">언발 슬릿 긴팔 티셔츠...</div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-section">
+                <div class="product-brand">📦 MIXXO</div>
+                <div class="mini-stats">
+                    <span class="mini-stat">🖼️ Visual: 30</span>
+                    <span class="mini-stat">📝 Text: 10</span>
+                    <span class="mini-stat">🔗 Combined: 40</span>
+                    <span class="mini-stat">✅ Selected: 2</span>
+                </div>
+                
+                <div class="section-title">🛍️ Product Matches:</div>
+<div class="results-grid">
+                    <div class="result-card">
+                        <img src="" alt="Product" class="result-image" onerror="this.style.display='none'">
+                        <div class="result-content">
+                            <div class="result-title">언발 슬릿 긴팔 티셔츠_MIWLWF942A...</div>
+                            <a href="https://mixxo.com/product/%EC%96%B8%EB%B0%9C-%EC%8A%AC%EB%A6%BF-%EA%B8%B4%ED%8C%94-%ED%8B%B0%EC%85%94%EC%B8%A0miwlwf942a/10774" target="_blank" class="result-link">🔗 View Product</a>
+                        </div>
+                    </div>
+
+                    <div class="result-card">
+                        <img src="" alt="Product" class="result-image" onerror="this.style.display='none'">
+                        <div class="result-content">
+                            <div class="result-title">미쏘(MIXXO) 언발 슬릿 긴팔 티셔츠_MIWLWF942A...</div>
+                            <a href="https://www.musinsa.com/products/5299498" target="_blank" class="result-link">🔗 View Product</a>
+                        </div>
+                    </div>
+</div></div></div>
+        <div class="image-card">
+            <div class="image-header">
+                <div class="original-image-container">
+                    <img src="../brands/731d24e62d99-IMG_3357 복사본.png" alt="Original" class="original-image" onerror="this.alt='Image not found'">
+                </div>
+                <div class="image-info">
+                    <div class="image-title">#8 731d24e62d99-IMG_3357 복사본.png</div>
+                    <div><span class="badge badge-success">✓ All Found</span></div>
+                    <div style="margin-top: 10px; font-size: 14px; color: #6e6e73;">
+                        1 product(s) detected • 1 found
+                    </div>
+                    
+                    <div class="detected-items">
+                        <div class="detected-title">🔍 Detected Products:</div>
+
+                        <div class="detected-item">
+                            <div class="detected-brand">songbyin</div>
+                            <div class="detected-text">비키 데님 팬츠 2 COLOR...</div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-section">
+                <div class="product-brand">📦 songbyin</div>
+                <div class="mini-stats">
+                    <span class="mini-stat">🖼️ Visual: 30</span>
+                    <span class="mini-stat">📝 Text: 9</span>
+                    <span class="mini-stat">🔗 Combined: 39</span>
+                    <span class="mini-stat">✅ Selected: 3</span>
+                </div>
+                
+                <div class="section-title">🛍️ Product Matches:</div>
+<div class="results-grid">
+                    <div class="result-card">
+                        <img src="" alt="Product" class="result-image" onerror="this.style.display='none'">
+                        <div class="result-content">
+                            <div class="result-title">[비키 데님 팬츠 - 2 COLOR]...</div>
+                            <a href="https://songby.in/m/product.html?branduid=1210938" target="_blank" class="result-link">🔗 View Product</a>
+                        </div>
+                    </div>
+
+                    <div class="result-card">
+                        <img src="" alt="Product" class="result-image" onerror="this.style.display='none'">
+                        <div class="result-content">
+                            <div class="result-title">[비키 데님 팬츠 - 2 COLOR]...</div>
+                            <a href="https://songby.in/m/product.html?branduid=1210938&amp;xcode=017&amp;mcode=002&amp;scode=&amp;type=Y&amp;sort=regdate&amp;cur_code=017&amp;search=&amp;GfDT=bml6W14%3D" target="_blank" class="result-link">🔗 View Product</a>
+                        </div>
+                    </div>
+
+                    <div class="result-card">
+                        <img src="" alt="Product" class="result-image" onerror="this.style.display='none'">
+                        <div class="result-content">
+                            <div class="result-title">송바이인...</div>
+                            <a href="http://songby.in/m/product_detail.html?brand_uid=1210938" target="_blank" class="result-link">🔗 View Product</a>
+                        </div>
+                    </div>
+</div></div></div>
+        <div class="image-card">
+            <div class="image-header">
+                <div class="original-image-container">
+                    <img src="../brands/78d08ac79404-Screenshot_20250922_222922_Instagram 복사본.jpg" alt="Original" class="original-image" onerror="this.alt='Image not found'">
+                </div>
+                <div class="image-info">
+                    <div class="image-title">#9 78d08ac79404-Screenshot_20250922_222922_</div>
+                    <div><span class="badge badge-success">✓ All Found</span></div>
+                    <div style="margin-top: 10px; font-size: 14px; color: #6e6e73;">
+                        1 product(s) detected • 1 found
+                    </div>
+                    
+                    <div class="detected-items">
+                        <div class="detected-title">🔍 Detected Products:</div>
+
+                        <div class="detected-item">
+                            <div class="detected-brand">Little Lund</div>
+                            <div class="detected-text">키즈백팩...</div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-section">
+                <div class="product-brand">📦 Little Lund</div>
+                <div class="mini-stats">
+                    <span class="mini-stat">🖼️ Visual: 30</span>
+                    <span class="mini-stat">📝 Text: 10</span>
+                    <span class="mini-stat">🔗 Combined: 40</span>
+                    <span class="mini-stat">✅ Selected: 3</span>
+                </div>
+                
+                <div class="section-title">🛍️ Product Matches:</div>
+<div class="results-grid">
+                    <div class="result-card">
+                        <img src="" alt="Product" class="result-image" onerror="this.style.display='none'">
+                        <div class="result-content">
+                            <div class="result-title">룬드런던(LUNDLONDON) 리틀룬드 키즈 백팩 우드랜드...</div>
+                            <a href="https://link.musinsa.com/app/goods/5211897" target="_blank" class="result-link">🔗 View Product</a>
+                        </div>
+                    </div>
+
+                    <div class="result-card">
+                        <img src="" alt="Product" class="result-image" onerror="this.style.display='none'">
+                        <div class="result-content">
+                            <div class="result-title">Little Lund Back Pack...</div>
+                            <a href="https://lunddesignhouse.com/products/little-lund-back-pack" target="_blank" class="result-link">🔗 View Product</a>
+                        </div>
+                    </div>
+
+                    <div class="result-card">
+                        <img src="" alt="Product" class="result-image" onerror="this.style.display='none'">
+                        <div class="result-content">
+                            <div class="result-title">Backpack – Woodland – Little Lund...</div>
+                            <a href="https://www.weenydew.com/shop/on-the-go/kids-bags-backpacks/backpack-woodland-little-lund/" target="_blank" class="result-link">🔗 View Product</a>
+                        </div>
+                    </div>
+</div></div></div>
+        <div class="image-card">
+            <div class="image-header">
+                <div class="original-image-container">
+                    <img src="../brands/8e6db17fb30f-IMG_0762 복사본.png" alt="Original" class="original-image" onerror="this.alt='Image not found'">
+                </div>
+                <div class="image-info">
+                    <div class="image-title">#10 8e6db17fb30f-IMG_0762 복사본.png</div>
+                    <div><span class="badge badge-success">✓ All Found</span></div>
+                    <div style="margin-top: 10px; font-size: 14px; color: #6e6e73;">
+                        1 product(s) detected • 1 found
+                    </div>
+                    
+                    <div class="detected-items">
+                        <div class="detected-title">🔍 Detected Products:</div>
+
+                        <div class="detected-item">
+                            <div class="detected-brand">쿠키시</div>
+                            <div class="detected-text">쿠키시 도트 야상자켓 (피그먼트블랙)...</div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-section">
+                <div class="product-brand">📦 쿠키시</div>
+                <div class="mini-stats">
+                    <span class="mini-stat">🖼️ Visual: 30</span>
+                    <span class="mini-stat">📝 Text: 10</span>
+                    <span class="mini-stat">🔗 Combined: 40</span>
+                    <span class="mini-stat">✅ Selected: 3</span>
+                </div>
+                
+                <div class="section-title">🛍️ Product Matches:</div>
+<div class="results-grid">
+                    <div class="result-card">
+                        <img src="" alt="Product" class="result-image" onerror="this.style.display='none'">
+                        <div class="result-content">
+                            <div class="result-title">MUSINSA | KOOKEESEE Cookie City Dot Field Jacket (Pigment Black)...</div>
+                            <a href="https://global.musinsa.com/ca/goods/3902196" target="_blank" class="result-link">🔗 View Product</a>
+                        </div>
+                    </div>
+
+                    <div class="result-card">
+                        <img src="" alt="Product" class="result-image" onerror="this.style.display='none'">
+                        <div class="result-content">
+                            <div class="result-title">쿠키시(KOOKEESEE) 쿠키시 도트 야상 자켓 (피그먼트 블랙)...</div>
+                            <a href="https://www.musinsa.com/products/3902196" target="_blank" class="result-link">🔗 View Product</a>
+                        </div>
+                    </div>
+
+                    <div class="result-card">
+                        <img src="" alt="Product" class="result-image" onerror="this.style.display='none'">
+                        <div class="result-content">
+                            <div class="result-title">KOOKEESEE DOT Jacket (Pigment Black) - 쿠키시 ......</div>
+                            <a href="https://kookeesee.com/product/kookeesee-dot-jacket-pigment-black/403/category/59/display/1/" target="_blank" class="result-link">🔗 View Product</a>
+                        </div>
+                    </div>
+</div></div></div>
+        <div class="image-card">
+            <div class="image-header">
+                <div class="original-image-container">
+                    <img src="../brands/8ed1599931de-Screenshot_20250919_120231_Instagram 복사본.jpg" alt="Original" class="original-image" onerror="this.alt='Image not found'">
+                </div>
+                <div class="image-info">
+                    <div class="image-title">#11 8ed1599931de-Screenshot_20250919_120231_</div>
+                    <div><span class="badge badge-fail">✗ Partial</span></div>
+                    <div style="margin-top: 10px; font-size: 14px; color: #6e6e73;">
+                        1 product(s) detected • 0 found
+                    </div>
+                    
+                    <div class="detected-items">
+                        <div class="detected-title">🔍 Detected Products:</div>
+
+                        <div class="detected-item">
+                            <div class="detected-brand">nul_official</div>
+                            <div class="detected-text">부드럽고 따뜻한 감성을 담은 카멜 미니 크로스백, 라메백(Latte Bag)...</div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-section">
+                <div class="product-brand">📦 nul_official</div>
+                <div class="mini-stats">
+                    <span class="mini-stat">🖼️ Visual: 30</span>
+                    <span class="mini-stat">📝 Text: 2</span>
+                    <span class="mini-stat">🔗 Combined: 31</span>
+                    <span class="mini-stat">✅ Selected: 0</span>
+                </div>
+                
+                <div class="section-title">🛍️ Product Matches:</div>
+<div class="no-results">❌ No matches found</div></div></div>
+        <div class="image-card">
+            <div class="image-header">
+                <div class="original-image-container">
+                    <img src="../brands/9c9b7d5f941e-IMG_7594 복사본.png" alt="Original" class="original-image" onerror="this.alt='Image not found'">
+                </div>
+                <div class="image-info">
+                    <div class="image-title">#12 9c9b7d5f941e-IMG_7594 복사본.png</div>
+                    <div><span class="badge badge-success">✓ All Found</span></div>
+                    <div style="margin-top: 10px; font-size: 14px; color: #6e6e73;">
+                        3 product(s) detected • 3 found
+                    </div>
+                    
+                    <div class="detected-items">
+                        <div class="detected-title">🔍 Detected Products:</div>
+
+                        <div class="detected-item">
+                            <div class="detected-brand">BEANPOLE</div>
+                            <div class="detected-text">울 케이블 라운드넥 카디건 - 블루 할인 중...</div>
+                        </div>
+
+                        <div class="detected-item">
+                            <div class="detected-brand">BEANPOLE</div>
+                            <div class="detected-text">턴업 데님 팬츠 - 네이비 할인 중...</div>
+                        </div>
+
+                        <div class="detected-item">
+                            <div class="detected-brand">BEANPOLE</div>
+                            <div class="detected-text">솔리드 리본 타이 볼륨 블라우스 할인중...</div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-section">
+                <div class="product-brand">📦 BEANPOLE</div>
+                <div class="mini-stats">
+                    <span class="mini-stat">🖼️ Visual: 30</span>
+                    <span class="mini-stat">📝 Text: 10</span>
+                    <span class="mini-stat">🔗 Combined: 39</span>
+                    <span class="mini-stat">✅ Selected: 2</span>
+                </div>
+                
+                <div class="section-title">🛍️ Product Matches:</div>
+<div class="results-grid">
+                    <div class="result-card">
+                        <img src="" alt="Product" class="result-image" onerror="this.style.display='none'">
+                        <div class="result-content">
+                            <div class="result-title">빈폴 레이디스(BEANPOLE LADIES) [Essential] 울 케이블 라운드 ......</div>
+                            <a href="https://www.musinsa.com/products/5518312" target="_blank" class="result-link">🔗 View Product</a>
+                        </div>
+                    </div>
+
+                    <div class="result-card">
+                        <img src="" alt="Product" class="result-image" onerror="this.style.display='none'">
+                        <div class="result-content">
+                            <div class="result-title">(Essential) 울 캐시미어 케이블 라운드넥 카디건...</div>
+                            <a href="https://m.lotteimall.com/goods/viewGoodsDetail.lotte?goods_no=2369551809&amp;rccode=mo_r_detail1&amp;t=1702443926657" target="_blank" class="result-link">🔗 View Product</a>
+                        </div>
+                    </div>
+</div></div>
+            <div class="product-section">
+                <div class="product-brand">📦 BEANPOLE</div>
+                <div class="mini-stats">
+                    <span class="mini-stat">🖼️ Visual: 30</span>
+                    <span class="mini-stat">📝 Text: 10</span>
+                    <span class="mini-stat">🔗 Combined: 40</span>
+                    <span class="mini-stat">✅ Selected: 3</span>
+                </div>
+                
+                <div class="section-title">🛍️ Product Matches:</div>
+<div class="results-grid">
+                    <div class="result-card">
+                        <img src="" alt="Product" class="result-image" onerror="this.style.display='none'">
+                        <div class="result-content">
+                            <div class="result-title">턴업 데님 팬츠 네이비 BF5921C79R...</div>
+                            <a href="https://www.lotteimall.com/coop/affilGate.lotte?chl_no=169230&amp;chl_dtl_no=&amp;returnUrl=/goods/viewGoodsDetail.lotte?goods_no=3116595698&amp;srsltid=AfmBOopBxLBavyIyPmKnjH_dMBTOxd57WVHZhf1_CADDPtPc2lh4DZVo" target="_blank" class="result-link">🔗 View Product</a>
+                        </div>
+                    </div>
+
+                    <div class="result-card">
+                        <img src="" alt="Product" class="result-image" onerror="this.style.display='none'">
+                        <div class="result-content">
+                            <div class="result-title">[빈폴레이디스] 생지 스트레이트 데님 네이비 (BF5721C73R)...</div>
+                            <a href="https://store.kakao.com/beanpole/products/579709686" target="_blank" class="result-link">🔗 View Product</a>
+                        </div>
+                    </div>
+
+                    <div class="result-card">
+                        <img src="" alt="Product" class="result-image" onerror="this.style.display='none'">
+                        <div class="result-content">
+                            <div class="result-title">[빈폴레이디스] 생지 스트레이트 데님 네이비 (BF5721C73R)...</div>
+                            <a href="https://www.hmall.com/md/pda/itemPtc?slitmCd=2237731188&amp;dispTrtyNmCd=home_mditem_not_auto&amp;dispOrdg=11" target="_blank" class="result-link">🔗 View Product</a>
+                        </div>
+                    </div>
+</div></div>
+            <div class="product-section">
+                <div class="product-brand">📦 BEANPOLE</div>
+                <div class="mini-stats">
+                    <span class="mini-stat">🖼️ Visual: 0</span>
+                    <span class="mini-stat">📝 Text: 10</span>
+                    <span class="mini-stat">🔗 Combined: 10</span>
+                    <span class="mini-stat">✅ Selected: 1</span>
+                </div>
+                
+                <div class="section-title">🛍️ Product Matches:</div>
+<div class="results-grid">
+                    <div class="result-card">
+                        <img src="" alt="Product" class="result-image" onerror="this.style.display='none'">
+                        <div class="result-content">
+                            <div class="result-title">빈폴 레이디스(BEANPOLE LADIES) [B. my] 솔리드 리본 ......</div>
+                            <a href="https://www.musinsa.com/app/goods/5402413" target="_blank" class="result-link">🔗 View Product</a>
+                        </div>
+                    </div>
+</div></div></div>
+        <div class="image-card">
+            <div class="image-header">
+                <div class="original-image-container">
+                    <img src="../brands/9d31b5d98ff0-Screenshot_20250622_134811_Instagram 복사본.jpg" alt="Original" class="original-image" onerror="this.alt='Image not found'">
+                </div>
+                <div class="image-info">
+                    <div class="image-title">#13 9d31b5d98ff0-Screenshot_20250622_134811_</div>
+                    <div><span class="badge badge-fail">✗ Partial</span></div>
+                    <div style="margin-top: 10px; font-size: 14px; color: #6e6e73;">
+                        1 product(s) detected • 0 found
+                    </div>
+                    
+                    <div class="detected-items">
+                        <div class="detected-title">🔍 Detected Products:</div>
+
+                        <div class="detected-item">
+                            <div class="detected-brand">EILEELLE</div>
+                            <div class="detected-text">EILEELLE .ill 41...</div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-section">
+                <div class="product-brand">📦 EILEELLE</div>
+                <div class="mini-stats">
+                    <span class="mini-stat">🖼️ Visual: 0</span>
+                    <span class="mini-stat">📝 Text: 4</span>
+                    <span class="mini-stat">🔗 Combined: 4</span>
+                    <span class="mini-stat">✅ Selected: 0</span>
+                </div>
+                
+                <div class="section-title">🛍️ Product Matches:</div>
+<div class="no-results">❌ No matches found</div></div></div>
+        <div class="image-card">
+            <div class="image-header">
+                <div class="original-image-container">
+                    <img src="../brands/a196d9a098f1-IMG_2210 복사본.png" alt="Original" class="original-image" onerror="this.alt='Image not found'">
+                </div>
+                <div class="image-info">
+                    <div class="image-title">#14 a196d9a098f1-IMG_2210 복사본.png</div>
+                    <div><span class="badge badge-success">✓ All Found</span></div>
+                    <div style="margin-top: 10px; font-size: 14px; color: #6e6e73;">
+                        2 product(s) detected • 2 found
+                    </div>
+                    
+                    <div class="detected-items">
+                        <div class="detected-title">🔍 Detected Products:</div>
+
+                        <div class="detected-item">
+                            <div class="detected-brand">UNIQLO</div>
+                            <div class="detected-text">유틸리티 오버사이즈 셔츠...</div>
+                        </div>
+
+                        <div class="detected-item">
+                            <div class="detected-brand">mond mond</div>
+                            <div class="detected-text">클래식 버튼 하프문 나일론 호보백...</div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-section">
+                <div class="product-brand">📦 UNIQLO</div>
+                <div class="mini-stats">
+                    <span class="mini-stat">🖼️ Visual: 30</span>
+                    <span class="mini-stat">📝 Text: 10</span>
+                    <span class="mini-stat">🔗 Combined: 40</span>
+                    <span class="mini-stat">✅ Selected: 3</span>
+                </div>
+                
+                <div class="section-title">🛍️ Product Matches:</div>
+<div class="results-grid">
+                    <div class="result-card">
+                        <img src="" alt="Product" class="result-image" onerror="this.style.display='none'">
+                        <div class="result-content">
+                            <div class="result-title">유틸리티오버사이즈셔츠(긴팔)...</div>
+                            <a href="https://www.uniqlo.com/kr/ko/products/E480652-000/00?srsltid=AfmBOorx7O0S44Fe5VtKE2SQI7qZKPDhLyezRngjCbSovFaMpejYe1dG" target="_blank" class="result-link">🔗 View Product</a>
+                        </div>
+                    </div>
+
+                    <div class="result-card">
+                        <img src="" alt="Product" class="result-image" onerror="this.style.display='none'">
+                        <div class="result-content">
+                            <div class="result-title">유틸리티오버셔츠(긴팔)...</div>
+                            <a href="https://www.uniqlo.com/kr/ko/products/E467841-000/00?srsltid=AfmBOoqrFoJXDvjgccWv2KdQ_XKIUD_uyXgKZjTqDQrKsvL9lyOVlslp" target="_blank" class="result-link">🔗 View Product</a>
+                        </div>
+                    </div>
+
+                    <div class="result-card">
+                        <img src="" alt="Product" class="result-image" onerror="this.style.display='none'">
+                        <div class="result-content">
+                            <div class="result-title">11/26 한정특가]유니클로 U 유틸리티 오버사이즈 셔츠 남방 ......</div>
+                            <a href="https://4910.kr/goods/51438466" target="_blank" class="result-link">🔗 View Product</a>
+                        </div>
+                    </div>
+</div></div>
+            <div class="product-section">
+                <div class="product-brand">📦 mond mond</div>
+                <div class="mini-stats">
+                    <span class="mini-stat">🖼️ Visual: 30</span>
+                    <span class="mini-stat">📝 Text: 10</span>
+                    <span class="mini-stat">🔗 Combined: 40</span>
+                    <span class="mini-stat">✅ Selected: 3</span>
+                </div>
+                
+                <div class="section-title">🛍️ Product Matches:</div>
+<div class="results-grid">
+                    <div class="result-card">
+                        <img src="" alt="Product" class="result-image" onerror="this.style.display='none'">
+                        <div class="result-content">
+                            <div class="result-title">Classic button half moon nylon bag Black...</div>
+                            <a href="https://mondemonde.com/product/classic-button-half-moon-nylon-bag-black5%EC%9B%94-12%EC%9D%BC-%EC%98%88%EC%95%BD-%EB%B0%B0%EC%86%A1/143/" target="_blank" class="result-link">🔗 View Product</a>
+                        </div>
+                    </div>
+
+                    <div class="result-card">
+                        <img src="" alt="Product" class="result-image" onerror="this.style.display='none'">
+                        <div class="result-content">
+                            <div class="result-title">몽드몽드(MONDE MONDE) 클래식 버튼 하프문 나일론백 블랙...</div>
+                            <a href="https://www.musinsa.com/products/4817875" target="_blank" class="result-link">🔗 View Product</a>
+                        </div>
+                    </div>
+
+                    <div class="result-card">
+                        <img src="" alt="Product" class="result-image" onerror="this.style.display='none'">
+                        <div class="result-content">
+                            <div class="result-title">Monde Monde Nylon Half Moon Bag...</div>
+                            <a href="https://globalbunjang.com/product/320539127" target="_blank" class="result-link">🔗 View Product</a>
+                        </div>
+                    </div>
+</div></div></div>
+        <div class="image-card">
+            <div class="image-header">
+                <div class="original-image-container">
+                    <img src="../brands/be1e0b23fea1-Screenshot_20240907_115420_Instagram 복사본.jpg" alt="Original" class="original-image" onerror="this.alt='Image not found'">
+                </div>
+                <div class="image-info">
+                    <div class="image-title">#16 be1e0b23fea1-Screenshot_20240907_115420_</div>
+                    <div><span class="badge badge-fail">✗ Partial</span></div>
+                    <div style="margin-top: 10px; font-size: 14px; color: #6e6e73;">
+                        1 product(s) detected • 0 found
+                    </div>
+                    
+                    <div class="detected-items">
+                        <div class="detected-title">🔍 Detected Products:</div>
+
+                        <div class="detected-item">
+                            <div class="detected-brand">JINGROU</div>
+                            <div class="detected-text">晶柔旗舰店...</div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-section">
+                <div class="product-brand">📦 JINGROU</div>
+                <div class="mini-stats">
+                    <span class="mini-stat">🖼️ Visual: 30</span>
+                    <span class="mini-stat">📝 Text: 4</span>
+                    <span class="mini-stat">🔗 Combined: 34</span>
+                    <span class="mini-stat">✅ Selected: 0</span>
+                </div>
+                
+                <div class="section-title">🛍️ Product Matches:</div>
+<div class="no-results">❌ No matches found</div></div></div>
+        <div class="image-card">
+            <div class="image-header">
+                <div class="original-image-container">
+                    <img src="../brands/cde72f5374e5-Screenshot_20250918_110202_Instagram 복사본.jpg" alt="Original" class="original-image" onerror="this.alt='Image not found'">
+                </div>
+                <div class="image-info">
+                    <div class="image-title">#18 cde72f5374e5-Screenshot_20250918_110202_</div>
+                    <div><span class="badge badge-success">✓ All Found</span></div>
+                    <div style="margin-top: 10px; font-size: 14px; color: #6e6e73;">
+                        1 product(s) detected • 1 found
+                    </div>
+                    
+                    <div class="detected-items">
+                        <div class="detected-title">🔍 Detected Products:</div>
+
+                        <div class="detected-item">
+                            <div class="detected-brand">RONIEL</div>
+                            <div class="detected-text">루드 핀턱 와이드 데님 [기장옵션 - 숏, 스탠다드]...</div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-section">
+                <div class="product-brand">📦 RONIEL</div>
+                <div class="mini-stats">
+                    <span class="mini-stat">🖼️ Visual: 30</span>
+                    <span class="mini-stat">📝 Text: 10</span>
+                    <span class="mini-stat">🔗 Combined: 40</span>
+                    <span class="mini-stat">✅ Selected: 1</span>
+                </div>
+                
+                <div class="section-title">🛍️ Product Matches:</div>
+<div class="results-grid">
+                    <div class="result-card">
+                        <img src="" alt="Product" class="result-image" onerror="this.style.display='none'">
+                        <div class="result-content">
+                            <div class="result-title">루드 핀턱 와이드 데님...</div>
+                            <a href="https://roniel.co.kr/product/%EB%A3%A8%EB%93%9C-%ED%95%80%ED%84%B1-%EC%99%80%EC%9D%B4%EB%93%9C-%EB%8D%B0%EB%8B%98/16162/?srsltid=AfmBOooA9uv4zB9q9-7jqk3LgpPei0NefL4qMBNYTCcM5FJSwfQuIn-A" target="_blank" class="result-link">🔗 View Product</a>
+                        </div>
+                    </div>
+</div></div></div>
+        <div class="image-card">
+            <div class="image-header">
+                <div class="original-image-container">
+                    <img src="../brands/ef9719b4f59c-Screenshot_20250724_125307_Instagram 복사본.jpg" alt="Original" class="original-image" onerror="this.alt='Image not found'">
+                </div>
+                <div class="image-info">
+                    <div class="image-title">#20 ef9719b4f59c-Screenshot_20250724_125307_</div>
+                    <div><span class="badge badge-success">✓ All Found</span></div>
+                    <div style="margin-top: 10px; font-size: 14px; color: #6e6e73;">
+                        1 product(s) detected • 1 found
+                    </div>
+                    
+                    <div class="detected-items">
+                        <div class="detected-title">🔍 Detected Products:</div>
+
+                        <div class="detected-item">
+                            <div class="detected-brand">LORDLOAR</div>
+                            <div class="detected-text">[3차 입고] 에센셜 플레어 스커트 WHITE...</div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-section">
+                <div class="product-brand">📦 LORDLOAR</div>
+                <div class="mini-stats">
+                    <span class="mini-stat">🖼️ Visual: 30</span>
+                    <span class="mini-stat">📝 Text: 10</span>
+                    <span class="mini-stat">🔗 Combined: 40</span>
+                    <span class="mini-stat">✅ Selected: 3</span>
+                </div>
+                
+                <div class="section-title">🛍️ Product Matches:</div>
+<div class="results-grid">
+                    <div class="result-card">
+                        <img src="" alt="Product" class="result-image" onerror="this.style.display='none'">
+                        <div class="result-content">
+                            <div class="result-title">[3차 입고] 에센셜 플레어 스커트 WHITE...</div>
+                            <a href="https://lordloar.com/product/3%EC%B0%A8-%EC%9E%85%EA%B3%A0-%EC%97%90%EC%84%BC%EC%85%9C-%ED%94%8C%EB%A0%88%EC%96%B4-%EC%8A%A4%EC%BB%A4%ED%8A%B8-white/387/" target="_blank" class="result-link">🔗 View Product</a>
+                        </div>
+                    </div>
+
+                    <div class="result-card">
+                        <img src="" alt="Product" class="result-image" onerror="this.style.display='none'">
+                        <div class="result-content">
+                            <div class="result-title">로드로아르(LORDLOAR) 에센셜 플레어 스커트 WHITE...</div>
+                            <a href="https://www.musinsa.com/products/3874381" target="_blank" class="result-link">🔗 View Product</a>
+                        </div>
+                    </div>
+
+                    <div class="result-card">
+                        <img src="" alt="Product" class="result-image" onerror="this.style.display='none'">
+                        <div class="result-content">
+                            <div class="result-title">에센셜 플레어 스커트 WHITE - LORDLOAR...</div>
+                            <a href="https://www.kolonmall.com/Brands/LORDLOAR/Product/K1738915958913078BK01?srsltid=AfmBOooJY3hikTxB-gtoTM8c1xQCD5zZEC6bd9kvq1JjOvUS8naizOAG" target="_blank" class="result-link">🔗 View Product</a>
+                        </div>
+                    </div>
+</div></div></div>
+        <div class="image-card">
+            <div class="image-header">
+                <div class="original-image-container">
+                    <img src="../brands/f2254a73eb94-IMG_6533 복사본.png" alt="Original" class="original-image" onerror="this.alt='Image not found'">
+                </div>
+                <div class="image-info">
+                    <div class="image-title">#21 f2254a73eb94-IMG_6533 복사본.png</div>
+                    <div><span class="badge badge-success">✓ All Found</span></div>
+                    <div style="margin-top: 10px; font-size: 14px; color: #6e6e73;">
+                        2 product(s) detected • 2 found
+                    </div>
+                    
+                    <div class="detected-items">
+                        <div class="detected-title">🔍 Detected Products:</div>
+
+                        <div class="detected-item">
+                            <div class="detected-brand">와이티지</div>
+                            <div class="detected-text">style_084 써지컬스틸 체인목걸이...</div>
+                        </div>
+
+                        <div class="detected-item">
+                            <div class="detected-brand">블링살롱</div>
+                            <div class="detected-text">블링살롱 국내제작 메탈 조약돌 롱 드롭 목걸이...</div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-section">
+                <div class="product-brand">📦 와이티지</div>
+                <div class="mini-stats">
+                    <span class="mini-stat">🖼️ Visual: 30</span>
+                    <span class="mini-stat">📝 Text: 10</span>
+                    <span class="mini-stat">🔗 Combined: 40</span>
+                    <span class="mini-stat">✅ Selected: 3</span>
+                </div>
+                
+                <div class="section-title">🛍️ Product Matches:</div>
+<div class="results-grid">
+                    <div class="result-card">
+                        <img src="" alt="Product" class="result-image" onerror="this.style.display='none'">
+                        <div class="result-content">
+                            <div class="result-title">와이티지 style_084 써지컬스틸 체인목걸이 빈티지목걸이 반지 ......</div>
+                            <a href="https://www.hohohi.kr/product/%EC%99%80%EC%9D%B4%ED%8B%B0%EC%A7%80-style084-%EC%8D%A8%EC%A7%80%EC%BB%AC%EC%8A%A4%ED%8B%B8-%EC%B2%B4%EC%9D%B8%EB%AA%A9%EA%B1%B8%EC%9D%B4-%EB%B9%88%ED%8B%B0%EC%A7%80%EB%AA%A9%EA%B1%B8%EC%9D%B4-%EB%B0%98%EC%A7%80%EC%A4%84-%EA%B5%B0%EB%B2%88%EC%A4%84-%EC%97%AC%EC%9E%90-%EB%82%A8%EC%9E%90-%EC%BB%A4%ED%94%8C-%EB%8D%B0%EC%9D%BC%EB%A6%AC-1" target="_blank" class="result-link">🔗 View Product</a>
+                        </div>
+                    </div>
+
+                    <div class="result-card">
+                        <img src="" alt="Product" class="result-image" onerror="this.style.display='none'">
+                        <div class="result-content">
+                            <div class="result-title">와이티지 style_084 써지컬스틸 체인목걸이 빈티지 ......</div>
+                            <a href="https://www.coupang.com/vp/products/7239852287" target="_blank" class="result-link">🔗 View Product</a>
+                        </div>
+                    </div>
+
+                    <div class="result-card">
+                        <img src="" alt="Product" class="result-image" onerror="this.style.display='none'">
+                        <div class="result-content">
+                            <div class="result-title">와이티지 style_084 써지컬스틸 체인목걸이 빈티지 ......</div>
+                            <a href="https://www.wishbucket.io/items/2134779" target="_blank" class="result-link">🔗 View Product</a>
+                        </div>
+                    </div>
+</div></div>
+            <div class="product-section">
+                <div class="product-brand">📦 블링살롱</div>
+                <div class="mini-stats">
+                    <span class="mini-stat">🖼️ Visual: 30</span>
+                    <span class="mini-stat">📝 Text: 10</span>
+                    <span class="mini-stat">🔗 Combined: 40</span>
+                    <span class="mini-stat">✅ Selected: 3</span>
+                </div>
+                
+                <div class="section-title">🛍️ Product Matches:</div>
+<div class="results-grid">
+                    <div class="result-card">
+                        <img src="" alt="Product" class="result-image" onerror="this.style.display='none'">
+                        <div class="result-content">
+                            <div class="result-title">[국내제작/당일발송♥] 메탈 조약돌 네크리스 롱 드롭 목걸이 ......</div>
+                            <a href="https://zigzag.kr/catalog/products/150565651" target="_blank" class="result-link">🔗 View Product</a>
+                        </div>
+                    </div>
+
+                    <div class="result-card">
+                        <img src="" alt="Product" class="result-image" onerror="this.style.display='none'">
+                        <div class="result-content">
+                            <div class="result-title">블링살롱 국내제작 메탈 조약돌 롱 드롭 목걸이 2컬러 여성용 ......</div>
+                            <a href="https://www.coupang.com/vp/products/8634359041" target="_blank" class="result-link">🔗 View Product</a>
+                        </div>
+                    </div>
+
+                    <div class="result-card">
+                        <img src="" alt="Product" class="result-image" onerror="this.style.display='none'">
+                        <div class="result-content">
+                            <div class="result-title">블링살롱 국내제작 아르떼 통통 하트 펜던트 조절가능 블랙 ......</div>
+                            <a href="https://alltimeprice.com/product/?pid=7978337877-89172398733" target="_blank" class="result-link">🔗 View Product</a>
+                        </div>
+                    </div>
+</div></div></div>
+        <div class="image-card">
+            <div class="image-header">
+                <div class="original-image-container">
+                    <img src="../brands/f40c483c87a8-Screenshot_20250922_212029_Instagram 복사본.jpg" alt="Original" class="original-image" onerror="this.alt='Image not found'">
+                </div>
+                <div class="image-info">
+                    <div class="image-title">#22 f40c483c87a8-Screenshot_20250922_212029_</div>
+                    <div><span class="badge badge-success">✓ All Found</span></div>
+                    <div style="margin-top: 10px; font-size: 14px; color: #6e6e73;">
+                        1 product(s) detected • 1 found
+                    </div>
+                    
+                    <div class="detected-items">
+                        <div class="detected-title">🔍 Detected Products:</div>
+
+                        <div class="detected-item">
+                            <div class="detected-brand">ririnco_official</div>
+                            <div class="detected-text">[1천장 돌파][무료배송] [하이퀄리티/프리미엄...&gt;...</div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-section">
+                <div class="product-brand">📦 ririnco_official</div>
+                <div class="mini-stats">
+                    <span class="mini-stat">🖼️ Visual: 30</span>
+                    <span class="mini-stat">📝 Text: 7</span>
+                    <span class="mini-stat">🔗 Combined: 37</span>
+                    <span class="mini-stat">✅ Selected: 3</span>
+                </div>
+                
+                <div class="section-title">🛍️ Product Matches:</div>
+<div class="results-grid">
+                    <div class="result-card">
+                        <img src="" alt="Product" class="result-image" onerror="this.style.display='none'">
+                        <div class="result-content">
+                            <div class="result-title">[1천장 돌파  ][무료배송][하이퀄리티/프리미엄  ] [44-120] 엘레이넌 트위드 하트넥 맞주름 벨트 롱 원피스( 봄...</div>
+                            <a href="https://ririnco.com/product/detail.html?product_no=26742&amp;cafe_mkt=ue_google_shopping" target="_blank" class="result-link">🔗 View Product</a>
+                        </div>
+                    </div>
+
+                    <div class="result-card">
+                        <img src="" alt="Product" class="result-image" onerror="this.style.display='none'">
+                        <div class="result-content">
+                            <div class="result-title">1천장 돌파✨][무료배송][하이퀄리티/프리미엄✦] [44-120] 엘레이넌 트위드 하트넥 맞주름 벨트 롱 원피스( 봄-가을-여름-신상-데일리룩-하객룩-격식룩-모던...</div>
+                            <a href="http://m.ksr8569.cafe24.com/product/1천장-돌파무료배송하이퀄리티프리미엄-44-120-엘레이넌-트위드-하트넥-맞주름-벨트-롱-원피스-봄가을여름신상데일리룩하객룩격식룩/26742/category/473/display/2/?page_6=1&amp;page_4=2" target="_blank" class="result-link">🔗 View Product</a>
+                        </div>
+                    </div>
+
+                    <div class="result-card">
+                        <img src="" alt="Product" class="result-image" onerror="this.style.display='none'">
+                        <div class="result-content">
+                            <div class="result-title">1천장 돌파✨][무료배송][하이퀄리티/프리미엄✦] [44-120] 엘레이넌 트위드 하트넥 맞주름 벨트 롱 원피스( 봄-가을-여름-신상-데일리룩-하객룩-격식룩-모던...</div>
+                            <a href="https://m.ririnco.com/product/1천장-돌파-하이퀄리티프리미엄-44-120-엘레이넌-트위드-하트넥-맞주름-벨트-롱-원피스-봄가을여름신상데일리룩하객룩격식룩모던룩/26742/display/1/" target="_blank" class="result-link">🔗 View Product</a>
+                        </div>
+                    </div>
+</div></div></div>
+        <div class="image-card">
+            <div class="image-header">
+                <div class="original-image-container">
+                    <img src="../brands/f62504d2513d-Screenshot_20250922_050551_Instagram 복사본.jpg" alt="Original" class="original-image" onerror="this.alt='Image not found'">
+                </div>
+                <div class="image-info">
+                    <div class="image-title">#23 f62504d2513d-Screenshot_20250922_050551_</div>
+                    <div><span class="badge badge-fail">✗ Partial</span></div>
+                    <div style="margin-top: 10px; font-size: 14px; color: #6e6e73;">
+                        1 product(s) detected • 0 found
+                    </div>
+                    
+                    <div class="detected-items">
+                        <div class="detected-title">🔍 Detected Products:</div>
+
+                        <div class="detected-item">
+                            <div class="detected-brand">Bongoût</div>
+                            <div class="detected-text">삼각김밥bag (블랙) 바로배송...</div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-section">
+                <div class="product-brand">📦 Bongoût</div>
+                <div class="mini-stats">
+                    <span class="mini-stat">🖼️ Visual: 30</span>
+                    <span class="mini-stat">📝 Text: 0</span>
+                    <span class="mini-stat">🔗 Combined: 30</span>
+                    <span class="mini-stat">✅ Selected: 0</span>
+                </div>
+                
+                <div class="section-title">🛍️ Product Matches:</div>
+<div class="no-results">❌ No matches found</div></div></div>
+        <div class="image-card">
+            <div class="image-header">
+                <div class="original-image-container">
+                    <img src="../brands/f8907dc5d73c-Screenshot_20250923_085216_Instagram 복사본.jpg" alt="Original" class="original-image" onerror="this.alt='Image not found'">
+                </div>
+                <div class="image-info">
+                    <div class="image-title">#24 f8907dc5d73c-Screenshot_20250923_085216_</div>
+                    <div><span class="badge badge-fail">✗ Partial</span></div>
+                    <div style="margin-top: 10px; font-size: 14px; color: #6e6e73;">
+                        3 product(s) detected • 1 found
+                    </div>
+                    
+                    <div class="detected-items">
+                        <div class="detected-title">🔍 Detected Products:</div>
+
+                        <div class="detected-item">
+                            <div class="detected-brand">Fila</div>
+                            <div class="detected-text">에샤페 초코...</div>
+                        </div>
+
+                        <div class="detected-item">
+                            <div class="detected-brand">Mizuno</div>
+                            <div class="detected-text">NOX 420 5G...</div>
+                        </div>
+
+                        <div class="detected-item">
+                            <div class="detected-brand">LG</div>
+                            <div class="detected-text">LG 60S 2K 브라운...</div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-section">
+                <div class="product-brand">📦 Fila</div>
+                <div class="mini-stats">
+                    <span class="mini-stat">🖼️ Visual: 30</span>
+                    <span class="mini-stat">📝 Text: 10</span>
+                    <span class="mini-stat">🔗 Combined: 40</span>
+                    <span class="mini-stat">✅ Selected: 3</span>
+                </div>
+                
+                <div class="section-title">🛍️ Product Matches:</div>
+<div class="results-grid">
+                    <div class="result-card">
+                        <img src="" alt="Product" class="result-image" onerror="this.style.display='none'">
+                        <div class="result-content">
+                            <div class="result-title">휠라(FILA) 에샤페 초코(FS261OD03X087219) - 사이즈 &amp; ......</div>
+                            <a href="https://www.musinsa.com/products/4328804" target="_blank" class="result-link">🔗 View Product</a>
+                        </div>
+                    </div>
+
+                    <div class="result-card">
+                        <img src="" alt="Product" class="result-image" onerror="this.style.display='none'">
+                        <div class="result-content">
+                            <div class="result-title">&lt;한소희 착용&gt;휠라 에샤페 초코...</div>
+                            <a href="https://www.fila.co.kr/product/view.asp?ProductNo=58171&amp;srsltid=AfmBOooOY2L_5dovs3Zv-7e8doO17OiSWjWMUq9JxGpg4pPM-oIyvREO" target="_blank" class="result-link">🔗 View Product</a>
+                        </div>
+                    </div>
+
+                    <div class="result-card">
+                        <img src="" alt="Product" class="result-image" onerror="this.style.display='none'">
+                        <div class="result-content">
+                            <div class="result-title">휠라 에샤페 초코 | FILA...</div>
+                            <a href="https://kream.co.kr/products/343618?srsltid=AfmBOoqzdPJj3qmSFO7Q-LsEacPxKffgoANc6E1ZlcTmE9HwfB2o4RwY" target="_blank" class="result-link">🔗 View Product</a>
+                        </div>
+                    </div>
+</div></div>
+            <div class="product-section">
+                <div class="product-brand">📦 Mizuno</div>
+                <div class="mini-stats">
+                    <span class="mini-stat">🖼️ Visual: 30</span>
+                    <span class="mini-stat">📝 Text: 10</span>
+                    <span class="mini-stat">🔗 Combined: 40</span>
+                    <span class="mini-stat">✅ Selected: 0</span>
+                </div>
+                
+                <div class="section-title">🛍️ Product Matches:</div>
+<div class="no-results">❌ No matches found</div></div>
+            <div class="product-section">
+                <div class="product-brand">📦 LG</div>
+                <div class="mini-stats">
+                    <span class="mini-stat">🖼️ Visual: 30</span>
+                    <span class="mini-stat">📝 Text: 10</span>
+                    <span class="mini-stat">🔗 Combined: 40</span>
+                    <span class="mini-stat">✅ Selected: 0</span>
+                </div>
+                
+                <div class="section-title">🛍️ Product Matches:</div>
+<div class="no-results">❌ No matches found</div></div></div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCR Pipeline Test Results - 24 Images</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f5f7;
+            padding: 20px;
+            color: #1d1d1f;
+        }
+        
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .stat-card {
+            background: #f5f5f7;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: 600;
+            color: #0071e3;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #6e6e73;
+            margin-top: 5px;
+        }
+        
+        .image-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .image-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e5e5e7;
+        }
+        
+        .image-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .image-meta {
+            font-size: 14px;
+            color: #6e6e73;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-left: 10px;
+        }
+        
+        .badge-success {
+            background: #d1f4e0;
+            color: #00814d;
+        }
+        
+        .badge-warning {
+            background: #fff4ce;
+            color: #996800;
+        }
+        
+        .badge-error {
+            background: #ffd3d3;
+            color: #c41e3a;
+        }
+        
+        .product-section {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #fafafa;
+            border-radius: 8px;
+        }
+        
+        .product-header {
+            margin-bottom: 15px;
+        }
+        
+        .product-brand {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0071e3;
+        }
+        
+        .product-text {
+            font-size: 14px;
+            color: #1d1d1f;
+            margin-top: 8px;
+            line-height: 1.5;
+        }
+        
+        .search-method {
+            display: inline-block;
+            padding: 4px 10px;
+            background: #e8f4fd;
+            color: #0066cc;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-top: 10px;
+        }
+        
+        .results-list {
+            margin-top: 15px;
+        }
+        
+        .result-item {
+            background: white;
+            border: 1px solid #e5e5e7;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 12px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .result-item:hover {
+            transform: translateX(4px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .result-title {
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 6px;
+            line-height: 1.4;
+        }
+        
+        .result-link {
+            font-size: 13px;
+            color: #0071e3;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 6px;
+            word-break: break-all;
+        }
+        
+        .result-link:hover {
+            text-decoration: underline;
+        }
+        
+        .result-snippet {
+            font-size: 13px;
+            color: #6e6e73;
+            line-height: 1.5;
+            margin-top: 6px;
+        }
+        
+        .result-meta {
+            font-size: 12px;
+            color: #86868b;
+            margin-top: 6px;
+        }
+        
+        .rating {
+            display: inline-block;
+            background: #fff4ce;
+            color: #996800;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 500;
+            margin-right: 8px;
+        }
+        
+        .no-results {
+            padding: 20px;
+            text-align: center;
+            color: #6e6e73;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎯 OCR Pipeline Test Results</h1>
+        <p style="color: #6e6e73; margin-top: 8px;">2025-11-21 03:56:57</p>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-value">24</div>
+                <div class="stat-label">Images Tested</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">32</div>
+                <div class="stat-label">Total Products</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">31</div>
+                <div class="stat-label">Products Found</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">96.9%</div>
+                <div class="stat-label">Success Rate</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">24.4 min</div>
+                <div class="stat-label">Total Time</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="image-card">
+        <div class="image-header">
+            <div>
+                <span class="image-title">Image 1/24</span>
+                <span class="badge badge-success">✓ All Found</span>
+                <div class="image-meta" style="margin-top: 5px;">0214d4bd3a05-IMG_6128 복사본.png</div>
+            </div>
+            <div style="text-align: right;">
+                <div class="image-meta">1 product(s)</div>
+                <div class="image-meta">1 found</div>
+            </div>
+        </div>
+
+        <div class="product-section">
+            <div class="product-header">
+                <div class="product-brand">1. CLOHNTIN</div>
+                <div class="product-text">여성용 스타일리시 하운드투스 토트백 - 대용량 캐주얼 핸드백, 지퍼 클로저 &amp; 고정 숄더 스트립</div>
+                <span class="search-method">🔍 general_search</span>
+            </div>
+<div class="results-list">
+                <div class="result-item">
+                    <div class="result-title">대용량 캔버스 토트백 여성용 스타일리시 다용도 숄더백 ...</div>
+                    <a href="https://ko.aliexpress.com/item/1005009855508800.html" target="_blank" class="result-link">https://ko.aliexpress.com/item/1005009855508800.html</a>
+<div class="result-snippet">소프트한 PU 소재와 두꺼운 천연 섬유를 사용해 편안한 사용감을 제공하며, 다양한 활동에 적합하게 디자인되어 있습니다. 대용량 디자인. 대용량 디자인으로 일상 생활 ...</div><div class="result-meta">Position: 1</div></div>
+                <div class="result-item">
+                    <div class="result-title">시크한 하운드투스 토트백 넉넉하고 스타일리시한 체크무늬 ...</div>
+                    <a href="https://www.temu.com/kr/%EC%8B%9C%ED%81%AC%ED%95%9C-%ED%95%98%EC%9A%B4%EB%93%9C%ED%88%AC%EC%8A%A4-%ED%86%A0%ED%8A%B8%EB%B0%B1-%EB%84%89%EB%84%89%ED%95%98%EA%B3%A0-%EC%8A%A4%ED%83%80%EC%9D%BC%EB%A6%AC%EC%8B%9C%ED%95%9C-%EC%B2%B4%ED%81%AC%EB%AC%B4%EB%8A%AC-%ED%95%B8%EB%93%9C%EB%B0%B1-%EC%97%AC%EC%84%B1%EC%9A%A9-%EC%A7%80%ED%8D%BC-%ED%81%B4%EB%A1%9C%EC%A0%80-%EB%B0%8F-%EA%B3%A0%EC%A0%95-%EC%96%B4%EA%B9%A8%EB%81%88-%EC%A7%81%EC%9E%A5-%EC%97%AC%ED%96%89-%EC%9D%BC%EC%83%81-%EC%82%AC%EC%9A%A9%EC%97%90-%EC%99%84%EB%B2%BD-%EC%95%88%EC%A0%84%ED%95%9C-%EC%A7%80%ED%8D%BC-%ED%86%A0%ED%8A%B8-%ED%95%98%EC%9A%B4%EB%93%9C%ED%88%AC%EC%8A%A4-%ED%8C%A8%ED%84%B4-%ED%8C%A8%EB%B8%8C%EB%A6%AD-%ED%86%A0%ED%8A%B8%EB%B0%B1-g-601099516882214.html" target="_blank" class="result-link">https://www.temu.com/kr/%EC%8B%9C%ED%81%AC%ED%95%9C-%ED%95%98%EC%9A%B4%EB%93%9C%ED%88%AC%EC%8A%A4-%ED%86%A0%ED%8A%B8%EB%B0%B1-%EB%84%89%EB%84%89%ED%95%98%EA%B3%A0-%EC%8A%A4%ED%83%80%EC%9D%BC%EB%A6%AC%EC%8B%9C%ED%95%9C-%EC%B2%B4%ED%81%AC%EB%AC%B4%EB%8A%AC-%ED%95%B8%EB%93%9C%EB%B0%B1-%EC%97%AC%EC%84%B1%EC%9A%A9-%EC%A7%80%ED%8D%BC-%ED%81%B4%EB%A1%9C%EC%A0%80-%EB%B0%8F-%EA%B3%A0%EC%A0%95-%EC%96%B4%EA%B9%A8%EB%81%88-%EC%A7%81%EC%9E%A5-%EC%97%AC%ED%96%89-%EC%9D%BC%EC%83%81-%EC%82%AC%EC%9A%A9%EC%97%90-%EC%99%84%EB%B2%BD-%EC%95%88%EC%A0%84%ED%95%9C-%EC%A7%80%ED%8D%BC-%ED%86%A0%ED%8A%B8-%ED%95%98%EC%9A%B4%EB%93%9C%ED%88%AC%EC%8A%A4-%ED%8C%A8%ED%84%B4-%ED%8C%A8%EB%B8%8C%EB%A6%AD-%ED%86%A0%ED%8A%B8%EB%B0%B1-g-601099516882214.html</a>
+<div class="result-snippet">스타일리시 체크 토트백 여성용 - 지퍼 클로저가 있는 넉넉한 수납공간, 내구성 좋은 카키/블랙 대용량 핸드백, 업무·여행·캐주얼 활용 다목적 숄더백. 5,843원 ...</div><div class="result-meta"><span class="rating">★ 4.8 (121)</span> • Position: 2</div></div>
+                <div class="result-item">
+                    <div class="result-title">여성용 대용량 토트백 - 스타일리시하고 내구성 있는 지퍼 ...</div>
+                    <a href="https://www.temu.com/kr/womens-large-capacity-tote-bag-stylish-durable-zipper-closure-handbag-with-fixed-strap-beige--color-lined-interior-for-work-school--travel-lightweight-sturdy--design---bag-for-women-ideal-for-college-shopping-and-minimalist-aesthetic-easy-to-clean-versatile-portable-shoulder-bag-g-601103467944429.html" target="_blank" class="result-link">https://www.temu.com/kr/womens-large-capacity-tote-bag-stylish-durable-zipper-closure-handbag-with-fixed-strap-beige--color-lined-interior-for-work-school--travel-lightweight-sturdy--design---bag-for-women-ideal-for-college-shopping-and-minimalist-aesthetic-easy-to-clean-versatile-portable-shoulder-bag-g-601103467944429.html</a>
+<div class="result-snippet">여성용 대용량 토트백 - 스타일리시하고 내구성 있는 지퍼 클로저 핸드백, 고정 스트랩, 베이지/블랙 솔리드 컬러, 안감 처리된 내부로 업무, 학교, ...</div><div class="result-meta">2025. 9. 12. • Position: 3</div></div></div></div></div>
+    <div class="image-card">
+        <div class="image-header">
+            <div>
+                <span class="image-title">Image 2/24</span>
+                <span class="badge badge-success">✓ All Found</span>
+                <div class="image-meta" style="margin-top: 5px;">36d2e0eeb84b-Screenshot_20250922_181119_Instagram 복사본.jpg</div>
+            </div>
+            <div style="text-align: right;">
+                <div class="image-meta">1 product(s)</div>
+                <div class="image-meta">1 found</div>
+            </div>
+        </div>
+
+        <div class="product-section">
+            <div class="product-header">
+                <div class="product-brand">1. musinsa_standard_woman</div>
+                <div class="product-text">브라이트 나일론 파라슈트 팬츠 [다크 그레이]</div>
+                <span class="search-method">🔍 platform_musinsa.com</span>
+            </div>
+<div class="results-list">
+                <div class="result-item">
+                    <div class="result-title">무신사 스탠다드 우먼</div>
+                    <a href="https://www.musinsa.com/products/3730368" target="_blank" class="result-link">https://www.musinsa.com/products/3730368</a>
+<div class="result-snippet">제품분류 :바지 &gt; 기타 하의 브랜드 : 무신사 스탠다드 우먼(MUSINSA STANDARD WOMAN) 제품번호 : MWDPC105-DG 제품 : 우먼즈 브라이트 나일론 파라슈트 팬츠 [다크 ...</div><div class="result-meta">Position: 1</div></div>
+                <div class="result-item">
+                    <div class="result-title">Women&#x27;s Bright Nylon Parachute Pants [Dark Grey]</div>
+                    <a href="https://global.musinsa.com/id/goods/5700556" target="_blank" class="result-link">https://global.musinsa.com/id/goods/5700556</a>
+<div class="result-snippet">Women&#x27;s Bright Nylon Parachute Pants [Dark Grey]. MUSINSA STANDARD WOMAN Official Online Store. $4459% Off. $18. $15Best Price with code.</div><div class="result-meta">Position: 2</div></div>
+                <div class="result-item">
+                    <div class="result-title">Women&#x27;s Bright Nylon Parachute Pants [Dark Grey]</div>
+                    <a href="https://global.musinsa.com/vn/goods/3730368" target="_blank" class="result-link">https://global.musinsa.com/vn/goods/3730368</a>
+<div class="result-snippet">Women&#x27;s Bright Nylon Parachute Pants [Dark Grey]. MUSINSA STANDARD WOMAN Official Online Store. 1.148.000₫50% Off. 573.000₫. 487.050₫Best Price with code.</div><div class="result-meta">Position: 3</div></div></div></div></div>
+    <div class="image-card">
+        <div class="image-header">
+            <div>
+                <span class="image-title">Image 3/24</span>
+                <span class="badge badge-success">✓ All Found</span>
+                <div class="image-meta" style="margin-top: 5px;">393bb2de055b-Screenshot_20250922_210538_Instagram 복사본.jpg</div>
+            </div>
+            <div style="text-align: right;">
+                <div class="image-meta">1 product(s)</div>
+                <div class="image-meta">1 found</div>
+            </div>
+        </div>
+
+        <div class="product-section">
+            <div class="product-header">
+                <div class="product-brand">1. 시아쥬</div>
+                <div class="product-text">시아쥬 바람막이정말 이쁘지않나요?</div>
+                <span class="search-method">🔍 general_search</span>
+            </div>
+<div class="results-list">
+                <div class="result-item">
+                    <div class="result-title">➖시아쥬 바람막이정말 이쁘지않나요? 요리조리 휘뚜루 ...</div>
+                    <a href="https://www.instagram.com/p/DO5QQw0ko-1/" target="_blank" class="result-link">https://www.instagram.com/p/DO5QQw0ko-1/</a>
+<div class="result-snippet">➖시아쥬 바람막이정말 이쁘지않나요? 요리조리 휘뚜루 마뚜루 걸치기 너무좋아요, 박스픽이라 시아부 룩북처럼 남방입으시기도 좋구 티셔츠에 바지에 그냥 ...</div><div class="result-meta">Position: 1</div></div>
+                <div class="result-item">
+                    <div class="result-title">➖시아쥬 바람막이정말 이쁘지않나요? 요리조리 휘뚜루 ...</div>
+                    <a href="https://www.threads.com/@mini_heejeong/post/DO5QR5CEuBU/%EC%8B%9C%EC%95%84%EC%A5%AC-%EB%B0%94%EB%9E%8C%EB%A7%89%EC%9D%B4%EC%A0%95%EB%A7%90-%EC%9D%B4%EC%81%98%EC%A7%80%EC%95%8A%EB%82%98%EC%9A%94%EC%9A%94%EB%A6%AC%EC%A1%B0%EB%A6%AC-%ED%9C%98%EB%9A%9C%EB%A3%A8-%EB%A7%88%EB%9A%9C%EB%A3%A8-%EA%B1%B8%EC%B9%98%EA%B8%B0-%EB%84%88%EB%AC%B4%EC%A2%8B%EC%95%84%EC%9A%94-%EB%B0%95%EC%8A%A4%ED%94%BD%EC%9D%B4%EB%9D%BC-%EC%8B%9C%EC%95%84%EB%B6%80-%EB%A3%A9%EB%B6%81%EC%B2%98%EB%9F%BC-%EB%82%A8%EB%B0%A9%EC%9E%85%EC%9C%BC%EC%8B%9C%EA%B8%B0%EB%8F%84-%EC%A2%8B%EA%B5%AC-%ED%8B%B0%EC%85%94%EC%B8%A0%EC%97%90-%EB%B0%94%EC%A7%80%EC%97%90-%EA%B7%B8%EB%83%A5-%ED%88%AD-" target="_blank" class="result-link">https://www.threads.com/@mini_heejeong/post/DO5QR5CEuBU/%EC%8B%9C%EC%95%84%EC%A5%AC-%EB%B0%94%EB%9E%8C%EB%A7%89%EC%9D%B4%EC%A0%95%EB%A7%90-%EC%9D%B4%EC%81%98%EC%A7%80%EC%95%8A%EB%82%98%EC%9A%94%EC%9A%94%EB%A6%AC%EC%A1%B0%EB%A6%AC-%ED%9C%98%EB%9A%9C%EB%A3%A8-%EB%A7%88%EB%9A%9C%EB%A3%A8-%EA%B1%B8%EC%B9%98%EA%B8%B0-%EB%84%88%EB%AC%B4%EC%A2%8B%EC%95%84%EC%9A%94-%EB%B0%95%EC%8A%A4%ED%94%BD%EC%9D%B4%EB%9D%BC-%EC%8B%9C%EC%95%84%EB%B6%80-%EB%A3%A9%EB%B6%81%EC%B2%98%EB%9F%BC-%EB%82%A8%EB%B0%A9%EC%9E%85%EC%9C%BC%EC%8B%9C%EA%B8%B0%EB%8F%84-%EC%A2%8B%EA%B5%AC-%ED%8B%B0%EC%85%94%EC%B8%A0%EC%97%90-%EB%B0%94%EC%A7%80%EC%97%90-%EA%B7%B8%EB%83%A5-%ED%88%AD-</a>
+<div class="result-snippet">시아쥬 바람막이정말 이쁘지않나요? 요리조리 휘뚜루 마뚜루 걸치기 너무좋아요, 박스픽이라 시아부 룩북처럼 남방입으시기도 좋구 티셔츠에 바지에 ...</div><div class="result-meta">2025. 9. 21. • Position: 2</div></div>
+                <div class="result-item">
+                    <div class="result-title">Siyazu | 시야쥬 공식홈페이지</div>
+                    <a href="https://siyazu.co.kr/" target="_blank" class="result-link">https://siyazu.co.kr/</a>
+<div class="result-snippet">시야쥬(Siyazu)는 어떤 것에 구애받지 않고 자신의 정체성을 자유롭게 표현하는 여성을 위한 디자인을 합니다.</div><div class="result-meta">Position: 3</div></div></div></div></div>
+    <div class="image-card">
+        <div class="image-header">
+            <div>
+                <span class="image-title">Image 4/24</span>
+                <span class="badge badge-success">✓ All Found</span>
+                <div class="image-meta" style="margin-top: 5px;">5d96eff1ccb9-IMG_1740 복사본.png</div>
+            </div>
+            <div style="text-align: right;">
+                <div class="image-meta">1 product(s)</div>
+                <div class="image-meta">1 found</div>
+            </div>
+        </div>
+
+        <div class="product-section">
+            <div class="product-header">
+                <div class="product-brand">1. LOOKNONE</div>
+                <div class="product-text">가을 셔츠 꺼내입어요
+요즘 입기 좋은
+가을 셔츠 모음.zip</div>
+                <span class="search-method">🔍 general_search</span>
+            </div>
+<div class="results-list">
+                <div class="result-item">
+                    <div class="result-title">이제 가을 셔츠 꺼내입어요🙌 요즘 입기 좋은 셔츠 모음.zip</div>
+                    <a href="https://www.instagram.com/p/DOn10z1j8R-/" target="_blank" class="result-link">https://www.instagram.com/p/DOn10z1j8R-/</a>
+<div class="result-snippet">looknone.kr. 이제 가을 셔츠 꺼내입어요 요즘 입기 좋은 셔츠 모음.zip. more. wen__moon. 셔츠 너무 이쁘요 남성 셔츠 아님 unisex 내주세요.</div><div class="result-meta">Position: 1</div></div>
+                <div class="result-item">
+                    <div class="result-title">룩넌</div>
+                    <a href="https://looknone.co.kr/" target="_blank" class="result-link">https://looknone.co.kr/</a>
+<div class="result-snippet">요즘 매일입어요 휘뚜루마뚜루 아무데나 잘어울림. 이**. 11.05. 신고 및 차단된 ... 생각보다 얇고 짧지만 디자인이 독특하고 1입기 좋을 것 같아요 간절기에 가볍게 걸치기 ...</div><div class="result-meta">Position: 2</div></div>
+                <div class="result-item">
+                    <div class="result-title">사계절 내내 손이 가장 많이 가는 셔츠 스타일링💙 비교적 ...</div>
+                    <a href="https://www.instagram.com/p/DOuYmLgE4d4/" target="_blank" class="result-link">https://www.instagram.com/p/DOuYmLgE4d4/</a>
+<div class="result-snippet">looknone.kr. 이번 가을에도 계속 이어지는 체크 패턴 자켓 안에 ... 이제 가을 셔츠 꺼내입어요 요즘 입기 좋은 셔츠 모음.zip. more. View 1 ...</div><div class="result-meta">Position: 3</div></div></div></div></div>
+    <div class="image-card">
+        <div class="image-header">
+            <div>
+                <span class="image-title">Image 5/24</span>
+                <span class="badge badge-success">✓ All Found</span>
+                <div class="image-meta" style="margin-top: 5px;">69e143fdcf4f-Screenshot_20250404_183603_Instagram 복사본.jpg</div>
+            </div>
+            <div style="text-align: right;">
+                <div class="image-meta">1 product(s)</div>
+                <div class="image-meta">1 found</div>
+            </div>
+        </div>
+
+        <div class="product-section">
+            <div class="product-header">
+                <div class="product-brand">1. FRED</div>
+                <div class="product-text">선샤인 주얼러 프레드,</div>
+                <span class="search-method">🔍 general_search</span>
+            </div>
+<div class="results-list">
+                <div class="result-item">
+                    <div class="result-title">새벽부터 황혼까지, 프레드의 빛</div>
+                    <a href="https://www.dreamsmagazine.co.kr/post/fred-sunshinejeweler" target="_blank" class="result-link">https://www.dreamsmagazine.co.kr/post/fred-sunshinejeweler</a>
+<div class="result-snippet">창립자 프레드 사무엘(Fred Samuel)의 남다른 비전과 빛과 컬러에 대한 뜨거운 열정을 바탕으로 탄생한 프랑스 주얼리 메종 프레드는 풍성한 헤리티지와 ...</div><div class="result-meta">2024. 4. 1. • Position: 4</div></div></div></div></div>
+    <div class="image-card">
+        <div class="image-header">
+            <div>
+                <span class="image-title">Image 6/24</span>
+                <span class="badge badge-success">✓ All Found</span>
+                <div class="image-meta" style="margin-top: 5px;">6b5e9533d2ee-Screenshot_20250922_205736_Instagram 복사본.jpg</div>
+            </div>
+            <div style="text-align: right;">
+                <div class="image-meta">1 product(s)</div>
+                <div class="image-meta">1 found</div>
+            </div>
+        </div>
+
+        <div class="product-section">
+            <div class="product-header">
+                <div class="product-brand">1. NARUI</div>
+                <div class="product-text">숄더백 백팩 크로스백 도트백 모자 타</div>
+                <span class="search-method">🔍 general_search</span>
+            </div>
+<div class="results-list">
+                <div class="result-item">
+                    <div class="result-title">숄더백</div>
+                    <a href="https://narui.ai.kr/category/%EC%88%84%EB%8D%94%EB%B0%B1/47/" target="_blank" class="result-link">https://narui.ai.kr/category/%EC%88%84%EB%8D%94%EB%B0%B1/47/</a>
+<div class="result-snippet">상품명 : [할인행사] 심플무드 숄더 크로스백 (파우치증정). 소비자가 : 43,900원; 57% 판매가 : 18,900원; 상품색상 : 사용후기 : 197. 추천 New. 데일리 키치 버킷백 ...</div><div class="result-meta">Position: 1</div></div>
+                <div class="result-item">
+                    <div class="result-title">크로스백/숄더백/토트백 - 가방</div>
+                    <a href="https://rebyme.co.kr/product/list.html?cate_no=29" target="_blank" class="result-link">https://rebyme.co.kr/product/list.html?cate_no=29</a>
+<div class="result-snippet">상품요약정보 : 부드러운 PU가죽 소재로 어디에서든 매치 가능한 유요한 아이템 · 소비자가 : 66,900원 · 65% 판매가 : 23,600원 · 상품색상 : · 사용후기 : 00.</div><div class="result-meta">Position: 2</div></div>
+                <div class="result-item">
+                    <div class="result-title">Shoulderbag</div>
+                    <a href="https://shifteight.kr/category/shoulderbag/46" target="_blank" class="result-link">https://shifteight.kr/category/shoulderbag/46</a>
+<div class="result-snippet">Shoulderbag · 소비자가 28,900원 · 판매가 24,900원 · 최적할인가 22,500원 ( 2,400원 할인).</div><div class="result-meta">Position: 3</div></div></div></div></div>
+    <div class="image-card">
+        <div class="image-header">
+            <div>
+                <span class="image-title">Image 7/24</span>
+                <span class="badge badge-success">✓ All Found</span>
+                <div class="image-meta" style="margin-top: 5px;">6bf49d4a9c81-IMG_6003 복사본.png</div>
+            </div>
+            <div style="text-align: right;">
+                <div class="image-meta">1 product(s)</div>
+                <div class="image-meta">1 found</div>
+            </div>
+        </div>
+
+        <div class="product-section">
+            <div class="product-header">
+                <div class="product-brand">1. MIXXO</div>
+                <div class="product-text">언발 슬릿 긴팔 티셔츠</div>
+                <span class="search-method">🔍 platform_musinsa.com</span>
+            </div>
+<div class="results-list">
+                <div class="result-item">
+                    <div class="result-title">미쏘(MIXXO) 언발 슬릿 긴팔 티셔츠_MIWLWF942A</div>
+                    <a href="https://www.musinsa.com/products/5299498" target="_blank" class="result-link">https://www.musinsa.com/products/5299498</a>
+<div class="result-snippet">제품분류 :상의 &gt; 긴소매 티셔츠 브랜드 : 미쏘(MIXXO) 제품번호 : MIWLWF942A 제품 : 언발 슬릿 긴팔 티셔츠_MIWLWF942A - 28400.</div><div class="result-meta">Position: 1</div></div>
+                <div class="result-item">
+                    <div class="result-title">슬릿티셔츠 | 무신사 추천 상품</div>
+                    <a href="https://www.musinsa.com/search/goods?keyword=%EC%8A%AC%EB%A6%BF%ED%8B%B0%EC%85%94%EC%B8%A0" target="_blank" class="result-link">https://www.musinsa.com/search/goods?keyword=%EC%8A%AC%EB%A6%BF%ED%8B%B0%EC%85%94%EC%B8%A0</a>
+<div class="result-snippet">언발 슬릿 긴팔 티셔츠_MIWLWF942A. 애프터세일. 미쏘언발 슬릿 긴팔 티셔츠_MIWLWF942A. 5%28,400원. 373. 5.0(1). 옵션. 여성. 절개 피그먼트 긴팔 티셔츠 애쉬 퍼플.</div><div class="result-meta">Position: 2</div></div>
+                <div class="result-item">
+                    <div class="result-title">비대칭 | 무신사 추천 상품</div>
+                    <a href="https://www.musinsa.com/search/goods?keyword=%EB%B9%84%EB%8C%80%EC%B9%AD" target="_blank" class="result-link">https://www.musinsa.com/search/goods?keyword=%EB%B9%84%EB%8C%80%EC%B9%AD</a>
+<div class="result-snippet">언발 슬릿 긴팔 티셔츠_MIWLWF942A. 애프터세일. 미쏘언발 슬릿 긴팔 티셔츠_MIWLWF942A. 5%28,400원. 390. 5.0(1). 옵션. 여성.</div><div class="result-meta">Position: 3</div></div></div></div></div>
+    <div class="image-card">
+        <div class="image-header">
+            <div>
+                <span class="image-title">Image 8/24</span>
+                <span class="badge badge-success">✓ All Found</span>
+                <div class="image-meta" style="margin-top: 5px;">731d24e62d99-IMG_3357 복사본.png</div>
+            </div>
+            <div style="text-align: right;">
+                <div class="image-meta">2 product(s)</div>
+                <div class="image-meta">2 found</div>
+            </div>
+        </div>
+
+        <div class="product-section">
+            <div class="product-header">
+                <div class="product-brand">1. gooodhealthlife</div>
+                <div class="product-text">축구선수의 문제성 발 스프레이!</div>
+                <span class="search-method">🔍 general_search</span>
+            </div>
+<div class="results-list">
+                <div class="result-item">
+                    <div class="result-title">(1분건강) 월드컵 선수들이 뿌리는 스프레이의 정체?</div>
+                    <a href="https://m.youtube.com/watch?v=xO5S9LtWezk" target="_blank" class="result-link">https://m.youtube.com/watch?v=xO5S9LtWezk</a>
+<div class="result-snippet">(1분건강) 월드컵 선수들이 뿌리는 스프레이의 정체? 5.8K views · 2 years ago. #모발이식 #탈모 #강인구원장 ...more ...</div><div class="result-meta">Position: 2</div></div>
+                <div class="result-item">
+                    <div class="result-title">축구화 냄새 차가운 스프레이</div>
+                    <a href="https://www.tiktok.com/discover/%EC%B6%95%EA%B5%AC%ED%99%94-%EB%83%84%EC%83%88-%EC%B0%A8%EA%B0%80%EC%9A%B4-%EC%8A%A4%ED%94%84%EB%A0%88%EC%9D%B4" target="_blank" class="result-link">https://www.tiktok.com/discover/%EC%B6%95%EA%B5%AC%ED%99%94-%EB%83%84%EC%83%88-%EC%B0%A8%EA%B0%80%EC%9A%B4-%EC%8A%A4%ED%94%84%EB%A0%88%EC%9D%B4</a>
+<div class="result-snippet">_먼저 스웨이드 지우개로 오염을 추가 제거하고, 사포로 긁어서 결을 정린 후, 콤비 브러시로 결을 살려주고 일반 브러시로 털어준다. 9._위의 과정을 ...</div><div class="result-meta">3일 전 • Position: 3</div></div></div></div>
+        <div class="product-section">
+            <div class="product-header">
+                <div class="product-brand">2. songbyin</div>
+                <div class="product-text">비키 데님 팬츠 2 COLOR</div>
+                <span class="search-method">🔍 brand_website</span>
+            </div>
+<div class="results-list">
+                <div class="result-item">
+                    <div class="result-title">[비키 데님 팬츠 - 2 COLOR]</div>
+                    <a href="https://songby.in/m/product.html?branduid=1210938" target="_blank" class="result-link">https://songby.in/m/product.html?branduid=1210938</a>
+<div class="result-snippet">비키 데님 팬츠 - 2 COLOR. 흑청 S, M 빠른배송 ! 상품가 27,370원won. 배송비 (조건) 지역별. 옵션열기 ORDER NOW. 수량. 옵션 적용가 27,370원. ORDER NOW.</div><div class="result-meta">Position: 1</div></div>
+                <div class="result-item">
+                    <div class="result-title">[비키 데님 팬츠 - 2 COLOR]</div>
+                    <a href="https://songby.in/m/product.html?branduid=1210938&amp;xcode=017&amp;mcode=002&amp;scode=&amp;type=Y&amp;sort=regdate&amp;cur_code=017&amp;search=&amp;GfDT=bml6W14%3D" target="_blank" class="result-link">https://songby.in/m/product.html?branduid=1210938&amp;xcode=017&amp;mcode=002&amp;scode=&amp;type=Y&amp;sort=regdate&amp;cur_code=017&amp;search=&amp;GfDT=bml6W14%3D</a>
+<div class="result-snippet">비키 데님 팬츠 - 2 COLOR. + JUNIOR. 상품가 39,100원won. 적립금 1% (카 1% 무 5% 실 1%). 배송비 (조건) 지역별. 옵션열기 ORDER NOW. 수량. 옵션 적용가 39,100원.</div><div class="result-meta">Position: 2</div></div>
+                <div class="result-item">
+                    <div class="result-title">송바이인</div>
+                    <a href="http://songby.in/m/product_detail.html?brand_uid=1210938" target="_blank" class="result-link">http://songby.in/m/product_detail.html?brand_uid=1210938</a>
+<div class="result-snippet">비키 데님 팬츠 - 2 COLOR. 상세 정보를 확대해 보실 수 있습니다.</div><div class="result-meta">Position: 3</div></div></div></div></div>
+    <div class="image-card">
+        <div class="image-header">
+            <div>
+                <span class="image-title">Image 9/24</span>
+                <span class="badge badge-success">✓ All Found</span>
+                <div class="image-meta" style="margin-top: 5px;">78d08ac79404-Screenshot_20250922_222922_Instagram 복사본.jpg</div>
+            </div>
+            <div style="text-align: right;">
+                <div class="image-meta">1 product(s)</div>
+                <div class="image-meta">1 found</div>
+            </div>
+        </div>
+
+        <div class="product-section">
+            <div class="product-header">
+                <div class="product-brand">1. Little Lund</div>
+                <div class="product-text">Little Lund, 키즈백팩</div>
+                <span class="search-method">🔍 platform_musinsa.com</span>
+            </div>
+<div class="results-list">
+                <div class="result-item">
+                    <div class="result-title">룬드런던(LUNDLONDON) 리틀룬드 키즈 백팩 오션</div>
+                    <a href="https://link.musinsa.com/app/goods/5211899" target="_blank" class="result-link">https://link.musinsa.com/app/goods/5211899</a>
+<div class="result-snippet">룬드런던(LUND LONDON)은 영국 디자이너 Daniel Lund Savage가 만들었으며, 일상에 함께하는 아이템의 아름다움과 가치를 생각하는 프리미엄 라이프스타일 브랜드 ...</div><div class="result-meta">Position: 1</div></div>
+                <div class="result-item">
+                    <div class="result-title">룬드런던(LUNDLONDON) 리틀룬드 키즈 백팩 다이노</div>
+                    <a href="https://www.musinsa.com/products/5211905" target="_blank" class="result-link">https://www.musinsa.com/products/5211905</a>
+<div class="result-snippet">룬드런던(LUND LONDON)은 영국 디자이너 Daniel Lund Savage가 만들었으며, 일상에 함께하는 아이템의 아름다움과 가치를 생각하는 프리미엄 라이프스타일 브랜드 ...</div><div class="result-meta">Position: 2</div></div>
+                <div class="result-item">
+                    <div class="result-title">룬드런던(LUNDLONDON) 리틀룬드 키즈 백팩 우드랜드</div>
+                    <a href="https://link.musinsa.com/app/goods/5211897" target="_blank" class="result-link">https://link.musinsa.com/app/goods/5211897</a>
+<div class="result-snippet">룬드런던(LUND LONDON)은 영국 디자이너 Daniel Lund Savage가 만들었으며, 일상에 함께하는 아이템의 아름다움과 가치를 생각하는 프리미엄 라이프스타일 브랜드 ...</div><div class="result-meta">Position: 3</div></div></div></div></div>
+    <div class="image-card">
+        <div class="image-header">
+            <div>
+                <span class="image-title">Image 10/24</span>
+                <span class="badge badge-error">✗ Not Found</span>
+                <div class="image-meta" style="margin-top: 5px;">8e6db17fb30f-IMG_0762 복사본.png</div>
+            </div>
+            <div style="text-align: right;">
+                <div class="image-meta">1 product(s)</div>
+                <div class="image-meta">0 found</div>
+            </div>
+        </div>
+
+        <div class="product-section">
+            <div class="product-header">
+                <div class="product-brand">1. iwomansense</div>
+                <div class="product-text">쿠키시 도트 야상자켓 (피그먼트블랙) 18만9천원</div>
+                <span class="search-method">🔍 None</span>
+            </div>
+<div class="no-results">No results found</div></div></div>
+    <div class="image-card">
+        <div class="image-header">
+            <div>
+                <span class="image-title">Image 11/24</span>
+                <span class="badge badge-success">✓ All Found</span>
+                <div class="image-meta" style="margin-top: 5px;">8ed1599931de-Screenshot_20250919_120231_Instagram 복사본.jpg</div>
+            </div>
+            <div style="text-align: right;">
+                <div class="image-meta">1 product(s)</div>
+                <div class="image-meta">1 found</div>
+            </div>
+        </div>
+
+        <div class="product-section">
+            <div class="product-header">
+                <div class="product-brand">1. ornoor_</div>
+                <div class="product-text">or 부드럽고 따뜻한 감성을 담은 카멜 미니 크로스백, 라메백(Latte Bag) 입니다.</div>
+                <span class="search-method">🔍 general_search</span>
+            </div>
+<div class="results-list">
+                <div class="result-item">
+                    <div class="result-title">부드럽고 따뜻한 감성을 담은 카멜 미니 크로스백, 라떼 ...</div>
+                    <a href="https://www.instagram.com/p/DOVkvOikkmj/?hl=ko" target="_blank" class="result-link">https://www.instagram.com/p/DOVkvOikkmj/?hl=ko</a>
+<div class="result-snippet">따뜻한 카멜 컬러에 주름진 텍스처가 더해져 부드럽지만 감각적인 포인트가 되어줍니다. 작고 가벼운 무게감으로 일상에서 편안하게 착용할 수 있으며, ...</div><div class="result-meta">Position: 1</div></div>
+                <div class="result-item">
+                    <div class="result-title">르네오로  LENEORO</div>
+                    <a href="https://leneoro.com/" target="_blank" class="result-link">https://leneoro.com/</a>
+<div class="result-snippet">미큐리오 미니 크로스백 (실버) - 세련되고 실용적인 미니 크로스백 이미지 · 미큐리오 미니 크로스백 (실버). 68,000원 34,000원 34,000원 50%; 68,000원; 34,000원 ...</div><div class="result-meta">Position: 2</div></div>
+                <div class="result-item">
+                    <div class="result-title">New arrival</div>
+                    <a href="https://roroanco.com/category/new-arrival/47" target="_blank" class="result-link">https://roroanco.com/category/new-arrival/47</a>
+<div class="result-snippet">New arrival ; Luna Large / BLACK루나 라지 / 블랙 · Luna Large / BLACK 루나 라지 / 블랙 · 380,000￦ ; Luna Large / CAMEL루나 라지 / 카멜 · Luna Large / CAMEL 루나 라지 ...</div><div class="result-meta">Position: 3</div></div></div></div></div>
+    <div class="image-card">
+        <div class="image-header">
+            <div>
+                <span class="image-title">Image 12/24</span>
+                <span class="badge badge-success">✓ All Found</span>
+                <div class="image-meta" style="margin-top: 5px;">9c9b7d5f941e-IMG_7594 복사본.png</div>
+            </div>
+            <div style="text-align: right;">
+                <div class="image-meta">3 product(s)</div>
+                <div class="image-meta">3 found</div>
+            </div>
+        </div>
+
+        <div class="product-section">
+            <div class="product-header">
+                <div class="product-brand">1. BEANPOLE</div>
+                <div class="product-text">울 케이블 라운드넥 카디건 - 블루 할인 중</div>
+                <span class="search-method">🔍 platform_29cm.co.kr</span>
+            </div>
+<div class="results-list">
+                <div class="result-item">
+                    <div class="result-title">우먼 라운드넥 가디건 네이비 - 감도 깊은 취향 셀렉트샵 ...</div>
+                    <a href="https://www.29cm.co.kr/products/2757857?id=3070417" target="_blank" class="result-link">https://www.29cm.co.kr/products/2757857?id=3070417</a>
+<div class="result-snippet">우먼 라운드 가디건 아이보리 · 라운드 가디건 아이보리 · 10%. 80,100 ; 우먼 라운드 가디건 네이비 · 라운드 가디건 네이비 · 10%. 80,100 ; 우먼 울 브이넥 가디건 네이비.</div><div class="result-meta">Position: 1</div></div>
+                <div class="result-item">
+                    <div class="result-title">여성용 코튼 블렌드 카디건 (BLACK) - 감도 깊은 취향 셀렉트샵 ...</div>
+                    <a href="https://www.29cm.co.kr/products/1899841?id=2861319" target="_blank" class="result-link">https://www.29cm.co.kr/products/1899841?id=2861319</a>
+<div class="result-snippet">결제수단 할인 · [토스페이] 패션 1만원 할인 자세히. -10,000원 · [현대카드] 5% M포인트 사용 자세히. -5,000원 · [카카오페이] 머니 4천원 할인 자세히. -4,000원 · [토스 ...</div><div class="result-meta">Position: 2</div></div>
+                <div class="result-item">
+                    <div class="result-title">블렌드 라운드 니트 가디건 - 멜란지 그레이</div>
+                    <a href="https://www.29cm.co.kr/products/2475200?id=2942765" target="_blank" class="result-link">https://www.29cm.co.kr/products/2475200?id=2942765</a>
+<div class="result-snippet">상품 쿠폰 할인 · 여름 아이템 혜택 15% 중복불가. -7,660원 받기 · [12% 혜택] Season Rewind 중복불가. -6,130원 받기 · 로에일 5% 쿠폰. -2,550원 받기 ...</div><div class="result-meta">Position: 3</div></div></div></div>
+        <div class="product-section">
+            <div class="product-header">
+                <div class="product-brand">2. BEANPOLE</div>
+                <div class="product-text">턴업 데님 팬츠 - 네이비 할인 중</div>
+                <span class="search-method">🔍 general_search</span>
+            </div>
+<div class="results-list">
+                <div class="result-item">
+                    <div class="result-title">BEANPOLE LADIES-턴업 데님 팬츠 - 네이비│삼성물산 ...</div>
+                    <a href="https://m.ssfshop.com/BEANPOLE-LADIES/GM0025082887826/good?dspCtgryNo=&amp;brandShopNo=&amp;brndShopId=&amp;leftBrandNM=&amp;utag=ref_evt:special*111263$set:$dpos:18" target="_blank" class="result-link">https://m.ssfshop.com/BEANPOLE-LADIES/GM0025082887826/good?dspCtgryNo=&amp;brandShopNo=&amp;brndShopId=&amp;leftBrandNM=&amp;utag=ref_evt:special*111263$set:$dpos:18</a>
+<div class="result-snippet">혜택 가격은 상품할인 및 쿠폰할인이 적용된 이후 실결제 가격에서 10% 할인적용 되며, 고객님이 보유하신 잔여 포인트 한도에 따라 달라질 수 있습니다. 분기 내 ...</div><div class="result-meta">Position: 1</div></div>
+                <div class="result-item">
+                    <div class="result-title">빈폴레이디스데님바지 - 추천•인기 상품, SSG.COM</div>
+                    <a href="https://www.ssg.com/search.ssg?query=%EB%B9%88%ED%8F%B4%EB%A0%88%EC%9D%B4%EB%94%94%EC%8A%A4%EB%8D%B0%EB%8B%98%EB%B0%94%EC%A7%80" target="_blank" class="result-link">https://www.ssg.com/search.ssg?query=%EB%B9%88%ED%8F%B4%EB%A0%88%EC%9D%B4%EB%94%94%EC%8A%A4%EB%8D%B0%EB%8B%98%EB%B0%94%EC%A7%80</a>
+<div class="result-snippet">빈폴레이디스 턴업 데님 팬츠 - 네이비 BF5921C79R. 신세계백화점. 빈폴레이디스. 턴업 데님 팬츠 - 네이비 BF5921C79R. 정상가격259,000원. 할인율5%판매가격246,050원.</div><div class="result-meta">Position: 3</div></div>
+                <div class="result-item">
+                    <div class="result-title">[빈폴XSSF] 단하루 혜택! 최대 40%할인+최대 25%쿠폰+10 ...</div>
+                    <a href="https://m.gsshop.com/deal/deal.gs?dealNo=59166403&amp;mseq=412044" target="_blank" class="result-link">https://m.gsshop.com/deal/deal.gs?dealNo=59166403&amp;mseq=412044</a>
+<div class="result-snippet">[빈폴레이디스] 네이비 생지 스트레이트 데님 팬츠 (BF9621C02R): 판매가 91,000원 ... 일시불할인 / 상품쿠폰할인 / 즉시할인 중 적용 가능한 할인 금액을 포함한 ...</div><div class="result-meta">Position: 4</div></div></div></div>
+        <div class="product-section">
+            <div class="product-header">
+                <div class="product-brand">3. BEANPOLE</div>
+                <div class="product-text">솔리드 리본 타이 볼륨 블라우스 할인중</div>
+                <span class="search-method">🔍 general_search</span>
+            </div>
+<div class="results-list">
+                <div class="result-item">
+                    <div class="result-title">[B. my] 솔리드 리본 타이 볼륨 블라우스 - 아이보리</div>
+                    <a href="https://m.ssfshop.com/BEANPOLE-LADIES/GM0025071058343/good?utag=ref_ptn:40997" target="_blank" class="result-link">https://m.ssfshop.com/BEANPOLE-LADIES/GM0025071058343/good?utag=ref_ptn:40997</a>
+<div class="result-snippet">혜택 가격은 상품할인 및 쿠폰할인이 적용된 이후 실결제 가격에서 10% 할인적용 되며, 고객님이 보유하신 잔여 포인트 한도에 따라 달라질 수 있습니다. 분기 내 ...</div><div class="result-meta">Position: 1</div></div>
+                <div class="result-item">
+                    <div class="result-title">빈폴 레이디스(BEANPOLE LADIES) [B. my] 솔리드 리본 ...</div>
+                    <a href="https://www.musinsa.com/app/goods/5402413" target="_blank" class="result-link">https://www.musinsa.com/app/goods/5402413</a>
+<div class="result-snippet">우아한 실루엣과 잔주름을 잡은 셔링 디테일이 여성스러운 무드를 연출하는 블라우스입니다. 리본 타이는 탈착이 가능하여 다양한 분위기로 스타일링할 수 있는 실용적인 ...</div><div class="result-meta">Position: 2</div></div>
+                <div class="result-item">
+                    <div class="result-title">빈폴레이디스블라우스 - 추천•인기 상품, 이마트몰 - SSG</div>
+                    <a href="https://emart.ssg.com/search.ssg?query=%EB%B9%88%ED%8F%B4%EB%A0%88%EC%9D%B4%EB%94%94%EC%8A%A4%EB%B8%94%EB%9D%BC%EC%9A%B0%EC%8A%A4" target="_blank" class="result-link">https://emart.ssg.com/search.ssg?query=%EB%B9%88%ED%8F%B4%EB%A0%88%EC%9D%B4%EB%94%94%EC%8A%A4%EB%B8%94%EB%9D%BC%EC%9A%B0%EC%8A%A4</a>
+<div class="result-snippet">3% 카드할인. 배송비 3,000원·조건부. 스타일온미 로에티 레이스 러플 리본타이 7부 블라우스. ADAD란? 툴팁 열기. 스타일온미 로에티 레이스 러플 리본타이 7부 블라우스.</div><div class="result-meta">Position: 3</div></div></div></div></div>
+    <div class="image-card">
+        <div class="image-header">
+            <div>
+                <span class="image-title">Image 13/24</span>
+                <span class="badge badge-success">✓ All Found</span>
+                <div class="image-meta" style="margin-top: 5px;">9d31b5d98ff0-Screenshot_20250622_134811_Instagram 복사본.jpg</div>
+            </div>
+            <div style="text-align: right;">
+                <div class="image-meta">1 product(s)</div>
+                <div class="image-meta">1 found</div>
+            </div>
+        </div>
+
+        <div class="product-section">
+            <div class="product-header">
+                <div class="product-brand">1. OTHER316</div>
+                <div class="product-text">OTHER316</div>
+                <span class="search-method">🔍 brand_website</span>
+            </div>
+<div class="results-list">
+                <div class="result-item">
+                    <div class="result-title">OTHER316</div>
+                    <a href="https://m.other316.com/" target="_blank" class="result-link">https://m.other316.com/</a>
+<div class="result-snippet">Recommended products Recommended products · quilted maxi skirt · strap shirring blouse · cross strap bra-top · seamlline denim baggy pants · seamlline denim ...</div><div class="result-meta">Position: 1</div></div>
+                <div class="result-item">
+                    <div class="result-title">컨템포러리 미니멀스타일 아더316</div>
+                    <a href="https://m.other316.com/?redirect=T/" target="_blank" class="result-link">https://m.other316.com/?redirect=T/</a>
+<div class="result-snippet">20대부터 40대까지 디자이너가 제안하는 독보적인 시크/유니크/빅사이즈 스타일의 여성의류.</div><div class="result-meta">Position: 2</div></div>
+                <div class="result-item">
+                    <div class="result-title">PRE-ORDER</div>
+                    <a href="https://m.other316.com/product/list.html?cate_no=44" target="_blank" class="result-link">https://m.other316.com/product/list.html?cate_no=44</a>
+<div class="result-snippet">PRE-ORDER · BEST. [PRE-ORDER] ballerina sneakers &quot;회원전용&quot; · BEST. [PRE-ORDER] summer flip-flop · BEST. [PRE-ORDER] ethnic sandals.</div><div class="result-meta">Position: 3</div></div></div></div></div>
+    <div class="image-card">
+        <div class="image-header">
+            <div>
+                <span class="image-title">Image 14/24</span>
+                <span class="badge badge-success">✓ All Found</span>
+                <div class="image-meta" style="margin-top: 5px;">a196d9a098f1-IMG_2210 복사본.png</div>
+            </div>
+            <div style="text-align: right;">
+                <div class="image-meta">3 product(s)</div>
+                <div class="image-meta">3 found</div>
+            </div>
+        </div>
+
+        <div class="product-section">
+            <div class="product-header">
+                <div class="product-brand">1. 반원 아뜰리에</div>
+                <div class="product-text">반원 아뜰리에 와이드 크림진</div>
+                <span class="search-method">🔍 platform_musinsa.com</span>
+            </div>
+<div class="results-list">
+                <div class="result-item">
+                    <div class="result-title">다양한 패션 콘텐츠가 모두 모이는 곳 ...</div>
+                    <a href="https://www.musinsa.com/snap/1237569428440035787?goodsNosIncludeOtherColor=MUSINSA:1831777&amp;sort=POPULAR" target="_blank" class="result-link">https://www.musinsa.com/snap/1237569428440035787?goodsNosIncludeOtherColor=MUSINSA:1831777&amp;sort=POPULAR</a>
+<div class="result-snippet">와이드 레플리카 퍼티그 팬츠 [세이지 그린]. 12%43,890원. product-image ... 반원 아틀리에. P3108 Bellet wide chino pants_Beige. 15%50,150원. product-image.</div><div class="result-meta">Position: 1</div></div>
+                <div class="result-item">
+                    <div class="result-title">스트라이프 니트와 데님 팬츠를 매치하고 스타디움 재킷 ...</div>
+                    <a href="https://www.musinsa.com/snap/1230717457234108317" target="_blank" class="result-link">https://www.musinsa.com/snap/1230717457234108317</a>
+<div class="result-snippet">반원 아틀리에. O3707 Irish crop varsity ... 브러시 와이드핏 데님 팬츠(MAFCSL03MLB)LB(라이트 ... 빈티지 워시드 데미지 진3. 40%83,400원. product-image. 라 ...</div><div class="result-meta">Position: 2</div></div></div></div>
+        <div class="product-section">
+            <div class="product-header">
+                <div class="product-brand">2. UNIQLO</div>
+                <div class="product-text">UNIQLO 유틸리티 오버사이즈 셔츠</div>
+                <span class="search-method">🔍 platform_musinsa.com</span>
+            </div>
+<div class="results-list">
+                <div class="result-item">
+                    <div class="result-title">시리즈(SERIES) 유틸리티 오버셔츠_SVUAM25601BKX</div>
+                    <a href="https://www.musinsa.com/products/4924576" target="_blank" class="result-link">https://www.musinsa.com/products/4924576</a>
+<div class="result-snippet">내구성이 뛰어나며 편안한 착용감을 제공합니다. - 두 개의 대형 가슴 포켓으로 실용성을 더한 디자인입니다. - 형태감 있는 소매로 자유로운 움직임을 지원하며, 편안한 ...</div><div class="result-meta">Position: 1</div></div>
+                <div class="result-item">
+                    <div class="result-title">다양한 패션 콘텐츠가 모두 모이는 곳 ...</div>
+                    <a href="https://www.musinsa.com/snap/1263103468299108600?keyword=%EC%9C%A0%ED%8B%B8%EB%A6%AC%ED%8B%B0+%EC%85%94%EC%B8%A0&amp;genders=ALL&amp;sort=POPULAR&amp;formatTypes=SHORTS%2CPOST&amp;page=3&amp;fields=id%2CcontentType%2CprofileId%2CthumbnailUrl%2Cmodel%2Clabels%2CcreatedAt%2CupdatedAt%2CformatType%2Cmedias&amp;size=30" target="_blank" class="result-link">https://www.musinsa.com/snap/1263103468299108600?keyword=%EC%9C%A0%ED%8B%B8%EB%A6%AC%ED%8B%B0+%EC%85%94%EC%B8%A0&amp;genders=ALL&amp;sort=POPULAR&amp;formatTypes=SHORTS%2CPOST&amp;page=3&amp;fields=id%2CcontentType%2CprofileId%2CthumbnailUrl%2Cmodel%2Clabels%2CcreatedAt%2CupdatedAt%2CformatType%2Cmedias&amp;size=30</a>
+<div class="result-snippet">163,000원. product-image. 유니클로. 유니클로 U 유틸리티 오버셔츠 브라운. 솔드아웃. 좋아요 64개. #유니클로오버사이즈유틸리티셔츠 #블랭크룸데님 #밈더워드로브 ...</div><div class="result-meta">Position: 2</div></div>
+                <div class="result-item">
+                    <div class="result-title">다양한 패션 콘텐츠가 모두 모이는 곳 ...</div>
+                    <a href="https://www.musinsa.com/snap/1287791213033550567?keyword=%EC%9C%A0%ED%8B%B8%EB%A6%AC%ED%8B%B0+%EC%85%94%EC%B8%A0&amp;genders=ALL&amp;sort=POPULAR&amp;formatTypes=SHORTS%2CPOST&amp;page=2&amp;fields=id%2CcontentType%2CprofileId%2CthumbnailUrl%2Cmodel%2Clabels%2CcreatedAt%2CupdatedAt%2CformatType%2Cmedias&amp;size=30" target="_blank" class="result-link">https://www.musinsa.com/snap/1287791213033550567?keyword=%EC%9C%A0%ED%8B%B8%EB%A6%AC%ED%8B%B0+%EC%85%94%EC%B8%A0&amp;genders=ALL&amp;sort=POPULAR&amp;formatTypes=SHORTS%2CPOST&amp;page=2&amp;fields=id%2CcontentType%2CprofileId%2CthumbnailUrl%2Cmodel%2Clabels%2CcreatedAt%2CupdatedAt%2CformatType%2Cmedias&amp;size=30</a>
+<div class="result-snippet">163,000원. product-image. 유니클로. 유니클로 U 유틸리티 오버셔츠 브라운. 솔드아웃. 좋아요 63개. #유니클로오버사이즈유틸리티셔츠 #블랭크룸데님 #밈더워드로브 ...</div><div class="result-meta">Position: 3</div></div></div></div>
+        <div class="product-section">
+            <div class="product-header">
+                <div class="product-brand">3. mond mond</div>
+                <div class="product-text">mond mond 클래식 버튼 하프문 나일론 호보백</div>
+                <span class="search-method">🔍 general_search</span>
+            </div>
+<div class="results-list">
+                <div class="result-item">
+                    <div class="result-title">Classic button half moon nylon bag Black</div>
+                    <a href="https://mondemonde.com/product/classic-button-half-moon-nylon-bag-black5%EC%9B%94-12%EC%9D%BC-%EC%98%88%EC%95%BD-%EB%B0%B0%EC%86%A1/143/" target="_blank" class="result-link">https://mondemonde.com/product/classic-button-half-moon-nylon-bag-black5%EC%9B%94-12%EC%9D%BC-%EC%98%88%EC%95%BD-%EB%B0%B0%EC%86%A1/143/</a>
+<div class="result-snippet">고밀도 나일론과 복스 가죽으로 제작된 백입니다. 숄더 및 크로스로 착용 가능하며 버클로 길이 조절이 가능합니다. 생활 방수가 되는 백으로 데일리로 사용하기에 적합 ...</div><div class="result-meta">Position: 1</div></div>
+                <div class="result-item">
+                    <div class="result-title">[몽드몽드]Classic Button Half Moon Nylon Bag_Black</div>
+                    <a href="https://www.wconcept.co.kr/Product/305873312?srsltid=AfmBOoo9xOQafbXCmEjRQpKP9v0aP67JxxaEYenXPKJ1pwJZ7VqdIffc" target="_blank" class="result-link">https://www.wconcept.co.kr/Product/305873312?srsltid=AfmBOoo9xOQafbXCmEjRQpKP9v0aP67JxxaEYenXPKJ1pwJZ7VqdIffc</a>
+<div class="result-snippet">상호, 이데픽스컴퍼니(idee fixe company). 대표자, 김미정. 사업장 소재지, [03017] 서울특별시 종로구 자하문로 296(홍지동) 한결빌딩 3층.</div><div class="result-meta">Position: 2</div></div>
+                <div class="result-item">
+                    <div class="result-title">몽드몽드(MONDE MONDE) 클래식 버튼 하프문 나일론백 블랙</div>
+                    <a href="https://www.musinsa.com/products/4817875" target="_blank" class="result-link">https://www.musinsa.com/products/4817875</a>
+<div class="result-snippet">제품분류 :가방 &gt; 메신저/크로스 백 브랜드 : 몽드몽드(MONDE MONDE) 제품번호 : bag-107 제품 : 클래식 버튼 하프문 나일론백 블랙 - 188100.</div><div class="result-meta">Position: 3</div></div></div></div></div>
+    <div class="image-card">
+        <div class="image-header">
+            <div>
+                <span class="image-title">Image 15/24</span>
+                <span class="badge badge-success">✓ All Found</span>
+                <div class="image-meta" style="margin-top: 5px;">ac674c645e5b-IMG_6015 복사본.png</div>
+            </div>
+            <div style="text-align: right;">
+                <div class="image-meta">2 product(s)</div>
+                <div class="image-meta">2 found</div>
+            </div>
+        </div>
+
+        <div class="product-section">
+            <div class="product-header">
+                <div class="product-brand">1. THOMAS MORE</div>
+                <div class="product-text">THOMAS MORE</div>
+                <span class="search-method">🔍 platform_musinsa.com</span>
+            </div>
+<div class="results-list">
+                <div class="result-item">
+                    <div class="result-title">Thomas More | Official Store – Shop Trendy Fashion at ...</div>
+                    <a href="https://global.musinsa.com/th/brands/thomasmore" target="_blank" class="result-link">https://global.musinsa.com/th/brands/thomasmore</a>
+<div class="result-snippet">THOMAS MORE is a brand that makes simple clothing that are faithful to fundamentals. THe refined designs and small hidden details make THOMAS MORE&#x27;s clothes ...</div><div class="result-meta">Position: 1</div></div>
+                <div class="result-item">
+                    <div class="result-title">TE2-SH04 Go-Bang Check Short-Sleeved Shirt</div>
+                    <a href="https://global.musinsa.com/ca/goods/4077350" target="_blank" class="result-link">https://global.musinsa.com/ca/goods/4077350</a>
+<div class="result-snippet">TE2-SH04 Go-Bang Check Short-Sleeved Shirt. THOMAS MORE Official Online Store. $56. $47Best Price with code. Estimated price with the best code.</div><div class="result-meta"><span class="rating">★ 4.9 (15)</span> • Position: 2</div></div>
+                <div class="result-item">
+                    <div class="result-title">TC4-SW10 Brodie Henley Neck Knit Sweater-Black</div>
+                    <a href="https://global.musinsa.com/ca/goods/2879870" target="_blank" class="result-link">https://global.musinsa.com/ca/goods/2879870</a>
+<div class="result-snippet">Explore THOMAS MORE&#x27;s TC4-SW10 Brodie Henley Neck Knit Sweater-Black from trending K-fashion brands at MUSINSA. Enjoy worldwide shipping and find the best ...</div><div class="result-meta">Position: 3</div></div></div></div>
+        <div class="product-section">
+            <div class="product-header">
+                <div class="product-brand">2. SCREEN ACTORS GUILD</div>
+                <div class="product-text">22ND ANNUAL SCREEN ACTORS GUILD Awards</div>
+                <span class="search-method">🔍 general_search</span>
+            </div>
+<div class="results-list">
+                <div class="result-item">
+                    <div class="result-title">The 22nd SAG Awards (2016) | [FULL SHOW]</div>
+                    <a href="https://www.youtube.com/watch?v=kzrwbrFNGyY" target="_blank" class="result-link">https://www.youtube.com/watch?v=kzrwbrFNGyY</a>
+<div class="result-snippet">The 22nd Annual Screen Actors Guild Awards, honoring the best achievements in film and television performances for the year 2015, ...</div><div class="result-meta">Position: 2</div></div>
+                <div class="result-item">
+                    <div class="result-title">The 22nd Annual Screen Actors Guild Awards</div>
+                    <a href="https://www.sagawards.org/awards/nominees-and-recipients/22nd-annual-screen-actors-guild-awards" target="_blank" class="result-link">https://www.sagawards.org/awards/nominees-and-recipients/22nd-annual-screen-actors-guild-awards</a>
+<div class="result-snippet">Outstanding Performance by a. OUTSTANDING PERFORMANCE BY A FEMALE ACTOR IN A COMEDY SERIES. Film. Outstanding Performance by a. Cast in a Motion Picture.</div><div class="result-meta">Position: 3</div></div>
+                <div class="result-item">
+                    <div class="result-title">The 22nd Annual Screen Actors Guild Awards</div>
+                    <a href="https://www.gettyimages.com/editorial-images/entertainment/events/600198939/child-events" target="_blank" class="result-link">https://www.gettyimages.com/editorial-images/entertainment/events/600198939/child-events</a>
+<div class="result-snippet">View the latest The 22nd Annual Screen Actors Guild Awards entertainment and celebrity photos gallery from Getty Images.</div><div class="result-meta">Position: 5</div></div></div></div></div>
+    <div class="image-card">
+        <div class="image-header">
+            <div>
+                <span class="image-title">Image 16/24</span>
+                <span class="badge badge-success">✓ All Found</span>
+                <div class="image-meta" style="margin-top: 5px;">be1e0b23fea1-Screenshot_20240907_115420_Instagram 복사본.jpg</div>
+            </div>
+            <div style="text-align: right;">
+                <div class="image-meta">1 product(s)</div>
+                <div class="image-meta">1 found</div>
+            </div>
+        </div>
+
+        <div class="product-section">
+            <div class="product-header">
+                <div class="product-brand">1. JINGROU</div>
+                <div class="product-text">블랙 마젠타 와인 버건디 레드 큐빅 보석 비즈 홀터 오프 숄더 이브닝 공연 피로연 연회 무대 기념일 시상 연예인 드레스</div>
+                <span class="search-method">🔍 general_search</span>
+            </div>
+<div class="results-list">
+                <div class="result-item">
+                    <div class="result-title">블랙 마젠타 와인 버건디 레드 큐빅 보석 비즈 홀터 오프 숄더 ...</div>
+                    <a href="https://zigzag.kr/catalog/products/141744482" target="_blank" class="result-link">https://zigzag.kr/catalog/products/141744482</a>
+<div class="result-snippet">블랙 마젠타 와인 버건디 레드 큐빅 보석 비즈 홀터 오프 숄더 이브닝 공연 피로연 연회 무대 기념일 시상 연예인 드레스. 5.0. 1개의 리뷰 보기.</div><div class="result-meta">Position: 1</div></div>
+                <div class="result-item">
+                    <div class="result-title">블랙 마젠타 와인 버건디 레드 큐빅 보석 비즈 홀터 오프 숄더 ...</div>
+                    <a href="https://www.brandi.co.kr/products/166546644?srsltid=AfmBOor4nSvOYLXEPKWx526_PNR16nfgjgfYgEred4O4iW98gHxppiTJ" target="_blank" class="result-link">https://www.brandi.co.kr/products/166546644?srsltid=AfmBOor4nSvOYLXEPKWx526_PNR16nfgjgfYgEred4O4iW98gHxppiTJ</a>
+<div class="result-snippet">블랙 마젠타 와인 버건디 레드 큐빅 보석 비즈 홀터 오프 숄더 이브닝 공연 피로연 연회 무대 기념일 시상 연예인 드레스. 상품 내용 공유하기. 371,700원. 배송정보. 일반 ...</div><div class="result-meta">Position: 2</div></div></div></div></div>
+    <div class="image-card">
+        <div class="image-header">
+            <div>
+                <span class="image-title">Image 17/24</span>
+                <span class="badge badge-success">✓ All Found</span>
+                <div class="image-meta" style="margin-top: 5px;">cb722aa4c65d-Screenshot_20250922_180144_Instagram 복사본.jpg</div>
+            </div>
+            <div style="text-align: right;">
+                <div class="image-meta">1 product(s)</div>
+                <div class="image-meta">1 found</div>
+            </div>
+        </div>
+
+        <div class="product-section">
+            <div class="product-header">
+                <div class="product-brand">1. EISHON &amp; BUSS</div>
+                <div class="product-text">EISHON &amp; BUSS</div>
+                <span class="search-method">🔍 general_search</span>
+            </div>
+<div class="results-list">
+                <div class="result-item">
+                    <div class="result-title">홈페이지 Startseite</div>
+                    <a href="https://www.buss-spezialmetalle.de/?lang=ko" target="_blank" class="result-link">https://www.buss-spezialmetalle.de/?lang=ko</a>
+<div class="result-snippet">Buss &amp; Buss는 전문적인, 고품질 탄탈륨 재생을 제공합니다. 또한 당사는 레늄, 하프늄, 니오븀, 지르코늄 뿐만 아니라 갈륨 및 게르마늄과 같은 특수 금속들을 재생 ...</div><div class="result-meta">Position: 1</div></div>
+                <div class="result-item">
+                    <div class="result-title">About us</div>
+                    <a href="https://www.westinbuss.se/en/about-us/" target="_blank" class="result-link">https://www.westinbuss.se/en/about-us/</a>
+<div class="result-snippet">Westin Buss - a well-established bus company since 1924. We offer a wide fleet of modern buses and well-trained drivers. Learn more about us →</div><div class="result-meta">Position: 2</div></div>
+                <div class="result-item">
+                    <div class="result-title">ISO BUSS (@iso.buss) • Instagram photos and videos</div>
+                    <a href="https://www.instagram.com/iso.buss/" target="_blank" class="result-link">https://www.instagram.com/iso.buss/</a>
+<div class="result-snippet">678 followers · 88 following · 547 posts · @iso.buss: “#AZPRO #BZPRO . NATIONWIDE TOP AGENCY &amp; GROUP CHAMPION 2019, 2021, 2022 || BUSS CONSULTING (M) SDN ...</div><div class="result-meta">Position: 3</div></div></div></div></div>
+    <div class="image-card">
+        <div class="image-header">
+            <div>
+                <span class="image-title">Image 18/24</span>
+                <span class="badge badge-success">✓ All Found</span>
+                <div class="image-meta" style="margin-top: 5px;">cde72f5374e5-Screenshot_20250918_110202_Instagram 복사본.jpg</div>
+            </div>
+            <div style="text-align: right;">
+                <div class="image-meta">1 product(s)</div>
+                <div class="image-meta">1 found</div>
+            </div>
+        </div>
+
+        <div class="product-section">
+            <div class="product-header">
+                <div class="product-brand">1. RONIEL</div>
+                <div class="product-text">기장따라 다른 매력, 매일 손이 가는 찐템! 루드 핀턱 와이드 데님 [기장옵션 - 숏, 스탠다드]</div>
+                <span class="search-method">🔍 general_search</span>
+            </div>
+<div class="results-list">
+                <div class="result-item">
+                    <div class="result-title">로니엘/RONIEL</div>
+                    <a href="https://roniel.co.kr/?srsltid=AfmBOoqN0caVA-Ufcs_5DQel3-JlKB95kngtxGD3dZqh0A4YeRNKy7YW" target="_blank" class="result-link">https://roniel.co.kr/?srsltid=AfmBOoqN0caVA-Ufcs_5DQel3-JlKB95kngtxGD3dZqh0A4YeRNKy7YW</a>
+<div class="result-snippet">기장 옵션 설명 : [기장 옵션-숏,스탠다드]; 판매가 : 125,000원; 할인판매가 ... 레느 절개 와이드 ...</div><div class="result-meta">Position: 1</div></div>
+                <div class="result-item">
+                    <div class="result-title">Straight</div>
+                    <a href="https://roniel.co.kr/category/straight/185/?srsltid=AfmBOoqH89zRbYh8GpD7-6iKJ0EaE5ESIz3ojo68j3ZmC09LTaeIckpi" target="_blank" class="result-link">https://roniel.co.kr/category/straight/185/?srsltid=AfmBOoqH89zRbYh8GpD7-6iKJ0EaE5ESIz3ojo68j3ZmC09LTaeIckpi</a>
+<div class="result-snippet">지금 이 순간 가장 핫한 상품!. 처음 방문한 고객님을 위해 가장 많이 ... 루드 핀턱 와이드 데님. 81,000원. 끝판 7 ...</div><div class="result-meta">Position: 2</div></div>
+                <div class="result-item">
+                    <div class="result-title">@roniel_official S/S 로니엘 상품 만나보고 왔는데요, 다가 올 ...</div>
+                    <a href="https://www.instagram.com/p/DHAUy_YyCfS/" target="_blank" class="result-link">https://www.instagram.com/p/DHAUy_YyCfS/</a>
+<div class="result-snippet">... 청바지들을 눈독들이다 가져왔어요 스텐다드나 롱기장으로 같은 제품이라도 길이 감이 달라서 취향에 맞게 선택하시기 넘 좋아요! 전상품 5% 할인에 ...</div><div class="result-meta">2025. 3. 9. • Position: 3</div></div></div></div></div>
+    <div class="image-card">
+        <div class="image-header">
+            <div>
+                <span class="image-title">Image 19/24</span>
+                <span class="badge badge-success">✓ All Found</span>
+                <div class="image-meta" style="margin-top: 5px;">d6459f83273f-IMG_3268 복사본.png</div>
+            </div>
+            <div style="text-align: right;">
+                <div class="image-meta">1 product(s)</div>
+                <div class="image-meta">1 found</div>
+            </div>
+        </div>
+
+        <div class="product-section">
+            <div class="product-header">
+                <div class="product-brand">1. LEADVAULT</div>
+                <div class="product-text">[골든아워세일] 연휴 직전의 황금 같은 혜택 ~42%</div>
+                <span class="search-method">🔍 brand_website</span>
+            </div>
+<div class="results-list">
+                <div class="result-item">
+                    <div class="result-title">릴리프 스티치 클립파우치 (2COLOR)</div>
+                    <a href="https://leadvault.shop/product/%EB%A6%B4%EB%A6%AC%ED%94%84-%EC%8A%A4%ED%8B%B0%EC%B9%98-%ED%81%B4%EB%A6%BD%ED%8C%8C%EC%9A%B0%EC%B9%98-2color/210/category/1/display/11/?icid=MAIN.product_listmain_10" target="_blank" class="result-link">https://leadvault.shop/product/%EB%A6%B4%EB%A6%AC%ED%94%84-%EC%8A%A4%ED%8B%B0%EC%B9%98-%ED%81%B4%EB%A6%BD%ED%8C%8C%EC%9A%B0%EC%B9%98-2color/210/category/1/display/11/?icid=MAIN.product_listmain_10</a>
+<div class="result-snippet">[골든아워세일] 연휴 직전의 황금 같은 혜택 ~42% · 35만원 이상 구매 시, 테크파우치 + 런드리백 선착순 증정! 카플친 추가 시, 5,000원 할인 쿠폰 발행 (쿠폰 유효기간 ...</div><div class="result-meta">Position: 1</div></div>
+                <div class="result-item">
+                    <div class="result-title">재입고문의 Q&amp;A</div>
+                    <a href="https://leadvault.shop/board/product/read.html?no=26352&amp;board_no=6&amp;spread_flag=T" target="_blank" class="result-link">https://leadvault.shop/board/product/read.html?no=26352&amp;board_no=6&amp;spread_flag=T</a>
+<div class="result-snippet">[골든아워세일] 연휴 직전의 황금 같은 혜택 ~42% · 카플친 추가 시, 5,000원 할인 쿠폰 발행 (쿠폰 유효기간 발행 후 1주일) · 로고. 전체 · 릴리프 스티치 라인 · 자사몰 ...</div><div class="result-meta">Position: 2</div></div>
+                <div class="result-item">
+                    <div class="result-title">오딧 캐리어 29인치 올인원 풀세트</div>
+                    <a href="https://leadvault.shop/product/%EC%98%A4%EB%94%A7-%EC%BA%90%EB%A6%AC%EC%96%B4-29%EC%9D%B8%EC%B9%98-%EC%98%AC%EC%9D%B8%EC%9B%90-%ED%92%80%EC%84%B8%ED%8A%B8/215/" target="_blank" class="result-link">https://leadvault.shop/product/%EC%98%A4%EB%94%A7-%EC%BA%90%EB%A6%AC%EC%96%B4-29%EC%9D%B8%EC%B9%98-%EC%98%AC%EC%9D%B8%EC%9B%90-%ED%92%80%EC%84%B8%ED%8A%B8/215/</a>
+<div class="result-snippet">[골든아워세일] 연휴 직전의 황금 같은 혜택 ~42% · 카플친 추가 시, 5,000원 할인 ... 직전까지 아이들과 여행 때 타고서 다니는 캐리어랑 엄청 고민하다가 이 ...</div><div class="result-meta">Position: 3</div></div></div></div></div>
+    <div class="image-card">
+        <div class="image-header">
+            <div>
+                <span class="image-title">Image 20/24</span>
+                <span class="badge badge-success">✓ All Found</span>
+                <div class="image-meta" style="margin-top: 5px;">ef9719b4f59c-Screenshot_20250724_125307_Instagram 복사본.jpg</div>
+            </div>
+            <div style="text-align: right;">
+                <div class="image-meta">1 product(s)</div>
+                <div class="image-meta">1 found</div>
+            </div>
+        </div>
+
+        <div class="product-section">
+            <div class="product-header">
+                <div class="product-brand">1. LORDLOAR</div>
+                <div class="product-text">[3차 입고] 에센셜 플레어 스커트 WHITE</div>
+                <span class="search-method">🔍 brand_website</span>
+            </div>
+<div class="results-list">
+                <div class="result-item">
+                    <div class="result-title">[3차 입고] 에센셜 플레어 스커트 WHITE</div>
+                    <a href="https://lordloar.com/product/3%EC%B0%A8-%EC%9E%85%EA%B3%A0-%EC%97%90%EC%84%BC%EC%85%9C-%ED%94%8C%EB%A0%88%EC%96%B4-%EC%8A%A4%EC%BB%A4%ED%8A%B8-white/387/" target="_blank" class="result-link">https://lordloar.com/product/3%EC%B0%A8-%EC%9E%85%EA%B3%A0-%EC%97%90%EC%84%BC%EC%85%9C-%ED%94%8C%EB%A0%88%EC%96%B4-%EC%8A%A4%EC%BB%A4%ED%8A%B8-white/387/</a>
+<div class="result-snippet">[3차 입고] 에센셜 플레어 스커트 WHITE. 20% 94,400 94,400 118,000. 공유하기. [2차 입고] 에센셜 플레어 스커트 PINK; [2차 입고] 에센셜 플레어 스커트 NAVY ...</div><div class="result-meta">Position: 1</div></div>
+                <div class="result-item">
+                    <div class="result-title">2024 결산 베스트</div>
+                    <a href="https://m.lordloar.com/product/list.html?cate_no=173&amp;page=2" target="_blank" class="result-link">https://m.lordloar.com/product/list.html?cate_no=173&amp;page=2</a>
+<div class="result-snippet">[3차 입고] 에센셜 플레어 스커트 WHITE. 소비자가 : 118,000. 20%. 판매가 : 94,400; 리뷰 : 64.</div><div class="result-meta">Position: 2</div></div>
+                <div class="result-item">
+                    <div class="result-title">Part.1 (OPEN 10% SALE)</div>
+                    <a href="https://m.lordloar.com/category/part1-open-10-sale/102/?page=1" target="_blank" class="result-link">https://m.lordloar.com/category/part1-open-10-sale/102/?page=1</a>
+<div class="result-snippet">[3차 입고] 에센셜 플레어 스커트 WHITE. 소비자가 : 118,000. 30%. 판매가 : 82,600; 리뷰 : 64.</div><div class="result-meta">Position: 3</div></div></div></div></div>
+    <div class="image-card">
+        <div class="image-header">
+            <div>
+                <span class="image-title">Image 21/24</span>
+                <span class="badge badge-success">✓ All Found</span>
+                <div class="image-meta" style="margin-top: 5px;">f2254a73eb94-IMG_6533 복사본.png</div>
+            </div>
+            <div style="text-align: right;">
+                <div class="image-meta">2 product(s)</div>
+                <div class="image-meta">2 found</div>
+            </div>
+        </div>
+
+        <div class="product-section">
+            <div class="product-header">
+                <div class="product-brand">1. 와이티지</div>
+                <div class="product-text">와이티지 style_084 써지컬스틸 체인목걸이.</div>
+                <span class="search-method">🔍 general_search</span>
+            </div>
+<div class="results-list">
+                <div class="result-item">
+                    <div class="result-title">와이티지 style_084 써지컬스틸 체인목걸이 빈티지목걸이 반지 ...</div>
+                    <a href="https://www.hohohi.kr/product/%EC%99%80%EC%9D%B4%ED%8B%B0%EC%A7%80-style084-%EC%8D%A8%EC%A7%80%EC%BB%AC%EC%8A%A4%ED%8B%B8-%EC%B2%B4%EC%9D%B8%EB%AA%A9%EA%B1%B8%EC%9D%B4-%EB%B9%88%ED%8B%B0%EC%A7%80%EB%AA%A9%EA%B1%B8%EC%9D%B4-%EB%B0%98%EC%A7%80%EC%A4%84-%EA%B5%B0%EB%B2%88%EC%A4%84-%EC%97%AC%EC%9E%90-%EB%82%A8%EC%9E%90-%EC%BB%A4%ED%94%8C-%EB%8D%B0%EC%9D%BC%EB%A6%AC-1" target="_blank" class="result-link">https://www.hohohi.kr/product/%EC%99%80%EC%9D%B4%ED%8B%B0%EC%A7%80-style084-%EC%8D%A8%EC%A7%80%EC%BB%AC%EC%8A%A4%ED%8B%B8-%EC%B2%B4%EC%9D%B8%EB%AA%A9%EA%B1%B8%EC%9D%B4-%EB%B9%88%ED%8B%B0%EC%A7%80%EB%AA%A9%EA%B1%B8%EC%9D%B4-%EB%B0%98%EC%A7%80%EC%A4%84-%EA%B5%B0%EB%B2%88%EC%A4%84-%EC%97%AC%EC%9E%90-%EB%82%A8%EC%9E%90-%EC%BB%A4%ED%94%8C-%EB%8D%B0%EC%9D%BC%EB%A6%AC-1</a>
+<div class="result-snippet">와이티지 style_084 써지컬스틸 체인목걸이 빈티지목걸이 반지줄 군번줄 여자 남자 커플 데일리. 32,000 원. 가격변경 확인 · 쿠폰적용 할인가? 알아보기.</div><div class="result-meta"><span class="rating">★ 4.5 (1)</span> • Position: 1</div></div>
+                <div class="result-item">
+                    <div class="result-title">&#x27;와이티지 style_084 써지컬스틸 체인목걸이 빈티지 ...</div>
+                    <a href="https://fallcent.com/product/?product_id=5004985283&amp;item_id=6693006467" target="_blank" class="result-link">https://fallcent.com/product/?product_id=5004985283&amp;item_id=6693006467</a>
+<div class="result-snippet">상품명, 와이티지 style_084 써지컬스틸 체인목걸이 빈티지목걸이 반지줄 군번줄 여자 남자 커플 데일리. 옵션, 65cm. 현재가, 13,000원. 할인율, -. 최저가, 13,000원.</div><div class="result-meta">Position: 3</div></div>
+                <div class="result-item">
+                    <div class="result-title">와이티지 style_084 써지컬스틸 체인목걸이 빈티지 ...</div>
+                    <a href="http://per.auction.co.kr/recommend/recommendbridge.aspx?itemno=E660196641" target="_blank" class="result-link">http://per.auction.co.kr/recommend/recommendbridge.aspx?itemno=E660196641</a>
+<div class="result-snippet">와이티지 style_084 써지컬스틸 체인목걸이 빈티지목걸이 반지줄 군번줄 여자 남자 커플 데일리. 16,700원. 상품상세정보 · 관심상품등록. 만족도0%.</div><div class="result-meta">Position: 4</div></div></div></div>
+        <div class="product-section">
+            <div class="product-header">
+                <div class="product-brand">2. 블링살롱</div>
+                <div class="product-text">블링살롱 국내제작 메탈 조약돌 롱 드롭 목걸이 2컬 성용 긴 레이어드 네크리스</div>
+                <span class="search-method">🔍 general_search</span>
+            </div>
+<div class="results-list">
+                <div class="result-item">
+                    <div class="result-title">[국내제작/당일발송♥] 메탈 조약돌 네크리스 롱 드롭 목걸이 ...</div>
+                    <a href="https://zigzag.kr/catalog/products/150565651" target="_blank" class="result-link">https://zigzag.kr/catalog/products/150565651</a>
+<div class="result-snippet">[국내제작/당일발송♥] 메탈 조약돌 네크리스 롱 드롭 목걸이 2color ... 지연될 수 있습니다. ... 포인트되는 목걸이 찾고있었는데, 딱 어울릴만한걸 발견해서 넘 좋았어요ㅎㅎ ...</div><div class="result-meta"><span class="rating">★ 4.4 (9)</span> • Position: 2</div></div></div></div></div>
+    <div class="image-card">
+        <div class="image-header">
+            <div>
+                <span class="image-title">Image 22/24</span>
+                <span class="badge badge-success">✓ All Found</span>
+                <div class="image-meta" style="margin-top: 5px;">f40c483c87a8-Screenshot_20250922_212029_Instagram 복사본.jpg</div>
+            </div>
+            <div style="text-align: right;">
+                <div class="image-meta">1 product(s)</div>
+                <div class="image-meta">1 found</div>
+            </div>
+        </div>
+
+        <div class="product-section">
+            <div class="product-header">
+                <div class="product-brand">1. ririnco_official</div>
+                <div class="product-text">[1천장 돌파][무료배송] [하이퀄리티/프리미엄...]</div>
+                <span class="search-method">🔍 brand_website</span>
+            </div>
+<div class="results-list">
+                <div class="result-item">
+                    <div class="result-title">[1천장 돌파  ][무료배송][하이퀄리티/프리미엄  ] [44-120] 엘레이 ...</div>
+                    <a href="https://m.ririnco.com/product/1%EC%B2%9C%EC%9E%A5-%EB%8F%8C%ED%8C%8C%EB%AC%B4%EB%A3%8C%EB%B0%B0%EC%86%A1%ED%95%98%EC%9D%B4%ED%80%84%EB%A6%AC%ED%8B%B0%ED%94%84%EB%A6%AC%EB%AF%B8%EC%97%84-44-120-%EC%97%98%EB%A0%88%EC%9D%B4%EB%84%8C-%ED%8A%B8%EC%9C%84%EB%93%9C-%ED%95%98%ED%8A%B8%EB%84%A5-%EB%A7%9E%EC%A3%BC%EB%A6%84-%EB%B2%A8%ED%8A%B8-%EB%A1%B1-%EC%9B%90%ED%94%BC%EC%8A%A4-%EB%B4%84%EA%B0%80%EC%9D%84%EC%97%AC%EB%A6%84%EC%8B%A0%EC%83%81%EB%8D%B0%EC%9D%BC%EB%A6%AC%EB%A3%A9%ED%95%98%EA%B0%9D%EB%A3%A9%EA%B2%A9%EC%8B%9D%EB%A3%A9/26742/" target="_blank" class="result-link">https://m.ririnco.com/product/1%EC%B2%9C%EC%9E%A5-%EB%8F%8C%ED%8C%8C%EB%AC%B4%EB%A3%8C%EB%B0%B0%EC%86%A1%ED%95%98%EC%9D%B4%ED%80%84%EB%A6%AC%ED%8B%B0%ED%94%84%EB%A6%AC%EB%AF%B8%EC%97%84-44-120-%EC%97%98%EB%A0%88%EC%9D%B4%EB%84%8C-%ED%8A%B8%EC%9C%84%EB%93%9C-%ED%95%98%ED%8A%B8%EB%84%A5-%EB%A7%9E%EC%A3%BC%EB%A6%84-%EB%B2%A8%ED%8A%B8-%EB%A1%B1-%EC%9B%90%ED%94%BC%EC%8A%A4-%EB%B4%84%EA%B0%80%EC%9D%84%EC%97%AC%EB%A6%84%EC%8B%A0%EC%83%81%EB%8D%B0%EC%9D%BC%EB%A6%AC%EB%A3%A9%ED%95%98%EA%B0%9D%EB%A3%A9%EA%B2%A9%EC%8B%9D%EB%A3%A9/26742/</a>
+<div class="result-snippet">트위드 소재의 원피스로 깔끔하게 떨어지는 핏이 고급스러운 무드를 더해줍니다 MD COMMENT 페미닌하고 모던한 무드가 돋보이는 원피스 소개드립니다 섬세한 조직감의 ...</div><div class="result-meta">Position: 1</div></div>
+                <div class="result-item">
+                    <div class="result-title">[1천장 돌파  ][무료배송][하이퀄리티/프리미엄  ] [44-120 ... - 리리앤코</div>
+                    <a href="https://m.ririnco.com/product/1%EC%B2%9C%EC%9E%A5-%EB%8F%8C%ED%8C%8C%EB%AC%B4%EB%A3%8C%EB%B0%B0%EC%86%A1%ED%95%98%EC%9D%B4%ED%80%84%EB%A6%AC%ED%8B%B0%ED%94%84%EB%A6%AC%EB%AF%B8%EC%97%84-44-120-%EC%97%98%EB%A0%88%EC%9D%B4%EB%84%8C-%ED%8A%B8%EC%9C%84%EB%93%9C-%ED%95%98%ED%8A%B8%EB%84%A5-%EB%A7%9E%EC%A3%BC%EB%A6%84-%EB%B2%A8%ED%8A%B8-%EB%A1%B1-%EC%9B%90%ED%94%BC%EC%8A%A4-%EB%B4%84-%EA%B0%80%EC%9D%84-%EC%97%AC%EB%A6%84-%EC%8B%A0%EC%83%81-%EB%8D%B0%EC%9D%BC%EB%A6%AC%EB%A3%A9-%ED%95%98/26742/display/1/" target="_blank" class="result-link">https://m.ririnco.com/product/1%EC%B2%9C%EC%9E%A5-%EB%8F%8C%ED%8C%8C%EB%AC%B4%EB%A3%8C%EB%B0%B0%EC%86%A1%ED%95%98%EC%9D%B4%ED%80%84%EB%A6%AC%ED%8B%B0%ED%94%84%EB%A6%AC%EB%AF%B8%EC%97%84-44-120-%EC%97%98%EB%A0%88%EC%9D%B4%EB%84%8C-%ED%8A%B8%EC%9C%84%EB%93%9C-%ED%95%98%ED%8A%B8%EB%84%A5-%EB%A7%9E%EC%A3%BC%EB%A6%84-%EB%B2%A8%ED%8A%B8-%EB%A1%B1-%EC%9B%90%ED%94%BC%EC%8A%A4-%EB%B4%84-%EA%B0%80%EC%9D%84-%EC%97%AC%EB%A6%84-%EC%8B%A0%EC%83%81-%EB%8D%B0%EC%9D%BC%EB%A6%AC%EB%A3%A9-%ED%95%98/26742/display/1/</a>
+<div class="result-snippet">트위드 소재의 원피스로 깔끔하게 떨어지는 핏이 고급스러운 무드를 더해줍니다 MD COMMENT 페미닌하고 모던한 무드가 돋보이는 원피스 소개드립니다 섬세한 조직감의 ...</div><div class="result-meta">Position: 2</div></div>
+                <div class="result-item">
+                    <div class="result-title">[1천장 돌파  ][프리미엄원단/하이퀄리티] [44-120] 언벨니덴 ...</div>
+                    <a href="https://m.ririnco.com/product/1%EC%B2%9C%EC%9E%A5-%EB%8F%8C%ED%8C%8C%ED%94%84%EB%A6%AC%EB%AF%B8%EC%97%84%EC%9B%90%EB%8B%A8%ED%95%98%EC%9D%B4%ED%80%84%EB%A6%AC%ED%8B%B0-44-120-%EC%96%B8%EB%B2%A8%EB%8B%88%EB%8D%B4-%ED%8A%B8%EC%9C%84%EB%93%9C-%EC%9E%90%EC%BC%93-%EB%B7%94%EC%8A%A4%ED%8B%B0%EC%97%90-%EB%A1%B1-%EC%9B%90%ED%94%BC%EC%8A%A4-%EC%84%B8%ED%8A%B8-%EC%8B%A0%EC%83%81%EB%B4%84%EC%97%AC%EB%A6%84%ED%95%98%EA%B0%9D%EB%A3%A9%EA%B2%A9%EC%8B%9D%EB%A3%A9%EB%8D%B0%EC%9D%BC%EB%A6%AC%EB%A3%A9%EB%B9%85%EC%82%AC%EC%9D%B4%EC%A6%88/26972/" target="_blank" class="result-link">https://m.ririnco.com/product/1%EC%B2%9C%EC%9E%A5-%EB%8F%8C%ED%8C%8C%ED%94%84%EB%A6%AC%EB%AF%B8%EC%97%84%EC%9B%90%EB%8B%A8%ED%95%98%EC%9D%B4%ED%80%84%EB%A6%AC%ED%8B%B0-44-120-%EC%96%B8%EB%B2%A8%EB%8B%88%EB%8D%B4-%ED%8A%B8%EC%9C%84%EB%93%9C-%EC%9E%90%EC%BC%93-%EB%B7%94%EC%8A%A4%ED%8B%B0%EC%97%90-%EB%A1%B1-%EC%9B%90%ED%94%BC%EC%8A%A4-%EC%84%B8%ED%8A%B8-%EC%8B%A0%EC%83%81%EB%B4%84%EC%97%AC%EB%A6%84%ED%95%98%EA%B0%9D%EB%A3%A9%EA%B2%A9%EC%8B%9D%EB%A3%A9%EB%8D%B0%EC%9D%BC%EB%A6%AC%EB%A3%A9%EB%B9%85%EC%82%AC%EC%9D%B4%EC%A6%88/26972/</a>
+<div class="result-snippet">프리미엄 트위드 원단을 사용하여 더욱 고급스러운 무드가 물씬 느껴져요 자켓은 언발 볼레로 디자인으로 페미닌한 무드가 느껴지는 세트에요 &#x27; 고급스러운 무드로 ...</div><div class="result-meta">Position: 3</div></div></div></div></div>
+    <div class="image-card">
+        <div class="image-header">
+            <div>
+                <span class="image-title">Image 23/24</span>
+                <span class="badge badge-success">✓ All Found</span>
+                <div class="image-meta" style="margin-top: 5px;">f62504d2513d-Screenshot_20250922_050551_Instagram 복사본.jpg</div>
+            </div>
+            <div style="text-align: right;">
+                <div class="image-meta">1 product(s)</div>
+                <div class="image-meta">1 found</div>
+            </div>
+        </div>
+
+        <div class="product-section">
+            <div class="product-header">
+                <div class="product-brand">1. Bongoût</div>
+                <div class="product-text">삼각김밥bag (블랙) 바로배송</div>
+                <span class="search-method">🔍 brand_website</span>
+            </div>
+<div class="results-list">
+                <div class="result-item">
+                    <div class="result-title">삼각김밥bag (블랙) 바로배송 - 주식회사 봉긋컴퍼니</div>
+                    <a href="https://bongout.kr/product/%EC%82%BC%EA%B0%81%EA%B9%80%EB%B0%A5bag-%EB%B8%94%EB%9E%99-%EB%B0%94%EB%A1%9C%EB%B0%B0%EC%86%A1/317" target="_blank" class="result-link">https://bongout.kr/product/%EC%82%BC%EA%B0%81%EA%B9%80%EB%B0%A5bag-%EB%B8%94%EB%9E%99-%EB%B0%94%EB%A1%9C%EB%B0%B0%EC%86%A1/317</a>
+<div class="result-snippet">힘든 환경이지만 ,최선을 다해 제품 생산및 출고에 노력하겠습니다. 구매시 주의사항. - 바로배송 마감시간은 낮12시 입니다. 주문 ...</div><div class="result-meta">Position: 1</div></div>
+                <div class="result-item">
+                    <div class="result-title">삼각김밥bag (블랙) 18일 오전11시 오픈 - 주식회사 봉긋컴퍼니</div>
+                    <a href="https://m.bongout.kr/product/%EC%82%BC%EA%B0%81%EA%B9%80%EB%B0%A5bag-%EB%B8%94%EB%9E%99-18%EC%9D%BC-%EC%98%A4%EC%A0%8411%EC%8B%9C-%EC%98%A4%ED%94%88/317/category/1/display/3/" target="_blank" class="result-link">https://m.bongout.kr/product/%EC%82%BC%EA%B0%81%EA%B9%80%EB%B0%A5bag-%EB%B8%94%EB%9E%99-18%EC%9D%BC-%EC%98%A4%EC%A0%8411%EC%8B%9C-%EC%98%A4%ED%94%88/317/category/1/display/3/</a>
+<div class="result-snippet">- 바로배송 마감시간은 낮12시 입니다. 주문변경도 낮12시까지만 가능합니다. - 무통장 입금 마감기한은 주문일 오후5 ...</div><div class="result-meta">Position: 2</div></div>
+                <div class="result-item">
+                    <div class="result-title">너무 예뻐요  REVIEW - 주식회사 봉긋컴퍼니</div>
+                    <a href="https://bongout.kr/article/review/4/121254" target="_blank" class="result-link">https://bongout.kr/article/review/4/121254</a>
+<div class="result-snippet">5점 삼각김밥bag (블랙) 바로배송. 너무 예뻐요♡ 파일첨부 이정**** 2025-09-29 5점 삼각김밥bag (블랙) 바로배송. about · guide · agreement · 개인정보 ...</div><div class="result-meta">2025. 9. 29. • Position: 3</div></div></div></div></div>
+    <div class="image-card">
+        <div class="image-header">
+            <div>
+                <span class="image-title">Image 24/24</span>
+                <span class="badge badge-success">✓ All Found</span>
+                <div class="image-meta" style="margin-top: 5px;">f8907dc5d73c-Screenshot_20250923_085216_Instagram 복사본.jpg</div>
+            </div>
+            <div style="text-align: right;">
+                <div class="image-meta">2 product(s)</div>
+                <div class="image-meta">2 found</div>
+            </div>
+        </div>
+
+        <div class="product-section">
+            <div class="product-header">
+                <div class="product-brand">1. Fila</div>
+                <div class="product-text">에샤페 초코</div>
+                <span class="search-method">🔍 platform_musinsa.com</span>
+            </div>
+<div class="results-list">
+                <div class="result-item">
+                    <div class="result-title">휠라(FILA) 에샤페 초코(FS261OD03X087219) - 사이즈 &amp; ...</div>
+                    <a href="https://www.musinsa.com/products/4328804" target="_blank" class="result-link">https://www.musinsa.com/products/4328804</a>
+<div class="result-snippet">특히 휠라의 디자인은 강렬한 색채 대비로 스포츠의 역동적인 모습을 표현하며 이탈리아의 정열을 스포츠 패션으로 승화시켜 삶에 대한 열정과 여유를 스포츠웨어로 제안 ...</div><div class="result-meta"><span class="rating">★ 4.9 (2116)</span> • Position: 1</div></div>
+                <div class="result-item">
+                    <div class="result-title">휠라(FILA) 에샤페 초코(1XM02361H200) - 사이즈 &amp; 후기</div>
+                    <a href="https://www.musinsa.com/products/5559005" target="_blank" class="result-link">https://www.musinsa.com/products/5559005</a>
+<div class="result-snippet">특히 휠라의 디자인은 강렬한 색채 대비로 스포츠의 역동적인 모습을 표현하며 이탈리아의 정열을 스포츠 패션으로 승화시켜 삶에 대한 열정과 여유를 스포츠웨어로 제안 ...</div><div class="result-meta"><span class="rating">★ 4.8 (52)</span> • Position: 2</div></div>
+                <div class="result-item">
+                    <div class="result-title">휠라 키즈(FILA KIDS) 리틀에샤페 초코 - 사이즈 &amp; 후기</div>
+                    <a href="https://www.musinsa.com/products/5307509" target="_blank" class="result-link">https://www.musinsa.com/products/5307509</a>
+<div class="result-snippet">키즈 사이즈의 경우 한국 사이즈 80~140mm은 infant&#x27;s size(3-36개월), 145mm~220mm까지는 PS(Pre-School, 4~7세), 225mm~260mm까지는 GS(Grade-School, 8~13세)로 통상적 ...</div><div class="result-meta"><span class="rating">★ 4.7 (6)</span> • Position: 3</div></div></div></div>
+        <div class="product-section">
+            <div class="product-header">
+                <div class="product-brand">2. Mizuno</div>
+                <div class="product-text">LG 60S 2K 브라운</div>
+                <span class="search-method">🔍 platform_musinsa.com</span>
+            </div>
+<div class="results-list">
+                <div class="result-item">
+                    <div class="result-title">다양한 패션 콘텐츠가 모두 모이는 곳 ...</div>
+                    <a href="https://www.musinsa.com/snap/goods/snap?snap_id=1260516276827184158&amp;goods_no=MUSINSA:3758255" target="_blank" class="result-link">https://www.musinsa.com/snap/goods/snap?snap_id=1260516276827184158&amp;goods_no=MUSINSA:3758255</a>
+<div class="result-snippet">미즈노 LG 60S 2K 브라운. 200,000원. 솔드아웃. 좋아요 0개. 부산여행 #ootd ... [무신사 스탠다드] 릴렉스드 워시드 포플린 셔츠 [브라운] XL [무 ...</div><div class="result-meta">2025. 10. 21. • Position: 1</div></div>
+                <div class="result-item">
+                    <div class="result-title">다양한 패션 콘텐츠가 모두 모이는 곳 ...</div>
+                    <a href="https://www.musinsa.com/snap/goods/snap?snap_id=1283355668574743285&amp;goods_no=MUSINSA:3757173" target="_blank" class="result-link">https://www.musinsa.com/snap/goods/snap?snap_id=1283355668574743285&amp;goods_no=MUSINSA:3757173</a>
+<div class="result-snippet">무신사 스탠다드. 투 턱 와이드 치노 팬츠 [블랙]28. 20%36,890원. product-image. 미즈노. 미즈노 LG 60S 2K 브라운. 200,000원. 솔드아웃. 좋아요 70개. 부산여행 #ootd ...</div><div class="result-meta">Position: 2</div></div>
+                <div class="result-item">
+                    <div class="result-title">다양한 패션 콘텐츠가 모두 모이는 곳 ...</div>
+                    <a href="https://www.musinsa.com/snap/goods/snap?snap_id=1304080620857951963&amp;goods_no=MUSINSA:3757173" target="_blank" class="result-link">https://www.musinsa.com/snap/goods/snap?snap_id=1304080620857951963&amp;goods_no=MUSINSA:3757173</a>
+<div class="result-snippet">투 턱 와이드 치노 팬츠 [블랙]28. 33%30,890원. product-image. 미즈노. 미즈노 LG 60S 2K 브라운. 115,000원. 솔드아웃. 좋아요 70개. 부산여행 #ootd #레더 #드로우핏 ...</div><div class="result-meta">Position: 3</div></div></div></div></div>
+</body>
+</html>
