@@ -148,7 +148,7 @@ def create_detection_task(image_url: str) -> Optional[str]:
         response.raise_for_status()
         
         result = response.json()
-        task_uuid = result.get('data', {}).get('uuid')
+        task_uuid = result.get('data', {}).get('task_uuid') or result.get('data', {}).get('uuid')
         
         if task_uuid:
             logger.info(f"✅ DINO-X task created: {task_uuid}")
