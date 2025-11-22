@@ -278,7 +278,7 @@ def analyze_and_crop_all(image_url: str) -> dict:
                 'dress': ['dress', 'gown'],
                 'shoes': ['shoe', 'sneaker', 'boot', 'sandal', 'heel', 'loafer'],
                 'bag': ['bag', 'purse', 'backpack', 'tote', 'clutch', 'handbag'],
-                'accessory': ['necklace', 'bracelet', 'earring', 'watch', 'hat', 'scarf', 'belt', 'sunglasses', 'ring', 'jewelry']
+                'accessory': ['necklace', 'bracelet', 'earring', 'watch', 'hat', 'cap', 'beanie', 'visor', 'headband', 'scarf', 'belt', 'sunglasses', 'ring', 'jewelry']
             }
             
             prompt_lower = prompt.lower()

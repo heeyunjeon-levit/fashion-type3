@@ -198,3 +198,5 @@ You now have a complete tracking system that works with your current data struct
 Run `UNIVERSAL_USER_JOURNEY.sql` with any phone number to see complete user journeys! 🚀
 
 
+
+

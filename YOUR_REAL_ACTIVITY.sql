@@ -105,3 +105,5 @@ GROUP BY EXTRACT(HOUR FROM clicked_at)
 ORDER BY hour_of_day;
 
 
+
+

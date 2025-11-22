@@ -1,0 +1,123 @@
+{
+  "timestamp": "2025-11-22T03:16:19.491532",
+  "fallback_test": true,
+  "total_images": 2,
+  "successful": 2,
+  "used_fallback": 2,
+  "failed": 0,
+  "total_time_seconds": 94.8,
+  "results": [
+    {
+      "image_path": "/Users/levit/Desktop/brands/0214d4bd3a05-IMG_6128 복사본.png",
+      "image_name": "0214d4bd3a05-IMG_6128 복사본.png",
+      "timestamp": "2025-11-22T03:14:44.691219",
+      "success": true,
+      "error": null,
+      "fallback_test": true,
+      "image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763748884783_0214d4bd3a05-IMG_6128_.jpg",
+      "analysis": {
+        "items": [],
+        "cached": false,
+        "timing": {
+          "download_seconds": 3.651,
+          "gpt4o_seconds": 6.45,
+          "groundingdino_seconds": 0.171,
+          "processing_seconds": 0,
+          "upload_seconds": 0,
+          "overhead_seconds": 0.098,
+          "total_seconds": 10.37
+        }
+      },
+      "search": {
+        "results": {
+          "bag_1": [
+            {
+              "link": "https://www.amazon.com/Houndstooth-Corduroy-Shoulder-Crossbody-Vacation/dp/B0CF1KFD9G",
+              "thumbnail": null,
+              "title": "Amazon.com: Classic Houndstooth Tote Bag for Women Crossbody ..."
+            },
+            {
+              "link": "https://www.amazon.com/YQxwJL-Houndstooth-Travel-Shoulder-Handbag/dp/B0D8KS9F31",
+              "thumbnail": null,
+              "title": "Amazon.com: YQxwJL Houndstooth Black Print Large Tote Bag For Women, Travel Shoulder Bag Handle Handbag For Gym, Work, Travel : Clothing, Shoes & Jewelry"
+            },
+            {
+              "link": "https://www.walmart.ca/en/ip/KLL-Houndstooth-Black-And-White-Print-Large-Beach-Tote-Bag-Women-Waterproof-Sandproof-Zipper-Pool-Gym-Grocery-Travel-Wet-Pocket/2ZFTAER33ZW8",
+              "thumbnail": null,
+              "title": "KLL Houndstooth Black And White Print Large Beach Tote Bag Women Waterproof Sandproof Zipper Beach Tote Bag for Pool Gym Grocery Travel with Wet Pocket - Walmart.ca"
+            }
+          ]
+        },
+        "meta": {
+          "fallbackMode": true,
+          "success": true,
+          "detectedCategory": "bag",
+          "reasoning": "The search results predominantly feature tote bags, with a recurring houndstooth pattern. Selected links are from reputable retailers Amazon and Walmart, focusing on products that directly match the description and images provided in the search results.",
+          "timing": {
+            "serper_api_seconds": 28.686,
+            "gpt4_turbo_seconds": 8.83,
+            "total_seconds": 37.521
+          }
+        }
+      },
+      "used_fallback": true,
+      "processing_time_seconds": 53.74
+    },
+    {
+      "image_path": "/Users/levit/Desktop/brands/d6459f83273f-IMG_3268 복사본.png",
+      "image_name": "d6459f83273f-IMG_3268 복사본.png",
+      "timestamp": "2025-11-22T03:15:40.431827",
+      "success": true,
+      "error": null,
+      "fallback_test": true,
+      "image_url": "https://ssfiahbvlzepvddglawo.supabase.co/storage/v1/object/public/images/upload_1763748940459_d6459f83273f-IMG_3268_.jpg",
+      "analysis": {
+        "items": [],
+        "cached": false,
+        "timing": {
+          "download_seconds": 3.442,
+          "gpt4o_seconds": 3.85,
+          "groundingdino_seconds": 0,
+          "processing_seconds": 0,
+          "upload_seconds": 0,
+          "overhead_seconds": 0.013,
+          "total_seconds": 7.31
+        }
+      },
+      "search": {
+        "results": {
+          "bag_1": [
+            {
+              "link": "https://kream.co.kr/products/318695",
+              "thumbnail": null,
+              "title": "리드볼트 몬딱 캐리어 24인치 실버 | LEAD VAULT | KREAM"
+            },
+            {
+              "link": "https://www.coupang.com/vp/products/8231579139",
+              "thumbnail": null,
+              "title": "10년 A/S] 리드볼트 몬딱 캐리어 - 캐리어 | 쿠팡"
+            },
+            {
+              "link": "https://leadvault.shop/product/%EB%AA%AC%EB%94%B1-%EC%BA%90%EB%A6%AC%EC%96%B4-20%EC%9D%B8%EC%B9%98/146",
+              "thumbnail": null,
+              "title": "Product"
+            }
+          ]
+        },
+        "meta": {
+          "fallbackMode": true,
+          "success": true,
+          "detectedCategory": "bag",
+          "reasoning": "The search results consistently show links to luggage or carry-on items, indicating the image likely features a travel bag or suitcase. Selected links are from reputable e-commerce and retail sites offering specific products rather than categories or non-shopping content.",
+          "timing": {
+            "serper_api_seconds": 20.979,
+            "gpt4_turbo_seconds": 5.506,
+            "total_seconds": 26.511
+          }
+        }
+      },
+      "used_fallback": true,
+      "processing_time_seconds": 39.06
+    }
+  ]
+}

@@ -1,0 +1,149 @@
+{
+  "timestamp": "2025-11-22T08:57:48.706175",
+  "endpoint": "https://api.deepdataspace.com/v2/task/dinox/detection",
+  "model": "DINO-X-1.0",
+  "fashion_prompt": "shirt. jacket. blouse. button up shirt. vest. skirt. shorts. pants. shoes. bag. dress. coat. sweater. cardigan. hoodie. jeans. leggings. sneakers. boots. sandals. backpack. purse. handbag. hat. cap. scarf. belt. watch. sunglasses. jewelry. necklace. bracelet. earrings. ring",
+  "total_images": 2,
+  "successful": 2,
+  "failed": 0,
+  "results": [
+    {
+      "success": true,
+      "image_path": "/Users/levit/Desktop/brands/0214d4bd3a05-IMG_6128 복사본.png",
+      "image_name": "0214d4bd3a05-IMG_6128 복사본.png",
+      "task_uuid": "2b171ba1-2785-4abe-8b7d-143642c35923",
+      "total_time": 4.48,
+      "create_time": 3.55,
+      "poll_time": 0.93,
+      "poll_count": 1,
+      "num_detections": 10,
+      "detections": [
+        {
+          "bbox": [
+            260.76153564453125,
+            1811.17431640625,
+            367.0478210449219,
+            1969.8709716796875
+          ],
+          "category": "handbag",
+          "score": 0.5353413224220276
+        },
+        {
+          "bbox": [
+            201.28604125976562,
+            0.853502631187439,
+            952.1185302734375,
+            1145.75439453125
+          ],
+          "category": "handbag",
+          "score": 0.52220219373703
+        },
+        {
+          "bbox": [
+            455.23834228515625,
+            1811.12353515625,
+            560.6282348632812,
+            1974.4371337890625
+          ],
+          "category": "handbag",
+          "score": 0.5133634805679321
+        },
+        {
+          "bbox": [
+            62.045494079589844,
+            1811.44921875,
+            166.10101318359375,
+            1967.98046875
+          ],
+          "category": "handbag",
+          "score": 0.5131195783615112
+        },
+        {
+          "bbox": [
+            663.0089111328125,
+            1810.558837890625,
+            764.790771484375,
+            1966.031494140625
+          ],
+          "category": "handbag",
+          "score": 0.4931645095348358
+        },
+        {
+          "bbox": [
+            988.28076171875,
+            619.5184326171875,
+            1068.5,
+            700.268798828125
+          ],
+          "category": "sunglasses",
+          "score": 0.3720487952232361
+        },
+        {
+          "bbox": [
+            1081.6494140625,
+            607.794677734375,
+            1165.799072265625,
+            764.0994262695312
+          ],
+          "category": "scarf",
+          "score": 0.3486451208591461
+        },
+        {
+          "bbox": [
+            725.9859008789062,
+            -0.4821537733078003,
+            1205.4415283203125,
+            415.2171936035156
+          ],
+          "category": "hat",
+          "score": 0.3242354094982147
+        },
+        {
+          "bbox": [
+            934.642578125,
+            652.2897338867188,
+            1059.23193359375,
+            758.298583984375
+          ],
+          "category": "shirt",
+          "score": 0.2658804655075073
+        },
+        {
+          "bbox": [
+            933.6812744140625,
+            607.0978393554688,
+            1076.99755859375,
+            757.8247680664062
+          ],
+          "category": "jacket",
+          "score": 0.25091278553009033
+        }
+      ]
+    },
+    {
+      "success": true,
+      "image_path": "/Users/levit/Desktop/brands/d6459f83273f-IMG_3268 복사본.png",
+      "image_name": "d6459f83273f-IMG_3268 복사본.png",
+      "task_uuid": "15a5750c-bea1-4307-a3ba-1c13dd9ab698",
+      "total_time": 5.74,
+      "create_time": 4.76,
+      "poll_time": 0.98,
+      "poll_count": 1,
+      "num_detections": 1,
+      "detections": [
+        {
+          "bbox": [
+            968.0933227539062,
+            412.80712890625,
+            1033.845703125,
+            472.9416198730469
+          ],
+          "category": "handbag",
+          "score": 0.3065270483493805
+        }
+      ]
+    }
+  ],
+  "avg_time_seconds": 5.11,
+  "avg_detections": 5.5
+}

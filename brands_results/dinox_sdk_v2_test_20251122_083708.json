@@ -1,0 +1,23 @@
+{
+  "timestamp": "2025-11-22T08:37:08.592467",
+  "sdk_version": "dds-cloudapi-sdk (V2Task)",
+  "model": "DINO-X-1.0",
+  "fashion_prompt": "shirt. jacket. blouse. button up shirt. vest. skirt. shorts. pants. shoes. bag. dress. coat. sweater. cardigan. hoodie. jeans. leggings. sneakers. boots. sandals. backpack. purse. handbag. hat. cap. scarf. belt. watch. sunglasses. jewelry. necklace. bracelet. earrings. ring",
+  "total_tests": 2,
+  "successful": 0,
+  "failed": 2,
+  "results": [
+    {
+      "success": false,
+      "elapsed_time": 3.86704683303833,
+      "error": "Failed to trigger V2Task<task_id:None, idemp_key:bc1ca862b1134c2f9ac42ddb54e0a574>, error: Resource Not Found. API docs: https://cloud.deepdataspace.com/docs",
+      "image_path": "/Users/levit/Desktop/brands/0214d4bd3a05-IMG_6128 복사본.png"
+    },
+    {
+      "success": false,
+      "elapsed_time": 5.12354302406311,
+      "error": "('Connection aborted.', TimeoutError('The write operation timed out'))",
+      "image_path": "/Users/levit/Desktop/brands/d6459f83273f-IMG_3268 복사본.png"
+    }
+  ]
+}

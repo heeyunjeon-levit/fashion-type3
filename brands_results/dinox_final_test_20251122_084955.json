@@ -1,0 +1,31 @@
+{
+  "timestamp": "2025-11-22T08:49:55.807993",
+  "api_endpoint": "https://api.deepdataspace.com/v2/task/dinox_region_vl",
+  "model": "DINO-X-1.0",
+  "fashion_prompt": "shirt. jacket. blouse. button up shirt. vest. skirt. shorts. pants. shoes. bag. dress. coat. sweater. cardigan. hoodie. jeans. leggings. sneakers. boots. sandals. backpack. purse. handbag. hat. cap. scarf. belt. watch. sunglasses. jewelry. necklace. bracelet. earrings. ring",
+  "total_images": 2,
+  "successful": 0,
+  "failed": 2,
+  "results": [
+    {
+      "success": false,
+      "image_path": "/Users/levit/Desktop/brands/0214d4bd3a05-IMG_6128 복사본.png",
+      "error": "Failed to create task",
+      "details": {
+        "success": false,
+        "error": "Status 404",
+        "response_text": "{\"code\":404000,\"data\":{},\"msg\":\"Resource Not Found. API docs: https://cloud.deepdataspace.com/docs\"}\n"
+      }
+    },
+    {
+      "success": false,
+      "image_path": "/Users/levit/Desktop/brands/d6459f83273f-IMG_3268 복사본.png",
+      "error": "Failed to create task",
+      "details": {
+        "success": false,
+        "error": "Status 404",
+        "response_text": "{\"code\":404000,\"data\":{},\"msg\":\"Resource Not Found. API docs: https://cloud.deepdataspace.com/docs\"}\n"
+      }
+    }
+  ]
+}

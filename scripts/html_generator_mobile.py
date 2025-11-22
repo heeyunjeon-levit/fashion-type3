@@ -87,7 +87,8 @@ def generate_html_page(phone: str, results: Dict) -> str:
             if len(title) > 30:
                 title = title[:30] + '...'
             
-            img_html = f'<img src="{thumbnail}" alt="{title}" />' if thumbnail else '<div class="no-img">No Image</div>'
+            # Add referrerpolicy to help load external images
+            img_html = f'<img src="{thumbnail}" alt="{title}" referrerpolicy="no-referrer" loading="lazy" />' if thumbnail else '<div class="no-img">No Image</div>'
             
             products_html += f"""
                 <a href="{link}" target="_blank" class="product-card">

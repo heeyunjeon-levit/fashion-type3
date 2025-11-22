@@ -40,13 +40,18 @@ class GPT4OFashionAnalyzer:
         
         # Focused prompt - prioritize most noticeable fashion items
         count_prompt = """
-        Look at this fashion image and identify the most noticeable fashion items worn by the main person.
-
+        Look at this fashion image and identify the most noticeable fashion items.
+        
+        🎯 TWO SCENARIOS:
+        A) If there's a PERSON in the image: Detect items WORN by the person
+        B) If there's NO PERSON: Detect fashion items visible in the scene (product display, hanging, laid out)
+        
         PRIORITIZE THESE MAIN ITEMS (IN ORDER):
-        1. PRIMARY CLOTHING: What is the person WEARING? (shirts, tops, hoodies, sweaters, jackets, dresses, pants, skirts)
-        2. FOOTWEAR: shoes, boots, sandals (only if clearly visible)
-        3. BAGS: handbags, backpacks, purses (ONLY if CARRIED separately - NOT clothing straps!)
-        4. OBVIOUS ACCESSORIES: large sunglasses, statement jewelry, watches (only if very noticeable)
+        1. PRIMARY CLOTHING: shirts, tops, hoodies, sweaters, jackets, dresses, pants, skirts
+        2. HEADWEAR: caps, hats, beanies, visors, headbands (ALWAYS detect if visible - worn OR displayed)
+        3. FOOTWEAR: shoes, boots, sandals (ALWAYS detect if visible - worn OR displayed)
+        4. BAGS: handbags, backpacks, purses (ALWAYS detect if visible - carried OR displayed)
+        5. OBVIOUS ACCESSORIES: large sunglasses, statement jewelry, watches (only if very noticeable)
 
         🚨 CRITICAL - AVOID FALSE DETECTIONS:
         - **DO NOT confuse clothing straps/harnesses with backpacks!**
@@ -55,11 +60,11 @@ class GPT4OFashionAnalyzer:
         - Straps across shoulders = likely part of clothing/harness, NOT a backpack
         - Always identify the PRIMARY GARMENT first (hoodie, jacket, shirt, etc.)
 
-        CONSERVATIVE APPROACH:
-        - Focus on items that immediately catch your eye
-        - Identify the main garment BEFORE looking for accessories
-        - Skip small, subtle accessories (rings, earrings, bracelets unless very bold)
-        - Only detect bags if they are CLEARLY separate from clothing
+        DETECTION APPROACH:
+        - For WORN items: Focus on what the person is wearing
+        - For PRODUCT DISPLAYS: Detect the main fashion item(s) shown (cap, shoe, bag, clothing, etc.)
+        - ALWAYS detect primary items: clothing, headwear, footwear, bags
+        - Skip small accessories (rings, earrings) unless very bold
         - When in doubt between clothing and accessory, choose clothing
 
         For each item you identify, provide:
@@ -73,6 +78,9 @@ class GPT4OFashionAnalyzer:
 
         groundingdino_prompt: "black skirt"       ← SIMPLE! Just color + type  
         description: "black high waist midi skirt with pleats"  ← DETAILED!
+
+        groundingdino_prompt: "green cap"         ← SIMPLE! Just color + type
+        description: "olive green baseball cap with white logo embroidery"  ← DETAILED!
 
         groundingdino_prompt: "white shoes"       ← SIMPLE! Just color + type
         description: "white mesh slip-on shoes with red striped socks"  ← DETAILED!

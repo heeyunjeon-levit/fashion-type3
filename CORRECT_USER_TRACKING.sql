@@ -224,3 +224,5 @@ WHERE uf.phone_number = target_user.phone_number
 ORDER BY created_at DESC;
 
 
+
+

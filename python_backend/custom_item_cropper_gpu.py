@@ -15,6 +15,9 @@ if "/root" not in sys.path:
     sys.path.append("/root")
 
 from src.analyzers.gpt4o_analyzer import GPT4OFashionAnalyzer
+from src.analyzers.fashion_analyzer import USE_DINOX
+from src.analyzers.dinox_analyzer import analyze_image_with_dinox
+import os
 
 class CustomItemCropper:
     def __init__(self, device: str = "cuda"):
@@ -107,12 +110,19 @@ class CustomItemCropper:
                 temp_image_path = tmp_file.name
             
             try:
-                # Step 1: Use GPT-4o to analyze and generate prompts
-                print("🤖 Step 1: GPT-4o analysis...")
-                gpt4o_start = time.time()
-                gpt_result = self.gpt_analyzer.analyze_fashion_items(temp_image_path)
-                gpt4o_time = time.time() - gpt4o_start
-                print(f"⏱️  GPT-4o analysis took: {gpt4o_time:.2f}s")
+                # Step 1: Use DINO-X or GPT-4o to analyze and generate prompts
+                if USE_DINOX:
+                    print("🤖 Step 1: DINO-X analysis (fast mode)...")
+                    gpt4o_start = time.time()
+                    gpt_result = analyze_image_with_dinox(image_url)
+                    gpt4o_time = time.time() - gpt4o_start
+                    print(f"⏱️  DINO-X analysis took: {gpt4o_time:.2f}s")
+                else:
+                    print("🤖 Step 1: GPT-4o analysis...")
+                    gpt4o_start = time.time()
+                    gpt_result = self.gpt_analyzer.analyze_fashion_items(temp_image_path)
+                    gpt4o_time = time.time() - gpt4o_start
+                    print(f"⏱️  GPT-4o analysis took: {gpt4o_time:.2f}s")
             finally:
                 # Clean up temp file
                 if os.path.exists(temp_image_path):
@@ -133,7 +143,7 @@ class CustomItemCropper:
             'dress': ['dress', 'gown'],
             'shoes': ['shoe', 'sneaker', 'boot', 'sandal', 'heel', 'loafer'],
             'bag': ['bag', 'purse', 'backpack', 'tote', 'clutch', 'handbag'],
-            'accessory': ['necklace', 'bracelet', 'earring', 'watch', 'hat', 'scarf', 'belt', 'sunglasses', 'ring', 'jewelry']
+            'accessory': ['necklace', 'bracelet', 'earring', 'watch', 'hat', 'cap', 'beanie', 'visor', 'headband', 'scarf', 'belt', 'sunglasses', 'ring', 'jewelry']
         }
         
         detected_items = []
