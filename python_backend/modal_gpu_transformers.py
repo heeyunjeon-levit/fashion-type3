@@ -61,6 +61,7 @@ image = (
         "supabase==2.10.0",
         "openai>=1.0.0",
         "boto3>=1.28.0",
+        "dds-cloudapi-sdk>=0.2.4",  # For DINO-X detection
     )
     # Add all necessary Python modules into the image
     .add_local_dir(backend_dir / "api", "/root/api")
@@ -208,7 +209,10 @@ def test_grounding_dino():
     memory=16384,  # 16GB for ML models
     timeout=600,
     volumes={"/cache": model_volume},
-    secrets=[modal.Secret.from_name("fashion-api-keys")],
+    secrets=[
+        modal.Secret.from_name("fashion-api-keys"),  # OPENAI_API_KEY, SUPABASE keys
+        modal.Secret.from_name("dinox-api-key"),     # DDS_API_TOKEN for DINO-X
+    ],
     scaledown_window=600,  # Keep container warm for 10 minutes
 )
 @modal.concurrent(max_inputs=10)  # Allow up to 10 concurrent requests
@@ -216,6 +220,12 @@ def test_grounding_dino():
 def fastapi_app_v2():
     """
     Load and return the FastAPI app with GPU-accelerated GroundingDINO
+    
+    Features:
+    - GPT-4o Vision detection (default)
+    - DINO-X detection (set USE_DINOX=true in request)
+    - Hybrid: DINO-X + GPT-4o-mini descriptions (best speed/cost)
+    
     Deployed at: https://heeyunjeon-levit--fashion-crop-api-gpu-fastapi-app-v2.modal.run/
     """
     import sys
@@ -225,6 +235,9 @@ def fastapi_app_v2():
     cache_dir = ensure_models_in_volume()
     os.environ["HF_HOME"] = cache_dir
     os.environ["TRANSFORMERS_CACHE"] = cache_dir
+    
+    # DINO-X is controlled per-request via use_dinox parameter
+    # No need to set USE_DINOX here - it's handled dynamically
     
     from api.server import app as fastapi_app
     return fastapi_app

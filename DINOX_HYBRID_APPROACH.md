@@ -185,10 +185,12 @@ for item in result['items']:
 ## 🎯 Next Steps
 
 ### To Deploy
-1. Set `OPENAI_API_KEY` in Railway environment
-2. Set `USE_DINOX=true` to enable hybrid mode
-3. Test with real user images
-4. Monitor cost savings vs quality
+1. Set `OPENAI_API_KEY` in Modal secrets
+2. Set `DDS_API_TOKEN` in Modal secrets (DINO-X API token)
+3. Set `USE_DINOX=true` in environment to enable hybrid mode
+4. Redeploy Modal app
+5. Test with real user images
+6. Monitor cost savings vs quality
 
 ### To Test
 1. ✅ DINO-X detection working
