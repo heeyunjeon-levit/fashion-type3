@@ -12,8 +12,19 @@ import base64
 import logging
 import requests
 from typing import Dict, List, Any, Optional
+from PIL import Image
+from io import BytesIO
 
 logger = logging.getLogger(__name__)
+
+# Try to import OpenAI for detailed descriptions (optional)
+try:
+    from openai import OpenAI
+    OPENAI_AVAILABLE = True
+    openai_client = OpenAI(api_key=os.environ.get('OPENAI_API_KEY'))
+except ImportError:
+    OPENAI_AVAILABLE = False
+    openai_client = None
 
 # DINO-X API Configuration
 DINOX_API_BASE = 'https://api.deepdataspace.com'
@@ -124,7 +135,8 @@ def create_detection_task(image_url: str) -> Optional[str]:
         # Convert image to base64
         base64_image = image_url_to_base64(image_url)
         
-        # Prepare request
+        # Prepare request - DINO-X doesn't support bbox+caption together
+        # We'll use bbox for detection, then enhance descriptions with GPT-4o mini (fast & cheap)
         payload = {
             "model": "DINO-X-1.0",
             "image": base64_image,
@@ -132,7 +144,7 @@ def create_detection_task(image_url: str) -> Optional[str]:
                 "type": "text",
                 "text": FASHION_PROMPT
             },
-            "targets": ["bbox"],
+            "targets": ["bbox"],  # Just bbox for now
             "bbox_threshold": 0.25,
             "iou_threshold": 0.8
         }
@@ -218,6 +230,151 @@ def map_dinox_category(dinox_category: str) -> str:
     return CATEGORY_MAPPING.get(dinox_category.lower(), 'accessories')
 
 
+def enhance_with_gpt4o_mini(image_url: str, objects: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """
+    Enhance DINO-X detections with detailed GPT-4o-mini descriptions
+    
+    Fast & cheap: GPT-4o-mini costs 1/60th of GPT-4o and is much faster
+    
+    Args:
+        image_url: URL or path to the image
+        objects: List of DINO-X detected objects with bboxes
+        
+    Returns:
+        Enhanced objects with detailed descriptions
+    """
+    if not OPENAI_AVAILABLE or not openai_client:
+        logger.warning("OpenAI not available, skipping detailed descriptions")
+        return objects
+    
+    if len(objects) == 0:
+        return objects
+    
+    try:
+        logger.info(f"✨ Enhancing {len(objects)} detections with GPT-4o-mini descriptions...")
+        
+        # Load image
+        if image_url.startswith('http'):
+            response = requests.get(image_url, timeout=30)
+            image = Image.open(BytesIO(response.content))
+        elif image_url.startswith('data:image'):
+            # Parse base64
+            base64_str = image_url.split(',')[1]
+            image_data = base64.b64decode(base64_str)
+            image = Image.open(BytesIO(image_data))
+        else:
+            # Local file
+            image = Image.open(image_url)
+        
+        # Convert to base64 for GPT-4o-mini
+        buffered = BytesIO()
+        image.save(buffered, format="JPEG")
+        img_base64 = base64.b64encode(buffered.getvalue()).decode('utf-8')
+        
+        # Create a prompt listing all detected items
+        items_list = []
+        for i, obj in enumerate(objects, 1):
+            category = obj.get('category', 'unknown')
+            bbox = obj.get('bbox', [])
+            items_list.append(f"{i}. {category} at position {bbox}")
+        
+        prompt = f"""You are a fashion expert. I've detected {len(objects)} fashion items in this image:
+
+{chr(10).join(items_list)}
+
+For each item, provide a detailed fashion description including:
+- Color and tone
+- Material/fabric (if visible)
+- Style details
+- Fit/silhouette
+
+Format your response as a JSON array with this structure:
+[
+  {{"item": 1, "description": "detailed fashion description"}},
+  {{"item": 2, "description": "detailed fashion description"}},
+  ...
+]
+
+Be specific and detailed like a fashion catalog would describe these items."""
+        
+        # Call GPT-4o-mini (fast & cheap!)
+        start_time = time.time()
+        response = openai_client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "image_url",
+                            "image_url": {
+                                "url": f"data:image/jpeg;base64,{img_base64}"
+                            }
+                        },
+                        {
+                            "type": "text",
+                            "text": prompt
+                        }
+                    ]
+                }
+            ],
+            max_tokens=1000,
+            temperature=0.3
+        )
+        
+        elapsed = time.time() - start_time
+        logger.info(f"✅ GPT-4o-mini descriptions in {elapsed:.2f}s")
+        
+        # Parse response
+        content = response.choices[0].message.content
+        
+        # Try to extract JSON
+        import json
+        import re
+        
+        # Find JSON array in response
+        json_match = re.search(r'\[.*\]', content, re.DOTALL)
+        if json_match:
+            descriptions = json.loads(json_match.group())
+            
+            # Map descriptions back to objects
+            for desc_obj in descriptions:
+                item_num = desc_obj.get('item', 0)
+                description = desc_obj.get('description', '')
+                
+                if 1 <= item_num <= len(objects):
+                    objects[item_num - 1]['detailed_description'] = description
+                    logger.info(f"   Item {item_num}: {description[:60]}...")
+        
+        return objects
+        
+    except Exception as e:
+        logger.error(f"Failed to enhance with GPT-4o-mini: {e}")
+        return objects  # Return original objects without enhancement
+
+
+class DINOXAnalyzer:
+    """
+    DINO-X Analyzer class - compatible interface with GPT4OFashionAnalyzer
+    """
+    
+    def __init__(self):
+        """Initialize DINO-X analyzer"""
+        logger.info("🚀 DINO-X Analyzer initialized")
+    
+    def analyze_fashion_items(self, image_path: str) -> Dict[str, Any]:
+        """
+        Analyze fashion items in image (compatible with GPT4OFashionAnalyzer interface)
+        
+        Args:
+            image_path: Path to image file or URL
+            
+        Returns:
+            Dict with detected items in standard format
+        """
+        return analyze_image_with_dinox(image_path)
+
+
 def analyze_image_with_dinox(image_url: str) -> Dict[str, Any]:
     """
     Analyze image using DINO-X API
@@ -259,8 +416,11 @@ def analyze_image_with_dinox(image_url: str) -> Dict[str, Any]:
         objects = result.get('objects', [])
         logger.info(f"📦 DINO-X detected {len(objects)} objects")
         
+        # Step 4: Enhance with GPT-4o-mini detailed descriptions (fast & cheap!)
+        enhanced_objects = enhance_with_gpt4o_mini(image_url, objects)
+        
         items = []
-        for obj in objects:
+        for obj in enhanced_objects:
             category = obj.get('category', 'unknown')
             bbox = obj.get('bbox', [])
             confidence = obj.get('score', 0.0)
@@ -268,17 +428,22 @@ def analyze_image_with_dinox(image_url: str) -> Dict[str, Any]:
             # Map to our standard categories
             mapped_category = map_dinox_category(category)
             
+            # Use GPT-4o-mini detailed description if available, otherwise use simple category
+            detailed_description = obj.get('detailed_description', category)
+            
             # Create item dict (compatible with GPT-4o format)
             item = {
                 'category': mapped_category,
                 'bbox': bbox,
                 'confidence': confidence,
-                'groundingdino_prompt': category,  # Use DINO-X category as prompt
-                'description': f"{category} detected by DINO-X"  # Simple description
+                'groundingdino_prompt': category,  # Keep simple category for GroundingDINO
+                'description': detailed_description  # Use detailed GPT-4o-mini description
             }
             
             items.append(item)
             logger.info(f"   - {mapped_category} ({category}, conf: {confidence:.2f})")
+            if 'detailed_description' in obj:
+                logger.info(f"     Description: {obj['detailed_description'][:80]}...")
         
         elapsed = time.time() - start_time
         

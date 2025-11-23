@@ -15,7 +15,6 @@ if "/root" not in sys.path:
     sys.path.append("/root")
 
 from src.analyzers.gpt4o_analyzer import GPT4OFashionAnalyzer
-from src.analyzers.fashion_analyzer import USE_DINOX
 from src.analyzers.dinox_analyzer import analyze_image_with_dinox
 import os
 
@@ -111,7 +110,10 @@ class CustomItemCropper:
             
             try:
                 # Step 1: Use DINO-X or GPT-4o to analyze and generate prompts
-                if USE_DINOX:
+                # Check environment variable dynamically (can be changed per request)
+                use_dinox = os.environ.get('USE_DINOX', 'false').lower() == 'true'
+                
+                if use_dinox:
                     print("🤖 Step 1: DINO-X analysis (fast mode)...")
                     gpt4o_start = time.time()
                     gpt_result = analyze_image_with_dinox(image_url)

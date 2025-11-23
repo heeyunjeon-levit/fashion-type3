@@ -60,6 +60,7 @@ class CropResponse(BaseModel):
 
 class AnalyzeRequest(BaseModel):
     imageUrl: str  # URL to uploaded image
+    use_dinox: Optional[bool] = False  # Use DINO-X instead of GPT-4o
 
 
 class DetectedItem(BaseModel):
@@ -158,14 +159,29 @@ async def analyze_image(request: AnalyzeRequest):
         print(f"\n{'='*80}")
         print(f"🔍 ANALYZE + CROP REQUEST RECEIVED")
         print(f"   Image URL: {request.imageUrl}")
+        print(f"   Use DINO-X: {request.use_dinox}")
         print(f"   CROPPER_AVAILABLE: {CROPPER_AVAILABLE}")
         print(f"{'='*80}\n")
         
         if CROPPER_AVAILABLE and analyze_and_crop_all:
-            print("✅ Analyzing and cropping image...")
-            result = analyze_and_crop_all(request.imageUrl)
-            print(f"✅ Complete: {len(result['items'])} items detected and cropped")
-            return AnalyzeResponse(**result)
+            # Temporarily set USE_DINOX environment variable if requested
+            old_use_dinox = os.environ.get('USE_DINOX')
+            if request.use_dinox:
+                os.environ['USE_DINOX'] = 'true'
+                print("🚀 Using DINO-X for detection")
+            
+            try:
+                print("✅ Analyzing and cropping image...")
+                result = analyze_and_crop_all(request.imageUrl)
+                print(f"✅ Complete: {len(result['items'])} items detected and cropped")
+                return AnalyzeResponse(**result)
+            finally:
+                # Restore original USE_DINOX value
+                if request.use_dinox:
+                    if old_use_dinox is None:
+                        os.environ.pop('USE_DINOX', None)
+                    else:
+                        os.environ['USE_DINOX'] = old_use_dinox
         else:
             print(f"⚠️ MOCK MODE: analyze not available")
             return AnalyzeResponse(items=[], cached=False)
