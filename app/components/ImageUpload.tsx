@@ -162,13 +162,14 @@ export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
       console.log('✅ Upload successful:', data.imageUrl)
       console.log(`⏱️  Frontend Upload Timing: ${totalUploadTime.toFixed(2)}s (compression: ${compressionTime.toFixed(2)}s, network: ${uploadRequestTime.toFixed(2)}s)`)
       
+      // Don't reset isUploading here - the component will be hidden by parent transition
+      // Keeping it as "uploading" prevents the button from reappearing
       onImageUploaded(data.imageUrl, totalUploadTime)
     } catch (error) {
       console.error('Error uploading image:', error)
       const errorMessage = error instanceof Error ? error.message : 'Unknown error'
       alert(`Failed to upload image: ${errorMessage}`)
-    } finally {
-      setIsUploading(false)
+      setIsUploading(false) // Only reset on error so user can retry
     }
   }
 

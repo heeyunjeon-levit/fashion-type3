@@ -1,0 +1,368 @@
+'use client';
+
+import { useState, useRef, useEffect } from 'react';
+import { useLanguage } from '../contexts/LanguageContext';
+
+interface BboxItem {
+  id: string;
+  bbox: [number, number, number, number]; // [x1, y1, x2, y2]
+  category: string;
+  mapped_category: string;
+  confidence: number;
+  selected?: boolean;
+}
+
+interface InteractiveBboxSelectorProps {
+  imageUrl: string;
+  bboxes: BboxItem[];
+  imageSize: [number, number]; // [width, height]
+  onSelectionChange: (allBboxes: BboxItem[]) => void; // Receives full array with selection states
+  onConfirm: () => void;
+}
+
+export default function InteractiveBboxSelector({
+  imageUrl,
+  bboxes: initialBboxes,
+  imageSize,
+  onSelectionChange,
+  onConfirm
+}: InteractiveBboxSelectorProps) {
+  const { t, language } = useLanguage();
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const imageRef = useRef<HTMLImageElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  
+  const [bboxes, setBboxes] = useState<BboxItem[]>(
+    initialBboxes.map(bbox => ({ ...bbox, selected: false }))
+  );
+  const [displaySize, setDisplaySize] = useState({ width: 0, height: 0 });
+  const [scale, setScale] = useState(1);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  
+  // Smart button positioning - alternates left/right sides to prevent overlap
+  const getButtonPositions = () => {
+    const buttonWidth = 120;
+    const buttonHeight = 44;
+    const horizontalOffset = 16; // Distance from bbox edge
+    const verticalSpacing = 60; // Minimum vertical space between buttons
+    
+    // Sort bboxes by vertical position (top to bottom)
+    const sortedBboxes = bboxes.map((bbox, index) => {
+      const [x1, y1, x2, y2] = bbox.bbox;
+      const bboxCenterY = ((y1 + y2) / 2) * scale;
+      return { bbox, index, bboxCenterY };
+    }).sort((a, b) => a.bboxCenterY - b.bboxCenterY);
+    
+    // Track used positions to prevent overlap
+    const usedPositions: Array<{ y: number; side: 'left' | 'right' }> = [];
+    
+    return sortedBboxes.map(({ bbox, index, bboxCenterY }, sortedIndex) => {
+      const [x1, y1, x2, y2] = bbox.bbox;
+      const scaledX1 = x1 * scale;
+      const scaledY1 = y1 * scale;
+      const scaledX2 = x2 * scale;
+      const scaledY2 = y2 * scale;
+      const bboxCenterX = (scaledX1 + scaledX2) / 2;
+      
+      // Determine which side to use
+      // Rule: Alternate sides, but check for conflicts with previous buttons
+      let preferredSide: 'left' | 'right' = sortedIndex % 2 === 0 ? 'left' : 'right';
+      
+      // Check if this position conflicts with recently placed buttons
+      const conflicts = usedPositions.filter(pos => 
+        Math.abs(pos.y - bboxCenterY) < verticalSpacing && pos.side === preferredSide
+      );
+      
+      // If there's a conflict, use the opposite side
+      if (conflicts.length > 0) {
+        preferredSide = preferredSide === 'left' ? 'right' : 'left';
+      }
+      
+      // Calculate button position based on side
+      let buttonX, anchorX;
+      if (preferredSide === 'left') {
+        buttonX = Math.max(horizontalOffset, scaledX1 - buttonWidth - horizontalOffset);
+        anchorX = scaledX1;
+      } else {
+        buttonX = Math.min(displaySize.width - buttonWidth - horizontalOffset, scaledX2 + horizontalOffset);
+        anchorX = scaledX2;
+      }
+      
+      // Vertical centering on the bbox
+      const buttonY = Math.max(
+        horizontalOffset,
+        Math.min(
+          displaySize.height - buttonHeight - horizontalOffset,
+          bboxCenterY - buttonHeight / 2
+        )
+      );
+      
+      // Record this position
+      usedPositions.push({ y: bboxCenterY, side: preferredSide });
+      
+      return {
+        originalIndex: index,
+        buttonX,
+        buttonY,
+        anchorX,
+        anchorY: bboxCenterY,
+        bboxCenterX,
+        bboxCenterY,
+        side: preferredSide
+      };
+    }).sort((a, b) => a.originalIndex - b.originalIndex); // Restore original order
+  };
+
+  // Debug logging
+  useEffect(() => {
+    console.log('🎨 InteractiveBboxSelector mounted:', {
+      initialBboxes: initialBboxes.length,
+      imageUrl,
+      imageSize
+    });
+  }, [initialBboxes.length, imageUrl, imageSize]);
+
+  // Load image and calculate display size
+  useEffect(() => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      console.log('🖼️  Image loaded:', {
+        naturalWidth: img.naturalWidth,
+        naturalHeight: img.naturalHeight,
+        imageSize: imageSize
+      });
+      
+      if (containerRef.current) {
+        const containerWidth = containerRef.current.clientWidth;
+        const containerHeight = window.innerHeight * 0.6; // Max 60vh
+        
+        // Use actual image dimensions instead of relying on imageSize from backend
+        const actualWidth = img.naturalWidth;
+        const actualHeight = img.naturalHeight;
+        
+        // Calculate scale to fit container while maintaining aspect ratio
+        const scaleX = containerWidth / actualWidth;
+        const scaleY = containerHeight / actualHeight;
+        const newScale = Math.min(scaleX, scaleY, 1); // Don't scale up
+        
+        setScale(newScale);
+        setDisplaySize({
+          width: actualWidth * newScale,
+          height: actualHeight * newScale
+        });
+        
+        if (imageRef.current) {
+          imageRef.current = img;
+        }
+      }
+    };
+    img.onerror = (e) => {
+      console.error('❌ Failed to load image:', e);
+    };
+    img.src = imageUrl;
+  }, [imageUrl]);
+
+  // Draw bboxes on canvas (non-interactive, just visual reference)
+  useEffect(() => {
+    if (!canvasRef.current || displaySize.width === 0) return;
+    
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    
+    console.log('🎨 Drawing bboxes:', {
+      count: bboxes.length,
+      displaySize,
+      scale
+    });
+    
+    // Clear canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Draw each bbox with subtle, elegant styling
+    bboxes.forEach((bbox, idx) => {
+      const [x1, y1, x2, y2] = bbox.bbox;
+      
+      // Bboxes are in absolute pixel coordinates from original image
+      // Scale them to display size
+      const scaledX1 = x1 * scale;
+      const scaledY1 = y1 * scale;
+      const scaledX2 = x2 * scale;
+      const scaledY2 = y2 * scale;
+      
+      const width = scaledX2 - scaledX1;
+      const height = scaledY2 - scaledY1;
+      
+      if (bbox.selected) {
+        // Selected: vibrant green with glow effect
+        ctx.strokeStyle = 'rgba(16, 185, 129, 0.8)';
+        ctx.lineWidth = 3;
+        ctx.setLineDash([]);
+        
+        // Outer glow
+        ctx.shadowColor = 'rgba(16, 185, 129, 0.4)';
+        ctx.shadowBlur = 8;
+        ctx.strokeRect(scaledX1, scaledY1, width, height);
+        ctx.shadowBlur = 0;
+        
+        // Light fill
+        ctx.fillStyle = 'rgba(16, 185, 129, 0.08)';
+        ctx.fillRect(scaledX1, scaledY1, width, height);
+      } else {
+        // Unselected: subtle dashed border
+        ctx.strokeStyle = 'rgba(209, 213, 219, 0.6)';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([6, 4]);
+        ctx.strokeRect(scaledX1, scaledY1, width, height);
+        ctx.setLineDash([]);
+        
+        // Very subtle fill
+        ctx.fillStyle = 'rgba(229, 231, 235, 0.05)';
+        ctx.fillRect(scaledX1, scaledY1, width, height);
+      }
+    });
+  }, [bboxes, displaySize, scale]);
+
+  // Handle button click for specific bbox
+  const handleBboxToggle = (index: number) => {
+    const newBboxes = [...bboxes];
+    newBboxes[index] = { ...newBboxes[index], selected: !newBboxes[index].selected };
+    setBboxes(newBboxes);
+    onSelectionChange(newBboxes);
+  };
+
+  // Select all / deselect all
+  const toggleSelectAll = () => {
+    const allSelected = bboxes.every(b => b.selected);
+    const newBboxes = bboxes.map(b => ({ ...b, selected: !allSelected }));
+    setBboxes(newBboxes);
+    onSelectionChange(newBboxes);
+  };
+
+  const selectedCount = bboxes.filter(b => b.selected).length;
+
+  return (
+    <div className="w-full max-w-4xl mx-auto">
+      {/* Image with overlay buttons - Instagram style */}
+      <div ref={containerRef} className="relative w-full flex items-center justify-center">
+        {displaySize.width > 0 && (
+          <div 
+            className="relative w-full"
+            style={{
+              maxWidth: displaySize.width,
+              aspectRatio: `${displaySize.width} / ${displaySize.height}`,
+            }}
+          >
+            <img
+              src={imageUrl}
+              alt="Uploaded"
+              className="w-full h-full object-contain rounded-lg"
+            />
+            <canvas
+              ref={canvasRef}
+              width={displaySize.width}
+              height={displaySize.height}
+              className="absolute top-0 left-0 w-full h-full pointer-events-none"
+            />
+            
+            {/* SVG for connecting lines */}
+            <svg
+              className="absolute top-0 left-0 w-full h-full pointer-events-none"
+            >
+              {getButtonPositions().map((pos, index) => {
+                const bbox = bboxes[index];
+                const isSelected = bbox.selected;
+                const isHovered = hoveredIndex === index;
+                
+                if (!isSelected && !isHovered) return null;
+                
+                // Calculate line positions as percentages
+                const buttonCenterX = ((pos.buttonX + 60) / displaySize.width) * 100;
+                const buttonCenterY = ((pos.buttonY + 22) / displaySize.height) * 100;
+                const anchorX = (pos.anchorX / displaySize.width) * 100;
+                const anchorY = (pos.anchorY / displaySize.height) * 100;
+                
+                return (
+                  <g key={`line-${bbox.id}`}>
+                    {/* Connecting line */}
+                    <line
+                      x1={`${buttonCenterX}%`}
+                      y1={`${buttonCenterY}%`}
+                      x2={`${anchorX}%`}
+                      y2={`${anchorY}%`}
+                      stroke={isSelected ? 'rgba(0,0,0,0.3)' : 'rgba(156,163,175,0.4)'}
+                      strokeWidth={isSelected ? 2 : 1.5}
+                      strokeDasharray={isSelected ? '0' : '3 3'}
+                      className="transition-all duration-300"
+                    />
+                  </g>
+                );
+              })}
+            </svg>
+            
+            {/* Overlay buttons - alternating left/right */}
+            {getButtonPositions().map((pos, index) => {
+              const bbox = bboxes[index];
+              
+              // Calculate position as percentages for responsive design
+              const leftPercent = (pos.buttonX / displaySize.width) * 100;
+              const topPercent = (pos.buttonY / displaySize.height) * 100;
+              
+              return (
+                <button
+                  key={bbox.id}
+                  onClick={() => handleBboxToggle(index)}
+                  onMouseEnter={() => setHoveredIndex(index)}
+                  onMouseLeave={() => setHoveredIndex(null)}
+                  className={`absolute px-5 py-2.5 text-sm font-semibold rounded-full transition-all duration-200 cursor-pointer flex items-center gap-2 whitespace-nowrap ${
+                    bbox.selected
+                      ? 'bg-black text-white shadow-lg'
+                      : 'bg-white/95 backdrop-blur-sm text-gray-900 shadow-md hover:shadow-lg'
+                  }`}
+                  style={{
+                    left: `${leftPercent}%`,
+                    top: `${topPercent}%`,
+                    zIndex: 50,
+                  }}
+                >
+                  <span className="capitalize tracking-wide">{bbox.category}</span>
+                  {bbox.selected ? (
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
+                    </svg>
+                  ) : (
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                    </svg>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* Bottom fixed action button - Instagram style */}
+      <div className="fixed bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-white via-white to-transparent pointer-events-none">
+        <div className="max-w-4xl mx-auto pointer-events-auto">
+          <button
+            onClick={onConfirm}
+            disabled={selectedCount === 0}
+            className={`w-full py-4 text-base font-bold rounded-full transition-all ${
+              selectedCount > 0
+                ? 'bg-black text-white hover:bg-gray-900 shadow-xl hover:shadow-2xl'
+                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+            }`}
+          >
+            {language === 'ko' 
+              ? selectedCount > 0 ? `${selectedCount}개 아이템 검색` : '아이템을 선택하세요'
+              : selectedCount > 0 ? `Search ${selectedCount} Items` : 'Select items to search'
+            }
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
