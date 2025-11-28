@@ -151,10 +151,6 @@ export default function InteractiveBboxSelector({
           width: actualWidth * newScale,
           height: actualHeight * newScale
         });
-        
-        if (imageRef.current) {
-          imageRef.current = img;
-        }
       }
     };
     img.onerror = (e) => {
