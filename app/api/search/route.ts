@@ -248,7 +248,7 @@ export async function POST(request: NextRequest) {
             const ocrData = await ocrResponse.json()
             console.log(`   ✅ OCR search complete: ${ocrData.success}`)
             console.log(`   📦 Product results count: ${ocrData.product_results?.length || 0}`)
-            console.log(`   📊 Full OCR response:`, JSON.stringify(ocrData, null, 2).substring(0, 1000))
+            console.log(`   📊 Full OCR response:`, JSON.stringify(ocrData, null, 2).substring(0, 500))
             
             if (ocrData.success) {
               // Transform to existing format for frontend compatibility
@@ -276,62 +276,68 @@ export async function POST(request: NextRequest) {
               console.log(`\n✅ V3.1 OCR Search complete in ${totalTime.toFixed(1)}s`)
               console.log(`   Brands found: ${Object.keys(results).length}`)
               
-              // Check if we actually got results
-              if (Object.keys(results).length > 0) {
-                return NextResponse.json({
-                  results,
-                  meta: {
-                    mode: 'ocr_v3.1',
-                    success: true,
-                    total_time: totalTime,
-                    ocr_mapping: ocrData.mapping,
-                    summary: ocrData.summary
-                  },
-                  timing: {
-                    total_seconds: totalTime
-                  }
-                })
-              } else {
-                console.log('   ⚠️ OCR succeeded but produced 0 results - returning failure response')
-                return NextResponse.json({
-                  results: {},
-                  meta: {
-                    fallbackMode: true,
-                    success: false,
-                    message: 'No valid products found after analysis'
-                  }
-                })
-              }
+              return NextResponse.json({
+                results,
+                meta: {
+                  mode: 'ocr_v3.1',
+                  success: true,
+                  total_time: totalTime,
+                  ocr_mapping: ocrData.mapping,
+                  summary: ocrData.summary
+                },
+                timing: {
+                  total_seconds: totalTime
+                }
+              })
             } else {
-              // Backend returned success: false
-              console.log('   ⚠️ Backend OCR returned success: false')
-              console.log('   Error:', ocrData.error || ocrData.message || 'unknown')
+              // OCR succeeded but found no text or products
+              const totalTime = (Date.now() - requestStartTime) / 1000
+              console.log(`   ⚠️ OCR returned no results: ${ocrData.reason || 'unknown reason'}`)
               return NextResponse.json({
                 results: {},
                 meta: {
-                  fallbackMode: true,
+                  mode: 'ocr_v3.1',
                   success: false,
-                  message: ocrData.error || ocrData.message || 'No valid products found after analysis'
+                  reason: ocrData.reason || 'No OCR text detected',
+                  total_time: totalTime
+                },
+                timing: {
+                  total_seconds: totalTime
                 }
               })
             }
           } else {
-            console.error(`   ❌ OCR search HTTP failed: ${ocrResponse.status}`)
-            const errorText = await ocrResponse.text()
-            console.error(`   Error response:`, errorText.substring(0, 500))
+            console.error(`   ❌ OCR search failed: ${ocrResponse.status}`)
+            const totalTime = (Date.now() - requestStartTime) / 1000
             return NextResponse.json({
               results: {},
               meta: {
-                fallbackMode: true,
+                mode: 'ocr_v3.1',
                 success: false,
-                message: `Backend error: ${ocrResponse.status}`
+                reason: `Backend returned ${ocrResponse.status}`,
+                total_time: totalTime
+              },
+              timing: {
+                total_seconds: totalTime
               }
             })
           }
         }
       } catch (ocrError) {
         console.error('   ❌ OCR search error:', ocrError)
-        console.log('   Falling back to regular search...')
+        const totalTime = (Date.now() - requestStartTime) / 1000
+        return NextResponse.json({
+          results: {},
+          meta: {
+            mode: 'ocr_v3.1',
+            success: false,
+            reason: `OCR search error: ${ocrError}`,
+            total_time: totalTime
+          },
+          timing: {
+            total_seconds: totalTime
+          }
+        })
       }
     }
 
@@ -785,16 +791,17 @@ export async function POST(request: NextRequest) {
 The original cropped image shows: ${searchTerms.join(', ')}
 ${itemDescription ? `\n🎯 **SPECIFIC ITEM DESCRIPTION: "${itemDescription}"**\nYou MUST find products that match THIS SPECIFIC DESCRIPTION, not just the general category.` : ''}
 
-🚨 CRITICAL CATEGORY FILTER:
+🚨 CRITICAL CATEGORY FILTER - MUST BE STRICTLY ENFORCED:
 - You are searching for: ${categoryLabels[categoryKey]}
 - ONLY return products that match this exact category type
+- **READ THE TITLE** and verify it matches the category BEFORE selecting it
 ${subTypeExclusion ? subTypeExclusion : ''}
-- ${categoryKey === 'tops' && !specificSubType ? '❌ EXCLUDE: pants, shorts, skirts, dresses, shoes, bags, accessories' : ''}
-- ${categoryKey === 'bottoms' && !specificSubType ? '❌ EXCLUDE: shirts, jackets, hoodies, sweaters, dresses, shoes, bags, accessories' : ''}
-- ${categoryKey === 'shoes' && !specificSubType ? '❌ EXCLUDE: clothing items, bags, accessories' : ''}
-- ${categoryKey === 'bag' && !specificSubType ? '❌ EXCLUDE: clothing items, shoes, accessories (except bags)' : ''}
-- ${categoryKey === 'accessory' && !specificSubType ? '❌ EXCLUDE: clothing items, shoes, bags' : ''}
-- ${categoryKey === 'dress' ? '❌ EXCLUDE: shirts, pants, shorts, shoes, bags, accessories' : ''}
+- ${categoryKey === 'tops' && !specificSubType ? '❌ ABSOLUTELY REJECT: Any title mentioning "jeans", "pants", "trousers", "shorts", "skirt", "dress", "바지", "청바지", "반바지", "치마"' : ''}
+- ${categoryKey === 'bottoms' && !specificSubType ? '❌ ABSOLUTELY REJECT: Any title mentioning "shirt", "blouse", "jacket", "hoodie", "sweater", "coat", "blazer", "top", "modal-blend", "tie-front", "셔츠", "블라우스", "재킷", "후드", "코트", "상의", "티셔츠", "아우터"' : ''}
+- ${categoryKey === 'shoes' && !specificSubType ? '❌ ABSOLUTELY REJECT: clothing items, bags, accessories' : ''}
+- ${categoryKey === 'bag' && !specificSubType ? '❌ ABSOLUTELY REJECT: clothing items, shoes, accessories (except bags)' : ''}
+- ${categoryKey === 'accessory' && !specificSubType ? '❌ ABSOLUTELY REJECT: clothing items, shoes, bags' : ''}
+- ${categoryKey === 'dress' ? '❌ ABSOLUTELY REJECT: Any title mentioning "pants", "jeans", "shorts", "shirt", "jacket", "바지", "셔츠", "재킷"' : ''}
 
 CRITICAL SELECTION RULES (in order of priority):
 1. CATEGORY MATCH FIRST: Must be the correct garment type (${categorySearchTerms[categoryKey]?.join(' OR ')})
@@ -804,7 +811,8 @@ CRITICAL SELECTION RULES (in order of priority):
 5. Accept unknown brands, boutique stores, international sites
 6. Accept: Amazon, Zara, H&M, Nordstrom, Uniqlo, Musinsa, YesStyle, SHEIN, Etsy, Depop, Poshmark, vintage stores, Korean fashion sites, ANY online retailer
 7. 🚫 REJECT these sites (NOT product pages): Instagram, TikTok, YouTube, Pinterest, Facebook, Twitter/X, Reddit, Google Images, image CDNs, blogs, news sites, wikis, non-product pages
-8. If you cannot find 3 VALID PRODUCT LINKS, return fewer than 3. NEVER include non-product sites just to fill the quota.
+8. 🚫 REJECT non-product pages: URLs ending with /reviews, /questions, /qa, /ratings (these are NOT product detail pages)
+9. If you cannot find 3 VALID PRODUCT LINKS, return fewer than 3. NEVER include non-product sites just to fill the quota.
 
 SELECTION PROCESS:
 - These results are aggregated from 3 cropped image runs + 3 full image runs for maximum coverage
@@ -825,7 +833,9 @@ ${itemDescription ? `3. 🎯 **Title MUST closely match "${itemDescription}"**
    - REJECT if colors don't match (unless item description didn't specify color)
    - For Korean text: be precise with category, flexible with style descriptions` : ''}
 4. ✅ STRONGLY PREFER titles with MATCHING COLOR (reject if clearly different color)
-5. ❌ REJECT if wrong${specificSubType ? ` item type (e.g., wrong ${specificSubType})` : ' category'} 
+5. ❌ REJECT if wrong${specificSubType ? ` item type (e.g., wrong ${specificSubType})` : ' category'}
+   ${categoryKey === 'tops' ? '**EXAMPLE: If title says "jeans", "pants", "shorts", "skirt" → REJECT immediately (these are bottoms, not tops)**' : ''}
+   ${categoryKey === 'bottoms' ? '**EXAMPLE: If title says "shirt", "blouse", "jacket", "hoodie", "sweater", "modal-blend", "tie-front" → REJECT immediately (these are tops, not bottoms)**' : ''}
 6. ❌ REJECT if title is generic ("Shop now", "Homepage", "Category", "Collection")
 7. ❌ REJECT if significantly different style (formal vs casual, vintage vs modern)
 
@@ -851,25 +861,30 @@ AVAILABILITY & ACCESSIBILITY NOTES:
 Search results (scan all ${resultsForGPT.length} for best matches):
 ${JSON.stringify(resultsForGPT, null, 2)}
 
-**VALIDATION PROCESS (be forgiving and flexible):**
+**VALIDATION PROCESS (STRICT FOR CATEGORY, FLEXIBLE FOR STYLE):**
 For EACH result you consider:
 1. 📖 READ the "title" field first
-2. ✅ CHECK: Does title mention the correct category? (${categorySearchTerms[categoryKey]?.join('/')})
-3. ✅ PREFER: Title mentions similar color/style (but accept close variations)
-4. ✅ CHECK: Is it a specific product (not "Shop", "Category", "Homepage")?
-5. ✅ SELECT if category matches and it's a reasonable match (don't be too strict!)
+2. 🚫 CHECK THE URL: Does it end with /reviews, /questions, /qa? → SKIP IMMEDIATELY (not a product page)
+3. ✅ CHECK: Does title mention the correct category? (${categorySearchTerms[categoryKey]?.join('/')})
+   ${categoryKey === 'tops' ? '⚠️ IF TITLE MENTIONS PANTS/JEANS/SHORTS/SKIRT IN ANY LANGUAGE → SKIP IMMEDIATELY' : ''}
+   ${categoryKey === 'bottoms' ? '⚠️ IF TITLE MENTIONS SHIRT/JACKET/SWEATER/HOODIE IN ANY LANGUAGE → SKIP IMMEDIATELY' : ''}
+4. ✅ PREFER: Title mentions similar color/style (but accept close variations)
+5. ✅ CHECK: Is it a specific product (not "Shop", "Category", "Homepage")?
+6. ✅ SELECT only if category is 100% correct AND URL is a product detail page
 
 Find the TOP 3-5 BEST AVAILABLE MATCHES. Prioritize:
-- Category accuracy (must match)
+- Category accuracy (MUST MATCH - this is non-negotiable)
 - Similar color/style (prefer but don't require exact)
 - Product variety (different retailers when possible)
 - Accessibility (prefer major retailers)
 
-✅ IMPORTANT: Return your BEST 3-5 options even if not perfect. 
+✅ IMPORTANT: Quality over quantity!
+- ${categoryKey === 'tops' ? '🚨 FOR TOPS: Zero tolerance for pants/jeans/shorts - if you see ANY bottom garment keywords in title, REJECT it' : ''}
+- ${categoryKey === 'bottoms' ? '🚨 FOR BOTTOMS: Zero tolerance for shirts/blouses/jackets/tops - if title mentions "shirt", "blouse", "jacket", "modal-blend", "tie-front", "top", or ANY upper body garment, REJECT it immediately' : ''}
 - Accept close color matches (navy ≈ black, cream ≈ white)
-- Accept style variations within the same category
-- Be forgiving with Korean titles (translation may vary)
-- Only return [] if literally NO valid product links exist in the results
+- Accept style variations WITHIN the same category only
+- Be forgiving with Korean titles (translation may vary) BUT category must be correct
+- Return [] if you cannot find valid products in the correct category - DO NOT return wrong category products
 
 Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links preferred) or {"${resultKey}": []} ONLY if zero valid products found.`
 
@@ -955,6 +970,97 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links preferred) or
             return false
           }
           
+          // CRITICAL: Category mismatch filter - Check product title for wrong category keywords
+          const resultItem = resultsForGPT.find((item: any) => item.link === link)
+          if (resultItem && resultItem.title) {
+            const title = resultItem.title.toLowerCase()
+            
+            // Define wrong category keywords for each category (very comprehensive)
+            const wrongKeywords: Record<string, string[]> = {
+              'tops': [
+                // English
+                'jean', 'jeans', 'pant', 'pants', 'trouser', 'trousers', 'short', 'shorts', 'skirt', 'skirts', 'dress', 'dresses',
+                'denim pant', 'denim short', 'cargo pant', 'wide pant', 'slim pant', 'baggy pant',
+                // Korean - comprehensive list
+                '바지', '청바지', '반바지', '치마', '드레스', '팬츠', '슬랙스', 
+                '데님팬츠', '데님바지', '진', '스키니', '와이드팬츠', '부츠컷', '벨보텀',
+                '카고팬츠', '조거팬츠', '슬랙스바지', '면바지', '린넨바지', '코튼팬츠',
+                '핀턱바지', '밴딩팬츠', '밴딩바지', '통바지', '일자바지', '스트레이트팬츠',
+                '포켓바지', '포켓팬츠', '워싱바지', '워싱팬츠', '루즈핏바지', '루즈핏팬츠',
+                // Common product descriptors for pants in Korean
+                '하의', '치마바지', '큐롯', '쇼츠', '하프팬츠', '5부바지', '7부바지', '9부바지',
+                '롱팬츠', '크롭팬츠', '크롭바지', '앵클팬츠'
+              ],
+              'bottoms': [
+                // English - comprehensive tops list
+                'shirt', 'blouse', 'jacket', 'coat', 'sweater', 'hoodie', 'cardigan', 'top', 'blazer', 'vest',
+                't-shirt', 'tshirt', 'tee', 'polo', 'button-up', 'button up', 'tie-front', 'crop top',
+                'tank top', 'camisole', 'sweatshirt', 'pullover', 'jumper', 'tunic', 'poncho',
+                // Korean - comprehensive tops list
+                '셔츠', '재킷', '후드', '코트', '스웨터', '니트', '가디건', '블라우스', '상의',
+                '티셔츠', '맨투맨', '후드티', '집업', '아우터', '점퍼', '자켓', '블레이저',
+                '베스트', '조끼', '가디건', '니트티', '폴라티', '긴팔티', '반팔티', '민소매',
+                '크롭티', '크롭탑', '캐미솔', '뷔스티에', '슬리브리스', '나시',
+                // Modal/tie-front specific (appears in Korean shopping)
+                'modal', 'tie-front', '타이', '프론트', '모달'
+              ],
+              'shoes': ['shirt', 'pant', 'jean', 'jacket', 'dress', 'bag', 'backpack', '셔츠', '바지', '가방', '재킷'],
+              'bag': ['shirt', 'pant', 'jean', 'jacket', 'dress', 'shoe', 'boot', 'sneaker', '셔츠', '바지', '신발', '재킷'],
+              'accessory': ['shirt', 'pant', 'jean', 'jacket', 'dress', 'shoe', 'bag', '셔츠', '바지', '신발', '가방', '재킷'],
+              'dress': ['pant', 'jean', 'short', 'shirt', 'jacket', '바지', '셔츠', '재킷']
+            }
+            
+            const keywordsToAvoid = wrongKeywords[categoryKey] || []
+            
+            // Check if title contains any wrong category keywords
+            for (const keyword of keywordsToAvoid) {
+              // For exact word matching (avoid false positives like "shortened" containing "short")
+              const regex = new RegExp(`\\b${keyword}\\b`, 'i')
+              if (regex.test(title) || title.includes(keyword)) {
+                console.log(`🚫 Category mismatch (title): "${resultItem.title.substring(0, 60)}..." contains "${keyword}" (searching for ${categoryKey})`)
+                return false
+              }
+            }
+            
+            // ADDITIONAL: Check URL path for category indicators (Korean sites often use URL segments)
+            if (categoryKey === 'tops') {
+              const urlPath = linkLower
+              const wrongUrlPatterns = [
+                '/pants/', '/jeans/', '/denim/', '/trousers/', '/shorts/', '/skirt/', '/bottom/',
+                '/바지/', '/청바지/', '/팬츠/', '/반바지/', '/치마/', '/하의/',
+                'category=pants', 'category=bottom', 'category=jeans',
+                '/goods/pants', '/goods/jeans', '/goods/bottom',
+                '/product/pants', '/product/jeans', '/product/bottom'
+              ]
+              
+              for (const pattern of wrongUrlPatterns) {
+                if (urlPath.includes(pattern)) {
+                  console.log(`🚫 Category mismatch (URL): "${link.substring(0, 60)}..." URL contains "${pattern}" (searching for tops)`)
+                  return false
+                }
+              }
+            }
+            
+            // ADDITIONAL: Check URL path for tops when searching for bottoms
+            if (categoryKey === 'bottoms') {
+              const urlPath = linkLower
+              const wrongUrlPatterns = [
+                '/shirt/', '/blouse/', '/top/', '/jacket/', '/coat/', '/sweater/', '/hoodie/',
+                '/셔츠/', '/블라우스/', '/상의/', '/티셔츠/', '/재킷/', '/아우터/',
+                'category=shirt', 'category=top', 'category=blouse',
+                '/goods/shirt', '/goods/blouse', '/goods/top',
+                '/product/shirt', '/product/blouse', '/product/top'
+              ]
+              
+              for (const pattern of wrongUrlPatterns) {
+                if (urlPath.includes(pattern)) {
+                  console.log(`🚫 Category mismatch (URL): "${link.substring(0, 60)}..." URL contains "${pattern}" (searching for bottoms)`)
+                  return false
+                }
+              }
+            }
+          }
+          
           // Filter out category/search/listing pages (not actual products)
           // Be precise to avoid false positives on actual product pages with query params
           const isCategoryPage = 
@@ -976,7 +1082,16 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links preferred) or
             linkLower.match(/[?&]q=/i) && !linkLower.includes('/product') || // Allow /product?q=... but not /search?q=...
             // Collection/product listing endpoints (but allow specific products)
             linkLower.match(/\/products\?/i) && !linkLower.match(/\/products\/[^?]+\?/) || // Block /products? but allow /products/123?
-            linkLower.match(/\/collections\?/i) && !linkLower.match(/\/collections\/[^?]+\/products/)  // Block /collections? but allow /collections/xyz/products/123
+            linkLower.match(/\/collections\?/i) && !linkLower.match(/\/collections\/[^?]+\/products/) ||  // Block /collections? but allow /collections/xyz/products/123
+            // Non-product pages (reviews, Q&A, etc.)
+            linkLower.endsWith('/reviews') ||
+            linkLower.endsWith('/reviews/') ||
+            linkLower.includes('/reviews?') ||
+            linkLower.endsWith('/questions') ||
+            linkLower.endsWith('/qa') ||
+            linkLower.endsWith('/ratings') ||
+            linkLower.includes('/customer-reviews') ||
+            linkLower.includes('/product-reviews')
           
           if (isCategoryPage) {
             console.log(`🚫 Blocked category/search page: ${link.substring(0, 60)}...`)
@@ -992,16 +1107,16 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links preferred) or
           
           // Post-filter check (backup - most filtering already done pre-GPT)
           // Only catches items if GPT somehow selected a filtered-out result
-          const resultItem = resultsForGPT.find((item: any) => item.link === link)
-          if (!resultItem) {
+          const foundResult = resultsForGPT.find((item: any) => item.link === link)
+          if (!foundResult) {
             console.log(`🚫 Post-filter: Link not in filtered results: ${link.substring(0, 60)}...`)
             return false
           }
           
           // ADDITIONAL VALIDATION: Check if title matches the specific item description
           // This catches cases where GPT might have missed specific attribute mismatches
-          if (itemDescription && resultItem.title) {
-            const title = resultItem.title.toLowerCase()
+          if (itemDescription && foundResult.title) {
+            const title = foundResult.title.toLowerCase()
             const description = itemDescription.toLowerCase()
             
             // Extract key descriptive words from the description (color, material, type, etc.)
@@ -1030,7 +1145,7 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links preferred) or
               if (hasDescAttribute) {
                 const hasExcludedAttribute = mismatch.exclude.some(attr => title.includes(attr))
                 if (hasExcludedAttribute) {
-                  console.log(`🚫 Post-filter: Title attribute mismatch for "${itemDescription}": "${resultItem.title?.substring(0, 80)}..."`)
+                  console.log(`🚫 Post-filter: Title attribute mismatch for "${itemDescription}": "${foundResult.title?.substring(0, 80)}..."`)
                   return false
                 }
               }
@@ -1113,7 +1228,7 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links preferred) or
                 return false
               }
               
-              // Filter out category/search pages
+              // Filter out category/search pages and non-product pages
               const isCategoryPage = 
                 linkLower.includes('/search?') ||
                 linkLower.includes('/search.') ||
@@ -1129,10 +1244,19 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links preferred) or
                 linkLower.match(/[?&]keyword=/i) ||
                 linkLower.match(/[?&]q=/i) && !linkLower.includes('/product') ||
                 linkLower.match(/\/products\?/i) && !linkLower.match(/\/products\/[^?]+\?/) ||
-                linkLower.match(/\/collections\?/i) && !linkLower.match(/\/collections\/[^?]+\/products/)
+                linkLower.match(/\/collections\?/i) && !linkLower.match(/\/collections\/[^?]+\/products/) ||
+                // Non-product pages (reviews, Q&A, etc.)
+                linkLower.endsWith('/reviews') ||
+                linkLower.endsWith('/reviews/') ||
+                linkLower.includes('/reviews?') ||
+                linkLower.endsWith('/questions') ||
+                linkLower.endsWith('/qa') ||
+                linkLower.endsWith('/ratings') ||
+                linkLower.includes('/customer-reviews') ||
+                linkLower.includes('/product-reviews')
               
               if (isCategoryPage) {
-                console.log(`🛟 Fallback: Blocked category page: ${item.link.substring(0, 60)}...`)
+                console.log(`🛟 Fallback: Blocked category/non-product page: ${item.link.substring(0, 60)}...`)
                 return false
               }
               
