@@ -160,73 +160,9 @@ export default function Home() {
       }
     }
 
-    // V3.1 OCR MODE: Skip detection, go directly to OCR search with full image
-      if (useOCRSearch) {
-        console.log('🚀 OCR Mode: Skipping detection, using full image for OCR search')
-        setCurrentStep('searching')
-        setIsLoading(true)
-        setOverallProgress(0)
-        
-        // Realistic progress simulation for OCR (~115 seconds based on actual timing)
-        const ocrDuration = 115000 // 115 seconds
-        const interval = 200 // Update every 200ms for smooth animation
-        const increment = (95 / ocrDuration) * interval
-        
-        const progressTimer = setInterval(() => {
-          setOverallProgress(prev => {
-            const next = prev + increment
-            return next >= 95 ? 95 : next
-          })
-        }, interval)
-      
-      try {
-        console.log('🔍 Starting V3.1 OCR Search with full image...')
-        const response = await fetch('/api/search', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            categories: [],
-            croppedImages: {},
-            originalImageUrl: imageUrl,
-            useOCRSearch: true,
-          }),
-        })
-
-        clearInterval(progressTimer) // Stop progress simulation when response arrives
-        const data = await response.json()
-        console.log('📦 OCR Search Response:', {
-          success: data.meta?.success,
-          mode: data.meta?.mode,
-          resultsCount: Object.keys(data.results || {}).length,
-          meta: data.meta
-        })
-        setResults(data.results || {})
-        
-        // Log search results
-        if (sessionManager) {
-          await sessionManager.logSearchResults(data.results, data.meta || {})
-          
-          if (data.meta?.ocr_mapping) {
-            console.log('📝 OCR Mapping:', data.meta.ocr_mapping)
-          }
-          if (data.meta?.summary) {
-            console.log('📊 Search Summary:', data.meta.summary)
-          }
-        }
-        
-        setCurrentStep('results')
-      } catch (error) {
-        clearInterval(progressTimer) // Stop progress on error
-        console.error('Error in OCR search:', error)
-        alert('An error occurred during OCR search. Please try again.')
-        setCurrentStep('upload')
-      } finally {
-        setIsLoading(false)
-      }
-      return
-    }
+    // Note: OCR mode is handled during the search phase, not during detection
+    // We still detect items and let users select them
+    // The OCR flag is passed to the search API to use OCR-based search instead of visual search
 
     if (useInteractiveMode) {
       // INTERACTIVE MODE: Fast detection first, user selects, then process
