@@ -224,7 +224,8 @@ export default function Home() {
       
       try {
         console.log('🔍 Starting V3.1 OCR Search with real-time progress...')
-        const backendUrl = process.env.NEXT_PUBLIC_GPU_API_URL || 'http://localhost:8000'
+        // Use CPU app for OCR (doesn't need GPU)
+        const backendUrl = 'https://heeyunjeon-levit--fashion-crop-api-fastapi-app.modal.run'
         
         // Try streaming endpoint first for real-time progress
         try {
