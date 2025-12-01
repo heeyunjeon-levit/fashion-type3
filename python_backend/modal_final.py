@@ -29,6 +29,7 @@ image = (
         "pydantic==2.5.0",
         "python-dotenv==1.0.0",
         "requests==2.31.0",
+        "beautifulsoup4==4.12.3",
     )
     # Install PyTorch
     .pip_install(
@@ -67,6 +68,7 @@ image = (
     .add_local_dir(backend_dir / "data/weights", "/root/data/weights")
     .add_local_file(backend_dir / "crop_api.py", "/root/crop_api.py")
     .add_local_file(backend_dir / "custom_item_cropper.py", "/root/custom_item_cropper.py")
+    .add_local_file(backend_dir / "ocr_search_pipeline.py", "/root/ocr_search_pipeline.py")
 )
 
 # Deploy the FastAPI app
