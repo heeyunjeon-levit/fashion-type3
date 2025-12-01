@@ -191,13 +191,27 @@ async def detect_items(request: DetectRequest):
         print(f"{'='*80}\n")
         
         # Import the fast detection function
-        from src.analyzers.dinox_analyzer import detect_bboxes_only
+        try:
+            from src.analyzers.dinox_analyzer import detect_bboxes_only
+            print("✅ Successfully imported detect_bboxes_only")
+        except ImportError as ie:
+            print(f"❌ Import error: {ie}")
+            # Return empty result if import fails
+            return DetectResponse(
+                bboxes=[],
+                image_size=[0, 0],
+                processing_time=0.0
+            )
         
         # Run fast detection
         print("✅ Running DINO-X fast detection...")
         result = detect_bboxes_only(request.imageUrl)
         
         print(f"✅ Detection complete: {len(result['bboxes'])} items found in {result['meta']['processing_time']}s")
+        
+        # Check if there was an error in the result
+        if 'error' in result.get('meta', {}):
+            print(f"⚠️  Detection returned with error: {result['meta']['error']}")
         
         return DetectResponse(
             bboxes=result['bboxes'],
