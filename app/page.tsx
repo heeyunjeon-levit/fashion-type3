@@ -160,9 +160,74 @@ export default function Home() {
       }
     }
 
-    // Note: OCR mode is handled during the search phase, not during detection
-    // We still detect items and let users select them
-    // The OCR flag is passed to the search API to use OCR-based search instead of visual search
+    // V3.1 OCR MODE: Skip detection, go directly to OCR search with full image
+    if (useOCRSearch) {
+      console.log('🚀 OCR Mode: Skipping detection, using full image for OCR search')
+      setCurrentStep('searching')
+      setIsLoading(true)
+      setOverallProgress(0)
+      
+      // Smooth progress animation for OCR
+      const smoothProgressInterval = setInterval(() => {
+        setOverallProgress(prev => {
+          if (prev < 94) {
+            return Math.min(94, prev + 0.1)
+          }
+          return prev
+        })
+      }, 100)
+      
+      try {
+        console.log('🔍 Starting V3.1 OCR Search with full image...')
+        const response = await fetch('/api/search', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            categories: [],
+            croppedImages: {},
+            originalImageUrl: imageUrl,
+            useOCRSearch: true,
+          }),
+        })
+
+        clearInterval(smoothProgressInterval)
+        const data = await response.json()
+        console.log('📦 OCR Search Response:', {
+          success: data.meta?.success,
+          mode: data.meta?.mode,
+          resultsCount: Object.keys(data.results || {}).length,
+          meta: data.meta
+        })
+        
+        setOverallProgress(95)
+        setResults(data.results || {})
+        
+        // Log search results
+        if (sessionManager) {
+          await sessionManager.logSearchResults(data.results, data.meta || {})
+          
+          if (data.meta?.ocr_mapping) {
+            console.log('📝 OCR Mapping:', data.meta.ocr_mapping)
+          }
+          if (data.meta?.summary) {
+            console.log('📊 Search Summary:', data.meta.summary)
+          }
+        }
+        
+        setOverallProgress(100)
+        setCurrentStep('results')
+      } catch (error) {
+        clearInterval(smoothProgressInterval)
+        console.error('Error in OCR search:', error)
+        alert('An error occurred during OCR search. Please try again.')
+        setCurrentStep('upload')
+      } finally {
+        setIsLoading(false)
+      }
+      return
+    }
 
     if (useInteractiveMode) {
       // INTERACTIVE MODE: Fast detection first, user selects, then process
