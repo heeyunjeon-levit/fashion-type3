@@ -63,7 +63,7 @@ image = (
         "boto3>=1.28.0",
         "dds-cloudapi-sdk>=0.2.4",  # For DINO-X detection
     )
-    # Add all necessary Python modules into the image
+    # Add all necessary Python modules into the image (updated with confidence filtering)
     .add_local_dir(backend_dir / "api", "/root/api")
     .add_local_dir(backend_dir / "src", "/root/src")
     # Note: No need for GroundingDINO configs - transformers handles it
