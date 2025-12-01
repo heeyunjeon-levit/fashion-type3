@@ -170,8 +170,10 @@ export default function Home() {
     const handleOCRSearchFallback = async (imageUrl: string) => {
       try {
         console.log('🔄 Using regular POST endpoint for OCR...')
+        console.log('   Image URL:', imageUrl?.substring(0, 80))
         setOverallProgress(50) // Show some progress
         
+        console.log('📤 Sending POST request to /api/search...')
         const response = await fetch('/api/search', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -183,22 +185,32 @@ export default function Home() {
           }),
         })
 
+        console.log('📥 Response received:', response.status, response.statusText)
         const data = await response.json()
+        console.log('📦 Response data:', {
+          success: data.meta?.success,
+          resultsCount: Object.keys(data.results || {}).length,
+          reason: data.meta?.reason
+        })
+        
         setOverallProgress(90)
         
         if (data.results && Object.keys(data.results).length > 0) {
+          console.log('✅ OCR found results, displaying...')
           setResults(data.results)
           setOverallProgress(100)
           setCurrentStep('results')
         } else {
+          console.log('⚠️ No results found')
           alert('텍스트를 찾을 수 없습니다. 다른 이미지를 시도해주세요.')
           setCurrentStep('upload')
         }
       } catch (error) {
-        console.error('OCR fallback error:', error)
+        console.error('❌ OCR fallback error:', error)
         alert('OCR 검색 실패. 다시 시도해주세요.')
         setCurrentStep('upload')
       } finally {
+        console.log('🏁 OCR search complete, setting isLoading to false')
         setIsLoading(false)
       }
     }
@@ -223,11 +235,12 @@ export default function Home() {
           let streamActive = true
           
           // Set timeout for stream connection
-          const streamTimeout = setTimeout(() => {
+          const streamTimeout = setTimeout(async () => {
             if (streamActive) {
               console.log('⏰ Stream timeout, falling back to regular endpoint...')
               eventSource.close()
               streamActive = false
+              await handleOCRSearchFallback(imageUrl)
             }
           }, 10000) // 10 second timeout for stream to start
           
@@ -295,7 +308,7 @@ export default function Home() {
             }
           }
           
-          eventSource.onerror = (error) => {
+          eventSource.onerror = async (error) => {
             clearTimeout(streamTimeout)
             if (!streamActive) return
             
@@ -305,14 +318,14 @@ export default function Home() {
             
             // Fall back to regular POST endpoint
             console.log('⚠️ Stream failed, using regular POST endpoint...')
-            handleOCRSearchFallback(imageUrl)
+            await handleOCRSearchFallback(imageUrl)
           }
           
           return
         } catch (streamError) {
           console.error('Stream setup error:', streamError)
           // Fall back to regular endpoint
-          handleOCRSearchFallback(imageUrl)
+          await handleOCRSearchFallback(imageUrl)
           return
         }
         

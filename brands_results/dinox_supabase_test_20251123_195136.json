@@ -1,0 +1,23 @@
+{
+  "timestamp": "20251123_195136",
+  "total_images": 3,
+  "successful": 0,
+  "failed": 3,
+  "results": [
+    {
+      "success": false,
+      "image_name": "5d96eff1ccb9-IMG_1740 복사본.png",
+      "error": "Upload failed"
+    },
+    {
+      "success": false,
+      "image_name": "9c9b7d5f941e-IMG_7594 복사본.png",
+      "error": "Upload failed"
+    },
+    {
+      "success": false,
+      "image_name": "731d24e62d99-IMG_3357 복사본.png",
+      "error": "Upload failed"
+    }
+  ]
+}

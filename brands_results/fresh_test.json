@@ -1,0 +1,20 @@
+[
+  {
+    "mode": "GPT-4o (Image 1)",
+    "elapsed": 6.82680606842041,
+    "cached": false,
+    "items": 1,
+    "backend_total": 6.63,
+    "detection_time": 4.63,
+    "description": "beige knitted poncho with fringe detailing and open weave pattern"
+  },
+  {
+    "mode": "DINO-X (Image 2)",
+    "elapsed": 9.951403141021729,
+    "cached": false,
+    "items": 3,
+    "backend_total": 9.81,
+    "detection_time": 6.03,
+    "description": "bright yellow cropped hoodie with long sleeves and drawstring hood"
+  }
+]
