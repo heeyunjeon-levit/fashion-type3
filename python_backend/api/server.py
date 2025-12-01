@@ -190,33 +190,52 @@ async def detect_items(request: DetectRequest):
         print(f"   Image URL: {request.imageUrl}")
         print(f"{'='*80}\n")
         
-        # Import the fast detection function
-        try:
-            from src.analyzers.dinox_analyzer import detect_bboxes_only
-            print("✅ Successfully imported detect_bboxes_only")
-        except ImportError as ie:
-            print(f"❌ Import error: {ie}")
-            # Return empty result if import fails
-            return DetectResponse(
-                bboxes=[],
-                image_size=[0, 0],
-                processing_time=0.0
-            )
+        # Use existing analyze_image_with_dinox and filter results
+        from src.analyzers.dinox_analyzer import analyze_image_with_dinox
         
-        # Run fast detection
-        print("✅ Running DINO-X fast detection...")
-        result = detect_bboxes_only(request.imageUrl)
+        # Run DINO-X analysis
+        print("✅ Running DINO-X detection...")
+        analysis_result = analyze_image_with_dinox(request.imageUrl)
         
-        print(f"✅ Detection complete: {len(result['bboxes'])} items found in {result['meta']['processing_time']}s")
+        # Filter items by confidence threshold (0.35)
+        CONFIDENCE_THRESHOLD = 0.35
+        items = analysis_result.get('items', [])
+        total_detections = len(items)
         
-        # Check if there was an error in the result
-        if 'error' in result.get('meta', {}):
-            print(f"⚠️  Detection returned with error: {result['meta']['error']}")
+        print(f"📦 DINO-X detected {total_detections} total items")
+        
+        # Filter by confidence and convert to bbox format
+        bboxes = []
+        for idx, item in enumerate(items):
+            confidence = item.get('confidence', 0.0)
+            
+            # Apply confidence filter
+            if confidence < CONFIDENCE_THRESHOLD:
+                print(f"   ⏭️  Skipping low-confidence: {item.get('category', 'unknown')} ({confidence:.2f})")
+                continue
+            
+            # Create bbox item
+            bbox_item = {
+                'id': f"{item.get('category', 'unknown')}_{idx}",
+                'bbox': item.get('bbox', []),
+                'category': item.get('category', 'unknown'),
+                'confidence': round(confidence, 3)
+            }
+            bboxes.append(bbox_item)
+            print(f"   ✅ {item.get('category')} (conf: {confidence:.2f})")
+        
+        filtered_count = len(bboxes)
+        processing_time = analysis_result.get('meta', {}).get('processing_time', 0.0)
+        
+        print(f"✅ Detection complete: {filtered_count}/{total_detections} items passed threshold (≥{CONFIDENCE_THRESHOLD})")
+        
+        # Get image size (default to 0,0 if not available)
+        image_size = [0, 0]
         
         return DetectResponse(
-            bboxes=result['bboxes'],
-            image_size=result['image_size'],
-            processing_time=result['meta']['processing_time']
+            bboxes=bboxes,
+            image_size=image_size,
+            processing_time=processing_time
         )
             
     except Exception as e:
