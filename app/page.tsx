@@ -166,6 +166,43 @@ export default function Home() {
       }
     }
 
+    // Fallback function for OCR when streaming fails
+    const handleOCRSearchFallback = async (imageUrl: string) => {
+      try {
+        console.log('🔄 Using regular POST endpoint for OCR...')
+        setOverallProgress(50) // Show some progress
+        
+        const response = await fetch('/api/search', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            categories: [],
+            croppedImages: {},
+            originalImageUrl: imageUrl,
+            useOCRSearch: true,
+          }),
+        })
+
+        const data = await response.json()
+        setOverallProgress(90)
+        
+        if (data.results && Object.keys(data.results).length > 0) {
+          setResults(data.results)
+          setOverallProgress(100)
+          setCurrentStep('results')
+        } else {
+          alert('텍스트를 찾을 수 없습니다. 다른 이미지를 시도해주세요.')
+          setCurrentStep('upload')
+        }
+      } catch (error) {
+        console.error('OCR fallback error:', error)
+        alert('OCR 검색 실패. 다시 시도해주세요.')
+        setCurrentStep('upload')
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
     // V3.1 OCR MODE: Skip detection, go directly to OCR search with full image
     if (useOCRSearch) {
       console.log('🚀 OCR Mode: Skipping detection, using full image for OCR search')
@@ -286,42 +323,6 @@ export default function Home() {
         setIsLoading(false)
       }
       return
-    }
-    
-    // Fallback function for OCR when streaming fails
-    async function handleOCRSearchFallback(imageUrl: string) {
-      try {
-        setOverallProgress(50) // Show some progress
-        
-        const response = await fetch('/api/search', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            categories: [],
-            croppedImages: {},
-            originalImageUrl: imageUrl,
-            useOCRSearch: true,
-          }),
-        })
-
-        const data = await response.json()
-        setOverallProgress(90)
-        
-        if (data.results && Object.keys(data.results).length > 0) {
-          setResults(data.results)
-          setOverallProgress(100)
-          setCurrentStep('results')
-        } else {
-          alert('텍스트를 찾을 수 없습니다. 다른 이미지를 시도해주세요.')
-          setCurrentStep('upload')
-        }
-      } catch (error) {
-        console.error('OCR fallback error:', error)
-        alert('OCR 검색 실패. 다시 시도해주세요.')
-        setCurrentStep('upload')
-      } finally {
-        setIsLoading(false)
-      }
     }
 
     if (useInteractiveMode) {
