@@ -41,7 +41,13 @@ export default function InteractiveBboxSelector({
   
   // Smart button positioning - alternates left/right sides to prevent overlap
   const getButtonPositions = () => {
-    const buttonWidth = 120;
+    // Estimate button width based on text length (more accurate)
+    const estimateButtonWidth = (text: string) => {
+      // Base width: padding + icon + gap = ~80px
+      // Text width: ~9px per character for the font we're using
+      return Math.max(120, 80 + (text.length * 9));
+    };
+    
     const buttonHeight = 44;
     const horizontalOffset = 16; // Distance from bbox edge
     const verticalSpacing = 60; // Minimum vertical space between buttons
@@ -54,7 +60,7 @@ export default function InteractiveBboxSelector({
     }).sort((a, b) => a.bboxCenterY - b.bboxCenterY);
     
     // Track used positions to prevent overlap
-    const usedPositions: Array<{ y: number; side: 'left' | 'right' }> = [];
+    const usedPositions: Array<{ y: number; side: 'left' | 'right'; width: number; height: number }> = [];
     
     return sortedBboxes.map(({ bbox, index, bboxCenterY }, sortedIndex) => {
       const [x1, y1, x2, y2] = bbox.bbox;
@@ -64,14 +70,21 @@ export default function InteractiveBboxSelector({
       const scaledY2 = y2 * scale;
       const bboxCenterX = (scaledX1 + scaledX2) / 2;
       
+      // Get dynamic button width based on category text
+      const buttonWidth = estimateButtonWidth(bbox.category);
+      
       // Determine which side to use
       // Rule: Alternate sides, but check for conflicts with previous buttons
       let preferredSide: 'left' | 'right' = sortedIndex % 2 === 0 ? 'left' : 'right';
       
-      // Check if this position conflicts with recently placed buttons
-      const conflicts = usedPositions.filter(pos => 
-        Math.abs(pos.y - bboxCenterY) < verticalSpacing && pos.side === preferredSide
-      );
+      // Check if this position conflicts with recently placed buttons (more sophisticated check)
+      const conflicts = usedPositions.filter(pos => {
+        // Check for vertical overlap
+        const verticalOverlap = Math.abs(pos.y - bboxCenterY) < (pos.height + buttonHeight);
+        // Check for same side
+        const sameSide = pos.side === preferredSide;
+        return verticalOverlap && sameSide;
+      });
       
       // If there's a conflict, use the opposite side
       if (conflicts.length > 0) {
@@ -97,8 +110,13 @@ export default function InteractiveBboxSelector({
         )
       );
       
-      // Record this position
-      usedPositions.push({ y: bboxCenterY, side: preferredSide });
+      // Record this position with width/height for better conflict detection
+      usedPositions.push({ 
+        y: buttonY, 
+        side: preferredSide,
+        width: buttonWidth,
+        height: buttonHeight
+      });
       
       return {
         originalIndex: index,
