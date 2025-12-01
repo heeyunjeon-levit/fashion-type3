@@ -473,6 +473,110 @@ def analyze_image_with_dinox(image_url: str) -> Dict[str, Any]:
         }
 
 
+def detect_bboxes_only(image_url: str, confidence_threshold: float = 0.35) -> Dict[str, Any]:
+    """
+    Fast detection that returns only bounding boxes without descriptions.
+    Perfect for interactive UX where user selects items first.
+    
+    Args:
+        image_url: URL to the image
+        confidence_threshold: Minimum confidence score (0-1) to include detection.
+                            Default 0.35 filters out low-confidence/spurious detections.
+    
+    Returns:
+        {
+            'bboxes': [
+                {
+                    'id': str,
+                    'bbox': [x1, y1, x2, y2],
+                    'category': str,
+                    'confidence': float
+                }
+            ],
+            'image_size': [width, height],
+            'meta': {
+                'processing_time': float,
+                'total_detections': int,
+                'filtered_detections': int,
+                'confidence_threshold': float
+            }
+        }
+    """
+    start_time = time.time()
+    
+    try:
+        logger.info(f"⚡ Fast DINO-X detection (threshold: {confidence_threshold})")
+        
+        # Step 1: Create task
+        task_uuid = create_detection_task(image_url)
+        if not task_uuid:
+            raise Exception("Failed to create DINO-X task")
+        
+        # Step 2: Poll for results
+        result = query_task_result(task_uuid)
+        if not result:
+            raise Exception("Failed to get DINO-X results")
+        
+        # Step 3: Parse detections and filter by confidence
+        objects = result.get('objects', [])
+        total_detections = len(objects)
+        logger.info(f"📦 DINO-X detected {total_detections} objects")
+        
+        # Get image size from result
+        image_info = result.get('image', {})
+        image_width = image_info.get('width', 0)
+        image_height = image_info.get('height', 0)
+        
+        bboxes = []
+        for idx, obj in enumerate(objects):
+            confidence = obj.get('score', 0.0)
+            
+            # FILTER: Only include high-confidence detections
+            if confidence < confidence_threshold:
+                logger.info(f"   ⏭️  Skipping low-confidence: {obj.get('category', 'unknown')} ({confidence:.2f} < {confidence_threshold})")
+                continue
+            
+            category = obj.get('category', 'unknown')
+            bbox = obj.get('bbox', [])
+            
+            # Map to our standard categories
+            mapped_category = map_dinox_category(category)
+            
+            # Create unique ID
+            bbox_id = f"{mapped_category}_{idx}"
+            
+            bbox_item = {
+                'id': bbox_id,
+                'bbox': bbox,  # [x1, y1, x2, y2]
+                'category': mapped_category,
+                'confidence': round(confidence, 3)
+            }
+            
+            bboxes.append(bbox_item)
+            logger.info(f"   ✅ {mapped_category} ({category}, conf: {confidence:.2f})")
+        
+        filtered_detections = len(bboxes)
+        elapsed = time.time() - start_time
+        
+        logger.info(f"✅ Fast detection complete: {filtered_detections}/{total_detections} passed threshold")
+        
+        return {
+            'bboxes': bboxes,
+            'image_size': [image_width, image_height],
+            'meta': {
+                'processing_time': round(elapsed, 2),
+                'total_detections': total_detections,
+                'filtered_detections': filtered_detections,
+                'confidence_threshold': confidence_threshold
+            }
+        }
+        
+    except Exception as e:
+        elapsed = time.time() - start_time
+        logger.error(f"❌ Fast detection failed after {elapsed:.2f}s: {e}")
+        raise
+
+
 if __name__ == "__main__":
     # Test with a sample image
     logging.basicConfig(level=logging.INFO)
