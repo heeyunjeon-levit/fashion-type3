@@ -97,7 +97,13 @@ export default function Home() {
 
   // Smooth progress bar animation - gradually increment to create constant movement
   // This ensures progress only moves forward, never backwards
+  // NOTE: Only runs for interactive mode, not OCR mode
   useEffect(() => {
+    // Skip animation for OCR mode (it doesn't have real-time progress)
+    if (useOCRSearch) {
+      return
+    }
+    
     if (currentStep !== 'processing' && currentStep !== 'searching') {
       return
     }
@@ -116,7 +122,7 @@ export default function Home() {
     }, 100) // Update every 100ms for smooth animation
 
     return () => clearInterval(interval)
-  }, [currentStep])
+  }, [currentStep, useOCRSearch])
 
   // Track page visits and user actions
   usePageTracking({
@@ -165,17 +171,6 @@ export default function Home() {
       console.log('🚀 OCR Mode: Skipping detection, using full image for OCR search')
       setCurrentStep('searching')
       setIsLoading(true)
-      setOverallProgress(0)
-      
-      // Smooth progress animation for OCR
-      const smoothProgressInterval = setInterval(() => {
-        setOverallProgress(prev => {
-          if (prev < 94) {
-            return Math.min(94, prev + 0.1)
-          }
-          return prev
-        })
-      }, 100)
       
       try {
         console.log('🔍 Starting V3.1 OCR Search with full image...')
@@ -192,7 +187,6 @@ export default function Home() {
           }),
         })
 
-        clearInterval(smoothProgressInterval)
         const data = await response.json()
         console.log('📦 OCR Search Response:', {
           success: data.meta?.success,
@@ -201,7 +195,6 @@ export default function Home() {
           meta: data.meta
         })
         
-        setOverallProgress(95)
         setResults(data.results || {})
         
         // Log search results
@@ -216,10 +209,8 @@ export default function Home() {
           }
         }
         
-        setOverallProgress(100)
         setCurrentStep('results')
       } catch (error) {
-        clearInterval(smoothProgressInterval)
         console.error('Error in OCR search:', error)
         alert('An error occurred during OCR search. Please try again.')
         setCurrentStep('upload')
@@ -735,18 +726,26 @@ export default function Home() {
             <div className="bg-white rounded-2xl shadow-xl p-12 border border-gray-100">
               <div className="text-center space-y-6">
                 <h2 className="text-2xl font-bold text-black">선택하신 패션템을 찾고 있어요!</h2>
-                {/* Single overall progress bar */}
-                <div className="space-y-2">
-                  <div className="flex items-center justify-center text-sm text-gray-500">
-                    {Math.floor(overallProgress)}%
+                
+                {useOCRSearch ? (
+                  // OCR mode: show spinner (no fake progress)
+                  <div className="flex justify-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black"></div>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
-                    <div 
-                      className="bg-black h-full rounded-full transition-all duration-500 ease-out" 
-                      style={{ width: `${overallProgress}%` }}
-                    ></div>
+                ) : (
+                  // Interactive mode: show real-time progress bar
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-center text-sm text-gray-500">
+                      {Math.floor(overallProgress)}%
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
+                      <div 
+                        className="bg-black h-full rounded-full transition-all duration-500 ease-out" 
+                        style={{ width: `${overallProgress}%` }}
+                      ></div>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
           </div>
