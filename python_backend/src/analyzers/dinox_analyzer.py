@@ -574,7 +574,19 @@ def detect_bboxes_only(image_url: str, confidence_threshold: float = 0.35) -> Di
     except Exception as e:
         elapsed = time.time() - start_time
         logger.error(f"❌ Fast detection failed after {elapsed:.2f}s: {e}")
-        raise
+        
+        # Return empty result instead of raising (graceful degradation)
+        return {
+            'bboxes': [],
+            'image_size': [0, 0],
+            'meta': {
+                'processing_time': round(elapsed, 2),
+                'total_detections': 0,
+                'filtered_detections': 0,
+                'confidence_threshold': confidence_threshold,
+                'error': str(e)
+            }
+        }
 
 
 if __name__ == "__main__":
