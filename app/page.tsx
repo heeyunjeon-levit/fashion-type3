@@ -171,50 +171,89 @@ export default function Home() {
       console.log('🚀 OCR Mode: Skipping detection, using full image for OCR search')
       setCurrentStep('searching')
       setIsLoading(true)
+      setOverallProgress(0)
       
       try {
-        console.log('🔍 Starting V3.1 OCR Search with full image...')
-        const response = await fetch('/api/search', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            categories: [],
-            croppedImages: {},
-            originalImageUrl: imageUrl,
-            useOCRSearch: true,
-          }),
-        })
-
-        const data = await response.json()
-        console.log('📦 OCR Search Response:', {
-          success: data.meta?.success,
-          mode: data.meta?.mode,
-          resultsCount: Object.keys(data.results || {}).length,
-          meta: data.meta
-        })
+        console.log('🔍 Starting V3.1 OCR Search with real-time progress...')
+        const backendUrl = process.env.NEXT_PUBLIC_GPU_API_URL || 'http://localhost:8000'
+        const streamUrl = `${backendUrl}/ocr-search-stream?imageUrl=${encodeURIComponent(imageUrl)}`
         
-        setResults(data.results || {})
+        const eventSource = new EventSource(streamUrl)
         
-        // Log search results
-        if (sessionManager) {
-          await sessionManager.logSearchResults(data.results, data.meta || {})
-          
-          if (data.meta?.ocr_mapping) {
-            console.log('📝 OCR Mapping:', data.meta.ocr_mapping)
-          }
-          if (data.meta?.summary) {
-            console.log('📊 Search Summary:', data.meta.summary)
+        eventSource.onmessage = (event) => {
+          try {
+            const data = JSON.parse(event.data)
+            console.log('📊 OCR Progress:', data)
+            
+            if (data.type === 'progress') {
+              setOverallProgress(data.progress)
+              console.log(`Progress: ${data.progress}% - ${data.message}`)
+            } else if (data.type === 'complete') {
+              eventSource.close()
+              
+              if (data.success && data.results) {
+                // Transform OCR results to frontend format
+                const results: Record<string, any> = {}
+                
+                for (const productResult of data.results.product_results || []) {
+                  const brand = productResult.product.brand
+                  const productName = productResult.product.product_name || productResult.product.exact_ocr_text?.substring(0, 30) || 'Unknown'
+                  const searchResult = productResult.search_result
+                  
+                  if (searchResult.success && searchResult.selected_results) {
+                    const resultKey = `${brand} - ${productName}`.substring(0, 80)
+                    results[resultKey] = searchResult.selected_results.map((r: any) => ({
+                      title: r.title || 'Product',
+                      link: r.link || '',
+                      thumbnail: r.thumbnail || r.image || null
+                    }))
+                  }
+                }
+                
+                setResults(results)
+                
+                // Log search results
+                if (sessionManager) {
+                  sessionManager.logSearchResults(results, { 
+                    mode: 'ocr_v3.1_stream',
+                    ocr_mapping: data.results.mapping,
+                    summary: data.results.summary
+                  })
+                }
+                
+                setOverallProgress(100)
+                setCurrentStep('results')
+              } else {
+                console.error('OCR search failed:', data.reason)
+                alert(`OCR search failed: ${data.reason || 'Unknown error'}`)
+                setCurrentStep('upload')
+              }
+              setIsLoading(false)
+            } else if (data.type === 'error') {
+              eventSource.close()
+              console.error('OCR error:', data.message)
+              alert(`OCR error: ${data.message}`)
+              setCurrentStep('upload')
+              setIsLoading(false)
+            }
+          } catch (e) {
+            console.error('Error parsing SSE data:', e)
           }
         }
         
-        setCurrentStep('results')
+        eventSource.onerror = (error) => {
+          console.error('EventSource error:', error)
+          eventSource.close()
+          alert('Connection to OCR service failed. Please try again.')
+          setCurrentStep('upload')
+          setIsLoading(false)
+        }
+        
+        // Don't return - let the EventSource handle the flow
       } catch (error) {
         console.error('Error in OCR search:', error)
         alert('An error occurred during OCR search. Please try again.')
         setCurrentStep('upload')
-      } finally {
         setIsLoading(false)
       }
       return
@@ -727,25 +766,18 @@ export default function Home() {
               <div className="text-center space-y-6">
                 <h2 className="text-2xl font-bold text-black">선택하신 패션템을 찾고 있어요!</h2>
                 
-                {useOCRSearch ? (
-                  // OCR mode: show spinner (no fake progress)
-                  <div className="flex justify-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black"></div>
+                {/* Real-time progress bar for both modes */}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-center text-sm text-gray-500">
+                    {Math.floor(overallProgress)}%
                   </div>
-                ) : (
-                  // Interactive mode: show real-time progress bar
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-center text-sm text-gray-500">
-                      {Math.floor(overallProgress)}%
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
-                      <div 
-                        className="bg-black h-full rounded-full transition-all duration-500 ease-out" 
-                        style={{ width: `${overallProgress}%` }}
-                      ></div>
-                    </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
+                    <div 
+                      className="bg-black h-full rounded-full transition-all duration-500 ease-out" 
+                      style={{ width: `${overallProgress}%` }}
+                    ></div>
                   </div>
-                )}
+                </div>
               </div>
             </div>
           </div>

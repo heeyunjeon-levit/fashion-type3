@@ -565,6 +565,74 @@ class OCRSearchResponse(BaseModel):
     reason: Optional[str] = None
 
 
+@app.get("/ocr-search-stream")
+async def ocr_search_stream(imageUrl: str):
+    """
+    V3.1 OCR search with Server-Sent Events for real-time progress.
+    
+    Returns streaming progress updates followed by final results.
+    """
+    from fastapi.responses import StreamingResponse
+    import asyncio
+    import json
+    
+    async def event_generator():
+        try:
+            print(f"\n{'='*80}")
+            print(f"🔍 OCR SEARCH STREAM REQUEST")
+            print(f"   Image URL: {imageUrl}")
+            print(f"{'='*80}\n")
+            
+            # Import V3.1 pipeline
+            from ocr_search_pipeline import EnhancedHybridPipelineV2
+            
+            # Store progress updates
+            progress_data = {'progress': 0, 'message': '시작...'}
+            
+            def progress_callback(progress, message):
+                """Callback to capture progress updates"""
+                progress_data['progress'] = progress
+                progress_data['message'] = message
+                print(f"📊 Progress: {progress}% - {message}")
+            
+            # Initialize pipeline with progress callback
+            pipeline = EnhancedHybridPipelineV2(progress_callback=progress_callback)
+            
+            # Run pipeline in a thread to allow async progress updates
+            import concurrent.futures
+            executor = concurrent.futures.ThreadPoolExecutor(max_workers=1)
+            future = executor.submit(pipeline.process_image_url, imageUrl)
+            
+            # Stream progress updates
+            last_progress = 0
+            while not future.done():
+                current_progress = progress_data['progress']
+                if current_progress > last_progress:
+                    yield f"data: {json.dumps({'type': 'progress', 'progress': current_progress, 'message': progress_data['message']})}\n\n"
+                    last_progress = current_progress
+                await asyncio.sleep(0.5)
+            
+            # Get final result
+            result = future.result()
+            
+            # Send final progress
+            yield f"data: {json.dumps({'type': 'progress', 'progress': 100, 'message': '완료!'})}\n\n"
+            
+            # Send results
+            if result.get('success'):
+                yield f"data: {json.dumps({'type': 'complete', 'success': True, 'results': result})}\n\n"
+            else:
+                yield f"data: {json.dumps({'type': 'complete', 'success': False, 'reason': result.get('reason')})}\n\n"
+                
+        except Exception as e:
+            print(f"❌ OCR stream error: {e}")
+            import traceback
+            traceback.print_exc()
+            yield f"data: {json.dumps({'type': 'error', 'message': str(e)})}\n\n"
+    
+    return StreamingResponse(event_generator(), media_type="text/event-stream")
+
+
 @app.post("/ocr-search", response_model=OCRSearchResponse)
 async def ocr_search(request: OCRSearchRequest):
     """

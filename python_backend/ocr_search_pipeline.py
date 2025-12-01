@@ -22,14 +22,19 @@ class EnhancedHybridPipelineV2:
     Accuracy-first, image-matching-first, product-pages-only.
     """
     
-    def __init__(self):
-        """Initialize with API keys from environment variables"""
+    def __init__(self, progress_callback=None):
+        """Initialize with API keys from environment variables
+        
+        Args:
+            progress_callback: Optional function(progress, message) to report progress (0-100)
+        """
         # Load API keys from environment
         self.GCLOUD_API_KEY = os.environ.get('GCLOUD_API_KEY')
         self.serper_api_key = os.environ.get('SERPER_API_KEY')
         self.openai_api_key = os.environ.get('OPENAI_API_KEY')
         self.supabase_url = os.environ.get('NEXT_PUBLIC_SUPABASE_URL') or os.environ.get('SUPABASE_URL')
         self.supabase_key = os.environ.get('SUPABASE_ANON_KEY') or os.environ.get('SUPABASE_KEY')
+        self.progress_callback = progress_callback
         
         if not self.GCLOUD_API_KEY:
             raise ValueError("GCLOUD_API_KEY environment variable not set")
@@ -822,6 +827,10 @@ Return JSON:
         
         start_time = time.time()
         
+        # Report progress: Starting
+        if self.progress_callback:
+            self.progress_callback(5, "텍스트 추출 중...")
+        
         # Step 1: OCR
         print(f"\n📖 Step 1: OCR Text Extraction...")
         ocr_result = self.extract_text_from_url(image_url)
@@ -835,6 +844,10 @@ Return JSON:
             }
         
         print(f"   ✅ Extracted {len(ocr_result['segments'])} text segments")
+        
+        # Report progress: OCR complete
+        if self.progress_callback:
+            self.progress_callback(20, "브랜드 분석 중...")
         
         # Step 2: Brand-Product Mapping
         print(f"\n🧠 Step 2: Brand-Product Mapping...")
@@ -854,6 +867,10 @@ Return JSON:
         
         print(f"   ✅ Identified {len(products)} product(s)")
         
+        # Report progress: Mapping complete
+        if self.progress_callback:
+            self.progress_callback(35, f"{len(products)}개 상품 검색 중...")
+        
         # Step 3: Search for each product
         print(f"\n🔍 Step 3: Searching for Products...\n")
         
@@ -870,6 +887,11 @@ Return JSON:
             print(f"   Product {i}/{len(products)}: {brand}")
             print(f"   Text: {text[:100]}...")
             
+            # Report progress: Searching product i/total (35% to 85%)
+            if self.progress_callback:
+                progress = 35 + int((i / len(products)) * 50)
+                self.progress_callback(progress, f"{brand} 검색 중... ({i}/{len(products)})")
+            
             # Pass OCR-extracted websites to search
             search_result = self.search_for_product(brand, text, product_type, image_url, brand_websites)
             
@@ -884,12 +906,20 @@ Return JSON:
         processing_time = time.time() - start_time
         successful_searches = sum(1 for pr in product_results if pr['search_result']['success'])
         
+        # Report progress: Complete
+        if self.progress_callback:
+            self.progress_callback(95, "결과 정리 중...")
+        
         print(f"\n{'='*80}")
         print(f"✅ Processing Complete")
         print(f"{'='*80}")
         print(f"⏱️  Time: {processing_time:.1f}s")
         print(f"📦 Products: {len(products)}")
         print(f"✅ Found: {successful_searches}/{len(products)}\n")
+        
+        # Final progress
+        if self.progress_callback:
+            self.progress_callback(100, "완료!")
         
         return {
             'success': True,
