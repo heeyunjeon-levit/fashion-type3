@@ -229,10 +229,11 @@ export async function POST(request: NextRequest) {
       console.log(`   originalImageUrl: ${originalImageUrl?.substring(0, 80)}...`)
       
       try {
-        // Hardcode for local development - environment variables aren't working reliably
-        const pythonBackendUrl = 'http://localhost:8000'
-        console.log(`   🔗 Using hardcoded backend URL: ${pythonBackendUrl}`)
-        console.log(`   📝 Env check: PYTHON_BACKEND_URL=${process.env.PYTHON_BACKEND_URL}`)
+        // Use environment variable for backend URL (falls back to localhost for development)
+        const pythonBackendUrl = process.env.PYTHON_BACKEND_URL || process.env.NEXT_PUBLIC_GPU_API_URL || 'http://localhost:8000'
+        console.log(`   🔗 Using backend URL: ${pythonBackendUrl}`)
+        console.log(`   📝 PYTHON_BACKEND_URL=${process.env.PYTHON_BACKEND_URL}`)
+        console.log(`   📝 NEXT_PUBLIC_GPU_API_URL=${process.env.NEXT_PUBLIC_GPU_API_URL}`)
         
         if (pythonBackendUrl) {
           console.log(`   Calling: ${pythonBackendUrl}/ocr-search`)
