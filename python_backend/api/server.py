@@ -17,9 +17,11 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 # Modal secrets are only available when functions run, not at module import
 try:
     print("🔧 Importing crop_api module...")
-    from crop_api import crop_image_from_url, get_cropper, analyze_image_only, analyze_and_crop_all
+    from crop_api import crop_image_from_url, get_cropper
     print("✅ crop_api module imported successfully")
     CROPPER_AVAILABLE = None  # Will be initialized on first request
+    analyze_image_only = None
+    analyze_and_crop_all = None
 except (ImportError, Exception) as e:
     print(f"⚠️ Failed to import crop_api: {e}")
     import traceback
@@ -197,10 +199,16 @@ async def detect_items(request: DetectRequest):
         print("✅ Running DINO-X detection...")
         analysis_result = analyze_image_with_dinox(request.imageUrl)
         
-        # Filter items by confidence threshold (0.35)
-        CONFIDENCE_THRESHOLD = 0.35
+        # Import category mapping function
+        from src.analyzers.dinox_analyzer import map_dinox_category
+        
+        # Filter items by confidence threshold (increased to reduce false positives)
+        CONFIDENCE_THRESHOLD = 0.40
         items = analysis_result.get('items', [])
         total_detections = len(items)
+        
+        # Problematic categories that often produce false positives (socks detected as leggings, etc.)
+        EXCLUDED_CATEGORIES = ['leggings', 'tights', 'stockings']
         
         print(f"📦 DINO-X detected {total_detections} total items")
         
@@ -214,15 +222,25 @@ async def detect_items(request: DetectRequest):
                 print(f"   ⏭️  Skipping low-confidence: {item.get('category', 'unknown')} ({confidence:.2f})")
                 continue
             
+            # Get raw and mapped categories
+            raw_category = item.get('groundingdino_prompt', item.get('category', 'unknown'))
+            mapped_cat = item.get('category', 'unknown')  # This is already mapped from analyze_image_with_dinox
+            
+            # Filter out problematic categories (often confused with socks, etc.)
+            if raw_category.lower() in EXCLUDED_CATEGORIES:
+                print(f"   🚫 Excluding problematic category: {raw_category} (often confused with socks)")
+                continue
+            
             # Create bbox item
             bbox_item = {
-                'id': f"{item.get('category', 'unknown')}_{idx}",
+                'id': f"{mapped_cat}_{idx}",
                 'bbox': item.get('bbox', []),
-                'category': item.get('category', 'unknown'),
+                'category': raw_category,  # Raw category from detector
+                'mapped_category': mapped_cat,  # Mapped category
                 'confidence': round(confidence, 3)
             }
             bboxes.append(bbox_item)
-            print(f"   ✅ {item.get('category')} (conf: {confidence:.2f})")
+            print(f"   ✅ {mapped_cat} ({raw_category}, conf: {confidence:.2f})")
         
         filtered_count = len(bboxes)
         processing_time = analysis_result.get('meta', {}).get('processing_time', 0.0)
@@ -339,8 +357,38 @@ Be specific and detailed. Return ONLY the description text, no JSON or extra for
         # Crop the item using bbox coordinates
         print(f"✅ Cropping item with bbox: {request.bbox}...")
         
-        # Crop using the provided bbox coordinates
+        # Crop using the provided bbox coordinates with smart adjustments
         x1, y1, x2, y2 = request.bbox
+        
+        # Smart cropping: For tops, reduce bottom margin to avoid including pants
+        # For bottoms, reduce top margin to avoid including tops
+        category_lower = request.category.lower()
+        
+        # Define top keywords (including raw detector categories)
+        top_keywords = ['top', 'shirt', 'jacket', 'coat', 'sweater', 'hoodie', 'blouse', 
+                       'cardigan', 'blazer', 'vest', 'button up', 't-shirt', 'tshirt',
+                       'sweatshirt', 'pullover', 'outerwear']
+        
+        # Define bottom keywords
+        bottom_keywords = ['bottom', 'pant', 'jean', 'short', 'skirt', 'trouser', 'slack']
+        
+        is_top = any(keyword in category_lower for keyword in top_keywords)
+        is_bottom = any(keyword in category_lower for keyword in bottom_keywords)
+        
+        if is_top:
+            # For tops: crop tighter on the bottom to exclude pants/bottoms
+            # Reduce height by 15% from bottom to ensure we don't capture pants
+            height = y2 - y1
+            y2 = y2 - (height * 0.15)  # Cut off bottom 15%
+            print(f"   🎯 Top category '{request.category}': Cropping tighter on bottom to exclude pants")
+            
+        elif is_bottom:
+            # For bottoms: crop tighter on the top to exclude tops
+            # Reduce from top by 10% to ensure we don't capture tops
+            height = y2 - y1
+            y1 = y1 + (height * 0.10)  # Cut off top 10%
+            print(f"   🎯 Bottom category '{request.category}': Cropping tighter on top to exclude tops")
+        
         cropped_image = image.crop((x1, y1, x2, y2))
         
         print(f"   Original size: {image.size}, Cropped size: {cropped_image.size}")

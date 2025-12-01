@@ -33,10 +33,11 @@ DINOX_QUERY_STATUS = '/v2/task_status'
 DINOX_API_TOKEN = os.environ.get('DINOX_API_TOKEN', 'bdf2ed490ebe69a28be81ea9d9b0b0e3')
 
 # Fashion categories for detection
+# Note: Excluded "leggings" as it's often confused with socks and causes false positives
 FASHION_CATEGORIES = [
     "shirt", "jacket", "blouse", "button up shirt", "vest", "skirt", 
     "shorts", "pants", "shoes", "bag", "dress", "coat", "sweater", 
-    "cardigan", "hoodie", "jeans", "leggings", "sneakers", "boots", 
+    "cardigan", "hoodie", "jeans", "sneakers", "boots", 
     "sandals", "backpack", "purse", "handbag", "hat", "cap", "scarf", 
     "belt", "watch", "sunglasses", "jewelry", "necklace", "bracelet", 
     "earrings", "ring"
@@ -47,6 +48,8 @@ FASHION_PROMPT = ". ".join(FASHION_CATEGORIES)
 # Category mapping (DINO-X category -> our standard categories)
 CATEGORY_MAPPING = {
     'shirt': 'top',
+    'button up shirt': 'top',
+    'button_up_shirt': 'top',
     'blouse': 'top',
     'jacket': 'outerwear',
     'coat': 'outerwear',
@@ -58,7 +61,6 @@ CATEGORY_MAPPING = {
     'shorts': 'bottom',
     'pants': 'bottom',
     'jeans': 'bottom',
-    'leggings': 'bottom',
     'shoes': 'shoes',
     'sneakers': 'shoes',
     'boots': 'shoes',

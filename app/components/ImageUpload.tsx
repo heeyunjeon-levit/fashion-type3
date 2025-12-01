@@ -180,7 +180,7 @@ export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
       </h1>
       
       <div className="bg-white rounded-2xl shadow-2xl p-8 border border-gray-100">
-        <div className="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center">
+        <div className="border-2 border-dashed border-gray-300 rounded-lg p-20 text-center">
           {isConverting ? (
             <div className="space-y-4">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black mx-auto"></div>
@@ -207,9 +207,9 @@ export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
               </button>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-6">
               <svg
-                className="mx-auto h-12 w-12 text-gray-400"
+                className="mx-auto h-16 w-16 text-gray-400"
                 stroke="currentColor"
                 fill="none"
                 viewBox="0 0 48 48"
@@ -221,10 +221,10 @@ export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
                   strokeLinejoin="round"
                 />
               </svg>
-              <p className="text-gray-600">{t('upload.placeholder')}</p>
+              <p className="text-gray-600 text-base">{t('upload.placeholder')}</p>
               <button
                 onClick={() => fileInputRef.current?.click()}
-                className="bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors font-medium"
+                className="bg-black text-white px-8 py-3.5 rounded-lg hover:bg-gray-800 transition-colors font-medium text-base"
               >
                 {t('upload.select')}
               </button>

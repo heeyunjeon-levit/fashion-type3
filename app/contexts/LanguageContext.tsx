@@ -87,7 +87,7 @@ const translations = {
   },
   ko: {
     // ImageUpload
-    'upload.title': '원하시는 옷\n찾아드려요!',
+    'upload.title': '어떤 패션템이든\n바로 찾아드려요.',
     'upload.converting': 'HEIC를 JPEG로 변환하는 중...',
     'upload.preview': '미리보기',
     'upload.change': '이미지 변경',

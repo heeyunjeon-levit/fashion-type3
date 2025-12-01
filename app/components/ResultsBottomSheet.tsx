@@ -381,15 +381,80 @@ export default function ResultsBottomSheet({
   }, [])
 
   const getCategoryName = (categoryKey: string): string => {
-    const categoryMap: Record<string, string> = {
-      tops: language === 'en' ? 'Top' : '상의',
-      bottoms: language === 'en' ? 'Bottom' : '하의',
-      bag: language === 'en' ? 'Bag' : '가방',
-      shoes: language === 'en' ? 'Shoes' : '신발',
-      accessory: language === 'en' ? 'Accessory' : '악세사리',
-      dress: language === 'en' ? 'Dress' : '드레스',
+    if (language !== 'en') {
+      // Korean translations for specific item names
+      const categoryMap: Record<string, string> = {
+        // Broad categories (fallback)
+        'top': '상의',
+        'tops': '상의',
+        'bottom': '하의',
+        'bottoms': '하의',
+        'bag': '가방',
+        'shoes': '신발',
+        'accessory': '악세사리',
+        'accessories': '악세사리',
+        'dress': '드레스',
+        'outerwear': '아우터',
+        // Specific items
+        'button up shirt': '셔츠',
+        'button_up_shirt': '셔츠',
+        'shirt': '셔츠',
+        'blouse': '블라우스',
+        't-shirt': '티셔츠',
+        'tshirt': '티셔츠',
+        'tee': '티셔츠',
+        'jacket': '재킷',
+        'coat': '코트',
+        'cardigan': '가디건',
+        'hoodie': '후드티',
+        'vest': '조끼',
+        'blazer': '블레이저',
+        'sweater': '스웨터',
+        'pants': '바지',
+        'jeans': '청바지',
+        'skirt': '치마',
+        'shorts': '반바지',
+        'leggings': '레깅스',
+        'handbag': '핸드백',
+        'backpack': '백팩',
+        'tote': '토트백',
+        'clutch': '클러치',
+        'crossbody': '크로스백',
+        'shoulder bag': '숄더백',
+        'purse': '지갑',
+        'wallet': '지갑',
+        'sneakers': '운동화',
+        'boots': '부츠',
+        'sandals': '샌들',
+        'heels': '힐',
+        'flats': '플랫슈즈',
+        'loafers': '로퍼',
+        'belt': '벨트',
+        'watch': '시계',
+        'sunglasses': '선글라스',
+        'hat': '모자',
+        'cap': '모자',
+        'scarf': '스카프',
+        'gloves': '장갑',
+        'tie': '넥타이',
+        'bowtie': '나비넥타이',
+        'socks': '양말',
+        'stockings': '스타킹',
+        'necklace': '목걸이',
+        'bracelet': '팔찌',
+        'ring': '반지',
+        'earring': '귀걸이',
+        'earrings': '귀걸이',
+        'jewelry': '주얼리',
+      }
+      const lowerKey = categoryKey.toLowerCase().replace(/_/g, ' ')
+      return categoryMap[lowerKey] || categoryMap[categoryKey] || categoryKey
     }
-    return categoryMap[categoryKey] || categoryKey
+    
+    // English: capitalize first letter of each word
+    return categoryKey.split('_').map(word => 
+      word.charAt(0).toUpperCase() + word.slice(1)
+    ).join(' ')
   }
 
   const isBlurred = !phoneSubmitted
@@ -534,9 +599,11 @@ export default function ResultsBottomSheet({
             <div className="space-y-8 pb-8">
               {/* Each category = one section */}
               {Object.entries(results).map(([category, links]) => {
-                const categoryKey = category.split('_')[0]
+                // Extract category name and item number (format: "categoryName_number")
+                const parts = category.split('_')
+                const itemNumber = parts[parts.length - 1] || '1'
+                const categoryKey = parts.slice(0, -1).join('_')
                 const displayName = getCategoryName(categoryKey)
-                const itemNumber = category.split('_')[1] || '1'
 
                 return (
                   <div key={category} className="space-y-3">

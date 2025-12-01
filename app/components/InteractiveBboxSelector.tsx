@@ -32,6 +32,77 @@ export default function InteractiveBboxSelector({
   const imageRef = useRef<HTMLImageElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   
+  // Category translation helper
+  const translateCategory = (category: string): string => {
+    if (language !== 'ko') return category.replace(/_/g, ' ');
+    
+    const translations: Record<string, string> = {
+      'necklace': '목걸이',
+      'sunglasses': '선글라스',
+      'button_up_shirt': '셔츠',
+      'button up shirt': '셔츠',
+      'jacket': '재킷',
+      'watch': '시계',
+      'belt': '벨트',
+      'pants': '바지',
+      'jeans': '청바지',
+      'handbag': '핸드백',
+      'bag': '가방',
+      'shoes': '신발',
+      'dress': '드레스',
+      'top': '상의',
+      'tops': '상의',
+      'bottom': '하의',
+      'bottoms': '하의',
+      'accessory': '악세사리',
+      'accessories': '악세사리',
+      'jewelry': '주얼리',
+      'earrings': '귀걸이',
+      'bracelet': '팔찌',
+      'ring': '반지',
+      'hat': '모자',
+      'scarf': '스카프',
+      'gloves': '장갑',
+      'coat': '코트',
+      'sweater': '스웨터',
+      'skirt': '치마',
+      'shorts': '반바지',
+      'sneakers': '운동화',
+      'boots': '부츠',
+      'sandals': '샌들',
+      'shirt': '셔츠',
+      'blouse': '블라우스',
+      't-shirt': '티셔츠',
+      'tshirt': '티셔츠',
+      'tee': '티셔츠',
+      'cardigan': '가디건',
+      'hoodie': '후드티',
+      'vest': '조끼',
+      'blazer': '블레이저',
+      'tie': '넥타이',
+      'bowtie': '나비넥타이',
+      'socks': '양말',
+      'stockings': '스타킹',
+      'leggings': '레깅스',
+      'wallet': '지갑',
+      'clutch': '클러치',
+      'backpack': '백팩',
+      'tote': '토트백',
+      'crossbody': '크로스백',
+      'shoulder bag': '숄더백',
+      'heels': '힐',
+      'flats': '플랫슈즈',
+      'loafers': '로퍼',
+      'purse': '지갑',
+      'ring': '반지',
+      'earring': '귀걸이',
+      'outerwear': '아우터'
+    };
+    
+    const lowerCategory = category.toLowerCase().replace(/_/g, ' ');
+    return translations[lowerCategory] || translations[category.toLowerCase()] || category.replace(/_/g, ' ');
+  };
+  
   const [bboxes, setBboxes] = useState<BboxItem[]>(
     initialBboxes.map(bbox => ({ ...bbox, selected: false }))
   );
@@ -70,8 +141,8 @@ export default function InteractiveBboxSelector({
       const scaledY2 = y2 * scale;
       const bboxCenterX = (scaledX1 + scaledX2) / 2;
       
-      // Get dynamic button width based on category text
-      const buttonWidth = estimateButtonWidth(bbox.category);
+      // Get dynamic button width based on translated category text
+      const buttonWidth = estimateButtonWidth(translateCategory(bbox.category));
       
       // Determine which side to use
       // Rule: Alternate sides, but check for conflicts with previous buttons
@@ -209,19 +280,19 @@ export default function InteractiveBboxSelector({
       const height = scaledY2 - scaledY1;
       
       if (bbox.selected) {
-        // Selected: vibrant green with glow effect
-        ctx.strokeStyle = 'rgba(16, 185, 129, 0.8)';
+        // Selected: vibrant hot pink with glow effect
+        ctx.strokeStyle = 'rgba(255, 105, 180, 0.8)';
         ctx.lineWidth = 3;
         ctx.setLineDash([]);
         
         // Outer glow
-        ctx.shadowColor = 'rgba(16, 185, 129, 0.4)';
+        ctx.shadowColor = 'rgba(255, 105, 180, 0.4)';
         ctx.shadowBlur = 8;
         ctx.strokeRect(scaledX1, scaledY1, width, height);
         ctx.shadowBlur = 0;
         
         // Light fill
-        ctx.fillStyle = 'rgba(16, 185, 129, 0.08)';
+        ctx.fillStyle = 'rgba(255, 105, 180, 0.08)';
         ctx.fillRect(scaledX1, scaledY1, width, height);
       } else {
         // Unselected: subtle dashed border
@@ -329,7 +400,8 @@ export default function InteractiveBboxSelector({
                   onClick={() => handleBboxToggle(index)}
                   onMouseEnter={() => setHoveredIndex(index)}
                   onMouseLeave={() => setHoveredIndex(null)}
-                  className={`absolute px-3 py-1.5 text-xs font-medium rounded-full transition-all duration-200 cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
+                  title={translateCategory(bbox.category)}
+                  className={`absolute px-3 py-1.5 text-xs font-medium rounded-full transition-all duration-200 cursor-pointer flex items-center gap-1.5 whitespace-nowrap max-w-[160px] ${
                     bbox.selected
                       ? 'bg-black text-white shadow-lg'
                       : 'bg-white/95 backdrop-blur-sm text-gray-900 shadow-md hover:shadow-lg'
@@ -340,13 +412,13 @@ export default function InteractiveBboxSelector({
                     zIndex: 50,
                   }}
                 >
-                  <span className="capitalize">{bbox.category}</span>
+                  <span className={language === 'ko' ? 'truncate' : 'capitalize truncate'}>{translateCategory(bbox.category)}</span>
                   {bbox.selected ? (
-                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                    <svg className="w-3 h-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
                     </svg>
                   ) : (
-                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                    <svg className="w-3 h-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
                     </svg>
                   )}

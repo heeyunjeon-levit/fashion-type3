@@ -28,7 +28,45 @@ interface BboxItem {
 }
 
 export default function Home() {
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
+  
+  // Helper to translate category names
+  const translateCategory = (category: string): string => {
+    if (language !== 'ko') return category
+    
+    const translations: Record<string, string> = {
+      'top': '상의',
+      'tops': '상의',
+      'bottom': '하의',
+      'bottoms': '하의',
+      'bag': '가방',
+      'shoes': '신발',
+      'accessory': '악세사리',
+      'accessories': '악세사리',
+      'dress': '드레스',
+      'jacket': '재킷',
+      'pants': '바지',
+      'jeans': '청바지',
+      'handbag': '핸드백',
+      'belt': '벨트',
+      'watch': '시계',
+      'sunglasses': '선글라스',
+      'necklace': '목걸이',
+      'jewelry': '주얼리',
+      'sweater': '스웨터',
+      'boots': '부츠',
+      'shorts': '반바지',
+      'purse': '지갑',
+      'ring': '반지',
+      'earring': '귀걸이',
+      'outerwear': '아우터',
+      'button up shirt': '셔츠',
+      'button_up_shirt': '셔츠'
+    }
+    
+    return translations[category.toLowerCase()] || category
+  }
+  
   // Enable interactive mode by default (new UX)
   const [useInteractiveMode, setUseInteractiveMode] = useState(true)
   
@@ -42,9 +80,43 @@ export default function Home() {
   const [imageSize, setImageSize] = useState<[number, number]>([0, 0])
   const [detectedItems, setDetectedItems] = useState<DetectedItem[]>([])
   const [selectedItems, setSelectedItems] = useState<DetectedItem[]>([])
+  const [processingItems, setProcessingItems] = useState<{category: string}[]>([])
   const [results, setResults] = useState<Record<string, Array<{ link: string; thumbnail: string | null; title: string | null }>>>({})
   const [isLoading, setIsLoading] = useState(false)
   const [sessionManager, setSessionManager] = useState<any>(null)
+  const [overallProgress, setOverallProgress] = useState(0)
+
+  // Initialize progress when steps change
+  useEffect(() => {
+    if (currentStep === 'processing') {
+      setOverallProgress(0)
+    } else if (currentStep === 'results') {
+      setOverallProgress(100)
+    }
+  }, [currentStep])
+
+  // Smooth progress bar animation - gradually increment to create constant movement
+  // This ensures progress only moves forward, never backwards
+  useEffect(() => {
+    if (currentStep !== 'processing' && currentStep !== 'searching') {
+      return
+    }
+
+    const interval = setInterval(() => {
+      setOverallProgress(prev => {
+        // Only move forward, never backwards
+        // Gradually increment, but cap at 94% to leave room for real completion updates
+        if (prev < 94) {
+          // Very small increment for smooth, constant movement
+          const increment = 0.1
+          return Math.min(94, prev + increment)
+        }
+        return prev
+      })
+    }, 100) // Update every 100ms for smooth animation
+
+    return () => clearInterval(interval)
+  }, [currentStep])
 
   // Track page visits and user actions
   usePageTracking({
@@ -93,12 +165,19 @@ export default function Home() {
         console.log('🚀 OCR Mode: Skipping detection, using full image for OCR search')
         setCurrentStep('searching')
         setIsLoading(true)
-        setOcrStep('extracting')
+        setOverallProgress(0)
         
-        // Simulate progress through OCR steps (approximate timing)
-        setTimeout(() => setOcrStep('mapping'), 15000)    // 15s: OCR extraction
-        setTimeout(() => setOcrStep('searching'), 45000)  // 45s: Brand mapping done
-        setTimeout(() => setOcrStep('selecting'), 150000) // 2.5min: Searches complete
+        // Realistic progress simulation for OCR (~115 seconds based on actual timing)
+        const ocrDuration = 115000 // 115 seconds
+        const interval = 200 // Update every 200ms for smooth animation
+        const increment = (95 / ocrDuration) * interval
+        
+        const progressTimer = setInterval(() => {
+          setOverallProgress(prev => {
+            const next = prev + increment
+            return next >= 95 ? 95 : next
+          })
+        }, interval)
       
       try {
         console.log('🔍 Starting V3.1 OCR Search with full image...')
@@ -115,6 +194,7 @@ export default function Home() {
           }),
         })
 
+        clearInterval(progressTimer) // Stop progress simulation when response arrives
         const data = await response.json()
         console.log('📦 OCR Search Response:', {
           success: data.meta?.success,
@@ -138,6 +218,7 @@ export default function Home() {
         
         setCurrentStep('results')
       } catch (error) {
+        clearInterval(progressTimer) // Stop progress on error
         console.error('Error in OCR search:', error)
         alert('An error occurred during OCR search. Please try again.')
         setCurrentStep('upload')
@@ -266,60 +347,90 @@ export default function Home() {
       return
     }
 
+    // Set items for progress tracking
+    setProcessingItems(selectedBboxes.map(bbox => ({ category: bbox.category })))
+    
     setCurrentStep('processing')
     console.log(`🎯 Processing ${selectedBboxes.length} selected items...`)
 
     try {
-      // Process each selected item: get description + crop
-      const processedItems: DetectedItem[] = []
+      // Process ALL items in parallel for efficiency with real-time progress tracking
+      console.log(`🚀 Processing ${selectedBboxes.length} items in parallel...`)
       
-      for (const bbox of selectedBboxes) {
+      const totalItems = selectedBboxes.length
+      let completedItems = 0
+      
+      const processingPromises = selectedBboxes.map(async (bbox) => {
         console.log(`Processing ${bbox.category}...`)
         
-        const processResponse = await fetch(`${process.env.NEXT_PUBLIC_GPU_API_URL}/process-item`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            imageUrl: uploadedImageUrl,
-            bbox: bbox.bbox,
-            category: bbox.category
-          }),
-        })
+        try {
+          const processResponse = await fetch(`${process.env.NEXT_PUBLIC_GPU_API_URL}/process-item`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              imageUrl: uploadedImageUrl,
+              bbox: bbox.bbox,
+              category: bbox.category
+            }),
+          })
 
-        if (!processResponse.ok) {
-          console.error(`Failed to process ${bbox.category}: ${processResponse.status}`)
-          continue
+          if (!processResponse.ok) {
+            console.error(`Failed to process ${bbox.category}: ${processResponse.status}`)
+            completedItems++
+            // Update progress: processing is 20% of total, so each item = 20% / totalItems
+            const targetProgress = Math.min(20, (completedItems / totalItems) * 20)
+            setOverallProgress(prev => Math.max(prev, targetProgress))
+            return null
+          }
+
+          const processData = await processResponse.json()
+          console.log(`✅ Processed ${bbox.category} in ${processData.processing_time}s`, {
+            description: processData.description?.substring(0, 50) + '...',
+            croppedImageUrl: processData.croppedImageUrl?.substring(0, 80) + '...',
+            category: processData.category
+          })
+
+          // Update real-time progress
+          completedItems++
+          const targetProgress = Math.min(20, (completedItems / totalItems) * 20)
+          setOverallProgress(prev => Math.max(prev, targetProgress))
+          console.log(`📊 Processing progress: ${completedItems}/${totalItems} items (${Math.floor((completedItems / totalItems) * 20)}%)`)
+
+          // Convert to DetectedItem format
+          const detectedItem = {
+            category: processData.category,
+            groundingdino_prompt: bbox.category,
+            description: processData.description,
+            croppedImageUrl: processData.croppedImageUrl,
+            confidence: bbox.confidence
+          }
+          
+          console.log('📦 DetectedItem created:', {
+            category: detectedItem.category,
+            hasDescription: !!detectedItem.description,
+            hasCroppedUrl: !!detectedItem.croppedImageUrl,
+            croppedUrlLength: detectedItem.croppedImageUrl?.length
+          })
+          
+          return detectedItem
+        } catch (error) {
+          console.error(`Error processing ${bbox.category}:`, error)
+          completedItems++
+          const targetProgress = Math.min(20, (completedItems / totalItems) * 20)
+          setOverallProgress(prev => Math.max(prev, targetProgress))
+          return null
         }
+      })
 
-        const processData = await processResponse.json()
-        console.log(`✅ Processed ${bbox.category} in ${processData.processing_time}s`, {
-          description: processData.description?.substring(0, 50) + '...',
-          croppedImageUrl: processData.croppedImageUrl?.substring(0, 80) + '...',
-          category: processData.category
-        })
+      // Wait for all processing to complete
+      const results = await Promise.all(processingPromises)
+      const processedItems = results.filter(item => item !== null) as DetectedItem[]
 
-        // Convert to DetectedItem format
-        const detectedItem = {
-          category: processData.category,
-          groundingdino_prompt: bbox.category,
-          description: processData.description,
-          croppedImageUrl: processData.croppedImageUrl,
-          confidence: bbox.confidence
-        }
-        
-        console.log('📦 DetectedItem created:', {
-          category: detectedItem.category,
-          hasDescription: !!detectedItem.description,
-          hasCroppedUrl: !!detectedItem.croppedImageUrl,
-          croppedUrlLength: detectedItem.croppedImageUrl?.length
-        })
-        
-        processedItems.push(detectedItem)
-      }
-
-      console.log(`✅ All items processed: ${processedItems.length}`)
+      console.log(`✅ All items processed in parallel: ${processedItems.length}/${selectedBboxes.length}`)
+      // Ensure we're at least 20% after processing completes
+      setOverallProgress(prev => Math.max(prev, 20))
       setDetectedItems(processedItems)
       setSelectedItems(processedItems)
 
@@ -335,6 +446,10 @@ export default function Home() {
 
   const handleItemsSelected = async (items: DetectedItem[]) => {
     setSelectedItems(items)
+    // Also set processingItems if not already set (for progress bars)
+    if (processingItems.length === 0) {
+      setProcessingItems(items.map(item => ({ category: item.category })))
+    }
     setCurrentStep('searching')
     setIsLoading(true)
 
@@ -344,58 +459,78 @@ export default function Home() {
     }
 
     try {
-      // Build cropped images map from selected items
-      const croppedImages: Record<string, string> = {}
-      const categories: string[] = []
+      // Search each item individually for real-time progress tracking
+      console.log(`🔍 Searching ${items.length} items with real-time progress...`)
       
-      items.forEach((item, idx) => {
-        if (item.croppedImageUrl) {
-          // Use unique key for each item
-          const key = `${item.category}_${idx + 1}`
-          croppedImages[key] = item.croppedImageUrl
-          categories.push(item.category)
+      const totalItems = items.length
+      let completedSearches = 0
+      const allResults: Record<string, Array<{ link: string; thumbnail: string | null; title: string | null }>> = {}
+      
+      // Process searches in parallel but track completion
+      const searchPromises = items.map(async (item, idx) => {
+        if (!item.croppedImageUrl) return null
+        
+        // Use the specific item name (groundingdino_prompt) instead of broad category
+        const itemName = item.groundingdino_prompt || item.category
+        const key = `${itemName}_${idx + 1}`
+        const croppedImages = { [key]: item.croppedImageUrl }
+        const categories = [item.category]
+        
+        try {
+          console.log(`🔍 Searching for ${itemName}...`)
+          
+          const response = await fetch('/api/search', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              categories,
+              croppedImages,
+              originalImageUrl: uploadedImageUrl,
+              useOCRSearch: useOCRSearch,
+            }),
+          })
+
+          const data = await response.json()
+          
+          // Update real-time progress: searching is 75% (from 20% to 95%)
+          completedSearches++
+          const targetProgress = Math.min(95, 20 + (completedSearches / totalItems) * 75)
+          setOverallProgress(prev => Math.max(prev, targetProgress))
+          console.log(`📊 Search progress: ${completedSearches}/${totalItems} items (${Math.floor(20 + (completedSearches / totalItems) * 75)}%)`)
+          
+          // Merge results
+          if (data.results) {
+            Object.entries(data.results).forEach(([category, links]) => {
+              allResults[category] = links as Array<{ link: string; thumbnail: string | null; title: string | null }>
+            })
+          }
+          
+          return data
+        } catch (error) {
+          console.error(`Error searching ${itemName}:`, error)
+          completedSearches++
+          const targetProgress = Math.min(95, 20 + (completedSearches / totalItems) * 75)
+          setOverallProgress(prev => Math.max(prev, targetProgress))
+          return null
         }
       })
-
-      console.log(`🔍 Searching ${items.length} selected items...`)
-      console.log('🔍 Search payload:', {
-        categories,
-        croppedImages,
-        originalImageUrl: uploadedImageUrl
-      })
-
-      // Call the API to get search results with cropped images
-      const response = await fetch('/api/search', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          categories,
-          croppedImages,
-          originalImageUrl: uploadedImageUrl,
-          useOCRSearch: useOCRSearch, // V3.1 OCR Search Pipeline
-        }),
-      })
-
-      const data = await response.json()
-      setResults(data.results || {})
       
-      // Log search results (with GPT reasoning from meta data)
+      // Wait for all searches to complete
+      await Promise.all(searchPromises)
+      
+      console.log(`✅ All searches complete: ${completedSearches}/${totalItems}`)
+      setOverallProgress(prev => Math.max(prev, 95)) // Ensure we're at least 95%
+      setResults(allResults)
+      
+      // Log combined search results
       if (sessionManager) {
-        await sessionManager.logSearchResults(data.results, data.meta || {})
-        
-        // Console log GPT reasoning for debugging
-        if (data.meta?.gptReasoning) {
-          console.log('🤖 GPT Product Selection Reasoning:', data.meta.gptReasoning)
-        }
-        
-        // Console log timing data for debugging
-        if (data.meta?.timing) {
-          console.log('⏱️  Pipeline Timing:', data.meta.timing)
-        } else {
-          console.log('⚠️  No timing data in response')
-        }
+        await sessionManager.logSearchResults(allResults, { 
+          mode: 'real_time_parallel_search',
+          totalItems: totalItems,
+          completedSearches: completedSearches
+        })
       }
       
       setCurrentStep('results')
@@ -433,6 +568,8 @@ export default function Home() {
     setUploadedImageUrl('')
     setDetectedItems([])
     setSelectedItems([])
+    setProcessingItems([])
+    setOverallProgress(0)
     setResults({})
   }
 
@@ -440,7 +577,9 @@ export default function Home() {
   const croppedImagesForResults: Record<string, string> = {}
   selectedItems.forEach((item, idx) => {
     if (item.croppedImageUrl) {
-      const key = `${item.category}_${idx + 1}`
+      // Use the specific item name to match search results keys
+      const itemName = item.groundingdino_prompt || item.category
+      const key = `${itemName}_${idx + 1}`
       croppedImagesForResults[key] = item.croppedImageUrl
     }
   })
@@ -453,34 +592,53 @@ export default function Home() {
       <div className="container mx-auto px-4 py-8">
         {currentStep === 'upload' && (
           <div className="max-w-2xl mx-auto space-y-4">
-            {/* V3.1 OCR Search Toggle */}
-            <div className="bg-gradient-to-r from-purple-50 to-blue-50 border-2 border-purple-200 rounded-xl p-4 shadow-sm">
-              <label className="flex items-center justify-between cursor-pointer">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-lg font-bold text-gray-900">🚀 Advanced OCR Search (V3.1)</span>
-                    <span className="px-2 py-0.5 text-xs font-bold bg-green-500 text-white rounded-full">BETA</span>
-                  </div>
-                  <p className="text-sm text-gray-600">
-                    {useOCRSearch 
-                      ? '✅ Using advanced pipeline with OCR text extraction + visual search'
-                      : 'Using standard visual search only'
-                    }
-                  </p>
-                </div>
-                <div className="relative ml-4">
-                  <input
-                    type="checkbox"
-                    checked={useOCRSearch}
-                    onChange={(e) => setUseOCRSearch(e.target.checked)}
-                    className="sr-only peer"
-                  />
-                  <div className="w-14 h-8 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-purple-600"></div>
-                </div>
-              </label>
-            </div>
-            
             <ImageUpload onImageUploaded={handleImageUploaded} />
+            
+            {/* V3.1 OCR Search Toggle */}
+            <div className="relative inline-block w-full">
+              {/* Outer container for gradient border */}
+              <div className="absolute -inset-[3px] rounded-[20px] overflow-hidden">
+                {/* Large rotating gradient (scaled up to hide corners) */}
+                <div 
+                  className="absolute inset-[-500%] animate-gradient-rotate"
+                  style={{
+                    background: 'conic-gradient(from 0deg at 50% 50%, #F5A623, #FF6B9D, #C644FC, #00C7BE, #F5A623)'
+                  }}
+                />
+              </div>
+              
+              {/* White background to create border effect */}
+              <div className="absolute inset-0 bg-white rounded-2xl"></div>
+              
+              {/* Content container */}
+              <div className="relative bg-white rounded-2xl p-2">
+                <div className="bg-white rounded-xl p-4 space-y-3">
+                  <p className="text-sm font-bold text-gray-700 text-center">업로드하시는 사진에 상품명 혹은 브랜드명이 적혀있나요?</p>
+                  <div className="flex gap-2 justify-center">
+                    <button
+                      onClick={() => setUseOCRSearch(true)}
+                      className={`py-2 px-6 rounded-xl font-semibold text-sm transition-all ${
+                        useOCRSearch
+                          ? 'bg-black text-white shadow-lg'
+                          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      }`}
+                    >
+                      예
+                    </button>
+                    <button
+                      onClick={() => setUseOCRSearch(false)}
+                      className={`py-2 px-6 rounded-xl font-semibold text-sm transition-all ${
+                        !useOCRSearch
+                          ? 'bg-black text-white shadow-lg'
+                          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      }`}
+                    >
+                      아니오
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         )}
         
@@ -488,16 +646,24 @@ export default function Home() {
           <div className="max-w-2xl mx-auto mt-8">
             <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
               <div className="text-center space-y-6">
-                {/* Image with animated gradient border (iPhone AI style) */}
-                <div className="relative inline-block overflow-hidden rounded-2xl">
-                  {/* Animated gradient rectangle (larger than container) */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 animate-gradient-rotate"></div>
+                {/* Image with animated gradient border (Apple Intelligence style) */}
+                <div className="relative inline-block">
+                  {/* Outer container for gradient border */}
+                  <div className="absolute -inset-[3px] rounded-[20px] overflow-hidden">
+                    {/* Large rotating gradient (scaled up to hide corners) */}
+                    <div 
+                      className="absolute inset-[-100%] animate-gradient-rotate"
+                      style={{
+                        background: 'conic-gradient(from 0deg at 50% 50%, #ec4899 0deg, #ffffff 30deg, #a855f7 60deg, #8b5cf6 90deg, #ffffff 120deg, #6366f1 150deg, #3b82f6 180deg, #ffffff 210deg, #06b6d4 240deg, #ec4899 270deg, #ffffff 300deg, #ec4899 360deg)'
+                      }}
+                    />
+                  </div>
                   
-                  {/* White mask rectangles to create border effect */}
-                  <div className="absolute inset-[3px] bg-white rounded-2xl"></div>
+                  {/* White background to create border effect */}
+                  <div className="absolute inset-0 bg-white rounded-2xl"></div>
                   
                   {/* Image container */}
-                  <div className="relative bg-white rounded-2xl p-2 m-[3px]">
+                  <div className="relative bg-white rounded-2xl p-2">
                     <img
                       src={uploadedImageUrl}
                       alt="Detecting"
@@ -509,10 +675,10 @@ export default function Home() {
                 {/* Text */}
                 <div className="space-y-2">
                   <h2 className="text-2xl font-bold text-black">
-                    {useInteractiveMode ? '⚡ Detecting Items...' : t('analyzing.title')}
+                    {useInteractiveMode ? 'AI 분석중...' : t('analyzing.title')}
                   </h2>
                   <p className="text-gray-600">
-                    {useInteractiveMode ? 'Fast detection with DINO-X' : t('analyzing.subtitle')}
+                    {useInteractiveMode ? '이미지에서 패션템을 찾고 있어요' : t('analyzing.subtitle')}
                   </p>
                 </div>
               </div>
@@ -536,9 +702,19 @@ export default function Home() {
           <div className="max-w-2xl mx-auto mt-8">
             <div className="bg-white rounded-2xl shadow-xl p-12 border border-gray-100">
               <div className="text-center space-y-6">
-                <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-500 mx-auto"></div>
-                <h2 className="text-2xl font-bold text-black">Processing Selected Items...</h2>
-                <p className="text-gray-600">Getting descriptions and cropping images</p>
+                <h2 className="text-2xl font-bold text-black">선택하신 패션템을 찾고 있어요!</h2>
+                {/* Single overall progress bar */}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-center text-sm text-gray-500">
+                    {Math.floor(overallProgress)}%
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
+                    <div 
+                      className="bg-black h-full rounded-full transition-all duration-500 ease-out" 
+                      style={{ width: `${overallProgress}%` }}
+                    ></div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -557,70 +733,18 @@ export default function Home() {
           <div className="max-w-2xl mx-auto mt-8">
             <div className="bg-white rounded-2xl shadow-xl p-12 border border-gray-100">
               <div className="text-center space-y-6">
-                {/* Apple Intelligence-style animated gradient border for OCR mode */}
-                {useOCRSearch && (
-                  <div className="relative inline-block mb-4">
-                    {/* Animated gradient background */}
-                    <div className="absolute inset-0 rounded-2xl overflow-hidden">
-                      <div className="absolute inset-0 bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 animate-gradient-shift"></div>
-                      <div className="absolute inset-0 bg-gradient-to-l from-blue-400 via-purple-400 to-pink-400 animate-gradient-shift-reverse opacity-70"></div>
-                    </div>
-                    {/* White inner container */}
-                    <div className="relative bg-white rounded-2xl m-1 p-4">
-                      <img
-                        src={uploadedImageUrl}
-                        alt="Processing"
-                        className="w-48 h-48 object-contain rounded-xl"
-                      />
-                    </div>
+                <h2 className="text-2xl font-bold text-black">선택하신 패션템을 찾고 있어요!</h2>
+                {/* Single overall progress bar */}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-center text-sm text-gray-500">
+                    {Math.floor(overallProgress)}%
                   </div>
-                )}
-                
-                {!useOCRSearch && (
-                  <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-black mx-auto"></div>
-                )}
-                
-                <div className="space-y-3">
-                  <h2 className="text-2xl font-bold text-black">
-                    {useOCRSearch ? '🚀 Advanced OCR Search' : t('searching.title')}
-                  </h2>
-                  {useOCRSearch && (
-                    <div className="space-y-2 text-sm text-gray-600">
-                      {/* Step 1: Extracting */}
-                      <div className={`flex items-center justify-center gap-2 transition-all ${ocrStep === 'extracting' ? 'text-purple-600 font-semibold scale-105' : ocrStep === 'mapping' || ocrStep === 'searching' || ocrStep === 'selecting' ? 'text-green-600' : 'text-gray-400'}`}>
-                        <div className={ocrStep === 'extracting' ? 'animate-pulse' : ''}>
-                          {ocrStep === 'extracting' ? '📝' : '✅'}
-                        </div>
-                        <span>Extracting text with Google Vision...</span>
-                      </div>
-                      
-                      {/* Step 2: Mapping */}
-                      <div className={`flex items-center justify-center gap-2 transition-all ${ocrStep === 'mapping' ? 'text-purple-600 font-semibold scale-105' : ocrStep === 'searching' || ocrStep === 'selecting' ? 'text-green-600' : 'text-gray-400'}`}>
-                        <div className={ocrStep === 'mapping' ? 'animate-pulse' : ''}>
-                          {ocrStep === 'mapping' ? '🤖' : ocrStep === 'searching' || ocrStep === 'selecting' ? '✅' : '⏳'}
-                        </div>
-                        <span>Mapping brands with GPT-4o...</span>
-                      </div>
-                      
-                      {/* Step 3: Searching */}
-                      <div className={`flex items-center justify-center gap-2 transition-all ${ocrStep === 'searching' ? 'text-purple-600 font-semibold scale-105' : ocrStep === 'selecting' ? 'text-green-600' : 'text-gray-400'}`}>
-                        <div className={ocrStep === 'searching' ? 'animate-pulse' : ''}>
-                          {ocrStep === 'searching' ? '🔍' : ocrStep === 'selecting' ? '✅' : '⏳'}
-                        </div>
-                        <span>Visual + Priority text search...</span>
-                      </div>
-                      
-                      {/* Step 4: Selecting */}
-                      <div className={`flex items-center justify-center gap-2 transition-all ${ocrStep === 'selecting' ? 'text-purple-600 font-semibold scale-105' : 'text-gray-400'}`}>
-                        <div className={ocrStep === 'selecting' ? 'animate-pulse' : ''}>
-                          {ocrStep === 'selecting' ? '✨' : '⏳'}
-                        </div>
-                        <span>Selecting best matches...</span>
-                      </div>
-                      
-                      <p className="text-xs text-gray-500 mt-4">⏳ This takes 3-4 minutes for thorough analysis</p>
-                    </div>
-                  )}
+                  <div className="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
+                    <div 
+                      className="bg-black h-full rounded-full transition-all duration-500 ease-out" 
+                      style={{ width: `${overallProgress}%` }}
+                    ></div>
+                  </div>
                 </div>
               </div>
             </div>
