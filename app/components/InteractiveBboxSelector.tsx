@@ -43,12 +43,12 @@ export default function InteractiveBboxSelector({
   const getButtonPositions = () => {
     // Estimate button width based on text length (more accurate)
     const estimateButtonWidth = (text: string) => {
-      // Base width: padding + icon + gap = ~80px
-      // Text width: ~9px per character for the font we're using
-      return Math.max(120, 80 + (text.length * 9));
+      // Smaller buttons: Base width ~50px (padding + icon + gap)
+      // Text width: ~7px per character for xs font size
+      return Math.max(70, 50 + (text.length * 7));
     };
     
-    const buttonHeight = 44;
+    const buttonHeight = 32; // Smaller height for compact buttons
     const horizontalOffset = 16; // Distance from bbox edge
     const verticalSpacing = 60; // Minimum vertical space between buttons
     
@@ -291,9 +291,9 @@ export default function InteractiveBboxSelector({
                 
                 if (!isSelected && !isHovered) return null;
                 
-                // Calculate line positions as percentages
-                const buttonCenterX = ((pos.buttonX + 60) / displaySize.width) * 100;
-                const buttonCenterY = ((pos.buttonY + 22) / displaySize.height) * 100;
+                // Calculate line positions as percentages (adjusted for smaller buttons)
+                const buttonCenterX = ((pos.buttonX + 35) / displaySize.width) * 100; // ~half of smaller button width
+                const buttonCenterY = ((pos.buttonY + 16) / displaySize.height) * 100; // ~half of smaller button height
                 const anchorX = (pos.anchorX / displaySize.width) * 100;
                 const anchorY = (pos.anchorY / displaySize.height) * 100;
                 
@@ -329,7 +329,7 @@ export default function InteractiveBboxSelector({
                   onClick={() => handleBboxToggle(index)}
                   onMouseEnter={() => setHoveredIndex(index)}
                   onMouseLeave={() => setHoveredIndex(null)}
-                  className={`absolute px-5 py-2.5 text-sm font-semibold rounded-full transition-all duration-200 cursor-pointer flex items-center gap-2 whitespace-nowrap ${
+                  className={`absolute px-3 py-1.5 text-xs font-medium rounded-full transition-all duration-200 cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
                     bbox.selected
                       ? 'bg-black text-white shadow-lg'
                       : 'bg-white/95 backdrop-blur-sm text-gray-900 shadow-md hover:shadow-lg'
@@ -340,13 +340,13 @@ export default function InteractiveBboxSelector({
                     zIndex: 50,
                   }}
                 >
-                  <span className="capitalize tracking-wide">{bbox.category}</span>
+                  <span className="capitalize">{bbox.category}</span>
                   {bbox.selected ? (
-                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
                     </svg>
                   ) : (
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
                     </svg>
                   )}
