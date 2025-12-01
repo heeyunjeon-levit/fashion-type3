@@ -176,87 +176,152 @@ export default function Home() {
       try {
         console.log('🔍 Starting V3.1 OCR Search with real-time progress...')
         const backendUrl = process.env.NEXT_PUBLIC_GPU_API_URL || 'http://localhost:8000'
-        const streamUrl = `${backendUrl}/ocr-search-stream?imageUrl=${encodeURIComponent(imageUrl)}`
         
-        const eventSource = new EventSource(streamUrl)
-        
-        eventSource.onmessage = (event) => {
-          try {
-            const data = JSON.parse(event.data)
-            console.log('📊 OCR Progress:', data)
-            
-            if (data.type === 'progress') {
-              setOverallProgress(data.progress)
-              console.log(`Progress: ${data.progress}% - ${data.message}`)
-            } else if (data.type === 'complete') {
+        // Try streaming endpoint first for real-time progress
+        try {
+          const streamUrl = `${backendUrl}/ocr-search-stream?imageUrl=${encodeURIComponent(imageUrl)}`
+          console.log('📡 Attempting streaming connection...')
+          
+          const eventSource = new EventSource(streamUrl)
+          let streamActive = true
+          
+          // Set timeout for stream connection
+          const streamTimeout = setTimeout(() => {
+            if (streamActive) {
+              console.log('⏰ Stream timeout, falling back to regular endpoint...')
               eventSource.close()
-              
-              if (data.success && data.results) {
-                // Transform OCR results to frontend format
-                const results: Record<string, any> = {}
-                
-                for (const productResult of data.results.product_results || []) {
-                  const brand = productResult.product.brand
-                  const productName = productResult.product.product_name || productResult.product.exact_ocr_text?.substring(0, 30) || 'Unknown'
-                  const searchResult = productResult.search_result
-                  
-                  if (searchResult.success && searchResult.selected_results) {
-                    const resultKey = `${brand} - ${productName}`.substring(0, 80)
-                    results[resultKey] = searchResult.selected_results.map((r: any) => ({
-                      title: r.title || 'Product',
-                      link: r.link || '',
-                      thumbnail: r.thumbnail || r.image || null
-                    }))
-                  }
-                }
-                
-                setResults(results)
-                
-                // Log search results
-                if (sessionManager) {
-                  sessionManager.logSearchResults(results, { 
-                    mode: 'ocr_v3.1_stream',
-                    ocr_mapping: data.results.mapping,
-                    summary: data.results.summary
-                  })
-                }
-                
-                setOverallProgress(100)
-                setCurrentStep('results')
-              } else {
-                console.error('OCR search failed:', data.reason)
-                alert(`OCR search failed: ${data.reason || 'Unknown error'}`)
-                setCurrentStep('upload')
-              }
-              setIsLoading(false)
-            } else if (data.type === 'error') {
-              eventSource.close()
-              console.error('OCR error:', data.message)
-              alert(`OCR error: ${data.message}`)
-              setCurrentStep('upload')
-              setIsLoading(false)
+              streamActive = false
             }
-          } catch (e) {
-            console.error('Error parsing SSE data:', e)
+          }, 10000) // 10 second timeout for stream to start
+          
+          eventSource.onmessage = (event) => {
+            clearTimeout(streamTimeout)
+            try {
+              const data = JSON.parse(event.data)
+              console.log('📊 OCR Progress:', data)
+              
+              if (data.type === 'progress') {
+                setOverallProgress(data.progress)
+                console.log(`Progress: ${data.progress}% - ${data.message}`)
+              } else if (data.type === 'complete') {
+                eventSource.close()
+                streamActive = false
+                
+                if (data.success && data.results) {
+                  // Transform OCR results to frontend format
+                  const results: Record<string, any> = {}
+                  
+                  for (const productResult of data.results.product_results || []) {
+                    const brand = productResult.product.brand
+                    const productName = productResult.product.product_name || productResult.product.exact_ocr_text?.substring(0, 30) || 'Unknown'
+                    const searchResult = productResult.search_result
+                    
+                    if (searchResult.success && searchResult.selected_results) {
+                      const resultKey = `${brand} - ${productName}`.substring(0, 80)
+                      results[resultKey] = searchResult.selected_results.map((r: any) => ({
+                        title: r.title || 'Product',
+                        link: r.link || '',
+                        thumbnail: r.thumbnail || r.image || null
+                      }))
+                    }
+                  }
+                  
+                  setResults(results)
+                  
+                  if (sessionManager) {
+                    sessionManager.logSearchResults(results, { 
+                      mode: 'ocr_v3.1_stream',
+                      ocr_mapping: data.results.mapping,
+                      summary: data.results.summary
+                    })
+                  }
+                  
+                  setOverallProgress(100)
+                  setCurrentStep('results')
+                } else {
+                  console.error('OCR search failed:', data.reason)
+                  alert(`OCR 검색 실패: ${data.reason || 'Unknown error'}`)
+                  setCurrentStep('upload')
+                }
+                setIsLoading(false)
+              } else if (data.type === 'error') {
+                eventSource.close()
+                streamActive = false
+                console.error('OCR error:', data.message)
+                alert(`OCR 오류: ${data.message}`)
+                setCurrentStep('upload')
+                setIsLoading(false)
+              }
+            } catch (e) {
+              console.error('Error parsing SSE data:', e, 'Raw data:', event.data)
+              // Continue - might be a partial message
+            }
           }
+          
+          eventSource.onerror = (error) => {
+            clearTimeout(streamTimeout)
+            if (!streamActive) return
+            
+            console.error('EventSource error:', error)
+            eventSource.close()
+            streamActive = false
+            
+            // Fall back to regular POST endpoint
+            console.log('⚠️ Stream failed, using regular POST endpoint...')
+            handleOCRSearchFallback(imageUrl)
+          }
+          
+          return
+        } catch (streamError) {
+          console.error('Stream setup error:', streamError)
+          // Fall back to regular endpoint
+          handleOCRSearchFallback(imageUrl)
+          return
         }
         
-        eventSource.onerror = (error) => {
-          console.error('EventSource error:', error)
-          eventSource.close()
-          alert('Connection to OCR service failed. Please try again.')
-          setCurrentStep('upload')
-          setIsLoading(false)
-        }
-        
-        // Don't return - let the EventSource handle the flow
       } catch (error) {
         console.error('Error in OCR search:', error)
-        alert('An error occurred during OCR search. Please try again.')
+        alert('OCR 검색 중 오류가 발생했습니다. 다시 시도해주세요.')
         setCurrentStep('upload')
         setIsLoading(false)
       }
       return
+    }
+    
+    // Fallback function for OCR when streaming fails
+    async function handleOCRSearchFallback(imageUrl: string) {
+      try {
+        setOverallProgress(50) // Show some progress
+        
+        const response = await fetch('/api/search', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            categories: [],
+            croppedImages: {},
+            originalImageUrl: imageUrl,
+            useOCRSearch: true,
+          }),
+        })
+
+        const data = await response.json()
+        setOverallProgress(90)
+        
+        if (data.results && Object.keys(data.results).length > 0) {
+          setResults(data.results)
+          setOverallProgress(100)
+          setCurrentStep('results')
+        } else {
+          alert('텍스트를 찾을 수 없습니다. 다른 이미지를 시도해주세요.')
+          setCurrentStep('upload')
+        }
+      } catch (error) {
+        console.error('OCR fallback error:', error)
+        alert('OCR 검색 실패. 다시 시도해주세요.')
+        setCurrentStep('upload')
+      } finally {
+        setIsLoading(false)
+      }
     }
 
     if (useInteractiveMode) {
