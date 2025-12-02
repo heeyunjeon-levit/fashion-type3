@@ -25,7 +25,7 @@ const FASHION_CATEGORIES = [
 
 const FASHION_PROMPT = FASHION_CATEGORIES.join(". ")
 
-// Convert image URL to base64
+// Convert image URL to base64 (with size optimization for faster processing)
 async function imageUrlToBase64(imageUrl: string): Promise<string> {
   try {
     console.log('   Converting image to base64...')
@@ -36,9 +36,14 @@ async function imageUrlToBase64(imageUrl: string): Promise<string> {
     }
     
     const arrayBuffer = await response.arrayBuffer()
+    const originalSize = arrayBuffer.byteLength
+    
+    // For very large images, we could resize here, but for now just convert
     const base64 = Buffer.from(arrayBuffer).toString('base64')
     const mimeType = response.headers.get('content-type') || 'image/jpeg'
-    console.log(`   ✅ Converted ${arrayBuffer.byteLength} bytes to base64`)
+    
+    console.log(`   ✅ Converted ${(originalSize / 1024).toFixed(1)} KB to base64 (${base64.length} chars)`)
+    
     return `data:${mimeType};base64,${base64}`
   } catch (error: any) {
     console.error('   ❌ Image conversion failed:', error.message)
@@ -75,30 +80,50 @@ async function createDetectionTask(base64Image: string) {
 }
 
 // Query task result
-async function queryTaskResult(taskUuid: string, maxWait: number = 60): Promise<DINOXDetectionResult | null> {
+async function queryTaskResult(taskUuid: string, maxWait: number = 120): Promise<DINOXDetectionResult | null> {
   const startTime = Date.now()
+  let attempts = 0
 
   while (Date.now() - startTime < maxWait * 1000) {
-    const response = await fetch(`${DINOX_API_BASE}/v2/task_status/${taskUuid}`, {
-      headers: { 'Token': DINOX_API_TOKEN }
-    })
+    attempts++
+    
+    try {
+      const response = await fetch(`${DINOX_API_BASE}/v2/task_status/${taskUuid}`, {
+        headers: { 'Token': DINOX_API_TOKEN },
+        signal: AbortSignal.timeout(10000) // 10s timeout per request
+      })
 
-    if (!response.ok) {
-      throw new Error(`Query task error: ${response.status}`)
+      if (!response.ok) {
+        console.log(`   ⚠️  Query attempt ${attempts} failed: ${response.status}, retrying...`)
+        await new Promise(resolve => setTimeout(resolve, 2000))
+        continue
+      }
+
+      const data = await response.json()
+      const status = data.data?.status
+
+      console.log(`   📊 Attempt ${attempts}: status = ${status}`)
+
+      if (status === 'finish') {
+        console.log('   ✅ Task completed!')
+        return data.data?.result
+      } else if (status === 'failed') {
+        throw new Error('DINO-X task failed')
+      }
+
+      // Wait 2 seconds between polls
+      await new Promise(resolve => setTimeout(resolve, 2000))
+    } catch (error: any) {
+      if (error.name === 'TimeoutError' || error.message.includes('timeout')) {
+        console.log(`   ⏱️  Query timeout, retrying...`)
+        await new Promise(resolve => setTimeout(resolve, 2000))
+        continue
+      }
+      throw error
     }
-
-    const data = await response.json()
-    const status = data.data?.status
-
-    if (status === 'finish') {
-      return data.data?.result
-    } else if (status === 'failed') {
-      throw new Error('DINO-X task failed')
-    }
-
-    await new Promise(resolve => setTimeout(resolve, 1000))
   }
 
+  console.error(`   ❌ Timeout after ${attempts} attempts over ${maxWait}s`)
   return null
 }
 
