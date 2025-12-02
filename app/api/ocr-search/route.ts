@@ -263,8 +263,8 @@ If NO fashion brands found, return: {"products": []}`
       if (p.exact_ocr_text) console.log(`         OCR: "${p.exact_ocr_text.substring(0, 50)}..."`)
     })
     
-    // Step 3: Search for each product using Serper
-    console.log('\n🔎 Step 3: Searching for products...')
+    // Step 3: Search for each product using HYBRID approach (Lens + Text)
+    console.log('\n🔎 Step 3: Hybrid search (Lens + Text) for products...')
     
     // Blocked domains for non-fashion results
     const blockedDomains = [

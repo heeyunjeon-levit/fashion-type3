@@ -226,64 +226,97 @@ export default function Home() {
       setOverallProgress(0)
       
       try {
-        console.log('🔍 Starting V3.1 OCR Search (Modal Hybrid Search)...')
+        console.log('🔍 Starting V3.1 OCR Search (Next.js OCR + Hybrid Search)...')
         
-        // Use Modal's proven OCR endpoint (with Lens + GPT + Priority Search)
+        // Step 1: Extract brands with Next.js OCR (has Instagram brand recognition)
         setOverallProgress(10)
-        const backendUrl = 'https://heeyunjeon-levit--fashion-crop-api-gpu-fastapi-app-v2.modal.run'
-        console.log(`📡 Calling ${backendUrl}/ocr-search...`)
+        console.log('📡 Step 1: Extracting brands with /api/ocr-search...')
         
-        const ocrResponse = await fetch(`${backendUrl}/ocr-search`, {
+        const ocrResponse = await fetch('/api/ocr-search', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ imageUrl }),
         })
         
-        setOverallProgress(90)
-        
         if (!ocrResponse.ok) {
-          throw new Error(`OCR search failed: ${ocrResponse.status}`)
+          throw new Error(`OCR extraction failed: ${ocrResponse.status}`)
         }
         
         const ocrData = await ocrResponse.json()
-        console.log('✅ OCR search complete:', ocrData)
+        console.log('✅ OCR extraction complete:', ocrData)
         
-        if (ocrData.success && ocrData.product_results && ocrData.product_results.length > 0) {
-          // Transform to frontend format
-          const results: Record<string, any> = {}
-          
-          for (const productResult of ocrData.product_results) {
-            const brand = productResult.product.brand
-            const productName = productResult.product.product_name || productResult.product.exact_ocr_text?.substring(0, 30) || 'Unknown'
-            const searchResult = productResult.search_result
-            
-            if (searchResult.success && searchResult.selected_results) {
-              const resultKey = `${brand} - ${productName}`.substring(0, 80)
-              results[resultKey] = searchResult.selected_results.map((r: any) => ({
-                title: r.title || 'Product',
-                link: r.link || '',
-                thumbnail: r.thumbnail || r.image || null
-              }))
-            }
-          }
-          
-          setResults(results)
-          
-          if (sessionManager) {
-            sessionManager.logSearchResults(results, { 
-              mode: 'ocr_modal_hybrid',
-              ocr_mapping: ocrData.mapping,
-              summary: ocrData.summary
-            })
-          }
-          
-          setOverallProgress(100)
-          setCurrentStep('results')
-        } else {
-          console.error('OCR search returned no results:', ocrData.reason)
-          alert(`OCR 검색 결과 없음: ${ocrData.reason || 'No products identified'}`)
+        if (!ocrData.success || !ocrData.product_results || ocrData.product_results.length === 0) {
+          console.error('OCR returned no brands:', ocrData.reason)
+          alert(`OCR 결과 없음: ${ocrData.reason || 'No brands detected'}`)
           setCurrentStep('upload')
+          setIsLoading(false)
+          return
         }
+        
+        setOverallProgress(30)
+        
+        // Step 2: For each brand, do hybrid search with /api/search (has Lens + GPT)
+        console.log(`\n🔎 Step 2: Hybrid search for ${ocrData.product_results.length} brand(s)...`)
+        
+        const results: Record<string, any> = {}
+        let completedSearches = 0
+        
+        for (const productResult of ocrData.product_results) {
+          const brand = productResult.brand
+          const searchTerm = productResult.exact_ocr_text || productResult.product_type
+          
+          console.log(`   Searching: ${brand} - ${searchTerm}`)
+          
+          try {
+            // Use existing /api/search with Lens + GPT
+            const searchResponse = await fetch('/api/search', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                categories: [brand],
+                croppedImages: { [brand]: imageUrl }, // Use full image for Lens search
+                originalImageUrl: imageUrl,
+                useOCRSearch: false, // Use regular hybrid search, not OCR mode
+              }),
+            })
+            
+            const searchData = await searchResponse.json()
+            
+            if (searchData.results && searchData.results[brand] && searchData.results[brand].length > 0) {
+              const resultKey = `${brand} - ${searchTerm}`.substring(0, 80)
+              results[resultKey] = searchData.results[brand]
+              console.log(`   ✅ Found ${searchData.results[brand].length} results for ${brand}`)
+            } else {
+              console.log(`   ⚠️  No results for ${brand}`)
+            }
+          } catch (searchError) {
+            console.error(`   ❌ Search failed for ${brand}:`, searchError)
+          }
+          
+          completedSearches++
+          const progress = 30 + (completedSearches / ocrData.product_results.length) * 60
+          setOverallProgress(Math.min(progress, 90))
+        }
+        
+        if (Object.keys(results).length === 0) {
+          alert('검색 결과가 없습니다. 다른 이미지를 시도해주세요.')
+          setCurrentStep('upload')
+          setIsLoading(false)
+          return
+        }
+        
+        setResults(results)
+        
+        if (sessionManager) {
+          sessionManager.logSearchResults(results, { 
+            mode: 'ocr_hybrid_nextjs',
+            extracted_text: ocrData.extracted_text,
+            brands_detected: ocrData.product_results.map((p: any) => p.brand).join(', ')
+          })
+        }
+        
+        setOverallProgress(100)
+        setCurrentStep('results')
         setIsLoading(false)
       } catch (error) {
         console.error('Error in OCR search:', error)
