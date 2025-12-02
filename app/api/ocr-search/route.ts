@@ -24,10 +24,15 @@ export async function POST(request: Request) {
     console.log('\n📖 Step 1: Extracting text with Google Cloud Vision API...')
     
     const visionApiKey = process.env.GCLOUD_API_KEY
+    console.log(`   GCLOUD_API_KEY configured: ${visionApiKey ? 'YES' : 'NO'}`)
+    console.log(`   OPENAI_API_KEY configured: ${process.env.OPENAI_API_KEY ? 'YES' : 'NO'}`)
+    console.log(`   SERPER_API_KEY configured: ${process.env.SERPER_API_KEY ? 'YES' : 'NO'}`)
+    
     if (!visionApiKey) {
+      console.error('   ❌ GCLOUD_API_KEY not set in environment!')
       return NextResponse.json({
         success: false,
-        reason: 'Google Cloud Vision API key not configured'
+        reason: 'Google Cloud Vision API key not configured in Vercel environment variables'
       }, { status: 500 })
     }
     
@@ -352,10 +357,15 @@ If NO fashion brands found, return: {"products": []}`
     
   } catch (error) {
     console.error('❌ OCR search error:', error)
+    console.error('   Error stack:', error instanceof Error ? error.stack : 'No stack trace')
+    console.error('   Error type:', typeof error)
+    console.error('   Error details:', JSON.stringify(error, null, 2))
+    
     return NextResponse.json(
       { 
         success: false, 
-        reason: error instanceof Error ? error.message : 'Unknown error' 
+        reason: error instanceof Error ? error.message : 'Unknown error',
+        error_details: error instanceof Error ? error.stack : String(error)
       },
       { status: 500 }
     )
