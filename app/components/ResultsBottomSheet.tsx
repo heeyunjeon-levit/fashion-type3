@@ -56,7 +56,19 @@ export default function ResultsBottomSheet({
     if (typeof window !== 'undefined') {
       const manager = getSessionManager()
       setSessionManager(manager)
-      setIsReturningUser(manager.isReturningUser())
+      const returning = manager.isReturningUser()
+      setIsReturningUser(returning)
+      
+      // If returning user, automatically set phone as submitted and hide modal
+      if (returning) {
+        setPhoneSubmitted(true)
+        setShowPhoneModal(false)
+        const phone = manager.getPhoneNumber()
+        if (phone) {
+          setUserPhoneNumber(phone)
+        }
+        console.log('👋 Returning user detected, skipping phone modal')
+      }
     }
   }, [])
 

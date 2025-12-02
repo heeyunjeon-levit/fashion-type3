@@ -748,9 +748,12 @@ export default function Home() {
     setProcessingItems([])
     setOverallProgress(0)
     setResults({})
-    // Clear saved state from localStorage
+    // Clear saved state from localStorage (including phone to prevent modal on fresh start)
     localStorage.removeItem('search_state')
+    localStorage.removeItem('product_click_time_main_app')
     console.log('🗑️ Cleared saved search state')
+    // Force page reload to get fresh upload screen
+    window.location.reload()
   }
 
   // Build croppedImages map for Results component
