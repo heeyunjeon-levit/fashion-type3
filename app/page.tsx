@@ -345,7 +345,9 @@ export default function Home() {
       
       try {
         console.log('⚡ Starting fast DINO-X detection...')
-        const detectResponse = await fetch(`${process.env.NEXT_PUBLIC_GPU_API_URL}/detect`, {
+        // Use CPU app for now (GPU app is crash-looping)
+        const backendUrl = 'https://heeyunjeon-levit--fashion-crop-api-fastapi-app.modal.run'
+        const detectResponse = await fetch(`${backendUrl}/detect`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -475,7 +477,8 @@ export default function Home() {
         console.log(`Processing ${bbox.category}...`)
         
         try {
-          const processResponse = await fetch(`${process.env.NEXT_PUBLIC_GPU_API_URL}/process-item`, {
+          const backendUrl = 'https://heeyunjeon-levit--fashion-crop-api-fastapi-app.modal.run'
+          const processResponse = await fetch(`${backendUrl}/process-item`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
