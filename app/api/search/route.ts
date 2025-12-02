@@ -215,9 +215,10 @@ export async function POST(request: NextRequest) {
     const requestStartTime = Date.now()
     console.log('=== SEARCH REQUEST STARTED ===')
     
-    const { categories, croppedImages, originalImageUrl, useOCRSearch } = await request.json()
+    const { categories, croppedImages, descriptions, originalImageUrl, useOCRSearch } = await request.json()
     console.log('📤 Received categories:', categories)
     console.log('📤 Cropped images:', Object.keys(croppedImages || {}))
+    console.log('📝 Descriptions:', descriptions ? Object.keys(descriptions) : 'none')
     console.log('🖼️ Original image URL:', originalImageUrl || 'none')
     console.log('🔍 OCR Search Mode:', useOCRSearch ? 'ENABLED (V3.1)' : 'disabled')
 
@@ -517,13 +518,15 @@ export async function POST(request: NextRequest) {
         
         console.log(`📋 Using top ${organicResults.length} results for ${resultKey}`)
 
-        // Extract specific item description from cropped image filename or use generic terms
-        // Format: "accessories_gold_ring_1762251435336.jpg"
-        // Extract: "gold ring" (between category and timestamp)
-        const croppedImageFilename = croppedImageUrl.split('/').pop() || ''
-        const itemDescription = croppedImageFilename.includes('_') 
-          ? croppedImageFilename.split('_').slice(1, -1).join(' ').replace('.jpg', '').replace('.jpeg', '') // Extract everything between category and timestamp
-          : null
+        // Get GPT-4o Vision description from request (if provided)
+        // This describes the specific item in detail (color, style, material, etc.)
+        const itemDescription = descriptions?.[resultKey] || null
+        
+        if (itemDescription) {
+          console.log(`   📝 Using GPT description: "${itemDescription.substring(0, 80)}..."`)
+        } else {
+          console.log(`   ℹ️  No description provided for ${resultKey}`)
+        }
         
         console.log(`🎯 Detected item: ${itemDescription || 'generic terms'}`)
 
@@ -1158,7 +1161,7 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links preferred) or
             const description = itemDescription.toLowerCase()
             
             // Extract key descriptive words from the description (color, material, type, etc.)
-            const descWords = description.split(/[\s_]+/).filter(word => word.length > 2)
+            const descWords = description.split(/[\s_]+/).filter((word: string) => word.length > 2)
             
             // Check for critical attribute mismatches
             const criticalMismatches = [

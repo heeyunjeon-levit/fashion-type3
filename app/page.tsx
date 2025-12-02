@@ -500,10 +500,10 @@ export default function Home() {
       let completedItems = 0
       
       const processingPromises = selectedBboxes.map(async (bbox) => {
-        console.log(`Cropping ${bbox.category}...`)
+        console.log(`Processing ${bbox.category}...`)
         
         try {
-          // Crop image client-side using Canvas API (fast!)
+          // Step 1: Crop image client-side using Canvas API
           const { cropImage } = await import('@/lib/imageCropper')
           
           console.log(`Cropping ${bbox.category} with bbox:`, bbox.bbox)
@@ -515,30 +515,50 @@ export default function Home() {
           
           console.log(`✅ Cropped ${bbox.category} (${Math.round(croppedDataUrl.length / 1024)}KB)`)
           
+          // Step 2: Generate description with GPT-4o Vision (this was the secret sauce!)
+          console.log(`Describing ${bbox.category} with GPT-4o Vision...`)
+          const descriptionResponse = await fetch('/api/describe-item', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              imageDataUrl: croppedDataUrl,
+              category: bbox.category
+            })
+          })
+          
+          let description = `${bbox.category} item`
+          if (descriptionResponse.ok) {
+            const descData = await descriptionResponse.json()
+            description = descData.description || description
+            console.log(`✅ GPT-4o described ${bbox.category}: "${description.substring(0, 80)}..."`)
+          } else {
+            console.warn(`⚠️  Description failed for ${bbox.category}, using fallback`)
+          }
+          
           // Update real-time progress
           completedItems++
           const targetProgress = Math.min(20, (completedItems / totalItems) * 20)
           setOverallProgress(prev => Math.max(prev, targetProgress))
-          console.log(`📊 Cropping progress: ${completedItems}/${totalItems} items (${Math.floor((completedItems / totalItems) * 20)}%)`)
+          console.log(`📊 Processing progress: ${completedItems}/${totalItems} items (${Math.floor((completedItems / totalItems) * 20)}%)`)
 
-          // Convert to DetectedItem format (use data URL directly - much faster!)
-          // Testing shows Serper accepts data URLs and returns good results
+          // Convert to DetectedItem format (with description + cropped image)
           const detectedItem = {
             category: bbox.mapped_category || bbox.category,
             groundingdino_prompt: bbox.category,
-            description: `${bbox.category} item`,
-            croppedImageUrl: croppedDataUrl, // Use data URL directly (3-4x faster than Supabase upload)
+            description: description, // GPT-4o Vision description!
+            croppedImageUrl: croppedDataUrl,
             confidence: bbox.confidence
           }
           
           console.log('📦 DetectedItem created:', {
             category: detectedItem.category,
+            description: description.substring(0, 60) + '...',
             dataUrlSize: `${Math.round(croppedDataUrl.length / 1024)}KB`
           })
           
           return detectedItem
         } catch (error) {
-          console.error(`Error cropping ${bbox.category}:`, error)
+          console.error(`Error processing ${bbox.category}:`, error)
           completedItems++
           const targetProgress = Math.min(20, (completedItems / totalItems) * 20)
           setOverallProgress(prev => Math.max(prev, targetProgress))
@@ -618,9 +638,11 @@ export default function Home() {
         
         const croppedImages = { [key]: croppedUrl }
         const categories = [item.category]
+        const descriptions = { [key]: item.description } // Pass GPT-4o descriptions!
         
         try {
           console.log(`🔍 Searching for ${itemName}...`)
+          console.log(`   Description: "${item.description.substring(0, 80)}..."`)
           
           const response = await fetch('/api/search', {
             method: 'POST',
@@ -630,6 +652,7 @@ export default function Home() {
             body: JSON.stringify({
               categories,
               croppedImages,
+              descriptions, // Include descriptions for better search!
               originalImageUrl: uploadedImageUrl,
               useOCRSearch: useOCRSearch,
             }),
