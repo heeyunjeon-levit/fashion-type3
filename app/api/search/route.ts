@@ -1209,8 +1209,9 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links preferred) or
             if (!thumbnail && resultItem) {
               console.log(`⚠️  No thumbnail for ${link.substring(0, 40)}`)
               console.log(`   Available fields:`, Object.keys(resultItem))
-            } else {
-              console.log(`✅ Thumbnail found for ${link.substring(0, 40)}`)
+              console.log(`   Full item:`, JSON.stringify(resultItem, null, 2).substring(0, 300))
+            } else if (thumbnail) {
+              console.log(`✅ Thumbnail found for ${link.substring(0, 40)}: ${thumbnail.substring(0, 60)}`)
             }
             
             return {
