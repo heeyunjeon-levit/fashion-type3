@@ -202,8 +202,8 @@ async def detect_items(request: DetectRequest):
         # Import category mapping function
         from src.analyzers.dinox_analyzer import map_dinox_category
         
-        # Filter items by confidence threshold (increased to reduce false positives)
-        CONFIDENCE_THRESHOLD = 0.45  # Increased from 0.40 to focus on main subject
+        # Filter items by confidence threshold
+        CONFIDENCE_THRESHOLD = 0.35  # Lower to catch all clothing items, rely on main_subject_score for filtering
         items = analysis_result.get('items', [])
         total_detections = len(items)
         
