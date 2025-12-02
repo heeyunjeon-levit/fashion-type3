@@ -640,7 +640,12 @@ export default function ResultsBottomSheet({
                           href={option.link}
                           target="_blank"
                           rel="noopener noreferrer"
-                          onClick={() => handleLinkClick(category, option.link, option.title, option.thumbnail, index + 1)}
+                          onClick={(e) => {
+                            e.preventDefault()
+                            handleLinkClick(category, option.link, option.title, option.thumbnail, index + 1)
+                            // Explicitly open in new tab for mobile compatibility
+                            window.open(option.link, '_blank', 'noopener,noreferrer')
+                          }}
                           className="flex-shrink-0 w-36 snap-start group"
                         >
                           <div className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all border border-gray-200 group-hover:border-gray-400">
