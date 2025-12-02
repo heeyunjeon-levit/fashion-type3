@@ -565,70 +565,34 @@ export default function Home() {
         console.log(`Processing ${bbox.category}...`)
         
         try {
-          let croppedImageUrl: string
-          let description: string
-          
-          // Try frontend cropping first (faster)
-          try {
-            const { cropImage, uploadCroppedImage } = await import('../lib/imageCropper')
-            
-            // Crop image in browser
-            const croppedDataUrl = await cropImage({
+          // Use Modal backend for processing (proven to work reliably)
+          console.log(`Processing ${bbox.category} with Modal backend...`)
+          const backendUrl = 'https://heeyunjeon-levit--fashion-crop-api-gpu-fastapi-app-v2.modal.run'
+          const processResponse = await fetch(`${backendUrl}/process-item`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
               imageUrl: uploadedImageUrl,
-              bbox: bbox.bbox as [number, number, number, number],
-              padding: 0.05
-            })
-            
-            // Upload to Supabase
-            croppedImageUrl = await uploadCroppedImage(croppedDataUrl, bbox.category)
-            console.log(`✅ Frontend cropping successful for ${bbox.category}`)
+              bbox: bbox.bbox,
+              category: bbox.category
+            }),
+          })
 
-            // Get description from GPT-4o (via Next.js API)
-            const descResponse = await fetch('/api/describe-item', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                imageUrl: croppedImageUrl,
-                category: bbox.category
-              })
-            })
-
-            description = `${bbox.category} item`
-            if (descResponse.ok) {
-              const descData = await descResponse.json()
-              description = descData.description || description
-              console.log(`✅ Got description for ${bbox.category}: "${description.substring(0, 60)}..."`)
-            } else {
-              console.error(`❌ Description API failed for ${bbox.category}:`, descResponse.status)
-              const errorData = await descResponse.json()
-              console.error('   Error:', errorData)
-            }
-          } catch (frontendError: any) {
-            console.warn(`⚠️  Frontend processing failed for ${bbox.category}, using Modal fallback:`, frontendError.message)
-            
-            // Fallback to Modal backend for processing
-            const backendUrl = 'https://heeyunjeon-levit--fashion-crop-api-gpu-fastapi-app-v2.modal.run'
-            const processResponse = await fetch(`${backendUrl}/process-item`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                imageUrl: uploadedImageUrl,
-                bbox: bbox.bbox,
-                category: bbox.category
-              }),
-            })
-
-            if (!processResponse.ok) {
-              throw new Error(`Both processing methods failed for ${bbox.category}`)
-            }
-
-            const processData = await processResponse.json()
-            croppedImageUrl = processData.croppedImageUrl
-            description = processData.description || `${bbox.category} item`
-            console.log(`✅ Modal fallback successful for ${bbox.category}`)
+          if (!processResponse.ok) {
+            console.error(`Failed to process ${bbox.category}: ${processResponse.status}`)
+            completedItems++
+            const targetProgress = Math.min(20, (completedItems / totalItems) * 20)
+            setOverallProgress(prev => Math.max(prev, targetProgress))
+            return null
           }
+
+          const processData = await processResponse.json()
+          const croppedImageUrl = processData.croppedImageUrl
+          const description = processData.description || `${bbox.category} item`
+          console.log(`✅ Processed ${bbox.category}: "${description.substring(0, 60)}..."`)
+
 
           // Update real-time progress
           completedItems++
