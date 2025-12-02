@@ -500,62 +500,36 @@ export default function Home() {
       let completedItems = 0
       
       const processingPromises = selectedBboxes.map(async (bbox) => {
-        console.log(`Processing ${bbox.category}...`)
+        console.log(`Preparing ${bbox.category} for search...`)
         
         try {
-          // Use Modal backend for processing (proven to work reliably)
-          console.log(`Processing ${bbox.category} with Modal backend...`)
-          const backendUrl = 'https://heeyunjeon-levit--fashion-crop-api-gpu-fastapi-app-v2.modal.run'
-          const processResponse = await fetch(`${backendUrl}/process-item`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              imageUrl: uploadedImageUrl,
-              bbox: bbox.bbox,
-              category: bbox.category
-            }),
-          })
-
-          if (!processResponse.ok) {
-            console.error(`Failed to process ${bbox.category}: ${processResponse.status}`)
-            completedItems++
-            const targetProgress = Math.min(20, (completedItems / totalItems) * 20)
-            setOverallProgress(prev => Math.max(prev, targetProgress))
-            return null
-          }
-
-          const processData = await processResponse.json()
-          const croppedImageUrl = processData.croppedImageUrl
-          const description = processData.description || `${bbox.category} item`
-          console.log(`✅ Processed ${bbox.category}: "${description.substring(0, 60)}..."`)
-
-
+          // Skip Modal processing - just prepare the item for search
+          // Use full image for Lens search (more accurate than cropped)
+          console.log(`Using full image for ${bbox.category} (Lens will handle matching)`)
+          
           // Update real-time progress
           completedItems++
           const targetProgress = Math.min(20, (completedItems / totalItems) * 20)
           setOverallProgress(prev => Math.max(prev, targetProgress))
-          console.log(`📊 Processing progress: ${completedItems}/${totalItems} items (${Math.floor((completedItems / totalItems) * 20)}%)`)
+          console.log(`📊 Preparation progress: ${completedItems}/${totalItems} items (${Math.floor((completedItems / totalItems) * 20)}%)`)
 
-          // Convert to DetectedItem format
+          // Convert to DetectedItem format (use full image for search)
           const detectedItem = {
             category: bbox.mapped_category || bbox.category,
             groundingdino_prompt: bbox.category,
-            description: description,
-            croppedImageUrl: croppedImageUrl,
+            description: `${bbox.category} item`,
+            croppedImageUrl: uploadedImageUrl, // Use full image for Lens search
             confidence: bbox.confidence
           }
           
-          console.log('📦 DetectedItem created:', {
+          console.log('📦 DetectedItem prepared:', {
             category: detectedItem.category,
-            hasDescription: !!detectedItem.description,
-            hasCroppedUrl: !!detectedItem.croppedImageUrl
+            usingFullImage: true
           })
           
           return detectedItem
         } catch (error) {
-          console.error(`Error processing ${bbox.category}:`, error)
+          console.error(`Error preparing ${bbox.category}:`, error)
           completedItems++
           const targetProgress = Math.min(20, (completedItems / totalItems) * 20)
           setOverallProgress(prev => Math.max(prev, targetProgress))
