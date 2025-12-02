@@ -212,9 +212,9 @@ export async function POST(request: NextRequest) {
     console.log('   Raw result structure:', JSON.stringify(result, null, 2).substring(0, 500))
 
     // Filter and score items for main subject focus
-    const CONFIDENCE_THRESHOLD = 0.40  // Lowered from 0.45 to match Modal backend
-    const MAIN_SUBJECT_THRESHOLD = 0.30  // Lowered from 0.35 to be less aggressive
-    const MAX_ITEMS = 8
+    const CONFIDENCE_THRESHOLD = 0.40  // Keep reasonable for detection
+    const MAIN_SUBJECT_THRESHOLD = 0.45  // Increased to focus on main person (foreground)
+    const MAX_ITEMS = 5  // Limit to top 5 items to reduce clutter
     const EXCLUDED_CATEGORIES = ['leggings', 'tights', 'stockings']
 
     console.log(`   Applying filters: confidence >= ${CONFIDENCE_THRESHOLD}, excluding ${EXCLUDED_CATEGORIES.join(', ')}`)
@@ -255,7 +255,8 @@ export async function POST(request: NextRequest) {
 
           const centralityScore = Math.max(0, 1 - distanceFromCenter * 2)
           const sizeScore = Math.min(1, bboxArea * 10)
-          mainSubjectScore = confidence * 0.4 + centralityScore * 0.35 + sizeScore * 0.25
+          // Increased weight on size and centrality to better focus on main subject
+          mainSubjectScore = confidence * 0.3 + centralityScore * 0.4 + sizeScore * 0.3
         }
 
         const mappedCategory = mapCategory(obj.category)
