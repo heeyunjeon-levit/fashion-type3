@@ -58,7 +58,7 @@ async function createDetectionTask(base64Image: string) {
     image: base64Image,
     prompt: { type: "text", text: FASHION_PROMPT },
     targets: ["bbox"],
-    bbox_threshold: 0.45,  // Increased threshold to focus on main subject
+    bbox_threshold: 0.25,  // Match Modal backend (0.45 was too high!)
     iou_threshold: 0.8
   }
 
@@ -212,8 +212,8 @@ export async function POST(request: NextRequest) {
     console.log('   Raw result structure:', JSON.stringify(result, null, 2).substring(0, 500))
 
     // Filter and score items for main subject focus
-    const CONFIDENCE_THRESHOLD = 0.45
-    const MAIN_SUBJECT_THRESHOLD = 0.35
+    const CONFIDENCE_THRESHOLD = 0.40  // Lowered from 0.45 to match Modal backend
+    const MAIN_SUBJECT_THRESHOLD = 0.30  // Lowered from 0.35 to be less aggressive
     const MAX_ITEMS = 8
     const EXCLUDED_CATEGORIES = ['leggings', 'tights', 'stockings']
 

@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
       image: base64Image,
       prompt: { type: "text", text: "cat. dog. person. chair. table" },
       targets: ["bbox"],
-      bbox_threshold: 0.3
+      bbox_threshold: 0.25  // Match production setting
     }
     
     console.log('   Creating DINO-X task...')
