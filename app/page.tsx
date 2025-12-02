@@ -395,31 +395,55 @@ export default function Home() {
       
       try {
         console.log('⚡ Starting DINO-X detection (direct API)...')
-        // Call DINO-X directly via Next.js API (no Modal!)
-        const detectResponse = await fetch('/api/detect-dinox', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ imageUrl }),
-        })
-
-        if (!detectResponse.ok) {
-          const errorData = await detectResponse.json()
-          console.error('API error:', errorData)
-          throw new Error(errorData.error || `Detection failed: ${detectResponse.status}`)
-        }
-
-        const detectData = await detectResponse.json()
+        let detectData: any = null
         
-        if (detectData.error) {
-          throw new Error(detectData.error)
+        // Try direct DINO-X API first
+        try {
+          const detectResponse = await fetch('/api/detect-dinox', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ imageUrl }),
+          })
+
+          if (!detectResponse.ok) {
+            const errorData = await detectResponse.json()
+            console.error('Direct API error:', errorData)
+            throw new Error(errorData.error || `Detection failed: ${detectResponse.status}`)
+          }
+
+          detectData = await detectResponse.json()
+          
+          if (detectData.error) {
+            throw new Error(detectData.error)
+          }
+          
+          console.log(`✅ Direct API detection complete: ${detectData.bboxes?.length || 0} items found`)
+        } catch (directApiError: any) {
+          console.warn('⚠️  Direct API failed, falling back to Modal backend:', directApiError.message)
+          
+          // Fallback to Modal backend
+          const backendUrl = 'https://heeyunjeon-levit--fashion-crop-api-gpu-fastapi-app-v2.modal.run'
+          const modalResponse = await fetch(`${backendUrl}/detect`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ imageUrl }),
+          })
+
+          if (!modalResponse.ok) {
+            throw new Error(`Both APIs failed. Direct: ${directApiError.message}, Modal: ${modalResponse.status}`)
+          }
+
+          detectData = await modalResponse.json()
+          console.log(`✅ Modal fallback successful: ${detectData.bboxes?.length || 0} items found`)
         }
         
-        console.log(`✅ Detection complete: ${detectData.bboxes?.length || 0} items found`)
         console.log('📦 Detection data:', {
           bboxes: detectData.bboxes,
-          source: detectData.source,
+          source: detectData.source || 'fallback',
           imageUrl: imageUrl
         })
         setBboxes(detectData.bboxes || [])
@@ -429,7 +453,7 @@ export default function Home() {
       } catch (error: any) {
         console.error('❌ Detection error:', error)
         const errorMsg = error.message || 'Failed to detect items'
-        alert(`Detection failed: ${errorMsg}\n\nCheck console for details.`)
+        alert(`Detection failed: ${errorMsg}\n\nPlease try again.`)
         setCurrentStep('upload')
       }
     } else {
