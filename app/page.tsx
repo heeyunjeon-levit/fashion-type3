@@ -420,6 +420,14 @@ export default function Home() {
           }
           
           console.log(`✅ Direct API detection complete: ${detectData.bboxes?.length || 0} items found`)
+          if (detectData.debug) {
+            console.log('🔍 Debug info:', detectData.debug)
+          }
+          
+          // If 0 items detected, throw to trigger Modal fallback
+          if (!detectData.bboxes || detectData.bboxes.length === 0) {
+            throw new Error('Direct API returned 0 items, trying Modal fallback...')
+          }
         } catch (directApiError: any) {
           console.warn('⚠️  Direct API failed, falling back to Modal backend:', directApiError.message)
           

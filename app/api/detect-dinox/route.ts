@@ -299,7 +299,15 @@ export async function POST(request: NextRequest) {
       bboxes: bboxesWithScores,
       image_size: [0, 0], // Not needed for normalized coords
       processing_time: 0,
-      source: 'dino-x-direct'
+      source: 'dino-x-direct',
+      // Debug info
+      debug: {
+        raw_objects_count: objects.length,
+        after_confidence_filter: afterConfidenceFilter.length,
+        after_category_filter: afterCategoryFilter.length,
+        after_main_subject_filter: bboxesWithScores.length,
+        raw_objects: objects.map(o => ({ category: o.category, score: o.score })).slice(0, 10)
+      }
     })
 
   } catch (error: any) {
