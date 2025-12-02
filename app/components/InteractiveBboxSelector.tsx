@@ -441,6 +441,23 @@ export default function InteractiveBboxSelector({
 
   return (
     <div className="w-full max-w-4xl mx-auto">
+      {/* Drawing mode instruction banner */}
+      {isDrawingMode && (
+        <div className="mb-4 bg-blue-500 text-white px-6 py-4 rounded-2xl shadow-xl flex items-center gap-3 animate-pulse">
+          <svg className="w-8 h-8 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11" />
+          </svg>
+          <div className="flex-1">
+            <p className="font-bold text-lg">
+              {language === 'ko' ? '드래그해서 박스를 그려주세요' : 'Drag to draw a box'}
+            </p>
+            <p className="text-sm text-blue-100 mt-0.5">
+              {language === 'ko' ? '원하는 아이템 주위를 터치하고 드래그하세요' : 'Touch and drag around the item you want'}
+            </p>
+          </div>
+        </div>
+      )}
+      
       {/* Image with overlay buttons - Instagram style */}
       <div ref={containerRef} className="relative w-full flex items-center justify-center">
         {displaySize.width > 0 && (
@@ -454,7 +471,7 @@ export default function InteractiveBboxSelector({
             <img
               src={imageUrl}
               alt="Uploaded"
-              className="w-full h-full object-contain rounded-lg"
+              className={`w-full h-full object-contain rounded-lg transition-opacity ${isDrawingMode ? 'opacity-80' : ''}`}
             />
             <canvas
               ref={canvasRef}
@@ -575,8 +592,8 @@ export default function InteractiveBboxSelector({
             }`}
           >
             {isDrawingMode 
-              ? (language === 'ko' ? '그리기 모드 취소' : 'Cancel Drawing') 
-              : (language === 'ko' ? '원하는 패션템이 없어요' : 'Item Missing? Draw It')
+              ? (language === 'ko' ? '✕ 취소' : '✕ Cancel') 
+              : (language === 'ko' ? '✏️ 원하는 패션템이 없어요' : '✏️ Item Missing? Draw It')
             }
           </button>
           
