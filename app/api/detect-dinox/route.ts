@@ -104,11 +104,18 @@ async function queryTaskResult(taskUuid: string, maxWait: number = 120): Promise
 
       console.log(`   📊 Attempt ${attempts}: status = ${status}`)
 
-      if (status === 'finish') {
-        console.log('   ✅ Task completed!')
+      // Check for terminal states (according to official DINO-X API docs)
+      if (status === 'success') {
+        console.log('   ✅ Task completed successfully!')
         return data.data?.result
       } else if (status === 'failed') {
+        console.error('   ❌ Task failed:', data)
         throw new Error('DINO-X task failed')
+      } else if (status === 'waiting' || status === 'running') {
+        // Task still processing, continue polling
+        console.log(`   ⏳ Task ${status}, waiting...`)
+      } else {
+        console.warn(`   ⚠️  Unknown status: ${status}`)
       }
 
       // Wait 2 seconds between polls
