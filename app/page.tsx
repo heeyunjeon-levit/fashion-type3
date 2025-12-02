@@ -557,35 +557,65 @@ export default function Home() {
         console.log(`Processing ${bbox.category}...`)
         
         try {
-          // Use frontend image cropping (no Modal!)
-          const { cropImage, uploadCroppedImage } = await import('../lib/imageCropper')
+          let croppedImageUrl: string
+          let description: string
           
-          // Crop image in browser
-          const croppedDataUrl = await cropImage({
-            imageUrl: uploadedImageUrl,
-            bbox: bbox.bbox as [number, number, number, number],
-            padding: 0.05
-          })
-          
-          // Upload to Supabase
-          const croppedImageUrl = await uploadCroppedImage(croppedDataUrl, bbox.category)
-          console.log(`✅ Cropped and uploaded ${bbox.category}`)
-
-          // Get description from GPT-4o (via Next.js API)
-          const descResponse = await fetch('/api/describe-item', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              imageUrl: croppedImageUrl,
-              category: bbox.category
+          // Try frontend cropping first (faster)
+          try {
+            const { cropImage, uploadCroppedImage } = await import('../lib/imageCropper')
+            
+            // Crop image in browser
+            const croppedDataUrl = await cropImage({
+              imageUrl: uploadedImageUrl,
+              bbox: bbox.bbox as [number, number, number, number],
+              padding: 0.05
             })
-          })
+            
+            // Upload to Supabase
+            croppedImageUrl = await uploadCroppedImage(croppedDataUrl, bbox.category)
+            console.log(`✅ Frontend cropping successful for ${bbox.category}`)
 
-          let description = `${bbox.category} item`
-          if (descResponse.ok) {
-            const descData = await descResponse.json()
-            description = descData.description || description
-            console.log(`✅ Got description for ${bbox.category}`)
+            // Get description from GPT-4o (via Next.js API)
+            const descResponse = await fetch('/api/describe-item', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                imageUrl: croppedImageUrl,
+                category: bbox.category
+              })
+            })
+
+            description = `${bbox.category} item`
+            if (descResponse.ok) {
+              const descData = await descResponse.json()
+              description = descData.description || description
+              console.log(`✅ Got description for ${bbox.category}`)
+            }
+          } catch (frontendError: any) {
+            console.warn(`⚠️  Frontend processing failed for ${bbox.category}, using Modal fallback:`, frontendError.message)
+            
+            // Fallback to Modal backend for processing
+            const backendUrl = 'https://heeyunjeon-levit--fashion-crop-api-gpu-fastapi-app-v2.modal.run'
+            const processResponse = await fetch(`${backendUrl}/process-item`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                imageUrl: uploadedImageUrl,
+                bbox: bbox.bbox,
+                category: bbox.category
+              }),
+            })
+
+            if (!processResponse.ok) {
+              throw new Error(`Both processing methods failed for ${bbox.category}`)
+            }
+
+            const processData = await processResponse.json()
+            croppedImageUrl = processData.croppedImageUrl
+            description = processData.description || `${bbox.category} item`
+            console.log(`✅ Modal fallback successful for ${bbox.category}`)
           }
 
           // Update real-time progress
