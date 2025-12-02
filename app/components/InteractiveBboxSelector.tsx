@@ -351,37 +351,55 @@ export default function InteractiveBboxSelector({
 
   const selectedCount = bboxes.filter(b => b.selected).length;
   
-  // Manual drawing handlers
-  const handleCanvasMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    if (!isDrawingMode) return;
-    
+  // Manual drawing handlers (works for both mouse and touch)
+  const getCoordinates = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!canvas) return null;
     
     const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    
+    if ('touches' in e) {
+      // Touch event
+      const touch = e.touches[0] || e.changedTouches[0];
+      if (!touch) return null;
+      return {
+        x: touch.clientX - rect.left,
+        y: touch.clientY - rect.top
+      };
+    } else {
+      // Mouse event
+      return {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+      };
+    }
+  };
+  
+  const handleDrawStart = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
+    if (!isDrawingMode) return;
+    e.preventDefault();
+    
+    const coords = getCoordinates(e);
+    if (!coords) return;
     
     setIsDrawing(true);
-    setDrawStart({ x, y });
-    setDrawCurrent({ x, y });
+    setDrawStart(coords);
+    setDrawCurrent(coords);
   };
   
-  const handleCanvasMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
+  const handleDrawMove = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
     if (!isDrawingMode || !isDrawing || !drawStart) return;
+    e.preventDefault();
     
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+    const coords = getCoordinates(e);
+    if (!coords) return;
     
-    const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    
-    setDrawCurrent({ x, y });
+    setDrawCurrent(coords);
   };
   
-  const handleCanvasMouseUp = () => {
+  const handleDrawEnd = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
     if (!isDrawingMode || !isDrawing || !drawStart || !drawCurrent) return;
+    e.preventDefault();
     
     // Calculate bbox in original image coordinates
     const x1 = Math.min(drawStart.x, drawCurrent.x) / scale;
@@ -442,12 +460,18 @@ export default function InteractiveBboxSelector({
               ref={canvasRef}
               width={displaySize.width}
               height={displaySize.height}
-              className={`absolute top-0 left-0 w-full h-full ${isDrawingMode ? 'cursor-crosshair pointer-events-auto' : 'pointer-events-none'}`}
-              onMouseDown={handleCanvasMouseDown}
-              onMouseMove={handleCanvasMouseMove}
-              onMouseUp={handleCanvasMouseUp}
-              onMouseLeave={() => {
-                if (isDrawing) handleCanvasMouseUp();
+              className={`absolute top-0 left-0 w-full h-full ${isDrawingMode ? 'cursor-crosshair pointer-events-auto touch-none' : 'pointer-events-none'}`}
+              onMouseDown={handleDrawStart}
+              onMouseMove={handleDrawMove}
+              onMouseUp={handleDrawEnd}
+              onMouseLeave={(e) => {
+                if (isDrawing) handleDrawEnd(e);
+              }}
+              onTouchStart={handleDrawStart}
+              onTouchMove={handleDrawMove}
+              onTouchEnd={handleDrawEnd}
+              onTouchCancel={(e) => {
+                if (isDrawing) handleDrawEnd(e);
               }}
             />
             
