@@ -165,13 +165,53 @@ If NO fashion brands found, return: {"products": []}`
       })
     }
     
-    const products = parsed.products || []
+    let products = parsed.products || []
+    
+    // HARD FILTER: Remove K-pop groups that GPT might have missed
+    const kpopGroups = [
+      'illit', 'ive', 'aespa', 'newjeans', 'le sserafim', 'lesserafim',
+      'blackpink', 'twice', 'red velvet', 'itzy', 'stray kids', 'straykids',
+      'bts', 'seventeen', 'enhypen', 'txt', 'tomorrow x together',
+      'treasure', 'nct', 'exo', 'got7', 'monsta x', 'monstax',
+      'ateez', 'the boyz', 'cravity', 'p1harmony', 'xikers',
+      'gidle', '(g)i-dle', 'everglow', 'loona', 'fromis_9', 'fromis9',
+      'kep1er', 'kepler', 'wjsn', 'cosmic girls', 'viviz', 'billlie'
+    ]
+    
+    const platformBrands = [
+      'musinsa', 'coupang', 'instagram', 'ably', 'kream', 'temu',
+      'naver', 'gmarket', '29cm', 'zigzag', 'wconcept', 'balaan'
+    ]
+    
+    products = products.filter((p: any) => {
+      const brandLower = p.brand?.toLowerCase().replace(/\s+/g, '') || ''
+      
+      // Check K-pop groups
+      const isKpop = kpopGroups.some(group => {
+        const groupNormalized = group.replace(/\s+/g, '')
+        return brandLower.includes(groupNormalized) || groupNormalized.includes(brandLower)
+      })
+      
+      if (isKpop) {
+        console.log(`   ❌ FILTERED OUT K-pop group: ${p.brand}`)
+        return false
+      }
+      
+      // Check platform brands
+      const isPlatform = platformBrands.some(platform => brandLower.includes(platform))
+      if (isPlatform) {
+        console.log(`   ❌ FILTERED OUT platform brand: ${p.brand}`)
+        return false
+      }
+      
+      return true
+    })
     
     if (products.length === 0) {
-      console.log('   ⚠️  No fashion products identified')
+      console.log('   ⚠️  No fashion products identified (after filtering K-pop/platforms)')
       return NextResponse.json({
         success: false,
-        reason: 'No fashion brands detected in extracted text',
+        reason: 'No fashion brands detected (only found K-pop groups or platform names)',
         extracted_text: fullText
       })
     }
