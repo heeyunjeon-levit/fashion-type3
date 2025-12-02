@@ -824,28 +824,27 @@ SELECTION PROCESS:
 - Example for tops: "red sweatshirt" ✅, "red skirt" ❌ (wrong category)
 - Prefer actual product pages over homepages, category pages, or general listings
 
-TITLE VALIDATION RULES (STRICT - prioritize quality):
+TITLE VALIDATION RULES (FLEXIBLE - trust visual similarity):
 1. ✅ READ the "title" field carefully - it tells you what the product actually is
-2. ✅ VERIFY the title mentions the CORRECT${specificSubType ? ` ${specificSubType.toUpperCase()}` : ' CATEGORY'} (${searchTerms[0]})
-${itemDescription ? `3. 🎯 **Title MUST closely match "${itemDescription}"**
-   - Color match is IMPORTANT: "black" ≠ "blue", "white" ≠ "beige" (exact or very close)
-   - Item type match is CRITICAL: exact type preferred (shirt = shirt, hoodie = hoodie)
-   - Style/material should be similar when mentioned
-   - REJECT if colors don't match (unless item description didn't specify color)
-   - For Korean text: be precise with category, flexible with style descriptions` : ''}
-4. ✅ STRONGLY PREFER titles with MATCHING COLOR (reject if clearly different color)
-5. ❌ REJECT if wrong${specificSubType ? ` item type (e.g., wrong ${specificSubType})` : ' category'}
-   ${categoryKey === 'tops' ? '**EXAMPLE: If title says "jeans", "pants", "shorts", "skirt" → REJECT immediately (these are bottoms, not tops)**' : ''}
-   ${categoryKey === 'bottoms' ? '**EXAMPLE: If title says "shirt", "blouse", "jacket", "hoodie", "sweater", "modal-blend", "tie-front" → REJECT immediately (these are tops, not bottoms)**' : ''}
+2. ✅ FLEXIBLE: Allow category variations within same body part (sweater/jacket/coat all OK for upper body)
+${itemDescription ? `3. 🎯 **Title SHOULD somewhat match "${itemDescription}" but allow variations**
+   - Similar style/vibe is more important than exact category match
+   - Prefer similar colors but allow complementary or neutral alternatives
+   - Material and quality level should match (luxury vs casual)
+   - For Korean text: be flexible with both category and style descriptions` : ''}
+4. ✅ PREFER titles with similar color/style but don't require exact match
+5. ⚠️ ONLY REJECT if clearly wrong body part:
+   ${categoryKey === 'tops' ? '**REJECT ONLY: pants/jeans/shorts/skirts/leggings (lower body items)**' : ''}
+   ${categoryKey === 'bottoms' ? '**REJECT ONLY: if title suggests it\'s NOT worn on lower body**' : ''}
 6. ❌ REJECT if title is generic ("Shop now", "Homepage", "Category", "Collection")
-7. ❌ REJECT if significantly different style (formal vs casual, vintage vs modern)
+7. ✅ ACCEPT style variations - luxury fur coat might be tagged as jacket, sweater, or cardigan
 
-Matching criteria (strict priority order):
-1. ✅ MUST: Title mentions correct category: ${categorySearchTerms[categoryKey]?.join(', ')}
-${itemDescription ? `2. ✅ MUST: Title closely matches "${itemDescription}" (strict match)` : ''}
-3. ✅ MUST: Title mentions matching or very similar color
-4. ✅ PREFER: Title mentions similar STYLE (vintage, casual, formal, etc.)
-5. ✅ PREFER: Title mentions similar ATTRIBUTES (neckline, sleeve length, material, etc.)
+Matching criteria (VISUAL SIMILARITY FIRST - flexible on exact category):
+1. ✅ PRIMARY: Visual similarity (Google Lens found these based on IMAGE, trust it!)
+2. ✅ PREFER: Similar style/material/vibe (luxury vs casual, knit vs leather, etc.)
+3. ✅ PREFER: Similar color or complementary colors
+${itemDescription ? `4. ✅ PREFER: Title somewhat matches "${itemDescription}" (but allow related items)` : ''}
+5. ✅ FLEXIBLE: Category can vary within same general type (sweater, jacket, coat all = upper body wear)
 6. ✅ MUST: Link goes to a product detail page (not category/homepage)
 7. ✅ PREFER: Reputable retailers and brands (luxury brands, major retailers preferred)
 
@@ -862,30 +861,33 @@ AVAILABILITY & ACCESSIBILITY NOTES:
 Search results (scan all ${resultsForGPT.length} for best matches):
 ${JSON.stringify(resultsForGPT, null, 2)}
 
-**VALIDATION PROCESS (STRICT FOR CATEGORY, FLEXIBLE FOR STYLE):**
+**VALIDATION PROCESS (VISUAL-FIRST, FLEXIBLE ON CATEGORY):**
 For EACH result you consider:
 1. 📖 READ the "title" field first
 2. 🚫 CHECK THE URL: Does it end with /reviews, /questions, /qa? → SKIP IMMEDIATELY (not a product page)
-3. ✅ CHECK: Does title mention the correct category? (${categorySearchTerms[categoryKey]?.join('/')})
-   ${categoryKey === 'tops' ? '⚠️ IF TITLE MENTIONS PANTS/JEANS/SHORTS/SKIRT IN ANY LANGUAGE → SKIP IMMEDIATELY' : ''}
-   ${categoryKey === 'bottoms' ? '⚠️ IF TITLE MENTIONS SHIRT/JACKET/SWEATER/HOODIE IN ANY LANGUAGE → SKIP IMMEDIATELY' : ''}
-4. ✅ PREFER: Title mentions similar color/style (but accept close variations)
-5. ✅ CHECK: Is it a specific product (not "Shop", "Category", "Homepage")?
-6. ✅ SELECT only if category is 100% correct AND URL is a product detail page
+3. ✅ PRIORITY: Visual similarity - Google Lens found these because they LOOK similar to the user's image
+4. ✅ CHECK: Does it seem like similar style/vibe? (luxury, casual, vintage, modern, etc.)
+5. ✅ PREFER: Similar or complementary colors
+6. ✅ FLEXIBLE: Category can vary - sweater/jacket/coat are all valid for upper body outerwear
+   ${categoryKey === 'tops' ? '⚠️ ONLY REJECT: pants/jeans/shorts/skirts (clearly wrong body part)' : ''}
+   ${categoryKey === 'bottoms' ? '⚠️ ONLY REJECT: if it\'s clearly an upper body item AND not related' : ''}
+7. ✅ CHECK: Is it a specific product (not "Shop", "Category", "Homepage")?
 
 Find the TOP 3-5 BEST AVAILABLE MATCHES. Prioritize:
-- Category accuracy (MUST MATCH - this is non-negotiable)
-- Similar color/style (prefer but don't require exact)
+- Visual similarity (Google Lens already filtered by appearance!)
+- Similar style/vibe/quality level (luxury vs fast fashion)
+- Similar color or aesthetic
 - Product variety (different retailers when possible)
 - Accessibility (prefer major retailers)
 
-✅ IMPORTANT: Quality over quantity!
-- ${categoryKey === 'tops' ? '🚨 FOR TOPS: Zero tolerance for pants/jeans/shorts - if you see ANY bottom garment keywords in title, REJECT it' : ''}
-- ${categoryKey === 'bottoms' ? '🚨 FOR BOTTOMS: Zero tolerance for shirts/blouses/jackets/tops - if title mentions "shirt", "blouse", "jacket", "modal-blend", "tie-front", "top", or ANY upper body garment, REJECT it immediately' : ''}
-- Accept close color matches (navy ≈ black, cream ≈ white)
-- Accept style variations WITHIN the same category only
-- Be forgiving with Korean titles (translation may vary) BUT category must be correct
-- Return [] if you cannot find valid products in the correct category - DO NOT return wrong category products
+✅ IMPORTANT: Trust visual search results!
+- Google Lens found these because they LOOK like the item
+- Don't reject just because text category is slightly different
+- ${categoryKey === 'tops' ? 'For tops: sweater, jacket, coat, blouse, cardigan are all valid upper body wear' : ''}
+- ${categoryKey === 'bottoms' ? 'For bottoms: pants, jeans, shorts, skirts are all valid lower body wear' : ''}
+- Focus on: Does this product have a similar LOOK and FEEL?
+- Accept style variations - a fur coat might be tagged as jacket, sweater, or coat
+- Return [] ONLY if results are completely unrelated (e.g., shoes when looking for tops)
 
 Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links preferred) or {"${resultKey}": []} ONLY if zero valid products found.`
 
