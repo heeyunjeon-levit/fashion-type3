@@ -13,14 +13,15 @@ interface DINOXDetectionResult {
   objects: DetectionObject[]
 }
 
-// Fashion categories for detection
+// Fashion categories for detection (ordered by priority for better detection)
 const FASHION_CATEGORIES = [
-  "shirt", "jacket", "blouse", "button up shirt", "vest", "skirt",
-  "shorts", "pants", "shoes", "bag", "dress", "coat", "sweater",
-  "cardigan", "hoodie", "jeans", "sneakers", "boots",
-  "sandals", "backpack", "purse", "handbag", "hat", "cap", "scarf",
-  "belt", "watch", "sunglasses", "jewelry", "necklace", "bracelet",
-  "earrings", "ring"
+  "fur coat", "fur jacket", "leather jacket", "coat", "jacket",
+  "dress", "blouse", "shirt", "button up shirt", "sweater", "cardigan", "hoodie", "vest",
+  "pants", "jeans", "shorts", "skirt",
+  "shoes", "sneakers", "boots", "sandals",
+  "bag", "backpack", "purse", "handbag",
+  "sunglasses", "hat", "cap", "scarf", "belt", "watch",
+  "jewelry", "necklace", "bracelet", "earrings", "ring"
 ]
 
 const FASHION_PROMPT = FASHION_CATEGORIES.join(". ")
@@ -136,6 +137,11 @@ async function queryTaskResult(taskUuid: string, maxWait: number = 120): Promise
 
 // Category mapping
 const CATEGORY_MAP: Record<string, string> = {
+  'fur coat': 'tops',
+  'fur jacket': 'tops',
+  'leather jacket': 'tops',
+  'coat': 'tops',
+  'jacket': 'tops',
   'shirt': 'tops',
   'blouse': 'tops',
   'button up shirt': 'tops',
@@ -144,8 +150,6 @@ const CATEGORY_MAP: Record<string, string> = {
   'sweater': 'tops',
   'cardigan': 'tops',
   'hoodie': 'tops',
-  'jacket': 'tops',
-  'coat': 'tops',
   'pants': 'bottoms',
   'jeans': 'bottoms',
   'shorts': 'bottoms',

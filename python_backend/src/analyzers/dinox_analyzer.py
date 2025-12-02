@@ -32,27 +32,31 @@ DINOX_CREATE_TASK = '/v2/task/dinox/detection'
 DINOX_QUERY_STATUS = '/v2/task_status'
 DINOX_API_TOKEN = os.environ.get('DINOX_API_TOKEN', 'bdf2ed490ebe69a28be81ea9d9b0b0e3')
 
-# Fashion categories for detection
+# Fashion categories for detection (ordered by priority for better detection)
 # Note: Excluded "leggings" as it's often confused with socks and causes false positives
 FASHION_CATEGORIES = [
-    "shirt", "jacket", "blouse", "button up shirt", "vest", "skirt", 
-    "shorts", "pants", "shoes", "bag", "dress", "coat", "sweater", 
-    "cardigan", "hoodie", "jeans", "sneakers", "boots", 
-    "sandals", "backpack", "purse", "handbag", "hat", "cap", "scarf", 
-    "belt", "watch", "sunglasses", "jewelry", "necklace", "bracelet", 
-    "earrings", "ring"
+    "fur coat", "fur jacket", "leather jacket", "coat", "jacket",
+    "dress", "blouse", "shirt", "button up shirt", "sweater", "cardigan", "hoodie", "vest",
+    "pants", "jeans", "shorts", "skirt",
+    "shoes", "sneakers", "boots", "sandals",
+    "bag", "backpack", "purse", "handbag",
+    "sunglasses", "hat", "cap", "scarf", "belt", "watch",
+    "jewelry", "necklace", "bracelet", "earrings", "ring"
 ]
 
 FASHION_PROMPT = ". ".join(FASHION_CATEGORIES)
 
 # Category mapping (DINO-X category -> our standard categories)
 CATEGORY_MAPPING = {
+    'fur coat': 'outerwear',
+    'fur jacket': 'outerwear',
+    'leather jacket': 'outerwear',
+    'jacket': 'outerwear',
+    'coat': 'outerwear',
     'shirt': 'top',
     'button up shirt': 'top',
     'button_up_shirt': 'top',
     'blouse': 'top',
-    'jacket': 'outerwear',
-    'coat': 'outerwear',
     'sweater': 'top',
     'cardigan': 'outerwear',
     'hoodie': 'top',
