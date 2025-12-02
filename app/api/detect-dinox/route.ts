@@ -208,7 +208,8 @@ export async function POST(request: NextRequest) {
     }
 
     const objects = result.objects || []
-    console.log(`📦 Detected ${objects.length} objects`)
+    console.log(`📦 DINO-X returned ${objects.length} raw objects`)
+    console.log('   Raw result structure:', JSON.stringify(result, null, 2).substring(0, 500))
 
     // Filter and score items for main subject focus
     const CONFIDENCE_THRESHOLD = 0.45
@@ -216,10 +217,24 @@ export async function POST(request: NextRequest) {
     const MAX_ITEMS = 8
     const EXCLUDED_CATEGORIES = ['leggings', 'tights', 'stockings']
 
-    const bboxesWithScores = objects
-      .filter(obj => obj.score >= CONFIDENCE_THRESHOLD)
-      .filter(obj => !EXCLUDED_CATEGORIES.includes(obj.category.toLowerCase()))
-      .map((obj, idx) => {
+    console.log(`   Applying filters: confidence >= ${CONFIDENCE_THRESHOLD}, excluding ${EXCLUDED_CATEGORIES.join(', ')}`)
+    
+    const afterConfidenceFilter = objects.filter(obj => {
+      const pass = obj.score >= CONFIDENCE_THRESHOLD
+      if (!pass) console.log(`   ❌ Filtered out (low confidence): ${obj.category} (${obj.score})`)
+      return pass
+    })
+    console.log(`   After confidence filter: ${afterConfidenceFilter.length}/${objects.length}`)
+    
+    const afterCategoryFilter = afterConfidenceFilter.filter(obj => {
+      const excluded = EXCLUDED_CATEGORIES.includes(obj.category.toLowerCase())
+      if (excluded) console.log(`   ❌ Filtered out (excluded category): ${obj.category}`)
+      return !excluded
+    })
+    console.log(`   After category filter: ${afterCategoryFilter.length}/${afterConfidenceFilter.length}`)
+    
+    // Calculate scores for all items
+    const allScored = afterCategoryFilter.map((obj, idx) => {
         const bbox = obj.bbox
         const confidence = obj.score
 
@@ -254,14 +269,31 @@ export async function POST(request: NextRequest) {
           main_subject_score: Math.round(mainSubjectScore * 1000) / 1000
         }
       })
-      .filter(item => item.main_subject_score >= MAIN_SUBJECT_THRESHOLD)
+    
+    console.log(`   Calculated scores for ${allScored.length} items`)
+    allScored.forEach(item => {
+      console.log(`   ${item.category}: conf=${item.confidence}, main_subject_score=${item.main_subject_score}`)
+    })
+    
+    // Filter by main subject threshold
+    const bboxesWithScores = allScored
+      .filter(item => {
+        const pass = item.main_subject_score >= MAIN_SUBJECT_THRESHOLD
+        if (!pass) console.log(`   ❌ Filtered out (low main_subject_score): ${item.category} (${item.main_subject_score})`)
+        return pass
+      })
       .sort((a, b) => b.main_subject_score - a.main_subject_score)
       .slice(0, MAX_ITEMS)
 
-    console.log(`✅ Filtered to ${bboxesWithScores.length} main subject items`)
-    bboxesWithScores.forEach(item => {
-      console.log(`   ${item.category} (score: ${item.main_subject_score})`)
-    })
+    console.log(`✅ Final result: ${bboxesWithScores.length} items after all filters`)
+    if (bboxesWithScores.length > 0) {
+      console.log('   Final items:')
+      bboxesWithScores.forEach(item => {
+        console.log(`     - ${item.category} (score: ${item.main_subject_score})`)
+      })
+    } else {
+      console.warn('   ⚠️  NO ITEMS PASSED ALL FILTERS!')
+    }
 
     return NextResponse.json({
       bboxes: bboxesWithScores,
