@@ -254,9 +254,9 @@ async def detect_items(request: DetectRequest):
                 # - Larger items score higher (bbox_area)
                 # - More centered items score higher (1 - distance_from_center)
                 # - Higher confidence scores higher
-                centrality_score = max(0, 1 - distance_from_center * 2)  # Penalize distance
+                centrality_score = max(0, 1 - distance_from_center * 2.5)  # Penalize distance MORE (2.5x instead of 2x)
                 size_score = min(1, bbox_area * 10)  # Normalize area (assuming coords 0-1)
-                main_subject_score = (confidence * 0.4 + centrality_score * 0.35 + size_score * 0.25)
+                main_subject_score = (confidence * 0.3 + centrality_score * 0.45 + size_score * 0.25)  # Centrality more important!
                 
                 print(f"   📊 {raw_category}: conf={confidence:.2f}, area={bbox_area:.3f}, center_dist={distance_from_center:.2f}, score={main_subject_score:.2f}")
             else:
@@ -274,15 +274,15 @@ async def detect_items(request: DetectRequest):
             }
             bboxes_with_scores.append(bbox_item)
         
-        # Filter out background items: only keep items with score >= 0.35
-        MAIN_SUBJECT_THRESHOLD = 0.35
+        # Filter out background items: only keep items with score >= 0.45 (increased from 0.35)
+        MAIN_SUBJECT_THRESHOLD = 0.45  # Higher threshold = stricter filtering of background items
         bboxes = [b for b in bboxes_with_scores if b['main_subject_score'] >= MAIN_SUBJECT_THRESHOLD]
         
         # Sort by main subject score (highest first)
         bboxes.sort(key=lambda x: x['main_subject_score'], reverse=True)
         
-        # Limit to top 8 items to avoid clutter
-        MAX_ITEMS = 8
+        # Limit to top 5 items to avoid clutter (reduced from 8)
+        MAX_ITEMS = 5
         if len(bboxes) > MAX_ITEMS:
             print(f"   ⚠️  Limiting to top {MAX_ITEMS} items (from {len(bboxes)})")
             bboxes = bboxes[:MAX_ITEMS]
