@@ -587,7 +587,28 @@ export default function Home() {
         // Use the specific item name (groundingdino_prompt) instead of broad category
         const itemName = item.groundingdino_prompt || item.category
         const key = `${itemName}_${idx + 1}`
-        const croppedImages = { [key]: item.croppedImageUrl }
+        
+        // If cropped URL is a data URL, upload it to Supabase first
+        let croppedUrl = item.croppedImageUrl
+        if (croppedUrl && croppedUrl.startsWith('data:')) {
+          console.log(`📤 Uploading data URL to Supabase for ${itemName}...`)
+          try {
+            const uploadResponse = await fetch('/api/upload-cropped', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ dataUrl: croppedUrl, category: itemName })
+            })
+            const uploadData = await uploadResponse.json()
+            if (uploadData.url) {
+              croppedUrl = uploadData.url
+              console.log(`✅ Uploaded to Supabase: ${croppedUrl.substring(0, 60)}...`)
+            }
+          } catch (uploadError) {
+            console.error(`⚠️ Failed to upload ${itemName}, using data URL:`, uploadError)
+          }
+        }
+        
+        const croppedImages = { [key]: croppedUrl }
         const categories = [item.category]
         
         try {

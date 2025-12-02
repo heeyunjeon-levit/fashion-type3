@@ -23,7 +23,20 @@ CPU_FALLBACK_URL = os.getenv("CPU_FALLBACK_URL")
 print(f"⚙️  Cropper mode: {'Roboflow API' if _use_roboflow else 'Local'}")
 
 def upload_image_to_supabase(image_bytes: bytes, original_filename: str = None) -> str:
-    """Upload image to Supabase storage and return URL"""
+    """Upload image to Supabase storage and return URL
+    
+    Note: Modal has DNS issues with Supabase, so we use ImgBB as fallback
+    """
+    # Try ImgBB first (works better with Modal)
+    imgbb_key = os.getenv("IMGBB_API_KEY")
+    if imgbb_key:
+        print("📤 Using ImgBB for upload (Modal-compatible)...")
+        try:
+            return upload_image_to_imgbb(image_bytes)
+        except Exception as imgbb_error:
+            print(f"⚠️ ImgBB failed: {imgbb_error}, falling back to Supabase...")
+    
+    # Fallback to Supabase
     from supabase import create_client
 
     supabase_url = os.getenv("SUPABASE_URL")
@@ -88,6 +101,11 @@ def upload_image_to_supabase(image_bytes: bytes, original_filename: str = None) 
         
         response = None
         try:
+            # Test network connectivity first
+            import requests
+            test_response = requests.get(f"{supabase_url}/rest/v1/", timeout=5)
+            print(f"   Network test: {test_response.status_code}")
+            
             # Try upload with file_options instead of dict
             response = supabase.storage.from_("images").upload(
                 path=filename,

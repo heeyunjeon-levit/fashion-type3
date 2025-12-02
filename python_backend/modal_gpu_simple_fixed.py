@@ -51,6 +51,7 @@ image = (
     timeout=600,
     secrets=[modal.Secret.from_name("fashion-api-keys")],
     allow_concurrent_inputs=10,  # Handle multiple requests
+    enable_memory_snapshot=False,  # Disable for network access
 )
 @modal.asgi_app()
 def fastapi_app_v2():
