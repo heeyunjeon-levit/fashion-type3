@@ -984,11 +984,16 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links preferred) or
           'reddit.com', 'www.reddit.com', 'redd.it',
           'tumblr.com', 'www.tumblr.com',
           'snapchat.com', 'www.snapchat.com',
-          'threads.net', 'www.threads.net',  // Meta's Threads
+          'threads.net', 'www.threads.net', 'threads.com',  // Meta's Threads
           'weibo.com', 'weibo.cn',  // Chinese social media
           // Image search engines (not product pages)
           'images.google.com', 'google.com/images', 'www.google.com/images',
-          'yandex.com/images', 'images.search.yahoo.com'
+          'yandex.com/images', 'images.search.yahoo.com',
+          // Magazines and editorial sites (not shopping)
+          'vogue.com', 'elle.com', 'elle.co.kr', 'harpersbazaar.com', 'cosmopolitan.com',
+          'gq.com', 'wmagazine.com', 'instyle.com', 'marieclaire.com',
+          'glamour.com', 'allure.com', 'nylon.com', 'refinery29.com',
+          'whowhatwear.com', 'popsugar.com', 'byrdie.com'
         ]
         
         // Problematic URL patterns (geo-restricted, frequently broken links)
