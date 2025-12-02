@@ -1213,7 +1213,15 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links preferred) or
             const resultItem = organicResults.find((item: any) => item.link === link)
             // Try multiple possible field names for thumbnail
             const thumbnail = resultItem?.thumbnail || resultItem?.image || resultItem?.imageUrl || resultItem?.ogImage || null
-            console.log(`🔍 Link: ${link.substring(0, 50)}..., Thumbnail: ${thumbnail ? thumbnail.substring(0, 50) : 'null'}`)
+            
+            // Debug: Log what fields are available when thumbnail is missing
+            if (!thumbnail && resultItem) {
+              console.log(`⚠️  No thumbnail for ${link.substring(0, 40)}`)
+              console.log(`   Available fields:`, Object.keys(resultItem))
+            } else {
+              console.log(`✅ Thumbnail found for ${link.substring(0, 40)}`)
+            }
+            
             return {
               link,
               thumbnail,
