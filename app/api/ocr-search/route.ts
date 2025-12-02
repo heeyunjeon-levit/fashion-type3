@@ -104,9 +104,36 @@ IMPORTANT: Only include products where you can clearly see the brand name or log
     // Step 2: Search for each product using Serper
     console.log('\n🔎 Step 2: Searching for products...')
     
+    // Blocked domains for non-fashion results
+    const blockedDomains = [
+      // Music & Album stores
+      'yes24.com', 'www.yes24.com',
+      'aladin.co.kr', 'www.aladin.co.kr',
+      'kyobobook.co.kr', 'www.kyobobook.co.kr',
+      'musicplant.com', 'ktown4u.com', 'catchopcd.com',
+      'apple.com/music', 'music.apple.com',
+      'spotify.com', 'www.spotify.com',
+      'melon.com', 'www.melon.com',
+      'bugs.co.kr', 'www.bugs.co.kr',
+      'genie.co.kr', 'www.genie.co.kr',
+      'flo.co.kr', 'www.flo.co.kr',
+      // Social media & editorial (already in main search)
+      'instagram.com', 'tiktok.com', 'youtube.com', 'pinterest.com',
+      'facebook.com', 'twitter.com', 'x.com', 'threads.net',
+      'elle.co.kr', 'vogue.com', 'harpersbazaar.com',
+    ]
+    
+    // Keywords that indicate non-fashion products
+    const excludedKeywords = [
+      'album', '앨범', 'single', '싱글', 'ep', 'cd', 'dvd',
+      'music', '음악', 'song', '노래', 'track', '화보집',
+      'photobook', 'photo book', 'photo card', 'photocard',
+      'poster', '포스터', 'merchandise', '굿즈'
+    ]
+    
     const searchResults = await Promise.all(
       products.map(async (product: any) => {
-        const query = `${product.brand} ${product.product_type} buy online`
+        const query = `${product.brand} ${product.product_type} buy online shop`
         console.log(`   Searching: ${query}`)
         
         try {
@@ -119,7 +146,7 @@ IMPORTANT: Only include products where you can clearly see the brand name or log
             body: JSON.stringify({
               q: query,
               gl: 'us',
-              num: 10,
+              num: 20, // Get more to filter out
             }),
           })
           
@@ -128,11 +155,37 @@ IMPORTANT: Only include products where you can clearly see the brand name or log
           
           console.log(`   Found ${organicResults.length} results for ${product.brand}`)
           
+          // Filter out blocked domains and non-fashion results
+          const filteredResults = organicResults.filter((r: any) => {
+            const link = r.link?.toLowerCase() || ''
+            const title = r.title?.toLowerCase() || ''
+            
+            // Check blocked domains
+            const isBlockedDomain = blockedDomains.some(domain => link.includes(domain))
+            if (isBlockedDomain) {
+              console.log(`   ❌ Blocked domain: ${link.substring(0, 50)}`)
+              return false
+            }
+            
+            // Check excluded keywords
+            const hasExcludedKeyword = excludedKeywords.some(keyword => 
+              title.includes(keyword.toLowerCase())
+            )
+            if (hasExcludedKeyword) {
+              console.log(`   ❌ Excluded keyword in title: ${title.substring(0, 50)}`)
+              return false
+            }
+            
+            return true
+          })
+          
+          console.log(`   ✅ Filtered to ${filteredResults.length} fashion results`)
+          
           return {
             brand: product.brand,
             product_type: product.product_type,
             description: product.description,
-            results: organicResults.slice(0, 5).map((r: any) => ({
+            results: filteredResults.slice(0, 5).map((r: any) => ({
               title: r.title,
               link: r.link,
               thumbnail: r.thumbnail || null,
