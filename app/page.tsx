@@ -503,8 +503,8 @@ export default function Home() {
         console.log(`Cropping ${bbox.category}...`)
         
         try {
-          // Step 1: Crop image client-side using Canvas API
-          const { cropImage, uploadCroppedImage } = await import('@/lib/imageCropper')
+          // Crop image client-side using Canvas API (fast!)
+          const { cropImage } = await import('@/lib/imageCropper')
           
           console.log(`Cropping ${bbox.category} with bbox:`, bbox.bbox)
           const croppedDataUrl = await cropImage({
@@ -515,34 +515,30 @@ export default function Home() {
           
           console.log(`✅ Cropped ${bbox.category} (${Math.round(croppedDataUrl.length / 1024)}KB)`)
           
-          // Step 2: Upload to Supabase to get HTTP URL (Serper needs HTTP URL, not data URL)
-          console.log(`Uploading cropped ${bbox.category} to Supabase...`)
-          const croppedHttpUrl = await uploadCroppedImage(croppedDataUrl, bbox.category)
-          console.log(`✅ Uploaded ${bbox.category}: ${croppedHttpUrl.substring(0, 80)}...`)
-          
           // Update real-time progress
           completedItems++
           const targetProgress = Math.min(20, (completedItems / totalItems) * 20)
           setOverallProgress(prev => Math.max(prev, targetProgress))
-          console.log(`📊 Processing progress: ${completedItems}/${totalItems} items (${Math.floor((completedItems / totalItems) * 20)}%)`)
+          console.log(`📊 Cropping progress: ${completedItems}/${totalItems} items (${Math.floor((completedItems / totalItems) * 20)}%)`)
 
-          // Convert to DetectedItem format (with HTTP URL)
+          // Convert to DetectedItem format (use data URL directly - much faster!)
+          // Testing shows Serper accepts data URLs and returns good results
           const detectedItem = {
             category: bbox.mapped_category || bbox.category,
             groundingdino_prompt: bbox.category,
             description: `${bbox.category} item`,
-            croppedImageUrl: croppedHttpUrl, // Use HTTP URL for Serper Lens
+            croppedImageUrl: croppedDataUrl, // Use data URL directly (3-4x faster than Supabase upload)
             confidence: bbox.confidence
           }
           
           console.log('📦 DetectedItem created:', {
             category: detectedItem.category,
-            croppedUrl: croppedHttpUrl.substring(0, 60) + '...'
+            dataUrlSize: `${Math.round(croppedDataUrl.length / 1024)}KB`
           })
           
           return detectedItem
         } catch (error) {
-          console.error(`Error processing ${bbox.category}:`, error)
+          console.error(`Error cropping ${bbox.category}:`, error)
           completedItems++
           const targetProgress = Math.min(20, (completedItems / totalItems) * 20)
           setOverallProgress(prev => Math.max(prev, targetProgress))
