@@ -216,54 +216,7 @@ export default function Home() {
       }
     }
 
-    // Fallback function for OCR when streaming fails
-    const handleOCRSearchFallback = async (imageUrl: string) => {
-      try {
-        console.log('🔄 Using regular POST endpoint for OCR...')
-        console.log('   Image URL:', imageUrl?.substring(0, 80))
-        setOverallProgress(50) // Show some progress
-        
-        console.log('📤 Sending POST request to /api/search...')
-        const response = await fetch('/api/search', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            categories: [],
-            croppedImages: {},
-            originalImageUrl: imageUrl,
-            useOCRSearch: true,
-          }),
-        })
-
-        console.log('📥 Response received:', response.status, response.statusText)
-        const data = await response.json()
-        console.log('📦 Response data:', {
-          success: data.meta?.success,
-          resultsCount: Object.keys(data.results || {}).length,
-          reason: data.meta?.reason
-        })
-        
-        setOverallProgress(90)
-        
-        if (data.results && Object.keys(data.results).length > 0) {
-          console.log('✅ OCR found results, displaying...')
-          setResults(data.results)
-          setOverallProgress(100)
-          setCurrentStep('results')
-        } else {
-          console.log('⚠️ No results found')
-          alert('텍스트를 찾을 수 없습니다. 다른 이미지를 시도해주세요.')
-          setCurrentStep('upload')
-        }
-      } catch (error) {
-        console.error('❌ OCR fallback error:', error)
-        alert('OCR 검색 실패. 다시 시도해주세요.')
-        setCurrentStep('upload')
-      } finally {
-        console.log('🏁 OCR search complete, setting isLoading to false')
-        setIsLoading(false)
-      }
-    }
+    // Old fallback function removed - now using /api/ocr-search directly
 
     // V3.1 OCR MODE: Skip detection, go directly to OCR search with full image
     if (useOCRSearch) {
@@ -273,113 +226,60 @@ export default function Home() {
       setOverallProgress(0)
       
       try {
-        console.log('🔍 Starting V3.1 OCR Search with real-time progress...')
-        // Use GPU app (now working!)
-        const backendUrl = 'https://heeyunjeon-levit--fashion-crop-api-gpu-fastapi-app-v2.modal.run'
+        console.log('🔍 Starting V3.1 OCR Search (Next.js Direct)...')
         
-        // Try streaming endpoint first for real-time progress
-        try {
-          const streamUrl = `${backendUrl}/ocr-search-stream?imageUrl=${encodeURIComponent(imageUrl)}`
-          console.log('📡 Attempting streaming connection...')
-          
-          const eventSource = new EventSource(streamUrl)
-          let streamActive = true
-          
-          // Set timeout for stream connection
-          const streamTimeout = setTimeout(async () => {
-            if (streamActive) {
-              console.log('⏰ Stream timeout, falling back to regular endpoint...')
-              eventSource.close()
-              streamActive = false
-              await handleOCRSearchFallback(imageUrl)
-            }
-          }, 10000) // 10 second timeout for stream to start
-          
-          eventSource.onmessage = (event) => {
-            clearTimeout(streamTimeout)
-            try {
-              const data = JSON.parse(event.data)
-              console.log('📊 OCR Progress:', data)
-              
-              if (data.type === 'progress') {
-                setOverallProgress(data.progress)
-                console.log(`Progress: ${data.progress}% - ${data.message}`)
-              } else if (data.type === 'complete') {
-                eventSource.close()
-                streamActive = false
-                
-                if (data.success && data.results) {
-                  // Transform OCR results to frontend format
-                  const results: Record<string, any> = {}
-                  
-                  for (const productResult of data.results.product_results || []) {
-                    const brand = productResult.product.brand
-                    const productName = productResult.product.product_name || productResult.product.exact_ocr_text?.substring(0, 30) || 'Unknown'
-                    const searchResult = productResult.search_result
-                    
-                    if (searchResult.success && searchResult.selected_results) {
-                      const resultKey = `${brand} - ${productName}`.substring(0, 80)
-                      results[resultKey] = searchResult.selected_results.map((r: any) => ({
-                        title: r.title || 'Product',
-                        link: r.link || '',
-                        thumbnail: r.thumbnail || r.image || null
-                      }))
-                    }
-                  }
-                  
-                  setResults(results)
-                  
-                  if (sessionManager) {
-                    sessionManager.logSearchResults(results, { 
-                      mode: 'ocr_v3.1_stream',
-                      ocr_mapping: data.results.mapping,
-                      summary: data.results.summary
-                    })
-                  }
-                  
-                  setOverallProgress(100)
-                  setCurrentStep('results')
-                } else {
-                  console.error('OCR search failed:', data.reason)
-                  alert(`OCR 검색 실패: ${data.reason || 'Unknown error'}`)
-                  setCurrentStep('upload')
-                }
-                setIsLoading(false)
-              } else if (data.type === 'error') {
-                eventSource.close()
-                streamActive = false
-                console.error('OCR error:', data.message)
-                alert(`OCR 오류: ${data.message}`)
-                setCurrentStep('upload')
-                setIsLoading(false)
-              }
-            } catch (e) {
-              console.error('Error parsing SSE data:', e, 'Raw data:', event.data)
-              // Continue - might be a partial message
-            }
-          }
-          
-          eventSource.onerror = async (error) => {
-            clearTimeout(streamTimeout)
-            if (!streamActive) return
-            
-            console.error('EventSource error:', error)
-            eventSource.close()
-            streamActive = false
-            
-            // Fall back to regular POST endpoint
-            console.log('⚠️ Stream failed, using regular POST endpoint...')
-            await handleOCRSearchFallback(imageUrl)
-          }
-          
-          return
-        } catch (streamError) {
-          console.error('Stream setup error:', streamError)
-          // Fall back to regular endpoint
-          await handleOCRSearchFallback(imageUrl)
-          return
+        // Use Next.js OCR endpoint (with K-pop filtering)
+        setOverallProgress(10)
+        console.log('📡 Calling /api/ocr-search...')
+        
+        const ocrResponse = await fetch('/api/ocr-search', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ imageUrl }),
+        })
+        
+        setOverallProgress(90)
+        
+        if (!ocrResponse.ok) {
+          throw new Error(`OCR search failed: ${ocrResponse.status}`)
         }
         
+        const ocrData = await ocrResponse.json()
+        console.log('✅ OCR search complete:', ocrData)
+        
+        if (ocrData.success && ocrData.product_results && ocrData.product_results.length > 0) {
+          // Transform to frontend format
+          const results: Record<string, any> = {}
+          
+          for (const productResult of ocrData.product_results) {
+            const brand = productResult.brand
+            const productType = productResult.product_type
+            const resultKey = `${brand} ${productType}`
+            
+            results[resultKey] = productResult.results.map((r: any) => ({
+              title: r.title || 'Product',
+              link: r.link || '',
+              thumbnail: r.thumbnail || null
+            }))
+          }
+          
+          setResults(results)
+          
+          if (sessionManager) {
+            sessionManager.logSearchResults(results, { 
+              mode: 'ocr_nextjs',
+              extracted_text: ocrData.extracted_text
+            })
+          }
+          
+          setOverallProgress(100)
+          setCurrentStep('results')
+        } else {
+          console.error('OCR search returned no results:', ocrData.reason)
+          alert(`OCR 검색 결과 없음: ${ocrData.reason || 'No products identified'}`)
+          setCurrentStep('upload')
+        }
+        setIsLoading(false)
       } catch (error) {
         console.error('Error in OCR search:', error)
         alert('OCR 검색 중 오류가 발생했습니다. 다시 시도해주세요.')
