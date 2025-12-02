@@ -109,6 +109,14 @@ export default function InteractiveBboxSelector({
   const [scale, setScale] = useState(1);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   
+  // Manual bbox drawing state
+  const [isDrawingMode, setIsDrawingMode] = useState(false);
+  const [isDrawing, setIsDrawing] = useState(false);
+  const [drawStart, setDrawStart] = useState<{ x: number; y: number } | null>(null);
+  const [drawCurrent, setDrawCurrent] = useState<{ x: number; y: number } | null>(null);
+  const [showCategoryModal, setShowCategoryModal] = useState(false);
+  const [pendingManualBox, setPendingManualBox] = useState<[number, number, number, number] | null>(null);
+  
   // Smart button positioning - alternates left/right sides to prevent overlap
   const getButtonPositions = () => {
     // Estimate button width based on text length (more accurate)
@@ -306,7 +314,24 @@ export default function InteractiveBboxSelector({
         ctx.fillRect(scaledX1, scaledY1, width, height);
       }
     });
-  }, [bboxes, displaySize, scale]);
+    
+    // Draw manual box being drawn
+    if (isDrawing && drawStart && drawCurrent) {
+      const x1 = Math.min(drawStart.x, drawCurrent.x);
+      const y1 = Math.min(drawStart.y, drawCurrent.y);
+      const x2 = Math.max(drawStart.x, drawCurrent.x);
+      const y2 = Math.max(drawStart.y, drawCurrent.y);
+      
+      ctx.strokeStyle = 'rgba(59, 130, 246, 0.8)'; // Blue for manual drawing
+      ctx.lineWidth = 3;
+      ctx.setLineDash([8, 4]);
+      ctx.strokeRect(x1, y1, x2 - x1, y2 - y1);
+      ctx.setLineDash([]);
+      
+      ctx.fillStyle = 'rgba(59, 130, 246, 0.1)';
+      ctx.fillRect(x1, y1, x2 - x1, y2 - y1);
+    }
+  }, [bboxes, displaySize, scale, isDrawing, drawStart, drawCurrent]);
 
   // Handle button click for specific bbox
   const handleBboxToggle = (index: number) => {
@@ -325,6 +350,76 @@ export default function InteractiveBboxSelector({
   };
 
   const selectedCount = bboxes.filter(b => b.selected).length;
+  
+  // Manual drawing handlers
+  const handleCanvasMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (!isDrawingMode) return;
+    
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    setIsDrawing(true);
+    setDrawStart({ x, y });
+    setDrawCurrent({ x, y });
+  };
+  
+  const handleCanvasMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (!isDrawingMode || !isDrawing || !drawStart) return;
+    
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    setDrawCurrent({ x, y });
+  };
+  
+  const handleCanvasMouseUp = () => {
+    if (!isDrawingMode || !isDrawing || !drawStart || !drawCurrent) return;
+    
+    // Calculate bbox in original image coordinates
+    const x1 = Math.min(drawStart.x, drawCurrent.x) / scale;
+    const y1 = Math.min(drawStart.y, drawCurrent.y) / scale;
+    const x2 = Math.max(drawStart.x, drawCurrent.x) / scale;
+    const y2 = Math.max(drawStart.y, drawCurrent.y) / scale;
+    
+    // Only accept box if it's large enough (at least 30x30 pixels)
+    if (x2 - x1 > 30 && y2 - y1 > 30) {
+      setPendingManualBox([x1, y1, x2, y2]);
+      setShowCategoryModal(true);
+    }
+    
+    setIsDrawing(false);
+    setDrawStart(null);
+    setDrawCurrent(null);
+  };
+  
+  const handleCategorySelect = (category: string) => {
+    if (!pendingManualBox) return;
+    
+    const newBbox: BboxItem = {
+      id: `manual_${Date.now()}`,
+      bbox: pendingManualBox,
+      category: category,
+      mapped_category: category,
+      confidence: 1.0,
+      selected: true // Auto-select the manually added box
+    };
+    
+    const updatedBboxes = [...bboxes, newBbox];
+    setBboxes(updatedBboxes);
+    onSelectionChange(updatedBboxes);
+    
+    setShowCategoryModal(false);
+    setPendingManualBox(null);
+    setIsDrawingMode(false);
+  };
 
   return (
     <div className="w-full max-w-4xl mx-auto">
@@ -347,7 +442,13 @@ export default function InteractiveBboxSelector({
               ref={canvasRef}
               width={displaySize.width}
               height={displaySize.height}
-              className="absolute top-0 left-0 w-full h-full pointer-events-none"
+              className={`absolute top-0 left-0 w-full h-full ${isDrawingMode ? 'cursor-crosshair pointer-events-auto' : 'pointer-events-none'}`}
+              onMouseDown={handleCanvasMouseDown}
+              onMouseMove={handleCanvasMouseMove}
+              onMouseUp={handleCanvasMouseUp}
+              onMouseLeave={() => {
+                if (isDrawing) handleCanvasMouseUp();
+              }}
             />
             
             {/* SVG for connecting lines */}
@@ -428,9 +529,34 @@ export default function InteractiveBboxSelector({
         )}
       </div>
 
-      {/* Bottom fixed action button - Instagram style */}
+      {/* Bottom fixed action buttons - Instagram style */}
       <div className="fixed bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-white via-white to-transparent pointer-events-none">
-        <div className="max-w-4xl mx-auto pointer-events-auto">
+        <div className="max-w-4xl mx-auto pointer-events-auto space-y-3">
+          {/* Manual draw button */}
+          <button
+            onClick={() => {
+              if (isDrawingMode) {
+                setIsDrawingMode(false);
+                setIsDrawing(false);
+                setDrawStart(null);
+                setDrawCurrent(null);
+              } else {
+                setIsDrawingMode(true);
+              }
+            }}
+            className={`w-full py-3 text-sm font-semibold rounded-full transition-all ${
+              isDrawingMode
+                ? 'bg-blue-500 text-white hover:bg-blue-600 shadow-lg'
+                : 'bg-white text-gray-700 border-2 border-gray-300 hover:border-gray-400 shadow-md'
+            }`}
+          >
+            {isDrawingMode 
+              ? (language === 'ko' ? '그리기 모드 취소' : 'Cancel Drawing') 
+              : (language === 'ko' ? '원하는 패션템이 없어요' : 'Item Missing? Draw It')
+            }
+          </button>
+          
+          {/* Confirm button */}
           <button
             onClick={onConfirm}
             disabled={selectedCount === 0}
@@ -447,6 +573,51 @@ export default function InteractiveBboxSelector({
           </button>
         </div>
       </div>
+      
+      {/* Category selection modal */}
+      {showCategoryModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[100] p-4">
+          <div className="bg-white rounded-2xl p-6 max-w-md w-full max-h-[80vh] overflow-y-auto">
+            <h3 className="text-xl font-bold mb-4">
+              {language === 'ko' ? '어떤 아이템인가요?' : 'What type of item?'}
+            </h3>
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                { ko: '상의', en: 'top', value: 'top' },
+                { ko: '하의', en: 'bottom', value: 'bottom' },
+                { ko: '원피스', en: 'dress', value: 'dress' },
+                { ko: '아우터', en: 'outerwear', value: 'outerwear' },
+                { ko: '신발', en: 'shoes', value: 'shoes' },
+                { ko: '가방', en: 'bag', value: 'bag' },
+                { ko: '모자', en: 'hat', value: 'hat' },
+                { ko: '악세사리', en: 'accessories', value: 'accessories' },
+                { ko: '치마', en: 'skirt', value: 'skirt' },
+                { ko: '바지', en: 'pants', value: 'pants' },
+                { ko: '재킷', en: 'jacket', value: 'jacket' },
+                { ko: '스웨터', en: 'sweater', value: 'sweater' },
+              ].map((category) => (
+                <button
+                  key={category.value}
+                  onClick={() => handleCategorySelect(category.value)}
+                  className="py-3 px-4 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition-colors"
+                >
+                  {language === 'ko' ? category.ko : category.en}
+                </button>
+              ))}
+            </div>
+            <button
+              onClick={() => {
+                setShowCategoryModal(false);
+                setPendingManualBox(null);
+                setIsDrawingMode(false);
+              }}
+              className="w-full mt-4 py-3 bg-gray-200 hover:bg-gray-300 rounded-lg font-medium transition-colors"
+            >
+              {language === 'ko' ? '취소' : 'Cancel'}
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
