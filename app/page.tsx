@@ -86,6 +86,48 @@ export default function Home() {
   const [sessionManager, setSessionManager] = useState<any>(null)
   const [overallProgress, setOverallProgress] = useState(0)
 
+  // Persist results and state to localStorage for mobile tab recovery
+  useEffect(() => {
+    if (Object.keys(results).length > 0 && selectedItems.length > 0) {
+      const stateToSave = {
+        results,
+        selectedItems,
+        uploadedImageUrl,
+        timestamp: Date.now()
+      }
+      localStorage.setItem('search_state', JSON.stringify(stateToSave))
+      console.log('💾 Saved search state to localStorage')
+    }
+  }, [results, selectedItems, uploadedImageUrl])
+
+  // Restore results from localStorage on mount (for mobile tab recovery)
+  useEffect(() => {
+    const savedState = localStorage.getItem('search_state')
+    
+    if (savedState && currentStep === 'upload') {
+      try {
+        const parsed = JSON.parse(savedState)
+        const timeSinceSave = Date.now() - (parsed.timestamp || 0)
+        const oneHour = 60 * 60 * 1000
+        
+        // Only restore if less than 1 hour old
+        if (timeSinceSave < oneHour && Object.keys(parsed.results || {}).length > 0) {
+          console.log('🔄 Restoring search state from localStorage')
+          setResults(parsed.results)
+          setSelectedItems(parsed.selectedItems || [])
+          setUploadedImageUrl(parsed.uploadedImageUrl || '')
+          setCurrentStep('results')
+        } else {
+          // Clear old data
+          localStorage.removeItem('search_state')
+        }
+      } catch (error) {
+        console.error('Failed to restore state:', error)
+        localStorage.removeItem('search_state')
+      }
+    }
+  }, [])
+
   // Initialize progress when steps change
   useEffect(() => {
     if (currentStep === 'processing') {
@@ -706,6 +748,9 @@ export default function Home() {
     setProcessingItems([])
     setOverallProgress(0)
     setResults({})
+    // Clear saved state from localStorage
+    localStorage.removeItem('search_state')
+    console.log('🗑️ Cleared saved search state')
   }
 
   // Build croppedImages map for Results component
