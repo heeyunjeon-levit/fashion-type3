@@ -521,7 +521,7 @@ export default function Home() {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              imageDataUrl: croppedDataUrl,
+              imageUrl: croppedDataUrl, // GPT-4o Vision accepts data URLs!
               category: bbox.category
             })
           })
@@ -532,7 +532,9 @@ export default function Home() {
             description = descData.description || description
             console.log(`✅ GPT-4o described ${bbox.category}: "${description.substring(0, 80)}..."`)
           } else {
-            console.warn(`⚠️  Description failed for ${bbox.category}, using fallback`)
+            const errorText = await descriptionResponse.text()
+            console.error(`⚠️  Description API failed for ${bbox.category} (${descriptionResponse.status}):`, errorText.substring(0, 200))
+            console.warn(`   Using fallback description: "${description}"`)
           }
           
           // Update real-time progress

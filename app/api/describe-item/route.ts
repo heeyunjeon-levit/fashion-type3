@@ -10,43 +10,47 @@ export async function POST(request: NextRequest) {
     const { imageUrl, category } = await request.json()
 
     if (!imageUrl || !category) {
+      console.error('❌ Missing required fields:', { imageUrl: !!imageUrl, category: !!category })
       return NextResponse.json(
         { error: 'imageUrl and category are required' },
         { status: 400 }
       )
     }
 
-    console.log(`🤖 Getting GPT-4o description for ${category}...`)
+    console.log(`🤖 Getting GPT-4o-mini description for ${category}...`)
+    console.log(`   Image type: ${imageUrl.startsWith('data:') ? 'data URL' : 'HTTP URL'}`)
+    console.log(`   Image size: ${Math.round(imageUrl.length / 1024)}KB`)
 
-    // Generate detailed description using GPT-4o
+    // Generate detailed description using GPT-4o-mini (same as Modal backend)
+    const prompt = `You are a fashion expert. Describe this ${category} in detail like a fashion catalog would:
+- Color and tone
+- Material/fabric (if visible)
+- Style details
+- Fit/silhouette
+
+Be specific and detailed. Return ONLY the description text, no JSON or extra formatting.`
+
     const response = await openai.chat.completions.create({
-      model: 'gpt-4o',
+      model: 'gpt-4o-mini', // Same as Modal
       messages: [
         {
           role: 'user',
           content: [
             {
-              type: 'text',
-              text: `You are a fashion expert. Describe this ${category} item in 15-25 words. Focus on:
-- Style and design (e.g., "oversized", "fitted", "vintage-inspired")
-- Key features (e.g., "button-down", "crew neck", "distressed")
-- Color and pattern
-- Material if visible
-
-Be specific and detailed. Use fashion terminology.`
-            },
-            {
               type: 'image_url',
               image_url: {
-                url: imageUrl,
-                detail: 'low' // Faster and cheaper
+                url: imageUrl // Accepts both HTTP URLs and data URLs
               }
+            },
+            {
+              type: 'text',
+              text: prompt
             }
           ]
         }
       ],
-      max_tokens: 100,
-      temperature: 0.7
+      max_tokens: 200, // Same as Modal
+      temperature: 0.3 // Same as Modal
     })
 
     const description = response.choices[0]?.message?.content?.trim() || `${category} item`
@@ -60,9 +64,15 @@ Be specific and detailed. Use fashion terminology.`
     })
 
   } catch (error: any) {
-    console.error('❌ GPT-4o description error:', error)
+    console.error('❌ GPT-4o-mini description error:', error)
+    console.error('   Error type:', error.constructor.name)
+    console.error('   Error message:', error.message)
+    console.error('   Stack:', error.stack?.substring(0, 300))
     return NextResponse.json(
-      { error: error.message || 'Description failed' },
+      { 
+        error: error.message || 'Description failed',
+        errorType: error.constructor.name
+      },
       { status: 500 }
     )
   }
