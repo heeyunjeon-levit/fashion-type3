@@ -213,7 +213,7 @@ export async function POST(request: NextRequest) {
 
     // Filter and score items for main subject focus
     const CONFIDENCE_THRESHOLD = 0.40  // Keep reasonable for detection
-    const MAIN_SUBJECT_THRESHOLD = 0.45  // Increased to focus on main person (foreground)
+    const MAIN_SUBJECT_THRESHOLD = 0.35  // Sweet spot: not too many, not zero (was 0.30→0.45→now 0.35)
     const MAX_ITEMS = 5  // Limit to top 5 items to reduce clutter
     const EXCLUDED_CATEGORIES = ['leggings', 'tights', 'stockings']
 
