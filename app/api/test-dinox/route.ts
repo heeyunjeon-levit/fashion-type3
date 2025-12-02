@@ -5,16 +5,34 @@ const DINOX_API_TOKEN = process.env.DINOX_API_TOKEN || 'bdf2ed490ebe69a28be81ea9
 
 export async function GET(request: NextRequest) {
   try {
-    // Test with a simple public image
-    const testImageUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Cat03.jpg/1200px-Cat03.jpg'
+    // Get image URL from query param or use default
+    const { searchParams } = new URL(request.url)
+    const testImageUrl = searchParams.get('imageUrl') || 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Cat03.jpg/1200px-Cat03.jpg'
     
-    console.log('🧪 Testing DINO-X with known image:', testImageUrl)
+    console.log('🧪 Testing DINO-X with image:', testImageUrl)
     
     // Fetch and convert to base64
+    console.log('   Fetching image...')
     const imageResponse = await fetch(testImageUrl)
+    console.log('   Fetch status:', imageResponse.status, imageResponse.statusText)
+    console.log('   Content-Type:', imageResponse.headers.get('content-type'))
+    console.log('   Content-Length:', imageResponse.headers.get('content-length'))
+    
+    if (!imageResponse.ok) {
+      return NextResponse.json({
+        error: 'Failed to fetch image',
+        status: imageResponse.status,
+        statusText: imageResponse.statusText
+      })
+    }
+    
     const arrayBuffer = await imageResponse.arrayBuffer()
+    const bufferSize = arrayBuffer.byteLength
+    console.log('   Image size:', (bufferSize / 1024).toFixed(2), 'KB')
+    
     const base64 = Buffer.from(arrayBuffer).toString('base64')
-    const base64Image = `data:image/jpeg;base64,${base64}`
+    const mimeType = imageResponse.headers.get('content-type') || 'image/jpeg'
+    const base64Image = `data:${mimeType};base64,${base64}`
     
     console.log('   Base64 length:', base64Image.length)
     console.log('   First 100 chars:', base64Image.substring(0, 100))
