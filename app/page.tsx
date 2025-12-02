@@ -394,10 +394,9 @@ export default function Home() {
       setCurrentStep('detecting')
       
       try {
-        console.log('⚡ Starting fast DINO-X detection...')
-        // Use GPU app (now working with DINO-X API)
-        const backendUrl = 'https://heeyunjeon-levit--fashion-crop-api-gpu-fastapi-app-v2.modal.run'
-        const detectResponse = await fetch(`${backendUrl}/detect`, {
+        console.log('⚡ Starting DINO-X detection (direct API)...')
+        // Call DINO-X directly via Next.js API (no Modal!)
+        const detectResponse = await fetch('/api/detect-dinox', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -411,10 +410,10 @@ export default function Home() {
 
         const detectData = await detectResponse.json()
         
-        console.log(`✅ Detection complete: ${detectData.bboxes?.length || 0} items found in ${detectData.processing_time}s`)
+        console.log(`✅ Detection complete: ${detectData.bboxes?.length || 0} items found`)
         console.log('📦 Detection data:', {
           bboxes: detectData.bboxes,
-          image_size: detectData.image_size,
+          source: detectData.source,
           imageUrl: imageUrl
         })
         setBboxes(detectData.bboxes || [])
@@ -527,34 +526,36 @@ export default function Home() {
         console.log(`Processing ${bbox.category}...`)
         
         try {
-          const backendUrl = 'https://heeyunjeon-levit--fashion-crop-api-gpu-fastapi-app-v2.modal.run'
-          const processResponse = await fetch(`${backendUrl}/process-item`, {
+          // Use frontend image cropping (no Modal!)
+          const { cropImage, uploadCroppedImage } = await import('../lib/imageCropper')
+          
+          // Crop image in browser
+          const croppedDataUrl = await cropImage({
+            imageUrl: uploadedImageUrl,
+            bbox: bbox.bbox as [number, number, number, number],
+            padding: 0.05
+          })
+          
+          // Upload to Supabase
+          const croppedImageUrl = await uploadCroppedImage(croppedDataUrl, bbox.category)
+          console.log(`✅ Cropped and uploaded ${bbox.category}`)
+
+          // Get description from GPT-4o (via Next.js API)
+          const descResponse = await fetch('/api/describe-item', {
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              imageUrl: uploadedImageUrl,
-              bbox: bbox.bbox,
+              imageUrl: croppedImageUrl,
               category: bbox.category
-            }),
+            })
           })
 
-          if (!processResponse.ok) {
-            console.error(`Failed to process ${bbox.category}: ${processResponse.status}`)
-            completedItems++
-            // Update progress: processing is 20% of total, so each item = 20% / totalItems
-            const targetProgress = Math.min(20, (completedItems / totalItems) * 20)
-            setOverallProgress(prev => Math.max(prev, targetProgress))
-            return null
+          let description = `${bbox.category} item`
+          if (descResponse.ok) {
+            const descData = await descResponse.json()
+            description = descData.description || description
+            console.log(`✅ Got description for ${bbox.category}`)
           }
-
-          const processData = await processResponse.json()
-          console.log(`✅ Processed ${bbox.category} in ${processData.processing_time}s`, {
-            description: processData.description?.substring(0, 50) + '...',
-            croppedImageUrl: processData.croppedImageUrl?.substring(0, 80) + '...',
-            category: processData.category
-          })
 
           // Update real-time progress
           completedItems++
@@ -564,18 +565,17 @@ export default function Home() {
 
           // Convert to DetectedItem format
           const detectedItem = {
-            category: processData.category,
+            category: bbox.mapped_category || bbox.category,
             groundingdino_prompt: bbox.category,
-            description: processData.description,
-            croppedImageUrl: processData.croppedImageUrl,
+            description: description,
+            croppedImageUrl: croppedImageUrl,
             confidence: bbox.confidence
           }
           
           console.log('📦 DetectedItem created:', {
             category: detectedItem.category,
             hasDescription: !!detectedItem.description,
-            hasCroppedUrl: !!detectedItem.croppedImageUrl,
-            croppedUrlLength: detectedItem.croppedImageUrl?.length
+            hasCroppedUrl: !!detectedItem.croppedImageUrl
           })
           
           return detectedItem
