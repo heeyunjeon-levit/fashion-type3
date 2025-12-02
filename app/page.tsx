@@ -102,6 +102,14 @@ export default function Home() {
 
   // Restore results from localStorage on mount (for mobile tab recovery)
   useEffect(() => {
+    // Check if user just clicked reset (skip restoration in this case)
+    const justReset = sessionStorage.getItem('just_reset')
+    if (justReset) {
+      sessionStorage.removeItem('just_reset')
+      console.log('🔄 Reset detected, skipping state restoration')
+      return
+    }
+    
     const savedState = localStorage.getItem('search_state')
     
     if (savedState && currentStep === 'upload') {
@@ -751,6 +759,8 @@ export default function Home() {
     // Clear saved state from localStorage (including phone to prevent modal on fresh start)
     localStorage.removeItem('search_state')
     localStorage.removeItem('product_click_time_main_app')
+    // Set flag to prevent state restoration after reload
+    sessionStorage.setItem('just_reset', 'true')
     console.log('🗑️ Cleared saved search state')
     // Force page reload to get fresh upload screen
     window.location.reload()
