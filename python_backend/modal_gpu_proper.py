@@ -22,6 +22,8 @@ image = (
     )
     # Set non-interactive mode for apt to avoid timezone prompts
     .env({"DEBIAN_FRONTEND": "noninteractive", "TZ": "UTC"})
+    # Install wget first (needed for CUDA setup)
+    .apt_install("wget")
     # Add NVIDIA CUDA repository for nvcc compiler
     .run_commands(
         "wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-keyring_1.0-1_all.deb",
@@ -30,7 +32,6 @@ image = (
     )
     # Install system dependencies + CUDA compiler tools
     .apt_install(
-        "wget",
         "build-essential",
         "git",
         "python3-opencv",
