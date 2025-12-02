@@ -740,8 +740,20 @@ export async function POST(request: NextRequest) {
         
         const excludedKeywords = getExcludedKeywords(specificSubType)
         
-        // Filter organicResults BEFORE GPT to save time and improve quality
-        let filteredResults = organicResults
+        // Merge full image results with cropped image results for better coverage
+        // Full image search often finds more accurate/iconic items
+        const mergedResults = [...organicResults]
+        if (fullImageResults.length > 0) {
+          console.log(`🔀 Merging ${fullImageResults.length} full image results with ${organicResults.length} cropped results`)
+          // Add full image results that aren't already in cropped results
+          const existingLinks = new Set(organicResults.map((r: any) => r.link))
+          const newFullImageResults = fullImageResults.filter((r: any) => !existingLinks.has(r.link))
+          mergedResults.push(...newFullImageResults)
+          console.log(`✅ Combined: ${mergedResults.length} total results (${newFullImageResults.length} unique from full image)`)
+        }
+        
+        // Filter merged results BEFORE GPT to save time and improve quality
+        let filteredResults = mergedResults
         if (excludedKeywords.length > 0) {
           console.log(`🔍 Pre-filtering with sub-type: ${specificSubType}, excluding: ${excludedKeywords.join(', ')}`)
           
@@ -781,7 +793,7 @@ export async function POST(request: NextRequest) {
             return true
           })
           
-          console.log(`✅ Pre-filter complete: ${organicResults.length} → ${filteredResults.length} results (removed ${organicResults.length - filteredResults.length} wrong sub-types)`)
+          console.log(`✅ Pre-filter complete: ${mergedResults.length} → ${filteredResults.length} results (removed ${mergedResults.length - filteredResults.length} wrong sub-types)`)
         }
         
         // Use filtered results for GPT analysis
