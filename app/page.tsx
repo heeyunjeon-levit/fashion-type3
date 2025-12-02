@@ -332,59 +332,29 @@ export default function Home() {
       setCurrentStep('detecting')
       
       try {
-        console.log('⚡ Starting DINO-X detection (direct API)...')
+        console.log('⚡ Starting DINO-X detection via Modal (1pm quality!)...')
         let detectData: any = null
         
-        // Try direct DINO-X API first
-        try {
-          const detectResponse = await fetch('/api/detect-dinox', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ imageUrl }),
-          })
+        // Use Modal /detect (proven quality from 1pm!)
+        const backendUrl = 'https://heeyunjeon-levit--fashion-crop-api-gpu-fastapi-app-v2.modal.run'
+        const modalResponse = await fetch(`${backendUrl}/detect`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ imageUrl }),
+          signal: AbortSignal.timeout(120000)  // 2 min timeout
+        })
 
-          if (!detectResponse.ok) {
-            const errorData = await detectResponse.json()
-            console.error('Direct API error:', errorData)
-            throw new Error(errorData.error || `Detection failed: ${detectResponse.status}`)
-          }
+        if (!modalResponse.ok) {
+          throw new Error(`Modal detection failed: ${modalResponse.status}`)
+        }
 
-          detectData = await detectResponse.json()
-          
-          if (detectData.error) {
-            throw new Error(detectData.error)
-          }
-          
-          console.log(`✅ Direct API detection complete: ${detectData.bboxes?.length || 0} items found`)
-          if (detectData.debug) {
-            console.log('🔍 Debug info:', detectData.debug)
-          }
-          
-          // If 0 items detected, throw to trigger Modal fallback
-          if (!detectData.bboxes || detectData.bboxes.length === 0) {
-            throw new Error('Direct API returned 0 items, trying Modal fallback...')
-          }
-        } catch (directApiError: any) {
-          console.warn('⚠️  Direct API failed, falling back to Modal backend:', directApiError.message)
-          
-          // Fallback to Modal backend
-          const backendUrl = 'https://heeyunjeon-levit--fashion-crop-api-gpu-fastapi-app-v2.modal.run'
-          const modalResponse = await fetch(`${backendUrl}/detect`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ imageUrl }),
-          })
-
-          if (!modalResponse.ok) {
-            throw new Error(`Both APIs failed. Direct: ${directApiError.message}, Modal: ${modalResponse.status}`)
-          }
-
-          detectData = await modalResponse.json()
-          console.log(`✅ Modal fallback successful: ${detectData.bboxes?.length || 0} items found`)
+        detectData = await modalResponse.json()
+        console.log(`✅ Modal detection complete: ${detectData.bboxes?.length || 0} items found`)
+        
+        if (!detectData.bboxes || detectData.bboxes.length === 0) {
+          throw new Error('No items detected')
         }
         
         console.log('📦 Detection data:', {
