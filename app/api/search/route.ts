@@ -229,93 +229,67 @@ export async function POST(request: NextRequest) {
       console.log(`   originalImageUrl: ${originalImageUrl?.substring(0, 80)}...`)
       
       try {
-        // Use GPU app (now working with DINO-X API)
-        const pythonBackendUrl = 'https://heeyunjeon-levit--fashion-crop-api-gpu-fastapi-app-v2.modal.run'
-        console.log(`   🔗 Using backend URL: ${pythonBackendUrl}`)
-        console.log(`   📝 PYTHON_BACKEND_URL=${process.env.PYTHON_BACKEND_URL}`)
-        console.log(`   📝 NEXT_PUBLIC_GPU_API_URL=${process.env.NEXT_PUBLIC_GPU_API_URL}`)
+        // Use Next.js OCR endpoint (bypasses Modal deployment issues)
+        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000')
+        console.log(`   🔗 Using Next.js OCR endpoint: ${baseUrl}/api/ocr-search`)
         
-        if (pythonBackendUrl) {
-          console.log(`   Calling: ${pythonBackendUrl}/ocr-search`)
+        const ocrResponse = await fetch(`${baseUrl}/api/ocr-search`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ imageUrl: originalImageUrl }),
+          signal: AbortSignal.timeout(120000) // 2 minute timeout (Next.js OCR is faster than Modal)
+        })
+        
+        if (ocrResponse.ok) {
+          const ocrData = await ocrResponse.json()
+          console.log(`   ✅ OCR search complete: ${ocrData.success}`)
+          console.log(`   📦 Product results count: ${ocrData.product_results?.length || 0}`)
           
-          const ocrResponse = await fetch(`${pythonBackendUrl}/ocr-search`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ imageUrl: originalImageUrl }),
-            signal: AbortSignal.timeout(300000) // 5 minute timeout (OCR takes 3-4 mins)
-          })
-          
-          if (ocrResponse.ok) {
-            const ocrData = await ocrResponse.json()
-            console.log(`   ✅ OCR search complete: ${ocrData.success}`)
-            console.log(`   📦 Product results count: ${ocrData.product_results?.length || 0}`)
-            console.log(`   📊 Full OCR response:`, JSON.stringify(ocrData, null, 2).substring(0, 500))
+          if (ocrData.success) {
+            // Transform to existing format for frontend compatibility
+            const results: Record<string, any> = {}
             
-            if (ocrData.success) {
-              // Transform to existing format for frontend compatibility
-              const results: Record<string, any> = {}
+            for (const productResult of ocrData.product_results || []) {
+              const brand = productResult.brand
+              const productType = productResult.product_type
               
-              for (const productResult of ocrData.product_results || []) {
-                const brand = productResult.product.brand
-                const productName = productResult.product.product_name || productResult.product.exact_ocr_text?.substring(0, 30) || 'Unknown'
-                const searchResult = productResult.search_result
-                
-                if (searchResult.success && searchResult.selected_results) {
-                  // Use brand + product name as key to avoid overwriting products from same brand
-                  const resultKey = `${brand} - ${productName}`.substring(0, 80)
-                  
-                  // Transform to match expected format (direct array)
-                  results[resultKey] = searchResult.selected_results.map((r: any) => ({
-                    title: r.title || 'Product',
-                    link: r.link || '',
-                    thumbnail: r.thumbnail || r.image || null
-                  }))
-                }
-              }
+              // Use brand + product type as key
+              const resultKey = `${brand} ${productType}`
               
-              const totalTime = (Date.now() - requestStartTime) / 1000
-              console.log(`\n✅ V3.1 OCR Search complete in ${totalTime.toFixed(1)}s`)
-              console.log(`   Brands found: ${Object.keys(results).length}`)
-              
-              return NextResponse.json({
-                results,
-                meta: {
-                  mode: 'ocr_v3.1',
-                  success: true,
-                  total_time: totalTime,
-                  ocr_mapping: ocrData.mapping,
-                  summary: ocrData.summary
-                },
-                timing: {
-                  total_seconds: totalTime
-                }
-              })
-            } else {
-              // OCR succeeded but found no text or products
-              const totalTime = (Date.now() - requestStartTime) / 1000
-              console.log(`   ⚠️ OCR returned no results: ${ocrData.reason || 'unknown reason'}`)
-              return NextResponse.json({
-                results: {},
-                meta: {
-                  mode: 'ocr_v3.1',
-                  success: false,
-                  reason: ocrData.reason || 'No OCR text detected',
-                  total_time: totalTime
-                },
-                timing: {
-                  total_seconds: totalTime
-                }
-              })
+              // Transform to match expected format (direct array)
+              results[resultKey] = productResult.results.map((r: any) => ({
+                title: r.title || 'Product',
+                link: r.link || '',
+                thumbnail: r.thumbnail || null
+              }))
             }
-          } else {
-            console.error(`   ❌ OCR search failed: ${ocrResponse.status}`)
+            
             const totalTime = (Date.now() - requestStartTime) / 1000
+            console.log(`\n✅ V3.1 OCR Search complete in ${totalTime.toFixed(1)}s`)
+            console.log(`   Products found: ${Object.keys(results).length}`)
+            
+            return NextResponse.json({
+              results,
+              meta: {
+                mode: 'ocr_v3.1_nextjs',
+                success: true,
+                total_time: totalTime,
+                extracted_text: ocrData.extracted_text
+              },
+              timing: {
+                total_seconds: totalTime
+              }
+            })
+          } else {
+            // OCR succeeded but found no text or products
+            const totalTime = (Date.now() - requestStartTime) / 1000
+            console.log(`   ⚠️ OCR returned no results: ${ocrData.reason || 'unknown reason'}`)
             return NextResponse.json({
               results: {},
               meta: {
-                mode: 'ocr_v3.1',
+                mode: 'ocr_v3.1_nextjs',
                 success: false,
-                reason: `Backend returned ${ocrResponse.status}`,
+                reason: ocrData.reason || 'No OCR text detected',
                 total_time: totalTime
               },
               timing: {
@@ -323,6 +297,23 @@ export async function POST(request: NextRequest) {
               }
             })
           }
+        } else {
+          console.error(`   ❌ OCR search failed: ${ocrResponse.status}`)
+          const errorText = await ocrResponse.text()
+          console.error(`   Error details: ${errorText}`)
+          const totalTime = (Date.now() - requestStartTime) / 1000
+          return NextResponse.json({
+            results: {},
+            meta: {
+              mode: 'ocr_v3.1_nextjs',
+              success: false,
+              reason: `OCR endpoint returned ${ocrResponse.status}`,
+              total_time: totalTime
+            },
+            timing: {
+              total_seconds: totalTime
+            }
+          })
         }
       } catch (ocrError) {
         console.error('   ❌ OCR search error:', ocrError)
