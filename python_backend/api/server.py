@@ -256,7 +256,8 @@ async def detect_items(request: DetectRequest):
                 # - Higher confidence scores higher
                 centrality_score = max(0, 1 - distance_from_center * 2.5)  # Penalize distance MORE (2.5x instead of 2x)
                 size_score = min(1, bbox_area * 10)  # Normalize area (assuming coords 0-1)
-                main_subject_score = (confidence * 0.3 + centrality_score * 0.45 + size_score * 0.25)  # Centrality more important!
+                # Balanced: confidence 35%, centrality 40%, size 25% (catches small accessories like sunglasses)
+                main_subject_score = (confidence * 0.35 + centrality_score * 0.40 + size_score * 0.25)
                 
                 print(f"   📊 {raw_category}: conf={confidence:.2f}, area={bbox_area:.3f}, center_dist={distance_from_center:.2f}, score={main_subject_score:.2f}")
             else:
@@ -274,8 +275,8 @@ async def detect_items(request: DetectRequest):
             }
             bboxes_with_scores.append(bbox_item)
         
-        # Filter out background items: only keep items with score >= 0.45 (increased from 0.35)
-        MAIN_SUBJECT_THRESHOLD = 0.45  # Higher threshold = stricter filtering of background items
+        # Filter out background items: only keep items with score >= 0.40 (sweet spot: not too strict, not too loose)
+        MAIN_SUBJECT_THRESHOLD = 0.40  # Balanced: catches accessories (sunglasses) but filters background
         bboxes = [b for b in bboxes_with_scores if b['main_subject_score'] >= MAIN_SUBJECT_THRESHOLD]
         
         # Sort by main subject score (highest first)
