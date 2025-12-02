@@ -740,16 +740,22 @@ export async function POST(request: NextRequest) {
         
         const excludedKeywords = getExcludedKeywords(specificSubType)
         
-        // Merge full image results with cropped image results for better coverage
-        // Full image search often finds more accurate/iconic items
-        const mergedResults = [...organicResults]
+        // PRIORITIZE full image results - they're more accurate for iconic/recognizable items
+        // Full image search recognizes context (celebrity outfits, paparazzi photos, etc.)
+        const mergedResults: any[] = []
         if (fullImageResults.length > 0) {
-          console.log(`🔀 Merging ${fullImageResults.length} full image results with ${organicResults.length} cropped results`)
-          // Add full image results that aren't already in cropped results
-          const existingLinks = new Set(organicResults.map((r: any) => r.link))
-          const newFullImageResults = fullImageResults.filter((r: any) => !existingLinks.has(r.link))
-          mergedResults.push(...newFullImageResults)
-          console.log(`✅ Combined: ${mergedResults.length} total results (${newFullImageResults.length} unique from full image)`)
+          console.log(`🎯 PRIORITIZING ${fullImageResults.length} full image results (more accurate for iconic items)`)
+          // Put full image results FIRST
+          mergedResults.push(...fullImageResults)
+          
+          // Then add cropped results that aren't duplicates
+          const existingLinks = new Set(fullImageResults.map((r: any) => r.link))
+          const newCroppedResults = organicResults.filter((r: any) => !existingLinks.has(r.link))
+          mergedResults.push(...newCroppedResults)
+          console.log(`✅ Combined: ${mergedResults.length} total (${fullImageResults.length} from full image first, ${newCroppedResults.length} unique from cropped)`)
+        } else {
+          // No full image results, use cropped only
+          mergedResults.push(...organicResults)
         }
         
         // Filter merged results BEFORE GPT to save time and improve quality
@@ -801,13 +807,19 @@ export async function POST(request: NextRequest) {
         
         const prompt = `You are analyzing aggregated image search results from multiple runs for ${categoryLabels[categoryKey]}.
 
-The original cropped image shows: ${searchTerms.join(', ')}
-${itemDescription ? `\n🎯 **SPECIFIC ITEM DESCRIPTION: "${itemDescription}"**\nYou MUST find products that match THIS SPECIFIC DESCRIPTION, not just the general category.` : ''}
+🎯 **IMPORTANT: Results are ordered by quality - TOP results are from full-image search (most accurate for iconic items)**
+- First ${fullImageResults.length} results are from full image search (recognizes context, celebrity outfits, exact matches)
+- Remaining results are from cropped image search (finds similar styles)
+- STRONGLY PREFER selecting from the TOP results - they're higher quality matches
 
-🚨 CRITICAL CATEGORY FILTER - MUST BE STRICTLY ENFORCED:
-- You are searching for: ${categoryLabels[categoryKey]}
-- ONLY return products that match this exact category type
-- **READ THE TITLE** and verify it matches the category BEFORE selecting it
+The original cropped image shows: ${searchTerms.join(', ')}
+${itemDescription ? `\n🎯 **SPECIFIC ITEM DESCRIPTION: "${itemDescription}"**\nYou SHOULD find products that match THIS DESCRIPTION, but prioritize top results even if not perfect text match.` : ''}
+
+⚠️ CATEGORY GUIDANCE (FLEXIBLE FOR VISUAL MATCHES):
+- General category: ${categoryLabels[categoryKey]}
+- **HOWEVER**: Visual similarity is MORE important than exact category match
+- If a "fur coat" looks like the item but category says "sweater", INCLUDE IT
+- The first ${fullImageResults.length} results are from full image search - these are likely EXACT or very close matches
 ${subTypeExclusion ? subTypeExclusion : ''}
 - ${categoryKey === 'tops' && !specificSubType ? '❌ ABSOLUTELY REJECT: Any title mentioning "jeans", "pants", "trousers", "shorts", "skirt", "dress", "바지", "청바지", "반바지", "치마"' : ''}
 - ${categoryKey === 'bottoms' && !specificSubType ? '❌ ABSOLUTELY REJECT: Any title mentioning "shirt", "blouse", "jacket", "hoodie", "sweater", "coat", "blazer", "top", "modal-blend", "tie-front", "셔츠", "블라우스", "재킷", "후드", "코트", "상의", "티셔츠", "아우터"' : ''}
@@ -860,7 +872,15 @@ ${itemDescription ? `4. ✅ PREFER: Title somewhat matches "${itemDescription}" 
 6. ✅ MUST: Link goes to a product detail page (not category/homepage)
 7. ✅ PREFER: Reputable retailers and brands (luxury brands, major retailers preferred)
 
-**IMPORTANT: Return your BEST 3-5 HIGH-QUALITY matches ONLY. Quality over quantity. Empty array if no good matches exist.**
+**IMPORTANT: Return your BEST 3-5 HIGH-QUALITY matches ONLY. Quality over quantity.**
+
+🌟 **SELECTION STRATEGY:**
+- START by reviewing the first ${fullImageResults.length} results (full image search)
+- If ANY of these top results are from reputable retailers (Zara, Fendi, Nordstrom, ASOS, etc.), STRONGLY CONSIDER including them
+- Full image search often finds EXACT matches or designer pieces that cropped search misses
+- Include high-quality full-image results EVEN IF category label differs slightly (fur coat labeled as "sweater" is fine)
+- Then supplement with best cropped-image results for variety
+- Return [] ONLY if literally no results are for the correct body part
 
 AVAILABILITY & ACCESSIBILITY NOTES:
 - Products from Etsy, Depop, Poshmark, Mercari are from individual sellers and may be sold out
@@ -873,32 +893,39 @@ AVAILABILITY & ACCESSIBILITY NOTES:
 Search results (scan all ${resultsForGPT.length} for best matches):
 ${JSON.stringify(resultsForGPT, null, 2)}
 
-**VALIDATION PROCESS (VISUAL-FIRST, FLEXIBLE ON CATEGORY):**
+**VALIDATION PROCESS (VISUAL-FIRST, PRIORITIZE TOP RESULTS):**
 For EACH result you consider:
 1. 📖 READ the "title" field first
 2. 🚫 CHECK THE URL: Does it end with /reviews, /questions, /qa? → SKIP IMMEDIATELY (not a product page)
-3. ✅ PRIORITY: Visual similarity - Google Lens found these because they LOOK similar to the user's image
-4. ✅ CHECK: Does it seem like similar style/vibe? (luxury, casual, vintage, modern, etc.)
-5. ✅ PREFER: Similar or complementary colors
-6. ✅ FLEXIBLE: Category can vary - sweater/jacket/coat are all valid for upper body outerwear
+3. ⭐ **PRIORITY**: First ${fullImageResults.length} results are from FULL IMAGE SEARCH - strongly prefer these!
+   - Full image search recognizes complete context (celebrity outfits, iconic pieces, exact scenes)
+   - If any of the top results look like quality matches, SELECT THEM FIRST
+   - Example: If category is "sweater" but top result shows luxury fur coat that matches the image, INCLUDE IT
+4. ✅ Visual similarity - Google Lens found these because they LOOK similar to the user's image
+5. ✅ CHECK: Does it seem like similar style/vibe/quality? (luxury vs casual, designer vs fast fashion)
+6. ✅ PREFER: Similar or complementary colors (but allow variations)
+7. ✅ FLEXIBLE: Category labels can vary - sweater/jacket/coat/cardigan are all upper body outerwear
    ${categoryKey === 'tops' ? '⚠️ ONLY REJECT: pants/jeans/shorts/skirts (clearly wrong body part)' : ''}
-   ${categoryKey === 'bottoms' ? '⚠️ ONLY REJECT: if it\'s clearly an upper body item AND not related' : ''}
-7. ✅ CHECK: Is it a specific product (not "Shop", "Category", "Homepage")?
+   ${categoryKey === 'bottoms' ? '⚠️ ONLY REJECT: if it\'s clearly NOT lower body wear' : ''}
+8. ✅ CHECK: Is it a specific product (not "Shop", "Category", "Homepage")?
 
-Find the TOP 3-5 BEST AVAILABLE MATCHES. Prioritize:
-- Visual similarity (Google Lens already filtered by appearance!)
-- Similar style/vibe/quality level (luxury vs fast fashion)
-- Similar color or aesthetic
-- Product variety (different retailers when possible)
-- Accessibility (prefer major retailers)
+Find the TOP 3-5 BEST AVAILABLE MATCHES. Prioritize IN THIS ORDER:
+1. **STRONGLY PREFER the first ${fullImageResults.length} results** (full image search = most accurate)
+2. Visual similarity (Google Lens already filtered by appearance!)
+3. Similar style/vibe/quality level (luxury vs fast fashion)
+4. Similar color or aesthetic
+5. Product variety (different retailers when possible)
+6. Accessibility (prefer major retailers)
 
-✅ IMPORTANT: Trust visual search results!
-- Google Lens found these because they LOOK like the item
-- Don't reject just because text category is slightly different
-- ${categoryKey === 'tops' ? 'For tops: sweater, jacket, coat, blouse, cardigan are all valid upper body wear' : ''}
+✅ IMPORTANT: Trust visual search results, especially FULL IMAGE results!
+- **TOP ${fullImageResults.length} results are from full image search - PRIORITIZE these!**
+- Full image search found these because the ENTIRE SCENE looks like the photo
+- These often contain EXACT MATCHES or iconic items (celebrity outfits, designer pieces)
+- Don't reject top results just because category label differs slightly
+- ${categoryKey === 'tops' ? 'For tops: sweater, jacket, coat, blazer, cardigan, fur coat are ALL valid upper body wear' : ''}
 - ${categoryKey === 'bottoms' ? 'For bottoms: pants, jeans, shorts, skirts are all valid lower body wear' : ''}
 - Focus on: Does this product have a similar LOOK and FEEL?
-- Accept style variations - a fur coat might be tagged as jacket, sweater, or coat
+- A luxury fur coat might be tagged as "sweater", "jacket", or "cardigan" - ALL VALID
 - Return [] ONLY if results are completely unrelated (e.g., shoes when looking for tops)
 
 Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links preferred) or {"${resultKey}": []} ONLY if zero valid products found.`
