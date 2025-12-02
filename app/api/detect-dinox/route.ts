@@ -27,10 +27,23 @@ const FASHION_PROMPT = FASHION_CATEGORIES.join(". ")
 
 // Convert image URL to base64
 async function imageUrlToBase64(imageUrl: string): Promise<string> {
-  const response = await fetch(imageUrl)
-  const arrayBuffer = await response.arrayBuffer()
-  const base64 = Buffer.from(arrayBuffer).toString('base64')
-  return `data:image/jpeg;base64,${base64}`
+  try {
+    console.log('   Converting image to base64...')
+    const response = await fetch(imageUrl)
+    
+    if (!response.ok) {
+      throw new Error(`Failed to fetch image: ${response.status} ${response.statusText}`)
+    }
+    
+    const arrayBuffer = await response.arrayBuffer()
+    const base64 = Buffer.from(arrayBuffer).toString('base64')
+    const mimeType = response.headers.get('content-type') || 'image/jpeg'
+    console.log(`   ✅ Converted ${arrayBuffer.byteLength} bytes to base64`)
+    return `data:${mimeType};base64,${base64}`
+  } catch (error: any) {
+    console.error('   ❌ Image conversion failed:', error.message)
+    throw new Error(`Image conversion failed: ${error.message}`)
+  }
 }
 
 // Create DINO-X detection task
@@ -142,9 +155,11 @@ export async function POST(request: NextRequest) {
 
     console.log('🔍 DINO-X Detection (Direct API Call)')
     console.log('   Image URL:', imageUrl.substring(0, 80))
+    console.log('   DINO-X Token:', DINOX_API_TOKEN ? '✅ Set' : '❌ Missing')
 
     // Convert image to base64
     const base64Image = await imageUrlToBase64(imageUrl)
+    console.log('   Base64 length:', base64Image.length)
 
     // Create detection task
     const taskUuid = await createDetectionTask(base64Image)
@@ -225,8 +240,13 @@ export async function POST(request: NextRequest) {
 
   } catch (error: any) {
     console.error('❌ DINO-X detection error:', error)
+    console.error('   Error stack:', error.stack)
     return NextResponse.json(
-      { error: error.message || 'Detection failed' },
+      { 
+        error: error.message || 'Detection failed',
+        details: error.stack,
+        step: 'detection'
+      },
       { status: 500 }
     )
   }

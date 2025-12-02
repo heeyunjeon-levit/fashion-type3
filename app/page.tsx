@@ -405,10 +405,16 @@ export default function Home() {
         })
 
         if (!detectResponse.ok) {
-          throw new Error(`Detection failed: ${detectResponse.status}`)
+          const errorData = await detectResponse.json()
+          console.error('API error:', errorData)
+          throw new Error(errorData.error || `Detection failed: ${detectResponse.status}`)
         }
 
         const detectData = await detectResponse.json()
+        
+        if (detectData.error) {
+          throw new Error(detectData.error)
+        }
         
         console.log(`✅ Detection complete: ${detectData.bboxes?.length || 0} items found`)
         console.log('📦 Detection data:', {
@@ -420,9 +426,10 @@ export default function Home() {
         setImageSize(detectData.image_size || [0, 0])
         
         setCurrentStep('selecting')
-      } catch (error) {
+      } catch (error: any) {
         console.error('❌ Detection error:', error)
-        alert('Failed to detect items. Please try again.')
+        const errorMsg = error.message || 'Failed to detect items'
+        alert(`Detection failed: ${errorMsg}\n\nCheck console for details.`)
         setCurrentStep('upload')
       }
     } else {
