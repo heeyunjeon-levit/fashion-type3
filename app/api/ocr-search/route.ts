@@ -117,11 +117,17 @@ INSTRUCTIONS:
 3. Preserve EXACT Korean product names (do NOT translate or paraphrase)
 4. Extract model numbers, colors, and key details EXACTLY as shown
 
+🚨 CRITICAL: Instagram fashion brand accounts ARE VALID BRANDS!
+- Format: @brandname with season codes (23S/S, 24F/W, 25F/W, etc.)
+- Korean context words: 입어봤어요 (wore it), 샀어요 (bought), 구매 (purchase)
+- Example: "@coyseio 25F/W 입어봤어요" = coyseio is a fashion brand!
+- Remove @ symbol from brand name in output
+
 Return JSON:
 {
   "products": [
     {
-      "brand": "BRAND_NAME",
+      "brand": "BRAND_NAME (without @ symbol)",
       "exact_ocr_text": "exact product name/description from OCR",
       "product_type": "tops/bottoms/bag/shoes/accessory",
       "model_number": "if visible",
@@ -132,9 +138,10 @@ Return JSON:
 
 CRITICAL RULES:
 - Preserve EXACT Korean text for product names
+- INCLUDE Instagram fashion brands (with @brandname + season code pattern)
 - Exclude platform brands (Musinsa, Coupang, Instagram, Ably, Kream, Temu)
 - Exclude K-pop artists/groups (ILLIT, IVE, aespa, NewJeans, BLACKPINK, TWICE, Stray Kids, BTS, etc.)
-- confidence=high if brand name + detailed product info visible
+- confidence=high if brand name + season code + context words visible
 - If unsure about brand, skip it (quality over quantity)
 
 If NO fashion brands found, return: {"products": []}`
@@ -171,6 +178,35 @@ If NO fashion brands found, return: {"products": []}`
     }
     
     let products = parsed.products || []
+    
+    // FALLBACK: If GPT missed Instagram fashion brands, extract them with regex
+    if (products.length === 0 && fullText) {
+      console.log('   🔍 No brands found by GPT, checking for Instagram fashion brand patterns...')
+      
+      // Pattern: @brandname followed by season code (23S/S, 24F/W, 25F/W) and Korean clothing context
+      const instagramBrandPattern = /@(\w+)\s+(\d{2}[SF]\/[WS])\s*(입어봤어요|샀어요|구매|착용)/g
+      const matches = [...fullText.matchAll(instagramBrandPattern)]
+      
+      for (const match of matches) {
+        const brandName = match[1] // Extract brand without @
+        const season = match[2] // e.g., "25F/W"
+        const context = match[3] // e.g., "입어봤어요"
+        
+        console.log(`   ✅ Found Instagram brand pattern: @${brandName} ${season} ${context}`)
+        
+        products.push({
+          brand: brandName,
+          exact_ocr_text: `${season} ${context}`,
+          product_type: 'tops', // Default, will be refined by search
+          model_number: season,
+          confidence: 'medium'
+        })
+      }
+      
+      if (products.length > 0) {
+        console.log(`   ✅ Extracted ${products.length} brand(s) using pattern matching`)
+      }
+    }
     
     // HARD FILTER: Remove K-pop groups that GPT might have missed
     const kpopGroups = [
