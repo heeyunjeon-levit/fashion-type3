@@ -224,8 +224,8 @@ export default function Home() {
       
       try {
         console.log('🔍 Starting V3.1 OCR Search with real-time progress...')
-        // Use CPU app for OCR (doesn't need GPU)
-        const backendUrl = 'https://heeyunjeon-levit--fashion-crop-api-fastapi-app.modal.run'
+        // Use GPU app (now working!)
+        const backendUrl = 'https://heeyunjeon-levit--fashion-crop-api-gpu-fastapi-app-v2.modal.run'
         
         // Try streaming endpoint first for real-time progress
         try {
@@ -345,8 +345,8 @@ export default function Home() {
       
       try {
         console.log('⚡ Starting fast DINO-X detection...')
-        // Use CPU app for now (GPU app is crash-looping)
-        const backendUrl = 'https://heeyunjeon-levit--fashion-crop-api-fastapi-app.modal.run'
+        // Use GPU app (now working with DINO-X API)
+        const backendUrl = 'https://heeyunjeon-levit--fashion-crop-api-gpu-fastapi-app-v2.modal.run'
         const detectResponse = await fetch(`${backendUrl}/detect`, {
           method: 'POST',
           headers: {
@@ -477,7 +477,7 @@ export default function Home() {
         console.log(`Processing ${bbox.category}...`)
         
         try {
-          const backendUrl = 'https://heeyunjeon-levit--fashion-crop-api-fastapi-app.modal.run'
+          const backendUrl = 'https://heeyunjeon-levit--fashion-crop-api-gpu-fastapi-app-v2.modal.run'
           const processResponse = await fetch(`${backendUrl}/process-item`, {
             method: 'POST',
             headers: {

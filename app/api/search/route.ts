@@ -229,8 +229,8 @@ export async function POST(request: NextRequest) {
       console.log(`   originalImageUrl: ${originalImageUrl?.substring(0, 80)}...`)
       
       try {
-        // Use CPU app for OCR (doesn't need GPU, and CPU app is working)
-        const pythonBackendUrl = 'https://heeyunjeon-levit--fashion-crop-api-fastapi-app.modal.run'
+        // Use GPU app (now working with DINO-X API)
+        const pythonBackendUrl = 'https://heeyunjeon-levit--fashion-crop-api-gpu-fastapi-app-v2.modal.run'
         console.log(`   🔗 Using backend URL: ${pythonBackendUrl}`)
         console.log(`   📝 PYTHON_BACKEND_URL=${process.env.PYTHON_BACKEND_URL}`)
         console.log(`   📝 NEXT_PUBLIC_GPU_API_URL=${process.env.NEXT_PUBLIC_GPU_API_URL}`)

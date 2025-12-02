@@ -22,7 +22,13 @@ image = (
     )
     # Set non-interactive mode for apt to avoid timezone prompts
     .env({"DEBIAN_FRONTEND": "noninteractive", "TZ": "UTC"})
-    # Install system dependencies (matching GroundingDINO Dockerfile + extras for compilation)
+    # Add NVIDIA CUDA repository for nvcc compiler
+    .run_commands(
+        "wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-keyring_1.0-1_all.deb",
+        "dpkg -i cuda-keyring_1.0-1_all.deb",
+        "apt-get update"
+    )
+    # Install system dependencies + CUDA compiler tools
     .apt_install(
         "wget",
         "build-essential",
@@ -34,20 +40,21 @@ image = (
         "libsm6",
         "libxrender1",
         "libxext6",
+        "cuda-compiler-12-1",  # CUDA 12.1 compiler (nvcc)
+        "cuda-cudart-dev-12-1",  # CUDA runtime dev
     )
     # Set CUDA environment variables (from GroundingDINO Dockerfile)
     .env({
-        "CUDA_HOME": "/usr/local/cuda",
+        "CUDA_HOME": "/usr/local/cuda-12.1",
         "TORCH_CUDA_ARCH_LIST": "6.0 6.1 7.0 7.5 8.0 8.6+PTX",
-        "PATH": "/usr/local/cuda/bin:/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+        "PATH": "/usr/local/cuda-12.1/bin:/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
     })
-    # Update conda and install CUDA toolkit (from official Dockerfile)
+    # Skip conda update (too slow) - PyTorch image already has CUDA 12.1
+    # Just verify CUDA is available
     .run_commands(
-        "conda update conda -y",
-        "conda install -c 'nvidia/label/cuda-12.1.1' cuda -y"
+        "nvcc --version || echo 'CUDA compiler check'",
+        "python -c 'import torch; print(f\"PyTorch CUDA: {torch.version.cuda}\")'"
     )
-    # Update CUDA_HOME to conda's CUDA
-    .env({"CUDA_HOME": "/opt/conda"})
     # Clone GroundingDINO and install (following official Dockerfile)
     .run_commands(
         "cd /opt && git clone https://github.com/IDEA-Research/GroundingDINO.git",
@@ -65,6 +72,8 @@ image = (
         "supabase",
         "requests",
         "httpx",  # Better DNS handling than requests
+        "beautifulsoup4",  # For OCR pipeline
+        "sse-starlette",  # For streaming responses
     )
     # Download GroundingDINO weights (official location)
     .run_commands(
