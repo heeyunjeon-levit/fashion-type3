@@ -31,6 +31,21 @@ export async function POST(request: Request) {
       }, { status: 500 })
     }
     
+    // Download and base64 encode image (same as Modal backend)
+    console.log('   Downloading image...')
+    const imageResponse = await fetch(imageUrl)
+    if (!imageResponse.ok) {
+      return NextResponse.json({
+        success: false,
+        reason: 'Failed to download image'
+      }, { status: 500 })
+    }
+    
+    const imageBuffer = await imageResponse.arrayBuffer()
+    const base64Image = Buffer.from(imageBuffer).toString('base64')
+    console.log(`   ✅ Image downloaded and encoded (${Math.round(base64Image.length / 1024)}KB)`)
+    
+    // Send to Google Cloud Vision API
     const visionResponse = await fetch(
       `https://vision.googleapis.com/v1/images:annotate?key=${visionApiKey}`,
       {
@@ -39,8 +54,8 @@ export async function POST(request: Request) {
         body: JSON.stringify({
           requests: [
             {
-              image: { source: { imageUri: imageUrl } },
-              features: [{ type: 'TEXT_DETECTION', maxResults: 50 }]
+              image: { content: base64Image },
+              features: [{ type: 'TEXT_DETECTION', maxResults: 100 }]
             }
           ]
         })
@@ -79,38 +94,49 @@ export async function POST(request: Request) {
       model: "gpt-4o",
       messages: [
         {
+          role: "system",
+          content: "Extract brands and products from OCR text. Return only valid JSON."
+        },
+        {
           role: "user",
-          content: `OCR extracted text from a fashion image:
-"${fullText}"
+          content: `You are analyzing OCR text extracted from a product image.
 
-Analyze this text and identify FASHION brands and products ONLY.
+TASK: Identify ALL brands and their products visible in this image.
 
-🚨 CRITICAL FILTERS - DO NOT INCLUDE:
-- K-pop groups/artists: ILLIT, IVE, aespa, NewJeans, BLACKPINK, TWICE, etc.
-- Music: song titles, artist names, album names
-- Social media: usernames, handles, captions, hashtags
-- General text: random words that aren't brand names
+OCR TEXT:
+${fullText}
 
-✅ ONLY INCLUDE:
-- Real fashion brand names (Zara, Gucci, Nike, Uniqlo, H&M, etc.)
-- Only if confident the text refers to a clothing/fashion brand
+INSTRUCTIONS:
+1. Find ALL brand names (clothing brands, not platform names like Instagram/Musinsa/Coupang)
+2. For EACH brand, identify the specific product being shown
+3. Preserve EXACT Korean product names (do NOT translate or paraphrase)
+4. Extract model numbers, colors, and key details EXACTLY as shown
 
 Return JSON:
 {
   "products": [
     {
-      "brand": "BrandName",
-      "product_type": "coat/dress/shoes/bag/etc",
+      "brand": "BRAND_NAME",
+      "exact_ocr_text": "exact product name/description from OCR",
+      "product_type": "tops/bottoms/bag/shoes/accessory",
+      "model_number": "if visible",
       "confidence": "high/medium/low"
     }
   ]
 }
 
-If NO fashion brands found, return empty products array: {"products": []}`
+CRITICAL RULES:
+- Preserve EXACT Korean text for product names
+- Exclude platform brands (Musinsa, Coupang, Instagram, Ably, Kream, Temu)
+- Exclude K-pop artists/groups (ILLIT, IVE, aespa, NewJeans, BLACKPINK, TWICE, Stray Kids, BTS, etc.)
+- confidence=high if brand name + detailed product info visible
+- If unsure about brand, skip it (quality over quantity)
+
+If NO fashion brands found, return: {"products": []}`
         }
       ],
       max_tokens: 500,
-      temperature: 0.2,
+      temperature: 0,
     })
     
     const mappingResult = mappingResponse.choices[0]?.message?.content
@@ -150,7 +176,11 @@ If NO fashion brands found, return empty products array: {"products": []}`
       })
     }
     
-    console.log(`   ✅ Identified ${products.length} product(s):`, products.map((p: any) => `${p.brand} ${p.product_type}`).join(', '))
+    console.log(`   ✅ Identified ${products.length} product(s):`)
+    products.forEach((p: any, i: number) => {
+      console.log(`      ${i + 1}. ${p.brand} - ${p.product_type} (${p.confidence})`)
+      if (p.exact_ocr_text) console.log(`         OCR: "${p.exact_ocr_text.substring(0, 50)}..."`)
+    })
     
     // Step 3: Search for each product using Serper
     console.log('\n🔎 Step 3: Searching for products...')
@@ -184,8 +214,10 @@ If NO fashion brands found, return empty products array: {"products": []}`
     
     const searchResults = await Promise.all(
       products.map(async (product: any) => {
-        const query = `${product.brand} ${product.product_type} buy online shop`
-        console.log(`   Searching: ${query}`)
+        // Use exact OCR text if available for more accurate search
+        const searchTerm = product.exact_ocr_text || product.product_type
+        const query = `${product.brand} ${searchTerm} buy online shop`
+        console.log(`   Searching: ${query.substring(0, 80)}...`)
         
         try {
           const serperResponse = await fetch('https://google.serper.dev/search', {
@@ -235,7 +267,9 @@ If NO fashion brands found, return empty products array: {"products": []}`
           return {
             brand: product.brand,
             product_type: product.product_type,
-            description: product.description || '',
+            exact_ocr_text: product.exact_ocr_text || '',
+            model_number: product.model_number || '',
+            confidence: product.confidence || 'medium',
             results: filteredResults.slice(0, 5).map((r: any) => ({
               title: r.title,
               link: r.link,
@@ -248,7 +282,9 @@ If NO fashion brands found, return empty products array: {"products": []}`
           return {
             brand: product.brand,
             product_type: product.product_type,
-            description: product.description || '',
+            exact_ocr_text: product.exact_ocr_text || '',
+            model_number: product.model_number || '',
+            confidence: product.confidence || 'medium',
             results: []
           }
         }
