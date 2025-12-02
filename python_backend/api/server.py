@@ -203,7 +203,7 @@ async def detect_items(request: DetectRequest):
         from src.analyzers.dinox_analyzer import map_dinox_category
         
         # Filter items by confidence threshold (increased to reduce false positives)
-        CONFIDENCE_THRESHOLD = 0.40
+        CONFIDENCE_THRESHOLD = 0.45  # Increased from 0.40 to focus on main subject
         items = analysis_result.get('items', [])
         total_detections = len(items)
         
@@ -212,8 +212,13 @@ async def detect_items(request: DetectRequest):
         
         print(f"📦 DINO-X detected {total_detections} total items")
         
+        # Calculate image dimensions for main subject filtering
+        # Assume normalized coordinates [0, 1] if no image size provided
+        image_center_x = 0.5
+        image_center_y = 0.5
+        
         # Filter by confidence and convert to bbox format
-        bboxes = []
+        bboxes_with_scores = []
         for idx, item in enumerate(items):
             confidence = item.get('confidence', 0.0)
             
@@ -231,21 +236,65 @@ async def detect_items(request: DetectRequest):
                 print(f"   🚫 Excluding problematic category: {raw_category} (often confused with socks)")
                 continue
             
-            # Create bbox item
+            # Calculate bbox properties for main subject filtering
+            bbox = item.get('bbox', [])
+            if len(bbox) == 4:
+                x1, y1, x2, y2 = bbox
+                bbox_width = abs(x2 - x1)
+                bbox_height = abs(y2 - y1)
+                bbox_area = bbox_width * bbox_height
+                
+                # Calculate distance from center (normalized)
+                bbox_center_x = (x1 + x2) / 2
+                bbox_center_y = (y1 + y2) / 2
+                distance_from_center = ((bbox_center_x - image_center_x) ** 2 + 
+                                       (bbox_center_y - image_center_y) ** 2) ** 0.5
+                
+                # Calculate main subject score:
+                # - Larger items score higher (bbox_area)
+                # - More centered items score higher (1 - distance_from_center)
+                # - Higher confidence scores higher
+                centrality_score = max(0, 1 - distance_from_center * 2)  # Penalize distance
+                size_score = min(1, bbox_area * 10)  # Normalize area (assuming coords 0-1)
+                main_subject_score = (confidence * 0.4 + centrality_score * 0.35 + size_score * 0.25)
+                
+                print(f"   📊 {raw_category}: conf={confidence:.2f}, area={bbox_area:.3f}, center_dist={distance_from_center:.2f}, score={main_subject_score:.2f}")
+            else:
+                # If bbox format is invalid, use confidence only
+                main_subject_score = confidence * 0.4
+            
+            # Create bbox item with score
             bbox_item = {
                 'id': f"{mapped_cat}_{idx}",
-                'bbox': item.get('bbox', []),
+                'bbox': bbox,
                 'category': raw_category,  # Raw category from detector
                 'mapped_category': mapped_cat,  # Mapped category
-                'confidence': round(confidence, 3)
+                'confidence': round(confidence, 3),
+                'main_subject_score': round(main_subject_score, 3)
             }
-            bboxes.append(bbox_item)
-            print(f"   ✅ {mapped_cat} ({raw_category}, conf: {confidence:.2f})")
+            bboxes_with_scores.append(bbox_item)
+        
+        # Filter out background items: only keep items with score >= 0.35
+        MAIN_SUBJECT_THRESHOLD = 0.35
+        bboxes = [b for b in bboxes_with_scores if b['main_subject_score'] >= MAIN_SUBJECT_THRESHOLD]
+        
+        # Sort by main subject score (highest first)
+        bboxes.sort(key=lambda x: x['main_subject_score'], reverse=True)
+        
+        # Limit to top 8 items to avoid clutter
+        MAX_ITEMS = 8
+        if len(bboxes) > MAX_ITEMS:
+            print(f"   ⚠️  Limiting to top {MAX_ITEMS} items (from {len(bboxes)})")
+            bboxes = bboxes[:MAX_ITEMS]
+        
+        # Log final items
+        for bbox_item in bboxes:
+            print(f"   ✅ {bbox_item['mapped_category']} ({bbox_item['category']}, score: {bbox_item['main_subject_score']:.2f})")
         
         filtered_count = len(bboxes)
         processing_time = analysis_result.get('meta', {}).get('processing_time', 0.0)
         
-        print(f"✅ Detection complete: {filtered_count}/{total_detections} items passed threshold (≥{CONFIDENCE_THRESHOLD})")
+        print(f"✅ Detection complete: {filtered_count}/{total_detections} items (conf ≥{CONFIDENCE_THRESHOLD}, main_subject ≥{MAIN_SUBJECT_THRESHOLD})")
         
         # Get image size (default to 0,0 if not available)
         image_size = [0, 0]
