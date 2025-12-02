@@ -716,6 +716,12 @@ export default function Home() {
 
           const data = await response.json()
           
+          // Check for API errors
+          if (data.error) {
+            console.error(`❌ Search API error for ${itemName}:`, data.error)
+            throw new Error(data.error)
+          }
+          
           // Update real-time progress: searching is 75% (from 20% to 95%)
           completedSearches++
           const targetProgress = Math.min(95, 20 + (completedSearches / totalItems) * 75)
@@ -726,7 +732,8 @@ export default function Home() {
           console.log(`🔍 Search API response for ${itemName}:`, {
             hasResults: !!data.results,
             resultsCount: data.results ? Object.keys(data.results).length : 0,
-            meta: data.meta
+            meta: data.meta,
+            error: data.error
           })
           
           // Merge results

@@ -763,7 +763,7 @@ export async function POST(request: NextRequest) {
         if (excludedKeywords.length > 0) {
           console.log(`🔍 Pre-filtering with sub-type: ${specificSubType}, excluding: ${excludedKeywords.join(', ')}`)
           
-          filteredResults = organicResults.filter((item: any) => {
+          filteredResults = mergedResults.filter((item: any) => {
             const title = item?.title?.toLowerCase() || ''
             const url = item?.link?.toLowerCase() || ''
             
