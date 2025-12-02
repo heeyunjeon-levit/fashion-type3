@@ -503,59 +503,56 @@ export default function Home() {
         console.log(`Processing ${bbox.category}...`)
         
         try {
-          // Step 1: Crop image client-side using Canvas API
-          const { cropImage } = await import('@/lib/imageCropper')
-          
-          console.log(`Cropping ${bbox.category} with bbox:`, bbox.bbox)
-          const croppedDataUrl = await cropImage({
-            imageUrl: uploadedImageUrl,
-            bbox: bbox.bbox,
-            padding: 0.05 // 5% padding around the item
-          })
-          
-          console.log(`✅ Cropped ${bbox.category} (${Math.round(croppedDataUrl.length / 1024)}KB)`)
-          
-          // Step 2: Generate description with GPT-4o Vision (this was the secret sauce!)
-          console.log(`Describing ${bbox.category} with GPT-4o Vision...`)
-          const descriptionResponse = await fetch('/api/describe-item', {
+          // Use Modal backend for processing (proven to work at 1pm!)
+          console.log(`Processing ${bbox.category} with Modal backend...`)
+          const backendUrl = 'https://heeyunjeon-levit--fashion-crop-api-gpu-fastapi-app-v2.modal.run'
+          const processResponse = await fetch(`${backendUrl}/process-item`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+              'Content-Type': 'application/json',
+            },
             body: JSON.stringify({
-              imageUrl: croppedDataUrl, // GPT-4o Vision accepts data URLs!
+              imageUrl: uploadedImageUrl,
+              bbox: bbox.bbox,
               category: bbox.category
-            })
+            }),
+            signal: AbortSignal.timeout(30000) // 30s timeout per item
           })
-          
-          let description = `${bbox.category} item`
-          if (descriptionResponse.ok) {
-            const descData = await descriptionResponse.json()
-            description = descData.description || description
-            console.log(`✅ GPT-4o described ${bbox.category}: "${description.substring(0, 80)}..."`)
-          } else {
-            const errorText = await descriptionResponse.text()
-            console.error(`⚠️  Description API failed for ${bbox.category} (${descriptionResponse.status}):`, errorText.substring(0, 200))
-            console.warn(`   Using fallback description: "${description}"`)
+
+          if (!processResponse.ok) {
+            const errorText = await processResponse.text()
+            console.error(`Failed to process ${bbox.category}: ${processResponse.status}`, errorText.substring(0, 200))
+            completedItems++
+            const targetProgress = Math.min(20, (completedItems / totalItems) * 20)
+            setOverallProgress(prev => Math.max(prev, targetProgress))
+            return null
           }
-          
+
+          const processData = await processResponse.json()
+          const croppedImageUrl = processData.croppedImageUrl
+          const description = processData.description || `${bbox.category} item`
+          console.log(`✅ Processed ${bbox.category}: "${description.substring(0, 60)}..."`)
+          console.log(`   Cropped URL: ${croppedImageUrl?.substring(0, 80)}...`)
+
           // Update real-time progress
           completedItems++
           const targetProgress = Math.min(20, (completedItems / totalItems) * 20)
           setOverallProgress(prev => Math.max(prev, targetProgress))
           console.log(`📊 Processing progress: ${completedItems}/${totalItems} items (${Math.floor((completedItems / totalItems) * 20)}%)`)
 
-          // Convert to DetectedItem format (with description + cropped image)
+          // Convert to DetectedItem format
           const detectedItem = {
             category: bbox.mapped_category || bbox.category,
             groundingdino_prompt: bbox.category,
-            description: description, // GPT-4o Vision description!
-            croppedImageUrl: croppedDataUrl,
+            description: description,
+            croppedImageUrl: croppedImageUrl,
             confidence: bbox.confidence
           }
           
           console.log('📦 DetectedItem created:', {
             category: detectedItem.category,
-            description: description.substring(0, 60) + '...',
-            dataUrlSize: `${Math.round(croppedDataUrl.length / 1024)}KB`
+            hasDescription: !!detectedItem.description,
+            hasCroppedUrl: !!detectedItem.croppedImageUrl
           })
           
           return detectedItem
