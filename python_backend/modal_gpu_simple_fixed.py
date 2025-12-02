@@ -38,7 +38,10 @@ image = (
     # Add all backend code
     .add_local_dir(backend_dir / "api", "/root/api")
     .add_local_dir(backend_dir / "src", "/root/src")
+    .add_local_dir(backend_dir / "configs", "/root/configs")  # Add configs for pipeline
     .add_local_file(backend_dir / "ocr_search_pipeline.py", "/root/ocr_search_pipeline.py")
+    .add_local_file(backend_dir / "crop_api.py", "/root/crop_api.py")
+    .add_local_file(backend_dir / "custom_item_cropper.py", "/root/custom_item_cropper.py")
 )
 
 @app.function(

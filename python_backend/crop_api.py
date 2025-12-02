@@ -81,11 +81,28 @@ def upload_image_to_supabase(image_bytes: bytes, original_filename: str = None) 
 
     # Upload to Supabase storage
     try:
-        response = supabase.storage.from_("images").upload(
-            filename,
-            image_bytes,
-            {"content-type": "image/jpeg", "upsert": "false"}
-        )
+        print(f"📤 Uploading {filename} to Supabase 'images' bucket...")
+        print(f"   Image size: {len(image_bytes)} bytes")
+        print(f"   Supabase URL: {supabase_url}")
+        print(f"   Supabase Key: {supabase_key[:20]}..." if supabase_key else "   Supabase Key: None")
+        
+        response = None
+        try:
+            # Try upload with file_options instead of dict
+            response = supabase.storage.from_("images").upload(
+                path=filename,
+                file=image_bytes,
+                file_options={"content-type": "image/jpeg"}
+            )
+            print(f"   Upload response type: {type(response)}")
+            print(f"   Upload response: {response}")
+        except Exception as upload_err:
+            print(f"❌ Upload call failed:")
+            print(f"   Error type: {type(upload_err).__name__}")
+            print(f"   Error message: {str(upload_err)}")
+            import traceback
+            traceback.print_exc()
+            raise
 
         # The response is a dict with 'path' on success or 'error' on failure
         if isinstance(response, dict) and 'error' in response:
@@ -93,9 +110,13 @@ def upload_image_to_supabase(image_bytes: bytes, original_filename: str = None) 
 
         # Get public URL
         public_url = supabase.storage.from_("images").get_public_url(filename)
+        print(f"✅ Upload successful: {public_url[:80]}...")
         return public_url
 
     except Exception as e:
+        print(f"❌ Final Supabase error:")
+        print(f"   Error type: {type(e).__name__}")
+        print(f"   Error message: {str(e)}")
         raise Exception(f"Failed to upload image to Supabase: {str(e)}")
 
 def upload_image_to_imgbb(image_bytes: bytes) -> str:

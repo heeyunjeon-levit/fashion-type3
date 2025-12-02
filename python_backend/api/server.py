@@ -398,7 +398,7 @@ Be specific and detailed. Return ONLY the description text, no JSON or extra for
         cropped_image.save(cropped_buffer, format='JPEG', quality=90)
         cropped_buffer.seek(0)
         
-        # Upload to Supabase
+        # Try Supabase first, but use data URL as fallback for speed
         print("✅ Uploading cropped image to Supabase...")
         from crop_api import upload_image_to_supabase
         
@@ -416,8 +416,13 @@ Be specific and detailed. Return ONLY the description text, no JSON or extra for
             print(f"✅ Cropped image uploaded: {cropped_url[:80]}...")
         except Exception as upload_error:
             print(f"⚠️ Failed to upload cropped image: {upload_error}")
-            # Fallback to original image if upload fails
-            cropped_url = request.imageUrl
+            import traceback
+            traceback.print_exc()
+            # Use data URL as fallback for immediate display
+            print("📸 Creating data URL for cropped image...")
+            cropped_base64 = base64.b64encode(cropped_buffer.getvalue()).decode('utf-8')
+            cropped_url = f"data:image/jpeg;base64,{cropped_base64}"
+            print(f"✅ Data URL created ({len(cropped_base64)} chars)")
         
         elapsed = time.time() - start_time
         print(f"✅ Item processed in {elapsed:.2f}s")
