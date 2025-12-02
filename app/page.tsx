@@ -597,7 +597,11 @@ export default function Home() {
             if (descResponse.ok) {
               const descData = await descResponse.json()
               description = descData.description || description
-              console.log(`✅ Got description for ${bbox.category}`)
+              console.log(`✅ Got description for ${bbox.category}: "${description.substring(0, 60)}..."`)
+            } else {
+              console.error(`❌ Description API failed for ${bbox.category}:`, descResponse.status)
+              const errorData = await descResponse.json()
+              console.error('   Error:', errorData)
             }
           } catch (frontendError: any) {
             console.warn(`⚠️  Frontend processing failed for ${bbox.category}, using Modal fallback:`, frontendError.message)
@@ -754,11 +758,25 @@ export default function Home() {
           setOverallProgress(prev => Math.max(prev, targetProgress))
           console.log(`📊 Search progress: ${completedSearches}/${totalItems} items (${Math.floor(20 + (completedSearches / totalItems) * 75)}%)`)
           
+          // Debug: Log search API response
+          console.log(`🔍 Search API response for ${itemName}:`, {
+            hasResults: !!data.results,
+            resultsCount: data.results ? Object.keys(data.results).length : 0,
+            meta: data.meta
+          })
+          
           // Merge results
           if (data.results) {
+            const resultCount = Object.keys(data.results).length
+            if (resultCount === 0) {
+              console.warn(`⚠️  Search returned 0 results for ${itemName}`)
+            }
             Object.entries(data.results).forEach(([category, links]) => {
               allResults[category] = links as Array<{ link: string; thumbnail: string | null; title: string | null }>
+              console.log(`   Added ${(links as any[]).length} products for ${category}`)
             })
+          } else {
+            console.warn(`⚠️  No results object for ${itemName}`)
           }
           
           return data

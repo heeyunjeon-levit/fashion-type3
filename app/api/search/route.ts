@@ -1261,7 +1261,7 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links preferred) or
                 return false
               }
               
-              // Positive signal: Must have shopping indicators
+              // Positive signal: Must have shopping indicators (RELAXED for better results)
               const hasShoppingIndicators = 
                 linkLower.includes('/product') ||
                 linkLower.includes('/item') ||
@@ -1272,10 +1272,14 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links preferred) or
                 linkLower.includes('smartstore.naver.com') ||
                 linkLower.includes('.com/kr/') ||
                 linkLower.includes('.co.kr') ||
+                linkLower.includes('.com') ||  // Allow any .com (many shopping sites)
                 linkLower.match(/\/(p|pd|prd|prod)\/\d+/) || // product ID patterns
                 linkLower.match(/\/buy/) ||
                 linkLower.match(/\/cart/) ||
-                linkLower.match(/\/commerce/)
+                linkLower.match(/\/commerce/) ||
+                linkLower.match(/\/clothing/) ||
+                linkLower.match(/\/fashion/) ||
+                linkLower.match(/\/wear/)
               
               if (!hasShoppingIndicators) {
                 console.log(`🛟 Fallback: No shopping indicators: ${item.link.substring(0, 60)}...`)
