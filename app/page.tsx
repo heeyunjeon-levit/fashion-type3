@@ -226,13 +226,14 @@ export default function Home() {
       setOverallProgress(0)
       
       try {
-        console.log('🔍 Starting V3.1 OCR Search (Next.js Direct)...')
+        console.log('🔍 Starting V3.1 OCR Search (Modal Hybrid Search)...')
         
-        // Use Next.js OCR endpoint (with K-pop filtering)
+        // Use Modal's proven OCR endpoint (with Lens + GPT + Priority Search)
         setOverallProgress(10)
-        console.log('📡 Calling /api/ocr-search...')
+        const backendUrl = 'https://heeyunjeon-levit--fashion-crop-api-gpu-fastapi-app-v2.modal.run'
+        console.log(`📡 Calling ${backendUrl}/ocr-search...`)
         
-        const ocrResponse = await fetch('/api/ocr-search', {
+        const ocrResponse = await fetch(`${backendUrl}/ocr-search`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ imageUrl }),
@@ -252,23 +253,27 @@ export default function Home() {
           const results: Record<string, any> = {}
           
           for (const productResult of ocrData.product_results) {
-            const brand = productResult.brand
-            const productType = productResult.product_type
-            const resultKey = `${brand} ${productType}`
+            const brand = productResult.product.brand
+            const productName = productResult.product.product_name || productResult.product.exact_ocr_text?.substring(0, 30) || 'Unknown'
+            const searchResult = productResult.search_result
             
-            results[resultKey] = productResult.results.map((r: any) => ({
-              title: r.title || 'Product',
-              link: r.link || '',
-              thumbnail: r.thumbnail || null
-            }))
+            if (searchResult.success && searchResult.selected_results) {
+              const resultKey = `${brand} - ${productName}`.substring(0, 80)
+              results[resultKey] = searchResult.selected_results.map((r: any) => ({
+                title: r.title || 'Product',
+                link: r.link || '',
+                thumbnail: r.thumbnail || r.image || null
+              }))
+            }
           }
           
           setResults(results)
           
           if (sessionManager) {
             sessionManager.logSearchResults(results, { 
-              mode: 'ocr_nextjs',
-              extracted_text: ocrData.extracted_text
+              mode: 'ocr_modal_hybrid',
+              ocr_mapping: ocrData.mapping,
+              summary: ocrData.summary
             })
           }
           
