@@ -500,36 +500,45 @@ export default function Home() {
       let completedItems = 0
       
       const processingPromises = selectedBboxes.map(async (bbox) => {
-        console.log(`Preparing ${bbox.category} for search...`)
+        console.log(`Cropping ${bbox.category}...`)
         
         try {
-          // Skip Modal processing - just prepare the item for search
-          // Use full image for Lens search (more accurate than cropped)
-          console.log(`Using full image for ${bbox.category} (Lens will handle matching)`)
+          // Crop image client-side using Canvas API
+          const { cropImage } = await import('@/lib/imageCropper')
+          
+          console.log(`Cropping ${bbox.category} with bbox:`, bbox.bbox)
+          const croppedDataUrl = await cropImage({
+            imageUrl: uploadedImageUrl,
+            bbox: bbox.bbox,
+            padding: 0.05 // 5% padding around the item
+          })
+          
+          console.log(`✅ Cropped ${bbox.category} (${Math.round(croppedDataUrl.length / 1024)}KB)`)
           
           // Update real-time progress
           completedItems++
           const targetProgress = Math.min(20, (completedItems / totalItems) * 20)
           setOverallProgress(prev => Math.max(prev, targetProgress))
-          console.log(`📊 Preparation progress: ${completedItems}/${totalItems} items (${Math.floor((completedItems / totalItems) * 20)}%)`)
+          console.log(`📊 Cropping progress: ${completedItems}/${totalItems} items (${Math.floor((completedItems / totalItems) * 20)}%)`)
 
-          // Convert to DetectedItem format (use full image for search)
+          // Convert to DetectedItem format (with cropped image)
           const detectedItem = {
             category: bbox.mapped_category || bbox.category,
             groundingdino_prompt: bbox.category,
             description: `${bbox.category} item`,
-            croppedImageUrl: uploadedImageUrl, // Use full image for Lens search
+            croppedImageUrl: croppedDataUrl, // Use cropped data URL
             confidence: bbox.confidence
           }
           
-          console.log('📦 DetectedItem prepared:', {
+          console.log('📦 DetectedItem created:', {
             category: detectedItem.category,
-            usingFullImage: true
+            hasCroppedImage: true,
+            croppedSize: `${Math.round(croppedDataUrl.length / 1024)}KB`
           })
           
           return detectedItem
         } catch (error) {
-          console.error(`Error preparing ${bbox.category}:`, error)
+          console.error(`Error cropping ${bbox.category}:`, error)
           completedItems++
           const targetProgress = Math.min(20, (completedItems / totalItems) * 20)
           setOverallProgress(prev => Math.max(prev, targetProgress))
