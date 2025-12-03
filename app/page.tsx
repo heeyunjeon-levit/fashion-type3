@@ -483,36 +483,57 @@ export default function Home() {
         console.log(`Processing ${bbox.category}...`)
         
         try {
-          // Use Modal backend for processing (proven to work at 1pm!)
-          console.log(`Processing ${bbox.category} with Modal backend...`)
-          const backendUrl = 'https://heeyunjeon-levit--fashion-crop-api-gpu-fastapi-app-v2.modal.run'
-          const processResponse = await fetch(`${backendUrl}/process-item`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              imageUrl: uploadedImageUrl,
-              bbox: bbox.bbox,
-              category: bbox.category
-            }),
-            signal: AbortSignal.timeout(30000) // 30s timeout per item
+          // FRONTEND PROCESSING: Crop locally + get description from Next.js API
+          // This is faster and more reliable than Modal (no Supabase DNS issues)
+          
+          // Step 1: Crop image locally using Canvas API
+          console.log(`✂️ Cropping ${bbox.category} locally...`)
+          const { cropImage } = await import('@/lib/imageCropper')
+          
+          // Convert pixel bbox to normalized (0-1) coordinates
+          const [x1, y1, x2, y2] = bbox.bbox
+          const normalizedBbox: [number, number, number, number] = [
+            x1 / imageSize[0],
+            y1 / imageSize[1],
+            x2 / imageSize[0],
+            y2 / imageSize[1]
+          ]
+          
+          const croppedDataUrl = await cropImage({
+            imageUrl: uploadedImageUrl,
+            bbox: normalizedBbox,
+            padding: 0.05
           })
-
-          if (!processResponse.ok) {
-            const errorText = await processResponse.text()
-            console.error(`Failed to process ${bbox.category}: ${processResponse.status}`, errorText.substring(0, 200))
-            completedItems++
-            const targetProgress = Math.min(20, (completedItems / totalItems) * 20)
-            setOverallProgress(prev => Math.max(prev, targetProgress))
-            return null
+          console.log(`✅ Cropped locally: ${Math.round(croppedDataUrl.length / 1024)}KB data URL`)
+          
+          // Step 2: Get GPT-4o-mini description from Next.js API (uses Vercel's OpenAI key)
+          console.log(`🤖 Getting description for ${bbox.category}...`)
+          let description = `${bbox.category} item`
+          try {
+            const descResponse = await fetch('/api/describe-item', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                imageUrl: croppedDataUrl,
+                category: bbox.category
+              }),
+              signal: AbortSignal.timeout(15000) // 15s timeout for description
+            })
+            
+            if (descResponse.ok) {
+              const descData = await descResponse.json()
+              description = descData.description || description
+              console.log(`✅ Description: "${description.substring(0, 60)}..."`)
+            } else {
+              console.warn(`⚠️ Description failed: ${descResponse.status}, using default`)
+            }
+          } catch (descError) {
+            console.warn(`⚠️ Description error:`, descError)
           }
-
-          const processData = await processResponse.json()
-          const croppedImageUrl = processData.croppedImageUrl
-          const description = processData.description || `${bbox.category} item`
+          
+          const croppedImageUrl = croppedDataUrl
           console.log(`✅ Processed ${bbox.category}: "${description.substring(0, 60)}..."`)
-          console.log(`   Cropped URL: ${croppedImageUrl?.substring(0, 80)}...`)
+          console.log(`   Cropped URL: data URL (${Math.round(croppedImageUrl.length / 1024)}KB)`)
 
           // Update real-time progress
           completedItems++

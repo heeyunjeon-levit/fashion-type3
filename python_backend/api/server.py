@@ -465,31 +465,12 @@ Be specific and detailed. Return ONLY the description text, no JSON or extra for
         cropped_image.save(cropped_buffer, format='JPEG', quality=90)
         cropped_buffer.seek(0)
         
-        # Try Supabase first, but use data URL as fallback for speed
-        print("✅ Uploading cropped image to Supabase...")
-        from crop_api import upload_image_to_supabase
-        
-        # Generate unique filename
-        import uuid
-        from datetime import datetime
-        timestamp = int(datetime.now().timestamp() * 1000)
-        filename = f"cropped_{request.category}_{timestamp}_{uuid.uuid4().hex[:8]}.jpg"
-        
-        try:
-            cropped_url = upload_image_to_supabase(
-                cropped_buffer.getvalue(),
-                filename
-            )
-            print(f"✅ Cropped image uploaded: {cropped_url[:80]}...")
-        except Exception as upload_error:
-            print(f"⚠️ Failed to upload cropped image: {upload_error}")
-            import traceback
-            traceback.print_exc()
-            # Use data URL as fallback for immediate display
-            print("📸 Creating data URL for cropped image...")
-            cropped_base64 = base64.b64encode(cropped_buffer.getvalue()).decode('utf-8')
-            cropped_url = f"data:image/jpeg;base64,{cropped_base64}"
-            print(f"✅ Data URL created ({len(cropped_base64)} chars)")
+        # Use data URL directly (faster & more reliable than Supabase from Modal)
+        # Supabase DNS resolution is flaky from Modal's network
+        print("📸 Creating data URL for cropped image...")
+        cropped_base64 = base64.b64encode(cropped_buffer.getvalue()).decode('utf-8')
+        cropped_url = f"data:image/jpeg;base64,{cropped_base64}"
+        print(f"✅ Data URL created ({len(cropped_url)} chars)")
         
         elapsed = time.time() - start_time
         print(f"✅ Item processed in {elapsed:.2f}s")
