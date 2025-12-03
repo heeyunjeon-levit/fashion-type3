@@ -1197,14 +1197,17 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links preferred) or
         })
         
         if (validLinks.length > 0) {
-          // Debug: Check first organic result structure
-          if (organicResults.length > 0) {
-            console.log('🔍 Sample Serper result keys:', Object.keys(organicResults[0]))
+          // Debug: Check first result structure
+          if (mergedResults.length > 0) {
+            console.log('🔍 Sample merged result keys:', Object.keys(mergedResults[0]))
           }
           
-          // Find the thumbnail images for each link from the organic results
+          // Find the thumbnail images from MERGED results (includes both full image + cropped)
+          // This fixes the bug where full image results had no thumbnails
           const linksWithThumbnails = validLinks.slice(0, 3).map((link: string) => {
-            const resultItem = organicResults.find((item: any) => item.link === link)
+            // Search in merged results first (includes full image + cropped), fallback to resultsForGPT
+            const resultItem = mergedResults.find((item: any) => item.link === link) 
+              || resultsForGPT.find((item: any) => item.link === link)
             // Try multiple possible field names for thumbnail
             const thumbnail = resultItem?.thumbnail || resultItem?.image || resultItem?.imageUrl || resultItem?.ogImage || null
             
