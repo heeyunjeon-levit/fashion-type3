@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react'
 import ImageUpload from './components/ImageUpload'
 import CroppedImageGallery from './components/CroppedImageGallery'
 import InteractiveBboxSelector from './components/InteractiveBboxSelector'
-import ManualCropSelector from './components/ManualCropSelector'
 import ResultsBottomSheet from './components/ResultsBottomSheet'
 import LanguageToggle from './components/LanguageToggle'
 import { getSessionManager } from '../lib/sessionManager'
@@ -75,7 +74,8 @@ export default function Home() {
   const [useOCRSearch, setUseOCRSearch] = useState(false)
   const [ocrStep, setOcrStep] = useState<'extracting' | 'mapping' | 'searching' | 'selecting'>('extracting')
   
-  const [currentStep, setCurrentStep] = useState<'upload' | 'detecting' | 'selecting' | 'manual-crop' | 'processing' | 'gallery' | 'searching' | 'results'>('upload')
+  const [currentStep, setCurrentStep] = useState<'upload' | 'detecting' | 'selecting' | 'processing' | 'gallery' | 'searching' | 'results'>('upload')
+  const [autoDrawMode, setAutoDrawMode] = useState(false)  // Auto-enable drawing when no items detected
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string>('')
   const [bboxes, setBboxes] = useState<BboxItem[]>([])
   const [imageSize, setImageSize] = useState<[number, number]>([0, 0])
@@ -355,9 +355,10 @@ export default function Home() {
         console.log(`✅ Modal detection complete: ${detectData.bboxes?.length || 0} items found`)
         
         if (!detectData.bboxes || detectData.bboxes.length === 0) {
-          console.log('⚠️ No items detected, switching to manual crop mode')
+          console.log('⚠️ No items detected, showing manual draw mode')
           setBboxes([])
-          setCurrentStep('manual-crop')
+          setAutoDrawMode(true)  // Signal to auto-enable drawing mode
+          setCurrentStep('selecting')  // Use same UI, just with drawing mode enabled
           return
         }
         
@@ -372,10 +373,11 @@ export default function Home() {
         setCurrentStep('selecting')
       } catch (error: any) {
         console.error('❌ Detection error:', error)
-        // On any error, offer manual crop mode instead of failing
-        console.log('⚠️ Detection failed, offering manual crop mode')
+        // On any error, offer manual draw mode instead of failing
+        console.log('⚠️ Detection failed, offering manual draw mode')
         setBboxes([])
-        setCurrentStep('manual-crop')
+        setAutoDrawMode(true)  // Signal to auto-enable drawing mode
+        setCurrentStep('selecting')  // Use same UI with drawing mode
       }
     } else {
       // OLD: Original mode - analyze + crop everything immediately
@@ -865,22 +867,8 @@ export default function Home() {
               imageSize={imageSize}
               onSelectionChange={handleBboxSelectionChange}
               onConfirm={handleBboxSelectionConfirm}
-            />
-          </div>
-        )}
-
-        {currentStep === 'manual-crop' && (
-          <div className="max-w-2xl mx-auto mt-8">
-            <ManualCropSelector
-              imageUrl={uploadedImageUrl}
-              onCropComplete={(manualBboxes) => {
-                console.log('✂️ Manual crop complete:', manualBboxes)
-                // Set the bboxes and proceed to confirm
-                setBboxes(manualBboxes)
-                // Auto-confirm since user manually drew and clicked "Search"
-                handleBboxSelectionConfirm(manualBboxes)
-              }}
-              onBack={() => setCurrentStep('upload')}
+              autoDrawMode={autoDrawMode}
+              onAutoDrawModeUsed={() => setAutoDrawMode(false)}
             />
           </div>
         )}

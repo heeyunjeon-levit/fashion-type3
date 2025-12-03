@@ -18,6 +18,8 @@ interface InteractiveBboxSelectorProps {
   imageSize: [number, number]; // [width, height]
   onSelectionChange: (allBboxes: BboxItem[]) => void; // Receives full array with selection states
   onConfirm: () => void;
+  autoDrawMode?: boolean;  // Auto-enable drawing mode (when no items detected)
+  onAutoDrawModeUsed?: () => void;  // Callback when auto-draw mode is acknowledged
 }
 
 export default function InteractiveBboxSelector({
@@ -25,7 +27,9 @@ export default function InteractiveBboxSelector({
   bboxes: initialBboxes,
   imageSize,
   onSelectionChange,
-  onConfirm
+  onConfirm,
+  autoDrawMode = false,
+  onAutoDrawModeUsed
 }: InteractiveBboxSelectorProps) {
   const { t, language } = useLanguage();
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -214,9 +218,19 @@ export default function InteractiveBboxSelector({
     console.log('🎨 InteractiveBboxSelector mounted:', {
       initialBboxes: initialBboxes.length,
       imageUrl,
-      imageSize
+      imageSize,
+      autoDrawMode
     });
-  }, [initialBboxes.length, imageUrl, imageSize]);
+  }, [initialBboxes.length, imageUrl, imageSize, autoDrawMode]);
+
+  // Auto-enable drawing mode when no items detected
+  useEffect(() => {
+    if (autoDrawMode && !isDrawingMode) {
+      console.log('✏️ Auto-enabling drawing mode (no items detected)');
+      setIsDrawingMode(true);
+      onAutoDrawModeUsed?.();
+    }
+  }, [autoDrawMode]);
 
   // Load image and calculate display size
   useEffect(() => {
@@ -441,6 +455,23 @@ export default function InteractiveBboxSelector({
 
   return (
     <div className="w-full max-w-4xl mx-auto">
+      {/* No items detected banner */}
+      {bboxes.length === 0 && !isDrawingMode && (
+        <div className="mb-4 bg-amber-50 border border-amber-200 text-amber-800 px-6 py-4 rounded-2xl shadow-lg flex items-center gap-3">
+          <svg className="w-8 h-8 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+          <div className="flex-1">
+            <p className="font-bold text-lg">
+              {language === 'ko' ? '패션 아이템을 찾지 못했어요' : 'No fashion items detected'}
+            </p>
+            <p className="text-sm text-amber-700 mt-0.5">
+              {language === 'ko' ? '아래 버튼을 눌러 직접 영역을 선택해주세요' : 'Click the button below to manually select the area'}
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Drawing mode instruction banner */}
       {isDrawingMode && (
         <div className="mb-4 bg-blue-500 text-white px-6 py-4 rounded-2xl shadow-xl flex items-center gap-3 animate-pulse">
