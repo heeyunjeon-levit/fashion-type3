@@ -532,8 +532,24 @@ export async function POST(request: NextRequest) {
         // This describes the specific item in detail (color, style, material, etc.)
         const itemDescription = descriptions?.[resultKey] || null
         
+        // Extract primary color from description for strict matching
+        let primaryColor: string | null = null
         if (itemDescription) {
+          const colorPatterns = [
+            // English colors
+            /\b(black|white|cream|ivory|beige|brown|tan|gray|grey|navy|blue|red|pink|green|yellow|orange|purple|burgundy|maroon|olive|khaki|charcoal)\b/i,
+            // Korean colors
+            /(검정|검은|블랙|흰|화이트|크림|아이보리|베이지|브라운|네이비|블루|레드|핑크|그린|옐로우|퍼플)/
+          ]
+          for (const pattern of colorPatterns) {
+            const match = itemDescription.match(pattern)
+            if (match) {
+              primaryColor = match[1] || match[0]
+              break
+            }
+          }
           console.log(`   📝 Using GPT description: "${itemDescription.substring(0, 80)}..."`)
+          console.log(`   🎨 Extracted primary color: ${primaryColor || 'none detected'}`)
         } else {
           console.log(`   ℹ️  No description provided for ${resultKey}`)
         }
@@ -811,13 +827,21 @@ export async function POST(request: NextRequest) {
         
         const prompt = `You are analyzing aggregated image search results from multiple runs for ${categoryLabels[categoryKey]}.
 
+${primaryColor ? `
+🚨🚨🚨 **CRITICAL: PRIMARY COLOR IS ${primaryColor.toUpperCase()}** 🚨🚨🚨
+- You MUST find products that are ${primaryColor.toUpperCase()} colored!
+- ❌ DO NOT return items with INVERTED colors (e.g., if color is BLACK, don't return WHITE/CREAM items)
+- ❌ If item is BLACK with white details, find BLACK items (not white/cream)
+- ❌ If item is WHITE/CREAM with black details, find WHITE/CREAM items (not black)
+` : ''}
+
 🎯 **IMPORTANT: Results are ordered by quality - TOP results are from full-image search (most accurate for iconic items)**
 - First ${fullImageResults.length} results are from full image search (recognizes context, celebrity outfits, exact matches)
 - Remaining results are from cropped image search (finds similar styles)
 - STRONGLY PREFER selecting from the TOP results - they're higher quality matches
 
 The original cropped image shows: ${searchTerms.join(', ')}
-${itemDescription ? `\n🎯 **SPECIFIC ITEM DESCRIPTION: "${itemDescription}"**\nYou SHOULD find products that match THIS DESCRIPTION, but prioritize top results even if not perfect text match.` : ''}
+${itemDescription ? `\n🎯 **SPECIFIC ITEM DESCRIPTION: "${itemDescription}"**\n${primaryColor ? `   🎨 **PRIMARY COLOR: ${primaryColor.toUpperCase()} - MATCH THIS COLOR!**` : ''}\nYou SHOULD find products that match THIS DESCRIPTION, especially the COLOR.` : ''}
 
 ⚠️ CATEGORY GUIDANCE (FLEXIBLE FOR VISUAL MATCHES):
 - General category: ${categoryLabels[categoryKey]}
