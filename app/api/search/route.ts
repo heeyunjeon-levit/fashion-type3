@@ -416,6 +416,16 @@ export async function POST(request: NextRequest) {
         
         console.log(`📊 Full image search returned ${fullImageResults.length} unique results`)
         console.log(`   ⏱️  Processing/deduplication: ${processingTime.toFixed(3)}s`)
+        
+        // Log top full image results for debugging
+        if (fullImageResults.length > 0) {
+          console.log('🔝 Top 5 full image results:')
+          fullImageResults.slice(0, 5).forEach((r: any, i: number) => {
+            console.log(`   ${i + 1}. ${r.source || 'Unknown'}: ${r.title?.substring(0, 50)}...`)
+            console.log(`      Link: ${r.link?.substring(0, 60)}...`)
+            console.log(`      Has thumbnail: ${!!(r.thumbnailUrl || r.thumbnail || r.imageUrl)}`)
+          })
+        }
       } catch (error) {
         console.error('❌ Error in full image search:', error)
         // Continue with cropped image search even if full image search fails
@@ -878,11 +888,11 @@ ${itemDescription ? `4. ✅ PREFER: Title somewhat matches "${itemDescription}" 
 
 AVAILABILITY & ACCESSIBILITY NOTES:
 - Products from Etsy, Depop, Poshmark, Mercari are from individual sellers and may be sold out
-- **PREFER globally accessible major retailers**: Amazon, Zara, H&M, Nordstrom, ASOS, Uniqlo, Mango, etc.
-- **AVOID region-specific sites** that may be geo-restricted (e.g., .sq, .al domains or /sq/, /al/ paths)
-- Try to include at least one link from a major international retailer if available
-- Prioritize to include Korean sites (Musinsa, Zigzag, Coupang) - these are accessible globally
-- Users prefer links they can actually access and purchase from
+- 🇰🇷 **STRONGLY PREFER Korean sites for exact matches**: G마켓, 11번가, Coupang, Musinsa, Zigzag, W Concept, 29CM, SSG
+- 🇰🇷 Korean shopping sites often have EXACT MATCHES - prioritize these highly!
+- ✅ Also good: Amazon, Zara, H&M, Nordstrom, ASOS, Uniqlo, Mango (international retailers)
+- **AVOID**: tiny region-specific sites from .sq, .al, .mk domains (NOT Korea - Korea is good!)
+- Mix recommendation: Include Korean sites when available + 1-2 international alternatives
 
 Search results (scan all ${resultsForGPT.length} for best matches):
 ${JSON.stringify(resultsForGPT, null, 2)}
@@ -1208,8 +1218,8 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links preferred) or
             // Search in merged results first (includes full image + cropped), fallback to resultsForGPT
             const resultItem = mergedResults.find((item: any) => item.link === link) 
               || resultsForGPT.find((item: any) => item.link === link)
-            // Try multiple possible field names for thumbnail
-            const thumbnail = resultItem?.thumbnail || resultItem?.image || resultItem?.imageUrl || resultItem?.ogImage || null
+            // Try ALL possible field names for thumbnail (Serper uses different names!)
+            const thumbnail = resultItem?.thumbnailUrl || resultItem?.thumbnail || resultItem?.image || resultItem?.imageUrl || resultItem?.ogImage || null
             
             // Debug: Log what fields are available when thumbnail is missing
             if (!thumbnail && resultItem) {
