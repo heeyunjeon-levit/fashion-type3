@@ -355,6 +355,15 @@ async def process_item(request: ProcessItemRequest):
         response = requests.get(request.imageUrl, timeout=30)
         image = Image.open(BytesIO(response.content))
         
+        # Convert RGBA to RGB if necessary (JPEG doesn't support alpha channel)
+        if image.mode == 'RGBA':
+            # Create white background and paste image on it
+            background = Image.new('RGB', image.size, (255, 255, 255))
+            background.paste(image, mask=image.split()[3])  # Use alpha channel as mask
+            image = background
+        elif image.mode != 'RGB':
+            image = image.convert('RGB')
+        
         # Convert to base64 for GPT
         buffered = BytesIO()
         image.save(buffered, format="JPEG")
@@ -440,6 +449,14 @@ Be specific and detailed. Return ONLY the description text, no JSON or extra for
             print(f"   🎯 Bottom category '{request.category}': Cropping tighter on top to exclude tops")
         
         cropped_image = image.crop((x1, y1, x2, y2))
+        
+        # Ensure cropped image is RGB (not RGBA) for JPEG
+        if cropped_image.mode == 'RGBA':
+            background = Image.new('RGB', cropped_image.size, (255, 255, 255))
+            background.paste(cropped_image, mask=cropped_image.split()[3])
+            cropped_image = background
+        elif cropped_image.mode != 'RGB':
+            cropped_image = cropped_image.convert('RGB')
         
         print(f"   Original size: {image.size}, Cropped size: {cropped_image.size}")
         
