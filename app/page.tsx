@@ -457,7 +457,8 @@ export default function Home() {
   // Handler for confirming bbox selection (process selected items)
   // Can optionally pass bboxes directly (for manual crop mode)
   const handleBboxSelectionConfirm = async (overrideBboxes?: BboxItem[]) => {
-    const bboxesToUse = overrideBboxes || bboxes
+    // Guard: If called from onClick, the first arg is MouseEvent, not BboxItem[]
+    const bboxesToUse = Array.isArray(overrideBboxes) ? overrideBboxes : bboxes
     const selectedBboxes = bboxesToUse.filter(b => b.selected)
     
     if (selectedBboxes.length === 0) {
