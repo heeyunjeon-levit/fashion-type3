@@ -855,26 +855,30 @@ SELECTION PROCESS:
 TITLE VALIDATION RULES (FLEXIBLE - trust visual similarity):
 1. ✅ READ the "title" field carefully - it tells you what the product actually is
 2. ✅ FLEXIBLE: Allow category variations within same body part (sweater/jacket/coat all OK for upper body)
-${itemDescription ? `3. 🎯 **Title SHOULD somewhat match "${itemDescription}" but allow variations**
-   - Similar style/vibe is more important than exact category match
-   - Prefer similar colors but allow complementary or neutral alternatives
-   - Material and quality level should match (luxury vs casual)
-   - For Korean text: be flexible with both category and style descriptions` : ''}
-4. ✅ PREFER titles with similar color/style but don't require exact match
+${itemDescription ? `3. 🎯 **CRITICAL: Match "${itemDescription}"**
+   - 🎨 **COLOR IS MOST IMPORTANT** - if description says "black", prefer BLACK items!
+   - If description says "white/cream/beige", prefer LIGHT colored items!
+   - Don't mix up inverted colors (black→white is WRONG, white→black is WRONG)
+   - Style/silhouette should match (cable knit, bow details, etc.)
+   - For Korean text: 검정=black, 흰색/아이보리=white/ivory, 베이지=beige` : ''}
+4. 🎨 **COLOR PRIORITY**: If the item has a distinctive color (black, white, red, etc.), STRONGLY prefer matching colors
 5. ⚠️ ONLY REJECT if clearly wrong body part:
    ${categoryKey === 'tops' ? '**REJECT ONLY: pants/jeans/shorts/skirts/leggings (lower body items)**' : ''}
    ${categoryKey === 'bottoms' ? '**REJECT ONLY: if title suggests it\'s NOT worn on lower body**' : ''}
 6. ❌ REJECT if title is generic ("Shop now", "Homepage", "Category", "Collection")
 7. ✅ ACCEPT style variations - luxury fur coat might be tagged as jacket, sweater, or cardigan
 
-Matching criteria (VISUAL SIMILARITY FIRST - flexible on exact category):
-1. ✅ PRIMARY: Visual similarity (Google Lens found these based on IMAGE, trust it!)
-2. ✅ PREFER: Similar style/material/vibe (luxury vs casual, knit vs leather, etc.)
-3. ✅ PREFER: Similar color or complementary colors
-${itemDescription ? `4. ✅ PREFER: Title somewhat matches "${itemDescription}" (but allow related items)` : ''}
+Matching criteria (COLOR FIRST, then visual similarity):
+1. 🎨 **#1 PRIORITY - COLOR MATCH**: If item is BLACK, find BLACK items. If WHITE/CREAM, find LIGHT items!
+   - BLACK sweater with white bows → find BLACK sweaters (NOT beige/cream ones!)
+   - WHITE/CREAM sweater with black bows → find WHITE/CREAM sweaters (NOT black ones!)
+   - Don't return inverted colors - this is a critical error!
+2. ✅ Visual similarity (Google Lens found these based on IMAGE, trust it!)
+3. ✅ Style/material match (cable knit, bow details, ruffle hem, etc.)
+${itemDescription ? `4. 🎯 MATCH DESCRIPTION: "${itemDescription}" - especially the COLOR words!` : ''}
 5. ✅ FLEXIBLE: Category can vary within same general type (sweater, jacket, coat all = upper body wear)
 6. ✅ MUST: Link goes to a product detail page (not category/homepage)
-7. ✅ PREFER: Reputable retailers and brands (luxury brands, major retailers preferred)
+7. 🇰🇷 PREFER: Korean sites often have exact color matches!
 
 **IMPORTANT: Return your BEST 3-5 HIGH-QUALITY matches ONLY. Quality over quantity.**
 
