@@ -857,12 +857,12 @@ ${subTypeExclusion ? subTypeExclusion : ''}
 - ${categoryKey === 'dress' ? '❌ ABSOLUTELY REJECT: Any title mentioning "pants", "jeans", "shorts", "shirt", "jacket", "바지", "셔츠", "재킷"' : ''}
 
 CRITICAL SELECTION RULES (in order of priority):
-1. CATEGORY MATCH FIRST: Must be the correct garment type (${categorySearchTerms[categoryKey]?.join(' OR ')})
-2. ITEM TYPE MATCH: Title must mention the correct type (NOT a different category)
-3. VISUAL MATCH: Look for titles/descriptions that mention similar style, color, material
-4. Accept ANY e-commerce/product website regardless of brand recognition
-5. Accept unknown brands, boutique stores, international sites
-6. Accept: Amazon, Zara, H&M, Nordstrom, Uniqlo, Musinsa, YesStyle, SHEIN, Etsy, Depop, Poshmark, vintage stores, Korean fashion sites, ANY online retailer
+${primaryColor ? `0. 🎨 **COLOR MATCH FIRST**: Item MUST be ${primaryColor.toUpperCase()} colored! Reject inverted colors!` : ''}
+1. 🇰🇷 **PREFER KOREAN SITES**: G마켓, 11번가, Coupang, Musinsa, Zigzag → often have EXACT matches!
+2. CATEGORY MATCH: Must be correct garment type (${categorySearchTerms[categoryKey]?.join(' OR ')})
+3. VISUAL MATCH: Look for similar style, color, material
+4. Accept ANY e-commerce/product website (Korean, international, boutique)
+5. Accept: G마켓, 11번가, Coupang, Musinsa, Amazon, Zara, H&M, Nordstrom, Uniqlo, YesStyle, Etsy, Depop
 7. 🚫 REJECT these sites (NOT product pages): Instagram, TikTok, YouTube, Pinterest, Facebook, Twitter/X, Reddit, Google Images, image CDNs, blogs, news sites, wikis, non-product pages
 8. 🚫 REJECT non-product pages: URLs ending with /reviews, /questions, /qa, /ratings (these are NOT product detail pages)
 9. If you cannot find 3 VALID PRODUCT LINKS, return fewer than 3. NEVER include non-product sites just to fill the quota.
@@ -914,13 +914,12 @@ ${itemDescription ? `4. 🎯 MATCH DESCRIPTION: "${itemDescription}" - especiall
 - Then supplement with best cropped-image results for variety
 - Return [] ONLY if literally no results are for the correct body part
 
-AVAILABILITY & ACCESSIBILITY NOTES:
-- Products from Etsy, Depop, Poshmark, Mercari are from individual sellers and may be sold out
-- 🇰🇷 **STRONGLY PREFER Korean sites for exact matches**: G마켓, 11번가, Coupang, Musinsa, Zigzag, W Concept, 29CM, SSG
-- 🇰🇷 Korean shopping sites often have EXACT MATCHES - prioritize these highly!
-- ✅ Also good: Amazon, Zara, H&M, Nordstrom, ASOS, Uniqlo, Mango (international retailers)
-- **AVOID**: tiny region-specific sites from .sq, .al, .mk domains (NOT Korea - Korea is good!)
-- Mix recommendation: Include Korean sites when available + 1-2 international alternatives
+🇰🇷 **KOREAN SITE PRIORITY** (search was done with gl=kr, hl=ko):
+- **SELECT KOREAN SITES FIRST**: gmarket.co.kr, 11st.co.kr, coupang.com, musinsa.com, zigzag.kr, wconcept.co.kr, 29cm.co.kr, ssg.com
+- Korean sites often have the EXACT MATCH - select these before international sites!
+- **Ideal selection**: 2 Korean sites + 1 international alternative
+- International alternatives: Amazon, Zara, H&M, ASOS, Uniqlo, Mango
+- Avoid: Etsy/Depop/Poshmark (often sold out), region-specific .sq/.al domains
 
 Search results (scan all ${resultsForGPT.length} for best matches):
 ${JSON.stringify(resultsForGPT, null, 2)}
