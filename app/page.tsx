@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import ImageUpload from './components/ImageUpload'
 import CroppedImageGallery from './components/CroppedImageGallery'
 import InteractiveBboxSelector from './components/InteractiveBboxSelector'
+import ManualCropSelector from './components/ManualCropSelector'
 import ResultsBottomSheet from './components/ResultsBottomSheet'
 import LanguageToggle from './components/LanguageToggle'
 import { getSessionManager } from '../lib/sessionManager'
@@ -74,7 +75,7 @@ export default function Home() {
   const [useOCRSearch, setUseOCRSearch] = useState(false)
   const [ocrStep, setOcrStep] = useState<'extracting' | 'mapping' | 'searching' | 'selecting'>('extracting')
   
-  const [currentStep, setCurrentStep] = useState<'upload' | 'detecting' | 'selecting' | 'processing' | 'gallery' | 'searching' | 'results'>('upload')
+  const [currentStep, setCurrentStep] = useState<'upload' | 'detecting' | 'selecting' | 'manual-crop' | 'processing' | 'gallery' | 'searching' | 'results'>('upload')
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string>('')
   const [bboxes, setBboxes] = useState<BboxItem[]>([])
   const [imageSize, setImageSize] = useState<[number, number]>([0, 0])
@@ -354,7 +355,10 @@ export default function Home() {
         console.log(`✅ Modal detection complete: ${detectData.bboxes?.length || 0} items found`)
         
         if (!detectData.bboxes || detectData.bboxes.length === 0) {
-          throw new Error('No items detected')
+          console.log('⚠️ No items detected, switching to manual crop mode')
+          setBboxes([])
+          setCurrentStep('manual-crop')
+          return
         }
         
         console.log('📦 Detection data:', {
@@ -368,9 +372,10 @@ export default function Home() {
         setCurrentStep('selecting')
       } catch (error: any) {
         console.error('❌ Detection error:', error)
-        const errorMsg = error.message || 'Failed to detect items'
-        alert(`Detection failed: ${errorMsg}\n\nPlease try again.`)
-        setCurrentStep('upload')
+        // On any error, offer manual crop mode instead of failing
+        console.log('⚠️ Detection failed, offering manual crop mode')
+        setBboxes([])
+        setCurrentStep('manual-crop')
       }
     } else {
       // OLD: Original mode - analyze + crop everything immediately
@@ -448,8 +453,10 @@ export default function Home() {
   }
 
   // Handler for confirming bbox selection (process selected items)
-  const handleBboxSelectionConfirm = async () => {
-    const selectedBboxes = bboxes.filter(b => b.selected)
+  // Can optionally pass bboxes directly (for manual crop mode)
+  const handleBboxSelectionConfirm = async (overrideBboxes?: BboxItem[]) => {
+    const bboxesToUse = overrideBboxes || bboxes
+    const selectedBboxes = bboxesToUse.filter(b => b.selected)
     
     if (selectedBboxes.length === 0) {
       alert('Please select at least one item')
@@ -858,6 +865,22 @@ export default function Home() {
               imageSize={imageSize}
               onSelectionChange={handleBboxSelectionChange}
               onConfirm={handleBboxSelectionConfirm}
+            />
+          </div>
+        )}
+
+        {currentStep === 'manual-crop' && (
+          <div className="max-w-2xl mx-auto mt-8">
+            <ManualCropSelector
+              imageUrl={uploadedImageUrl}
+              onCropComplete={(manualBboxes) => {
+                console.log('✂️ Manual crop complete:', manualBboxes)
+                // Set the bboxes and proceed to confirm
+                setBboxes(manualBboxes)
+                // Auto-confirm since user manually drew and clicked "Search"
+                handleBboxSelectionConfirm(manualBboxes)
+              }}
+              onBack={() => setCurrentStep('upload')}
             />
           </div>
         )}
