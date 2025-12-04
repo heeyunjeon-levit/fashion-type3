@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    console.log(`🤖 Getting Gemini 3 Pro description for ${category}...`)
+    console.log(`🤖 Getting Gemini 3 Pro Preview description for ${category}...`)
     console.log(`   Image type: ${imageUrl.startsWith('data:') ? 'data URL' : 'HTTP URL'}`)
     console.log(`   Image size: ${Math.round(imageUrl.length / 1024)}KB`)
     
@@ -205,12 +205,12 @@ Return ONLY the product title.`,
     
     const promptConfig = getCategoryPrompt(category)
     
-    // Generate search-optimized description - using Gemini 3 Pro (superior OCR/text detection)
+    // Generate search-optimized description - using Gemini 3 Pro Preview (superior OCR/text detection)
     const model = genAI.getGenerativeModel({ 
-      model: 'gemini-3-pro',
+      model: 'gemini-3-pro-preview',
       generationConfig: {
         maxOutputTokens: 150,
-        temperature: 0.0
+        temperature: 1.0 // Gemini 3 default (docs recommend not lowering for best performance)
       }
     })
 
