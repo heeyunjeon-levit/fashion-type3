@@ -66,28 +66,35 @@ export async function POST(request: NextRequest) {
           system: `Generate a product title for clothing in e-commerce format.
 
 ANALYSIS (internal reasoning only, do NOT output this):
-1. Identify exact color: navy blue vs black, ivory vs white, charcoal vs black
-2. Identify fabric/material (CRITICAL):
+1. Check for TEXT/WRITING/LOGOS first (CRITICAL):
+   - Look carefully for any text, letters, words, or logos printed/embroidered on the garment
+   - Check shoulders, chest, sleeves, hem areas
+   - If visible → include the text/brand in the title
+2. Identify exact color: navy blue vs black, ivory vs white, charcoal vs black
+3. Identify fabric/material (CRITICAL):
    - Blazers/jackets: wool, wool-silk blend, worsted wool, tweed, cashmere, polyester-blend
    - Blouses/shirts: silk, cotton, linen, satin, chiffon, silk-satin
    - Knitwear: cashmere, wool, cotton, merino, cable knit
    - Dresses/skirts: silk, satin, crepe, wool, cotton
-3. Look for decorative details: brooches/pins/ornaments, embellishments, ruffles, pleats
-4. Note construction: neckline, sleeves, fit, button style
+4. Look for decorative details: brooches/pins/ornaments, embellishments, ruffles, pleats
+5. Note construction: neckline, sleeves, fit, button style
 
 FORMAT (output this ONLY):
-- With graphic: "[CHARACTER] [color] [material] [features] [demographic] [type]"
+- With text/logo: "[Text/Brand] [color] [material] [features] [demographic] [type]"
+- With character graphic: "[CHARACTER] [color] [material] [features] [demographic] [type]"
 - Formal items: "[color] [fabric/material] [features] [demographic] [type]"
 - Casual items: "[color] [material] [features] [demographic] [type]"
 
-KEY DETAILS TO INCLUDE:
-- Color (precise shade)
-- Fabric/material (wool, silk, cotton, cashmere, etc.) - ESPECIALLY for blazers, blouses, dresses
-- Decorative elements: brooches, pins, ornaments, rhinestones, pearls
-- Texture: ruffles, pleats (horizontal/vertical), draping, ruching
-- Construction: button style (single-button, double-breasted), neckline, sleeves
+KEY DETAILS TO INCLUDE (in order of priority):
+1. Text/writing/logos printed or embroidered on the garment (FIRST)
+2. Color (precise shade)
+3. Fabric/material (wool, silk, cotton, cashmere, etc.) - ESPECIALLY for blazers, blouses, dresses
+4. Decorative elements: brooches, pins, ornaments, rhinestones, pearls
+5. Texture: ruffles, pleats (horizontal/vertical), draping, ruching
+6. Construction: button style (single-button, double-breasted), neckline, sleeves
 
-EXAMPLES (notice fabric/material):
+EXAMPLES (notice text/logos come first):
+"PARIS charcoal grey cotton off-shoulder long sleeve ruched women's mini dress"
 "Donald Duck mint green cotton crew neck fleece kids' sweatshirt"
 "Navy blue wool-silk blend single-button brooch detail ruffle lapel women's blazer"
 "Emerald green silk-satin tie-neck puff sleeve draped women's blouse"
@@ -97,11 +104,12 @@ EXAMPLES (notice fabric/material):
 CRITICAL:
 ❌ DO NOT output "Step 1", "Step 2", or thinking process
 ❌ DO NOT output "Product title:"
+❌ DO NOT skip text/writing/logos visible on the garment
 ❌ DO NOT skip fabric/material for formal items (blazers, blouses, dresses)
 ✅ Output ONLY the product title (one line)
 
 Return ONLY the product title.`,
-          user: `Analyze this ${cat}. What fabric/material do you see? Generate the product title.`
+          user: `Look carefully at this ${cat}. Is there any text, writing, or logo visible? What fabric/material? Generate the product title.`
         }
       } else       if (isShoes) {
         return {
