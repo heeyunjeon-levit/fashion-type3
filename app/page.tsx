@@ -520,6 +520,7 @@ export default function Home() {
           
           console.log(`   📏 Bbox conversion:`, {
             'bbox (pixels)': bbox.bbox,
+            'bbox values': `[${x1}, ${y1}, ${x2}, ${y2}]`,
             'imageSize': imageSize,
             'imageSize valid': imageSize[0] > 0 && imageSize[1] > 0
           })
