@@ -5,7 +5,7 @@ import imageCompression from 'browser-image-compression'
 import { useLanguage } from '../contexts/LanguageContext'
 
 interface ImageUploadProps {
-  onImageUploaded: (imageUrl: string, uploadTimeSeconds?: number) => void
+  onImageUploaded: (imageUrl: string, uploadTimeSeconds?: number, localDataUrl?: string) => void
 }
 
 export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
@@ -164,7 +164,8 @@ export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
       
       // Don't reset isUploading here - the component will be hidden by parent transition
       // Keeping it as "uploading" prevents the button from reappearing
-      onImageUploaded(data.imageUrl, totalUploadTime)
+      // Pass local data URL for cropping (avoids CORS issues with Supabase storage)
+      onImageUploaded(data.imageUrl, totalUploadTime, preview)
     } catch (error) {
       console.error('Error uploading image:', error)
       const errorMessage = error instanceof Error ? error.message : 'Unknown error'

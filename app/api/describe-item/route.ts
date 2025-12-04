@@ -20,6 +20,36 @@ export async function POST(request: NextRequest) {
     console.log(`🤖 Getting GPT-4o-mini description for ${category}...`)
     console.log(`   Image type: ${imageUrl.startsWith('data:') ? 'data URL' : 'HTTP URL'}`)
     console.log(`   Image size: ${Math.round(imageUrl.length / 1024)}KB`)
+    
+    // Validate data URL format
+    if (imageUrl.startsWith('data:')) {
+      const mimeMatch = imageUrl.match(/^data:([^;]+);base64,/)
+      if (!mimeMatch) {
+        console.error('❌ Invalid data URL format - missing MIME type or base64 prefix')
+        return NextResponse.json(
+          { error: 'Invalid data URL format' },
+          { status: 400 }
+        )
+      }
+      const mimeType = mimeMatch[1]
+      if (!mimeType.startsWith('image/')) {
+        console.error(`❌ Invalid MIME type: ${mimeType} (expected image/*)`)
+        return NextResponse.json(
+          { error: `Invalid MIME type: ${mimeType}` },
+          { status: 400 }
+        )
+      }
+      // Check if data URL has actual content
+      const base64Part = imageUrl.split(',')[1]
+      if (!base64Part || base64Part.length < 100) {
+        console.error(`❌ Data URL appears empty or too small: ${base64Part?.length || 0} chars`)
+        return NextResponse.json(
+          { error: 'Data URL appears empty - cropping may have failed due to CORS' },
+          { status: 400 }
+        )
+      }
+      console.log(`   ✅ Valid data URL: ${mimeType}, ${Math.round(base64Part.length / 1024)}KB base64`)
+    }
 
     // Generate detailed description using GPT-4o-mini (same as Modal backend)
     const prompt = `You are a fashion expert. Describe this ${category} in detail like a fashion catalog would:

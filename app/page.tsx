@@ -77,6 +77,7 @@ export default function Home() {
   const [currentStep, setCurrentStep] = useState<'upload' | 'detecting' | 'selecting' | 'processing' | 'gallery' | 'searching' | 'results'>('upload')
   const [autoDrawMode, setAutoDrawMode] = useState(false)  // Auto-enable drawing when no items detected
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string>('')
+  const [localImageDataUrl, setLocalImageDataUrl] = useState<string>('')  // Local data URL for cropping (avoids CORS)
   const [bboxes, setBboxes] = useState<BboxItem[]>([])
   const [imageSize, setImageSize] = useState<[number, number]>([0, 0])
   const [detectedItems, setDetectedItems] = useState<DetectedItem[]>([])
@@ -194,7 +195,7 @@ export default function Home() {
     }
   }, [])
 
-  const handleImageUploaded = async (imageUrl: string, uploadTimeSeconds?: number) => {
+  const handleImageUploaded = async (imageUrl: string, uploadTimeSeconds?: number, localDataUrl?: string) => {
     // Prevent duplicate processing in React Strict Mode
     if (uploadedImageUrl === imageUrl) {
       console.log('⚠️  Duplicate upload detected, ignoring...')
@@ -202,6 +203,11 @@ export default function Home() {
     }
     
     setUploadedImageUrl(imageUrl)
+    // Store local data URL for cropping (avoids CORS issues with Supabase storage)
+    if (localDataUrl) {
+      setLocalImageDataUrl(localDataUrl)
+      console.log('📸 Local data URL stored for cropping (avoids CORS)')
+    }
     
     // Log image upload and frontend timing
     if (sessionManager) {
@@ -499,8 +505,13 @@ export default function Home() {
             y2 / imageSize[1]
           ]
           
+          // Use local data URL for cropping (avoids CORS issues with Supabase storage)
+          // Fall back to uploaded URL if local data URL not available
+          const imageUrlForCropping = localImageDataUrl || uploadedImageUrl
+          console.log(`   Using ${localImageDataUrl ? 'local data URL' : 'Supabase URL'} for cropping`)
+          
           const croppedDataUrl = await cropImage({
-            imageUrl: uploadedImageUrl,
+            imageUrl: imageUrlForCropping,
             bbox: normalizedBbox,
             padding: 0.05
           })
@@ -753,6 +764,7 @@ export default function Home() {
   const handleReset = () => {
     setCurrentStep('upload')
     setUploadedImageUrl('')
+    setLocalImageDataUrl('')  // Clear local data URL
     setDetectedItems([])
     setSelectedItems([])
     setProcessingItems([])
