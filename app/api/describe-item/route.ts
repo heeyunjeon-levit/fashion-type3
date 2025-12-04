@@ -68,8 +68,10 @@ export async function POST(request: NextRequest) {
 ANALYSIS (internal reasoning only, do NOT output this):
 1. Check for TEXT/WRITING/LOGOS first (CRITICAL):
    - Look carefully for any text, letters, words, or logos printed/embroidered on the garment
-   - Check shoulders, chest, sleeves, hem areas
-   - If visible → include the text/brand in the title
+   - Check shoulders, chest, sleeves, neckline, hem areas
+   - If text is readable → include the actual text in quotes: "with 'PARIS' print near shoulder"
+   - If text is NOT readable → just mention it: "with text print near shoulder"
+   - Note the location: near shoulder, on chest, near neckline, on sleeve, at hem
 2. Identify exact color: navy blue vs black, ivory vs white, charcoal vs black
 3. Identify fabric/material (CRITICAL):
    - Blazers/jackets: wool, wool-silk blend, worsted wool, tweed, cashmere, polyester-blend
@@ -80,7 +82,8 @@ ANALYSIS (internal reasoning only, do NOT output this):
 5. Note construction: neckline, sleeves, fit, button style
 
 FORMAT (output this ONLY):
-- With text/logo: "[Text/Brand] [color] [material] [features] [demographic] [type]"
+- With text/logo: "[color] [material] [features] [demographic] [type] with '[text]' print [location]"
+  (If text is readable → include the actual text. Location: near shoulder/chest/neckline/hem)
 - With character graphic: "[CHARACTER] [color] [material] [features] [demographic] [type]"
 - Formal items: "[color] [fabric/material] [features] [demographic] [type]"
 - Casual items: "[color] [material] [features] [demographic] [type]"
@@ -93,13 +96,13 @@ KEY DETAILS TO INCLUDE (in order of priority):
 5. Texture: ruffles, pleats (horizontal/vertical), draping, ruching
 6. Construction: button style (single-button, double-breasted), neckline, sleeves
 
-EXAMPLES (notice text/logos come first):
-"PARIS charcoal grey cotton off-shoulder long sleeve ruched women's mini dress"
+EXAMPLES (notice text location details):
+"Charcoal grey cotton off-shoulder long sleeve ruched women's mini dress with text print near shoulder"
+"Black cotton crew neck women's t-shirt with 'PARIS' print on chest"
 "Donald Duck mint green cotton crew neck fleece kids' sweatshirt"
 "Navy blue wool-silk blend single-button brooch detail ruffle lapel women's blazer"
 "Emerald green silk-satin tie-neck puff sleeve draped women's blouse"
 "Black wool crepe horizontal pleated high-waist women's midi skirt"
-"Ivory cashmere cable knit oversized women's sweater"
 
 CRITICAL:
 ❌ DO NOT output "Step 1", "Step 2", or thinking process
@@ -109,7 +112,7 @@ CRITICAL:
 ✅ Output ONLY the product title (one line)
 
 Return ONLY the product title.`,
-          user: `Look carefully at this ${cat}. Is there any text, writing, or logo visible? What fabric/material? Generate the product title.`
+          user: `Look carefully at this ${cat}. Is there any text, writing, or logo visible? If yes, what does it say and where is it located (shoulder, chest, neckline, sleeve, hem)? What fabric/material? Generate the product title.`
         }
       } else       if (isShoes) {
         return {
