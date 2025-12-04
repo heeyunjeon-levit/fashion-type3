@@ -14,7 +14,6 @@ interface ProductOption {
 
 interface ResultsBottomSheetProps {
   results: Record<string, ProductOption[]>
-  sourceProducts?: Array<ProductOption & { sourceCategory?: string }> // NEW: Source products from original photo (full image search)
   isLoading: boolean
   croppedImages?: Record<string, string>
   originalImageUrl: string // Background image
@@ -26,7 +25,6 @@ interface ResultsBottomSheetProps {
 
 export default function ResultsBottomSheet({
   results,
-  sourceProducts = [],
   isLoading,
   croppedImages,
   originalImageUrl,

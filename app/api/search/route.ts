@@ -1451,51 +1451,11 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links preferred) or
     timingData.processing_overhead_time += aggregateTime
     console.log(`⏱️  Result aggregation took: ${aggregateTime.toFixed(3)}s`)
     
-    // NEW: Extract "Source Product" from full image search
-    // Full image search = searches with entire original photo → finds the actual product being worn
-    // This is different from cropped search which finds similar alternatives for specific items
-    console.log('\n📸 Processing full image results for source product...')
-    const sourceProducts: any[] = []
-    
-    // Collect all full image results from gptReasoningData (aggregate from all categories)
-    const allFullImageResults: any[] = []
-    for (const [key, data] of Object.entries(gptReasoningData)) {
-      const reasoningData = data as any
-      if (reasoningData.fullImageResults && reasoningData.fullImageResults.length > 0) {
-        console.log(`   Found ${reasoningData.fullImageResults.length} full image results from ${key}`)
-        allFullImageResults.push(...reasoningData.fullImageResults.map((item: any) => ({
-          ...item,
-          sourceCategory: key
-        })))
-      }
-    }
-    
-    // Deduplicate by link (full image results are the same across all categories)
-    const uniqueFullImageResults = Array.from(
-      new Map(allFullImageResults.map(item => [item.link, item])).values()
-    )
-    
-    console.log(`📦 Total unique full image results: ${uniqueFullImageResults.length}`)
-    
-    // Take top 3 as "Source Products" (the actual products from the original photo)
-    const topSourceProducts = uniqueFullImageResults.slice(0, 3)
-    
-    console.log(`✅ Selected ${topSourceProducts.length} source products from original photo`)
-    if (topSourceProducts.length > 0) {
-      console.log(`   Source products:`)
-      topSourceProducts.forEach((item, idx) => {
-        console.log(`     ${idx + 1}. ${item.title?.substring(0, 60)}...`)
-      })
-    } else {
-      console.log(`   ℹ️  No source products found (full image search returned no results)`)
-    }
-    
     const requestTotalTime = (Date.now() - requestStartTime) / 1000
     const searchWallClockTime = (Date.now() - timingData.search_wall_clock_start) / 1000
     
     console.log('\n📊 Final results:', Object.keys(allResults))
     console.log(`📈 Result sources: GPT=${sourceCounts.gpt}, Fallback=${sourceCounts.fallback}, None=${sourceCounts.none}, Error=${sourceCounts.error}`)
-    console.log(`📸 Source products: ${topSourceProducts.length}`)
     
     // Calculate overhead
     const measuredTime = timingData.full_image_search_time + 
@@ -1520,7 +1480,6 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links preferred) or
     
     return NextResponse.json({ 
       results: allResults,
-      sourceProducts: topSourceProducts, // NEW: Dedicated section for source products from original photo (full image search)
       meta: { 
         sourceCounts,
         gptReasoning: gptReasoningData,  // Include GPT reasoning for each category
