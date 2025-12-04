@@ -55,18 +55,19 @@ export async function POST(request: NextRequest) {
       console.log(`   ✅ Valid data URL: ${mimeType}, ${Math.round(base64Part.length / 1024)}KB base64`)
     }
 
-    // Generate search-optimized description - using system+user message for better accuracy
-    const response = await openai.chat.completions.create({
-      model: 'gpt-4o-mini', // Fast & cost-effective, works well now that cropping is fixed
-      messages: [
-        {
-          role: 'system',
-          content: `You are a fashion product analyzer. Generate concise e-commerce product titles.
+    // Category-specific prompt templates
+    const getCategoryPrompt = (cat: string) => {
+      const isClothing = ['shirt', 'sweater', 'hoodie', 'sweatshirt', 'jacket', 'coat', 'dress', 'pants', 'jeans', 'shorts', 'skirt', 'top', 'bottom'].includes(cat)
+      const isShoes = cat === 'shoes' || cat === 'sneakers' || cat === 'boots'
+      const isAccessory = ['sunglasses', 'glasses', 'bag', 'handbag', 'backpack', 'watch', 'hat', 'scarf', 'belt'].includes(cat)
+      
+      if (isClothing) {
+        return {
+          system: `You are a fashion product analyzer. Generate concise e-commerce product titles.
 
-CRITICAL RULES:
-1. If there's a CHARACTER/LOGO/GRAPHIC visible → START with it first
-   Examples: "Donald Duck", "Mickey Mouse", "Winnie the Pooh", "Hello Kitty"
-2. Use SPECIFIC color shades: "mint green", "bubblegum pink", "navy blue", "ivory white"
+RULES:
+1. If there's a CHARACTER/LOGO/GRAPHIC → START with it: "Donald Duck", "Mickey Mouse", "Nike"
+2. Use SPECIFIC colors: "mint green", "navy blue", "bubblegum pink"
 3. Include 2-3 key features: crew neck, puff sleeve, oversized, ribbed, etc.
 4. Add demographic if clear: women's, men's, kids', baby
 
@@ -76,11 +77,79 @@ FORMAT:
 
 EXAMPLES:
 "Donald Duck mint green crew neck fleece kids' sweatshirt"
-"Mickey Mouse ivory white cotton kids' t-shirt"
-"Winnie the Pooh bright yellow oversized fleece kids' sweatshirt"
 "Emerald green tie-neck puff sleeve silk-satin women's blouse"
+"Black cable knit oversized women's sweater"
 
-Return ONLY the product title (one line).`
+Return ONLY the product title (one line).`,
+          user: `Describe this ${cat}. Any character/graphic? What color? Key features?`
+        }
+      } else if (isShoes) {
+        return {
+          system: `You are a footwear product analyzer. Generate concise e-commerce product titles.
+
+RULES:
+1. Use SPECIFIC colors: "white", "black", "navy blue", "bright red"
+2. Include shoe type: sneakers, boots, sandals, heels, loafers, oxfords, etc.
+3. Include 2-3 key features: high-top, low-top, platform, chunky sole, lace-up, slip-on, etc.
+4. Add brand if visible: Nike, Adidas, Converse, Vans, etc.
+5. Add demographic if clear: women's, men's, kids', unisex
+
+FORMAT: "[Brand] [color] [features] [shoe type] [demographic]"
+
+EXAMPLES:
+"Nike white low-top leather sneakers women's"
+"Black chunky platform ankle boots women's"
+"Brown leather lace-up oxford shoes men's"
+"Adidas navy blue high-top sneakers unisex"
+
+Return ONLY the product title (one line).`,
+          user: `Describe these ${cat}. What brand/logo? What color? What style/type?`
+        }
+      } else if (isAccessory) {
+        return {
+          system: `You are an accessory product analyzer. Generate concise e-commerce product titles.
+
+RULES:
+1. Use SPECIFIC colors: "black", "tortoiseshell", "gold", "silver", "brown"
+2. Include accessory type: sunglasses, eyeglasses, tote bag, crossbody bag, backpack, etc.
+3. Include 2-3 key features: oversized, cat-eye, aviator, quilted, leather, etc.
+4. Add brand if visible: Ray-Ban, Gucci, Prada, Chanel, etc.
+5. Add demographic if clear: women's, men's, unisex
+
+FORMAT: "[Brand] [color] [features] [accessory type] [demographic]"
+
+EXAMPLES:
+"Ray-Ban black aviator sunglasses unisex"
+"Tortoiseshell oversized cat-eye sunglasses women's"
+"Black quilted leather crossbody bag women's"
+"Gucci brown leather tote bag women's"
+
+Return ONLY the product title (one line).`,
+          user: `Describe this ${cat}. What brand? What color? What style/shape?`
+        }
+      } else {
+        // Fallback for unknown categories
+        return {
+          system: `You are a fashion product analyzer. Generate a concise e-commerce product title.
+
+Use specific colors, key features, and the item type.
+Format: "[color] [features] [type]"
+
+Return ONLY the product title (one line).`,
+          user: `Describe this ${cat}. What color? What are the key features?`
+        }
+      }
+    }
+    
+    const promptConfig = getCategoryPrompt(category)
+    
+    // Generate search-optimized description - using category-specific prompts
+    const response = await openai.chat.completions.create({
+      model: 'gpt-4o-mini', // Fast & cost-effective, works well now that cropping is fixed
+      messages: [
+        {
+          role: 'system',
+          content: promptConfig.system
         },
         {
           role: 'user',
@@ -93,7 +162,7 @@ Return ONLY the product title (one line).`
             },
             {
               type: 'text',
-              text: `Look carefully at this ${category} image. What character/graphic do you see? What is the exact color? Generate the product title following the format.`
+              text: promptConfig.user
             }
           ]
         }
