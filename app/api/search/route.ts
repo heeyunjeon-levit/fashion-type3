@@ -1460,13 +1460,74 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links preferred) or
       const reasoningData = data as any
       if (reasoningData.fullImageResults && reasoningData.fullImageResults.length > 0) {
         console.log(`   Found ${reasoningData.fullImageResults.length} full image results for ${key}`)
-        // Take top 1-2 full image results as exact matches
-        const topFullImageResults = reasoningData.fullImageResults.slice(0, 2)
-        exactMatches.push(...topFullImageResults.map((item: any) => ({
-          ...item,
-          sourceCategory: key,
-          matchType: 'exact' // Mark as exact match
-        })))
+        
+        // CRITICAL: Extract character name from description to filter exact matches
+        const itemDescription = reasoningData.itemDescription || ''
+        const characterPatterns = [
+          // Disney characters (English)
+          /\b(Mickey Mouse|Minnie Mouse|Donald Duck|Daisy Duck|Winnie the Pooh|Pooh|Goofy|Pluto|Dumbo|Bambi|Simba|Stitch|Elsa|Anna|Ariel|Belle|Cinderella)\b/i,
+          // Other characters (English)
+          /\b(Hello Kitty|Snoopy|Pikachu|Pokemon|SpongeBob|Batman|Superman|Spider-Man|Avengers|Marvel|Disney)\b/i,
+          // Brands/logos
+          /\b(Nike|Adidas|Puma|Supreme|Gucci|Louis Vuitton|Chanel|Champion|North Face|Patagonia)\b/i,
+        ]
+        
+        let characterName: string | null = null
+        for (const pattern of characterPatterns) {
+          const match = itemDescription.match(pattern)
+          if (match) {
+            characterName = match[1] || match[0]
+            break
+          }
+        }
+        
+        console.log(`   Description: "${itemDescription.substring(0, 80)}..."`)
+        console.log(`   Extracted character: ${characterName || 'none'}`)
+        
+        // Filter full image results to ONLY include those matching the character
+        let filteredResults = reasoningData.fullImageResults
+        
+        if (characterName) {
+          // Character name mappings (English ↔ Korean)
+          const characterMappings: Record<string, string[]> = {
+            'Donald Duck': ['donald', 'duck', '도널드', '도날드'],
+            'Mickey Mouse': ['mickey', 'mouse', '미키'],
+            'Minnie Mouse': ['minnie', 'mouse', '미니'],
+            'Winnie the Pooh': ['pooh', 'winnie', '푸', '곰돌이'],
+            'Hello Kitty': ['hello kitty', 'kitty', '헬로키티', '키티'],
+            // Add more mappings as needed
+          }
+          
+          const searchTerms = characterMappings[characterName] || [characterName.toLowerCase()]
+          console.log(`   Filtering for character: ${characterName} (search terms: ${searchTerms.join(', ')})`)
+          
+          filteredResults = reasoningData.fullImageResults.filter((item: any) => {
+            const title = (item.title || '').toLowerCase()
+            const hasMatch = searchTerms.some(term => title.includes(term.toLowerCase()))
+            
+            if (!hasMatch) {
+              console.log(`   ❌ Rejected: "${item.title?.substring(0, 50)}..." (no ${characterName} match)`)
+            } else {
+              console.log(`   ✅ Matched: "${item.title?.substring(0, 50)}..." (contains ${characterName})`)
+            }
+            
+            return hasMatch
+          })
+          
+          console.log(`   After character filtering: ${filteredResults.length}/${reasoningData.fullImageResults.length} results`)
+        }
+        
+        // Take top 1-2 filtered results as exact matches
+        const topFullImageResults = filteredResults.slice(0, 2)
+        if (topFullImageResults.length > 0) {
+          exactMatches.push(...topFullImageResults.map((item: any) => ({
+            ...item,
+            sourceCategory: key,
+            matchType: 'exact' // Mark as exact match
+          })))
+        } else if (characterName) {
+          console.log(`   ⚠️  No full image results matched character "${characterName}" - skipping exact matches for ${key}`)
+        }
       }
     }
     
@@ -1481,6 +1542,8 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links preferred) or
       uniqueExactMatches.slice(0, 3).forEach((item, idx) => {
         console.log(`     ${idx + 1}. ${item.title?.substring(0, 60)}... (from ${item.sourceCategory})`)
       })
+    } else {
+      console.log(`   ℹ️  No exact matches found (full image results didn't match character/description)`)
     }
     
     const requestTotalTime = (Date.now() - requestStartTime) / 1000
