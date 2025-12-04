@@ -525,19 +525,48 @@ export default function Home() {
             'imageSize valid': imageSize[0] > 0 && imageSize[1] > 0
           })
           
-          // Check if imageSize is valid
-          if (!imageSize || imageSize[0] === 0 || imageSize[1] === 0) {
-            console.error(`   ❌ Invalid imageSize: [${imageSize[0]}, ${imageSize[1]}]`)
-            console.error(`   Bboxes from detection might already be normalized!`)
-            // Assume bboxes are already normalized (0-1 range)
-            console.log(`   ℹ️  Using bbox as already normalized`)
-            const normalizedBbox: [number, number, number, number] = [x1, y1, x2, y2]
+          // Check if bboxes are already normalized (0-1 range) or in pixel coordinates
+          const bboxValuesMax = Math.max(x1, y1, x2, y2)
+          const bboxesAreNormalized = bboxValuesMax <= 1
+          
+          console.log(`   🔍 Bbox format detection: max value = ${bboxValuesMax}, normalized = ${bboxesAreNormalized}`)
+          
+          let normalizedBbox: [number, number, number, number]
+          
+          if (bboxesAreNormalized) {
+            // Bboxes are already in 0-1 range
+            console.log(`   ✅ Using bbox as already normalized`)
+            normalizedBbox = [x1, y1, x2, y2]
+          } else {
+            // Bboxes are in pixel coordinates - need to normalize
+            console.log(`   ⚠️  Bboxes are in PIXEL coordinates, need to normalize`)
             
-            const croppedDataUrl = await cropImage({
-              imageUrl: localDataUrl,
-              bbox: normalizedBbox,
-              padding: 0.05
+            // Load image to get actual dimensions
+            const img = new Image()
+            const imgDimensions = await new Promise<{width: number, height: number}>((resolve, reject) => {
+              img.onload = () => resolve({ width: img.naturalWidth, height: img.naturalHeight })
+              img.onerror = reject
+              img.src = localDataUrl
             })
+            
+            console.log(`   📐 Loaded image dimensions: ${imgDimensions.width}x${imgDimensions.height}`)
+            
+            // Normalize pixel coordinates to 0-1 range
+            normalizedBbox = [
+              x1 / imgDimensions.width,
+              y1 / imgDimensions.height,
+              x2 / imgDimensions.width,
+              y2 / imgDimensions.height
+            ]
+            
+            console.log(`   ✅ Normalized bbox: [${normalizedBbox.map(v => v.toFixed(4)).join(', ')}]`)
+          }
+            
+          const croppedDataUrl = await cropImage({
+            imageUrl: localDataUrl,
+            bbox: normalizedBbox,
+            padding: 0.05
+          })
             console.log(`✅ Cropped locally: ${Math.round(croppedDataUrl.length / 1024)}KB data URL`)
             
             // Continue with description...
@@ -576,78 +605,6 @@ export default function Home() {
               croppedImageUrl: croppedImageUrl,
               confidence: bbox.confidence
             }
-          }
-          
-          const normalizedBbox: [number, number, number, number] = [
-            x1 / imageSize[0],
-            y1 / imageSize[1],
-            x2 / imageSize[0],
-            y2 / imageSize[1]
-          ]
-          
-          console.log(`   ✅ Normalized bbox:`, normalizedBbox)
-          console.log(`   ✅ Using local data URL: ${Math.round(localDataUrl.length / 1024)}KB`)
-          
-          const imageUrlForCropping = localDataUrl
-          
-          const croppedDataUrl = await cropImage({
-            imageUrl: imageUrlForCropping,
-            bbox: normalizedBbox,
-            padding: 0.05
-          })
-          console.log(`✅ Cropped locally: ${Math.round(croppedDataUrl.length / 1024)}KB data URL`)
-          
-          // Step 2: Get GPT-4o-mini description from Next.js API (uses Vercel's OpenAI key)
-          console.log(`🤖 Getting description for ${bbox.category}...`)
-          let description = `${bbox.category} item`
-          try {
-            const descResponse = await fetch('/api/describe-item', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                imageUrl: croppedDataUrl,
-                category: bbox.category
-              }),
-              signal: AbortSignal.timeout(15000) // 15s timeout for description
-            })
-            
-            if (descResponse.ok) {
-              const descData = await descResponse.json()
-              description = descData.description || description
-              console.log(`✅ Description: "${description.substring(0, 60)}..."`)
-            } else {
-              console.warn(`⚠️ Description failed: ${descResponse.status}, using default`)
-            }
-          } catch (descError) {
-            console.warn(`⚠️ Description error:`, descError)
-          }
-          
-          const croppedImageUrl = croppedDataUrl
-          console.log(`✅ Processed ${bbox.category}: "${description.substring(0, 60)}..."`)
-          console.log(`   Cropped URL: data URL (${Math.round(croppedImageUrl.length / 1024)}KB)`)
-
-          // Update real-time progress
-          completedItems++
-          const targetProgress = Math.min(20, (completedItems / totalItems) * 20)
-          setOverallProgress(prev => Math.max(prev, targetProgress))
-          console.log(`📊 Processing progress: ${completedItems}/${totalItems} items (${Math.floor((completedItems / totalItems) * 20)}%)`)
-
-          // Convert to DetectedItem format
-          const detectedItem = {
-            category: bbox.mapped_category || bbox.category,
-            groundingdino_prompt: bbox.category,
-            description: description,
-            croppedImageUrl: croppedImageUrl,
-            confidence: bbox.confidence
-          }
-          
-          console.log('📦 DetectedItem created:', {
-            category: detectedItem.category,
-            hasDescription: !!detectedItem.description,
-            hasCroppedUrl: !!detectedItem.croppedImageUrl
-          })
-          
-          return detectedItem
         } catch (error) {
           console.error(`Error processing ${bbox.category}:`, error)
           completedItems++
