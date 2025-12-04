@@ -119,7 +119,7 @@ CRITICAL - OUTPUT FORMAT:
 YOUR ENTIRE RESPONSE SHOULD BE EXACTLY ONE LINE - THE PRODUCT TITLE.
 
 Return ONLY the product title.`,
-          user: `Generate ONLY the product title for this ${cat}. No explanations, no reasoning, just the title.`
+          user: `Look VERY carefully at this ${cat} for any text, letters, words, or small prints (check shoulders, neckline, chest, sleeves carefully). Then generate ONLY the product title. No explanations, just the title.`
         }
       } else       if (isShoes) {
         return {
@@ -209,7 +209,7 @@ Return ONLY the product title.`,
     
     // Generate search-optimized description - using category-specific prompts
     const response = await openai.chat.completions.create({
-      model: 'gpt-4o', // GPT-4o has the best vision capabilities for text/logo detection
+      model: 'gpt-4.1', // GPT-4.1 has superior vision + OCR (74.8% MMMU vs GPT-4o's 68.7%)
       messages: [
         {
           role: 'system',
@@ -231,7 +231,7 @@ Return ONLY the product title.`,
           ]
         }
       ],
-      max_tokens: 100, // Increased for fabric/material details
+      max_tokens: 150, // Increased for text detection + fabric/material details
       temperature: 0.0 // Zero temperature for maximum determinism
     })
 
