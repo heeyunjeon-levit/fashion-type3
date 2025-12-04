@@ -65,7 +65,10 @@ export async function cropImage(options: CropOptions): Promise<string> {
         const canvas = document.createElement('canvas')
         canvas.width = cropW
         canvas.height = cropH
-        const ctx = canvas.getContext('2d')
+        
+        console.log(`   📐 Canvas dimensions: ${cropW}x${cropH}`)
+        
+        const ctx = canvas.getContext('2d', { willReadFrequently: false })
 
         if (!ctx) {
           reject(new Error('Failed to get canvas context'))
@@ -78,25 +81,39 @@ export async function cropImage(options: CropOptions): Promise<string> {
           cropX, cropY, cropW, cropH,  // Source rectangle
           0, 0, cropW, cropH            // Destination rectangle
         )
+        
+        console.log(`   ✅ Image drawn to canvas`)
 
         // Convert to data URL
         try {
-          const dataUrl = canvas.toDataURL('image/jpeg', 0.9)
-          console.log(`   🖼️  Cropped canvas to data URL: ${dataUrl.length} bytes, starts with: ${dataUrl.substring(0, 50)}`)
+          // Try JPEG first (smaller file size)
+          console.log(`   🎨 Converting canvas to JPEG...`)
+          let dataUrl = canvas.toDataURL('image/jpeg', 0.9)
+          console.log(`   📊 JPEG result: ${dataUrl.length} bytes, starts with: ${dataUrl.substring(0, 50)}`)
           
-          // Check if canvas was tainted (returns empty data URL)
+          // Check if canvas was tainted or export failed (returns empty data URL)
           if (!dataUrl || dataUrl === 'data:,' || dataUrl.length < 100) {
-            console.error('❌ TAINTED CANVAS: toDataURL returned empty/invalid result!')
-            console.error('   This means the image was loaded from cross-origin without proper CORS')
-            console.error('   Original imageUrl:', imageUrl.substring(0, 100))
-            reject(new Error('Canvas tainted - image loaded from cross-origin source. Use local data URL instead.'))
-            return
+            console.warn('⚠️ JPEG export failed, trying PNG...')
+            // Try PNG as fallback (works with transparency)
+            dataUrl = canvas.toDataURL('image/png')
+            console.log(`   📊 PNG result: ${dataUrl.length} bytes, starts with: ${dataUrl.substring(0, 50)}`)
+            
+            // If still empty, canvas is definitely tainted
+            if (!dataUrl || dataUrl === 'data:,' || dataUrl.length < 100) {
+              console.error('❌ TAINTED CANVAS: Both JPEG and PNG export failed!')
+              console.error('   Canvas dimensions:', canvas.width, 'x', canvas.height)
+              console.error('   Original imageUrl:', imageUrl.substring(0, 100))
+              console.error('   This is a browser security restriction - canvas is tainted')
+              reject(new Error('Canvas tainted - both JPEG and PNG export failed'))
+              return
+            }
           }
           
+          console.log(`   ✅ Successfully exported: ${Math.round(dataUrl.length / 1024)}KB`)
           resolve(dataUrl)
         } catch (error) {
-          console.error('❌ toDataURL failed (canvas tainted):', error)
-          reject(new Error('Canvas tainted - cannot export image'))
+          console.error('❌ toDataURL exception:', error)
+          reject(new Error(`Canvas export failed: ${error}`))
         }
       } catch (error) {
         reject(error)
