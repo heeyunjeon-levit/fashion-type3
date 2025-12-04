@@ -637,7 +637,11 @@ export default function ResultsBottomSheet({
                         href={product.link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        onClick={(e) => handleProductClick(e, product.link)}
+                        onClick={(e) => {
+                          e.preventDefault()
+                          handleLinkClick('exact_match', product.link, product.title, product.thumbnail, idx + 1)
+                          window.open(product.link, '_blank', 'noopener,noreferrer')
+                        }}
                         className="min-w-[160px] snap-start block"
                       >
                         <div className="bg-white rounded-2xl border-2 border-indigo-300 overflow-hidden hover:shadow-lg transition-all hover:scale-105 relative">
