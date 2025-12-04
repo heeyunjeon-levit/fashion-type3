@@ -3,6 +3,7 @@
 import { useState, useRef } from 'react'
 import imageCompression from 'browser-image-compression'
 import { useLanguage } from '../contexts/LanguageContext'
+import { isSupportedImageType, needsConversion, getSupportedFormatsString } from '@/lib/imageFormats'
 
 interface ImageUploadProps {
   onImageUploaded: (imageUrl: string, uploadTimeSeconds?: number, localDataUrl?: string) => void
@@ -20,15 +21,18 @@ export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
     const file = e.target.files?.[0]
     if (!file) return
 
-    // Check if file is HEIC/HEIF format
-    const isHEIC = file.type === 'image/heic' || 
-                   file.type === 'image/heif' || 
-                   file.name.toLowerCase().endsWith('.heic') || 
-                   file.name.toLowerCase().endsWith('.heif')
+    // Validate file type
+    if (!isSupportedImageType(file)) {
+      alert(`Unsupported image format. Please use: ${getSupportedFormatsString()}`)
+      return
+    }
+
+    // Check if file needs server-side conversion (HEIC/HEIF)
+    const needsServerConversion = needsConversion(file)
 
     let processedFile = file
 
-    if (isHEIC) {
+    if (needsServerConversion) {
       setIsConverting(true)
       try {
         console.log('🔄 Converting HEIC to JPEG via server...')

@@ -3,6 +3,8 @@
  * Uses Canvas API to crop images client-side (no backend needed!)
  */
 
+import { IMAGE_FORMATS } from './imageFormats'
+
 export interface CropOptions {
   imageUrl: string
   bbox: [number, number, number, number] // [x1, y1, x2, y2] normalized 0-1
@@ -86,31 +88,39 @@ export async function cropImage(options: CropOptions): Promise<string> {
 
         // Convert to data URL
         try {
-          // Try JPEG first (smaller file size)
-          console.log(`   🎨 Converting canvas to JPEG...`)
-          let dataUrl = canvas.toDataURL('image/jpeg', 0.9)
-          console.log(`   📊 JPEG result: ${dataUrl.length} bytes, starts with: ${dataUrl.substring(0, 50)}`)
+          // Try formats in order from IMAGE_FORMATS.CANVAS_EXPORT
+          let dataUrl: string = ''
           
-          // Check if canvas was tainted or export failed (returns empty data URL)
-          if (!dataUrl || dataUrl === 'data:,' || dataUrl.length < 100) {
-            console.warn('⚠️ JPEG export failed, trying PNG...')
-            // Try PNG as fallback (works with transparency)
-            dataUrl = canvas.toDataURL('image/png')
-            console.log(`   📊 PNG result: ${dataUrl.length} bytes, starts with: ${dataUrl.substring(0, 50)}`)
+          for (const exportFormat of IMAGE_FORMATS.CANVAS_EXPORT) {
+            console.log(`   🎨 Converting canvas to ${exportFormat.name}...`)
+            const quality = exportFormat.quality
+            dataUrl = quality !== undefined 
+              ? canvas.toDataURL(exportFormat.format, quality)
+              : canvas.toDataURL(exportFormat.format)
             
-            // If still empty, canvas is definitely tainted
-            if (!dataUrl || dataUrl === 'data:,' || dataUrl.length < 100) {
-              console.error('❌ TAINTED CANVAS: Both JPEG and PNG export failed!')
-              console.error('   Canvas dimensions:', canvas.width, 'x', canvas.height)
-              console.error('   Original imageUrl:', imageUrl.substring(0, 100))
-              console.error('   This is a browser security restriction - canvas is tainted')
-              reject(new Error('Canvas tainted - both JPEG and PNG export failed'))
+            console.log(`   📊 ${exportFormat.name} result: ${dataUrl.length} bytes, starts with: ${dataUrl.substring(0, 50)}`)
+            
+            // Check if export succeeded
+            if (dataUrl && dataUrl !== 'data:,' && dataUrl.length >= 100) {
+              console.log(`   ✅ Successfully exported as ${exportFormat.name}: ${Math.round(dataUrl.length / 1024)}KB`)
+              resolve(dataUrl)
               return
             }
+            
+            console.warn(`   ⚠️ ${exportFormat.name} export failed, trying next format...`)
           }
           
-          console.log(`   ✅ Successfully exported: ${Math.round(dataUrl.length / 1024)}KB`)
-          resolve(dataUrl)
+          // If we get here, all formats failed
+          console.log(`   📊 Final attempt result: ${dataUrl.length} bytes, starts with: ${dataUrl.substring(0, 50)}`)
+          
+          // All export formats failed - canvas is tainted
+          console.error('❌ TAINTED CANVAS: All export formats failed!')
+          console.error('   Tried formats:', IMAGE_FORMATS.CANVAS_EXPORT.map(f => f.name).join(', '))
+          console.error('   Canvas dimensions:', canvas.width, 'x', canvas.height)
+          console.error('   Original imageUrl:', imageUrl.substring(0, 100))
+          console.error('   This is a browser security restriction - canvas is tainted')
+          reject(new Error(`Canvas tainted - all export formats failed: ${IMAGE_FORMATS.CANVAS_EXPORT.map(f => f.name).join(', ')}`))
+          return
         } catch (error) {
           console.error('❌ toDataURL exception:', error)
           reject(new Error(`Canvas export failed: ${error}`))
