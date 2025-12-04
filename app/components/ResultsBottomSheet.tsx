@@ -14,6 +14,7 @@ interface ProductOption {
 
 interface ResultsBottomSheetProps {
   results: Record<string, ProductOption[]>
+  exactMatches?: Array<ProductOption & { sourceCategory?: string }> // NEW: Exact matches from full image search
   isLoading: boolean
   croppedImages?: Record<string, string>
   originalImageUrl: string // Background image
@@ -25,6 +26,7 @@ interface ResultsBottomSheetProps {
 
 export default function ResultsBottomSheet({
   results,
+  exactMatches = [],
   isLoading,
   croppedImages,
   originalImageUrl,
@@ -609,6 +611,69 @@ export default function ResultsBottomSheet({
             </div>
           ) : (
             <div className="space-y-8 pb-8">
+              {/* NEW: Exact Match Section (from full image search) */}
+              {exactMatches.length > 0 && (
+                <div className="space-y-3">
+                  {/* Exact Match Header with special styling */}
+                  <div className="flex items-center gap-3 pb-2 border-b-2 border-indigo-200">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center flex-shrink-0">
+                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
+                        🎯 Exact Match
+                      </h3>
+                      <p className="text-sm text-gray-500">Found by full image search</p>
+                    </div>
+                  </div>
+
+                  {/* Horizontal scroll for exact matches */}
+                  <div className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-hide -mx-4 px-4">
+                    {exactMatches.slice(0, 3).map((product, idx) => (
+                      <a
+                        key={idx}
+                        href={product.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => handleProductClick(e, product.link)}
+                        className="min-w-[160px] snap-start block"
+                      >
+                        <div className="bg-white rounded-2xl border-2 border-indigo-300 overflow-hidden hover:shadow-lg transition-all hover:scale-105 relative">
+                          {/* Exact Match Badge */}
+                          <div className="absolute top-2 right-2 z-10 bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg">
+                            ⭐ EXACT
+                          </div>
+                          <div className="aspect-square bg-gray-100">
+                            {product.thumbnail ? (
+                              <img
+                                src={product.thumbnail}
+                                alt={product.title || 'Product'}
+                                className="w-full h-full object-cover"
+                                onError={(e) => {
+                                  e.currentTarget.src = originalImageUrl
+                                  e.currentTarget.onerror = null
+                                }}
+                              />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center text-gray-400">
+                                No Image
+                              </div>
+                            )}
+                          </div>
+                          <div className="p-3">
+                            <p className="text-sm text-gray-700 line-clamp-2 font-medium">
+                              {product.title || 'View Product'}
+                            </p>
+                          </div>
+                        </div>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* Each category = one section */}
               {Object.entries(results).map(([category, links]) => {
                 // Extract category name and item number (format: "categoryName_number")

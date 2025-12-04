@@ -783,23 +783,15 @@ export async function POST(request: NextRequest) {
         
         const excludedKeywords = getExcludedKeywords(specificSubType)
         
-        // PRIORITIZE full image results - they're more accurate for iconic/recognizable items
-        // Full image search recognizes context (celebrity outfits, paparazzi photos, etc.)
-        const mergedResults: any[] = []
-        if (fullImageResults.length > 0) {
-          console.log(`🎯 PRIORITIZING ${fullImageResults.length} full image results (more accurate for iconic items)`)
-          // Put full image results FIRST
-          mergedResults.push(...fullImageResults)
-          
-          // Then add cropped results that aren't duplicates
-          const existingLinks = new Set(fullImageResults.map((r: any) => r.link))
-          const newCroppedResults = organicResults.filter((r: any) => !existingLinks.has(r.link))
-          mergedResults.push(...newCroppedResults)
-          console.log(`✅ Combined: ${mergedResults.length} total (${fullImageResults.length} from full image first, ${newCroppedResults.length} unique from cropped)`)
-        } else {
-          // No full image results, use cropped only
-          mergedResults.push(...organicResults)
-        }
+        // SEPARATE full image results for "Exact Match" section
+        // Full image search = searches with entire original photo → often finds exact product
+        // Cropped image search = searches with just the item → finds similar alternatives
+        console.log(`📊 Results breakdown:`)
+        console.log(`   🎯 Full image search: ${fullImageResults.length} results (for exact matches)`)
+        console.log(`   ✂️  Cropped image search: ${organicResults.length} results (for alternatives)`)
+        
+        // Use cropped results for category-based search
+        const mergedResults: any[] = [...organicResults]
         
         // Filter merged results BEFORE GPT to save time and improve quality
         let filteredResults = mergedResults
@@ -1027,7 +1019,8 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links preferred) or
           searchTerms,
           selectedLinks: [],
           timestamp: new Date().toISOString(),
-          candidateCount: resultsForGPT.length
+          candidateCount: resultsForGPT.length,
+          fullImageResults: fullImageResults // Store for exact match extraction
         }
         
         // Parse response
@@ -1458,11 +1451,44 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links preferred) or
     timingData.processing_overhead_time += aggregateTime
     console.log(`⏱️  Result aggregation took: ${aggregateTime.toFixed(3)}s`)
     
+    // NEW: Extract exact matches from full image search (for dedicated section)
+    console.log('\n🎯 Processing full image results for exact matches...')
+    const exactMatches: any[] = []
+    
+    // Collect all full image results from gptReasoningData
+    for (const [key, data] of Object.entries(gptReasoningData)) {
+      const reasoningData = data as any
+      if (reasoningData.fullImageResults && reasoningData.fullImageResults.length > 0) {
+        console.log(`   Found ${reasoningData.fullImageResults.length} full image results for ${key}`)
+        // Take top 1-2 full image results as exact matches
+        const topFullImageResults = reasoningData.fullImageResults.slice(0, 2)
+        exactMatches.push(...topFullImageResults.map((item: any) => ({
+          ...item,
+          sourceCategory: key,
+          matchType: 'exact' // Mark as exact match
+        })))
+      }
+    }
+    
+    // Deduplicate exact matches by link
+    const uniqueExactMatches = Array.from(
+      new Map(exactMatches.map(item => [item.link, item])).values()
+    )
+    
+    console.log(`✅ Extracted ${uniqueExactMatches.length} unique exact matches from full image search`)
+    if (uniqueExactMatches.length > 0) {
+      console.log(`   Top exact matches:`)
+      uniqueExactMatches.slice(0, 3).forEach((item, idx) => {
+        console.log(`     ${idx + 1}. ${item.title?.substring(0, 60)}... (from ${item.sourceCategory})`)
+      })
+    }
+    
     const requestTotalTime = (Date.now() - requestStartTime) / 1000
     const searchWallClockTime = (Date.now() - timingData.search_wall_clock_start) / 1000
     
     console.log('\n📊 Final results:', Object.keys(allResults))
     console.log(`📈 Result sources: GPT=${sourceCounts.gpt}, Fallback=${sourceCounts.fallback}, None=${sourceCounts.none}, Error=${sourceCounts.error}`)
+    console.log(`🎯 Exact matches: ${uniqueExactMatches.length}`)
     
     // Calculate overhead
     const measuredTime = timingData.full_image_search_time + 
@@ -1486,7 +1512,8 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links preferred) or
     console.log(`   ⏱️  Total request time: ${requestTotalTime.toFixed(2)}s\n`)
     
     return NextResponse.json({ 
-      results: allResults, 
+      results: allResults,
+      exactMatches: uniqueExactMatches, // NEW: Dedicated section for exact matches from full image search
       meta: { 
         sourceCounts,
         gptReasoning: gptReasoningData,  // Include GPT reasoning for each category
