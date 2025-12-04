@@ -62,14 +62,17 @@ CRITICAL: Look carefully at the ACTUAL item in the image. Describe ONLY what you
 
 Describe in 2-3 sentences including:
 1. PRIMARY COLOR (be accurate - if it's pink, say pink; if white, say white; if multicolored, say multicolored)
-2. Target demographic (women's, men's, or kids' - based on style, cut, and design)
+2. Target demographic (women's, men's, kids', or baby - based on style, cut, and design)
+   - Baby: 0-2 years (onesies, soft fabrics, snap closures, very small sizes)
+   - Kids: 3-12 years (like mini adult clothes, larger sizes than baby)
 3. Key visual features (patterns, graphics, text, logos, character prints, etc.)
 4. Style/type (casual, formal, athletic, oversized, fitted, etc.)
 
 Examples:
 - "A pink women's casual sweatshirt featuring a large Winnie the Pooh character graphic on the front. The oversized, relaxed fit design appears to be made from soft fleece material."
 - "A navy men's athletic jogger with a tapered fit and elastic waistband. Made from moisture-wicking fabric with side pockets."
-- "A yellow kids' t-shirt with colorful cartoon character prints on the front. The short-sleeve crew neck design is sized for children."
+- "A yellow kids' t-shirt with colorful cartoon character prints on the front. The short-sleeve crew neck design is sized for children aged 3-12."
+- "A white baby onesie with soft cotton fabric and snap closures at the crotch. Features a cute teddy bear print, designed for infants 0-24 months."
 
 Be concise and accurate. Return ONLY the description text.`
 
