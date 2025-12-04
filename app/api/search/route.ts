@@ -90,7 +90,7 @@ async function handleFallbackSearch(originalImageUrl: string, requestStartTime: 
       })
     }
     
-    // Use GPT-4 Turbo to analyze and categorize the results
+    // Use GPT-4.1 to analyze and categorize the results
     const topResults = uniqueResults.slice(0, 30)
     
     const prompt = `You are analyzing image search results for a fashion product where automatic detection failed.
@@ -125,7 +125,7 @@ Return TOP 3-5 BEST matches only. Quality over quantity.`
     const openai = getOpenAIClient()
     const gptStart = Date.now()
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4-turbo-preview',
+      model: 'gpt-4.1',
       messages: [
         {
           role: 'system',
@@ -136,7 +136,7 @@ Return TOP 3-5 BEST matches only. Quality over quantity.`
       temperature: 0,
     })
     timingData.gpt4_turbo_api_time = (Date.now() - gptStart) / 1000
-    console.log(`   ⏱️  Fallback GPT-4 Turbo: ${timingData.gpt4_turbo_api_time.toFixed(2)}s`)
+    console.log(`   ⏱️  Fallback GPT-4.1: ${timingData.gpt4_turbo_api_time.toFixed(2)}s`)
 
     const responseText = completion.choices[0].message.content || '{}'
     const cleaned = responseText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim()
@@ -1006,7 +1006,7 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
         const openai = getOpenAIClient()
         const gptStart = Date.now()
         const completion = await openai.chat.completions.create({
-          model: 'gpt-4-turbo-preview',  // Original model - best quality
+          model: 'gpt-4.1',  // GPT-4.1 - better reasoning than GPT-4 Turbo
           messages: [
             {
               role: 'system',
@@ -1019,7 +1019,7 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
         const gptTime = (Date.now() - gptStart) / 1000
         timingData.gpt4_turbo_total_api_time += gptTime
         timingData.gpt4_turbo_count += 1
-        console.log(`   ⏱️  GPT-4 Turbo filtering: ${gptTime.toFixed(2)}s`)
+        console.log(`   ⏱️  GPT-4.1 filtering: ${gptTime.toFixed(2)}s`)
 
         const responseText = completion.choices[0].message.content || '{}'
         console.log(`📄 GPT response for ${resultKey}:`, responseText.substring(0, 200))
@@ -1522,7 +1522,7 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
     console.log(`   2️⃣  Per-category searches (${timingData.serper_count}x parallel): ${timingData.per_category_search_time.toFixed(2)}s`)
     console.log(`      → Serper API time (accumulated): ${timingData.serper_total_api_time.toFixed(2)}s`)
     console.log(`      → Avg per category: ${(timingData.serper_total_api_time / Math.max(timingData.serper_count, 1)).toFixed(2)}s`)
-    console.log(`   3️⃣  GPT-4 Turbo filtering (${timingData.gpt4_turbo_count}x): ${timingData.gpt4_turbo_total_api_time.toFixed(2)}s`)
+    console.log(`   3️⃣  GPT-4.1 filtering (${timingData.gpt4_turbo_count}x): ${timingData.gpt4_turbo_total_api_time.toFixed(2)}s`)
     console.log(`      → Avg per category: ${(timingData.gpt4_turbo_total_api_time / Math.max(timingData.gpt4_turbo_count, 1)).toFixed(2)}s`)
     console.log(`   4️⃣  Processing overhead (parsing/dedup/merge): ${timingData.processing_overhead_time.toFixed(2)}s`)
     console.log(`   5️⃣  Other overhead (network/etc): ${unmeasuredOverhead.toFixed(2)}s`)
