@@ -67,34 +67,41 @@ export async function POST(request: NextRequest) {
 
 ANALYSIS (internal reasoning only, do NOT output this):
 1. Identify exact color: navy blue vs black, ivory vs white, charcoal vs black
-2. Look for decorative details: brooches/pins/ornaments, embellishments, ruffles, pleats
-3. Note construction: neckline, sleeves, fit, button style
+2. Identify fabric/material (CRITICAL):
+   - Blazers/jackets: wool, wool-silk blend, worsted wool, tweed, cashmere, polyester-blend
+   - Blouses/shirts: silk, cotton, linen, satin, chiffon, silk-satin
+   - Knitwear: cashmere, wool, cotton, merino, cable knit
+   - Dresses/skirts: silk, satin, crepe, wool, cotton
+3. Look for decorative details: brooches/pins/ornaments, embellishments, ruffles, pleats
+4. Note construction: neckline, sleeves, fit, button style
 
 FORMAT (output this ONLY):
-- With graphic/character: "[CHARACTER] [color] [features] [demographic] [type]"
-- No graphic: "[color] [features] [demographic] [type]"
+- With graphic: "[CHARACTER] [color] [material] [features] [demographic] [type]"
+- Formal items: "[color] [fabric/material] [features] [demographic] [type]"
+- Casual items: "[color] [material] [features] [demographic] [type]"
 
 KEY DETAILS TO INCLUDE:
 - Color (precise shade)
-- Decorative elements: brooches, pins, ornaments, rhinestones, pearls, sequins
-- Texture details: ruffles, pleats (horizontal/vertical), draping, ruching
-- Construction: button style, neckline, sleeves, fit
-- Trim: feather, lace, fur, fringe
+- Fabric/material (wool, silk, cotton, cashmere, etc.) - ESPECIALLY for blazers, blouses, dresses
+- Decorative elements: brooches, pins, ornaments, rhinestones, pearls
+- Texture: ruffles, pleats (horizontal/vertical), draping, ruching
+- Construction: button style (single-button, double-breasted), neckline, sleeves
 
-EXAMPLES (output format - copy this):
-"Donald Duck mint green crew neck fleece kids' sweatshirt"
-"Navy blue single button brooch detail ruffle lapel women's blazer"
-"Emerald green tie-neck puff sleeve draped silk-satin women's blouse"
-"Black horizontal pleated high-waist women's midi skirt"
-"Ivory white lace trim puff sleeve women's blouse"
+EXAMPLES (notice fabric/material):
+"Donald Duck mint green cotton crew neck fleece kids' sweatshirt"
+"Navy blue wool-silk blend single-button brooch detail ruffle lapel women's blazer"
+"Emerald green silk-satin tie-neck puff sleeve draped women's blouse"
+"Black wool crepe horizontal pleated high-waist women's midi skirt"
+"Ivory cashmere cable knit oversized women's sweater"
 
 CRITICAL:
 ❌ DO NOT output "Step 1", "Step 2", or thinking process
 ❌ DO NOT output "Product title:"
+❌ DO NOT skip fabric/material for formal items (blazers, blouses, dresses)
 ✅ Output ONLY the product title (one line)
 
 Return ONLY the product title.`,
-          user: `Analyze this ${cat} and generate the product title.`
+          user: `Analyze this ${cat}. What fabric/material do you see? Generate the product title.`
         }
       } else       if (isShoes) {
         return {
@@ -184,7 +191,7 @@ Return ONLY the product title.`,
     
     // Generate search-optimized description - using category-specific prompts
     const response = await openai.chat.completions.create({
-      model: 'gpt-4.1-mini', // Latest mini model with better instruction following
+      model: 'gpt-4.1', // Full GPT-4.1 for better fabric/material identification
       messages: [
         {
           role: 'system',
@@ -206,7 +213,7 @@ Return ONLY the product title.`,
           ]
         }
       ],
-      max_tokens: 80,
+      max_tokens: 100, // Increased for fabric/material details
       temperature: 0.0 // Zero temperature for maximum determinism
     })
 
