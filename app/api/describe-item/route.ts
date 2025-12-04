@@ -55,14 +55,20 @@ export async function POST(request: NextRequest) {
       console.log(`   ✅ Valid data URL: ${mimeType}, ${Math.round(base64Part.length / 1024)}KB base64`)
     }
 
-    // Generate detailed description using GPT-4o-mini (same as Modal backend)
-    const prompt = `You are a fashion expert. Describe this ${category} in detail like a fashion catalog would:
-- Color and tone
-- Material/fabric (if visible)
-- Style details
-- Fit/silhouette
+    // Generate detailed description using GPT-4o-mini
+    const prompt = `You are a fashion expert analyzing a cropped image of a ${category}.
 
-Be specific and detailed. Return ONLY the description text, no JSON or extra formatting.`
+CRITICAL: Look carefully at the ACTUAL item in the image. Describe ONLY what you see.
+
+Describe in 2-3 sentences:
+1. PRIMARY COLOR (be accurate - if it's pink, say pink; if white, say white; if multicolored, say multicolaced)
+2. Key visual features (patterns, graphics, text, logos, character prints, etc.)
+3. Style/type (casual, formal, athletic, oversized, fitted, etc.)
+
+Example for a pink sweatshirt with Winnie the Pooh:
+"A pink casual sweatshirt featuring a large Winnie the Pooh character graphic on the front. The oversized, relaxed fit design appears to be made from soft fleece material."
+
+Be concise and accurate. Return ONLY the description text.`
 
     const response = await openai.chat.completions.create({
       model: 'gpt-4o-mini', // Same as Modal
@@ -83,8 +89,8 @@ Be specific and detailed. Return ONLY the description text, no JSON or extra for
           ]
         }
       ],
-      max_tokens: 200, // Same as Modal
-      temperature: 0.3 // Same as Modal
+      max_tokens: 100, // Shorter, more focused descriptions
+      temperature: 0.2 // Lower temperature for more accurate color recognition
     })
 
     const description = response.choices[0]?.message?.content?.trim() || `${category} item`
