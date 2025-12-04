@@ -69,25 +69,31 @@ FORMAT:
 - With graphic/character: "[CHARACTER] [color] [features] [demographic] [type]"
 - No graphic: "[color] [features] [demographic] [type]"
 
-CRITICAL:
-- NO explanations, NO sentences, ONLY the product title
-- If there's a character/graphic → START with it
-- If no character → just start with color
-- NEVER say "No character or graphic" in the output
+CRITICAL COLOR ACCURACY:
+- Be PRECISE with colors: navy blue vs black, ivory vs white, charcoal vs black
+- Look carefully at the actual shade
+- If it looks navy blue (dark blue) → say "navy blue" NOT "black"
+
+INCLUDE DECORATIVE DETAILS:
+- Brooches, pins, ornaments, embellishments
+- Ruffles, pleats, draping, ruching
+- Buttons (single-button, double-breasted, etc.)
+- Trim details (feather, lace, rhinestone, etc.)
 
 EXAMPLES (copy this format exactly):
 "Donald Duck mint green crew neck fleece kids' sweatshirt"
-"Mickey Mouse ivory white cotton kids' t-shirt"
-"Emerald green tie-neck puff sleeve silk-satin women's blouse"
-"Black cable knit oversized women's sweater"
+"Navy blue single button brooch detail ruffle lapel women's blazer"
+"Emerald green tie-neck puff sleeve draped silk-satin women's blouse"
+"Navy blue satin high-waist midi women's skirt"
 "Charcoal gray off-shoulder long sleeve ruched women's mini dress"
 
 WRONG (never do this):
 ❌ "No character or graphic. Charcoal gray..."
 ❌ "This is a black sweater with..."
+❌ Saying "black" when it's actually navy blue
 
 Return ONLY the product title.`,
-          user: `Generate product title for this ${cat}.`
+          user: `Look carefully at the color and any decorative details. Generate product title for this ${cat}.`
         }
       } else       if (isShoes) {
         return {
@@ -96,23 +102,28 @@ Return ONLY the product title.`,
 FORMAT: "[color] [material] [features] [shoe type] [demographic]"
 If brand visible: "[Brand] [color] [features] [shoe type] [demographic]"
 
-CRITICAL:
+CRITICAL COLOR ACCURACY:
+- Be PRECISE: navy blue vs black, beige vs tan vs camel, white vs cream vs ivory
+- Look carefully at the actual shade
+
+OTHER RULES:
 - NO explanations, NO sentences, ONLY the product title
 - If you can't see the brand → skip it, don't say "I cannot determine"
-- If color is unclear → use best guess (white, black, brown, etc.)
+- Include material (leather, suede, canvas, etc.) if visible
 
 EXAMPLES (copy this format exactly):
 "Nike white low-top leather sneakers women's"
-"Black chunky platform ankle boots women's"
+"Navy blue suede chunky sole sneakers women's"
 "Light brown suede lace-up sneakers unisex"
-"Navy blue canvas slip-on sneakers men's"
+"Beige canvas slip-on sneakers men's"
 
 WRONG (never do this):
 ❌ "The shoes are light brown... The brand is not visible..."
 ❌ "I cannot determine the brand..."
+❌ Saying "black" when it's navy blue
 
 Return ONLY the product title.`,
-          user: `Generate product title for these ${cat}.`
+          user: `Look carefully at the color and material. Generate product title for these ${cat}.`
         }
       } else if (isAccessory) {
         return {
@@ -121,7 +132,11 @@ Return ONLY the product title.`,
 FORMAT: "[color] [material] [frame shape] [accessory type] [demographic]"
 If brand visible: "[Brand] [color] [frame shape] [accessory type] [demographic]"
 
-CRITICAL:
+CRITICAL COLOR ACCURACY:
+- Be PRECISE: navy vs black, gold vs rose gold vs silver, tortoiseshell vs brown
+- Look carefully at the actual shade
+
+OTHER RULES:
 - NO explanations, NO sentences, ONLY the product title
 - If you can't see the brand → skip it, don't say "I cannot determine"
 - For sunglasses: describe frame color, shape (aviator, cat-eye, rectangular, round, oversized)
@@ -130,14 +145,15 @@ EXAMPLES (copy this format exactly):
 "Ray-Ban black aviator sunglasses unisex"
 "Gold metal rectangular frame sunglasses women's"
 "Tortoiseshell oversized cat-eye sunglasses women's"
-"Black quilted leather crossbody bag women's"
+"Navy blue quilted leather crossbody bag women's"
 
 WRONG (never do this):
 ❌ "I cannot determine the brand... The sunglasses appear to be..."
 ❌ "The frame is gold metal..."
+❌ Saying "black" when it's navy blue
 
 Return ONLY the product title.`,
-          user: `Generate product title for this ${cat}.`
+          user: `Look carefully at the color and material. Generate product title for this ${cat}.`
         }
       } else {
         // Fallback for unknown categories
