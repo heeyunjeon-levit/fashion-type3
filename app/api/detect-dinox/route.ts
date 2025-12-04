@@ -221,6 +221,22 @@ export async function POST(request: NextRequest) {
     const MAX_ITEMS = 5  // Limit to top 5 items to reduce clutter
     const EXCLUDED_CATEGORIES = ['leggings', 'tights', 'stockings']
 
+    // Check if bboxes need normalization (DINOx API should return normalized, but verify)
+    let imageWidth = 0
+    let imageHeight = 0
+    if (objects.length > 0 && objects[0].bbox) {
+      // Quick check: if any bbox value > 1, it's in pixel coordinates
+      const sampleBbox = objects[0].bbox
+      const needsNormalization = sampleBbox.some(coord => coord > 1)
+      if (needsNormalization) {
+        console.log(`   ⚠️  Bboxes appear to be in pixel coordinates (${sampleBbox}), need normalization`)
+        // TODO: Get actual image dimensions if needed
+        // For now, assume DINOx returns normalized - this is a safety check
+      } else {
+        console.log(`   ✅ Bboxes appear to be normalized (${sampleBbox})`)
+      }
+    }
+    
     console.log(`   Applying filters: confidence >= ${CONFIDENCE_THRESHOLD}, excluding ${EXCLUDED_CATEGORIES.join(', ')}`)
     
     const afterConfidenceFilter = objects.filter(obj => {
