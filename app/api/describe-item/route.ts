@@ -145,7 +145,7 @@ Return ONLY the product title (one line).`,
     
     // Generate search-optimized description - using category-specific prompts
     const response = await openai.chat.completions.create({
-      model: 'gpt-4o-mini', // Fast & cost-effective, works well now that cropping is fixed
+      model: 'gpt-4.1-mini', // Latest mini model with better instruction following
       messages: [
         {
           role: 'system',
