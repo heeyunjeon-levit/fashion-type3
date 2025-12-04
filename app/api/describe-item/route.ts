@@ -55,44 +55,48 @@ export async function POST(request: NextRequest) {
       console.log(`   ✅ Valid data URL: ${mimeType}, ${Math.round(base64Part.length / 1024)}KB base64`)
     }
 
-    // Generate search-optimized description (keyword-dense for e-commerce matching)
-    const prompt = `You are analyzing a ${category} image for product search. Describe it EXACTLY as it appears, using e-commerce terminology.
+    // Generate search-optimized description matching Net-A-Porter/luxury e-commerce format
+    const prompt = `You are analyzing a ${category} image. Describe it EXACTLY like a product title on Net-A-Porter, Nordstrom, or Zara.
 
-🎯 FORMAT (keyword-dense like product titles):
-"[Specific Color] [Material] [Demographic] [Item Type] - [Key Design Features], [Fit/Silhouette]"
+🎯 EXACT FORMAT TO MATCH:
+"[Key Features] [Material] [Item Type]"
+
+REAL EXAMPLES from shopping sites:
+- Net-A-Porter: "Tie-neck draped gathered silk satin-twill blouse"
+- Zara: "Puff sleeve ribbed knit sweater" 
+- Musinsa: "Oversized Mickey graphic fleece sweatshirt"
+- Nordstrom: "High-waist wide leg denim jeans"
+
+YOUR OUTPUT MUST MATCH THIS STYLE:
+✅ Start with KEY DESIGN FEATURES (tie-neck, puff sleeve, oversized, high-waist, etc.)
+✅ Add MATERIAL if visible (silk, cotton, denim, fleece, wool, ribbed knit, etc.)
+✅ End with ITEM TYPE (blouse, sweater, jeans, dress, etc.)
+✅ Add DEMOGRAPHIC as prefix if clear (women's/men's/kids'/baby)
+✅ Include SPECIFIC COLOR as prefix (emerald green, dusty rose, navy blue, etc.)
 
 CRITICAL RULES:
-1. 🎨 COLOR FIRST - Be specific: "emerald green" not just "green", "dusty rose" not "pink", "cream" not "white"
-2. 👥 DEMOGRAPHIC - women's, men's, kids', or baby (look at cut, sizing, styling cues)
-3. 🔍 USE INDUSTRY TERMS - pussy bow, bishop sleeves, keyhole back, ribbed cuffs, flared leg, etc.
-4. ✨ DESIGN FEATURES - List 2-4 distinctive elements (tie-neck, puff sleeves, rhinestone details, etc.)
-5. 📏 FIT/SILHOUETTE - oversized, fitted, relaxed, tailored, flared, wide-leg, etc.
+1. 🎨 SPECIFIC COLOR - "emerald green" not "green", "dusty rose" not "pink", "ivory" not "white"
+2. 🔍 INDUSTRY TERMS ONLY:
+   - Necklines: tie-neck, pussy bow, keyhole, crew neck, V-neck, turtleneck
+   - Sleeves: puff sleeve, bishop sleeve, bell sleeve, cap sleeve, raglan
+   - Details: gathered, draped, pleated, ruched, ribbed, cable knit
+   - Fit: oversized, fitted, relaxed, tailored, wide-leg, flared, slim-fit
+   - Closures: tie-neck, button-front, zip-up, snap-button
+3. 👥 DEMOGRAPHIC if obvious (baby has onesies/snaps, kids 3-12, women's/men's based on cut)
+4. ✨ 2-4 KEY FEATURES max - don't overload
+5. 📦 ONE LINE - no paragraphs, no flowery language
 
-EXAMPLES (study the format):
-1. Gucci blouse → "Emerald green silk-satin women's blouse - pussy bow tie-neck, dramatic puff sleeves, keyhole back with button, gathered details, oversized fit"
+EXAMPLES:
+Green Gucci blouse → "Emerald green tie-neck draped puff sleeve silk-satin women's blouse"
+Pink Disney sweatshirt → "Bubblegum pink Winnie the Pooh graphic oversized fleece sweatshirt"  
+Navy sweater → "Navy blue cable knit crew neck ribbed men's sweater"
+Kids tee → "Bright yellow Mickey Mouse graphic cotton kids' t-shirt"
+Baby onesie → "White teddy bear appliqué snap-closure cotton baby onesie"
 
-2. Pink Disney sweatshirt → "Bubblegum pink fleece women's sweatshirt - Winnie the Pooh graphic print, crew neck, dropped shoulders, ribbed cuffs, oversized relaxed fit"
+❌ AVOID: "sophisticated", "versatile", "finds sweet spot", "exudes", "perfect for", "occasions"
+✅ USE: Concrete, searchable keywords that match product listings
 
-3. Blue wide-leg jeans → "Medium wash denim women's jeans - high-waisted, wide flared leg, vintage style, button fly, classic 5-pocket"
-
-4. Navy knit sweater → "Navy blue wool-blend men's jumper - cable knit texture, crew neck, ribbed cuffs and hem, fitted silhouette"
-
-5. Yellow kids tee → "Bright yellow cotton kids' t-shirt - Mickey Mouse graphic, crew neck, short sleeves, sized 3-12 years, regular fit"
-
-WHAT TO AVOID:
-❌ Generic words: "nice", "beautiful", "sophisticated", "versatile"
-❌ Vague colors: "dark", "light" (be specific!)
-❌ Editorial language: "finds the sweet spot", "exudes elegance"
-❌ Unnecessary details: fabric care, occasion suggestions
-
-WHAT TO INCLUDE:
-✅ Exact color shade (kelly green, dusty rose, cream, charcoal)
-✅ Material if visible (silk, cotton, denim, fleece, wool, leather)
-✅ Specific design terms (pussy bow, keyhole, puff sleeve, ribbed, flared)
-✅ Prints/graphics (Mickey Mouse, floral, striped, polka dot)
-✅ Fit descriptor (oversized, fitted, wide-leg, relaxed, tailored)
-
-Return ONE line in the format shown above. Be specific and keyword-rich.`
+Return ONE concise line matching e-commerce product title format.`
 
     const response = await openai.chat.completions.create({
       model: 'gpt-4o-mini', // Same as Modal
