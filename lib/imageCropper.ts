@@ -93,9 +93,8 @@ export async function cropImage(options: CropOptions): Promise<string> {
           
           for (const exportFormat of IMAGE_FORMATS.CANVAS_EXPORT) {
             console.log(`   🎨 Converting canvas to ${exportFormat.name}...`)
-            const quality = exportFormat.quality
-            dataUrl = quality !== undefined 
-              ? canvas.toDataURL(exportFormat.format, quality)
+            dataUrl = exportFormat.quality !== undefined 
+              ? canvas.toDataURL(exportFormat.format, exportFormat.quality)
               : canvas.toDataURL(exportFormat.format)
             
             console.log(`   📊 ${exportFormat.name} result: ${dataUrl.length} bytes, starts with: ${dataUrl.substring(0, 50)}`)

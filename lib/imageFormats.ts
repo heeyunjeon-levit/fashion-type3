@@ -20,8 +20,8 @@ export const IMAGE_FORMATS = {
   
   // Canvas export preferences (order matters - try first to last)
   CANVAS_EXPORT: [
-    { format: 'image/jpeg', quality: 0.9, name: 'JPEG' },  // Smaller file size
-    { format: 'image/png', name: 'PNG' },                  // Fallback (supports transparency)
+    { format: 'image/jpeg' as const, quality: 0.9, name: 'JPEG' },  // Smaller file size
+    { format: 'image/png' as const, quality: undefined, name: 'PNG' },  // Fallback (supports transparency)
   ],
 } as const
 
