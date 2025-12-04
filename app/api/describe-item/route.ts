@@ -65,118 +65,117 @@ export async function POST(request: NextRequest) {
         return {
           system: `Generate a product title for clothing in e-commerce format.
 
-FORMAT:
+ANALYSIS (internal reasoning only, do NOT output this):
+1. Identify exact color: navy blue vs black, ivory vs white, charcoal vs black
+2. Look for decorative details: brooches/pins/ornaments, embellishments, ruffles, pleats
+3. Note construction: neckline, sleeves, fit, button style
+
+FORMAT (output this ONLY):
 - With graphic/character: "[CHARACTER] [color] [features] [demographic] [type]"
 - No graphic: "[color] [features] [demographic] [type]"
 
-STEP 1 - COLOR (be precise):
-- Navy blue vs black, ivory vs white, charcoal vs black
-- Look at the actual shade carefully
+KEY DETAILS TO INCLUDE:
+- Color (precise shade)
+- Decorative elements: brooches, pins, ornaments, rhinestones, pearls, sequins
+- Texture details: ruffles, pleats (horizontal/vertical), draping, ruching
+- Construction: button style, neckline, sleeves, fit
+- Trim: feather, lace, fur, fringe
 
-STEP 2 - DECORATIVE DETAILS (always check for these):
-- Brooches/pins/ornaments attached to the garment
-- Embellishments: rhinestones, pearls, sequins, beads
-- Ruffles, pleats, draping, ruching, gathering
-- Button style: single-button, double-breasted, covered buttons
-- Trim: feather, lace, fur, fringe, contrast trim
-
-STEP 3 - CONSTRUCTION DETAILS:
-- Neckline: crew neck, V-neck, off-shoulder, tie-neck
-- Sleeves: puff sleeve, long sleeve, short sleeve
-- Fit: oversized, fitted, A-line, bodycon
-
-EXAMPLES (notice the decorative details):
+EXAMPLES (output format - copy this):
 "Donald Duck mint green crew neck fleece kids' sweatshirt"
 "Navy blue single button brooch detail ruffle lapel women's blazer"
 "Emerald green tie-neck puff sleeve draped silk-satin women's blouse"
-"Black pearl button cashmere cardigan women's"
+"Black horizontal pleated high-waist women's midi skirt"
 "Ivory white lace trim puff sleeve women's blouse"
 
-WRONG:
-❌ Missing decorative details like brooches/pins/ornaments
-❌ "This is a black sweater..."
-❌ Saying "black" when it's navy blue
+CRITICAL:
+❌ DO NOT output "Step 1", "Step 2", or thinking process
+❌ DO NOT output "Product title:"
+✅ Output ONLY the product title (one line)
 
 Return ONLY the product title.`,
-          user: `Look at this ${cat}. Step 1: What's the exact color? Step 2: Are there any decorative details (brooches, pins, ornaments, embellishments)? Step 3: What are the key construction features? Generate the product title.`
+          user: `Analyze this ${cat} and generate the product title.`
         }
       } else       if (isShoes) {
         return {
           system: `Generate a product title for footwear in e-commerce format.
 
-FORMAT: "[color] [material] [features] [shoe type] [demographic]"
+ANALYSIS (internal only, do NOT output):
+1. Identify exact color: navy vs black, beige vs tan vs camel, white vs cream vs ivory
+2. Check for brand/logo visibility
+3. Identify material: leather, suede, canvas, mesh, etc.
+4. Note features: chunky sole, platform, lace-up, slip-on, high-top, low-top
+
+FORMAT (output this ONLY):
+"[color] [material] [features] [shoe type] [demographic]"
 If brand visible: "[Brand] [color] [features] [shoe type] [demographic]"
 
-CRITICAL COLOR ACCURACY:
-- Be PRECISE: navy blue vs black, beige vs tan vs camel, white vs cream vs ivory
-- Look carefully at the actual shade
-
-OTHER RULES:
-- NO explanations, NO sentences, ONLY the product title
-- If you can't see the brand → skip it, don't say "I cannot determine"
-- Include material (leather, suede, canvas, etc.) if visible
-
-EXAMPLES (copy this format exactly):
+EXAMPLES (copy this format):
 "Nike white low-top leather sneakers women's"
 "Navy blue suede chunky sole sneakers women's"
 "Light brown suede lace-up sneakers unisex"
 "Beige canvas slip-on sneakers men's"
 
-WRONG (never do this):
-❌ "The shoes are light brown... The brand is not visible..."
-❌ "I cannot determine the brand..."
-❌ Saying "black" when it's navy blue
+CRITICAL:
+❌ NO "Step 1", "Step 2", or thinking process in output
+❌ NO "I cannot determine..." or explanations
+✅ Output ONLY the product title (one line)
 
 Return ONLY the product title.`,
-          user: `Look carefully at the color and material. Generate product title for these ${cat}.`
+          user: `Analyze these ${cat} and generate the product title.`
         }
       } else if (isAccessory) {
         return {
           system: `Generate a product title for accessories in e-commerce format.
 
-FORMAT: "[color] [material] [frame shape] [accessory type] [demographic]"
-If brand visible: "[Brand] [color] [frame shape] [accessory type] [demographic]"
+ANALYSIS (internal only, do NOT output):
+1. Identify exact color: navy vs black, gold vs rose gold vs silver, tortoiseshell vs brown
+2. Check for brand/logo visibility
+3. For sunglasses: note frame shape (aviator, cat-eye, rectangular, round, oversized)
+4. For bags: note style (crossbody, tote, clutch, backpack) and features (quilted, chain strap)
 
-CRITICAL COLOR ACCURACY:
-- Be PRECISE: navy vs black, gold vs rose gold vs silver, tortoiseshell vs brown
-- Look carefully at the actual shade
+FORMAT (output this ONLY):
+"[color] [material] [frame shape/style] [accessory type] [demographic]"
+If brand visible: "[Brand] [color] [frame shape/style] [accessory type] [demographic]"
 
-OTHER RULES:
-- NO explanations, NO sentences, ONLY the product title
-- If you can't see the brand → skip it, don't say "I cannot determine"
-- For sunglasses: describe frame color, shape (aviator, cat-eye, rectangular, round, oversized)
-
-EXAMPLES (copy this format exactly):
+EXAMPLES (copy this format):
 "Ray-Ban black aviator sunglasses unisex"
 "Gold metal rectangular frame sunglasses women's"
 "Tortoiseshell oversized cat-eye sunglasses women's"
 "Navy blue quilted leather crossbody bag women's"
 
-WRONG (never do this):
-❌ "I cannot determine the brand... The sunglasses appear to be..."
-❌ "The frame is gold metal..."
-❌ Saying "black" when it's navy blue
+CRITICAL:
+❌ NO "Step 1", "Step 2", or thinking process in output
+❌ NO "I cannot determine..." or explanations
+✅ Output ONLY the product title (one line)
 
 Return ONLY the product title.`,
-          user: `Look carefully at the color and material. Generate product title for this ${cat}.`
+          user: `Analyze this ${cat} and generate the product title.`
         }
       } else {
         // Fallback for unknown categories
         return {
           system: `Generate a product title in e-commerce format.
 
-FORMAT: "[color] [key features] [item type]"
+ANALYSIS (internal only, do NOT output):
+1. Identify exact color and shade
+2. Note key features and materials
+3. Identify item type
 
-CRITICAL:
-- NO explanations, NO sentences, ONLY the product title
-- Use specific colors and 2-3 key features
+FORMAT (output this ONLY):
+"[color] [key features] [item type]"
 
-EXAMPLES:
+EXAMPLES (copy this format):
 "Black leather quilted crossbody bag"
 "Navy blue striped cotton scarf"
 
+CRITICAL:
+❌ NO "Step 1", "Step 2", or thinking process in output
+❌ NO explanations or sentences
+✅ Output ONLY the product title (one line)
+
 Return ONLY the product title.`,
-          user: `Generate product title for this ${cat}.`
+          user: `Analyze this ${cat} and generate the product title.`
         }
       }
     }
