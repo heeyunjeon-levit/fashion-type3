@@ -207,7 +207,7 @@ Return ONLY the product title.`,
     
     // Generate search-optimized description - using Gemini 1.5 Pro (proven OCR)
     const model = genAI.getGenerativeModel({ 
-      model: 'gemini-1.5-pro',
+      model: 'gemini-1.5-pro-latest',
       generationConfig: {
         maxOutputTokens: 150,
         temperature: 1.0
