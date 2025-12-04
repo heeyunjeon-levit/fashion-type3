@@ -85,7 +85,7 @@ export default function Home() {
   const [selectedItems, setSelectedItems] = useState<DetectedItem[]>([])
   const [processingItems, setProcessingItems] = useState<{category: string}[]>([])
   const [results, setResults] = useState<Record<string, Array<{ link: string; thumbnail: string | null; title: string | null }>>>({})
-  const [exactMatches, setExactMatches] = useState<Array<{ link: string; thumbnail: string | null; title: string | null; sourceCategory?: string }>>([])
+  const [sourceProducts, setSourceProducts] = useState<Array<{ link: string; thumbnail: string | null; title: string | null; sourceCategory?: string }>>([])
   const [isLoading, setIsLoading] = useState(false)
   const [sessionManager, setSessionManager] = useState<any>(null)
   const [overallProgress, setOverallProgress] = useState(0)
@@ -656,7 +656,7 @@ export default function Home() {
       const totalItems = items.length
       let completedSearches = 0
       const allResults: Record<string, Array<{ link: string; thumbnail: string | null; title: string | null }>> = {}
-      const allExactMatches: Array<{ link: string; thumbnail: string | null; title: string | null; sourceCategory?: string }> = []
+      const allSourceProducts: Array<{ link: string; thumbnail: string | null; title: string | null; sourceCategory?: string }> = []
       
       // Process searches in parallel but track completion
       const searchPromises = items.map(async (item, idx) => {
@@ -744,10 +744,10 @@ export default function Home() {
             console.warn(`⚠️  No results object for ${itemName}`)
           }
           
-          // NEW: Collect exact matches from full image search
-          if (data.exactMatches && Array.isArray(data.exactMatches) && data.exactMatches.length > 0) {
-            console.log(`🎯 Found ${data.exactMatches.length} exact matches for ${itemName}`)
-            allExactMatches.push(...data.exactMatches)
+          // NEW: Collect source products from full image search (product from original photo)
+          if (data.sourceProducts && Array.isArray(data.sourceProducts) && data.sourceProducts.length > 0) {
+            console.log(`📸 Found ${data.sourceProducts.length} source products for ${itemName}`)
+            allSourceProducts.push(...data.sourceProducts)
           }
           
           return data
@@ -766,14 +766,14 @@ export default function Home() {
       console.log(`✅ All searches complete: ${completedSearches}/${totalItems}`)
       setOverallProgress(prev => Math.max(prev, 95)) // Ensure we're at least 95%
       
-      // Deduplicate exact matches
-      const uniqueExactMatches = Array.from(
-        new Map(allExactMatches.map(item => [item.link, item])).values()
+      // Deduplicate source products (full image results are same across categories)
+      const uniqueSourceProducts = Array.from(
+        new Map(allSourceProducts.map(item => [item.link, item])).values()
       )
-      console.log(`🎯 Total exact matches collected: ${uniqueExactMatches.length}`)
+      console.log(`📸 Total source products collected: ${uniqueSourceProducts.length}`)
       
       setResults(allResults)
-      setExactMatches(uniqueExactMatches)
+      setSourceProducts(uniqueSourceProducts)
       
       // Log combined search results
       if (sessionManager) {
@@ -824,7 +824,7 @@ export default function Home() {
     setProcessingItems([])
     setOverallProgress(0)
     setResults({})
-    setExactMatches([])
+    setSourceProducts([])
     // Clear saved state from localStorage (including phone to prevent modal on fresh start)
     localStorage.removeItem('search_state')
     localStorage.removeItem('product_click_time_main_app')
@@ -1019,7 +1019,7 @@ export default function Home() {
         {currentStep === 'results' && (
           <ResultsBottomSheet
             results={results}
-            exactMatches={exactMatches}
+            sourceProducts={sourceProducts}
             isLoading={isLoading}
             croppedImages={croppedImagesForResults}
             originalImageUrl={uploadedImageUrl}

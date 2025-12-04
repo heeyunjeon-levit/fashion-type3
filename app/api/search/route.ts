@@ -1451,99 +1451,43 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links preferred) or
     timingData.processing_overhead_time += aggregateTime
     console.log(`⏱️  Result aggregation took: ${aggregateTime.toFixed(3)}s`)
     
-    // NEW: Extract exact matches from full image search (for dedicated section)
-    console.log('\n🎯 Processing full image results for exact matches...')
-    const exactMatches: any[] = []
+    // NEW: Extract "Source Product" from full image search
+    // Full image search = searches with entire original photo → finds the actual product being worn
+    // This is different from cropped search which finds similar alternatives for specific items
+    console.log('\n📸 Processing full image results for source product...')
+    const sourceProducts: any[] = []
     
-    // Collect all full image results from gptReasoningData
+    // Collect all full image results from gptReasoningData (aggregate from all categories)
+    const allFullImageResults: any[] = []
     for (const [key, data] of Object.entries(gptReasoningData)) {
       const reasoningData = data as any
       if (reasoningData.fullImageResults && reasoningData.fullImageResults.length > 0) {
-        console.log(`   Found ${reasoningData.fullImageResults.length} full image results for ${key}`)
-        
-        // CRITICAL: Extract character name from description to filter exact matches
-        const itemDescription = reasoningData.itemDescription || ''
-        const characterPatterns = [
-          // Disney characters (English)
-          /\b(Mickey Mouse|Minnie Mouse|Donald Duck|Daisy Duck|Winnie the Pooh|Pooh|Goofy|Pluto|Dumbo|Bambi|Simba|Stitch|Elsa|Anna|Ariel|Belle|Cinderella)\b/i,
-          // Other characters (English)
-          /\b(Hello Kitty|Snoopy|Pikachu|Pokemon|SpongeBob|Batman|Superman|Spider-Man|Avengers|Marvel|Disney)\b/i,
-          // Brands/logos
-          /\b(Nike|Adidas|Puma|Supreme|Gucci|Louis Vuitton|Chanel|Champion|North Face|Patagonia)\b/i,
-        ]
-        
-        let characterName: string | null = null
-        for (const pattern of characterPatterns) {
-          const match = itemDescription.match(pattern)
-          if (match) {
-            characterName = match[1] || match[0]
-            break
-          }
-        }
-        
-        console.log(`   Description: "${itemDescription.substring(0, 80)}..."`)
-        console.log(`   Extracted character: ${characterName || 'none'}`)
-        
-        // Filter full image results to ONLY include those matching the character
-        let filteredResults = reasoningData.fullImageResults
-        
-        if (characterName) {
-          // Character name mappings (English ↔ Korean)
-          const characterMappings: Record<string, string[]> = {
-            'Donald Duck': ['donald', 'duck', '도널드', '도날드'],
-            'Mickey Mouse': ['mickey', 'mouse', '미키'],
-            'Minnie Mouse': ['minnie', 'mouse', '미니'],
-            'Winnie the Pooh': ['pooh', 'winnie', '푸', '곰돌이'],
-            'Hello Kitty': ['hello kitty', 'kitty', '헬로키티', '키티'],
-            // Add more mappings as needed
-          }
-          
-          const searchTerms = characterMappings[characterName] || [characterName.toLowerCase()]
-          console.log(`   Filtering for character: ${characterName} (search terms: ${searchTerms.join(', ')})`)
-          
-          filteredResults = reasoningData.fullImageResults.filter((item: any) => {
-            const title = (item.title || '').toLowerCase()
-            const hasMatch = searchTerms.some(term => title.includes(term.toLowerCase()))
-            
-            if (!hasMatch) {
-              console.log(`   ❌ Rejected: "${item.title?.substring(0, 50)}..." (no ${characterName} match)`)
-            } else {
-              console.log(`   ✅ Matched: "${item.title?.substring(0, 50)}..." (contains ${characterName})`)
-            }
-            
-            return hasMatch
-          })
-          
-          console.log(`   After character filtering: ${filteredResults.length}/${reasoningData.fullImageResults.length} results`)
-        }
-        
-        // Take top 1-2 filtered results as exact matches
-        const topFullImageResults = filteredResults.slice(0, 2)
-        if (topFullImageResults.length > 0) {
-          exactMatches.push(...topFullImageResults.map((item: any) => ({
-            ...item,
-            sourceCategory: key,
-            matchType: 'exact' // Mark as exact match
-          })))
-        } else if (characterName) {
-          console.log(`   ⚠️  No full image results matched character "${characterName}" - skipping exact matches for ${key}`)
-        }
+        console.log(`   Found ${reasoningData.fullImageResults.length} full image results from ${key}`)
+        allFullImageResults.push(...reasoningData.fullImageResults.map((item: any) => ({
+          ...item,
+          sourceCategory: key
+        })))
       }
     }
     
-    // Deduplicate exact matches by link
-    const uniqueExactMatches = Array.from(
-      new Map(exactMatches.map(item => [item.link, item])).values()
+    // Deduplicate by link (full image results are the same across all categories)
+    const uniqueFullImageResults = Array.from(
+      new Map(allFullImageResults.map(item => [item.link, item])).values()
     )
     
-    console.log(`✅ Extracted ${uniqueExactMatches.length} unique exact matches from full image search`)
-    if (uniqueExactMatches.length > 0) {
-      console.log(`   Top exact matches:`)
-      uniqueExactMatches.slice(0, 3).forEach((item, idx) => {
-        console.log(`     ${idx + 1}. ${item.title?.substring(0, 60)}... (from ${item.sourceCategory})`)
+    console.log(`📦 Total unique full image results: ${uniqueFullImageResults.length}`)
+    
+    // Take top 3 as "Source Products" (the actual products from the original photo)
+    const topSourceProducts = uniqueFullImageResults.slice(0, 3)
+    
+    console.log(`✅ Selected ${topSourceProducts.length} source products from original photo`)
+    if (topSourceProducts.length > 0) {
+      console.log(`   Source products:`)
+      topSourceProducts.forEach((item, idx) => {
+        console.log(`     ${idx + 1}. ${item.title?.substring(0, 60)}...`)
       })
     } else {
-      console.log(`   ℹ️  No exact matches found (full image results didn't match character/description)`)
+      console.log(`   ℹ️  No source products found (full image search returned no results)`)
     }
     
     const requestTotalTime = (Date.now() - requestStartTime) / 1000
@@ -1551,7 +1495,7 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links preferred) or
     
     console.log('\n📊 Final results:', Object.keys(allResults))
     console.log(`📈 Result sources: GPT=${sourceCounts.gpt}, Fallback=${sourceCounts.fallback}, None=${sourceCounts.none}, Error=${sourceCounts.error}`)
-    console.log(`🎯 Exact matches: ${uniqueExactMatches.length}`)
+    console.log(`📸 Source products: ${topSourceProducts.length}`)
     
     // Calculate overhead
     const measuredTime = timingData.full_image_search_time + 
@@ -1576,7 +1520,7 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links preferred) or
     
     return NextResponse.json({ 
       results: allResults,
-      exactMatches: uniqueExactMatches, // NEW: Dedicated section for exact matches from full image search
+      sourceProducts: topSourceProducts, // NEW: Dedicated section for source products from original photo (full image search)
       meta: { 
         sourceCounts,
         gptReasoning: gptReasoningData,  // Include GPT reasoning for each category

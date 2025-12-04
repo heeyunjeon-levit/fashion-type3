@@ -14,7 +14,7 @@ interface ProductOption {
 
 interface ResultsBottomSheetProps {
   results: Record<string, ProductOption[]>
-  exactMatches?: Array<ProductOption & { sourceCategory?: string }> // NEW: Exact matches from full image search
+  sourceProducts?: Array<ProductOption & { sourceCategory?: string }> // NEW: Source products from original photo (full image search)
   isLoading: boolean
   croppedImages?: Record<string, string>
   originalImageUrl: string // Background image
@@ -26,7 +26,7 @@ interface ResultsBottomSheetProps {
 
 export default function ResultsBottomSheet({
   results,
-  exactMatches = [],
+  sourceProducts = [],
   isLoading,
   croppedImages,
   originalImageUrl,
@@ -611,27 +611,27 @@ export default function ResultsBottomSheet({
             </div>
           ) : (
             <div className="space-y-8 pb-8">
-              {/* NEW: Exact Match Section (from full image search) */}
-              {exactMatches.length > 0 && (
+              {/* NEW: Source Product Section (from full image search of original photo) */}
+              {sourceProducts.length > 0 && (
                 <div className="space-y-3">
-                  {/* Exact Match Header with special styling */}
+                  {/* Source Product Header with special styling */}
                   <div className="flex items-center gap-3 pb-2 border-b-2 border-indigo-200">
                     <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center flex-shrink-0">
                       <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                       </svg>
                     </div>
                     <div className="flex-1">
                       <h3 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
-                        🎯 Exact Match
+                        📸 Source Product
                       </h3>
-                      <p className="text-sm text-gray-500">Found by full image search</p>
+                      <p className="text-sm text-gray-500">Product from your original photo</p>
                     </div>
                   </div>
 
-                  {/* Horizontal scroll for exact matches */}
+                  {/* Horizontal scroll for source products */}
                   <div className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-hide -mx-4 px-4">
-                    {exactMatches.slice(0, 3).map((product, idx) => (
+                    {sourceProducts.slice(0, 3).map((product, idx) => (
                       <a
                         key={idx}
                         href={product.link}
@@ -639,15 +639,15 @@ export default function ResultsBottomSheet({
                         rel="noopener noreferrer"
                         onClick={(e) => {
                           e.preventDefault()
-                          handleLinkClick('exact_match', product.link, product.title, product.thumbnail, idx + 1)
+                          handleLinkClick('source_product', product.link, product.title, product.thumbnail, idx + 1)
                           window.open(product.link, '_blank', 'noopener,noreferrer')
                         }}
                         className="min-w-[160px] snap-start block"
                       >
                         <div className="bg-white rounded-2xl border-2 border-indigo-300 overflow-hidden hover:shadow-lg transition-all hover:scale-105 relative">
-                          {/* Exact Match Badge */}
+                          {/* Source Product Badge */}
                           <div className="absolute top-2 right-2 z-10 bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg">
-                            ⭐ EXACT
+                            📸 SOURCE
                           </div>
                           <div className="aspect-square bg-gray-100">
                             {product.thumbnail ? (
