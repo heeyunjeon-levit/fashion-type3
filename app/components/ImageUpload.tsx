@@ -110,6 +110,8 @@ export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
         name: image.name,
         type: image.type,
         size: image.size,
+        hasPreview: !!preview,
+        previewStart: preview?.substring(0, 60)
       })
 
       let fileToUpload = image
@@ -187,8 +189,22 @@ export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
       console.log('✅ Direct Supabase upload successful:', publicUrl)
       console.log(`⏱️  Frontend Upload Timing: ${totalUploadTime.toFixed(2)}s (compression: ${compressionTime.toFixed(2)}s, upload: ${uploadRequestTime.toFixed(2)}s)`)
       
+      // Ensure we have a valid preview data URL
+      // If preview state isn't ready yet, generate it synchronously
+      let localDataUrl = preview
+      if (!localDataUrl || !localDataUrl.startsWith('data:')) {
+        console.log('⚠️ Preview not ready, generating data URL synchronously...')
+        const reader = new FileReader()
+        localDataUrl = await new Promise<string>((resolve, reject) => {
+          reader.onloadend = () => resolve(reader.result as string)
+          reader.onerror = reject
+          reader.readAsDataURL(fileToUpload)
+        })
+        console.log(`✅ Generated data URL: ${localDataUrl.substring(0, 60)}... (${Math.round(localDataUrl.length / 1024)}KB)`)
+      }
+      
       // Pass local data URL for cropping (avoids CORS issues with Supabase storage)
-      onImageUploaded(publicUrl, totalUploadTime, preview)
+      onImageUploaded(publicUrl, totalUploadTime, localDataUrl)
     } catch (error) {
       console.error('Error uploading image:', error)
       const errorMessage = error instanceof Error ? error.message : 'Unknown error'

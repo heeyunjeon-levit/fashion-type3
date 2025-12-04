@@ -202,11 +202,22 @@ export default function Home() {
       return
     }
     
+    console.log('🎯 handleImageUploaded called:', {
+      imageUrl: imageUrl.substring(0, 60),
+      hasLocalDataUrl: !!localDataUrl,
+      localDataUrlStart: localDataUrl?.substring(0, 60)
+    })
+    
     setUploadedImageUrl(imageUrl)
     // Store local data URL for cropping (avoids CORS issues with Supabase storage)
     if (localDataUrl) {
       setLocalImageDataUrl(localDataUrl)
-      console.log('📸 Local data URL stored for cropping (avoids CORS)')
+      console.log('📸 Local data URL stored for cropping (avoids CORS)', {
+        length: localDataUrl.length,
+        start: localDataUrl.substring(0, 60)
+      })
+    } else {
+      console.warn('⚠️ No local data URL provided - cropping will use Supabase URL (may have CORS issues)')
     }
     
     // Log image upload and frontend timing
