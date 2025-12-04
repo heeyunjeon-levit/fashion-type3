@@ -573,10 +573,10 @@ export default function InteractiveBboxSelector({
                   onMouseEnter={() => setHoveredIndex(index)}
                   onMouseLeave={() => setHoveredIndex(null)}
                   title={translateCategory(bbox.category)}
-                  className={`absolute px-3 py-1.5 text-xs font-medium rounded-full transition-all duration-200 cursor-pointer flex items-center gap-1.5 whitespace-nowrap max-w-[160px] ${
+                  className={`absolute px-3 py-1.5 text-xs font-medium rounded-full transition-all duration-200 cursor-pointer flex items-center gap-1.5 whitespace-nowrap max-w-[160px] border-2 ${
                     bbox.selected
-                      ? 'bg-black text-white shadow-lg'
-                      : 'bg-white/95 backdrop-blur-sm text-gray-900 shadow-md hover:shadow-lg'
+                      ? 'bg-black text-white shadow-lg border-black'
+                      : 'bg-white text-gray-900 shadow-lg hover:shadow-xl border-gray-400'
                   }`}
                   style={{
                     left: `${leftPercent}%`,
