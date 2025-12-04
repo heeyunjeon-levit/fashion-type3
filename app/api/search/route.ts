@@ -884,7 +884,7 @@ ${subTypeExclusion ? subTypeExclusion : ''}
 CRITICAL SELECTION RULES (in order of priority):
 ${characterName ? `0. 🎭 **CHARACTER/GRAPHIC MATCH FIRST**: Item MUST feature "${characterName.toUpperCase()}"! Reject different characters!` : ''}
 ${primaryColor ? `${characterName ? '1' : '0'}. 🎨 **COLOR MATCH ${characterName ? 'SECOND' : 'FIRST'}**: Item MUST be ${primaryColor.toUpperCase()} colored! Reject inverted colors!` : ''}
-${characterName || primaryColor ? '2' : '1'}. 🇰🇷 **PREFER KOREAN SITES**: G마켓, 11번가, Coupang, Musinsa, Zigzag → often have EXACT matches!
+${characterName || primaryColor ? '2' : '1'}. 🇰🇷 **MANDATORY: AT LEAST 2 KOREAN SITES**: Your final selection MUST include minimum 2 Korean e-commerce sites!
 ${characterName || primaryColor ? '3' : '2'}. CATEGORY MATCH: Must be correct garment type (${categorySearchTerms[categoryKey]?.join(' OR ')})
 ${characterName || primaryColor ? '4' : '3'}. VISUAL MATCH: Look for similar style, color, material
 4. Accept ANY e-commerce/product website (Korean, international, boutique)
@@ -945,12 +945,17 @@ ${characterName ? '8' : '7'}. 🇰🇷 PREFER: Korean sites often have exact cha
 - Then supplement with best cropped-image results for variety
 - Return [] ONLY if literally no results are for the correct body part
 
-🇰🇷 **KOREAN SITE PRIORITY** (search was done with gl=kr, hl=ko):
-- **SELECT KOREAN SITES FIRST**: gmarket.co.kr, 11st.co.kr, coupang.com, musinsa.com, zigzag.kr, wconcept.co.kr, 29cm.co.kr, ssg.com
-- Korean sites often have the EXACT MATCH - select these before international sites!
-- **Ideal selection**: 2 Korean sites + 1 international alternative
-- International alternatives: Amazon, Zara, H&M, ASOS, Uniqlo, Mango
-- Avoid: Etsy/Depop/Poshmark (often sold out), region-specific .sq/.al domains
+🇰🇷 **KOREAN SITE REQUIREMENT** (search was done with gl=kr, hl=ko):
+- ⚠️ **MANDATORY**: You MUST select AT LEAST 2 KOREAN SITES in your results!
+- **Korean e-commerce sites**: gmarket.co.kr, 11st.co.kr, coupang.com, musinsa.com, zigzag.kr, wconcept.co.kr, 29cm.co.kr, ssg.com, elandmall.co.kr
+- Korean sites often have EXACT matches with better prices and faster shipping in Korea
+- **Required selection pattern**: 
+  * If you find 3+ Korean matches → Select 3 Korean sites (all Korean)
+  * If you find 2 Korean matches → Select 2 Korean + 1 international alternative
+  * If you find only 1 Korean match → Select 1 Korean + look harder for a 2nd Korean + 1 international
+  * If you find 0 Korean matches → Return international sites BUT LOG THIS AS UNUSUAL
+- International alternatives (use ONLY if you have 2+ Korean already): Amazon, Zara, H&M, ASOS, Uniqlo, Mango
+- ❌ NEVER select: Etsy, Depop, Poshmark, Gap, Old Navy (wrong market, often sold out)
 
 Search results (scan all ${resultsForGPT.length} for best matches):
 ${JSON.stringify(resultsForGPT, null, 2)}
@@ -990,7 +995,13 @@ Find the TOP 3-5 BEST AVAILABLE MATCHES. Prioritize IN THIS ORDER:
 - A luxury fur coat might be tagged as "sweater", "jacket", or "cardigan" - ALL VALID
 - Return [] ONLY if results are completely unrelated (e.g., shoes when looking for tops)
 
-Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links preferred) or {"${resultKey}": []} ONLY if zero valid products found.`
+🚨 **FINAL VALIDATION - BEFORE RETURNING YOUR RESULTS:**
+1. Count Korean sites in your selection: coupang.com, gmarket.co.kr, 11st.co.kr, musinsa.com, zigzag.kr, elandmall.co.kr, wconcept.co.kr, 29cm.co.kr, ssg.com
+2. If you have fewer than 2 Korean sites → GO BACK and find more Korean options from the search results
+3. Only include international sites (Zara, Gap, Etsy, Amazon, etc.) AFTER you have 2+ Korean sites
+4. **REQUIRED PATTERN**: [Korean site 1, Korean site 2, Korean site 3] OR [Korean site 1, Korean site 2, International site]
+
+Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MUST be Korean sites) or {"${resultKey}": []} ONLY if zero valid products found.`
 
         const openai = getOpenAIClient()
         const gptStart = Date.now()
@@ -1266,6 +1277,47 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links preferred) or
         })
         
         if (validLinks.length > 0) {
+          // KOREAN SITE VALIDATION: Ensure at least 2 Korean sites
+          const koreanDomains = ['coupang.com', 'gmarket.co.kr', '11st.co.kr', 'musinsa.com', 'zigzag.kr', 
+                                 'elandmall.co.kr', 'wconcept.co.kr', '29cm.co.kr', 'ssg.com', 
+                                 'oottbebe.co.kr', 'jenybiny.com', 'ably.co.kr', 'brandi.co.kr']
+          
+          const koreanLinks = validLinks.filter((link: string) => 
+            koreanDomains.some(domain => link.toLowerCase().includes(domain))
+          )
+          const internationalLinks = validLinks.filter((link: string) => 
+            !koreanDomains.some(domain => link.toLowerCase().includes(domain))
+          )
+          
+          console.log(`🇰🇷 Korean site validation: ${koreanLinks.length} Korean, ${internationalLinks.length} international`)
+          
+          // Enforce minimum 2 Korean sites
+          let finalLinks: string[]
+          if (koreanLinks.length >= 2) {
+            // Good! We have enough Korean sites
+            if (koreanLinks.length >= 3) {
+              // All Korean if we have 3+
+              finalLinks = koreanLinks.slice(0, 3)
+              console.log(`✅ Using 3 Korean sites (have ${koreanLinks.length} available)`)
+            } else {
+              // 2 Korean + 1 international
+              finalLinks = [...koreanLinks.slice(0, 2), ...internationalLinks.slice(0, 1)]
+              console.log(`✅ Using 2 Korean + 1 international`)
+            }
+          } else if (koreanLinks.length === 1) {
+            // Only 1 Korean - still use it but warn
+            finalLinks = [...koreanLinks, ...internationalLinks.slice(0, 2)]
+            console.warn(`⚠️  Only found 1 Korean site, adding 2 international (not ideal)`)
+          } else {
+            // No Korean sites - use international but log this
+            finalLinks = internationalLinks.slice(0, 3)
+            console.warn(`⚠️  NO KOREAN SITES FOUND - using international only (unusual!)`)
+          }
+          
+          // Re-validate finalLinks exist
+          validLinks.length = 0
+          validLinks.push(...finalLinks)
+          
           // Debug: Check first result structure
           if (mergedResults.length > 0) {
             console.log('🔍 Sample merged result keys:', Object.keys(mergedResults[0]))
