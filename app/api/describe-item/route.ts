@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    console.log(`🤖 Getting Gemini 3 Pro Preview description for ${category}...`)
+    console.log(`🤖 Getting Gemini 2.0 Flash description for ${category}...`)
     console.log(`   Image type: ${imageUrl.startsWith('data:') ? 'data URL' : 'HTTP URL'}`)
     console.log(`   Image size: ${Math.round(imageUrl.length / 1024)}KB`)
     
@@ -205,12 +205,12 @@ Return ONLY the product title.`,
     
     const promptConfig = getCategoryPrompt(category)
     
-    // Generate search-optimized description - using Gemini 3 Pro Preview (superior OCR/text detection)
+    // Generate search-optimized description - using Gemini 2.0 Flash Exp (fast + excellent vision)
     const model = genAI.getGenerativeModel({ 
-      model: 'gemini-3-pro-preview',
+      model: 'gemini-2.0-flash-exp',
       generationConfig: {
         maxOutputTokens: 150,
-        temperature: 1.0 // Gemini 3 default (docs recommend not lowering for best performance)
+        temperature: 1.0
       }
     })
 
@@ -248,7 +248,7 @@ Return ONLY the product title.`,
     // Gemini usage metadata
     const usageMetadata = response.usageMetadata as any
     
-    console.log(`✅ Gemini 3 Pro Description: "${description}"`)
+    console.log(`✅ Gemini 2.0 Flash Description: "${description}"`)
     console.log(`   Prompt tokens: ${usageMetadata?.promptTokenCount || 0}, Completion tokens: ${usageMetadata?.candidatesTokenCount || 0}`)
 
     return NextResponse.json({
@@ -262,7 +262,7 @@ Return ONLY the product title.`,
     })
 
   } catch (error: any) {
-    console.error('❌ Gemini 3 Pro description error:', error)
+    console.error('❌ Gemini 2.0 Flash description error:', error)
     console.error('   Error type:', error.constructor.name)
     console.error('   Error message:', error.message)
     console.error('   Stack:', error.stack?.substring(0, 300))
