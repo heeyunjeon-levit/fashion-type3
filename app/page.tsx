@@ -521,15 +521,30 @@ export default function Home() {
           // Use local data URL for cropping (avoids CORS issues with Supabase storage)
           // Use ref for immediate access (state might not be updated yet)
           const localDataUrl = localImageDataUrlRef.current || localImageDataUrl
-          const imageUrlForCropping = localDataUrl || uploadedImageUrl
-          console.log(`   Using ${localDataUrl ? 'local data URL (from ref)' : 'Supabase URL'} for cropping`)
-          console.log(`   localImageDataUrl state: ${!!localImageDataUrl}`)
-          console.log(`   localImageDataUrlRef: ${!!localImageDataUrlRef.current}`)
-          console.log(`   uploadedImageUrl: ${uploadedImageUrl.substring(0, 60)}`)
+          
+          console.log(`   🔍 Cropping URL check:`, {
+            'localImageDataUrl state': !!localImageDataUrl,
+            'localImageDataUrlRef': !!localImageDataUrlRef.current,
+            'localDataUrl (merged)': !!localDataUrl,
+            'uploadedImageUrl': uploadedImageUrl.substring(0, 60)
+          })
+          
           if (localDataUrl) {
+            console.log(`   ✅ Using local data URL (from ref)`)
             console.log(`   localDataUrl start: ${localDataUrl.substring(0, 100)}`)
             console.log(`   localDataUrl size: ${Math.round(localDataUrl.length / 1024)}KB`)
+          } else {
+            console.error(`   ❌ CRITICAL: No local data URL available! This will cause CORS taint!`)
+            console.error(`   localImageDataUrlRef.current:`, localImageDataUrlRef.current?.substring(0, 100) || 'undefined')
+            console.error(`   localImageDataUrl state:`, localImageDataUrl?.substring(0, 100) || 'undefined')
           }
+          
+          // NEVER use Supabase URL for cropping - it will taint the canvas
+          if (!localDataUrl) {
+            throw new Error('No local data URL available for cropping - cannot proceed without CORS taint')
+          }
+          
+          const imageUrlForCropping = localDataUrl
           
           const croppedDataUrl = await cropImage({
             imageUrl: imageUrlForCropping,

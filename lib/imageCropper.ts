@@ -80,9 +80,24 @@ export async function cropImage(options: CropOptions): Promise<string> {
         )
 
         // Convert to data URL
-        const dataUrl = canvas.toDataURL('image/jpeg', 0.9)
-        console.log(`   🖼️  Cropped canvas to data URL: ${dataUrl.length} bytes, starts with: ${dataUrl.substring(0, 50)}`)
-        resolve(dataUrl)
+        try {
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.9)
+          console.log(`   🖼️  Cropped canvas to data URL: ${dataUrl.length} bytes, starts with: ${dataUrl.substring(0, 50)}`)
+          
+          // Check if canvas was tainted (returns empty data URL)
+          if (!dataUrl || dataUrl === 'data:,' || dataUrl.length < 100) {
+            console.error('❌ TAINTED CANVAS: toDataURL returned empty/invalid result!')
+            console.error('   This means the image was loaded from cross-origin without proper CORS')
+            console.error('   Original imageUrl:', imageUrl.substring(0, 100))
+            reject(new Error('Canvas tainted - image loaded from cross-origin source. Use local data URL instead.'))
+            return
+          }
+          
+          resolve(dataUrl)
+        } catch (error) {
+          console.error('❌ toDataURL failed (canvas tainted):', error)
+          reject(new Error('Canvas tainted - cannot export image'))
+        }
       } catch (error) {
         reject(error)
       }
