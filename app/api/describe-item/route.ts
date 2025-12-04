@@ -104,15 +104,22 @@ EXAMPLES (notice text location details):
 "Emerald green silk-satin tie-neck puff sleeve draped women's blouse"
 "Black wool crepe horizontal pleated high-waist women's midi skirt"
 
-CRITICAL:
-❌ DO NOT output "Step 1", "Step 2", or thinking process
-❌ DO NOT output "Product title:"
+CRITICAL - OUTPUT FORMAT:
+❌ DO NOT write "There is no visible text..."
+❌ DO NOT write "The fabric appears to be..."
+❌ DO NOT output any reasoning, explanations, or thinking process
+❌ DO NOT output "Step 1", "Step 2", or "Product title:"
 ❌ DO NOT skip text/writing/logos visible on the garment
-❌ DO NOT skip fabric/material for formal items (blazers, blouses, dresses)
-✅ Output ONLY the product title (one line)
+❌ DO NOT skip fabric/material for formal items
+
+✅ OUTPUT ONLY THE PRODUCT TITLE
+✅ Just one line
+✅ No preamble, no explanation, no reasoning
+
+YOUR ENTIRE RESPONSE SHOULD BE EXACTLY ONE LINE - THE PRODUCT TITLE.
 
 Return ONLY the product title.`,
-          user: `Look carefully at this ${cat}. Is there any text, writing, or logo visible? If yes, what does it say and where is it located (shoulder, chest, neckline, sleeve, hem)? What fabric/material? Generate the product title.`
+          user: `Generate ONLY the product title for this ${cat}. No explanations, no reasoning, just the title.`
         }
       } else       if (isShoes) {
         return {
@@ -202,7 +209,7 @@ Return ONLY the product title.`,
     
     // Generate search-optimized description - using category-specific prompts
     const response = await openai.chat.completions.create({
-      model: 'gpt-4.1', // Full GPT-4.1 for better fabric/material identification
+      model: 'gpt-4o', // GPT-4o has the best vision capabilities for text/logo detection
       messages: [
         {
           role: 'system',
