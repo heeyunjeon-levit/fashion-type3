@@ -353,12 +353,11 @@ export default function Home() {
       setCurrentStep('detecting')
       
       try {
-        console.log('⚡ Starting DINO-X detection via Modal (1pm quality!)...')
+        console.log('⚡ Starting DINO-X detection via Vercel (direct DINOx API)...')
         let detectData: any = null
         
-        // Use Modal /detect (proven quality from 1pm!)
-        const backendUrl = 'https://heeyunjeon-levit--fashion-crop-api-gpu-fastapi-app-v2.modal.run'
-        const modalResponse = await fetch(`${backendUrl}/detect`, {
+        // Use Vercel /api/detect-dinox (calls DINOx API directly - no Modal needed!)
+        const dinoxResponse = await fetch('/api/detect-dinox', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -367,12 +366,12 @@ export default function Home() {
           signal: AbortSignal.timeout(120000)  // 2 min timeout
         })
 
-        if (!modalResponse.ok) {
-          throw new Error(`Modal detection failed: ${modalResponse.status}`)
+        if (!dinoxResponse.ok) {
+          throw new Error(`DINOx detection failed: ${dinoxResponse.status}`)
         }
 
-        detectData = await modalResponse.json()
-        console.log(`✅ Modal detection complete: ${detectData.bboxes?.length || 0} items found`)
+        detectData = await dinoxResponse.json()
+        console.log(`✅ DINOx detection complete: ${detectData.bboxes?.length || 0} items found`)
         
         if (!detectData.bboxes || detectData.bboxes.length === 0) {
           console.log('⚠️ No items detected, showing manual draw mode')
