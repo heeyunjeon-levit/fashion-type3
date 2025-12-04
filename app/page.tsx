@@ -509,8 +509,74 @@ export default function Home() {
           console.log(`✂️ Cropping ${bbox.category} locally...`)
           const { cropImage } = await import('@/lib/imageCropper')
           
+          // Get local data URL first (needed for cropping)
+          const localDataUrl = localImageDataUrlRef.current || localImageDataUrl
+          if (!localDataUrl) {
+            throw new Error('No local data URL available for cropping')
+          }
+          
           // Convert pixel bbox to normalized (0-1) coordinates
           const [x1, y1, x2, y2] = bbox.bbox
+          
+          console.log(`   📏 Bbox conversion:`, {
+            'bbox (pixels)': bbox.bbox,
+            'imageSize': imageSize,
+            'imageSize valid': imageSize[0] > 0 && imageSize[1] > 0
+          })
+          
+          // Check if imageSize is valid
+          if (!imageSize || imageSize[0] === 0 || imageSize[1] === 0) {
+            console.error(`   ❌ Invalid imageSize: [${imageSize[0]}, ${imageSize[1]}]`)
+            console.error(`   Bboxes from detection might already be normalized!`)
+            // Assume bboxes are already normalized (0-1 range)
+            console.log(`   ℹ️  Using bbox as already normalized`)
+            const normalizedBbox: [number, number, number, number] = [x1, y1, x2, y2]
+            
+            const croppedDataUrl = await cropImage({
+              imageUrl: localDataUrl,
+              bbox: normalizedBbox,
+              padding: 0.05
+            })
+            console.log(`✅ Cropped locally: ${Math.round(croppedDataUrl.length / 1024)}KB data URL`)
+            
+            // Continue with description...
+            let description = `${bbox.category} item`
+            try {
+              const descResponse = await fetch('/api/describe-item', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  imageUrl: croppedDataUrl,
+                  category: bbox.category
+                }),
+                signal: AbortSignal.timeout(15000)
+              })
+              
+              if (descResponse.ok) {
+                const descData = await descResponse.json()
+                description = descData.description || description
+                console.log(`✅ Description: "${description.substring(0, 60)}..."`)
+              } else {
+                console.warn(`⚠️ Description failed: ${descResponse.status}, using default`)
+              }
+            } catch (descError) {
+              console.warn(`⚠️ Description error:`, descError)
+            }
+            
+            const croppedImageUrl = croppedDataUrl
+            completedItems++
+            const targetProgress = Math.min(20, (completedItems / totalItems) * 20)
+            setOverallProgress(prev => Math.max(prev, targetProgress))
+            
+            return {
+              category: bbox.mapped_category || bbox.category,
+              groundingdino_prompt: bbox.category,
+              description: description,
+              croppedImageUrl: croppedImageUrl,
+              confidence: bbox.confidence
+            }
+          }
+          
           const normalizedBbox: [number, number, number, number] = [
             x1 / imageSize[0],
             y1 / imageSize[1],
@@ -518,31 +584,8 @@ export default function Home() {
             y2 / imageSize[1]
           ]
           
-          // Use local data URL for cropping (avoids CORS issues with Supabase storage)
-          // Use ref for immediate access (state might not be updated yet)
-          const localDataUrl = localImageDataUrlRef.current || localImageDataUrl
-          
-          console.log(`   🔍 Cropping URL check:`, {
-            'localImageDataUrl state': !!localImageDataUrl,
-            'localImageDataUrlRef': !!localImageDataUrlRef.current,
-            'localDataUrl (merged)': !!localDataUrl,
-            'uploadedImageUrl': uploadedImageUrl.substring(0, 60)
-          })
-          
-          if (localDataUrl) {
-            console.log(`   ✅ Using local data URL (from ref)`)
-            console.log(`   localDataUrl start: ${localDataUrl.substring(0, 100)}`)
-            console.log(`   localDataUrl size: ${Math.round(localDataUrl.length / 1024)}KB`)
-          } else {
-            console.error(`   ❌ CRITICAL: No local data URL available! This will cause CORS taint!`)
-            console.error(`   localImageDataUrlRef.current:`, localImageDataUrlRef.current?.substring(0, 100) || 'undefined')
-            console.error(`   localImageDataUrl state:`, localImageDataUrl?.substring(0, 100) || 'undefined')
-          }
-          
-          // NEVER use Supabase URL for cropping - it will taint the canvas
-          if (!localDataUrl) {
-            throw new Error('No local data URL available for cropping - cannot proceed without CORS taint')
-          }
+          console.log(`   ✅ Normalized bbox:`, normalizedBbox)
+          console.log(`   ✅ Using local data URL: ${Math.round(localDataUrl.length / 1024)}KB`)
           
           const imageUrlForCropping = localDataUrl
           
