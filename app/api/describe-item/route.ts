@@ -69,31 +69,36 @@ FORMAT:
 - With graphic/character: "[CHARACTER] [color] [features] [demographic] [type]"
 - No graphic: "[color] [features] [demographic] [type]"
 
-CRITICAL COLOR ACCURACY:
-- Be PRECISE with colors: navy blue vs black, ivory vs white, charcoal vs black
-- Look carefully at the actual shade
-- If it looks navy blue (dark blue) → say "navy blue" NOT "black"
+STEP 1 - COLOR (be precise):
+- Navy blue vs black, ivory vs white, charcoal vs black
+- Look at the actual shade carefully
 
-INCLUDE DECORATIVE DETAILS:
-- Brooches, pins, ornaments, embellishments
-- Ruffles, pleats, draping, ruching
-- Buttons (single-button, double-breasted, etc.)
-- Trim details (feather, lace, rhinestone, etc.)
+STEP 2 - DECORATIVE DETAILS (always check for these):
+- Brooches/pins/ornaments attached to the garment
+- Embellishments: rhinestones, pearls, sequins, beads
+- Ruffles, pleats, draping, ruching, gathering
+- Button style: single-button, double-breasted, covered buttons
+- Trim: feather, lace, fur, fringe, contrast trim
 
-EXAMPLES (copy this format exactly):
+STEP 3 - CONSTRUCTION DETAILS:
+- Neckline: crew neck, V-neck, off-shoulder, tie-neck
+- Sleeves: puff sleeve, long sleeve, short sleeve
+- Fit: oversized, fitted, A-line, bodycon
+
+EXAMPLES (notice the decorative details):
 "Donald Duck mint green crew neck fleece kids' sweatshirt"
 "Navy blue single button brooch detail ruffle lapel women's blazer"
 "Emerald green tie-neck puff sleeve draped silk-satin women's blouse"
-"Navy blue satin high-waist midi women's skirt"
-"Charcoal gray off-shoulder long sleeve ruched women's mini dress"
+"Black pearl button cashmere cardigan women's"
+"Ivory white lace trim puff sleeve women's blouse"
 
-WRONG (never do this):
-❌ "No character or graphic. Charcoal gray..."
-❌ "This is a black sweater with..."
-❌ Saying "black" when it's actually navy blue
+WRONG:
+❌ Missing decorative details like brooches/pins/ornaments
+❌ "This is a black sweater..."
+❌ Saying "black" when it's navy blue
 
 Return ONLY the product title.`,
-          user: `Look carefully at the color and any decorative details. Generate product title for this ${cat}.`
+          user: `Look at this ${cat}. Step 1: What's the exact color? Step 2: Are there any decorative details (brooches, pins, ornaments, embellishments)? Step 3: What are the key construction features? Generate the product title.`
         }
       } else       if (isShoes) {
         return {
