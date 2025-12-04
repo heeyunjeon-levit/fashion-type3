@@ -55,24 +55,34 @@ export async function POST(request: NextRequest) {
       console.log(`   ✅ Valid data URL: ${mimeType}, ${Math.round(base64Part.length / 1024)}KB base64`)
     }
 
-    // Generate search-optimized description matching Net-A-Porter/luxury e-commerce format
-    const prompt = `You are analyzing a ${category} image. Describe it EXACTLY like a product title on Net-A-Porter, Nordstrom, or Zara.
+    // Generate search-optimized description matching international + Korean e-commerce formats
+    const prompt = `You are analyzing a ${category} image. Describe it like product titles on Net-A-Porter, Nordstrom, Musinsa, 11번가.
 
-🎯 EXACT FORMAT TO MATCH:
-"[Key Features] [Material] [Item Type]"
+🎯 OUTPUT FORMAT (keyword-dense for search matching):
+"[Color] [Key Design Features] [Material] [Demographic] [Item Type]"
 
-REAL EXAMPLES from shopping sites:
-- Net-A-Porter: "Tie-neck draped gathered silk satin-twill blouse"
-- Zara: "Puff sleeve ribbed knit sweater" 
-- Musinsa: "Oversized Mickey graphic fleece sweatshirt"
-- Nordstrom: "High-waist wide leg denim jeans"
+REAL PRODUCT TITLE EXAMPLES:
+International (Net-A-Porter, Zara, Nordstrom):
+- "Tie-neck draped gathered silk satin-twill blouse"
+- "Puff sleeve ribbed knit sweater"
+- "High-waist wide leg denim jeans"
 
-YOUR OUTPUT MUST MATCH THIS STYLE:
-✅ Start with KEY DESIGN FEATURES (tie-neck, puff sleeve, oversized, high-waist, etc.)
-✅ Add MATERIAL if visible (silk, cotton, denim, fleece, wool, ribbed knit, etc.)
-✅ End with ITEM TYPE (blouse, sweater, jeans, dress, etc.)
-✅ Add DEMOGRAPHIC as prefix if clear (women's/men's/kids'/baby)
-✅ Include SPECIFIC COLOR as prefix (emerald green, dusty rose, navy blue, etc.)
+Korean (Musinsa, 11번가, Zigzag):
+- "테나야 레이크 바라클라바 다운 자켓 브라운" (Tenaya Lake balaclava down jacket brown)
+- "오버핏 미키 그래픽 플리스 맨투맨" (Oversized Mickey graphic fleece sweatshirt)
+- "와이드 스트레이트 데님 팬츠 블루" (Wide straight denim pants blue)
+
+YOUR OUTPUT STRUCTURE:
+1. COLOR first (for both Korean and English search): "emerald green", "dusty rose", "navy blue", "ivory white"
+2. KEY FEATURES (2-4 distinctive elements):
+   - Necklines: tie-neck, pussy bow, crew neck, V-neck, turtleneck, keyhole
+   - Sleeves: puff sleeve, bishop sleeve, bell sleeve, balloon sleeve, raglan, bishop
+   - Silhouette: oversized, fitted, relaxed, wide-leg, flared, A-line, bodycon
+   - Details: draped, gathered, pleated, ruched, ribbed, cable knit, quilted
+   - Embellishments: rhinestone, sequin, embroidered, appliqué, beaded
+3. MATERIAL if visible: silk-satin, cotton, denim, fleece, wool, ribbed knit, leather
+4. DEMOGRAPHIC if clear: women's, men's, kids', baby
+5. ITEM TYPE: blouse, sweater, jeans, jacket, dress, t-shirt, etc.
 
 CRITICAL RULES:
 1. 🎨 SPECIFIC COLOR - "emerald green" not "green", "dusty rose" not "pink", "ivory" not "white"
@@ -86,17 +96,31 @@ CRITICAL RULES:
 4. ✨ 2-4 KEY FEATURES max - don't overload
 5. 📦 ONE LINE - no paragraphs, no flowery language
 
-EXAMPLES:
-Green Gucci blouse → "Emerald green tie-neck draped puff sleeve silk-satin women's blouse"
-Pink Disney sweatshirt → "Bubblegum pink Winnie the Pooh graphic oversized fleece sweatshirt"  
-Navy sweater → "Navy blue cable knit crew neck ribbed men's sweater"
-Kids tee → "Bright yellow Mickey Mouse graphic cotton kids' t-shirt"
-Baby onesie → "White teddy bear appliqué snap-closure cotton baby onesie"
+EXAMPLES (match this keyword-dense format):
+1. Green Gucci blouse → "Emerald green tie-neck draped gathered puff sleeve silk-satin women's blouse"
+2. Brown down jacket → "Chocolate brown balaclava hood quilted down women's jacket"
+3. Pink Disney sweatshirt → "Bubblegum pink Winnie the Pooh graphic oversized fleece women's sweatshirt"
+4. Blue jeans → "Medium wash high-waist wide leg denim women's jeans"
+5. Navy sweater → "Navy blue cable knit crew neck ribbed men's sweater"
+6. Yellow kids tee → "Bright yellow Mickey Mouse graphic cotton kids' t-shirt"
+7. White baby onesie → "Ivory white teddy bear appliqué snap-closure cotton baby onesie"
 
-❌ AVOID: "sophisticated", "versatile", "finds sweet spot", "exudes", "perfect for", "occasions"
-✅ USE: Concrete, searchable keywords that match product listings
+COLOR SPECIFICITY (CRITICAL for search):
+❌ "green" → ✅ "emerald green", "kelly green", "sage green", "olive green"
+❌ "pink" → ✅ "bubblegum pink", "dusty rose", "hot pink", "blush pink"
+❌ "blue" → ✅ "navy blue", "royal blue", "sky blue", "cobalt blue"
+❌ "brown" → ✅ "chocolate brown", "camel", "tan", "cognac"
+❌ "white" → ✅ "ivory white", "cream", "pure white", "off-white"
 
-Return ONE concise line matching e-commerce product title format.`
+KOREAN KEYWORDS (Musinsa, 11번가 style):
+- Fit: 오버핏 (oversized), 루즈핏 (loose), 슬림핏 (slim)
+- Features: 후드 (hood), 지퍼 (zipper), 포켓 (pocket), 프린트 (print)
+- Materials: 니트 (knit), 플리스 (fleece), 데님 (denim), 코튼 (cotton)
+
+❌ AVOID: Editorial language, vague terms, styling suggestions
+✅ USE: Concrete searchable keywords matching product titles
+
+Return ONE keyword-dense line. Match the examples exactly.`
 
     const response = await openai.chat.completions.create({
       model: 'gpt-4o-mini', // Same as Modal
