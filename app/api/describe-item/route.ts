@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import OpenAI from 'openai'
+import { GoogleGenerativeAI } from '@google/generative-ai'
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-})
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY || '')
 
 export async function POST(request: NextRequest) {
   try {
@@ -17,7 +15,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    console.log(`🤖 Getting GPT-4o-mini description for ${category}...`)
+    console.log(`🤖 Getting Gemini 3 Pro description for ${category}...`)
     console.log(`   Image type: ${imageUrl.startsWith('data:') ? 'data URL' : 'HTTP URL'}`)
     console.log(`   Image size: ${Math.round(imageUrl.length / 1024)}KB`)
     
@@ -207,47 +205,64 @@ Return ONLY the product title.`,
     
     const promptConfig = getCategoryPrompt(category)
     
-    // Generate search-optimized description - using category-specific prompts
-    const response = await openai.chat.completions.create({
-      model: 'gpt-4.1', // GPT-4.1 has superior vision + OCR (74.8% MMMU vs GPT-4o's 68.7%)
-      messages: [
-        {
-          role: 'system',
-          content: promptConfig.system
-        },
-        {
-          role: 'user',
-          content: [
-            {
-              type: 'image_url',
-              image_url: {
-                url: imageUrl // Accepts both HTTP URLs and data URLs
-              }
-            },
-            {
-              type: 'text',
-              text: promptConfig.user
-            }
-          ]
-        }
-      ],
-      max_tokens: 150, // Increased for text detection + fabric/material details
-      temperature: 0.0 // Zero temperature for maximum determinism
+    // Generate search-optimized description - using Gemini 3 Pro (superior OCR/text detection)
+    const model = genAI.getGenerativeModel({ 
+      model: 'gemini-3-pro',
+      generationConfig: {
+        maxOutputTokens: 150,
+        temperature: 0.0
+      }
     })
 
-    const description = response.choices[0]?.message?.content?.trim() || `${category} item`
+    // Prepare image data for Gemini
+    let imageData: { inlineData: { data: string; mimeType: string } } | { fileData: { fileUri: string; mimeType: string } }
+    
+    if (imageUrl.startsWith('data:')) {
+      // Data URL - extract base64 and MIME type
+      const match = imageUrl.match(/^data:([^;]+);base64,(.+)$/)
+      if (!match) {
+        throw new Error('Invalid data URL format')
+      }
+      imageData = {
+        inlineData: {
+          data: match[2], // Base64 string without prefix
+          mimeType: match[1]
+        }
+      }
+    } else {
+      // HTTP URL - Gemini doesn't support direct URLs, we need to fetch and convert
+      throw new Error('HTTP URLs not yet supported with Gemini - please use data URLs')
+    }
 
-    console.log(`✅ GPT-4o-mini Description: "${description}"`)
-    console.log(`   Prompt tokens: ${response.usage?.prompt_tokens}, Completion tokens: ${response.usage?.completion_tokens}`)
+    // Combine system + user prompts for Gemini (no separate system message)
+    const fullPrompt = `${promptConfig.system}\n\n${promptConfig.user}`
+
+    const result = await model.generateContent([
+      fullPrompt,
+      imageData
+    ])
+
+    const response = await result.response
+    const description = response.text()?.trim() || `${category} item`
+
+    // Gemini usage metadata
+    const usageMetadata = response.usageMetadata as any
+    
+    console.log(`✅ Gemini 3 Pro Description: "${description}"`)
+    console.log(`   Prompt tokens: ${usageMetadata?.promptTokenCount || 0}, Completion tokens: ${usageMetadata?.candidatesTokenCount || 0}`)
 
     return NextResponse.json({
       description,
       category,
-      usage: response.usage
+      usage: {
+        prompt_tokens: usageMetadata?.promptTokenCount || 0,
+        completion_tokens: usageMetadata?.candidatesTokenCount || 0,
+        total_tokens: usageMetadata?.totalTokenCount || 0
+      }
     })
 
   } catch (error: any) {
-    console.error('❌ GPT-4o-mini description error:', error)
+    console.error('❌ Gemini 3 Pro description error:', error)
     console.error('   Error type:', error.constructor.name)
     console.error('   Error message:', error.message)
     console.error('   Stack:', error.stack?.substring(0, 300))
