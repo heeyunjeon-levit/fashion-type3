@@ -534,12 +534,34 @@ export async function POST(request: NextRequest) {
         
         // Extract primary color from description for strict matching
         let primaryColor: string | null = null
+        let characterName: string | null = null
+        
         if (itemDescription) {
+          // Extract character/brand names (MOST IMPORTANT for graphic items!)
+          const characterPatterns = [
+            // Disney characters (English)
+            /\b(Mickey Mouse|Minnie Mouse|Donald Duck|Daisy Duck|Winnie the Pooh|Pooh|Goofy|Pluto|Dumbo|Bambi|Simba|Stitch|Elsa|Anna|Ariel|Belle|Cinderella)\b/i,
+            // Other characters (English)
+            /\b(Hello Kitty|Snoopy|Pikachu|Pokemon|SpongeBob|Batman|Superman|Spider-Man|Avengers|Marvel|Disney)\b/i,
+            // Brands/logos
+            /\b(Nike|Adidas|Puma|Supreme|Gucci|Louis Vuitton|Chanel|Champion|North Face|Patagonia)\b/i,
+            // Korean character names
+            /(미키|미니|도널드|곰돌이|푸|스누피|헬로키티|포켓몬|피카츄)/
+          ]
+          for (const pattern of characterPatterns) {
+            const match = itemDescription.match(pattern)
+            if (match) {
+              characterName = match[1] || match[0]
+              break
+            }
+          }
+          
+          // Extract color
           const colorPatterns = [
             // English colors
-            /\b(black|white|cream|ivory|beige|brown|tan|gray|grey|navy|blue|red|pink|green|yellow|orange|purple|burgundy|maroon|olive|khaki|charcoal)\b/i,
+            /\b(black|white|cream|ivory|beige|brown|tan|gray|grey|navy|blue|red|pink|green|yellow|orange|purple|burgundy|maroon|olive|khaki|charcoal|mint)\b/i,
             // Korean colors
-            /(검정|검은|블랙|흰|화이트|크림|아이보리|베이지|브라운|네이비|블루|레드|핑크|그린|옐로우|퍼플)/
+            /(검정|검은|블랙|흰|화이트|크림|아이보리|베이지|브라운|네이비|블루|레드|핑크|그린|옐로우|퍼플|민트)/
           ]
           for (const pattern of colorPatterns) {
             const match = itemDescription.match(pattern)
@@ -550,6 +572,7 @@ export async function POST(request: NextRequest) {
           }
           console.log(`   📝 Using GPT description: "${itemDescription.substring(0, 80)}..."`)
           console.log(`   🎨 Extracted primary color: ${primaryColor || 'none detected'}`)
+          console.log(`   🎭 Extracted character/graphic: ${characterName || 'none detected'}`)
         } else {
           console.log(`   ℹ️  No description provided for ${resultKey}`)
         }
@@ -827,8 +850,18 @@ export async function POST(request: NextRequest) {
         
         const prompt = `You are analyzing aggregated image search results from multiple runs for ${categoryLabels[categoryKey]}.
 
+${characterName ? `
+🎭🎭🎭 **CRITICAL PRIORITY #1: CHARACTER/GRAPHIC IS "${characterName.toUpperCase()}"** 🎭🎭🎭
+- This is a GRAPHIC/CHARACTER item - the character is THE MOST IMPORTANT feature!
+- You MUST find products featuring "${characterName.toUpperCase()}"!
+- ❌ ABSOLUTELY REJECT items with DIFFERENT characters (e.g., if looking for "Donald Duck", reject "Winnie the Pooh" or "Mickey Mouse")
+- ❌ DO NOT mix up characters just because they're similar style (all Disney, all kids', etc.)
+- The character name MUST match or you MUST reject the product!
+- Korean mappings: 푸 = Pooh, 미키 = Mickey, 미니 = Minnie, 도널드 = Donald Duck
+` : ''}
+
 ${primaryColor ? `
-🚨🚨🚨 **CRITICAL: PRIMARY COLOR IS ${primaryColor.toUpperCase()}** 🚨🚨🚨
+🚨 **PRIORITY #2: PRIMARY COLOR IS ${primaryColor.toUpperCase()}** 🚨
 - You MUST find products that are ${primaryColor.toUpperCase()} colored!
 - ❌ DO NOT return items with INVERTED colors (e.g., if color is BLACK, don't return WHITE/CREAM items)
 - ❌ If item is BLACK with white details, find BLACK items (not white/cream)
@@ -857,10 +890,11 @@ ${subTypeExclusion ? subTypeExclusion : ''}
 - ${categoryKey === 'dress' ? '❌ ABSOLUTELY REJECT: Any title mentioning "pants", "jeans", "shorts", "shirt", "jacket", "바지", "셔츠", "재킷"' : ''}
 
 CRITICAL SELECTION RULES (in order of priority):
-${primaryColor ? `0. 🎨 **COLOR MATCH FIRST**: Item MUST be ${primaryColor.toUpperCase()} colored! Reject inverted colors!` : ''}
-1. 🇰🇷 **PREFER KOREAN SITES**: G마켓, 11번가, Coupang, Musinsa, Zigzag → often have EXACT matches!
-2. CATEGORY MATCH: Must be correct garment type (${categorySearchTerms[categoryKey]?.join(' OR ')})
-3. VISUAL MATCH: Look for similar style, color, material
+${characterName ? `0. 🎭 **CHARACTER/GRAPHIC MATCH FIRST**: Item MUST feature "${characterName.toUpperCase()}"! Reject different characters!` : ''}
+${primaryColor ? `${characterName ? '1' : '0'}. 🎨 **COLOR MATCH ${characterName ? 'SECOND' : 'FIRST'}**: Item MUST be ${primaryColor.toUpperCase()} colored! Reject inverted colors!` : ''}
+${characterName || primaryColor ? '2' : '1'}. 🇰🇷 **PREFER KOREAN SITES**: G마켓, 11번가, Coupang, Musinsa, Zigzag → often have EXACT matches!
+${characterName || primaryColor ? '3' : '2'}. CATEGORY MATCH: Must be correct garment type (${categorySearchTerms[categoryKey]?.join(' OR ')})
+${characterName || primaryColor ? '4' : '3'}. VISUAL MATCH: Look for similar style, color, material
 4. Accept ANY e-commerce/product website (Korean, international, boutique)
 5. Accept: G마켓, 11번가, Coupang, Musinsa, Amazon, Zara, H&M, Nordstrom, Uniqlo, YesStyle, Etsy, Depop
 7. 🚫 REJECT these sites (NOT product pages): Instagram, TikTok, YouTube, Pinterest, Facebook, Twitter/X, Reddit, Google Images, image CDNs, blogs, news sites, wikis, non-product pages
@@ -892,17 +926,22 @@ ${itemDescription ? `3. 🎯 **CRITICAL: Match "${itemDescription}"**
 6. ❌ REJECT if title is generic ("Shop now", "Homepage", "Category", "Collection")
 7. ✅ ACCEPT style variations - luxury fur coat might be tagged as jacket, sweater, or cardigan
 
-Matching criteria (COLOR FIRST, then visual similarity):
-1. 🎨 **#1 PRIORITY - COLOR MATCH**: If item is BLACK, find BLACK items. If WHITE/CREAM, find LIGHT items!
+Matching criteria (${characterName ? 'CHARACTER FIRST, then color' : 'COLOR FIRST, then visual similarity'}):
+${characterName ? `1. 🎭 **#1 PRIORITY - CHARACTER/GRAPHIC MATCH**: Item MUST feature "${characterName.toUpperCase()}"!
+   - Donald Duck mint green → find DONALD DUCK items (NOT Winnie the Pooh or Mickey!)
+   - Winnie the Pooh yellow → find WINNIE THE POOH items (NOT Donald or Minnie!)
+   - Don't mix up characters - this is a critical error!
+   - Korean names: 푸 = Pooh, 미키 = Mickey, 미니 = Minnie, 도널드 = Donald Duck
+2. 🎨 **#2 PRIORITY - COLOR MATCH**: If item is ${primaryColor?.toUpperCase() || 'a specific color'}, find matching colors!` : '1. 🎨 **#1 PRIORITY - COLOR MATCH**: If item is BLACK, find BLACK items. If WHITE/CREAM, find LIGHT items!'}
    - BLACK sweater with white bows → find BLACK sweaters (NOT beige/cream ones!)
    - WHITE/CREAM sweater with black bows → find WHITE/CREAM sweaters (NOT black ones!)
    - Don't return inverted colors - this is a critical error!
-2. ✅ Visual similarity (Google Lens found these based on IMAGE, trust it!)
-3. ✅ Style/material match (cable knit, bow details, ruffle hem, etc.)
-${itemDescription ? `4. 🎯 MATCH DESCRIPTION: "${itemDescription}" - especially the COLOR words!` : ''}
-5. ✅ FLEXIBLE: Category can vary within same general type (sweater, jacket, coat all = upper body wear)
-6. ✅ MUST: Link goes to a product detail page (not category/homepage)
-7. 🇰🇷 PREFER: Korean sites often have exact color matches!
+${characterName ? '3' : '2'}. ✅ Visual similarity (Google Lens found these based on IMAGE, trust it!)
+${characterName ? '4' : '3'}. ✅ Style/material match (cable knit, bow details, ruffle hem, etc.)
+${itemDescription ? `${characterName ? '5' : '4'}. 🎯 MATCH DESCRIPTION: "${itemDescription}" - especially the ${characterName ? 'CHARACTER and COLOR' : 'COLOR'} words!` : ''}
+${characterName ? '6' : '5'}. ✅ FLEXIBLE: Category can vary within same general type (sweater, jacket, coat all = upper body wear)
+${characterName ? '7' : '6'}. ✅ MUST: Link goes to a product detail page (not category/homepage)
+${characterName ? '8' : '7'}. 🇰🇷 PREFER: Korean sites often have exact character + color matches!
 
 **IMPORTANT: Return your BEST 3-5 HIGH-QUALITY matches ONLY. Quality over quantity.**
 
