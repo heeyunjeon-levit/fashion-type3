@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import ImageUpload from './components/ImageUpload'
 import CroppedImageGallery from './components/CroppedImageGallery'
 import InteractiveBboxSelector from './components/InteractiveBboxSelector'
@@ -78,6 +78,7 @@ export default function Home() {
   const [autoDrawMode, setAutoDrawMode] = useState(false)  // Auto-enable drawing when no items detected
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string>('')
   const [localImageDataUrl, setLocalImageDataUrl] = useState<string>('')  // Local data URL for cropping (avoids CORS)
+  const localImageDataUrlRef = useRef<string>('')  // Ref for immediate access (state updates are async)
   const [bboxes, setBboxes] = useState<BboxItem[]>([])
   const [imageSize, setImageSize] = useState<[number, number]>([0, 0])
   const [detectedItems, setDetectedItems] = useState<DetectedItem[]>([])
@@ -210,8 +211,10 @@ export default function Home() {
     
     setUploadedImageUrl(imageUrl)
     // Store local data URL for cropping (avoids CORS issues with Supabase storage)
+    // Use both state and ref - ref is immediately available, state is for React re-renders
     if (localDataUrl) {
       setLocalImageDataUrl(localDataUrl)
+      localImageDataUrlRef.current = localDataUrl  // Store in ref for immediate access
       console.log('📸 Local data URL stored for cropping (avoids CORS)', {
         length: localDataUrl.length,
         start: localDataUrl.substring(0, 60)
@@ -517,13 +520,16 @@ export default function Home() {
           ]
           
           // Use local data URL for cropping (avoids CORS issues with Supabase storage)
-          // Fall back to uploaded URL if local data URL not available
-          const imageUrlForCropping = localImageDataUrl || uploadedImageUrl
-          console.log(`   Using ${localImageDataUrl ? 'local data URL' : 'Supabase URL'} for cropping`)
-          console.log(`   localImageDataUrl available: ${!!localImageDataUrl}`)
+          // Use ref for immediate access (state might not be updated yet)
+          const localDataUrl = localImageDataUrlRef.current || localImageDataUrl
+          const imageUrlForCropping = localDataUrl || uploadedImageUrl
+          console.log(`   Using ${localDataUrl ? 'local data URL (from ref)' : 'Supabase URL'} for cropping`)
+          console.log(`   localImageDataUrl state: ${!!localImageDataUrl}`)
+          console.log(`   localImageDataUrlRef: ${!!localImageDataUrlRef.current}`)
           console.log(`   uploadedImageUrl: ${uploadedImageUrl.substring(0, 60)}`)
-          if (localImageDataUrl) {
-            console.log(`   localImageDataUrl start: ${localImageDataUrl.substring(0, 100)}`)
+          if (localDataUrl) {
+            console.log(`   localDataUrl start: ${localDataUrl.substring(0, 100)}`)
+            console.log(`   localDataUrl size: ${Math.round(localDataUrl.length / 1024)}KB`)
           }
           
           const croppedDataUrl = await cropImage({
@@ -781,6 +787,7 @@ export default function Home() {
     setCurrentStep('upload')
     setUploadedImageUrl('')
     setLocalImageDataUrl('')  // Clear local data URL
+    localImageDataUrlRef.current = ''  // Clear ref too
     setDetectedItems([])
     setSelectedItems([])
     setProcessingItems([])
