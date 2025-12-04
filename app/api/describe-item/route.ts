@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    console.log(`🤖 Getting Gemini 1.5 Pro description for ${category}...`)
+    console.log(`🤖 Getting Gemini Pro Vision description for ${category}...`)
     console.log(`   Image type: ${imageUrl.startsWith('data:') ? 'data URL' : 'HTTP URL'}`)
     console.log(`   Image size: ${Math.round(imageUrl.length / 1024)}KB`)
     
@@ -205,9 +205,9 @@ Return ONLY the product title.`,
     
     const promptConfig = getCategoryPrompt(category)
     
-    // Generate search-optimized description - using Gemini 1.5 Pro (proven OCR)
+    // Generate search-optimized description - using Gemini Pro (stable + proven OCR)
     const model = genAI.getGenerativeModel({ 
-      model: 'gemini-1.5-pro-latest',
+      model: 'gemini-pro-vision',
       generationConfig: {
         maxOutputTokens: 150,
         temperature: 1.0
@@ -250,7 +250,7 @@ Return ONLY the product title.`,
     // Gemini usage metadata
     const usageMetadata = response.usageMetadata as any
     
-    console.log(`✅ Gemini 1.5 Pro Description: "${description}"`)
+    console.log(`✅ Gemini Pro Vision Description: "${description}"`)
     console.log(`   Prompt tokens: ${usageMetadata?.promptTokenCount || 0}, Completion tokens: ${usageMetadata?.candidatesTokenCount || 0}`)
 
     return NextResponse.json({
@@ -264,7 +264,7 @@ Return ONLY the product title.`,
     })
 
   } catch (error: any) {
-    console.error('❌ Gemini 1.5 Pro description error:', error)
+    console.error('❌ Gemini Pro Vision description error:', error)
     console.error('   Error type:', error.constructor.name)
     console.error('   Error message:', error.message)
     console.error('   Stack:', error.stack?.substring(0, 300))
