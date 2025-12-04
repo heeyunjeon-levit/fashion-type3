@@ -66,13 +66,21 @@ Describe in 2-3 sentences including:
    - Baby: 0-2 years (onesies, soft fabrics, snap closures, very small sizes)
    - Kids: 3-12 years (like mini adult clothes, larger sizes than baby)
 3. Key visual features (patterns, graphics, text, logos, character prints, etc.)
-4. Style/type (casual, formal, athletic, oversized, fitted, etc.)
+4. Design details & embellishments:
+   - Trim details (feather trim, lace trim, piping, etc.)
+   - Embellishments (rhinestones, sequins, beading, embroidery, appliqué)
+   - Texture details (ribbed knit, cable knit, quilted, pleated, ruched)
+   - Closure details (buttons, zippers, ties, drawstrings)
+   - Neckline/collar details (V-neck, crew neck, turtleneck, ruffle collar)
+   - Sleeve details (puff sleeves, bell sleeves, cuffed, rolled)
+5. Style/type (casual, formal, athletic, oversized, fitted, etc.)
 
 Examples:
-- "A pink women's casual sweatshirt featuring a large Winnie the Pooh character graphic on the front. The oversized, relaxed fit design appears to be made from soft fleece material."
-- "A navy men's athletic jogger with a tapered fit and elastic waistband. Made from moisture-wicking fabric with side pockets."
-- "A yellow kids' t-shirt with colorful cartoon character prints on the front. The short-sleeve crew neck design is sized for children aged 3-12."
-- "A white baby onesie with soft cotton fabric and snap closures at the crotch. Features a cute teddy bear print, designed for infants 0-24 months."
+- "A pink women's casual sweatshirt featuring a large Winnie the Pooh character graphic on the front. The oversized, relaxed fit design is made from soft fleece material with ribbed cuffs and hem."
+- "A navy men's ribbed knit jumper with crew neck and cable knit texture throughout. Features tonal feather trim at cuffs and a fitted silhouette."
+- "A yellow kids' t-shirt with colorful cartoon character prints on the front. The short-sleeve crew neck design has contrast stitching and is sized for children aged 3-12."
+- "A white baby onesie with soft cotton fabric and snap closures at the crotch. Features a cute teddy bear appliqué and delicate lace trim at the neckline, designed for infants 0-24 months."
+- "A black women's evening top with rhinestone flower details across the shoulders. The fitted silhouette features sheer mesh panels and a back zipper closure."
 
 Be concise and accurate. Return ONLY the description text.`
 
