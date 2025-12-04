@@ -60,13 +60,16 @@ export async function POST(request: NextRequest) {
 
 CRITICAL: Look carefully at the ACTUAL item in the image. Describe ONLY what you see.
 
-Describe in 2-3 sentences:
-1. PRIMARY COLOR (be accurate - if it's pink, say pink; if white, say white; if multicolored, say multicolaced)
-2. Key visual features (patterns, graphics, text, logos, character prints, etc.)
-3. Style/type (casual, formal, athletic, oversized, fitted, etc.)
+Describe in 2-3 sentences including:
+1. PRIMARY COLOR (be accurate - if it's pink, say pink; if white, say white; if multicolored, say multicolored)
+2. Target demographic (women's, men's, or kids' - based on style, cut, and design)
+3. Key visual features (patterns, graphics, text, logos, character prints, etc.)
+4. Style/type (casual, formal, athletic, oversized, fitted, etc.)
 
-Example for a pink sweatshirt with Winnie the Pooh:
-"A pink casual sweatshirt featuring a large Winnie the Pooh character graphic on the front. The oversized, relaxed fit design appears to be made from soft fleece material."
+Examples:
+- "A pink women's casual sweatshirt featuring a large Winnie the Pooh character graphic on the front. The oversized, relaxed fit design appears to be made from soft fleece material."
+- "A navy men's athletic jogger with a tapered fit and elastic waistband. Made from moisture-wicking fabric with side pockets."
+- "A yellow kids' t-shirt with colorful cartoon character prints on the front. The short-sleeve crew neck design is sized for children."
 
 Be concise and accurate. Return ONLY the description text.`
 
