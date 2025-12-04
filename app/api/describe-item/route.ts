@@ -55,34 +55,44 @@ export async function POST(request: NextRequest) {
       console.log(`   ✅ Valid data URL: ${mimeType}, ${Math.round(base64Part.length / 1024)}KB base64`)
     }
 
-    // Generate detailed description using GPT-4o-mini
-    const prompt = `You are a fashion expert analyzing a cropped image of a ${category}.
+    // Generate search-optimized description (keyword-dense for e-commerce matching)
+    const prompt = `You are analyzing a ${category} image for product search. Describe it EXACTLY as it appears, using e-commerce terminology.
 
-CRITICAL: Look carefully at the ACTUAL item in the image. Describe ONLY what you see.
+🎯 FORMAT (keyword-dense like product titles):
+"[Specific Color] [Material] [Demographic] [Item Type] - [Key Design Features], [Fit/Silhouette]"
 
-Describe in 2-3 sentences including:
-1. PRIMARY COLOR (be accurate - if it's pink, say pink; if white, say white; if multicolored, say multicolored)
-2. Target demographic (women's, men's, kids', or baby - based on style, cut, and design)
-   - Baby: 0-2 years (onesies, soft fabrics, snap closures, very small sizes)
-   - Kids: 3-12 years (like mini adult clothes, larger sizes than baby)
-3. Key visual features (patterns, graphics, text, logos, character prints, etc.)
-4. Design details & embellishments:
-   - Trim details (feather trim, lace trim, piping, etc.)
-   - Embellishments (rhinestones, sequins, beading, embroidery, appliqué)
-   - Texture details (ribbed knit, cable knit, quilted, pleated, ruched)
-   - Closure details (buttons, zippers, ties, drawstrings)
-   - Neckline/collar details (V-neck, crew neck, turtleneck, ruffle collar)
-   - Sleeve details (puff sleeves, bell sleeves, cuffed, rolled)
-5. Style/type (casual, formal, athletic, oversized, fitted, etc.)
+CRITICAL RULES:
+1. 🎨 COLOR FIRST - Be specific: "emerald green" not just "green", "dusty rose" not "pink", "cream" not "white"
+2. 👥 DEMOGRAPHIC - women's, men's, kids', or baby (look at cut, sizing, styling cues)
+3. 🔍 USE INDUSTRY TERMS - pussy bow, bishop sleeves, keyhole back, ribbed cuffs, flared leg, etc.
+4. ✨ DESIGN FEATURES - List 2-4 distinctive elements (tie-neck, puff sleeves, rhinestone details, etc.)
+5. 📏 FIT/SILHOUETTE - oversized, fitted, relaxed, tailored, flared, wide-leg, etc.
 
-Examples:
-- "A pink women's casual sweatshirt featuring a large Winnie the Pooh character graphic on the front. The oversized, relaxed fit design is made from soft fleece material with ribbed cuffs and hem."
-- "A navy men's ribbed knit jumper with crew neck and cable knit texture throughout. Features tonal feather trim at cuffs and a fitted silhouette."
-- "A yellow kids' t-shirt with colorful cartoon character prints on the front. The short-sleeve crew neck design has contrast stitching and is sized for children aged 3-12."
-- "A white baby onesie with soft cotton fabric and snap closures at the crotch. Features a cute teddy bear appliqué and delicate lace trim at the neckline, designed for infants 0-24 months."
-- "A black women's evening top with rhinestone flower details across the shoulders. The fitted silhouette features sheer mesh panels and a back zipper closure."
+EXAMPLES (study the format):
+1. Gucci blouse → "Emerald green silk-satin women's blouse - pussy bow tie-neck, dramatic puff sleeves, keyhole back with button, gathered details, oversized fit"
 
-Be concise and accurate. Return ONLY the description text.`
+2. Pink Disney sweatshirt → "Bubblegum pink fleece women's sweatshirt - Winnie the Pooh graphic print, crew neck, dropped shoulders, ribbed cuffs, oversized relaxed fit"
+
+3. Blue wide-leg jeans → "Medium wash denim women's jeans - high-waisted, wide flared leg, vintage style, button fly, classic 5-pocket"
+
+4. Navy knit sweater → "Navy blue wool-blend men's jumper - cable knit texture, crew neck, ribbed cuffs and hem, fitted silhouette"
+
+5. Yellow kids tee → "Bright yellow cotton kids' t-shirt - Mickey Mouse graphic, crew neck, short sleeves, sized 3-12 years, regular fit"
+
+WHAT TO AVOID:
+❌ Generic words: "nice", "beautiful", "sophisticated", "versatile"
+❌ Vague colors: "dark", "light" (be specific!)
+❌ Editorial language: "finds the sweet spot", "exudes elegance"
+❌ Unnecessary details: fabric care, occasion suggestions
+
+WHAT TO INCLUDE:
+✅ Exact color shade (kelly green, dusty rose, cream, charcoal)
+✅ Material if visible (silk, cotton, denim, fleece, wool, leather)
+✅ Specific design terms (pussy bow, keyhole, puff sleeve, ribbed, flared)
+✅ Prints/graphics (Mickey Mouse, floral, striped, polka dot)
+✅ Fit descriptor (oversized, fitted, wide-leg, relaxed, tailored)
+
+Return ONE line in the format shown above. Be specific and keyword-rich.`
 
     const response = await openai.chat.completions.create({
       model: 'gpt-4o-mini', // Same as Modal
@@ -103,8 +113,8 @@ Be concise and accurate. Return ONLY the description text.`
           ]
         }
       ],
-      max_tokens: 100, // Shorter, more focused descriptions
-      temperature: 0.2 // Lower temperature for more accurate color recognition
+      max_tokens: 80, // One keyword-dense line (not paragraphs)
+      temperature: 0.1 // Very low for consistent, accurate descriptions
     })
 
     const description = response.choices[0]?.message?.content?.trim() || `${category} item`
