@@ -55,34 +55,33 @@ export async function POST(request: NextRequest) {
       console.log(`   ✅ Valid data URL: ${mimeType}, ${Math.round(base64Part.length / 1024)}KB base64`)
     }
 
-    // Generate search-optimized description - using GPT-4o for superior vision + instruction following
-    const prompt = `Analyze this ${category} image and generate ONE concise product title.
+    // Generate search-optimized description - using system+user message for better accuracy
+    const response = await openai.chat.completions.create({
+      model: 'gpt-4o', // Superior vision for character/graphic recognition
+      messages: [
+        {
+          role: 'system',
+          content: `You are a fashion product analyzer. Generate concise e-commerce product titles.
 
-CRITICAL: Look carefully at what's actually in the image. Describe ONLY what you see.
-
-🚨 RULE #1: If there's a CHARACTER, LOGO, or GRAPHIC → START WITH IT!
-Examples: "Donald Duck", "Mickey Mouse", "Winnie the Pooh", "Hello Kitty", "Nike", "Adidas"
-
-🎨 RULE #2: Use SPECIFIC color shades
-"mint green" not "green", "bubblegum pink" not "pink", "navy blue" not "blue"
+CRITICAL RULES:
+1. If there's a CHARACTER/LOGO/GRAPHIC visible → START with it first
+   Examples: "Donald Duck", "Mickey Mouse", "Winnie the Pooh", "Hello Kitty"
+2. Use SPECIFIC color shades: "mint green", "bubblegum pink", "navy blue", "ivory white"
+3. Include 2-3 key features: crew neck, puff sleeve, oversized, ribbed, etc.
+4. Add demographic if clear: women's, men's, kids', baby
 
 FORMAT:
-- With graphic: "[CHARACTER] [specific color] [2-3 features] [demographic] [type]"
-- No graphic: "[specific color] [2-3 features] [demographic] [type]"
+- With graphic: "[CHARACTER] [color] [features] [demographic] [type]"
+- No graphic: "[color] [features] [demographic] [type]"
 
 EXAMPLES:
 "Donald Duck mint green crew neck fleece kids' sweatshirt"
-"Winnie the Pooh bubblegum pink oversized fleece women's sweatshirt"
-"Mickey Mouse bright yellow cotton kids' t-shirt"
-"Minnie Mouse baby pink crew neck cotton kids' sweatshirt"
+"Mickey Mouse ivory white cotton kids' t-shirt"
+"Winnie the Pooh bright yellow oversized fleece kids' sweatshirt"
 "Emerald green tie-neck puff sleeve silk-satin women's blouse"
-"Chocolate brown balaclava hood quilted down women's jacket"
 
-Return ONLY the product title (one line, no explanations, no section headers).`
-
-    const response = await openai.chat.completions.create({
-      model: 'gpt-4o', // Upgraded from gpt-4o-mini for much better vision + instruction following
-      messages: [
+Return ONLY the product title (one line).`
+        },
         {
           role: 'user',
           content: [
@@ -94,18 +93,19 @@ Return ONLY the product title (one line, no explanations, no section headers).`
             },
             {
               type: 'text',
-              text: prompt
+              text: `Look carefully at this ${category} image. What character/graphic do you see? What is the exact color? Generate the product title following the format.`
             }
           ]
         }
       ],
-      max_tokens: 80, // One keyword-dense line (not paragraphs)
-      temperature: 0.1 // Very low for consistent, accurate descriptions
+      max_tokens: 80,
+      temperature: 0.0 // Zero temperature for maximum determinism
     })
 
     const description = response.choices[0]?.message?.content?.trim() || `${category} item`
 
-    console.log(`✅ Description: ${description.substring(0, 60)}...`)
+    console.log(`✅ GPT-4o Description: "${description}"`)
+    console.log(`   Prompt tokens: ${response.usage?.prompt_tokens}, Completion tokens: ${response.usage?.completion_tokens}`)
 
     return NextResponse.json({
       description,
