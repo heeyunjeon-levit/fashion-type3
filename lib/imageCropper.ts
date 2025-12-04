@@ -63,6 +63,7 @@ export async function cropImage(options: CropOptions): Promise<string> {
 
         // Convert to data URL
         const dataUrl = canvas.toDataURL('image/jpeg', 0.9)
+        console.log(`   🖼️  Cropped canvas to data URL: ${dataUrl.length} bytes, starts with: ${dataUrl.substring(0, 50)}`)
         resolve(dataUrl)
       } catch (error) {
         reject(error)

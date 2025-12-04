@@ -509,6 +509,11 @@ export default function Home() {
           // Fall back to uploaded URL if local data URL not available
           const imageUrlForCropping = localImageDataUrl || uploadedImageUrl
           console.log(`   Using ${localImageDataUrl ? 'local data URL' : 'Supabase URL'} for cropping`)
+          console.log(`   localImageDataUrl available: ${!!localImageDataUrl}`)
+          console.log(`   uploadedImageUrl: ${uploadedImageUrl.substring(0, 60)}`)
+          if (localImageDataUrl) {
+            console.log(`   localImageDataUrl start: ${localImageDataUrl.substring(0, 100)}`)
+          }
           
           const croppedDataUrl = await cropImage({
             imageUrl: imageUrlForCropping,

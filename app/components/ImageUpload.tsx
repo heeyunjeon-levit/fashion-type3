@@ -27,7 +27,6 @@ export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
                    file.name.toLowerCase().endsWith('.heif')
 
     let processedFile = file
-    let previewUrl = ''
 
     if (isHEIC) {
       setIsConverting(true)
@@ -74,9 +73,6 @@ export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
         
         const originalName = file.name.replace(/\.heic$/i, '').replace(/\.heif$/i, '')
         processedFile = new File([blob], `${originalName}.jpg`, { type: 'image/jpeg' })
-        
-        // Create object URL for preview
-        previewUrl = URL.createObjectURL(blob)
 
       } catch (error) {
         console.error('❌ Error converting HEIC:', error)
@@ -92,16 +88,15 @@ export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
     // Set the processed file
     setImage(processedFile)
 
-    // Generate preview
-    if (previewUrl) {
-      setPreview(previewUrl)
-    } else {
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        setPreview(reader.result as string)
-      }
-      reader.readAsDataURL(processedFile)
+    // ALWAYS generate preview using data URL (not blob URL)
+    // This ensures the preview can be used for cropping without CORS issues
+    const reader = new FileReader()
+    reader.onloadend = () => {
+      const dataUrl = reader.result as string
+      setPreview(dataUrl)
+      console.log(`📸 Generated data URL preview: ${dataUrl.substring(0, 50)}... (${Math.round(dataUrl.length / 1024)}KB)`)
     }
+    reader.readAsDataURL(processedFile)
   }
 
   const handleUpload = async () => {

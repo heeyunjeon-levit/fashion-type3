@@ -23,9 +23,13 @@ export async function POST(request: NextRequest) {
     
     // Validate data URL format
     if (imageUrl.startsWith('data:')) {
+      // Log first 100 chars to debug
+      console.log(`   Data URL start: ${imageUrl.substring(0, 100)}`)
+      
       const mimeMatch = imageUrl.match(/^data:([^;]+);base64,/)
       if (!mimeMatch) {
         console.error('❌ Invalid data URL format - missing MIME type or base64 prefix')
+        console.error(`   Received format: ${imageUrl.substring(0, 200)}`)
         return NextResponse.json(
           { error: 'Invalid data URL format' },
           { status: 400 }
