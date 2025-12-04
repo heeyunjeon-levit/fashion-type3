@@ -106,7 +106,7 @@ export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
     const uploadStartTime = performance.now()
     
     try {
-      console.log('📤 Starting frontend upload...', {
+      console.log('📤 Starting direct Supabase upload from frontend...', {
         name: image.name,
         type: image.type,
         size: image.size,
@@ -115,14 +115,14 @@ export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
       let fileToUpload = image
       let compressionTime = 0
 
-      // Compress image if it's larger than 4MB (Vercel limit is 4.5MB)
+      // Compress image if it's larger than 4MB
       if (image.size > 4 * 1024 * 1024) {
         console.log('🗜️ Compressing large image...')
         const compressionStart = performance.now()
         try {
           const compressed = await imageCompression(image, {
-            maxSizeMB: 3.5, // Target 3.5MB to have buffer
-            maxWidthOrHeight: 2048, // Max dimension
+            maxSizeMB: 3.5,
+            maxWidthOrHeight: 2048,
             useWebWorker: true,
             fileType: 'image/jpeg',
           })
@@ -131,41 +131,69 @@ export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
           fileToUpload = compressed
         } catch (compressionError) {
           console.error('⚠️ Compression failed, uploading original:', compressionError)
-          // Continue with original file
         }
       }
 
-      // Create FormData to send the file
-      const formData = new FormData()
-      formData.append('file', fileToUpload)
+      // Upload directly to Supabase from frontend
+      const { createClient } = await import('@supabase/supabase-js')
+      const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      )
 
-      const uploadRequestStart = performance.now()
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData,
-      })
-
-      const data = await response.json()
-      const uploadRequestTime = (performance.now() - uploadRequestStart) / 1000
-
-      if (!response.ok) {
-        console.error('❌ Upload failed:', data)
-        throw new Error(data.error || 'Upload failed')
+      // Convert file to buffer
+      const arrayBuffer = await fileToUpload.arrayBuffer()
+      
+      // Generate unique filename
+      const timestamp = Date.now()
+      const sanitizedName = fileToUpload.name
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^\x00-\x7F]/g, '')
+        .replace(/[^a-zA-Z0-9._-]/g, '_')
+        .replace(/_{2,}/g, '_')
+        .trim() || 'image'
+      
+      let filename = `upload_${timestamp}_${sanitizedName}`
+      
+      // Fix extension if needed
+      if (fileToUpload.type === 'image/jpeg' && !filename.match(/\.(jpg|jpeg)$/i)) {
+        filename = `upload_${timestamp}_${sanitizedName.replace(/\.[^.]+$/, '')}.jpg`
       }
 
+      console.log('📁 Uploading to Supabase:', filename)
+
+      const uploadRequestStart = performance.now()
+      const { data, error } = await supabase.storage
+        .from('images')
+        .upload(filename, arrayBuffer, {
+          contentType: fileToUpload.type || 'image/jpeg',
+          upsert: false
+        })
+
+      const uploadRequestTime = (performance.now() - uploadRequestStart) / 1000
+
+      if (error) {
+        console.error('❌ Supabase upload failed:', error)
+        throw new Error(error.message || 'Upload failed')
+      }
+
+      // Get public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from('images')
+        .getPublicUrl(filename)
+
       const totalUploadTime = (performance.now() - uploadStartTime) / 1000
-      console.log('✅ Upload successful:', data.imageUrl)
-      console.log(`⏱️  Frontend Upload Timing: ${totalUploadTime.toFixed(2)}s (compression: ${compressionTime.toFixed(2)}s, network: ${uploadRequestTime.toFixed(2)}s)`)
+      console.log('✅ Direct Supabase upload successful:', publicUrl)
+      console.log(`⏱️  Frontend Upload Timing: ${totalUploadTime.toFixed(2)}s (compression: ${compressionTime.toFixed(2)}s, upload: ${uploadRequestTime.toFixed(2)}s)`)
       
-      // Don't reset isUploading here - the component will be hidden by parent transition
-      // Keeping it as "uploading" prevents the button from reappearing
       // Pass local data URL for cropping (avoids CORS issues with Supabase storage)
-      onImageUploaded(data.imageUrl, totalUploadTime, preview)
+      onImageUploaded(publicUrl, totalUploadTime, preview)
     } catch (error) {
       console.error('Error uploading image:', error)
       const errorMessage = error instanceof Error ? error.message : 'Unknown error'
       alert(`Failed to upload image: ${errorMessage}`)
-      setIsUploading(false) // Only reset on error so user can retry
+      setIsUploading(false)
     }
   }
 
