@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
 
     // Generate search-optimized description - using system+user message for better accuracy
     const response = await openai.chat.completions.create({
-      model: 'gpt-4o', // Superior vision for character/graphic recognition
+      model: 'gpt-4o-mini', // Fast & cost-effective, works well now that cropping is fixed
       messages: [
         {
           role: 'system',
@@ -104,7 +104,7 @@ Return ONLY the product title (one line).`
 
     const description = response.choices[0]?.message?.content?.trim() || `${category} item`
 
-    console.log(`✅ GPT-4o Description: "${description}"`)
+    console.log(`✅ GPT-4o-mini Description: "${description}"`)
     console.log(`   Prompt tokens: ${response.usage?.prompt_tokens}, Completion tokens: ${response.usage?.completion_tokens}`)
 
     return NextResponse.json({
