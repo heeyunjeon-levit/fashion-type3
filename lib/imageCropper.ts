@@ -17,11 +17,29 @@ export async function cropImage(options: CropOptions): Promise<string> {
   const { imageUrl, bbox, padding = 0.05 } = options
   const [x1, y1, x2, y2] = bbox
 
+  console.log('🖼️  cropImage called:', {
+    imageUrlType: imageUrl.startsWith('data:') ? 'data URL' : imageUrl.startsWith('http') ? 'HTTP URL' : 'unknown',
+    imageUrlStart: imageUrl.substring(0, 100),
+    imageUrlLength: imageUrl.length,
+    bbox
+  })
+
   return new Promise((resolve, reject) => {
     const img = new Image()
-    img.crossOrigin = 'anonymous' // Enable CORS for Supabase images
+    
+    // Only set crossOrigin for HTTP URLs (not needed for data URLs)
+    if (!imageUrl.startsWith('data:')) {
+      img.crossOrigin = 'anonymous'
+      console.log('   ℹ️  Set crossOrigin=anonymous for HTTP URL')
+    } else {
+      console.log('   ℹ️  Data URL - no CORS needed')
+    }
     
     img.onload = () => {
+      console.log('   ✅ Image loaded successfully:', {
+        naturalWidth: img.naturalWidth,
+        naturalHeight: img.naturalHeight
+      })
       try {
         const imgWidth = img.naturalWidth
         const imgHeight = img.naturalHeight
@@ -70,8 +88,10 @@ export async function cropImage(options: CropOptions): Promise<string> {
       }
     }
 
-    img.onerror = () => {
-      reject(new Error('Failed to load image'))
+    img.onerror = (error) => {
+      console.error('❌ Image load error:', error)
+      console.error('   Failed URL:', imageUrl.substring(0, 100))
+      reject(new Error(`Failed to load image: ${error}`))
     }
 
     img.src = imageUrl

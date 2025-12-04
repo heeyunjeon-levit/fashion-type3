@@ -111,8 +111,19 @@ export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
         type: image.type,
         size: image.size,
         hasPreview: !!preview,
+        previewLength: preview?.length || 0,
+        previewIsDataUrl: preview?.startsWith('data:'),
         previewStart: preview?.substring(0, 60)
       })
+      
+      // Critical check: Ensure preview is valid before proceeding
+      if (!preview || !preview.startsWith('data:')) {
+        console.error('❌ CRITICAL: Preview is not a valid data URL!', {
+          hasPreview: !!preview,
+          previewType: typeof preview,
+          previewStart: preview?.substring(0, 100)
+        })
+      }
 
       let fileToUpload = image
       let compressionTime = 0
@@ -193,15 +204,42 @@ export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
       // If preview state isn't ready yet, generate it synchronously
       let localDataUrl = preview
       if (!localDataUrl || !localDataUrl.startsWith('data:')) {
-        console.log('⚠️ Preview not ready, generating data URL synchronously...')
+        console.warn('⚠️ Preview not ready, generating data URL synchronously...', {
+          hasPreview: !!preview,
+          previewLength: preview?.length || 0
+        })
         const reader = new FileReader()
         localDataUrl = await new Promise<string>((resolve, reject) => {
-          reader.onloadend = () => resolve(reader.result as string)
-          reader.onerror = reject
+          reader.onloadend = () => {
+            const result = reader.result as string
+            console.log(`✅ Sync generated data URL: ${result.substring(0, 60)}... (${Math.round(result.length / 1024)}KB)`)
+            resolve(result)
+          }
+          reader.onerror = (err) => {
+            console.error('❌ FileReader error:', err)
+            reject(err)
+          }
           reader.readAsDataURL(fileToUpload)
         })
-        console.log(`✅ Generated data URL: ${localDataUrl.substring(0, 60)}... (${Math.round(localDataUrl.length / 1024)}KB)`)
+      } else {
+        console.log(`✅ Using preview state data URL: ${localDataUrl.substring(0, 60)}... (${Math.round(localDataUrl.length / 1024)}KB)`)
       }
+      
+      // Final validation before callback
+      if (!localDataUrl || !localDataUrl.startsWith('data:image/')) {
+        console.error('❌ CRITICAL: Final localDataUrl is invalid!', {
+          hasLocalDataUrl: !!localDataUrl,
+          starts: localDataUrl?.substring(0, 30),
+          length: localDataUrl?.length || 0
+        })
+        throw new Error('Failed to generate valid data URL for cropping')
+      }
+      
+      console.log('✅ Passing valid data URL to parent:', {
+        supabaseUrl: publicUrl.substring(0, 60),
+        dataUrlStart: localDataUrl.substring(0, 60),
+        dataUrlSize: Math.round(localDataUrl.length / 1024) + 'KB'
+      })
       
       // Pass local data URL for cropping (avoids CORS issues with Supabase storage)
       onImageUploaded(publicUrl, totalUploadTime, localDataUrl)
