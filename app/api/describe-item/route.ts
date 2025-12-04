@@ -63,80 +63,99 @@ export async function POST(request: NextRequest) {
       
       if (isClothing) {
         return {
-          system: `You are a fashion product analyzer. Generate concise e-commerce product titles.
-
-RULES:
-1. If there's a CHARACTER/LOGO/GRAPHIC → START with it: "Donald Duck", "Mickey Mouse", "Nike"
-2. Use SPECIFIC colors: "mint green", "navy blue", "bubblegum pink"
-3. Include 2-3 key features: crew neck, puff sleeve, oversized, ribbed, etc.
-4. Add demographic if clear: women's, men's, kids', baby
+          system: `Generate a product title for clothing in e-commerce format.
 
 FORMAT:
-- With graphic: "[CHARACTER] [color] [features] [demographic] [type]"
+- With graphic/character: "[CHARACTER] [color] [features] [demographic] [type]"
 - No graphic: "[color] [features] [demographic] [type]"
 
-EXAMPLES:
+CRITICAL:
+- NO explanations, NO sentences, ONLY the product title
+- If there's a character/graphic → START with it
+- If no character → just start with color
+- NEVER say "No character or graphic" in the output
+
+EXAMPLES (copy this format exactly):
 "Donald Duck mint green crew neck fleece kids' sweatshirt"
+"Mickey Mouse ivory white cotton kids' t-shirt"
 "Emerald green tie-neck puff sleeve silk-satin women's blouse"
 "Black cable knit oversized women's sweater"
+"Charcoal gray off-shoulder long sleeve ruched women's mini dress"
 
-Return ONLY the product title (one line).`,
-          user: `Describe this ${cat}. Any character/graphic? What color? Key features?`
+WRONG (never do this):
+❌ "No character or graphic. Charcoal gray..."
+❌ "This is a black sweater with..."
+
+Return ONLY the product title.`,
+          user: `Generate product title for this ${cat}.`
         }
-      } else if (isShoes) {
+      } else       if (isShoes) {
         return {
-          system: `You are a footwear product analyzer. Generate concise e-commerce product titles.
+          system: `Generate a product title for footwear in e-commerce format.
 
-RULES:
-1. Use SPECIFIC colors: "white", "black", "navy blue", "bright red"
-2. Include shoe type: sneakers, boots, sandals, heels, loafers, oxfords, etc.
-3. Include 2-3 key features: high-top, low-top, platform, chunky sole, lace-up, slip-on, etc.
-4. Add brand if visible: Nike, Adidas, Converse, Vans, etc.
-5. Add demographic if clear: women's, men's, kids', unisex
+FORMAT: "[color] [material] [features] [shoe type] [demographic]"
+If brand visible: "[Brand] [color] [features] [shoe type] [demographic]"
 
-FORMAT: "[Brand] [color] [features] [shoe type] [demographic]"
+CRITICAL:
+- NO explanations, NO sentences, ONLY the product title
+- If you can't see the brand → skip it, don't say "I cannot determine"
+- If color is unclear → use best guess (white, black, brown, etc.)
 
-EXAMPLES:
+EXAMPLES (copy this format exactly):
 "Nike white low-top leather sneakers women's"
 "Black chunky platform ankle boots women's"
-"Brown leather lace-up oxford shoes men's"
-"Adidas navy blue high-top sneakers unisex"
+"Light brown suede lace-up sneakers unisex"
+"Navy blue canvas slip-on sneakers men's"
 
-Return ONLY the product title (one line).`,
-          user: `Describe these ${cat}. What brand/logo? What color? What style/type?`
+WRONG (never do this):
+❌ "The shoes are light brown... The brand is not visible..."
+❌ "I cannot determine the brand..."
+
+Return ONLY the product title.`,
+          user: `Generate product title for these ${cat}.`
         }
       } else if (isAccessory) {
         return {
-          system: `You are an accessory product analyzer. Generate concise e-commerce product titles.
+          system: `Generate a product title for accessories in e-commerce format.
 
-RULES:
-1. Use SPECIFIC colors: "black", "tortoiseshell", "gold", "silver", "brown"
-2. Include accessory type: sunglasses, eyeglasses, tote bag, crossbody bag, backpack, etc.
-3. Include 2-3 key features: oversized, cat-eye, aviator, quilted, leather, etc.
-4. Add brand if visible: Ray-Ban, Gucci, Prada, Chanel, etc.
-5. Add demographic if clear: women's, men's, unisex
+FORMAT: "[color] [material] [frame shape] [accessory type] [demographic]"
+If brand visible: "[Brand] [color] [frame shape] [accessory type] [demographic]"
 
-FORMAT: "[Brand] [color] [features] [accessory type] [demographic]"
+CRITICAL:
+- NO explanations, NO sentences, ONLY the product title
+- If you can't see the brand → skip it, don't say "I cannot determine"
+- For sunglasses: describe frame color, shape (aviator, cat-eye, rectangular, round, oversized)
 
-EXAMPLES:
+EXAMPLES (copy this format exactly):
 "Ray-Ban black aviator sunglasses unisex"
+"Gold metal rectangular frame sunglasses women's"
 "Tortoiseshell oversized cat-eye sunglasses women's"
 "Black quilted leather crossbody bag women's"
-"Gucci brown leather tote bag women's"
 
-Return ONLY the product title (one line).`,
-          user: `Describe this ${cat}. What brand? What color? What style/shape?`
+WRONG (never do this):
+❌ "I cannot determine the brand... The sunglasses appear to be..."
+❌ "The frame is gold metal..."
+
+Return ONLY the product title.`,
+          user: `Generate product title for this ${cat}.`
         }
       } else {
         // Fallback for unknown categories
         return {
-          system: `You are a fashion product analyzer. Generate a concise e-commerce product title.
+          system: `Generate a product title in e-commerce format.
 
-Use specific colors, key features, and the item type.
-Format: "[color] [features] [type]"
+FORMAT: "[color] [key features] [item type]"
 
-Return ONLY the product title (one line).`,
-          user: `Describe this ${cat}. What color? What are the key features?`
+CRITICAL:
+- NO explanations, NO sentences, ONLY the product title
+- Use specific colors and 2-3 key features
+
+EXAMPLES:
+"Black leather quilted crossbody bag"
+"Navy blue striped cotton scarf"
+
+Return ONLY the product title.`,
+          user: `Generate product title for this ${cat}.`
         }
       }
     }
