@@ -252,6 +252,15 @@ Return ONLY the product title.`,
     // Gemini usage metadata
     const usageMetadata = response.usageMetadata as any
     
+    // DEBUG: Log full response structure to understand token counting
+    console.log('🔍 DEBUG - Full response structure:', {
+      hasText: !!response.text(),
+      textLength: description.length,
+      usageMetadata: usageMetadata,
+      candidates: result.response.candidates?.length || 0,
+      promptFeedback: result.response.promptFeedback
+    })
+    
     console.log(`✅ Gemini 3 Pro Preview Description: "${description}"`)
     console.log(`   Prompt tokens: ${usageMetadata?.promptTokenCount || 0}`)
     console.log(`   Completion tokens: ${usageMetadata?.candidatesTokenCount || 0}`)
@@ -259,7 +268,16 @@ Return ONLY the product title.`,
     
     // Warn if no completion tokens (API timeout or error)
     if (!usageMetadata?.candidatesTokenCount || usageMetadata.candidatesTokenCount === 0) {
-      console.warn('⚠️ No completion tokens generated - API may have timed out or failed')
+      console.warn('⚠️ No completion tokens generated - possible causes:')
+      console.warn('   1. Model using cached response')
+      console.warn('   2. Token counting not implemented for this model')
+      console.warn('   3. API returned empty response (using fallback)')
+      console.warn(`   4. Description length: ${description.length} chars`)
+      
+      // Check if description is just the fallback
+      if (description === `${category} item`) {
+        console.error('❌ Description is fallback value - API returned empty!')
+      }
     }
 
     return NextResponse.json({
