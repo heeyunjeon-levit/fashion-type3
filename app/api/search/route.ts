@@ -139,7 +139,7 @@ Return TOP 3-5 BEST matches only. Quality over quantity.`
       model: 'gemini-3-pro-preview',
       contents: fullPrompt,
       config: {
-        maxOutputTokens: 500,
+        maxOutputTokens: 2048, // Increased from 500 to accommodate thinking + output
         temperature: 0,
         thinkingConfig: {
           thinkingLevel: ThinkingLevel.LOW // Fast analysis for filtering
@@ -1046,7 +1046,7 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
           model: 'gemini-3-pro-preview',
           contents: fullPrompt,
           config: {
-            maxOutputTokens: 500,
+            maxOutputTokens: 2048, // Increased from 500 to accommodate thinking + output
             temperature: 0,
             thinkingConfig: {
               thinkingLevel: ThinkingLevel.LOW // Fast filtering
