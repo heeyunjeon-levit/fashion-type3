@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import ResultsBottomSheet from '@/app/components/ResultsBottomSheet'
 import { DetectedItem } from '@/app/page'
 
@@ -16,6 +17,23 @@ export default function SharedResultsClient({
   createdAt: string
   croppedImages: Record<string, string>
 }) {
+  // Format date on client-side only to avoid hydration mismatch
+  const [formattedDate, setFormattedDate] = useState<string>('')
+
+  useEffect(() => {
+    if (createdAt) {
+      setFormattedDate(
+        new Date(createdAt).toLocaleDateString('ko-KR', { 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        })
+      )
+    }
+  }, [createdAt])
+
   return (
     <>
       {/* Header with share info */}
@@ -24,14 +42,8 @@ export default function SharedResultsClient({
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-lg font-bold text-gray-900">공유된 검색 결과</h1>
-              <p className="text-sm text-gray-600 mt-1">
-                {new Date(createdAt).toLocaleDateString('ko-KR', { 
-                  year: 'numeric', 
-                  month: 'long', 
-                  day: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit'
-                })}
+              <p className="text-sm text-gray-600 mt-1" suppressHydrationWarning>
+                {formattedDate || '로딩 중...'}
               </p>
             </div>
             <a 
