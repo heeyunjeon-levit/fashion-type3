@@ -1393,6 +1393,35 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
           validLinks.length = 0
           validLinks.push(...finalLinks)
           
+          // PRIORITY: Force-include top full image results (exact matches!)
+          // Full image search finds EXACT items, so prioritize these FIRST
+          const topFullImageLinks = fullImageResults
+            .slice(0, 3) // Take top 3 full image results
+            .filter((item: any) => {
+              if (!item.link) return false
+              const linkLower = item.link.toLowerCase()
+              // Filter out social media and blocked domains
+              const isBlocked = blockedDomains.some(domain => linkLower.includes(domain))
+              if (isBlocked) {
+                console.log(`🚫 Blocked top full image result: ${item.link.substring(0, 50)}...`)
+                return false
+              }
+              return true
+            })
+            .map((item: any) => item.link)
+          
+          console.log(`🌟 Top full image results (exact matches):`, topFullImageLinks.length)
+          
+          // Prepend top full image results to final links (priority placement)
+          // Remove duplicates while preserving order
+          const combinedLinks = [...topFullImageLinks, ...validLinks]
+          const uniqueLinks = Array.from(new Set(combinedLinks))
+          
+          validLinks.length = 0
+          validLinks.push(...uniqueLinks.slice(0, 5)) // Keep top 5 total
+          
+          console.log(`✅ Final links (full image priority):`, validLinks.slice(0, 3))
+          
           // Debug: Check first result structure
           if (mergedResults.length > 0) {
             console.log('🔍 Sample merged result keys:', Object.keys(mergedResults[0]))
