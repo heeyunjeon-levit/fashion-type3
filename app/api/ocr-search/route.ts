@@ -1,9 +1,12 @@
 import { NextResponse } from 'next/server'
 import OpenAI from 'openai'
+import { GoogleGenerativeAI } from '@google/generative-ai'
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 })
+
+const genAI = new GoogleGenerativeAI(process.env.GCLOUD_API_KEY || '')
 
 export async function POST(request: Request) {
   try {
@@ -20,83 +23,103 @@ export async function POST(request: Request) {
     
     console.log(`   Image URL: ${imageUrl.substring(0, 80)}...`)
     
-    // Step 1: Use Google Cloud Vision API for accurate OCR
-    console.log('\n📖 Step 1: Extracting text with Google Cloud Vision API...')
+    // Step 1: Use Gemini for OCR text extraction
+    console.log('\n📖 Step 1: Extracting text with Gemini 2.0 Flash...')
     
-    const visionApiKey = process.env.GCLOUD_API_KEY
-    console.log(`   GCLOUD_API_KEY configured: ${visionApiKey ? 'YES' : 'NO'}`)
+    const geminiApiKey = process.env.GCLOUD_API_KEY
+    console.log(`   GCLOUD_API_KEY configured: ${geminiApiKey ? 'YES' : 'NO'}`)
     console.log(`   OPENAI_API_KEY configured: ${process.env.OPENAI_API_KEY ? 'YES' : 'NO'}`)
     console.log(`   SERPER_API_KEY configured: ${process.env.SERPER_API_KEY ? 'YES' : 'NO'}`)
     
-    if (!visionApiKey) {
+    if (!geminiApiKey) {
       console.error('   ❌ GCLOUD_API_KEY not set in environment!')
       return NextResponse.json({
         success: false,
-        reason: 'Google Cloud Vision API key not configured in Vercel environment variables'
+        reason: 'Gemini API key not configured in Vercel environment variables'
       }, { status: 500 })
     }
     
-    // Download and base64 encode image (same as Modal backend)
-    console.log('   Downloading image...')
-    const imageResponse = await fetch(imageUrl)
-    if (!imageResponse.ok) {
-      return NextResponse.json({
-        success: false,
-        reason: 'Failed to download image'
-      }, { status: 500 })
-    }
+    // Prepare image for Gemini
+    let imageData: { inlineData: { data: string; mimeType: string } }
     
-    const imageBuffer = await imageResponse.arrayBuffer()
-    const base64Image = Buffer.from(imageBuffer).toString('base64')
-    console.log(`   ✅ Image downloaded and encoded (${Math.round(base64Image.length / 1024)}KB)`)
-    
-    // Send to Google Cloud Vision API
-    const visionResponse = await fetch(
-      `https://vision.googleapis.com/v1/images:annotate?key=${visionApiKey}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          requests: [
-            {
-              image: { content: base64Image },
-              features: [{ type: 'TEXT_DETECTION', maxResults: 100 }]
-            }
-          ]
-        })
+    if (imageUrl.startsWith('data:')) {
+      // Data URL - extract base64 and MIME type
+      const match = imageUrl.match(/^data:([^;]+);base64,(.+)$/)
+      if (!match) {
+        return NextResponse.json({
+          success: false,
+          reason: 'Invalid data URL format'
+        }, { status: 400 })
       }
-    )
-    
-    if (!visionResponse.ok) {
-      console.error('   ❌ Vision API error:', visionResponse.status)
-      return NextResponse.json({
-        success: false,
-        reason: 'Google Cloud Vision API request failed'
-      }, { status: 500 })
+      imageData = {
+        inlineData: {
+          data: match[2],
+          mimeType: match[1]
+        }
+      }
+      console.log(`   ✅ Using data URL (${Math.round(match[2].length / 1024)}KB)`)
+    } else {
+      // HTTP URL - download and convert
+      console.log('   Downloading image...')
+      const imageResponse = await fetch(imageUrl)
+      if (!imageResponse.ok) {
+        return NextResponse.json({
+          success: false,
+          reason: 'Failed to download image'
+        }, { status: 500 })
+      }
+      
+      const imageBuffer = await imageResponse.arrayBuffer()
+      const base64Image = Buffer.from(imageBuffer).toString('base64')
+      const mimeType = imageResponse.headers.get('content-type') || 'image/jpeg'
+      
+      imageData = {
+        inlineData: {
+          data: base64Image,
+          mimeType: mimeType
+        }
+      }
+      console.log(`   ✅ Image downloaded and encoded (${Math.round(base64Image.length / 1024)}KB)`)
     }
     
-    const visionData = await visionResponse.json()
-    const textAnnotations = visionData.responses?.[0]?.textAnnotations || []
+    // Use Gemini to extract ALL text from the image
+    const model = genAI.getGenerativeModel({ 
+      model: 'gemini-2.0-flash-exp',
+      generationConfig: {
+        maxOutputTokens: 1000,
+        temperature: 0.0
+      }
+    })
     
-    if (textAnnotations.length === 0) {
-      console.log('   ⚠️  No text detected by Google Vision')
+    const prompt = `Extract ALL text visible in this image. Include:
+- All Korean text (한글)
+- All English text
+- Brand names, usernames (like @brandname), product names
+- Numbers, dates, prices
+- Any text on clothing, tags, signs, or overlays
+
+Return ONLY the extracted text, nothing else. If there's no text, say "NO TEXT FOUND".`
+    
+    const result = await model.generateContent([prompt, imageData])
+    const response = await result.response
+    const fullText = response.text()?.trim() || ''
+    
+    if (!fullText || fullText === 'NO TEXT FOUND') {
+      console.log('   ⚠️  No text detected by Gemini')
       return NextResponse.json({
         success: false,
         reason: 'No text detected in image'
       })
     }
     
-    // First annotation is the full text, rest are individual words
-    const fullText = textAnnotations[0]?.description || ''
-    
     console.log(`   ✅ Extracted text: "${fullText.substring(0, 150)}..."`)
-    console.log(`   ✅ Found ${textAnnotations.length} text segments`)
+    console.log(`   ✅ Text length: ${fullText.length} characters`)
     
-    // Step 2: Use GPT-4o to map extracted text to fashion brands/products
-    console.log('\n🧠 Step 2: Mapping text to fashion brands with GPT-4o...')
+    // Step 2: Use GPT-4.1 to map extracted text to fashion brands/products
+    console.log('\n🧠 Step 2: Mapping text to fashion brands with GPT-4.1...')
     
     const mappingResponse = await openai.chat.completions.create({
-      model: "gpt-4o",
+      model: "gpt-4.1",
       messages: [
         {
           role: "system",
