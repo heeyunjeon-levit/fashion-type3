@@ -579,7 +579,7 @@ export default function Home() {
                   imageUrl: croppedDataUrl,
                   category: bbox.category
                 }),
-                signal: AbortSignal.timeout(15000)
+                signal: AbortSignal.timeout(30000) // Increased to 30s for Gemini 3 Pro thinking
               })
               
               if (descResponse.ok) {
@@ -590,7 +590,10 @@ export default function Home() {
                 console.warn(`⚠️ Description failed: ${descResponse.status}, using default`)
               }
             } catch (descError) {
-              console.warn(`⚠️ Description error:`, descError)
+              console.error(`❌ Description failed for ${bbox.category}:`, descError)
+              if (descError instanceof Error && descError.name === 'TimeoutError') {
+                console.error(`   Timeout after 30s - Gemini 3 Pro taking too long`)
+              }
             }
             
             const croppedImageUrl = croppedDataUrl
