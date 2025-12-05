@@ -16,8 +16,8 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    console.log(`🤖 Getting Gemini 1.5 Pro description for ${category}...`)
-    console.log(`   Model: gemini-1.5-pro-latest (most reliable + powerful)`)
+    console.log(`🤖 Getting Gemini 3 Pro Preview description for ${category}...`)
+    console.log(`   Model: gemini-3-pro-preview (most intelligent model!)`)
     console.log(`   Image type: ${imageUrl.startsWith('data:') ? 'data URL' : 'HTTP URL'}`)
     console.log(`   Image size: ${Math.round(imageUrl.length / 1024)}KB`)
     
@@ -207,9 +207,9 @@ Return ONLY the product title.`,
     
     const promptConfig = getCategoryPrompt(category)
     
-    // Generate search-optimized description - using Gemini 1.5 Pro (most reliable + powerful)
+    // Generate search-optimized description - using Gemini 3 Pro Preview (most intelligent!)
     const model = genAI.getGenerativeModel({ 
-      model: 'gemini-1.5-pro-latest',
+      model: 'gemini-3-pro-preview',
       generationConfig: {
         maxOutputTokens: 150,
         temperature: 1.0
@@ -247,23 +247,52 @@ Return ONLY the product title.`,
     ])
 
     const response = await result.response
-    const description = response.text()?.trim() || `${category} item`
+    
+    // Gemini 3 thinking models store output differently
+    let description = ''
+    try {
+      // Method 1: Standard text() method
+      description = response.text()?.trim() || ''
+    } catch (e) {
+      console.warn('⚠️ response.text() failed, trying alternative access')
+    }
+    
+    // Method 2: Direct access to candidates (for thinking models)
+    if (!description && response.candidates && response.candidates.length > 0) {
+      const candidate = response.candidates[0]
+      if (candidate.content && candidate.content.parts) {
+        for (const part of candidate.content.parts) {
+          if (part.text) {
+            description += part.text
+          }
+        }
+        description = description.trim()
+      }
+    }
+    
+    // Fallback if no description found
+    if (!description) {
+      description = `${category} item`
+    }
 
     // Gemini usage metadata
     const usageMetadata = response.usageMetadata as any
     
     // DEBUG: Log full response structure to understand token counting
     console.log('🔍 DEBUG - Full response structure:', {
-      hasText: !!response.text(),
+      hasTextMethod: !!response.text,
       textLength: description.length,
       usageMetadata: usageMetadata,
-      candidates: result.response.candidates?.length || 0,
-      promptFeedback: result.response.promptFeedback
+      candidates: response.candidates?.length || 0,
+      candidateContent: response.candidates?.[0]?.content?.parts?.length || 0,
+      promptFeedback: response.promptFeedback,
+      thoughtsTokenCount: (usageMetadata as any)?.thoughtsTokenCount
     })
     
-    console.log(`✅ Gemini 1.5 Pro Description: "${description}"`)
+    console.log(`✅ Gemini 3 Pro Preview Description: "${description}"`)
     console.log(`   Prompt tokens: ${usageMetadata?.promptTokenCount || 0}`)
     console.log(`   Completion tokens: ${usageMetadata?.candidatesTokenCount || 0}`)
+    console.log(`   Thoughts tokens: ${(usageMetadata as any)?.thoughtsTokenCount || 0}`)
     console.log(`   Total tokens: ${usageMetadata?.totalTokenCount || 0}`)
     
     // Warn if no completion tokens (API timeout or error)
@@ -291,7 +320,7 @@ Return ONLY the product title.`,
     })
 
   } catch (error: any) {
-    console.error('❌ Gemini 1.5 Pro description error:', error)
+    console.error('❌ Gemini 3 Pro Preview description error:', error)
     console.error('   Error type:', error.constructor.name)
     console.error('   Error message:', error.message)
     console.error('   Stack:', error.stack?.substring(0, 300))
