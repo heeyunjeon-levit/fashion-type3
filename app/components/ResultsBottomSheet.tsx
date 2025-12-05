@@ -36,8 +36,9 @@ export default function ResultsBottomSheet({
   isSharedView = false
 }: ResultsBottomSheetProps) {
   const { t, language } = useLanguage()
-  const [showPhoneModal, setShowPhoneModal] = useState(true)
-  const [phoneSubmitted, setPhoneSubmitted] = useState(false)
+  // Initialize phone modal state based on isSharedView to prevent flash
+  const [showPhoneModal, setShowPhoneModal] = useState(!isSharedView)
+  const [phoneSubmitted, setPhoneSubmitted] = useState(isSharedView)
   const [isReturningUser, setIsReturningUser] = useState(false)
   const [sessionManager, setSessionManager] = useState<any>(null)
   const [sheetPosition, setSheetPosition] = useState<'peek' | 'half' | 'full'>('half')
@@ -60,11 +61,9 @@ export default function ResultsBottomSheet({
 
   // Initialize session manager
   useEffect(() => {
-    // Skip phone modal for shared views
+    // Skip session manager setup for shared views
     if (isSharedView) {
-      setPhoneSubmitted(true)
-      setShowPhoneModal(false)
-      console.log('👁️ Shared view detected, skipping phone modal')
+      console.log('👁️ Shared view - no session manager needed')
       return
     }
 
