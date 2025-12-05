@@ -1157,9 +1157,20 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
         const validLinks = links.filter((link: any) => {
           if (typeof link !== 'string' || !link.startsWith('http')) return false
           
-          // Check if link contains any blocked domain
+          // Check if link contains any blocked domain (with boundary checking to avoid false positives)
           const linkLower = link.toLowerCase()
-          const isBlocked = blockedDomains.some(domain => linkLower.includes(domain))
+          const isBlocked = blockedDomains.some(domain => {
+            // For very short domains like 't.co', check for exact domain match with boundaries
+            if (domain.length <= 5) {
+              // Match: //t.co/ or //t.co? or //www.t.co/
+              return linkLower.includes(`//${domain}/`) || 
+                     linkLower.includes(`//${domain}?`) ||
+                     linkLower.includes(`//www.${domain}/`) ||
+                     linkLower.includes(`//www.${domain}?`)
+            }
+            // For longer domains, regular substring match is safe
+            return linkLower.includes(domain)
+          })
           
           if (isBlocked) {
             console.log(`🚫 Blocked social media link: ${link.substring(0, 50)}...`)
@@ -1400,8 +1411,17 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
             .filter((item: any) => {
               if (!item.link) return false
               const linkLower = item.link.toLowerCase()
-              // Filter out social media and blocked domains
-              const isBlocked = blockedDomains.some(domain => linkLower.includes(domain))
+              // Filter out social media and blocked domains (with boundary checking)
+              const isBlocked = blockedDomains.some(domain => {
+                // For very short domains like 't.co', check for exact domain match
+                if (domain.length <= 5) {
+                  return linkLower.includes(`//${domain}/`) || 
+                         linkLower.includes(`//${domain}?`) ||
+                         linkLower.includes(`//www.${domain}/`) ||
+                         linkLower.includes(`//www.${domain}?`)
+                }
+                return linkLower.includes(domain)
+              })
               if (isBlocked) {
                 console.log(`🚫 Blocked top full image result: ${item.link.substring(0, 50)}...`)
                 return false
