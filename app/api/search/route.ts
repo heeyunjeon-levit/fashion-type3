@@ -173,9 +173,37 @@ Return TOP 3-5 BEST matches only. Quality over quantity.`
       console.error(`❌ No response from Fallback Gemini - finishReason: ${completion.candidates?.[0]?.finishReason || 'unknown'}`)
       responseText = '{}'
     }
-    const cleaned = responseText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim()
-    const jsonMatch = cleaned.match(/\{[\s\S]*\}/)
-    const gptResult = jsonMatch ? JSON.parse(jsonMatch[0]) : JSON.parse(cleaned)
+    
+    // Parse JSON - improved extraction
+    let gptResult: any
+    try {
+      let cleaned = responseText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim()
+      
+      // Extract ONLY the JSON object
+      const firstBrace = cleaned.indexOf('{')
+      if (firstBrace === -1) throw new Error('No JSON object found')
+      
+      let braceCount = 0
+      let lastBrace = firstBrace
+      for (let i = firstBrace; i < cleaned.length; i++) {
+        if (cleaned[i] === '{') braceCount++
+        if (cleaned[i] === '}') {
+          braceCount--
+          if (braceCount === 0) {
+            lastBrace = i
+            break
+          }
+        }
+      }
+      
+      const jsonStr = cleaned.substring(firstBrace, lastBrace + 1)
+      gptResult = JSON.parse(jsonStr)
+      
+    } catch (parseError: any) {
+      console.error(`❌ Fallback JSON parse error:`, parseError.message)
+      console.error(`   Raw response:`, responseText.substring(0, 500))
+      gptResult = { product_links: [] }
+    }
     
     console.log(`📋 Fallback GPT detected: ${gptResult.detected_category}`)
     console.log(`📋 Fallback GPT reasoning: ${gptResult.reasoning}`)
@@ -1109,10 +1137,40 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
           fullImageResults: fullImageResults // Store for exact match extraction
         }
         
-        // Parse response
-        const cleaned = responseText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim()
-        const jsonMatch = cleaned.match(/\{[\s\S]*\}/)
-        const result = jsonMatch ? JSON.parse(jsonMatch[0]) : JSON.parse(cleaned)
+        // Parse response - improved JSON extraction
+        let result: any
+        try {
+          // Remove markdown code blocks and trim
+          let cleaned = responseText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim()
+          
+          // Extract ONLY the JSON object (first { to last matching })
+          const firstBrace = cleaned.indexOf('{')
+          if (firstBrace === -1) {
+            throw new Error('No JSON object found in response')
+          }
+          
+          // Find the matching closing brace
+          let braceCount = 0
+          let lastBrace = firstBrace
+          for (let i = firstBrace; i < cleaned.length; i++) {
+            if (cleaned[i] === '{') braceCount++
+            if (cleaned[i] === '}') {
+              braceCount--
+              if (braceCount === 0) {
+                lastBrace = i
+                break
+              }
+            }
+          }
+          
+          const jsonStr = cleaned.substring(firstBrace, lastBrace + 1)
+          result = JSON.parse(jsonStr)
+          
+        } catch (parseError: any) {
+          console.error(`❌ JSON parse error for ${resultKey}:`, parseError.message)
+          console.error(`   Raw response:`, responseText.substring(0, 500))
+          result = {}
+        }
         
         // Handle both single string and array responses
         let links = result[resultKey]
