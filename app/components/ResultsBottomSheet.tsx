@@ -21,6 +21,7 @@ interface ResultsBottomSheetProps {
   onBack?: () => void // Go back to cropped images selection
   onResearch?: () => void // Re-run search with same items
   selectedItems?: any[]
+  isSharedView?: boolean // If true, this is a shared results page (disable some features)
 }
 
 export default function ResultsBottomSheet({
@@ -31,7 +32,8 @@ export default function ResultsBottomSheet({
   onReset,
   onBack,
   onResearch,
-  selectedItems
+  selectedItems,
+  isSharedView = false
 }: ResultsBottomSheetProps) {
   const { t, language } = useLanguage()
   const [showPhoneModal, setShowPhoneModal] = useState(true)
@@ -51,8 +53,21 @@ export default function ResultsBottomSheet({
   const scrollTimerRef = useRef<NodeJS.Timeout | null>(null)
   const productClickTimeKey = 'product_click_time_main_app'
 
+  // Share functionality
+  const [isSharing, setIsSharing] = useState(false)
+  const [shareUrl, setShareUrl] = useState<string | null>(null)
+  const [showShareSuccess, setShowShareSuccess] = useState(false)
+
   // Initialize session manager
   useEffect(() => {
+    // Skip phone modal for shared views
+    if (isSharedView) {
+      setPhoneSubmitted(true)
+      setShowPhoneModal(false)
+      console.log('👁️ Shared view detected, skipping phone modal')
+      return
+    }
+
     if (typeof window !== 'undefined') {
       const manager = getSessionManager()
       setSessionManager(manager)
@@ -70,7 +85,7 @@ export default function ResultsBottomSheet({
         console.log('👋 Returning user detected, skipping phone modal')
       }
     }
-  }, [])
+  }, [isSharedView])
 
   const handlePhoneSubmit = async (phoneNumber: string) => {
     if (!sessionManager) return
@@ -134,6 +149,56 @@ export default function ResultsBottomSheet({
       localStorage.setItem(productClickTimeKey, timestamp)
       console.log('🖱️ Product clicked, timestamp saved:', timestamp)
       console.log('💡 When you return to this page, modal should show after 3s')
+    }
+  }
+
+  const handleShareResults = async () => {
+    if (isSharing || shareUrl) return // Prevent duplicate shares
+
+    setIsSharing(true)
+    console.log('🔗 Creating shareable link...')
+
+    try {
+      const response = await fetch('/api/share-results', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          results,
+          originalImageUrl,
+          selectedItems,
+          sessionId: sessionManager?.getSessionId(),
+          userPhone: sessionManager?.getPhoneNumber(),
+          searchMode: 'interactive'
+        })
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to create share link')
+      }
+
+      const data = await response.json()
+
+      if (!data.success) {
+        throw new Error(data.error || 'Failed to create share link')
+      }
+
+      const url = data.shareUrl
+      setShareUrl(url)
+
+      // Copy to clipboard
+      await navigator.clipboard.writeText(url)
+      
+      console.log('✅ Share link created and copied:', url)
+      setShowShareSuccess(true)
+
+      // Hide success message after 3 seconds
+      setTimeout(() => setShowShareSuccess(false), 3000)
+
+    } catch (error) {
+      console.error('❌ Error sharing results:', error)
+      alert('공유 링크 생성에 실패했습니다. 다시 시도해주세요.')
+    } finally {
+      setIsSharing(false)
     }
   }
 
@@ -700,28 +765,76 @@ export default function ResultsBottomSheet({
 
         {/* Bottom action bar - only show when not at peek */}
         {sheetPosition !== 'peek' && (
-          <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 flex gap-2 z-20">
-            <button
-              onClick={onReset}
-              className="flex-shrink-0 bg-gray-100 text-gray-700 p-3 rounded-xl font-semibold hover:bg-gray-200 transition-colors active:scale-95"
-              title={t('results.startOver')}
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-              </svg>
-            </button>
-            <button
-              onClick={onResearch || onReset}
-              className="flex-1 bg-gray-100 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-200 transition-colors active:scale-95"
-            >
-              {t('results.searchAgain')}
-            </button>
-            <button
-              onClick={() => setSheetPosition(sheetPosition === 'full' ? 'half' : 'full')}
-              className="flex-1 bg-black text-white py-3 rounded-xl font-semibold hover:bg-gray-800 transition-all shadow-lg active:scale-95"
-            >
-              {sheetPosition === 'full' ? t('results.collapse') : t('results.viewAll')}
-            </button>
+          <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 z-20">
+            <div className="flex gap-2 mb-2">
+              <button
+                onClick={onReset}
+                className="flex-shrink-0 bg-gray-100 text-gray-700 p-3 rounded-xl font-semibold hover:bg-gray-200 transition-colors active:scale-95"
+                title={t('results.startOver')}
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+              </button>
+              <button
+                onClick={onResearch || onReset}
+                className="flex-1 bg-gray-100 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-200 transition-colors active:scale-95"
+              >
+                {t('results.searchAgain')}
+              </button>
+              <button
+                onClick={() => setSheetPosition(sheetPosition === 'full' ? 'half' : 'full')}
+                className="flex-1 bg-black text-white py-3 rounded-xl font-semibold hover:bg-gray-800 transition-all shadow-lg active:scale-95"
+              >
+                {sheetPosition === 'full' ? t('results.collapse') : t('results.viewAll')}
+              </button>
+            </div>
+            
+            {/* Share button - only show if not in shared view and we have results */}
+            {!isSharedView && Object.keys(results).length > 0 && (
+              <div className="relative">
+                <button
+                  onClick={handleShareResults}
+                  disabled={isSharing}
+                  className={`w-full py-3 rounded-xl font-semibold transition-all shadow-lg active:scale-95 flex items-center justify-center gap-2 ${
+                    shareUrl
+                      ? 'bg-green-500 text-white hover:bg-green-600'
+                      : 'bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600'
+                  } ${isSharing ? 'opacity-50 cursor-not-allowed' : ''}`}
+                >
+                  {isSharing ? (
+                    <>
+                      <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      링크 생성 중...
+                    </>
+                  ) : shareUrl ? (
+                    <>
+                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      링크가 클립보드에 복사되었습니다!
+                    </>
+                  ) : (
+                    <>
+                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                      </svg>
+                      결과 공유하기
+                    </>
+                  )}
+                </button>
+
+                {/* Success popup */}
+                {showShareSuccess && (
+                  <div className="absolute -top-16 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg text-sm font-semibold whitespace-nowrap animate-bounce">
+                    ✓ 링크 복사 완료!
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         )}
 
