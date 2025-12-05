@@ -23,10 +23,20 @@ export default function SharedResultsPage() {
         setLoading(true)
         console.log(`🔗 Loading shared results: ${shareId}`)
         
-        const response = await fetch(`/api/share-results?id=${shareId}`)
+        // Add timeout to fetch (15 seconds)
+        const controller = new AbortController()
+        const timeoutId = setTimeout(() => controller.abort(), 15000)
+        
+        const response = await fetch(`/api/share-results?id=${shareId}`, {
+          signal: controller.signal
+        })
+        
+        clearTimeout(timeoutId)
         
         if (!response.ok) {
-          throw new Error('Failed to load shared results')
+          const errorData = await response.json().catch(() => ({}))
+          console.error('❌ API error:', errorData)
+          throw new Error(errorData.error || `HTTP ${response.status}: Failed to load shared results`)
         }
         
         const data = await response.json()
@@ -46,9 +56,13 @@ export default function SharedResultsPage() {
           totalProducts: Object.values(data.results).reduce((acc: number, arr: any) => acc + arr.length, 0)
         })
         
-      } catch (err) {
+      } catch (err: any) {
         console.error('❌ Error loading shared results:', err)
-        setError(err instanceof Error ? err.message : 'Failed to load results')
+        if (err.name === 'AbortError') {
+          setError('요청 시간 초과. 데이터베이스 연결을 확인해주세요.')
+        } else {
+          setError(err instanceof Error ? err.message : 'Failed to load results')
+        }
       } finally {
         setLoading(false)
       }

@@ -92,6 +92,7 @@ export async function POST(request: NextRequest) {
 // GET endpoint to retrieve shared results
 export async function GET(request: NextRequest) {
   try {
+    const startTime = Date.now()
     const { searchParams } = new URL(request.url)
     const id = searchParams.get('id')
 
@@ -102,34 +103,57 @@ export async function GET(request: NextRequest) {
       )
     }
 
+    console.log(`🔍 Fetching shared results: ${id}`)
+
     const supabase = getSupabaseServerClient()
     
-    // Get the shared results
-    const { data, error } = await supabase
-      .from('shared_results')
-      .select('*')
-      .eq('id', id)
-      .is('deleted_at', null)
-      .single()
+    // Get the shared results with a timeout
+    const { data, error } = await Promise.race([
+      supabase
+        .from('shared_results')
+        .select('*')
+        .eq('id', id)
+        .is('deleted_at', null)
+        .single(),
+      new Promise<{ data: null; error: any }>((_, reject) => 
+        setTimeout(() => reject(new Error('Database query timeout')), 10000)
+      )
+    ]) as any
 
     if (error || !data) {
       console.error('❌ Error fetching shared results:', error)
+      console.error('❌ Error details:', JSON.stringify(error, null, 2))
+      
+      // Check if it's a table not found error
+      if (error?.code === '42P01' || error?.message?.includes('relation') || error?.message?.includes('does not exist')) {
+        return NextResponse.json(
+          { 
+            error: 'Database table not found. Please run the SQL schema in Supabase.',
+            details: 'Run supabase_shared_results_schema.sql in your Supabase SQL Editor'
+          },
+          { status: 500 }
+        )
+      }
+      
       return NextResponse.json(
-        { error: 'Results not found' },
+        { error: 'Results not found', details: error?.message || 'Unknown error' },
         { status: 404 }
       )
     }
 
-    // Increment view count
-    await supabase
+    // Increment view count (non-blocking, fire and forget)
+    supabase
       .from('shared_results')
       .update({ 
         view_count: (data.view_count || 0) + 1,
         last_viewed_at: new Date().toISOString()
       })
       .eq('id', id)
+      .then(() => console.log(`👁️  View count updated: ${id}`))
+      .catch(err => console.error('⚠️  Failed to update view count:', err))
 
-    console.log(`👁️  Shared results viewed: ${id} (views: ${data.view_count + 1})`)
+    const elapsed = Date.now() - startTime
+    console.log(`✅ Shared results retrieved in ${elapsed}ms: ${id} (views: ${data.view_count + 1})`)
 
     return NextResponse.json({
       success: true,
@@ -140,10 +164,11 @@ export async function GET(request: NextRequest) {
       createdAt: data.created_at
     })
 
-  } catch (error) {
+  } catch (error: any) {
     console.error('❌ Error in GET share-results:', error)
+    console.error('❌ Error message:', error?.message)
     return NextResponse.json(
-      { error: 'Failed to fetch results' },
+      { error: 'Failed to fetch results', details: error?.message || 'Unknown error' },
       { status: 500 }
     )
   }
