@@ -211,7 +211,9 @@ Return ONLY the product title.`,
     const model = genAI.getGenerativeModel({ 
       model: 'gemini-3-pro-preview',
       generationConfig: {
-        maxOutputTokens: 150,
+        // Increased from 150 to 512 to allow room for thinking + output
+        // Previous issue: 149 tokens used for thinking, 0 left for output (MAX_TOKENS error)
+        maxOutputTokens: 512,
         temperature: 1.0
       }
     })
