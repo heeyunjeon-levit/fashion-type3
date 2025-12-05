@@ -150,29 +150,27 @@ Return TOP 3-5 BEST matches only. Quality over quantity.`
     timingData.gpt4_turbo_api_time = (Date.now() - gptStart) / 1000
     console.log(`   ⏱️  Fallback Gemini 3 Pro: ${timingData.gpt4_turbo_api_time.toFixed(2)}s`)
 
-    // Try to get text from response (same fix as main filtering)
+    // Parse response - handle both .text and candidates[]
     let responseText = ''
     try {
       responseText = completion.text || ''
     } catch (e) {
-      console.warn('⚠️ Fallback completion.text failed:', e)
+      console.warn('⚠️ Fallback completion.text failed')
     }
 
-    // If no text, try candidates (for thinking models)
+    // If no text, try candidates
     if (!responseText && completion.candidates && completion.candidates.length > 0) {
       const candidate = completion.candidates[0]
-      if (candidate.content && candidate.content.parts) {
+      if (candidate.content?.parts) {
         for (const part of candidate.content.parts) {
-          if (part.text) {
-            responseText += part.text
-          }
+          if (part.text) responseText += part.text
         }
       }
     }
 
-    // Fallback to empty object if still no response
+    // Fallback
     if (!responseText) {
-      console.error(`❌ No response from Fallback Gemini - finishReason: ${completion.candidates?.[0]?.finishReason}`)
+      console.error(`❌ No response from Fallback Gemini - finishReason: ${completion.candidates?.[0]?.finishReason || 'unknown'}`)
       responseText = '{}'
     }
     const cleaned = responseText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim()
@@ -942,34 +940,28 @@ TITLE VALIDATION RULES (FLEXIBLE - trust visual similarity):
 1. ✅ READ the "title" field carefully - it tells you what the product actually is
 2. ✅ FLEXIBLE: Allow category variations within same body part (sweater/jacket/coat all OK for upper body)
 ${itemDescription ? `3. 🎯 **CRITICAL: Match "${itemDescription}"**
-   - 🎨 **DESIGN/STYLE IS MOST IMPORTANT** - exact same item in different color is BETTER than different item in same color!
-   - Prioritize: studs, bows, ribbing, material, cut, silhouette
-   - Example: "studded beanie" in BLACK is better match than "plain beanie" in WHITE
-   - Color is secondary - prefer matching color but don't exclude exact design in different color
+   - 🎨 **COLOR IS MOST IMPORTANT** - if description says "black", prefer BLACK items!
+   - If description says "white/cream/beige", prefer LIGHT colored items!
+   - Don't mix up inverted colors (black→white is WRONG, white→black is WRONG)
+   - Style/silhouette should match (cable knit, bow details, etc.)
    - For Korean text: 검정=black, 흰색/아이보리=white/ivory, 베이지=beige` : ''}
-4. 🎨 **COLOR PREFERENCE** (secondary): If the item has a distinctive color, prefer matching colors but don't exclude design matches
+4. 🎨 **COLOR PRIORITY**: If the item has a distinctive color (black, white, red, etc.), STRONGLY prefer matching colors
 5. ⚠️ ONLY REJECT if clearly wrong body part:
    ${categoryKey === 'tops' ? '**REJECT ONLY: pants/jeans/shorts/skirts/leggings (lower body items)**' : ''}
    ${categoryKey === 'bottoms' ? '**REJECT ONLY: if title suggests it\'s NOT worn on lower body**' : ''}
 6. ❌ REJECT if title is generic ("Shop now", "Homepage", "Category", "Collection")
 7. ✅ ACCEPT style variations - luxury fur coat might be tagged as jacket, sweater, or cardigan
 
-Matching criteria (${characterName ? 'CHARACTER FIRST, then design/style, then color' : 'DESIGN/STYLE FIRST, then color'}):
+Matching criteria (${characterName ? 'CHARACTER FIRST, then color' : 'COLOR FIRST, then visual similarity'}):
 ${characterName ? `1. 🎭 **#1 PRIORITY - CHARACTER/GRAPHIC MATCH**: Item MUST feature "${characterName.toUpperCase()}"!
    - Donald Duck mint green → find DONALD DUCK items (NOT Winnie the Pooh or Mickey!)
    - Winnie the Pooh yellow → find WINNIE THE POOH items (NOT Donald or Minnie!)
    - Don't mix up characters - this is a critical error!
    - Korean names: 푸 = Pooh, 미키 = Mickey, 미니 = Minnie, 도널드 = Donald Duck
-2. ✨ **#2 PRIORITY - DESIGN/STYLE MATCH**: Exact same design in different color is EXCELLENT!
-   - Studded beanie in BLACK = studded beanie in WHITE (same item, different color variant)
-   - Prioritize: studs, ribbing, cut, material, silhouette match
-3. 🎨 **#3 PRIORITY - COLOR PREFERENCE**: Prefer ${primaryColor?.toUpperCase() || 'matching color'} but don't exclude design matches!` : '1. ✨ **#1 PRIORITY - DESIGN/STYLE MATCH**: Exact same item in different color is BETTER than different item in same color!
-   - Example: "studded cross beanie" in BLACK is BETTER match than "plain beanie" in WHITE
-   - Prioritize: studs, bows, ribbing, cut, material, silhouette
-   - Exact design match = highest priority
-2. 🎨 **#2 PRIORITY - COLOR PREFERENCE**: Prefer matching color (BLACK→BLACK, WHITE→WHITE) but don't exclude exact design matches!'}
-   - Same design, different color = EXCELLENT match (color variants are common)
-   - Different design, same color = OKAY match (backup option)
+2. 🎨 **#2 PRIORITY - COLOR MATCH**: If item is ${primaryColor?.toUpperCase() || 'a specific color'}, find matching colors!` : '1. 🎨 **#1 PRIORITY - COLOR MATCH**: If item is BLACK, find BLACK items. If WHITE/CREAM, find LIGHT items!'}
+   - BLACK sweater with white bows → find BLACK sweaters (NOT beige/cream ones!)
+   - WHITE/CREAM sweater with black bows → find WHITE/CREAM sweaters (NOT black ones!)
+   - Don't return inverted colors - this is a critical error!
 ${characterName ? '3' : '2'}. ✅ Visual similarity (Google Lens found these based on IMAGE, trust it!)
 ${characterName ? '4' : '3'}. ✅ Style/material match (cable knit, bow details, ruffle hem, etc.)
 ${itemDescription ? `${characterName ? '5' : '4'}. 🎯 MATCH DESCRIPTION: "${itemDescription}" - especially the ${characterName ? 'CHARACTER and COLOR' : 'COLOR'} words!` : ''}
@@ -1019,13 +1011,12 @@ For EACH result you consider:
 8. ✅ CHECK: Is it a specific product (not "Shop", "Category", "Homepage")?
 
 Find the TOP 3-5 BEST AVAILABLE MATCHES. Prioritize IN THIS ORDER:
-1. **STRONGLY PREFER the first ${fullImageResults.length} results** (full image search = most accurate, often EXACT matches!)
-2. ${characterName ? 'Character/graphic match (must have the right character!)' : 'Design/style match (studs, ribbing, bows, cut, silhouette)'}
-3. Visual similarity (Google Lens already filtered by appearance!)
-4. Similar style/vibe/quality level (luxury vs fast fashion)
-5. Color preference (matching color is great, but don't exclude exact design in different color!)
-6. Product variety (different retailers when possible)
-7. Accessibility (prefer major retailers)
+1. **STRONGLY PREFER the first ${fullImageResults.length} results** (full image search = most accurate)
+2. Visual similarity (Google Lens already filtered by appearance!)
+3. Similar style/vibe/quality level (luxury vs fast fashion)
+4. Similar color or aesthetic
+5. Product variety (different retailers when possible)
+6. Accessibility (prefer major retailers)
 
 ✅ IMPORTANT: Trust visual search results, especially FULL IMAGE results!
 - **TOP ${fullImageResults.length} results are from full image search - PRIORITIZE these!**
@@ -1068,38 +1059,28 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
         timingData.gpt4_turbo_count += 1
         console.log(`   ⏱️  Gemini 3 Pro filtering: ${gptTime.toFixed(2)}s`)
 
-        // DEBUG: Log full response structure
-        console.log(`🔍 Gemini response structure for ${resultKey}:`, {
-          hasText: !!completion.text,
-          hasCandidates: !!completion.candidates,
-          candidatesCount: completion.candidates?.length || 0,
-          finishReason: completion.candidates?.[0]?.finishReason || 'unknown',
-          usageMetadata: completion.usageMetadata
-        })
-
-        // Try to get text from response (same fix as describe-item)
+        // Parse response - handle both .text and candidates[] for thinking models
         let responseText = ''
         try {
           responseText = completion.text || ''
         } catch (e) {
-          console.warn(`⚠️ completion.text failed for ${resultKey}:`, e)
+          console.warn(`⚠️ completion.text failed for ${resultKey}`)
         }
 
-        // If no text, try candidates (for thinking models)
+        // If no text, try candidates (for thinking models like Gemini 3)
         if (!responseText && completion.candidates && completion.candidates.length > 0) {
           const candidate = completion.candidates[0]
-          if (candidate.content && candidate.content.parts) {
+          console.log(`🔍 Parsing candidates for ${resultKey} - finishReason: ${candidate.finishReason}`)
+          if (candidate.content?.parts) {
             for (const part of candidate.content.parts) {
-              if (part.text) {
-                responseText += part.text
-              }
+              if (part.text) responseText += part.text
             }
           }
         }
 
-        // Fallback to empty object if still no response
+        // Fallback to empty object
         if (!responseText) {
-          console.error(`❌ No response text from Gemini for ${resultKey} - finishReason: ${completion.candidates?.[0]?.finishReason}`)
+          console.error(`❌ No response from Gemini for ${resultKey} - finishReason: ${completion.candidates?.[0]?.finishReason || 'unknown'}`)
           responseText = '{}'
         }
 
