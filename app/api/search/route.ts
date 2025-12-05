@@ -1,10 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
 import OpenAI from 'openai'
+import { GoogleGenAI, ThinkingLevel } from '@google/genai'
 
 // Initialize OpenAI lazily to read fresh env vars on each request
 function getOpenAIClient() {
   return new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
+  })
+}
+
+// Initialize Gemini client
+function getGeminiClient() {
+  return new GoogleGenAI({
+    apiKey: process.env.GEMINI_API_KEY || process.env.GCLOUD_API_KEY || ''
   })
 }
 
@@ -122,23 +130,27 @@ Respond with JSON:
 
 Return TOP 3-5 BEST matches only. Quality over quantity.`
 
-    const openai = getOpenAIClient()
+    const gemini = getGeminiClient()
     const gptStart = Date.now()
-    const completion = await openai.chat.completions.create({
-      model: 'gpt-4.1',
-      messages: [
-        {
-          role: 'system',
-          content: 'You are a fashion product analyzer. Return only valid JSON.',
-        },
-        { role: 'user', content: prompt },
-      ],
-      temperature: 0,
+    
+    // Use Gemini 3 Pro Preview for analysis
+    const fullPrompt = `You are a fashion product analyzer. Return only valid JSON.\n\n${prompt}`
+    const completion = await gemini.models.generateContent({
+      model: 'gemini-3-pro-preview',
+      contents: fullPrompt,
+      config: {
+        maxOutputTokens: 500,
+        temperature: 0,
+        thinkingConfig: {
+          thinkingLevel: ThinkingLevel.LOW // Fast analysis for filtering
+        }
+      }
     })
+    
     timingData.gpt4_turbo_api_time = (Date.now() - gptStart) / 1000
-    console.log(`   ⏱️  Fallback GPT-4.1: ${timingData.gpt4_turbo_api_time.toFixed(2)}s`)
+    console.log(`   ⏱️  Fallback Gemini 3 Pro: ${timingData.gpt4_turbo_api_time.toFixed(2)}s`)
 
-    const responseText = completion.choices[0].message.content || '{}'
+    const responseText = completion.text || '{}'
     const cleaned = responseText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim()
     const jsonMatch = cleaned.match(/\{[\s\S]*\}/)
     const gptResult = jsonMatch ? JSON.parse(jsonMatch[0]) : JSON.parse(cleaned)
@@ -1003,25 +1015,29 @@ Find the TOP 3-5 BEST AVAILABLE MATCHES. Prioritize IN THIS ORDER:
 
 Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MUST be Korean sites) or {"${resultKey}": []} ONLY if zero valid products found.`
 
-        const openai = getOpenAIClient()
+        const gemini = getGeminiClient()
         const gptStart = Date.now()
-        const completion = await openai.chat.completions.create({
-          model: 'gpt-4.1',  // GPT-4.1 - better reasoning than GPT-4 Turbo
-          messages: [
-            {
-              role: 'system',
-              content: 'You extract product links. Return only valid JSON without any additional text or markdown.',
-            },
-            { role: 'user', content: prompt },
-          ],
-          temperature: 0,
+        
+        // Use Gemini 3 Pro Preview for filtering
+        const fullPrompt = `You extract product links. Return only valid JSON without any additional text or markdown.\n\n${prompt}`
+        const completion = await gemini.models.generateContent({
+          model: 'gemini-3-pro-preview',
+          contents: fullPrompt,
+          config: {
+            maxOutputTokens: 500,
+            temperature: 0,
+            thinkingConfig: {
+              thinkingLevel: ThinkingLevel.LOW // Fast filtering
+            }
+          }
         })
+        
         const gptTime = (Date.now() - gptStart) / 1000
         timingData.gpt4_turbo_total_api_time += gptTime
         timingData.gpt4_turbo_count += 1
-        console.log(`   ⏱️  GPT-4.1 filtering: ${gptTime.toFixed(2)}s`)
+        console.log(`   ⏱️  Gemini 3 Pro filtering: ${gptTime.toFixed(2)}s`)
 
-        const responseText = completion.choices[0].message.content || '{}'
+        const responseText = completion.text || '{}'
         console.log(`📄 GPT response for ${resultKey}:`, responseText.substring(0, 200))
         
         // Store GPT reasoning/response for this category
