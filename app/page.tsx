@@ -571,7 +571,9 @@ export default function Home() {
             
             // Continue with description...
             let description = `${bbox.category} item`
+            const descStartTime = Date.now()
             try {
+              console.log(`🔄 Fetching description for ${bbox.category}...`)
               const descResponse = await fetch('/api/describe-item', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -579,20 +581,30 @@ export default function Home() {
                   imageUrl: croppedDataUrl,
                   category: bbox.category
                 }),
-                signal: AbortSignal.timeout(30000) // Increased to 30s for Gemini 3 Pro thinking
+                signal: AbortSignal.timeout(45000) // Increased to 45s for Gemini 3 Pro thinking (parallel processing can be slower)
               })
+              
+              const descTime = ((Date.now() - descStartTime) / 1000).toFixed(1)
               
               if (descResponse.ok) {
                 const descData = await descResponse.json()
                 description = descData.description || description
-                console.log(`✅ Description: "${description.substring(0, 60)}..."`)
+                console.log(`✅ Description (${descTime}s): "${description.substring(0, 60)}..."`)
               } else {
-                console.warn(`⚠️ Description failed: ${descResponse.status}, using default`)
+                const errorText = await descResponse.text()
+                console.error(`❌ Description API error ${descResponse.status} (${descTime}s):`, errorText.substring(0, 200))
               }
             } catch (descError) {
-              console.error(`❌ Description failed for ${bbox.category}:`, descError)
-              if (descError instanceof Error && descError.name === 'TimeoutError') {
-                console.error(`   Timeout after 30s - Gemini 3 Pro taking too long`)
+              const descTime = ((Date.now() - descStartTime) / 1000).toFixed(1)
+              console.error(`❌ Description failed for ${bbox.category} (${descTime}s):`, descError)
+              if (descError instanceof Error) {
+                console.error(`   Error name: ${descError.name}`)
+                console.error(`   Error message: ${descError.message}`)
+                if (descError.name === 'TimeoutError') {
+                  console.error(`   🕐 Timeout after 45s - Backend still processing`)
+                } else if (descError.name === 'AbortError') {
+                  console.error(`   🛑 Request aborted`)
+                }
               }
             }
             
