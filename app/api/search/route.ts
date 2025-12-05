@@ -139,7 +139,7 @@ Return TOP 3-5 BEST matches only. Quality over quantity.`
       model: 'gemini-3-pro-preview',
       contents: fullPrompt,
       config: {
-        maxOutputTokens: 2048, // Increased from 500 to accommodate thinking + output
+        maxOutputTokens: 8192, // Increased from 2048 - give it plenty of room for thinking + output
         temperature: 0,
         thinkingConfig: {
           thinkingLevel: ThinkingLevel.LOW // Fast analysis for filtering
@@ -1046,7 +1046,7 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
           model: 'gemini-3-pro-preview',
           contents: fullPrompt,
           config: {
-            maxOutputTokens: 2048, // Increased from 500 to accommodate thinking + output
+            maxOutputTokens: 8192, // Increased from 2048 - give it plenty of room for thinking + output
             temperature: 0,
             thinkingConfig: {
               thinkingLevel: ThinkingLevel.LOW // Fast filtering
@@ -1063,6 +1063,14 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
         let responseText = ''
         try {
           responseText = completion.text || ''
+          // Log token usage for successful responses too
+          if (responseText) {
+            const usageMeta = completion.usageMetadata as any
+            console.log(`💡 Token usage for ${resultKey}:`)
+            console.log(`   thoughtsTokens: ${usageMeta?.thoughtsTokenCount || 0}`)
+            console.log(`   candidatesTokens: ${usageMeta?.candidatesTokenCount || 0}`)
+            console.log(`   totalTokens: ${usageMeta?.totalTokenCount || 0}`)
+          }
         } catch (e) {
           console.warn(`⚠️ completion.text failed for ${resultKey}`)
         }
@@ -1070,7 +1078,12 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
         // If no text, try candidates (for thinking models like Gemini 3)
         if (!responseText && completion.candidates && completion.candidates.length > 0) {
           const candidate = completion.candidates[0]
-          console.log(`🔍 Parsing candidates for ${resultKey} - finishReason: ${candidate.finishReason}`)
+          const usageMeta = completion.usageMetadata as any
+          console.log(`🔍 Parsing candidates for ${resultKey}:`)
+          console.log(`   finishReason: ${candidate.finishReason}`)
+          console.log(`   thoughtsTokens: ${usageMeta?.thoughtsTokenCount || 0}`)
+          console.log(`   candidatesTokens: ${usageMeta?.candidatesTokenCount || 0}`)
+          console.log(`   totalTokens: ${usageMeta?.totalTokenCount || 0}`)
           if (candidate.content?.parts) {
             for (const part of candidate.content.parts) {
               if (part.text) responseText += part.text
