@@ -149,8 +149,13 @@ export async function GET(request: NextRequest) {
         last_viewed_at: new Date().toISOString()
       })
       .eq('id', id)
-      .then(() => console.log(`👁️  View count updated: ${id}`))
-      .catch(err => console.error('⚠️  Failed to update view count:', err))
+      .then((result) => {
+        if (result.error) {
+          console.error('⚠️  Failed to update view count:', result.error)
+        } else {
+          console.log(`👁️  View count updated: ${id}`)
+        }
+      })
 
     const elapsed = Date.now() - startTime
     console.log(`✅ Shared results retrieved in ${elapsed}ms: ${id} (views: ${data.view_count + 1})`)
