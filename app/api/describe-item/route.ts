@@ -248,22 +248,34 @@ Return ONLY the product title.`,
 
     const response = await result.response
     
+    // DEEP DEBUG: Log the entire response to see what Gemini 3 is actually returning
+    console.log('🔍 DEEP DEBUG - Raw response object:')
+    console.log('   candidates:', JSON.stringify(response.candidates, null, 2).substring(0, 2000))
+    console.log('   usageMetadata:', JSON.stringify(response.usageMetadata, null, 2))
+    
     // Gemini 3 thinking models store output differently
     let description = ''
     try {
       // Method 1: Standard text() method
       description = response.text()?.trim() || ''
+      console.log(`   Method 1 (text()): "${description}"`)
     } catch (e) {
-      console.warn('⚠️ response.text() failed, trying alternative access')
+      console.warn('⚠️ response.text() failed:', e)
     }
     
     // Method 2: Direct access to candidates (for thinking models)
     if (!description && response.candidates && response.candidates.length > 0) {
       const candidate = response.candidates[0]
+      console.log('   Method 2 - Parsing candidates...')
+      console.log('   candidate.content:', candidate.content ? 'exists' : 'null')
+      console.log('   candidate.content.parts:', candidate.content?.parts?.length || 0)
+      
       if (candidate.content && candidate.content.parts) {
         for (const part of candidate.content.parts) {
+          console.log('   part:', Object.keys(part))
           if (part.text) {
             description += part.text
+            console.log(`   Found text in part: "${part.text}"`)
           }
         }
         description = description.trim()
@@ -272,6 +284,7 @@ Return ONLY the product title.`,
     
     // Fallback if no description found
     if (!description) {
+      console.error('❌ No description found in response - using fallback')
       description = `${category} item`
     }
 
