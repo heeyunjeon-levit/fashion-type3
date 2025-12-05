@@ -1,116 +1,82 @@
-'use client'
-
-import { useEffect, useState } from 'react'
-import { useParams } from 'next/navigation'
+import { Suspense } from 'react'
+import { notFound } from 'next/navigation'
 import ResultsBottomSheet from '@/app/components/ResultsBottomSheet'
 import { DetectedItem } from '@/app/page'
+import { getSupabaseServerClient } from '@/lib/supabaseServer'
 
-export default function SharedResultsPage() {
-  const params = useParams()
-  const shareId = params.id as string
+// Enable caching for shared results pages (revalidate every hour)
+export const revalidate = 3600
+
+// This is now a Server Component - data fetched on server before render
+async function getSharedResults(shareId: string) {
+  const startTime = Date.now()
   
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [results, setResults] = useState<Record<string, Array<{ link: string; thumbnail: string | null; title: string | null }>>>({})
-  const [originalImageUrl, setOriginalImageUrl] = useState<string>('')
-  const [selectedItems, setSelectedItems] = useState<DetectedItem[]>([])
-  const [searchMode, setSearchMode] = useState<string>('unknown')
-  const [createdAt, setCreatedAt] = useState<string>('')
-
-  useEffect(() => {
-    const fetchSharedResults = async () => {
-      try {
-        setLoading(true)
-        console.log(`🔗 Loading shared results: ${shareId}`)
-        
-        // Add timeout to fetch (15 seconds)
-        const controller = new AbortController()
-        const timeoutId = setTimeout(() => controller.abort(), 15000)
-        
-        const response = await fetch(`/api/share-results?id=${shareId}`, {
-          signal: controller.signal
-        })
-        
-        clearTimeout(timeoutId)
-        
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}))
-          console.error('❌ API error:', errorData)
-          throw new Error(errorData.error || `HTTP ${response.status}: Failed to load shared results`)
-        }
-        
-        const data = await response.json()
-        
-        if (!data.success) {
-          throw new Error(data.error || 'Failed to load results')
-        }
-        
-        setResults(data.results)
-        setOriginalImageUrl(data.originalImageUrl || '')
-        setSelectedItems(data.selectedItems || [])
-        setSearchMode(data.searchMode || 'unknown')
-        setCreatedAt(data.createdAt || '')
-        
-        console.log('✅ Shared results loaded:', {
-          categories: Object.keys(data.results).length,
-          totalProducts: Object.values(data.results).reduce((acc: number, arr: any) => acc + arr.length, 0)
-        })
-        
-      } catch (err: any) {
-        console.error('❌ Error loading shared results:', err)
-        if (err.name === 'AbortError') {
-          setError('요청 시간 초과. 데이터베이스 연결을 확인해주세요.')
-        } else {
-          setError(err instanceof Error ? err.message : 'Failed to load results')
-        }
-      } finally {
-        setLoading(false)
-      }
-    }
+  try {
+    console.log(`🔍 [SSR] Fetching shared results: ${shareId}`)
     
-    if (shareId) {
-      fetchSharedResults()
+    const supabase = getSupabaseServerClient()
+    
+    const { data, error } = await supabase
+      .from('shared_results')
+      .select('*')
+      .eq('id', shareId)
+      .is('deleted_at', null)
+      .single()
+
+    if (error || !data) {
+      console.error('❌ [SSR] Error fetching:', error)
+      return null
     }
-  }, [shareId])
+
+    // Increment view count (non-blocking)
+    supabase
+      .from('shared_results')
+      .update({ 
+        view_count: (data.view_count || 0) + 1,
+        last_viewed_at: new Date().toISOString()
+      })
+      .eq('id', shareId)
+      .then((result) => {
+        if (!result.error) {
+          console.log(`👁️  [SSR] View count updated: ${shareId}`)
+        }
+      })
+
+    const elapsed = Date.now() - startTime
+    console.log(`✅ [SSR] Retrieved in ${elapsed}ms`)
+
+    return {
+      results: data.results,
+      originalImageUrl: data.original_image_url,
+      selectedItems: data.selected_items,
+      searchMode: data.search_mode,
+      createdAt: data.created_at
+    }
+  } catch (error) {
+    console.error('❌ [SSR] Error:', error)
+    return null
+  }
+}
+
+export default async function SharedResultsPage({ params }: { params: { id: string } }) {
+  const shareId = params.id
+  const data = await getSharedResults(shareId)
+
+  if (!data) {
+    notFound()
+  }
+
+  const { results, originalImageUrl, selectedItems, searchMode, createdAt } = data
 
   // Build croppedImages map for Results component
   const croppedImagesForResults: Record<string, string> = {}
-  selectedItems.forEach((item, idx) => {
+  selectedItems?.forEach((item: any, idx: number) => {
     if (item.croppedImageUrl) {
       const itemName = item.groundingdino_prompt || item.category
       const key = `${itemName}_${idx + 1}`
       croppedImagesForResults[key] = item.croppedImageUrl
     }
   })
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-center space-y-4">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black mx-auto"></div>
-          <p className="text-gray-600">공유된 결과를 불러오는 중...</p>
-        </div>
-      </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-center space-y-4 max-w-md mx-auto px-4">
-          <div className="text-6xl">❌</div>
-          <h1 className="text-2xl font-bold text-gray-900">결과를 찾을 수 없습니다</h1>
-          <p className="text-gray-600">{error}</p>
-          <a 
-            href="/"
-            className="inline-block mt-4 px-6 py-3 bg-black text-white rounded-xl font-semibold hover:bg-gray-800 transition-colors"
-          >
-            홈으로 돌아가기
-          </a>
-        </div>
-      </div>
-    )
-  }
 
   return (
     <main className="min-h-screen bg-white">
@@ -142,19 +108,55 @@ export default function SharedResultsPage() {
         </div>
 
         {/* Results */}
-        <ResultsBottomSheet
-          results={results}
-          isLoading={false}
-          croppedImages={croppedImagesForResults}
-          originalImageUrl={originalImageUrl}
-          onReset={() => window.location.href = '/'}
-          onBack={() => window.location.href = '/'}
-          onResearch={() => {}}
-          selectedItems={selectedItems}
-          isSharedView={true}
-        />
+        <Suspense fallback={
+          <div className="min-h-screen bg-white flex items-center justify-center">
+            <div className="text-center space-y-4">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black mx-auto"></div>
+              <p className="text-gray-600">공유된 결과를 불러오는 중...</p>
+            </div>
+          </div>
+        }>
+          <SharedResultsClient
+            results={results}
+            originalImageUrl={originalImageUrl || ''}
+            selectedItems={selectedItems || []}
+            createdAt={createdAt || ''}
+            croppedImages={croppedImagesForResults}
+          />
+        </Suspense>
       </div>
     </main>
+  )
+}
+
+// Client component for interactive parts only
+'use client'
+
+function SharedResultsClient({ 
+  results, 
+  originalImageUrl, 
+  selectedItems, 
+  createdAt,
+  croppedImages 
+}: {
+  results: Record<string, Array<{ link: string; thumbnail: string | null; title: string | null }>>
+  originalImageUrl: string
+  selectedItems: DetectedItem[]
+  createdAt: string
+  croppedImages: Record<string, string>
+}) {
+  return (
+    <ResultsBottomSheet
+      results={results}
+      isLoading={false}
+      croppedImages={croppedImages}
+      originalImageUrl={originalImageUrl}
+      onReset={() => window.location.href = '/'}
+      onBack={() => window.location.href = '/'}
+      onResearch={() => {}}
+      selectedItems={selectedItems}
+      isSharedView={true}
+    />
   )
 }
 
