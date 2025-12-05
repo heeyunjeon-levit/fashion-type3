@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { GoogleGenerativeAI } from '@google/generative-ai'
+import { GoogleGenAI, ThinkingLevel } from '@google/genai'
 
 // Use dedicated Gemini API key (project-specific, not gcloud)
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || process.env.GCLOUD_API_KEY || '')
+const client = new GoogleGenAI({
+  apiKey: process.env.GEMINI_API_KEY || process.env.GCLOUD_API_KEY || ''
+})
 
 export async function POST(request: NextRequest) {
   try {
@@ -207,102 +209,63 @@ Return ONLY the product title.`,
     
     const promptConfig = getCategoryPrompt(category)
     
-    // Generate search-optimized description - using Gemini 3 Pro Preview (most intelligent!)
-    const model = genAI.getGenerativeModel({ 
-      model: 'gemini-3-pro-preview',
-      generationConfig: {
-        // Increased from 150 to 512 to allow room for thinking + output
-        // Previous issue: 149 tokens used for thinking, 0 left for output (MAX_TOKENS error)
-        maxOutputTokens: 512,
-        temperature: 1.0
-      }
-    })
-
-    // Prepare image data for Gemini
-    let imageData: { inlineData: { data: string; mimeType: string } } | { fileData: { fileUri: string; mimeType: string } }
-    
-    if (imageUrl.startsWith('data:')) {
-      // Data URL - extract base64 and MIME type
-      const match = imageUrl.match(/^data:([^;]+);base64,(.+)$/)
-      if (!match) {
-        throw new Error('Invalid data URL format')
-      }
-      imageData = {
-        inlineData: {
-          data: match[2], // Base64 string without prefix
-          mimeType: match[1]
-        }
-      }
-    } else {
-      // HTTP URL - Gemini doesn't support direct URLs, we need to fetch and convert
+    // Prepare image data for new SDK
+    if (!imageUrl.startsWith('data:')) {
       throw new Error('HTTP URLs not yet supported with Gemini - please use data URLs')
     }
+    
+    // Data URL - extract base64 and MIME type
+    const match = imageUrl.match(/^data:([^;]+);base64,(.+)$/)
+    if (!match) {
+      throw new Error('Invalid data URL format')
+    }
+    
+    const mimeType = match[1]
+    const base64Data = match[2]
 
     // Combine system + user prompts for Gemini (no separate system message)
     // Add explicit OCR instruction
     const ocrInstruction = `CRITICAL: First, perform OCR (Optical Character Recognition) on this image. Look for ANY text, letters, words, numbers, or small prints ANYWHERE on the garment - especially on shoulders, neckline, chest, sleeves, hem. If you find ANY text, you MUST include it in the product title.\n\n`
     const fullPrompt = `${ocrInstruction}${promptConfig.system}\n\n${promptConfig.user}`
 
-    const result = await model.generateContent([
-      fullPrompt,
-      imageData
-    ])
-
-    const response = await result.response
+    // Use NEW SDK with proper thinking control
+    console.log(`   Using NEW @google/genai SDK with thinkingLevel: "low"`)
     
-    // DEEP DEBUG: Log the entire response to see what Gemini 3 is actually returning
-    console.log('🔍 DEEP DEBUG - Raw response object:')
-    console.log('   candidates:', JSON.stringify(response.candidates, null, 2).substring(0, 2000))
-    console.log('   usageMetadata:', JSON.stringify(response.usageMetadata, null, 2))
-    
-    // Gemini 3 thinking models store output differently
-    let description = ''
-    try {
-      // Method 1: Standard text() method
-      description = response.text()?.trim() || ''
-      console.log(`   Method 1 (text()): "${description}"`)
-    } catch (e) {
-      console.warn('⚠️ response.text() failed:', e)
-    }
-    
-    // Method 2: Direct access to candidates (for thinking models)
-    if (!description && response.candidates && response.candidates.length > 0) {
-      const candidate = response.candidates[0]
-      console.log('   Method 2 - Parsing candidates...')
-      console.log('   candidate.content:', candidate.content ? 'exists' : 'null')
-      console.log('   candidate.content.parts:', candidate.content?.parts?.length || 0)
-      
-      if (candidate.content && candidate.content.parts) {
-        for (const part of candidate.content.parts) {
-          console.log('   part:', Object.keys(part))
-          if (part.text) {
-            description += part.text
-            console.log(`   Found text in part: "${part.text}"`)
-          }
+    const result = await client.models.generateContent({
+      model: 'gemini-3-pro-preview',
+      contents: [
+        {
+          role: 'user',
+          parts: [
+            { text: fullPrompt },
+            {
+              inlineData: {
+                mimeType: mimeType,
+                data: base64Data
+              }
+            }
+          ]
         }
-        description = description.trim()
+      ],
+      config: {
+        maxOutputTokens: 200,
+        temperature: 1.0,
+        thinkingConfig: {
+          thinkingLevel: ThinkingLevel.LOW // CRITICAL: Prevents spending all tokens on thinking
+        }
       }
-    }
-    
-    // Fallback if no description found
-    if (!description) {
-      console.error('❌ No description found in response - using fallback')
-      description = `${category} item`
-    }
-
-    // Gemini usage metadata
-    const usageMetadata = response.usageMetadata as any
-    
-    // DEBUG: Log full response structure to understand token counting
-    console.log('🔍 DEBUG - Full response structure:', {
-      hasTextMethod: !!response.text,
-      textLength: description.length,
-      usageMetadata: usageMetadata,
-      candidates: response.candidates?.length || 0,
-      candidateContent: response.candidates?.[0]?.content?.parts?.length || 0,
-      promptFeedback: response.promptFeedback,
-      thoughtsTokenCount: (usageMetadata as any)?.thoughtsTokenCount
     })
+
+    // NEW SDK returns text directly
+    const description = result.text?.trim() || `${category} item`
+    const usageMetadata = result.usageMetadata as any
+    const finishReason = result.candidates?.[0]?.finishReason || 'unknown'
+    
+    // Log response for debugging
+    console.log('🔍 NEW SDK Response:')
+    console.log(`   Text: "${description}"`)
+    console.log(`   FinishReason: ${finishReason}`)
+    console.log(`   Thinking tokens: ${usageMetadata?.thoughtsTokenCount || 0}`)
     
     console.log(`✅ Gemini 3 Pro Preview Description: "${description}"`)
     console.log(`   Prompt tokens: ${usageMetadata?.promptTokenCount || 0}`)
