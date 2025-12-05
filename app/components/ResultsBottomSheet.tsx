@@ -171,11 +171,16 @@ export default function ResultsBottomSheet({
         })
       })
 
+      console.log('📡 Share API response status:', response.status)
+
       if (!response.ok) {
-        throw new Error('Failed to create share link')
+        const errorData = await response.json().catch(() => ({}))
+        console.error('❌ API error response:', errorData)
+        throw new Error(errorData.error || 'Failed to create share link')
       }
 
       const data = await response.json()
+      console.log('📦 Share API response data:', data)
 
       if (!data.success) {
         throw new Error(data.error || 'Failed to create share link')
@@ -184,18 +189,29 @@ export default function ResultsBottomSheet({
       const url = data.shareUrl
       setShareUrl(url)
 
-      // Copy to clipboard
-      await navigator.clipboard.writeText(url)
+      // Try to copy to clipboard, but don't fail if it doesn't work
+      try {
+        await navigator.clipboard.writeText(url)
+        console.log('✅ Share link created and copied:', url)
+      } catch (clipboardError) {
+        console.warn('⚠️ Clipboard copy failed, but link was created:', clipboardError)
+        // Show link in alert as fallback
+        prompt('링크가 생성되었습니다! 복사하세요:', url)
+      }
       
-      console.log('✅ Share link created and copied:', url)
       setShowShareSuccess(true)
 
       // Hide success message after 3 seconds
       setTimeout(() => setShowShareSuccess(false), 3000)
 
-    } catch (error) {
+    } catch (error: any) {
       console.error('❌ Error sharing results:', error)
-      alert('공유 링크 생성에 실패했습니다. 다시 시도해주세요.')
+      console.error('❌ Error details:', {
+        message: error?.message,
+        stack: error?.stack,
+        name: error?.name
+      })
+      alert(`공유 링크 생성에 실패했습니다.\n\n오류: ${error?.message || '알 수 없는 오류'}\n\n다시 시도해주세요.`)
     } finally {
       setIsSharing(false)
     }
