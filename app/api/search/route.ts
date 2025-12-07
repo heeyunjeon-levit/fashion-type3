@@ -130,48 +130,35 @@ Respond with JSON:
 
 Return TOP 3-5 BEST matches only. Quality over quantity.`
 
-    const gemini = getGeminiClient()
+    const openai = getOpenAIClient()
     const gptStart = Date.now()
     
-    // Use Gemini 3 Pro Preview for analysis
-    const fullPrompt = `You are a fashion product analyzer. Return only valid JSON.\n\n${prompt}`
-    const completion = await gemini.models.generateContent({
-      model: 'gemini-3-pro-preview',
-      contents: fullPrompt,
-      config: {
-        maxOutputTokens: 8192, // Increased from 2048 - give it plenty of room for thinking + output
-        temperature: 0,
-        thinkingConfig: {
-          thinkingLevel: ThinkingLevel.LOW // Fast analysis for filtering
+    // Use GPT-4 Turbo for analysis (fast & reliable!)
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-4-turbo-2024-04-09',
+      messages: [
+        {
+          role: 'system',
+          content: 'You are a fashion product analyzer. Return only valid JSON without any markdown formatting.'
+        },
+        {
+          role: 'user',
+          content: prompt
         }
-      }
+      ],
+      temperature: 0,
+      max_tokens: 2000,
+      response_format: { type: 'json_object' }
     })
     
     timingData.gpt4_turbo_api_time = (Date.now() - gptStart) / 1000
-    console.log(`   ⏱️  Fallback Gemini 3 Pro: ${timingData.gpt4_turbo_api_time.toFixed(2)}s`)
+    console.log(`   ⏱️  Fallback GPT-4 Turbo: ${timingData.gpt4_turbo_api_time.toFixed(2)}s`)
 
-    // Parse response - handle both .text and candidates[]
-    let responseText = ''
-    try {
-      responseText = completion.text || ''
-    } catch (e) {
-      console.warn('⚠️ Fallback completion.text failed')
-    }
-
-    // If no text, try candidates
-    if (!responseText && completion.candidates && completion.candidates.length > 0) {
-      const candidate = completion.candidates[0]
-      if (candidate.content?.parts) {
-        for (const part of candidate.content.parts) {
-          if (part.text) responseText += part.text
-        }
-      }
-    }
-
-    // Fallback
-    if (!responseText) {
-      console.error(`❌ No response from Fallback Gemini - finishReason: ${completion.candidates?.[0]?.finishReason || 'unknown'}`)
-      responseText = '{}'
+    // Parse response from GPT-4
+    const responseText = completion.choices[0]?.message?.content || '{}'
+    
+    if (!responseText || responseText === '{}') {
+      console.error(`❌ No response from Fallback GPT-4 Turbo`)
     }
     
     // Parse JSON - improved extraction
@@ -1065,67 +1052,40 @@ Find the TOP 3-5 BEST AVAILABLE MATCHES. Prioritize IN THIS ORDER:
 
 Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MUST be Korean sites) or {"${resultKey}": []} ONLY if zero valid products found.`
 
-        const gemini = getGeminiClient()
+        const openai = getOpenAIClient()
         const gptStart = Date.now()
         
-        // Use Gemini 3 Pro Preview for filtering
-        const fullPrompt = `You extract product links. Return only valid JSON without any additional text or markdown.\n\n${prompt}`
-        const completion = await gemini.models.generateContent({
-          model: 'gemini-3-pro-preview',
-          contents: fullPrompt,
-          config: {
-            maxOutputTokens: 8192, // Increased from 2048 - give it plenty of room for thinking + output
-            temperature: 0,
-            thinkingConfig: {
-              thinkingLevel: ThinkingLevel.LOW // Fast filtering
+        // Use GPT-4 Turbo for filtering (fast & reliable!)
+        const completion = await openai.chat.completions.create({
+          model: 'gpt-4-turbo-2024-04-09',
+          messages: [
+            {
+              role: 'system',
+              content: 'You extract product links from search results. Return only valid JSON without any markdown formatting.'
+            },
+            {
+              role: 'user',
+              content: prompt
             }
-          }
+          ],
+          temperature: 0,
+          max_tokens: 2000,
+          response_format: { type: 'json_object' }
         })
         
         const gptTime = (Date.now() - gptStart) / 1000
         timingData.gpt4_turbo_total_api_time += gptTime
         timingData.gpt4_turbo_count += 1
-        console.log(`   ⏱️  Gemini 3 Pro filtering: ${gptTime.toFixed(2)}s`)
+        console.log(`   ⏱️  GPT-4 Turbo filtering: ${gptTime.toFixed(2)}s`)
 
-        // Parse response - handle both .text and candidates[] for thinking models
-        let responseText = ''
-        try {
-          responseText = completion.text || ''
-          // Log token usage for successful responses too
-          if (responseText) {
-            const usageMeta = completion.usageMetadata as any
-            console.log(`💡 Token usage for ${resultKey}:`)
-            console.log(`   thoughtsTokens: ${usageMeta?.thoughtsTokenCount || 0}`)
-            console.log(`   candidatesTokens: ${usageMeta?.candidatesTokenCount || 0}`)
-            console.log(`   totalTokens: ${usageMeta?.totalTokenCount || 0}`)
-          }
-        } catch (e) {
-          console.warn(`⚠️ completion.text failed for ${resultKey}`)
+        // Parse response from GPT-4 Turbo
+        const responseText = completion.choices[0]?.message?.content || '{}'
+        
+        if (!responseText || responseText === '{}') {
+          console.error(`❌ No response from GPT-4 Turbo for ${resultKey}`)
         }
 
-        // If no text, try candidates (for thinking models like Gemini 3)
-        if (!responseText && completion.candidates && completion.candidates.length > 0) {
-          const candidate = completion.candidates[0]
-          const usageMeta = completion.usageMetadata as any
-          console.log(`🔍 Parsing candidates for ${resultKey}:`)
-          console.log(`   finishReason: ${candidate.finishReason}`)
-          console.log(`   thoughtsTokens: ${usageMeta?.thoughtsTokenCount || 0}`)
-          console.log(`   candidatesTokens: ${usageMeta?.candidatesTokenCount || 0}`)
-          console.log(`   totalTokens: ${usageMeta?.totalTokenCount || 0}`)
-          if (candidate.content?.parts) {
-            for (const part of candidate.content.parts) {
-              if (part.text) responseText += part.text
-            }
-          }
-        }
-
-        // Fallback to empty object
-        if (!responseText) {
-          console.error(`❌ No response from Gemini for ${resultKey} - finishReason: ${completion.candidates?.[0]?.finishReason || 'unknown'}`)
-          responseText = '{}'
-        }
-
-        console.log(`📄 Gemini response for ${resultKey}:`, responseText.substring(0, 200))
+        console.log(`📄 GPT-4 Turbo response for ${resultKey}:`, responseText.substring(0, 200))
         
         // Store GPT reasoning/response for this category
         gptReasoningData[resultKey] = {
