@@ -545,21 +545,114 @@ export async function POST(request: NextRequest) {
         
         console.log(`📊 Cropped image search: ${uniqueCroppedResults.length} unique results`)
         
-        // Filter full image results to only include items relevant to this category
+        // STRICT CATEGORY FILTERING: Filter full image results to only include items relevant to this category
         const filteredFullImageResults = fullImageResults.filter(item => {
           const title = item.title?.toLowerCase() || ''
           const snippet = item.snippet?.toLowerCase() || ''
-          const combinedText = `${title} ${snippet}`
+          const url = item.link?.toLowerCase() || ''
+          const combinedText = `${title} ${snippet} ${url}`
+          
+          // Define STRICT category exclusion rules (prevent wrong categories from contaminating results)
+          const categoryExclusions: Record<string, string[]> = {
+            'bags': [
+              // EXCLUDE clothing
+              'sweater', 'cardigan', 'jacket', 'coat', 'shirt', 'blouse', 'top', 'dress', 'pants', 'jeans', 'skirt', 'shorts',
+              '스웨터', '가디건', '재킷', '코트', '셔츠', '블라우스', '상의', '원피스', '바지', '청바지', '치마', '반바지',
+              // EXCLUDE shoes
+              'sneaker', 'boot', 'shoe', 'sandal', 'heel', 'slipper', '신발', '부츠', '샌들', '슬리퍼',
+              // EXCLUDE accessories
+              'hat', 'cap', 'scarf', 'glove', 'belt', 'watch', 'jewelry', '모자', '스카프', '장갑', '벨트', '시계'
+            ],
+            'tops': [
+              // EXCLUDE bottoms
+              'pants', 'jeans', 'trousers', 'shorts', 'skirt', '바지', '청바지', '반바지', '치마', 'slacks',
+              // EXCLUDE bags/shoes/accessories
+              'bag', 'backpack', 'purse', 'tote', 'clutch', '가방', '백팩',
+              'sneaker', 'boot', 'shoe', '신발', '부츠'
+            ],
+            'bottoms': [
+              // EXCLUDE tops
+              'shirt', 'blouse', 'sweater', 'jacket', 'coat', 'hoodie', 'cardigan', 'blazer', '셔츠', '블라우스', '스웨터', '재킷', '코트', '후드', '가디건',
+              // EXCLUDE bags/shoes/accessories
+              'bag', 'backpack', 'purse', 'tote', '가방', '백팩',
+              'sneaker', 'boot', 'shoe', '신발', '부츠'
+            ],
+            'shoes': [
+              // EXCLUDE clothing
+              'shirt', 'sweater', 'jacket', 'pants', 'dress', 'skirt', '셔츠', '스웨터', '재킷', '바지', '원피스',
+              // EXCLUDE bags/accessories
+              'bag', 'backpack', 'purse', 'tote', '가방', '백팩'
+            ],
+            'accessory': [
+              // EXCLUDE clothing
+              'shirt', 'sweater', 'jacket', 'pants', 'dress', '셔츠', '스웨터', '재킷', '바지',
+              // EXCLUDE bags/shoes (unless it's a bag accessory like charm)
+              'bag', 'backpack', 'purse', 'tote', '가방', '백팩',
+              'sneaker', 'boot', 'shoe', '신발', '부츠'
+            ]
+          }
+          
+          // Check for EXCLUDED categories (strict filtering)
+          const exclusionList = categoryExclusions[categoryKey] || []
+          const hasExcludedCategory = exclusionList.some(excludedTerm => {
+            // Check in title, snippet, AND url path
+            return combinedText.includes(excludedTerm.toLowerCase()) ||
+                   combinedText.includes(`/${excludedTerm}/`) ||
+                   combinedText.includes(`-${excludedTerm}-`)
+          })
+          
+          if (hasExcludedCategory) {
+            console.log(`🚫 CATEGORY MISMATCH: Excluded "${item.title?.substring(0, 40)}" from ${categoryKey} results`)
+            return false
+          }
           
           // Check if the result contains keywords relevant to this category
           const categoryTerms = categorySearchTerms[categoryKey] || [categoryKey]
-          return categoryTerms.some(term => combinedText.includes(term.toLowerCase()))
+          const hasRelevantKeyword = categoryTerms.some(term => combinedText.includes(term.toLowerCase()))
+          
+          if (!hasRelevantKeyword) {
+            console.log(`ℹ️  No relevant keyword for ${categoryKey}: "${item.title?.substring(0, 40)}"`)
+          }
+          
+          return hasRelevantKeyword
         })
         
         console.log(`📊 Full image results: ${fullImageResults.length} total, ${filteredFullImageResults.length} relevant to ${categoryKey}`)
         
-        // Combine cropped image results with filtered full image results
-        const combinedResults = [...uniqueCroppedResults, ...filteredFullImageResults]
+        // APPLY SAME STRICT CATEGORY FILTERING to cropped results
+        const filteredCroppedResults = uniqueCroppedResults.filter(item => {
+          const title = item.title?.toLowerCase() || ''
+          const url = item.link?.toLowerCase() || ''
+          const combinedText = `${title} ${url}`
+          
+          // Same exclusion rules as full image filtering
+          const categoryExclusions: Record<string, string[]> = {
+            'bags': ['sweater', 'cardigan', 'jacket', 'coat', 'shirt', 'blouse', 'top', 'dress', 'pants', 'jeans', 'skirt', 'shorts', '스웨터', '가디건', '재킷', '코트', '셔츠', '블라우스', '상의', '원피스', '바지', '청바지', '치마', '반바지', 'sneaker', 'boot', 'shoe', 'sandal', 'heel', 'slipper', '신발', '부츠', '샌들', '슬리퍼'],
+            'tops': ['pants', 'jeans', 'trousers', 'shorts', 'skirt', '바지', '청바지', '반바지', '치마', 'slacks', 'bag', 'backpack', 'purse', 'tote', 'clutch', '가방', '백팩', 'sneaker', 'boot', 'shoe', '신발', '부츠'],
+            'bottoms': ['shirt', 'blouse', 'sweater', 'jacket', 'coat', 'hoodie', 'cardigan', 'blazer', '셔츠', '블라우스', '스웨터', '재킷', '코트', '후드', '가디건', 'bag', 'backpack', 'purse', 'tote', '가방', '백팩', 'sneaker', 'boot', 'shoe', '신발', '부츠'],
+            'shoes': ['shirt', 'sweater', 'jacket', 'pants', 'dress', 'skirt', '셔츠', '스웨터', '재킷', '바지', '원피스', 'bag', 'backpack', 'purse', 'tote', '가방', '백팩'],
+            'accessory': ['shirt', 'sweater', 'jacket', 'pants', 'dress', '셔츠', '스웨터', '재킷', '바지', 'bag', 'backpack', 'purse', 'tote', '가방', '백팩', 'sneaker', 'boot', 'shoe', '신발', '부츠']
+          }
+          
+          const exclusionList = categoryExclusions[categoryKey] || []
+          const hasExcludedCategory = exclusionList.some(excludedTerm => {
+            return combinedText.includes(excludedTerm.toLowerCase()) ||
+                   combinedText.includes(`/${excludedTerm}/`) ||
+                   combinedText.includes(`-${excludedTerm}-`)
+          })
+          
+          if (hasExcludedCategory) {
+            console.log(`🚫 CROPPED FILTER: Excluded "${item.title?.substring(0, 40)}" from ${categoryKey}`)
+            return false
+          }
+          
+          return true
+        })
+        
+        console.log(`📊 Cropped results filtered: ${uniqueCroppedResults.length} → ${filteredCroppedResults.length} (removed ${uniqueCroppedResults.length - filteredCroppedResults.length} wrong categories)`)
+        
+        // Combine filtered cropped image results with filtered full image results
+        const combinedResults = [...filteredCroppedResults, ...filteredFullImageResults]
         
         // Deduplicate the combined results
         const uniqueCombinedResults = Array.from(
@@ -926,7 +1019,7 @@ ${subTypeExclusion ? subTypeExclusion : ''}
 - ${categoryKey === 'tops' && !specificSubType ? '❌ ABSOLUTELY REJECT: Any title mentioning "jeans", "pants", "trousers", "shorts", "skirt", "dress", "바지", "청바지", "반바지", "치마"' : ''}
 - ${categoryKey === 'bottoms' && !specificSubType ? '❌ ABSOLUTELY REJECT: Any title mentioning "shirt", "blouse", "jacket", "hoodie", "sweater", "coat", "blazer", "top", "modal-blend", "tie-front", "셔츠", "블라우스", "재킷", "후드", "코트", "상의", "티셔츠", "아우터"' : ''}
 - ${categoryKey === 'shoes' && !specificSubType ? '❌ ABSOLUTELY REJECT: clothing items, bags, accessories' : ''}
-- ${categoryKey === 'bag' && !specificSubType ? '❌ ABSOLUTELY REJECT: clothing items, shoes, accessories (except bags)' : ''}
+- ${categoryKey === 'bag' && !specificSubType ? '❌ ABSOLUTELY REJECT: clothing items (sweaters, cardigans, jackets, shirts, coats, tops), shoes, accessories (except bags). ONLY BAGS/PURSES/BACKPACKS!' : ''}
 - ${categoryKey === 'accessory' && !specificSubType ? '❌ ABSOLUTELY REJECT: clothing items, shoes, bags' : ''}
 - ${categoryKey === 'dress' ? '❌ ABSOLUTELY REJECT: Any title mentioning "pants", "jeans", "shorts", "shirt", "jacket", "바지", "셔츠", "재킷"' : ''}
 
