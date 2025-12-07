@@ -581,7 +581,7 @@ export default function Home() {
                   imageUrl: croppedDataUrl,
                   category: bbox.category
                 }),
-                signal: AbortSignal.timeout(45000) // Increased to 45s for Gemini 3 Pro thinking (parallel processing can be slower)
+                signal: AbortSignal.timeout(60000) // 60s timeout for Gemini 3 Pro (matches Vercel function limit)
               })
               
               const descTime = ((Date.now() - descStartTime) / 1000).toFixed(1)

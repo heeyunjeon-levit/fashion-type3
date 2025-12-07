@@ -228,8 +228,8 @@ Return ONLY the product title.`,
     const ocrInstruction = `CRITICAL: First, perform OCR (Optical Character Recognition) on this image. Look for ANY text, letters, words, numbers, or small prints ANYWHERE on the garment - especially on shoulders, neckline, chest, sleeves, hem. If you find ANY text, you MUST include it in the product title.\n\n`
     const fullPrompt = `${ocrInstruction}${promptConfig.system}\n\n${promptConfig.user}`
 
-    // Use NEW SDK with proper thinking control
-    console.log(`   Using NEW @google/genai SDK with thinkingLevel: "low"`)
+    // Use Gemini 3 Pro Preview for best quality descriptions
+    console.log(`   Using Gemini 3 Pro Preview (4096 tokens, no forced thinking!)`)
     
     const result = await client.models.generateContent({
       model: 'gemini-3-pro-preview',
@@ -248,11 +248,9 @@ Return ONLY the product title.`,
         }
       ],
       config: {
-        maxOutputTokens: 200,
-        temperature: 1.0,
-        thinkingConfig: {
-          thinkingLevel: ThinkingLevel.LOW // CRITICAL: Prevents spending all tokens on thinking
-        }
+        maxOutputTokens: 4096, // Large buffer for detailed descriptions + any thinking
+        temperature: 1.0
+        // NO thinkingConfig = Let Gemini 3 work naturally without forced thinking overhead
       }
     })
 
