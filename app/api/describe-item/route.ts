@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { GoogleGenAI, ThinkingLevel } from '@google/genai'
+import { GoogleGenAI } from '@google/genai'
 
 // Use dedicated Gemini API key (project-specific, not gcloud)
 const client = new GoogleGenAI({
@@ -248,9 +248,8 @@ For unknown categories:
       ],
       config: {
         maxOutputTokens: 16384,  // Maximum for Gemini 2.0 - ensure we never hit token limit
-        temperature: 0.3,  // More deterministic
-        responseMimeType: 'application/json',  // Force JSON output
-        thinkingLevel: ThinkingLevel.HIGH  // Enable deep reasoning for color accuracy
+        temperature: 0.3,  // More deterministic for color accuracy
+        responseMimeType: 'application/json'  // Force JSON output
       }
     })
 
