@@ -1521,18 +1521,30 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
           validLinks.length = 0
           validLinks.push(...finalLinks)
           
-          // ONLY use full image results for non-character items (generic products)
+          // ONLY use full image results for non-character items AND same category
           // For character/graphic items, DON'T mix full image results (they may be different characters!)
           if (!characterName) {
-            console.log(`📌 No character detected - including top full image results as supplements`)
+            console.log(`📌 No character - checking if top full image results match category...`)
+            
+            // Category validation: Define what to accept per category
+            const categoryKeywords: Record<string, string[]> = {
+              'bags': ['bag', 'backpack', 'purse', 'tote', 'clutch', 'crossbody', 'shoulder bag', 'handbag', 'messenger', '가방', '백팩'],
+              'tops': ['jacket', 'coat', 'sweater', 'shirt', 'blouse', 'cardigan', 'blazer', 'hoodie', '재킷', '코트', '스웨터', '셔츠'],
+              'bottoms': ['pants', 'jeans', 'skirt', 'shorts', 'trousers', '바지', '청바지', '치마', '반바지'],
+              'shoes': ['shoe', 'sneaker', 'boot', 'sandal', 'heel', 'loafer', '신발', '부츠', '샌들'],
+              'accessory': ['sunglasses', 'glasses', 'eyewear', 'ring', 'necklace', 'earring', 'bracelet', 'watch', 'hat', 'cap', 'belt', 'scarf', '선글라스', '안경']
+            }
+            
             const topFullImageLinks = fullImageResults
-              .slice(0, 3) // Take top 3 full image results
+              .slice(0, 10) // Check top 10 (not just 3) for better category matching
               .filter((item: any) => {
                 if (!item.link) return false
                 const linkLower = item.link.toLowerCase()
-                // Filter out social media and blocked domains (with boundary checking)
+                const titleLower = item.title?.toLowerCase() || ''
+                const combinedText = `${titleLower} ${linkLower}`
+                
+                // Check if blocked domain
                 const isBlocked = blockedDomains.some(domain => {
-                  // For very short domains like 't.co', check for exact domain match
                   if (domain.length <= 5) {
                     return linkLower.includes(`//${domain}/`) || 
                            linkLower.includes(`//${domain}?`) ||
@@ -1542,27 +1554,42 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
                   return linkLower.includes(domain)
                 })
                 if (isBlocked) {
-                  console.log(`🚫 Blocked top full image result: ${item.link.substring(0, 50)}...`)
+                  console.log(`🚫 Blocked full image result: ${item.link.substring(0, 50)}...`)
                   return false
                 }
+                
+                // CRITICAL: Check if same category (prevent bags in sunglasses results!)
+                const allowedKeywords = categoryKeywords[categoryKey] || []
+                const hasCategoryMatch = allowedKeywords.some(keyword => combinedText.includes(keyword))
+                
+                if (!hasCategoryMatch) {
+                  console.log(`🚫 WRONG CATEGORY in full image: "${item.title?.substring(0, 40)}" (not ${categoryKey})`)
+                  return false
+                }
+                
+                console.log(`✅ CATEGORY MATCH in full image: "${item.title?.substring(0, 40)}" (${categoryKey})`)
                 return true
               })
               .map((item: any) => item.link)
             
-            console.log(`🌟 Top full image results (exact matches):`, topFullImageLinks.length)
-            
-            // Prepend top full image results to final links (priority placement)
-            // Remove duplicates while preserving order
-            const combinedLinks = [...topFullImageLinks, ...validLinks]
-            const uniqueLinks = Array.from(new Set(combinedLinks))
-            
-            validLinks.length = 0
-            validLinks.push(...uniqueLinks.slice(0, 5)) // Keep top 5 total
-            
-            console.log(`✅ Final links (full image priority):`, validLinks.slice(0, 3))
+            if (topFullImageLinks.length > 0) {
+              console.log(`🌟 Top full image results (CATEGORY VERIFIED):`, topFullImageLinks.length)
+              
+              // Prepend ONLY if they're the same category
+              const combinedLinks = [...topFullImageLinks, ...validLinks]
+              const uniqueLinks = Array.from(new Set(combinedLinks))
+              
+              validLinks.length = 0
+              validLinks.push(...uniqueLinks.slice(0, 5))
+              
+              console.log(`✅ Final links (full image + GPT-4):`, validLinks.slice(0, 3))
+            } else {
+              console.log(`⚠️  No category-matched full image results - using GPT-4 only`)
+              console.log(`✅ Final links (GPT-4 only):`, validLinks.slice(0, 3))
+            }
           } else {
             console.log(`🎭 Character item (${characterName}) - skipping full image results (may be different characters)`)
-            console.log(`✅ Final links (Gemini only):`, validLinks.slice(0, 3))
+            console.log(`✅ Final links (GPT-4 only):`, validLinks.slice(0, 3))
           }
           
           // Debug: Check first result structure
