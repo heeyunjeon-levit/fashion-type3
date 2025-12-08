@@ -252,7 +252,12 @@ export default function Home() {
   // Handle single item question response
   const handleSingleItemResponse = async (isSingle: boolean) => {
     setIsSingleItem(isSingle)
+    
+    // INSTANT FEEDBACK: Show loading state immediately (before async work)
     setShowSingleItemQuestion(false)
+    setCurrentStep('searching')
+    setIsLoading(true)
+    setOverallProgress(0)
     
     if (isSingle) {
       // SINGLE ITEM MODE: Skip detection, go straight to full image search
@@ -263,15 +268,15 @@ export default function Home() {
     
     // Multiple items: proceed with normal detection
     console.log('👔 Multiple Items Mode: Starting detection...')
+    // Note: startDetectionProcess sets its own loading states
+    setCurrentStep('detecting')  // Show detecting screen immediately
     await startDetectionProcess()
   }
 
   // Single item search (skip detection)
   const handleSingleItemSearch = async () => {
     console.log('⚡ Single item search: Using full image without detection')
-    setCurrentStep('searching')
-    setIsLoading(true)
-    setOverallProgress(0)
+    // Loading states already set by handleSingleItemResponse for instant feedback
     
     try {
       // Use fallback search (full image search without detection)
@@ -986,18 +991,19 @@ export default function Home() {
         
         {/* Single Item Question Modal */}
         {showSingleItemQuestion && (
-          <div className="max-w-2xl mx-auto space-y-6">
+          <div className="max-w-2xl mx-auto space-y-6 animate-fadeInUp">
             {/* Uploaded Image Preview */}
-            <div className="bg-white rounded-2xl shadow-xl p-6 border border-gray-100">
+            <div className="bg-white rounded-2xl shadow-xl p-6 border border-gray-100 animate-fadeIn">
               <img
-                src={uploadedImageUrl}
+                src={localImageDataUrl || uploadedImageUrl}
                 alt="Uploaded"
                 className="w-full h-96 object-contain rounded-xl"
+                loading="eager"
               />
             </div>
             
             {/* Single Item Question */}
-            <div className="relative inline-block w-full">
+            <div className="relative inline-block w-full animate-slideUp">
               {/* Outer container for gradient border */}
               <div className="absolute -inset-[3px] rounded-[20px] overflow-hidden">
                 {/* Large rotating gradient (scaled up to hide corners) */}
@@ -1044,7 +1050,7 @@ export default function Home() {
         )}
         
         {currentStep === 'detecting' && (
-          <div className="max-w-2xl mx-auto mt-8">
+          <div className="max-w-2xl mx-auto mt-8 animate-fadeIn">
             <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
               <div className="text-center space-y-6">
                 {/* Image with animated gradient border (Apple Intelligence style) */}
@@ -1102,7 +1108,7 @@ export default function Home() {
         )}
 
         {currentStep === 'processing' && (
-          <div className="max-w-2xl mx-auto mt-8">
+          <div className="max-w-2xl mx-auto mt-8 animate-fadeIn">
             <div className="bg-white rounded-2xl shadow-xl p-12 border border-gray-100">
               <div className="text-center space-y-6">
                 <h2 className="text-2xl font-bold text-black">선택하신 패션템을 찾고 있어요!</h2>
@@ -1133,7 +1139,7 @@ export default function Home() {
         )}
         
         {currentStep === 'searching' && (
-          <div className="max-w-2xl mx-auto mt-8">
+          <div className="max-w-2xl mx-auto mt-8 animate-fadeIn">
             <div className="bg-white rounded-2xl shadow-xl p-12 border border-gray-100">
               <div className="text-center space-y-6">
                 <h2 className="text-2xl font-bold text-black">선택하신 패션템을 찾고 있어요!</h2>
