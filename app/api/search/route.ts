@@ -1847,6 +1847,11 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
             // Collection/product listing endpoints (but allow specific products)
             linkLower.match(/\/products\?/i) && !linkLower.match(/\/products\/[^?]+\?/) || // Block /products? but allow /products/123?
             linkLower.match(/\/collections\?/i) && !linkLower.match(/\/collections\/[^?]+\/products/) ||  // Block /collections? but allow /collections/xyz/products/123
+            // Catalog pages ending with generic plural category names (e.g., /bags/, /shoes/, /travel-bags.html)
+            linkLower.match(/\/(bags|shoes|accessories|clothing|apparel|dresses|pants|trousers|shirts|tops|bottoms|outerwear|jackets|coats|sweaters|knitwear|skirts|shorts|jeans|sneakers|boots|sandals|jewelry|watches|belts|scarves|hats|gloves|sunglasses|wallets|purses|backpacks|luggage|travel-bags|duffle|tote|crossbody|handbags|clutches|shoulder-bags)\.html?$/i) ||
+            linkLower.match(/\/(bags|shoes|accessories|clothing|travel-bags|duffle|handbags)\/?$/i) && !linkLower.match(/\/product/i) ||
+            // Multi-level category paths without product identifiers (e.g., /men/accessories/bags/travel-bags.html)
+            linkLower.match(/\/(men|women|kids|unisex)\/(accessories|clothing|shoes|bags)\/.+\.(html?|aspx?)$/i) && !linkLower.match(/\/(product|item|p)[\/-]/i) && !linkLower.match(/\d{5,}/i) || // Allow if has product ID (5+ digits)
             // Non-product pages (reviews, Q&A, etc.)
             linkLower.endsWith('/reviews') ||
             linkLower.endsWith('/reviews/') ||
