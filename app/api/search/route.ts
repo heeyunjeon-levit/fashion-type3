@@ -1505,7 +1505,7 @@ ${itemDescription ? `\n🎯 **SPECIFIC ITEM DESCRIPTION: "${itemDescription}"**\
 ${subTypeExclusion ? subTypeExclusion : ''}
 - ${categoryKey === 'tops' && !specificSubType ? '❌ ABSOLUTELY REJECT: Any title mentioning "jeans", "pants", "trousers", "shorts", "skirt", "dress", "바지", "청바지", "반바지", "치마"' : ''}
 - ${categoryKey === 'bottoms' && !specificSubType ? '❌ ABSOLUTELY REJECT: Any title mentioning "shirt", "blouse", "jacket", "hoodie", "sweater", "coat", "blazer", "top", "modal-blend", "tie-front", "셔츠", "블라우스", "재킷", "후드", "코트", "상의", "티셔츠", "아우터"' : ''}
-- ${categoryKey === 'shoes' && !specificSubType ? '❌ ABSOLUTELY REJECT: clothing items, bags, accessories' : ''}
+- ${categoryKey === 'shoes' && !specificSubType ? '❌ ABSOLUTELY REJECT: Any title mentioning clothing (shirt, dress, skirt, pants, jeans, jacket, coat, sweater, hoodie, blouse, top, bottom, shorts, 셔츠, 드레스, 치마, 바지, 재킷, 상의, 하의), bags (bag, backpack, purse, tote, 가방, 백팩), or accessories (belt, watch, hat, 벨트, 시계, 모자). ONLY FOOTWEAR (shoes, boots, sneakers, sandals, heels, 신발, 부츠, 운동화, 샌들)!' : ''}
 - ${categoryKey === 'bag' && !specificSubType ? '❌ ABSOLUTELY REJECT: clothing items (sweaters, cardigans, jackets, shirts, coats, tops), shoes, accessories (except bags). ONLY BAGS/PURSES/BACKPACKS!' : ''}
 - ${categoryKey === 'accessory' && !specificSubType ? '❌ ABSOLUTELY REJECT: ALL clothing, ALL shoes, ALL bags (purses, backpacks, totes, crossbody, belt bags, fanny packs)' : ''}
 - ${categoryKey === 'accessory' && specificSubType === 'eyewear' ? '🕶️ SUNGLASSES/EYEWEAR ONLY! ❌ REJECT: ALL bags, belts, wallets, clothing, shoes. ONLY glasses/sunglasses!' : ''}
@@ -1561,9 +1561,10 @@ ${itemDescription ? `4. 🎯 **MATCH DESCRIPTION: "${itemDescription}"**
    - Don't mix up colors (olive→beige is WRONG, green→neutrals is WRONG)
    - Style/silhouette should match (tapered, cuffed, etc.)
    - For Korean text: 검정=black, 흰색/아이보리=white/ivory, 베이지=beige, 올리브=olive, 그린=green` : ''}
-5. ⚠️ ONLY REJECT if clearly wrong body part:
+5. ⚠️ ONLY REJECT if clearly wrong category:
    ${categoryKey === 'tops' ? '**REJECT ONLY: pants/jeans/shorts/skirts/leggings (lower body items)**' : ''}
    ${categoryKey === 'bottoms' ? '**REJECT ONLY: if title suggests it\'s NOT worn on lower body**' : ''}
+   ${categoryKey === 'shoes' ? '**REJECT: dress, skirt, shirt, pants, jeans, jacket, bag, backpack - ONLY ACCEPT FOOTWEAR (shoes/boots/sneakers/sandals)**' : ''}
 6. ❌ REJECT if title is generic ("Shop now", "Homepage", "Category", "Collection")
 7. ✅ ACCEPT style variations - but NEVER compromise on color!
 
@@ -1861,10 +1862,43 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
                 // Modal/tie-front specific (appears in Korean shopping)
                 'modal', 'tie-front', '타이', '프론트', '모달'
               ],
-              'shoes': ['shirt', 'pant', 'jean', 'jacket', 'dress', 'bag', 'backpack', '셔츠', '바지', '가방', '재킷'],
-              'bag': ['shirt', 'pant', 'jean', 'jacket', 'dress', 'shoe', 'boot', 'sneaker', '셔츠', '바지', '신발', '재킷'],
-              'accessory': ['shirt', 'pant', 'jean', 'jacket', 'dress', 'shoe', 'bag', '셔츠', '바지', '신발', '가방', '재킷'],
-              'dress': ['pant', 'jean', 'short', 'shirt', 'jacket', '바지', '셔츠', '재킷']
+              'shoes': [
+                // English - comprehensive non-shoe items
+                'shirt', 'pant', 'pants', 'jean', 'jeans', 'jacket', 'coat', 'dress', 'dresses', 'skirt', 'skirts',
+                'bag', 'backpack', 'purse', 'tote', 'sweater', 'hoodie', 'blouse', 'shorts', 'trouser', 'trousers',
+                'top', 'bottom', 't-shirt', 'cardigan', 'blazer', 'vest',
+                // Korean - comprehensive non-shoe items
+                '셔츠', '바지', '가방', '재킷', '드레스', '치마', '원피스', '상의', '하의', 
+                '청바지', '반바지', '코트', '스웨터', '후드', '블라우스', '팬츠', '슬랙스',
+                '티셔츠', '맨투맨', '가디건', '니트', '아우터', '조끼', '베스트'
+              ],
+              'bag': [
+                // English - comprehensive non-bag items
+                'shirt', 'pant', 'pants', 'jean', 'jeans', 'jacket', 'coat', 'dress', 'dresses', 'skirt', 'skirts',
+                'shoe', 'shoes', 'boot', 'boots', 'sneaker', 'sneakers', 'sandal', 'heel', 'flat',
+                'sweater', 'hoodie', 'blouse', 'shorts', 'trouser', 'trousers', 'top', 'bottom',
+                // Korean - comprehensive non-bag items
+                '셔츠', '바지', '신발', '재킷', '드레스', '치마', '원피스', '상의', '하의',
+                '청바지', '반바지', '부츠', '운동화', '샌들', '슬리퍼', '구두', '힐', '로퍼',
+                '코트', '스웨터', '후드', '블라우스', '팬츠'
+              ],
+              'accessory': [
+                // English - comprehensive clothing/shoes/bags
+                'shirt', 'pant', 'pants', 'jean', 'jeans', 'jacket', 'coat', 'dress', 'dresses', 'skirt', 'skirts',
+                'shoe', 'shoes', 'boot', 'boots', 'sneaker', 'bag', 'backpack', 'purse', 'tote',
+                'sweater', 'hoodie', 'blouse', 'shorts', 'trouser',
+                // Korean - comprehensive clothing/shoes/bags
+                '셔츠', '바지', '신발', '가방', '재킷', '드레스', '치마', '원피스', '상의', '하의',
+                '청바지', '부츠', '운동화', '백팩', '토트백', '코트', '스웨터', '후드', '블라우스'
+              ],
+              'dress': [
+                // English - comprehensive non-dress items
+                'pant', 'pants', 'jean', 'jeans', 'short', 'shorts', 'shirt', 'jacket', 'trouser', 'trousers',
+                'shoe', 'bag', 'backpack', 'sweater', 'hoodie', 'coat', 'blazer',
+                // Korean - comprehensive non-dress items
+                '바지', '청바지', '반바지', '셔츠', '재킷', '팬츠', '슬랙스',
+                '신발', '가방', '스웨터', '후드', '코트', '블레이저'
+              ]
             }
             
             const keywordsToAvoid = wrongKeywords[categoryKey] || []
