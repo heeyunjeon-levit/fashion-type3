@@ -2312,6 +2312,12 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
               
               const additionalColorMatches = mergedResults
                 .filter((item: any) => {
+                  // CRITICAL: Must have a valid link
+                  if (!item.link || typeof item.link !== 'string') {
+                    console.log(`   🚫 Skipping item with invalid link`)
+                    return false
+                  }
+                  
                   const title = item.title?.toLowerCase() || ''
                   const link = item.link?.toLowerCase() || ''
                   const combinedText = `${title} ${link}`
@@ -2371,6 +2377,12 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
               
               const additionalStyleMatches = mergedResults
                 .filter((item: any) => {
+                  // CRITICAL: Must have a valid link
+                  if (!item.link || typeof item.link !== 'string') {
+                    console.log(`   🚫 Skipping item with invalid link`)
+                    return false
+                  }
+                  
                   const title = item.title?.toLowerCase() || ''
                   const link = item.link?.toLowerCase() || ''
                   const combinedText = `${title} ${link}`
