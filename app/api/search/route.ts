@@ -1569,10 +1569,49 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
               'watch': ['watch', 'timepiece', 'wristwatch', '시계', '손목시계']
             }
             
-            // Also extract key descriptive words from the item description for better matching
-            const descriptionWords = itemDescription ? itemDescription.toLowerCase().split(/\s+/).filter((w: string) => 
-              w.length > 3 && !['item', 'the', 'and', 'with', 'for', 'from'].includes(w)
-            ) : []
+            // Extract key descriptive words with WEIGHTED IMPORTANCE
+            // Distinctive features (collar style, patterns, special details) get 5x weight
+            // Common features (color, material) get 1x weight
+            const distinctiveKeywords = [
+              'collar', 'collared', 'shirt collar', 'pointed collar', 'shawl collar', 'v-neck', 'crew neck',
+              'drawstring', 'toggle', 'zipper', 'zip-up', 'button-down', 'snap',
+              'cropped', 'oversized', 'slim-fit', 'relaxed-fit', 'tailored',
+              'ribbed', 'cable-knit', 'chunky', 'fine-knit',
+              'pleated', 'flared', 'wide-leg', 'tapered', 'straight-leg',
+              'ruffled', 'puff sleeve', 'bell sleeve', 'cap sleeve',
+              'asymmetric', 'cutout', 'backless', 'halter',
+              'fringe', 'sequin', 'embroidered', 'studded', 'quilted',
+              'houndstooth', 'plaid', 'striped', 'polka dot', 'leopard', 'zebra'
+            ]
+            
+            const descriptionLower = itemDescription ? itemDescription.toLowerCase() : ''
+            const descriptionWords = descriptionLower.split(/\s+/).filter((w: string) => 
+              w.length > 3 && !['item', 'the', 'and', 'with', 'for', 'from', 'long', 'sleeve', 'short'].includes(w)
+            )
+            
+            // Build weighted keyword map
+            const weightedKeywords: Array<{ word: string; weight: number }> = []
+            
+            // Add distinctive features with 5x weight
+            distinctiveKeywords.forEach(keyword => {
+              if (descriptionLower.includes(keyword)) {
+                // For multi-word keywords, add each word separately
+                keyword.split(/\s+/).forEach(word => {
+                  if (word.length > 3) {
+                    weightedKeywords.push({ word, weight: 5 })
+                  }
+                })
+              }
+            })
+            
+            // Add remaining words with 1x weight (avoid duplicates)
+            const addedWords = new Set(weightedKeywords.map(k => k.word))
+            descriptionWords.forEach((word: string) => {
+              if (!addedWords.has(word)) {
+                weightedKeywords.push({ word, weight: 1 })
+                addedWords.add(word)
+              }
+            })
             
             const topFullImageLinks = fullImageResults
               .slice(0, 50) // Check top 50 to find better matches (e.g., silk-satin drawstring pants buried deep)
@@ -1606,15 +1645,21 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
                   return null
                 }
                 
-                // Calculate match score (more keyword matches = higher priority)
+                // Calculate WEIGHTED match score (distinctive features get 5x weight!)
                 let matchScore = 1 // Base score for category match
-                descriptionWords.forEach((word: string) => {
+                weightedKeywords.forEach(({ word, weight }) => {
                   if (combinedText.includes(word)) {
-                    matchScore++
+                    matchScore += weight
                   }
                 })
                 
-                console.log(`✅ CATEGORY MATCH in full image: "${item.title?.substring(0, 40)}" (${categoryKey}, score: ${matchScore})`)
+                // Log distinctiveness
+                const distinctiveMatches = weightedKeywords.filter(k => k.weight === 5 && combinedText.includes(k.word))
+                const distinctiveLabel = distinctiveMatches.length > 0 
+                  ? ` [DISTINCTIVE: ${distinctiveMatches.map(k => k.word).join(', ')}]` 
+                  : ''
+                
+                console.log(`✅ CATEGORY MATCH in full image: "${item.title?.substring(0, 40)}" (${categoryKey}, score: ${matchScore}${distinctiveLabel})`)
                 return { link: item.link, score: matchScore }
               })
               .filter((item: any) => item !== null)
