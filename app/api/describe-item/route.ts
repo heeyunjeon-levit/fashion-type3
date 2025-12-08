@@ -260,7 +260,7 @@ For unknown categories:
     
     // Log thinking content if available (helpful for debugging color accuracy)
     const thinkingContent = result.candidates?.[0]?.content?.parts?.find((p: any) => p.thought)?.thought
-    if (thinkingContent) {
+    if (thinkingContent && typeof thinkingContent === 'string') {
       console.log('💭 Gemini Thinking Process:')
       console.log(`   ${thinkingContent.substring(0, 300)}...`)
     }
