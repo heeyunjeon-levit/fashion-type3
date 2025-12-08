@@ -399,7 +399,15 @@ export async function POST(request: NextRequest) {
       return await handleFallbackSearch(originalImageUrl, requestStartTime)
     }
 
-    const allResults: Record<string, Array<{ link: string; thumbnail: string | null; title: string | null }>> = {}
+    // Results can be in two formats:
+    // 1. Two-stage format: { colorMatches: [], styleMatches: [] }
+    // 2. Legacy format: Array of items (for backward compatibility)
+    type ResultItem = { link: string; thumbnail: string | null; title: string | null }
+    type TwoStageResults = {
+      colorMatches: ResultItem[]
+      styleMatches: ResultItem[]
+    }
+    const allResults: Record<string, TwoStageResults | ResultItem[]> = {}
     const gptReasoningData: Record<string, any> = {}
     const timingData: Record<string, number> = {
       serper_total_api_time: 0,  // Accumulated time across all Serper calls
@@ -498,7 +506,7 @@ export async function POST(request: NextRequest) {
       console.log(`   📸 Cropped image URL: ${croppedImageUrl}`)
       
       try {
-        // Call Serper Lens 3 times for best result coverage
+        // Call Serper Lens 3 times for best result coverage (VISUAL SEARCH)
         const serperCallPromises = Array.from({ length: 3 }, (_, i) => {
           console.log(`   Run ${i + 1}/3...`)
           return fetch('https://google.serper.dev/lens', {
@@ -515,14 +523,42 @@ export async function POST(request: NextRequest) {
           })
         })
 
+        // NEW: Text-based image search using description (KEYWORD SEARCH)
+        const descriptionForSearch = descriptions?.[resultKey]
+        let textSearchPromise: Promise<Response> | null = null
+        
+        if (descriptionForSearch) {
+          console.log(`   📝 Text search with description: "${descriptionForSearch.substring(0, 60)}..."`)
+          textSearchPromise = fetch('https://google.serper.dev/images', {
+            method: 'POST',
+            headers: {
+              'X-API-KEY': process.env.SERPER_API_KEY!,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              q: descriptionForSearch,
+              gl: 'kr',
+              hl: 'ko',
+              num: 60, // Get 60 results
+            }),
+          })
+        }
+
         const serperStart = Date.now()
-        const serperResponses = await Promise.all(serperCallPromises)
+        const allPromises = textSearchPromise 
+          ? [...serperCallPromises, textSearchPromise]
+          : serperCallPromises
+        
+        const allResponses = await Promise.all(allPromises)
+        const serperResponses = allResponses.slice(0, 3) // First 3 are visual
+        const textSearchResponse = textSearchPromise ? allResponses[3] : null
+        
         const serperTime = (Date.now() - serperStart) / 1000
         timingData.serper_total_api_time += serperTime
-        timingData.serper_count += 1
-        console.log(`   ⏱️  Serper API (3x parallel): ${serperTime.toFixed(2)}s`)
+        timingData.serper_count += textSearchPromise ? 2 : 1 // Count visual + text searches
+        console.log(`   ⏱️  Serper API (${textSearchPromise ? '3x visual + 1x text' : '3x visual'}): ${serperTime.toFixed(2)}s`)
         
-        // Aggregate results from 3 runs
+        // Aggregate results from 3 visual search runs
         const allOrganicResults: any[] = []
         for (let i = 0; i < serperResponses.length; i++) {
           if (!serperResponses[i].ok) {
@@ -534,16 +570,53 @@ export async function POST(request: NextRequest) {
           console.log(`   ✅ Run ${i + 1}/3 returned ${serperData.organic?.length || 0} results`)
           
           if (serperData.organic) {
-            allOrganicResults.push(...serperData.organic)
+            // Mark as visual search for debugging
+            allOrganicResults.push(...serperData.organic.map((item: any) => ({
+              ...item,
+              searchType: 'visual'
+            })))
           }
         }
 
-        // Deduplicate by URL and keep unique results from cropped image
+        // Process text-based search results if available
+        const textSearchResults: any[] = []
+        if (textSearchResponse && textSearchResponse.ok) {
+          const textData = await textSearchResponse.json()
+          console.log(`   ✅ Text search returned ${textData.images?.length || 0} results`)
+          
+          if (textData.images) {
+            // Transform text search results to match visual search format AND mark them as text search
+            textSearchResults.push(...textData.images.map((img: any) => ({
+              title: img.title,
+              link: img.link,
+              source: img.source,
+              thumbnail: img.thumbnailUrl || img.imageUrl,
+              imageUrl: img.imageUrl,
+              position: img.position,
+              searchType: 'text' // Mark as text search for debugging
+            })))
+            
+            // LOG first 10 text search results for debugging
+            console.log(`\n📝 TEXT SEARCH RESULTS (first 10):`)
+            textSearchResults.slice(0, 10).forEach((item, idx) => {
+              console.log(`   ${idx + 1}. "${item.title?.substring(0, 60)}..." - ${item.link}`)
+            })
+          }
+        } else if (textSearchResponse) {
+          const errorText = await textSearchResponse.text()
+          console.log(`   ❌ Text search failed:`, errorText.substring(0, 200))
+        }
+
+        // Merge visual + text search results
+        const combinedSearchResults = [...allOrganicResults, ...textSearchResults]
+        console.log(`📊 Combined search: ${allOrganicResults.length} visual + ${textSearchResults.length} text = ${combinedSearchResults.length} total`)
+
+        // Deduplicate by URL and keep unique results
         const uniqueCroppedResults = Array.from(
-          new Map(allOrganicResults.map(item => [item.link, item])).values()
+          new Map(combinedSearchResults.map(item => [item.link, item])).values()
         )
         
-        console.log(`📊 Cropped image search: ${uniqueCroppedResults.length} unique results`)
+        console.log(`📊 After deduplication: ${uniqueCroppedResults.length} unique results`)
         
         // STRICT CATEGORY FILTERING: Filter full image results to only include items relevant to this category
         const filteredFullImageResults = fullImageResults.filter(item => {
@@ -654,9 +727,9 @@ export async function POST(request: NextRequest) {
           return true
         })
         
-        console.log(`📊 Cropped results filtered: ${uniqueCroppedResults.length} → ${filteredCroppedResults.length} (removed ${uniqueCroppedResults.length - filteredCroppedResults.length} wrong categories)`)
+        console.log(`📊 Cropped+Text results filtered: ${uniqueCroppedResults.length} → ${filteredCroppedResults.length} (removed ${uniqueCroppedResults.length - filteredCroppedResults.length} wrong categories)`)
         
-        // Combine filtered cropped image results with filtered full image results
+        // Combine filtered cropped+text results with filtered full image results
         const combinedResults = [...filteredCroppedResults, ...filteredFullImageResults]
         
         // Deduplicate the combined results
@@ -664,12 +737,15 @@ export async function POST(request: NextRequest) {
           new Map(combinedResults.map(item => [item.link, item])).values()
         )
         
-        console.log(`📊 Combined (cropped + full image): ${uniqueCombinedResults.length} unique results`)
+        console.log(`📊 Combined (visual + text + full image): ${uniqueCombinedResults.length} unique results`)
+        console.log(`   🖼️  Visual search: ${allOrganicResults.length} results`)
+        console.log(`   📝 Text search: ${textSearchResults.length} results`)
+        console.log(`   🎯 Full image: ${filteredFullImageResults.length} results`)
         
-        const organicResults = uniqueCombinedResults.slice(0, 30) // Keep top 30 for best GPT analysis
+        const organicResults = uniqueCombinedResults.slice(0, 80) // Increased to 80 for better coverage
         
         if (organicResults.length === 0) {
-          console.log(`⚠️ No Serper results for ${resultKey} after 3 runs`)
+          console.log(`⚠️ No Serper results for ${resultKey} after all searches`)
           return { resultKey, results: null }
         }
         
@@ -935,7 +1011,7 @@ export async function POST(request: NextRequest) {
         // Cropped image search = searches with just the item → finds similar alternatives
         console.log(`📊 Results breakdown:`)
         console.log(`   🎯 Full image search: ${fullImageResults.length} results (for exact matches)`)
-        console.log(`   ✂️  Cropped image search: ${organicResults.length} results (for alternatives)`)
+        console.log(`   ✂️  Cropped+Text search: ${organicResults.length} results (for alternatives)`)
         
         // Use cropped results for category-based search
         const mergedResults: any[] = [...organicResults]
@@ -984,10 +1060,305 @@ export async function POST(request: NextRequest) {
           console.log(`✅ Pre-filter complete: ${mergedResults.length} → ${filteredResults.length} results (removed ${mergedResults.length - filteredResults.length} wrong sub-types)`)
         }
         
-        // Use filtered results for GPT analysis
-        const resultsForGPT = filteredResults
+        // COLOR PRE-FILTERING (Remove wrong colors BEFORE GPT sees them!)
+        let resultsForGPT = filteredResults
+        
+        if (primaryColor) {
+          const colorBefore = resultsForGPT.length
+          const colorLower = primaryColor.toLowerCase()
+          
+          // Define color rejection patterns based on primary color
+          const colorRejectionPatterns: string[] = []
+          const colorAcceptancePatterns: string[] = []
+          
+          if (colorLower === 'olive' || colorLower.includes('green')) {
+            colorRejectionPatterns.push('neutral', 'beige', 'tan', 'mole', 'brown')
+            colorAcceptancePatterns.push('olive', 'green', 'verde', 'khaki', 'kaki', 'olive green', 'dark green', 'army green', '올리브', '그린', '카키')
+          } else if (colorLower === 'black') {
+            colorRejectionPatterns.push('white', 'cream', 'ivory', 'beige', 'navy', 'grey', 'gray')
+            colorAcceptancePatterns.push('black', 'noir', 'schwarz', 'negro', '블랙', '검정')
+          } else if (colorLower === 'white' || colorLower === 'ivory' || colorLower === 'cream') {
+            colorRejectionPatterns.push('black', 'navy', 'dark', 'grey', 'gray', 'brown')
+            colorAcceptancePatterns.push('white', 'cream', 'ivory', 'off-white', 'ecru', '화이트', '흰색', '아이보리')
+          } else if (colorLower === 'beige' || colorLower === 'tan') {
+            colorRejectionPatterns.push('black', 'white', 'navy', 'brown', 'grey', 'gray')
+            colorAcceptancePatterns.push('beige', 'tan', 'sand', 'camel', 'taupe', '베이지')
+          } else if (colorLower === 'navy' || colorLower.includes('blue')) {
+            colorRejectionPatterns.push('black', 'white', 'brown', 'grey', 'gray')
+            colorAcceptancePatterns.push('navy', 'blue', 'indigo', 'azul', '네이비', '블루')
+          }
+          
+          // Filter out results with wrong color in title
+          resultsForGPT = resultsForGPT.filter((result: any) => {
+            const title = (result.title || '').toLowerCase()
+            
+            // Check if title contains any acceptance patterns (green, olive, etc.)
+            const hasAcceptedColor = colorAcceptancePatterns.some(pattern => title.includes(pattern.toLowerCase()))
+            
+            // Check if title contains any rejection patterns (neutrals, beige, etc.)
+            const hasRejectedColor = colorRejectionPatterns.some(pattern => title.includes(pattern.toLowerCase()))
+            
+            // Keep if: (has accepted color) OR (no color mentioned at all)
+            // Reject if: has rejected color AND doesn't have accepted color
+            if (hasRejectedColor && !hasAcceptedColor) {
+              console.log(`   ❌ COLOR FILTER: Rejected "${result.title?.substring(0, 60)}..." (contains rejected color, not ${primaryColor})`)
+              return false // REJECT
+            }
+            
+            return true // KEEP
+          })
+          
+          console.log(`🎨 Color pre-filter (text): ${colorBefore} → ${resultsForGPT.length} results (removed ${colorBefore - resultsForGPT.length} wrong colors for "${primaryColor}")`)
+        }
+        
+        // PRE-FILTER: Remove blocked domains (news sites, social media) BEFORE sending to GPT
+        const blockedDomainsPreFilter = [
+          // Social media
+          'instagram.com', 'tiktok.com', 'youtube.com', 'youtu.be', 'pinterest.com', 'pin.it',
+          'facebook.com', 'fb.com', 'twitter.com', 'x.com', 'reddit.com', 'tumblr.com',
+          'snapchat.com', 'threads.net', 'threads.com', 'weibo.com',
+          // News & entertainment sites
+          'newsen.com', 'm.newsen.com', 'www.newsen.com',
+          'xportsnews.com', 'dispatch.co.kr', 'sportsseoul.com', 'sportalkorea.com',
+          'osen.co.kr', 'm.osen.co.kr', 'entertain.naver.com', 'sports.naver.com',
+          'starnewskorea.com', 'tenasia.co.kr', 'mydaily.co.kr',
+          'news.nate.com', 'news.zum.com', 'news.chosun.com', 'news.joins.com',
+          // Magazines
+          'vogue.com', 'elle.com', 'elle.co.kr', 'harpersbazaar.com', 'gq.com'
+        ]
+        
+        const beforeBlockedFilter = resultsForGPT.length
+        resultsForGPT = resultsForGPT.filter((result: any) => {
+          const linkLower = (result.link || '').toLowerCase()
+          const isBlocked = blockedDomainsPreFilter.some(domain => linkLower.includes(domain))
+          if (isBlocked) {
+            console.log(`🚫 PRE-FILTER: Blocked news/social site: ${result.link?.substring(0, 60)}...`)
+            return false
+          }
+          return true
+        })
+        
+        if (beforeBlockedFilter > resultsForGPT.length) {
+          console.log(`✅ PRE-FILTER complete: ${beforeBlockedFilter} → ${resultsForGPT.length} results (removed ${beforeBlockedFilter - resultsForGPT.length} news/social sites)`)
+        }
+        
+        // VISUAL VALIDATION: Analyze thumbnails with Gemini Flash
+        if (primaryColor && resultsForGPT.length > 0) {
+          console.log(`\n🖼️  Starting visual color validation with Gemini 2.5 Flash Image...`)
+          console.log(`   📊 Analyzing ${Math.min(30, resultsForGPT.length)} thumbnails in batches of 5 with rate limiting`)
+          const visualBefore = resultsForGPT.length
+          const startVisual = Date.now()
+          
+          try {
+            const geminiClient = getGeminiClient()
+            
+            // Batch analyze thumbnails with rate limiting (Free tier: 15 RPM for gemini-2.5-flash-image)
+            const resultsToAnalyze = resultsForGPT.slice(0, 30) // Reduced to 30 to stay under rate limits
+            const batchSize = 5 // 5 at a time in parallel
+            const delayBetweenBatches = 2000 // 2s delay between batches to avoid rate limits
+            const visuallyValidResults: any[] = []
+            
+            for (let i = 0; i < resultsToAnalyze.length; i += batchSize) {
+              const batch = resultsToAnalyze.slice(i, i + batchSize)
+              const batchNum = Math.floor(i / batchSize) + 1
+              const totalBatches = Math.ceil(resultsToAnalyze.length / batchSize)
+              
+              console.log(`\n   📦 Batch ${batchNum}/${totalBatches} (${batch.length} thumbnails)`)
+              
+              // Add delay between batches to respect rate limits (except first batch)
+              if (i > 0) {
+                console.log(`   ⏱️  Waiting 2s to respect rate limits...`)
+                await new Promise(resolve => setTimeout(resolve, delayBetweenBatches))
+              }
+              
+              // Analyze batch in parallel
+              const batchPromises = batch.map(async (result: any) => {
+                try {
+                  if (!result.thumbnailUrl) return null
+                  
+                  // Fetch and encode the thumbnail image
+                  let imageData: string
+                  try {
+                    const response = await fetch(result.thumbnailUrl)
+                    const arrayBuffer = await response.arrayBuffer()
+                    imageData = Buffer.from(arrayBuffer).toString('base64')
+                  } catch (fetchError) {
+                    console.log(`   ⚠️  Could not fetch thumbnail, keeping result: ${result.title?.substring(0, 40)}`)
+                    return result // Keep if we can't fetch thumbnail
+                  }
+                  
+                  // Retry logic for rate limit errors
+                  let response
+                  let retries = 0
+                  const maxRetries = 2
+                  
+                  while (retries <= maxRetries) {
+                    try {
+                      response = await geminiClient.models.generateContent({
+                        model: 'gemini-2.5-flash-image', // Higher quota than 2.0-flash-exp
+                    contents: [{
+                      role: 'user',
+                      parts: [
+                        {
+                          inlineData: {
+                            mimeType: 'image/jpeg',
+                            data: imageData
+                          }
+                        },
+                        {
+                          text: `Is this product's primary color ${primaryColor.toUpperCase()}?
+
+Answer ONLY "MATCH" or "DIFFERENT".
+
+${primaryColor.toLowerCase() === 'olive' || primaryColor.toLowerCase().includes('green') ? 'MATCH = olive/green shades. DIFFERENT = beige/tan/brown/neutral.' : ''}
+${primaryColor.toLowerCase() === 'black' ? 'MATCH = black. DIFFERENT = navy/grey/dark blue.' : ''}
+${primaryColor.toLowerCase() === 'white' || primaryColor.toLowerCase() === 'cream' ? 'MATCH = white/cream/ivory. DIFFERENT = beige/grey/black.' : ''}
+
+Answer:`
+                        }
+                      ]
+                    }],
+                        config: {
+                          maxOutputTokens: 10,
+                          temperature: 0.1
+                        }
+                      })
+                      break // Success, exit retry loop
+                    } catch (retryErr: any) {
+                      retries++
+                      if (retryErr.message?.includes('429') || retryErr.message?.includes('RESOURCE_EXHAUSTED')) {
+                        if (retries <= maxRetries) {
+                          const waitTime = Math.pow(2, retries) * 1000 // Exponential backoff: 2s, 4s
+                          console.log(`   ⏳ Rate limit hit, waiting ${waitTime/1000}s before retry ${retries}/${maxRetries}...`)
+                          await new Promise(resolve => setTimeout(resolve, waitTime))
+                        } else {
+                          throw retryErr // Max retries exceeded
+                        }
+                      } else {
+                        throw retryErr // Non-rate-limit error
+                      }
+                    }
+                  }
+                  
+                  if (!response) {
+                    console.log(`   ⚠️  Max retries exceeded, keeping result: ${result.title?.substring(0, 40)}`)
+                    return result
+                  }
+                  
+                  const answer = (response.text?.trim() || '').toUpperCase()
+                  const isMatch = answer.includes('MATCH')
+                  
+                  console.log(`   ${isMatch ? '✅' : '❌'} Visual: "${result.title?.substring(0, 50)}..." → ${answer}`)
+                  
+                  return isMatch ? result : null
+                } catch (err) {
+                  console.error(`   ⚠️  Visual analysis failed for thumbnail, keeping result:`, err)
+                  return result // Keep if analysis fails
+                }
+              })
+              
+              const batchResults = await Promise.all(batchPromises)
+              visuallyValidResults.push(...batchResults.filter(r => r !== null))
+            }
+            
+            // Add remaining results that weren't analyzed (top 40 already filtered)
+            if (resultsForGPT.length > resultsToAnalyze.length) {
+              visuallyValidResults.push(...resultsForGPT.slice(resultsToAnalyze.length))
+            }
+            
+            const visualDuration = ((Date.now() - startVisual) / 1000).toFixed(2)
+            console.log(`\n🖼️  Visual validation complete in ${visualDuration}s`)
+            console.log(`   ${visualBefore} → ${visuallyValidResults.length} results (removed ${visualBefore - visuallyValidResults.length} wrong colors visually)`)
+            
+            resultsForGPT = visuallyValidResults
+          } catch (error) {
+            console.error('❌ Visual validation failed, continuing with text-filtered results:', error)
+            // Continue with text-filtered results if visual analysis fails
+          }
+        }
+        
+        // Extract brand names from titles (strong signal for exact matches!)
+        const brandFrequency: Record<string, { count: number; examples: string[] }> = {}
+        
+        resultsForGPT.forEach((result: any) => {
+          const title = result.title || ''
+          
+          // Extract potential brand names (capitalized words, Korean brand names, etc.)
+          // Common patterns:
+          // - "BAGGU Duck Bag" → "BAGGU"
+          // - "Nike Air Force 1" → "Nike"
+          // - "Zara Wool Coat" → "Zara"
+          // - "[브랜드명] Product Name" (Korean bracket pattern)
+          
+          const brandMatches: string[] = []
+          
+          // Pattern 1: Korean brackets [브랜드]
+          const koreanBracketMatch = title.match(/\[([^\]]+)\]/)
+          if (koreanBracketMatch) {
+            brandMatches.push(koreanBracketMatch[1].trim())
+          }
+          
+          // Pattern 2: Capitalized words at the start (before hyphens or common separators)
+          const capitalizedMatch = title.match(/^([A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)\b/)
+          if (capitalizedMatch) {
+            brandMatches.push(capitalizedMatch[1].trim())
+          }
+          
+          // Pattern 3: All-caps brand names (e.g., "BAGGU", "NIKE")
+          const allCapsMatches = title.match(/\b([A-Z]{3,})\b/g)
+          if (allCapsMatches) {
+            brandMatches.push(...allCapsMatches)
+          }
+          
+          // Count each brand
+          brandMatches.forEach(brand => {
+            if (!brandFrequency[brand]) {
+              brandFrequency[brand] = { count: 0, examples: [] }
+            }
+            brandFrequency[brand].count++
+            if (brandFrequency[brand].examples.length < 2) {
+              brandFrequency[brand].examples.push(title.substring(0, 60))
+            }
+          })
+        })
+        
+        // Sort by frequency and show top repeated brands
+        const topRepeatedBrands = Object.entries(brandFrequency)
+          .filter(([_, data]) => data.count >= 2) // Only show brands appearing 2+ times
+          .sort((a, b) => b[1].count - a[1].count)
+          .slice(0, 10)
+          .map(([brand, data]) => `"${brand}" (×${data.count})`)
+          .join(', ')
+        
+        // Log brand name frequency
+        if (topRepeatedBrands) {
+          console.log(`\n🔥 REPEATED BRAND NAMES in titles (high confidence signal):`)
+          console.log(`   ${topRepeatedBrands}`)
+        }
+        
+        // Log cropped image results being sent to GPT (show more for debugging)
+        console.log(`\n📦 CROPPED IMAGE RESULTS sent to GPT (${resultsForGPT.length} total items):`)
+        console.log('─'.repeat(80))
+        resultsForGPT.slice(0, 30).forEach((r: any, i: number) => {
+          console.log(`   ${i + 1}. ${r.source || 'Unknown'}: ${r.title?.substring(0, 70)}...`)
+          console.log(`      🔗 ${r.link?.substring(0, 80)}...`)
+        })
+        if (resultsForGPT.length > 30) {
+          console.log(`   ... and ${resultsForGPT.length - 30} more items`)
+        }
+        console.log('─'.repeat(80) + '\n')
         
         const prompt = `You are analyzing aggregated image search results from multiple runs for ${categoryLabels[categoryKey]}.
+
+${topRepeatedBrands ? `
+🔥🔥🔥 **BRAND NAME FREQUENCY - HIGH CONFIDENCE SIGNALS** 🔥🔥🔥
+Brand names appearing multiple times in titles (sorted by frequency): ${topRepeatedBrands}
+
+**WHY THIS MATTERS**: When the same BRAND NAME appears in 3+ product titles, it's Google's algorithm saying "THIS IS THE EXACT BRAND!"
+→ Example: If "BAGGU" (×4) appears above, products with "BAGGU" in the title are almost certainly the exact match!
+→ **STRONGLY PRIORITIZE these repeated brand names in your selection!**
+→ Note: This is brand name frequency from titles, not domain names (since sites like Musinsa carry multiple brands)
+` : ''}
 
 ${characterName ? `
 🎭🎭🎭 **CRITICAL PRIORITY #1: CHARACTER/GRAPHIC IS "${characterName.toUpperCase()}"** 🎭🎭🎭
@@ -1000,16 +1371,34 @@ ${characterName ? `
 ` : ''}
 
 ${primaryColor ? `
-🚨 **PRIORITY #2: PRIMARY COLOR IS ${primaryColor.toUpperCase()}** 🚨
-- You MUST find products that are ${primaryColor.toUpperCase()} colored!
-- ❌ DO NOT return items with INVERTED colors (e.g., if color is BLACK, don't return WHITE/CREAM items)
-- ❌ If item is BLACK with white details, find BLACK items (not white/cream)
-- ❌ If item is WHITE/CREAM with black details, find WHITE/CREAM items (not black)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🚨🚨🚨 CRITICAL #1 PRIORITY: COLOR MUST BE ${primaryColor.toUpperCase()} 🚨🚨🚨
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+**MANDATORY COLOR MATCHING:**
+- Look at the product title - does it mention ${primaryColor.toUpperCase()} or a similar color word?
+- ❌ ABSOLUTELY REJECT if title says a DIFFERENT color (see rejection list below)
+- ✅ ONLY SELECT products whose titles match the color "${primaryColor.toUpperCase()}"
+
+**COLOR REJECTION LIST FOR ${primaryColor.toUpperCase()}:**
+${primaryColor.toLowerCase() === 'olive' || primaryColor.toLowerCase().includes('green') ? `- ❌ REJECT: "Neutrals", "Beige", "Tan", "Mole", "Brown", "Khaki" (these are NOT olive/green!)
+- ✅ ACCEPT: "Olive", "Green", "Dark Green", "Khaki Green", "Army Green"` : ''}
+${primaryColor.toLowerCase() === 'black' ? `- ❌ REJECT: "White", "Cream", "Ivory", "Beige", "Navy", "Grey", "Dark Blue"
+- ✅ ACCEPT: "Black", "Jet Black", "Charcoal Black"` : ''}
+${primaryColor.toLowerCase() === 'white' || primaryColor.toLowerCase() === 'ivory' || primaryColor.toLowerCase() === 'cream' ? `- ❌ REJECT: "Black", "Navy", "Dark", "Grey", "Brown"  
+- ✅ ACCEPT: "White", "Cream", "Ivory", "Off-White", "Ecru"` : ''}
+${primaryColor.toLowerCase() === 'beige' || primaryColor.toLowerCase() === 'tan' ? `- ❌ REJECT: "Black", "White", "Navy", "Brown", "Grey"
+- ✅ ACCEPT: "Beige", "Tan", "Sand", "Camel", "Taupe"` : ''}
+${primaryColor.toLowerCase() === 'navy' || primaryColor.toLowerCase().includes('blue') ? `- ❌ REJECT: "Black", "White", "Brown", "Grey" (unless they also say "Blue")
+- ✅ ACCEPT: "Navy", "Blue", "Dark Blue", "Indigo"` : ''}
+
+**WHY THIS MATTERS:** "Olive Green" pants and "Neutral Beige" pants look VERY different!
+Don't confuse them just because they have similar silhouettes!
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ` : ''}
 
 🎯 **IMPORTANT: Results are ordered by quality - TOP results are from full-image search (most accurate for iconic items)**
 - First ${fullImageResults.length} results are from full image search (recognizes context, celebrity outfits, exact matches)
-- Remaining results are from cropped image search (finds similar styles)
+- Remaining results are from cropped image search (visual similarity) + text-based search (keyword matching)
 - STRONGLY PREFER selecting from the TOP results - they're higher quality matches
 
 The original cropped image shows: ${searchTerms.join(', ')}
@@ -1030,11 +1419,19 @@ ${subTypeExclusion ? subTypeExclusion : ''}
 - ${categoryKey === 'dress' ? '❌ ABSOLUTELY REJECT: Any title mentioning "pants", "jeans", "shorts", "shirt", "jacket", "바지", "셔츠", "재킷"' : ''}
 
 CRITICAL SELECTION RULES (in order of priority):
-${characterName ? `0. 🎭 **CHARACTER/GRAPHIC MATCH FIRST**: Item MUST feature "${characterName.toUpperCase()}"! Reject different characters!` : ''}
-${primaryColor ? `${characterName ? '1' : '0'}. 🎨 **COLOR MATCH ${characterName ? 'SECOND' : 'FIRST'}**: Item MUST be ${primaryColor.toUpperCase()} colored! Reject inverted colors!` : ''}
-${characterName || primaryColor ? '2' : '1'}. 🇰🇷 **MANDATORY: AT LEAST 2 KOREAN SITES**: Your final selection MUST include minimum 2 Korean e-commerce sites!
-${characterName || primaryColor ? '3' : '2'}. CATEGORY MATCH: Must be correct garment type (${categorySearchTerms[categoryKey]?.join(' OR ')})
-${characterName || primaryColor ? '4' : '3'}. VISUAL MATCH: Look for similar style, color, material
+${topRepeatedBrands ? `
+🔥 **BRAND FREQUENCY - STRONG SIGNAL (but not mandatory)**: ${topRepeatedBrands}
+   → If a brand appears 4+ times AND visually matches: STRONGLY PREFER it!
+   → If a brand appears 3+ times AND visually matches: Consider it highly
+   → If a brand appears 2+ times: Give it priority when quality/visual match is similar
+   → **BUT**: Use your judgment! Visual similarity + quality > raw frequency
+   → Example: High-end brand (Berluti, Bottega Veneta) with good match > generic brand appearing 4× with poor match
+` : ''}
+${characterName ? `1. 🎭 **CHARACTER/GRAPHIC MATCH**: Item MUST feature "${characterName.toUpperCase()}"! Reject different characters!` : ''}
+${primaryColor ? `2. 🎨 **COLOR MATCH**: Item MUST be ${primaryColor.toUpperCase()} colored! Reject inverted colors!` : ''}
+3. 🇰🇷 **MANDATORY: AT LEAST 2 KOREAN SITES**: Your final selection MUST include minimum 2 Korean e-commerce sites!
+4. CATEGORY MATCH: Must be correct garment type (${categorySearchTerms[categoryKey]?.join(' OR ')})
+5. VISUAL MATCH: Look for similar style, color, material
 4. Accept ANY e-commerce/product website (Korean, international, boutique)
 5. Accept: G마켓, 11번가, Coupang, Musinsa, Amazon, Zara, H&M, Nordstrom, Uniqlo, YesStyle, Etsy, Depop
 7. 🚫 REJECT these sites (NOT product pages): Instagram, TikTok, YouTube, Pinterest, Facebook, Twitter/X, Reddit, Google Images, image CDNs, blogs, news sites, wikis, non-product pages
@@ -1042,7 +1439,7 @@ ${characterName || primaryColor ? '4' : '3'}. VISUAL MATCH: Look for similar sty
 9. If you cannot find 3 VALID PRODUCT LINKS, return fewer than 3. NEVER include non-product sites just to fill the quota.
 
 SELECTION PROCESS:
-- These results are aggregated from 3 cropped image runs + 3 full image runs for maximum coverage
+- These results are aggregated from 3 visual image runs + 1 text-based search + 3 full image runs for maximum coverage
 - Each result has: "link", "title", "thumbnail" fields
 - **CRITICAL: You MUST read and validate the "title" field for EVERY result before selecting it**
 - The "title" describes what the link actually shows - use it to verify accuracy
@@ -1050,32 +1447,54 @@ SELECTION PROCESS:
 - Example for tops: "red sweatshirt" ✅, "red skirt" ❌ (wrong category)
 - Prefer actual product pages over homepages, category pages, or general listings
 
-TITLE VALIDATION RULES (FLEXIBLE - trust visual similarity):
+🔥 **BRAND NAME FREQUENCY = STRONG SIGNAL (use with judgment)**:
+- If a brand appears 4+ times in titles: This is a strong signal - check if it visually matches!
+- If a brand appears 3+ times: Give it high priority IF the visual match is good
+- If a brand appears 2+ times: Prefer it over single appearances when visual quality is similar
+- **HOWEVER**: Don't blindly follow frequency! A high-end brand (Berluti, Bottega Veneta, Loewe) with a perfect visual match is better than a generic brand appearing 4× with poor match
+- Use brand frequency as ONE factor alongside: visual similarity, product quality, color match, style match
+- Note: Look at BRAND NAME in titles, not just domain (Musinsa/Amazon carry many brands)
+
+TITLE VALIDATION RULES (STRICT COLOR MATCHING):
 1. ✅ READ the "title" field carefully - it tells you what the product actually is
-2. ✅ FLEXIBLE: Allow category variations within same body part (sweater/jacket/coat all OK for upper body)
-${itemDescription ? `3. 🎯 **CRITICAL: Match "${itemDescription}"**
-   - 🎨 **COLOR IS MOST IMPORTANT** - if description says "black", prefer BLACK items!
-   - If description says "white/cream/beige", prefer LIGHT colored items!
-   - Don't mix up inverted colors (black→white is WRONG, white→black is WRONG)
-   - Style/silhouette should match (cable knit, bow details, etc.)
-   - For Korean text: 검정=black, 흰색/아이보리=white/ivory, 베이지=beige` : ''}
-4. 🎨 **COLOR PRIORITY**: If the item has a distinctive color (black, white, red, etc.), STRONGLY prefer matching colors
+${primaryColor ? `2. 🚨 **COLOR VALIDATION (MANDATORY)**: Check if title mentions a color word
+   - If title says "${primaryColor.toUpperCase()}" or similar → ✅ GOOD!
+   - If title says a DIFFERENT color → ❌ REJECT IMMEDIATELY!
+   - Example: Looking for "Olive Green"? "Neutrals", "Beige", "Mole" = WRONG COLOR, REJECT!
+   - Don't assume "Neutrals" = "Olive" just because they're earthy tones. They're DIFFERENT!` : ''}
+3. ✅ FLEXIBLE: Allow category variations within same body part (sweater/jacket/coat all OK for upper body)
+${itemDescription ? `4. 🎯 **MATCH DESCRIPTION: "${itemDescription}"**
+   - 🎨 **COLOR IS MOST IMPORTANT** - if description says "olive green", ONLY select "olive"/"green" items!
+   - Don't mix up colors (olive→beige is WRONG, green→neutrals is WRONG)
+   - Style/silhouette should match (tapered, cuffed, etc.)
+   - For Korean text: 검정=black, 흰색/아이보리=white/ivory, 베이지=beige, 올리브=olive, 그린=green` : ''}
 5. ⚠️ ONLY REJECT if clearly wrong body part:
    ${categoryKey === 'tops' ? '**REJECT ONLY: pants/jeans/shorts/skirts/leggings (lower body items)**' : ''}
    ${categoryKey === 'bottoms' ? '**REJECT ONLY: if title suggests it\'s NOT worn on lower body**' : ''}
 6. ❌ REJECT if title is generic ("Shop now", "Homepage", "Category", "Collection")
-7. ✅ ACCEPT style variations - luxury fur coat might be tagged as jacket, sweater, or cardigan
+7. ✅ ACCEPT style variations - but NEVER compromise on color!
 
-Matching criteria (${characterName ? 'CHARACTER FIRST, then color' : 'COLOR FIRST, then visual similarity'}):
-${characterName ? `1. 🎭 **#1 PRIORITY - CHARACTER/GRAPHIC MATCH**: Item MUST feature "${characterName.toUpperCase()}"!
+Matching criteria (${characterName ? 'CHARACTER FIRST, then color' : 'COLOR + VISUAL SIMILARITY FIRST'}):
+${topRepeatedBrands ? `0. 🔥 **BRAND FREQUENCY (strong signal)**: Repeated brands detected: ${topRepeatedBrands}
+   - If these brands also have good visual/color match → Give them high priority!
+   - But don't select them if they don't match the style/color/description
+   - Use as a tie-breaker when multiple products look equally good` : ''}
+${characterName ? `${topRepeatedBrands ? '1' : '0'}. 🎭 **#${topRepeatedBrands ? '1' : '0'} PRIORITY - CHARACTER/GRAPHIC MATCH**: Item MUST feature "${characterName.toUpperCase()}"!
    - Donald Duck mint green → find DONALD DUCK items (NOT Winnie the Pooh or Mickey!)
    - Winnie the Pooh yellow → find WINNIE THE POOH items (NOT Donald or Minnie!)
    - Don't mix up characters - this is a critical error!
    - Korean names: 푸 = Pooh, 미키 = Mickey, 미니 = Minnie, 도널드 = Donald Duck
-2. 🎨 **#2 PRIORITY - COLOR MATCH**: If item is ${primaryColor?.toUpperCase() || 'a specific color'}, find matching colors!` : '1. 🎨 **#1 PRIORITY - COLOR MATCH**: If item is BLACK, find BLACK items. If WHITE/CREAM, find LIGHT items!'}
+${topRepeatedBrands ? '2' : '1'}. 🎨 **#${topRepeatedBrands ? '2' : '1'} PRIORITY - COLOR MATCH**: If item is ${primaryColor?.toUpperCase() || 'a specific color'}, find matching colors!` : `${topRepeatedBrands ? '1' : '0'}. 🎨 **#${topRepeatedBrands ? '1' : '0'} PRIORITY - COLOR MATCH**: If item is BLACK, find BLACK items. If WHITE/CREAM, find LIGHT items!`}
    - BLACK sweater with white bows → find BLACK sweaters (NOT beige/cream ones!)
    - WHITE/CREAM sweater with black bows → find WHITE/CREAM sweaters (NOT black ones!)
    - Don't return inverted colors - this is a critical error!
+${primaryColor ? `   
+   ━━━ COLOR REJECTION RULES ━━━
+   ${primaryColor.toLowerCase() === 'olive' || primaryColor.toLowerCase() === 'green' ? '❌ REJECT if title says: "Neutrals", "Beige", "Tan", "Mole", "Brown", "Khaki" (unless it also says "Olive" or "Green")' : ''}
+   ${primaryColor.toLowerCase() === 'black' ? '❌ REJECT if title says: "White", "Cream", "Beige", "Navy", "Grey" (NOT black)' : ''}
+   ${primaryColor.toLowerCase() === 'white' || primaryColor.toLowerCase() === 'ivory' || primaryColor.toLowerCase() === 'cream' ? '❌ REJECT if title says: "Black", "Navy", "Grey", "Dark" (NOT white/light)' : ''}
+   ${primaryColor.toLowerCase() === 'beige' || primaryColor.toLowerCase() === 'tan' ? '❌ REJECT if title says: "Black", "White", "Navy", "Brown", "Grey" (NOT beige)' : ''}
+   ` : ''}
 ${characterName ? '3' : '2'}. ✅ Visual similarity (Google Lens found these based on IMAGE, trust it!)
 ${characterName ? '4' : '3'}. ✅ Style/material match (cable knit, bow details, ruffle hem, etc.)
 ${itemDescription ? `${characterName ? '5' : '4'}. 🎯 MATCH DESCRIPTION: "${itemDescription}" - especially the ${characterName ? 'CHARACTER and COLOR' : 'COLOR'} words!` : ''}
@@ -1086,11 +1505,17 @@ ${characterName ? '8' : '7'}. 🇰🇷 PREFER: Korean sites often have exact cha
 **IMPORTANT: Return your BEST 3-5 HIGH-QUALITY matches ONLY. Quality over quantity.**
 
 🌟 **SELECTION STRATEGY:**
-- START by reviewing the first ${fullImageResults.length} results (full image search)
-- If ANY of these top results are from reputable retailers (Zara, Fendi, Nordstrom, ASOS, etc.), STRONGLY CONSIDER including them
-- Full image search often finds EXACT matches or designer pieces that cropped search misses
-- Include high-quality full-image results EVEN IF category label differs slightly (fur coat labeled as "sweater" is fine)
-- Then supplement with best cropped-image results for variety
+- 🔥 **STEP 1 - BRAND FREQUENCY (strong signal, use with judgment)**:
+  ${topRepeatedBrands ? `* Consider these repeated brands: ${topRepeatedBrands}
+  * Check if products from these brands have good visual/color match
+  * If they DO match visually, PREFER them (high confidence)!
+  * If they DON'T match well, trust your visual judgment over frequency
+  * Example: Berluti bag with perfect match > Louis Vuitton (×4) if LV products don't match style` : '* No repeated brands detected - proceed with visual matching'}
+- **STEP 2**: Review the first ${fullImageResults.length} results (full image search)
+  * Full image search often finds EXACT matches or designer pieces
+  * High-end brands with good visual match are excellent selections
+- **STEP 3**: Balance: repeated brands (if good match) + visual similarity + product quality
+- **STEP 4**: Include 3-5 best matches considering ALL factors
 - Return [] ONLY if literally no results are for the correct body part
 
 🇰🇷 **KOREAN SITE REQUIREMENT** (search was done with gl=kr, hl=ko):
@@ -1108,11 +1533,15 @@ ${characterName ? '8' : '7'}. 🇰🇷 PREFER: Korean sites often have exact cha
 Search results (scan all ${resultsForGPT.length} for best matches):
 ${JSON.stringify(resultsForGPT, null, 2)}
 
-**VALIDATION PROCESS (VISUAL-FIRST, PRIORITIZE TOP RESULTS):**
+**VALIDATION PROCESS (COLOR-FIRST, THEN VISUAL):**
 For EACH result you consider:
 1. 📖 READ the "title" field first
-2. 🚫 CHECK THE URL: Does it end with /reviews, /questions, /qa? → SKIP IMMEDIATELY (not a product page)
-3. ⭐ **PRIORITY**: First ${fullImageResults.length} results are from FULL IMAGE SEARCH - strongly prefer these!
+${primaryColor ? `2. 🎨 **COLOR CHECK (MANDATORY)**: Does the title mention "${primaryColor.toUpperCase()}" or a matching color?
+   - ✅ If YES → Proceed to next step
+   - ❌ If NO (title says different color) → REJECT and move to next result
+   - Example: Looking for "Olive Green"? Title says "Neutrals" → REJECT!` : '2. 🚫 CHECK THE URL: Does it end with /reviews, /questions, /qa? → SKIP IMMEDIATELY (not a product page)'}
+3. 🚫 CHECK THE URL: Does it end with /reviews, /questions, /qa? → SKIP IMMEDIATELY (not a product page)
+4. ⭐ **PRIORITY**: First ${fullImageResults.length} results are from FULL IMAGE SEARCH - strongly prefer these!
    - Full image search recognizes complete context (celebrity outfits, iconic pieces, exact scenes)
    - If any of the top results look like quality matches, SELECT THEM FIRST
    - Example: If category is "sweater" but top result shows luxury fur coat that matches the image, INCLUDE IT
@@ -1193,7 +1622,8 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
           selectedLinks: [],
           timestamp: new Date().toISOString(),
           candidateCount: resultsForGPT.length,
-          fullImageResults: fullImageResults // Store for exact match extraction
+          croppedImageResults: resultsForGPT.slice(0, 50), // Store first 50 cropped results for debugging
+          fullImageResults: fullImageResults.slice(0, 50) // Store first 50 full image results for debugging
         }
         
         // Parse response - improved JSON extraction
@@ -1259,7 +1689,17 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
           'vogue.com', 'elle.com', 'elle.co.kr', 'harpersbazaar.com', 'cosmopolitan.com',
           'gq.com', 'wmagazine.com', 'instyle.com', 'marieclaire.com',
           'glamour.com', 'allure.com', 'nylon.com', 'refinery29.com',
-          'whowhatwear.com', 'popsugar.com', 'byrdie.com'
+          'whowhatwear.com', 'popsugar.com', 'byrdie.com',
+          // Korean entertainment/news sites (celebrity photos, not products)
+          'newsen.com', 'm.newsen.com', 'www.newsen.com',
+          'xportsnews.com', 'www.xportsnews.com',
+          'dispatch.co.kr', 'www.dispatch.co.kr',
+          'sportsseoul.com', 'www.sportsseoul.com',
+          'sportalkorea.com', 'www.sportalkorea.com',
+          'osen.co.kr', 'www.osen.co.kr', 'm.osen.co.kr',
+          'entertain.naver.com', 'sports.naver.com',
+          'starnewskorea.com', 'tenasia.co.kr', 'mydaily.co.kr',
+          'news.nate.com', 'news.zum.com'
         ]
         
         // Problematic URL patterns (geo-restricted, frequently broken links)
@@ -1756,8 +2196,297 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
           }))
           gptReasoningData[resultKey].selectionCount = linksWithThumbnails.length
           
+          // TWO-STAGE SELECTION: Split into Color Matches and Style Matches
+          const colorMatches: any[] = []
+          const styleMatches: any[] = []
+          
+          // Extract CORE features ONLY (garment type) - trust GPT for style details
+          const extractCoreFeatures = (desc: string): string[] => {
+            const descLower = desc.toLowerCase()
+            const coreFeatures: string[] = []
+            
+            // ONLY extract garment type (CORE FEATURE)
+            // Skip detail features like collar, pleat, cuff - GPT handles those visually
+            if (descLower.includes('cardigan') || descLower.includes('가디건')) coreFeatures.push('cardigan')
+            if (descLower.includes('sweater') || descLower.includes('스웨터')) coreFeatures.push('sweater')
+            if (descLower.includes('hoodie') || descLower.includes('후드')) coreFeatures.push('hoodie')
+            if (descLower.includes('jacket') || descLower.includes('재킷')) coreFeatures.push('jacket')
+            if (descLower.includes('coat') || descLower.includes('코트')) coreFeatures.push('coat')
+            if (descLower.includes('shirt') || descLower.includes('셔츠')) coreFeatures.push('shirt')
+            if (descLower.includes('blouse') || descLower.includes('블라우스')) coreFeatures.push('blouse')
+            if (descLower.includes('dress') || descLower.includes('드레스')) coreFeatures.push('dress')
+            if (descLower.includes('pants') || descLower.includes('trouser') || descLower.includes('바지') || descLower.includes('팬츠')) coreFeatures.push('pants')
+            if (descLower.includes('jeans') || descLower.includes('청바지') || descLower.includes('denim')) coreFeatures.push('jeans')
+            if (descLower.includes('skirt') || descLower.includes('치마')) coreFeatures.push('skirt')
+            if (descLower.includes('shorts') || descLower.includes('반바지')) coreFeatures.push('shorts')
+            
+            return coreFeatures
+          }
+          
+          const coreFeatures = extractCoreFeatures(itemDescription || '')
+          console.log(`🎯 Core features (garment type only): ${coreFeatures.join(', ')}`)
+          console.log(`ℹ️  Trusting GPT-4 Turbo for style details (collar, pleat, cuff, etc.)`)
+          
+          if (primaryColor && linksWithThumbnails.length > 0) {
+            // Define color matching keywords (exact and synonyms)
+            const colorKeywords: Record<string, string[]> = {
+              'olive': ['olive', '올리브', 'khaki green', 'army green'],
+              'khaki': ['khaki', '카키', 'olive', 'army'],
+              'beige': ['beige', '베이지', 'sand', 'tan', 'camel'],
+              'black': ['black', '블랙', '검정', 'noir'],
+              'white': ['white', '화이트', '흰색', 'ivory', 'cream', '아이보리'],
+              'navy': ['navy', '네이비', '남색', 'dark blue', 'deep navy'], // Added variations
+              'brown': ['brown', '브라운', '갈색', 'chocolate'],
+              'grey': ['grey', 'gray', '그레이', '회색', 'charcoal'],
+              'green': ['green', '그린', '녹색', 'emerald', 'forest'],
+              'blue': ['blue', '블루', '파랑', 'azure', 'cobalt']
+            }
+            
+            const matchingKeywords = colorKeywords[primaryColor.toLowerCase()] || [primaryColor.toLowerCase()]
+            console.log(`\n🎨 COLOR MATCHING DEBUG:`)
+            console.log(`   Primary color: "${primaryColor}"`)
+            console.log(`   Matching keywords: [${matchingKeywords.join(', ')}]`)
+            
+            // LENIENT VALIDATION: Only check CORE features (garment type + color)
+            // Trust GPT-4 Turbo for style details (collar, pleat, cuff, etc.)
+            linksWithThumbnails.forEach((item: any, idx: number) => {
+              const title = item.title?.toLowerCase() || ''
+              const link = item.link?.toLowerCase() || ''
+              const combinedText = `${title} ${link}`
+              
+              // Check color match with detailed logging
+              const matchedColorKeyword = matchingKeywords.find(keyword => combinedText.includes(keyword))
+              const hasColorMatch = !!matchedColorKeyword
+              
+              // Check if GARMENT TYPE matches (core feature) - WITH KOREAN SUPPORT
+              const matchedGarmentFeature = coreFeatures.find(feature => {
+                // Direct match
+                if (combinedText.includes(feature)) return true
+                
+                // Pants variations (English + Korean)
+                if (feature === 'pants' && (
+                  combinedText.includes('trouser') || 
+                  combinedText.includes('slacks') || 
+                  combinedText.includes('chino') ||
+                  combinedText.includes('팬츠') ||  // Korean: pants
+                  combinedText.includes('바지') ||  // Korean: pants/trousers
+                  combinedText.includes('치노') ||  // Korean: chino
+                  combinedText.includes('슬랙스')   // Korean: slacks
+                )) return true
+                
+                // Cardigan variations (Korean)
+                if (feature === 'cardigan' && combinedText.includes('가디건')) return true
+                
+                // Sweater variations (Korean)
+                if (feature === 'sweater' && (combinedText.includes('스웨터') || combinedText.includes('니트'))) return true
+                
+                return false
+              })
+              const hasGarmentTypeMatch = coreFeatures.length === 0 || !!matchedGarmentFeature
+              
+              // Check if this was from text search
+              const isFromTextSearch = item.searchType === 'text'
+              const searchTypeIcon = isFromTextSearch ? '📝' : '🖼️'
+              
+              // LENIENT: Accept if garment type matches (trust GPT for details)
+              if (hasColorMatch && hasGarmentTypeMatch) {
+                // Perfect match: right color + right garment type
+                colorMatches.push(item)
+                console.log(`${searchTypeIcon} 🎨 COLOR MATCH #${idx + 1}: "${item.title?.substring(0, 60)}..."`)
+                console.log(`   ✓ Color: "${matchedColorKeyword}" | ✓ Garment: "${matchedGarmentFeature}" ${isFromTextSearch ? '(TEXT SEARCH)' : ''}`)
+              } else if (!hasColorMatch && hasGarmentTypeMatch) {
+                // Style match: wrong color but right garment type
+                styleMatches.push(item)
+                console.log(`${searchTypeIcon} ✂️  STYLE MATCH #${idx + 1}: "${item.title?.substring(0, 60)}..."`)
+                console.log(`   ✗ Color (no match) | ✓ Garment: "${matchedGarmentFeature}" ${isFromTextSearch ? '(TEXT SEARCH)' : ''}`)
+              } else {
+                // Rejected: wrong garment type
+                console.log(`${searchTypeIcon} ❌ REJECTED #${idx + 1}: "${item.title?.substring(0, 60)}..."`)
+                console.log(`   Color: ${hasColorMatch ? '✓' : '✗'} | Garment: ✗ (expected: ${coreFeatures.join(', ')})`)
+              }
+            })
+            
+            // If we don't have enough color matches, fill from merged results (with lenient validation)
+            if (colorMatches.length < 3) {
+              console.log(`\n⚠️  Only ${colorMatches.length} color matches found, searching merged results for more...`)
+              
+              const additionalColorMatches = mergedResults
+                .filter((item: any) => {
+                  const title = item.title?.toLowerCase() || ''
+                  const link = item.link?.toLowerCase() || ''
+                  const combinedText = `${title} ${link}`
+                  
+                  // Must have color match
+                  const matchedKeyword = matchingKeywords.find(keyword => combinedText.includes(keyword))
+                  const hasColorMatch = !!matchedKeyword
+                  if (!hasColorMatch) return false
+                  
+                  // Must have garment type (lenient - only core feature) WITH KOREAN SUPPORT
+                  const hasGarmentTypeMatch = coreFeatures.length === 0 || coreFeatures.some(feature => {
+                    if (combinedText.includes(feature)) return true
+                    
+                    // Pants variations (English + Korean)
+                    if (feature === 'pants' && (
+                      combinedText.includes('trouser') || 
+                      combinedText.includes('slacks') || 
+                      combinedText.includes('chino') ||
+                      combinedText.includes('팬츠') ||
+                      combinedText.includes('바지') ||
+                      combinedText.includes('치노') ||
+                      combinedText.includes('슬랙스')
+                    )) return true
+                    
+                    // Cardigan variations (Korean)
+                    if (feature === 'cardigan' && combinedText.includes('가디건')) return true
+                    
+                    // Sweater variations (Korean)
+                    if (feature === 'sweater' && (combinedText.includes('스웨터') || combinedText.includes('니트'))) return true
+                    
+                    return false
+                  })
+                  if (!hasGarmentTypeMatch) return false
+                  
+                  // Not already included
+                  const notAlreadyIncluded = !colorMatches.some(existing => existing.link === item.link)
+                  if (notAlreadyIncluded) {
+                    console.log(`   💡 Found potential: "${title.substring(0, 60)}..." (matched: "${matchedKeyword}")`)
+                  }
+                  return notAlreadyIncluded
+                })
+                .slice(0, 3 - colorMatches.length)
+                .map((item: any) => ({
+                  link: item.link,
+                  thumbnail: item.thumbnailUrl || item.thumbnail || item.imageUrl || null,
+                  title: item.title || null,
+                  searchType: item.searchType || 'unknown' // PRESERVE searchType!
+                }))
+              
+              colorMatches.push(...additionalColorMatches)
+              console.log(`✅ Added ${additionalColorMatches.length} more color matches from merged results`)
+            }
+            
+            // If we STILL don't have enough style matches, fill from merged results (lenient)
+            if (styleMatches.length < 3) {
+              console.log(`⚠️  Only ${styleMatches.length} style matches found, searching for more...`)
+              
+              const additionalStyleMatches = mergedResults
+                .filter((item: any) => {
+                  const title = item.title?.toLowerCase() || ''
+                  const link = item.link?.toLowerCase() || ''
+                  const combinedText = `${title} ${link}`
+                  
+                  // Must have garment type (ignore color, ignore detail features) WITH KOREAN SUPPORT
+                  const hasGarmentTypeMatch = coreFeatures.length === 0 || coreFeatures.some(feature => {
+                    if (combinedText.includes(feature)) return true
+                    
+                    // Pants variations (English + Korean)
+                    if (feature === 'pants' && (
+                      combinedText.includes('trouser') || 
+                      combinedText.includes('slacks') || 
+                      combinedText.includes('chino') ||
+                      combinedText.includes('팬츠') ||
+                      combinedText.includes('바지') ||
+                      combinedText.includes('치노') ||
+                      combinedText.includes('슬랙스')
+                    )) return true
+                    
+                    // Cardigan variations (Korean)
+                    if (feature === 'cardigan' && combinedText.includes('가디건')) return true
+                    
+                    // Sweater variations (Korean)
+                    if (feature === 'sweater' && (combinedText.includes('스웨터') || combinedText.includes('니트'))) return true
+                    
+                    return false
+                  })
+                  if (!hasGarmentTypeMatch) return false
+                  
+                  // CRITICAL: Must NOT have the target color (this is STYLE match, not COLOR match!)
+                  const hasTargetColor = matchingKeywords.some(keyword => combinedText.includes(keyword))
+                  if (hasTargetColor) {
+                    console.log(`   🚫 Skipping "${title.substring(0, 40)}..." (has target color, should be in colorMatches)`)
+                    return false
+                  }
+                  
+                  // Must NOT be in color matches or style matches already
+                  const notInColorMatches = !colorMatches.some(existing => existing.link === item.link)
+                  const notInStyleMatches = !styleMatches.some(existing => existing.link === item.link)
+                  return notInColorMatches && notInStyleMatches
+                })
+                .slice(0, 3 - styleMatches.length)
+                .map((item: any) => ({
+                  link: item.link,
+                  thumbnail: item.thumbnailUrl || item.thumbnail || item.imageUrl || null,
+                  title: item.title || null,
+                  searchType: item.searchType || 'unknown' // PRESERVE searchType!
+                }))
+              
+              styleMatches.push(...additionalStyleMatches)
+              console.log(`✅ Added ${additionalStyleMatches.length} more style matches (lenient validation)`)
+            }
+            
+            console.log(`\n📊 Two-Stage Selection Complete:`)
+            console.log(`   🎨 Color Matches: ${colorMatches.length}`)
+            console.log(`   ✂️  Style Matches: ${styleMatches.length}`)
+          } else {
+            // No primary color detected - validate garment type only (lenient)
+            console.log(`ℹ️  No primary color detected - validating garment type only`)
+            
+            linksWithThumbnails.forEach((item: any) => {
+              const title = item.title?.toLowerCase() || ''
+              const link = item.link?.toLowerCase() || ''
+              const combinedText = `${title} ${link}`
+              
+              // Check if garment type matches (lenient) WITH KOREAN SUPPORT
+              const hasGarmentTypeMatch = coreFeatures.length === 0 || coreFeatures.some(feature => {
+                if (combinedText.includes(feature)) return true
+                
+                // Pants variations (English + Korean)
+                if (feature === 'pants' && (
+                  combinedText.includes('trouser') || 
+                  combinedText.includes('slacks') || 
+                  combinedText.includes('chino') ||
+                  combinedText.includes('팬츠') ||
+                  combinedText.includes('바지') ||
+                  combinedText.includes('치노') ||
+                  combinedText.includes('슬랙스')
+                )) return true
+                
+                // Cardigan variations (Korean)
+                if (feature === 'cardigan' && combinedText.includes('가디건')) return true
+                
+                // Sweater variations (Korean)
+                if (feature === 'sweater' && (combinedText.includes('스웨터') || combinedText.includes('니트'))) return true
+                
+                return false
+              })
+              
+              if (hasGarmentTypeMatch) {
+                styleMatches.push(item)
+                console.log(`✂️  STYLE MATCH (no color): "${item.title?.substring(0, 60)}..." (${coreFeatures.join(', ')})`)
+              } else {
+                console.log(`❌ REJECTED (no color): "${item.title?.substring(0, 60)}..." (wrong garment type)`)
+              }
+            })
+          }
+          
           console.log(`✅ Found ${validLinks.length} link(s) for ${resultKey}:`, validLinks.slice(0, 3))
-          return { resultKey, results: linksWithThumbnails, source: 'gpt' }
+          
+          // Summary: Text vs Visual search distribution
+          const colorMatchesFromText = colorMatches.filter((item: any) => item.searchType === 'text').length
+          const colorMatchesFromVisual = colorMatches.filter((item: any) => item.searchType === 'visual').length
+          const styleMatchesFromText = styleMatches.filter((item: any) => item.searchType === 'text').length
+          const styleMatchesFromVisual = styleMatches.filter((item: any) => item.searchType === 'visual').length
+          
+          console.log(`\n📊 FINAL RESULTS SUMMARY for ${resultKey}:`)
+          console.log(`   🎨 Color Matches: ${colorMatches.length} total (📝 ${colorMatchesFromText} text, 🖼️  ${colorMatchesFromVisual} visual)`)
+          console.log(`   ✂️  Style Matches: ${styleMatches.length} total (📝 ${styleMatchesFromText} text, 🖼️  ${styleMatchesFromVisual} visual)`)
+          
+          return { 
+            resultKey, 
+            colorMatches: colorMatches.slice(0, 3), 
+            styleMatches: styleMatches.slice(0, 3),
+            source: 'gpt' 
+          }
         } else {
           // Fallback: take top 3 organic results directly (with STRICT filtering)
           const fallback = organicResults
@@ -1788,6 +2517,11 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
                 // News/media
                 'naver.com/news', 'daum.net/news', 'joins.com', 'chosun.com', 'donga.com',
                 'hankyung.com', 'mk.co.kr', 'sedaily.com', 'mt.co.kr', 'hani.co.kr',
+                // Korean entertainment/news sites
+                'newsen.com', 'm.newsen.com', 'xportsnews.com', 'dispatch.co.kr',
+                'sportsseoul.com', 'sportalkorea.com', 'osen.co.kr', 'm.osen.co.kr',
+                'entertain.naver.com', 'sports.naver.com', 'starnewskorea.com',
+                'tenasia.co.kr', 'mydaily.co.kr', 'news.nate.com', 'news.zum.com',
                 // Wiki/reference
                 'wikipedia.org', 'namu.wiki', 'wikiwand.com',
                 // Q&A/forums
@@ -1869,10 +2603,21 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
             }))
           if (fallback.length > 0) {
             console.log(`🛟 Fallback used for ${resultKey} with ${fallback.length} link(s)`)
-            return { resultKey, results: fallback, source: 'fallback' }
+            // Fallback returns all results as style matches (no color filtering in fallback mode)
+            return { 
+              resultKey, 
+              colorMatches: [],
+              styleMatches: fallback, 
+              source: 'fallback' 
+            }
           } else {
             console.log(`⚠️ No valid link for ${resultKey}`)
-            return { resultKey, results: null, source: 'none' }
+            return { 
+              resultKey, 
+              colorMatches: [],
+              styleMatches: [],
+              source: 'none' 
+            }
           }
         }
       } catch (error) {
@@ -1889,10 +2634,21 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
     // Aggregate results and track sources
     const aggregateStart = Date.now()
     const sourceCounts = { gpt: 0, fallback: 0, none: 0, error: 0 }
-    for (const { resultKey, results, source } of searchResults) {
-      if (results) {
+    for (const result of searchResults) {
+      const { resultKey, colorMatches, styleMatches, results, source } = result as any
+      
+      // New two-stage format (color + style matches)
+      if (colorMatches || styleMatches) {
+        allResults[resultKey] = {
+          colorMatches: colorMatches || [],
+          styleMatches: styleMatches || []
+        }
+      } 
+      // Legacy format (backward compatibility)
+      else if (results) {
         allResults[resultKey] = results
       }
+      
       // Track source statistics
       if (source) {
         sourceCounts[source as keyof typeof sourceCounts]++

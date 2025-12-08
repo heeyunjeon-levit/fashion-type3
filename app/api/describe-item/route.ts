@@ -57,152 +57,151 @@ export async function POST(request: NextRequest) {
       console.log(`   ✅ Valid data URL: ${mimeType}, ${Math.round(base64Part.length / 1024)}KB base64`)
     }
 
-    // Category-specific prompt templates
+    // Category-specific prompt templates (NOW unified JSON schema)
     const getCategoryPrompt = (cat: string) => {
       const isClothing = ['shirt', 'sweater', 'hoodie', 'sweatshirt', 'jacket', 'coat', 'dress', 'pants', 'jeans', 'shorts', 'skirt', 'top', 'bottom'].includes(cat)
       const isShoes = cat === 'shoes' || cat === 'sneakers' || cat === 'boots'
       const isAccessory = ['sunglasses', 'glasses', 'bag', 'handbag', 'backpack', 'watch', 'hat', 'scarf', 'belt'].includes(cat)
-      
+
+      const unifiedSchemaPrompt = `
+You are a fashion attribute extractor for e-commerce search.
+
+Given a single product image and its rough category, output a SINGLE LINE of valid JSON with these fields:
+
+{
+  "product_group": "...",      // "clothing", "shoes", "accessory", or "other"
+  "category": "...",           // e.g. "shirt", "sweater", "hoodie", "jeans", "dress", "sneakers", "boots", "bag", "sunglasses", "hat"
+  "gender": "...",             // "womens", "mens", "kids", "unisex", or "unknown",
+
+  "primary_color": "...",      // one of: black, white, ivory, beige, grey, navy, blue, brown, green, red, pink, yellow, purple, other
+  "secondary_color": "...",    // same list or "none",
+
+  "has_text_or_logo": true,
+  "text_readable": true,
+  "text_content": "...",       // exact text if readable, else ""
+  "text_position": "...",      // "chest", "shoulder", "sleeve", "front", "back", "none",
+
+  "material_family": "...",    // broad bucket: "cotton", "denim", "knit", "wool", "leather", "suede", "canvas", "mesh", "polyester", "metal", "plastic", "unknown",
+
+  "silhouette": ["..."],       // clothing: ["cropped", "oversized", "slim", "wide-leg", "mini", "midi", "maxi"]
+                               // shoes: ["chunky", "platform", "pointed-toe", "round-toe", "high-top", "low-top"]
+                               // accessories: ["oversized", "thin", "wide-brim"], etc.
+
+  "key_details": ["..."],      // e.g. ["crew neck", "double-breasted", "puff sleeves", "ruffle hem", "quilted", "chain strap", "pearl buttons", "horn buttons", "gold buttons"], [] if none,
+
+  "formality": "...",          // "casual", "smart casual", "formal", "sportswear", "unknown",
+
+  "shoe_specific": {
+    "type": "...",             // e.g. "sneakers", "boots", "heels", "loafers", or "none"
+    "heel_height": "...",      // "flat", "low", "mid", "high", "unknown"
+    "closure": "..."           // "lace-up", "slip-on", "strap", "zip", "unknown"
+  },
+
+  "accessory_specific": {
+    "type": "...",             // e.g. "sunglasses", "bag", "hat", "belt", "scarf", or "none"
+    "frame_shape": "...",      // for glasses: "aviator", "cat-eye", "round", "rectangular", "square", "oval", "unknown"
+    "bag_style": "...",        // for bags: "crossbody", "tote", "backpack", "clutch", "shoulder", "mini bag", "unknown"
+    "metal_color": "..."       // "gold", "silver", "rose gold", "none", "unknown"
+  },
+
+  "ecom_title": "..."          // final product title in ecommerce format
+}
+
+Rules:
+- If you are NOT reasonably sure about a field, use "unknown", "none", false, or [] instead of guessing.
+- Prefer broad, safe "material_family" over specific blends. Do NOT invent things like "wool-silk blend" unless obvious.
+- "ecom_title" should be a natural product title that includes:
+  - color
+  - material_family (if not "unknown")
+  - 1–3 key details (neckline, button style/material, sole/heel type, frame shape, strap type, etc.)
+  - gender (if clear)
+  - category.
+- CRITICAL: Include distinctive button details in title when visible (e.g., "pearl button", "horn button", "gold button").
+- If you detect any printed text or logo, put the exact text in "text_content" AND also reflect it in "ecom_title" in quotes.
+
+Output:
+- Return ONLY valid JSON (single-line or multi-line is fine)
+- NO extra text before or after the JSON
+- NO markdown code blocks
+`.trim()
+
       if (isClothing) {
         return {
-          system: `Generate a product title for clothing in e-commerce format.
+          system: `
+${unifiedSchemaPrompt}
 
-ANALYSIS (internal reasoning only, do NOT output this):
-1. Check for TEXT/WRITING/LOGOS first (CRITICAL):
-   - Look carefully for any text, letters, words, or logos printed/embroidered on the garment
-   - Check shoulders, chest, sleeves, neckline, hem areas
-   - If text is readable → include the actual text in quotes: "with 'PARIS' print near shoulder"
-   - If text is NOT readable → just mention it: "with text print near shoulder"
-   - Note the location: near shoulder, on chest, near neckline, on sleeve, at hem
-2. Identify exact color: navy blue vs black, ivory vs white, charcoal vs black
-3. Identify fabric/material (CRITICAL):
-   - Blazers/jackets: wool, wool-silk blend, worsted wool, tweed, cashmere, polyester-blend
-   - Blouses/shirts: silk, cotton, linen, satin, chiffon, silk-satin
-   - Knitwear: cashmere, wool, cotton, merino, cable knit
-   - Dresses/skirts: silk, satin, crepe, wool, cotton
-4. Look for decorative details: brooches/pins/ornaments, embellishments, ruffles, pleats
-5. Note construction: neckline, sleeves, fit, button style
+ADDITIONAL CLOTHING ANALYSIS (internal only, do NOT output):
+🔴 **BUTTON DETAILS - TOP PRIORITY**:
+Look at buttons carefully. Identify material (pearl/shell, horn, metal, plastic) and count them.
+Add to key_details: e.g., "6 pearl buttons", "horn buttons", "metal buttons"
+Quick ID guide: pearl=iridescent sheen, horn=matte brown, metal=shiny gold/silver
 
-FORMAT (output this ONLY):
-- With text/logo: "[color] [material] [features] [demographic] [type] with '[text]' print [location]"
-  (If text is readable → include the actual text. Location: near shoulder/chest/neckline/hem)
-- With character graphic: "[CHARACTER] [color] [material] [features] [demographic] [type]"
-- Formal items: "[color] [fabric/material] [features] [demographic] [type]"
-- Casual items: "[color] [material] [features] [demographic] [type]"
+Then:
+- neckline (crew neck, v-neck, turtleneck, shirt collar, etc.)
+  - sleeve length (short, long, sleeveless)
+  - length (cropped, regular, longline, mini/midi/maxi for dresses/skirts)
+- fit (oversized, relaxed, slim)
+- Look for printed text or logos (chest, shoulder, sleeves)
+- If fabric is ambiguous, use "unknown" instead of guessing
 
-KEY DETAILS TO INCLUDE (in order of priority):
-1. Text/writing/logos printed or embroidered on the garment (FIRST)
-2. Color (precise shade)
-3. Fabric/material (wool, silk, cotton, cashmere, etc.) - ESPECIALLY for blazers, blouses, dresses
-4. Decorative elements: brooches, pins, ornaments, rhinestones, pearls
-5. Texture: ruffles, pleats (horizontal/vertical), draping, ruching
-6. Construction: button style (single-button, double-breasted), neckline, sleeves
-
-EXAMPLES (notice text location details):
-"Charcoal grey cotton off-shoulder long sleeve ruched women's mini dress with text print near shoulder"
-"Black cotton crew neck women's t-shirt with 'PARIS' print on chest"
-"Donald Duck mint green cotton crew neck fleece kids' sweatshirt"
-"Navy blue wool-silk blend single-button brooch detail ruffle lapel women's blazer"
-"Emerald green silk-satin tie-neck puff sleeve draped women's blouse"
-"Black wool crepe horizontal pleated high-waist women's midi skirt"
-
-CRITICAL - OUTPUT FORMAT:
-❌ DO NOT write "There is no visible text..."
-❌ DO NOT write "The fabric appears to be..."
-❌ DO NOT output any reasoning, explanations, or thinking process
-❌ DO NOT output "Step 1", "Step 2", or "Product title:"
-❌ DO NOT skip text/writing/logos visible on the garment
-❌ DO NOT skip fabric/material for formal items
-
-✅ OUTPUT ONLY THE PRODUCT TITLE
-✅ Just one line
-✅ No preamble, no explanation, no reasoning
-
-YOUR ENTIRE RESPONSE SHOULD BE EXACTLY ONE LINE - THE PRODUCT TITLE.
-
-Return ONLY the product title.`,
-          user: `Look VERY carefully at this ${cat} for any text, letters, words, or small prints (check shoulders, neckline, chest, sleeves carefully). Then generate ONLY the product title. No explanations, just the title.`
+For clothing, set:
+- "product_group": "clothing"
+- "category": one of: "shirt", "sweater", "hoodie", "sweatshirt", "jacket", "coat", "dress", "pants", "jeans", "shorts", "skirt", "top", "bottom".
+`.trim(),
+          user: `Analyze this ${cat} image and return the JSON object with all fields populated. Output only valid JSON.`
         }
-      } else       if (isShoes) {
+      } else if (isShoes) {
         return {
-          system: `Generate a product title for footwear in e-commerce format.
+          system: `
+${unifiedSchemaPrompt}
 
-ANALYSIS (internal only, do NOT output):
-1. Identify exact color: navy vs black, beige vs tan vs camel, white vs cream vs ivory
-2. Check for brand/logo visibility
-3. Identify material: leather, suede, canvas, mesh, etc.
-4. Note features: chunky sole, platform, lace-up, slip-on, high-top, low-top
+ADDITIONAL SHOES ANALYSIS (internal only, do NOT output):
+- Identify shoe type: sneakers, boots, heels, loafers, sandals, etc.
+- Look at:
+  - overall height (high-top vs low-top, ankle boot vs knee boot)
+  - heel height (flat / low / mid / high)
+  - closure type (lace-up, slip-on, strap, zip).
+- Pay attention to "material_family": leather, suede, canvas, mesh, knit, etc.
 
-FORMAT (output this ONLY):
-"[color] [material] [features] [shoe type] [demographic]"
-If brand visible: "[Brand] [color] [features] [shoe type] [demographic]"
-
-EXAMPLES (copy this format):
-"Nike white low-top leather sneakers women's"
-"Navy blue suede chunky sole sneakers women's"
-"Light brown suede lace-up sneakers unisex"
-"Beige canvas slip-on sneakers men's"
-
-CRITICAL:
-❌ NO "Step 1", "Step 2", or thinking process in output
-❌ NO "I cannot determine..." or explanations
-✅ Output ONLY the product title (one line)
-
-Return ONLY the product title.`,
-          user: `Analyze these ${cat} and generate the product title.`
+For shoes, set:
+- "product_group": "shoes"
+- "shoe_specific.type": the shoe type
+- "category": same as the main type, e.g. "sneakers", "boots", "heels".
+`.trim(),
+          user: `Analyze this ${cat} image and return the JSON object with all fields populated. Output only valid JSON.`
         }
       } else if (isAccessory) {
         return {
-          system: `Generate a product title for accessories in e-commerce format.
+          system: `
+${unifiedSchemaPrompt}
 
-ANALYSIS (internal only, do NOT output):
-1. Identify exact color: navy vs black, gold vs rose gold vs silver, tortoiseshell vs brown
-2. Check for brand/logo visibility
-3. For sunglasses: note frame shape (aviator, cat-eye, rectangular, round, oversized)
-4. For bags: note style (crossbody, tote, clutch, backpack) and features (quilted, chain strap)
+ADDITIONAL ACCESSORY ANALYSIS (internal only, do NOT output):
+- If sunglasses/glasses:
+  - frame_shape: aviator, cat-eye, rectangular, round, oversized, etc.
+- If bag:
+  - bag_style: crossbody, tote, backpack, clutch, shoulder, mini bag, etc.
+  - note quilted surfaces, chain straps, top-handle vs long strap.
+- If belt/hat/scarf/watch:
+  - focus on width/shape, metal color, pattern, etc.
 
-FORMAT (output this ONLY):
-"[color] [material] [frame shape/style] [accessory type] [demographic]"
-If brand visible: "[Brand] [color] [frame shape/style] [accessory type] [demographic]"
-
-EXAMPLES (copy this format):
-"Ray-Ban black aviator sunglasses unisex"
-"Gold metal rectangular frame sunglasses women's"
-"Tortoiseshell oversized cat-eye sunglasses women's"
-"Navy blue quilted leather crossbody bag women's"
-
-CRITICAL:
-❌ NO "Step 1", "Step 2", or thinking process in output
-❌ NO "I cannot determine..." or explanations
-✅ Output ONLY the product title (one line)
-
-Return ONLY the product title.`,
-          user: `Analyze this ${cat} and generate the product title.`
+For accessories, set:
+- "product_group": "accessory"
+- "accessory_specific.type": e.g. "sunglasses", "bag", "hat", "belt", "scarf".
+- "category": same as that type (e.g. "bag", "sunglasses").
+`.trim(),
+          user: `Analyze this ${cat} image and return the JSON object with all fields populated. Output only valid JSON.`
         }
       } else {
         // Fallback for unknown categories
         return {
-          system: `Generate a product title in e-commerce format.
+          system: `
+${unifiedSchemaPrompt}
 
-ANALYSIS (internal only, do NOT output):
-1. Identify exact color and shade
-2. Note key features and materials
-3. Identify item type
-
-FORMAT (output this ONLY):
-"[color] [key features] [item type]"
-
-EXAMPLES (copy this format):
-"Black leather quilted crossbody bag"
-"Navy blue striped cotton scarf"
-
-CRITICAL:
-❌ NO "Step 1", "Step 2", or thinking process in output
-❌ NO explanations or sentences
-✅ Output ONLY the product title (one line)
-
-Return ONLY the product title.`,
-          user: `Analyze this ${cat} and generate the product title.`
+For unknown categories:
+- "product_group": "other"
+- "category": "${cat}"
+`.trim(),
+          user: `Analyze this ${cat} image and return the JSON object with all fields populated. Output only valid JSON.`
         }
       }
     }
@@ -225,11 +224,11 @@ Return ONLY the product title.`,
 
     // Combine system + user prompts for Gemini (no separate system message)
     // Add explicit OCR instruction
-    const ocrInstruction = `CRITICAL: First, perform OCR (Optical Character Recognition) on this image. Look for ANY text, letters, words, numbers, or small prints ANYWHERE on the garment - especially on shoulders, neckline, chest, sleeves, hem. If you find ANY text, you MUST include it in the product title.\n\n`
+    const ocrInstruction = `CRITICAL: First, perform OCR (Optical Character Recognition) on this image. Look for ANY text, letters, words, numbers, or small prints ANYWHERE on the item - especially on shoulders, neckline, chest, sleeves, hem, straps, or logos. If you find ANY text, you MUST include the exact text in the "text_content" field AND reflect it in "ecom_title" in quotes.\n\n`
     const fullPrompt = `${ocrInstruction}${promptConfig.system}\n\n${promptConfig.user}`
 
     // Use Gemini 3 Pro Preview for best quality descriptions
-    console.log(`   Using Gemini 3 Pro Preview (4096 tokens, no forced thinking!)`)
+    console.log(`   Using Gemini 3 Pro Preview with HIGH thinking mode for improved accuracy`)
     
     const result = await client.models.generateContent({
       model: 'gemini-3-pro-preview',
@@ -248,9 +247,10 @@ Return ONLY the product title.`,
         }
       ],
       config: {
-        maxOutputTokens: 4096, // Large buffer for detailed descriptions + any thinking
-        temperature: 1.0
-        // NO thinkingConfig = Let Gemini 3 work naturally without forced thinking overhead
+        maxOutputTokens: 16384,  // Maximum for Gemini 2.0 - ensure we never hit token limit
+        temperature: 0.3,  // More deterministic
+        responseMimeType: 'application/json',  // Force JSON output
+        thinkingLevel: ThinkingLevel.HIGH  // Enable deep reasoning for color accuracy
       }
     })
 
@@ -259,34 +259,95 @@ Return ONLY the product title.`,
     const usageMetadata = result.usageMetadata as any
     const finishReason = result.candidates?.[0]?.finishReason || 'unknown'
     
+    // Log thinking content if available (helpful for debugging color accuracy)
+    const thinkingContent = result.candidates?.[0]?.content?.parts?.find((p: any) => p.thought)?.thought
+    if (thinkingContent) {
+      console.log('💭 Gemini Thinking Process:')
+      console.log(`   ${thinkingContent.substring(0, 300)}...`)
+    }
+    
     // Log response for debugging
     console.log('🔍 NEW SDK Response:')
     console.log(`   Text: "${description}"`)
     console.log(`   FinishReason: ${finishReason}`)
-    console.log(`   Thinking tokens: ${usageMetadata?.thoughtsTokenCount || 0}`)
+    console.log(`   Thinking tokens: ${usageMetadata?.thoughtsTokenCount || 0}${thinkingContent ? ' (with thinking content)' : ''}`)
     
-    console.log(`✅ Gemini 3 Pro Preview Description: "${description}"`)
+    console.log(`✅ Gemini 3 Pro Preview Description (JSON string): "${description}"`)
     console.log(`   Prompt tokens: ${usageMetadata?.promptTokenCount || 0}`)
     console.log(`   Completion tokens: ${usageMetadata?.candidatesTokenCount || 0}`)
     console.log(`   Thoughts tokens: ${(usageMetadata as any)?.thoughtsTokenCount || 0}`)
     console.log(`   Total tokens: ${usageMetadata?.totalTokenCount || 0}`)
     
-    // Warn if no completion tokens (API timeout or error)
-    if (!usageMetadata?.candidatesTokenCount || usageMetadata.candidatesTokenCount === 0) {
-      console.warn('⚠️ No completion tokens generated - possible causes:')
-      console.warn('   1. Model using cached response')
-      console.warn('   2. Token counting not implemented for this model')
-      console.warn('   3. API returned empty response (using fallback)')
-      console.warn(`   4. Description length: ${description.length} chars`)
+    // Check if we need to retry (detect failures BEFORE they cause issues)
+    const needsRetry = (
+      finishReason === 'MAX_TOKENS' ||  // Hit token limit (most reliable signal)
+      description === `${category} item` ||  // Got fallback value (API returned nothing useful)
+      (!usageMetadata?.candidatesTokenCount || usageMetadata.candidatesTokenCount === 0) ||  // No completion tokens
+      description.length < 50  // Response too short to be valid JSON
+    )
+    
+    if (needsRetry) {
+      console.error('❌ RETRY TRIGGERED:')
+      console.error(`   - FinishReason: ${finishReason}`)
+      console.error(`   - Completion tokens: ${usageMetadata?.candidatesTokenCount || 0}`)
+      console.error(`   - Description length: ${description.length} chars`)
+      console.error(`   - Is fallback: ${description === `${category} item`}`)
       
-      // Check if description is just the fallback
-      if (description === `${category} item`) {
-        console.error('❌ Description is fallback value - API returned empty!')
+      if (finishReason === 'MAX_TOKENS') {
+        console.error('   ⚠️ MAX_TOKENS hit - thinking tokens consumed all output budget!')
       }
+      if (!usageMetadata?.candidatesTokenCount || usageMetadata.candidatesTokenCount === 0) {
+        console.error('   ⚠️ Zero completion tokens - API returned empty response!')
+      }
+      
+      // RETRY with ultra-minimal prompt (no thinking mode encouragement)
+      console.log('🔄 Retry attempt with minimal prompt...')
+      const retryResult = await client.models.generateContent({
+          model: 'gemini-2.0-flash-exp',
+          contents: [
+            {
+              role: 'user',
+              parts: [
+                {
+                  inlineData: {
+                    data: base64Data,
+                    mimeType: mimeType
+                  }
+                },
+                {
+                  text: `Return ONLY valid JSON (no markdown, no explanation). Use this schema:
+{"product_group":"clothing/shoes/accessory/other","category":"${category}","gender":"womens/mens/unisex","primary_color":"black/white/beige/navy/etc","secondary_color":"...","has_text_or_logo":false,"text_readable":false,"text_content":"","text_position":"none","material_family":"cotton/leather/knit/etc","silhouette":[],"key_details":[],"formality":"casual","shoe_specific":{"type":"none","heel_height":"unknown","closure":"unknown"},"accessory_specific":{"type":"none","frame_shape":"unknown","bag_style":"unknown","metal_color":"unknown"},"ecom_title":"brief product title"}`
+                }
+              ]
+            }
+          ],
+          config: {
+            maxOutputTokens: 2048,  // Much smaller - just enough for the JSON
+            temperature: 0.1,
+            responseMimeType: 'application/json'
+          }
+      })
+      
+      const retryDescription = retryResult.text?.trim() || `${category} item`
+      const retryUsage = retryResult.usageMetadata as any
+      
+      console.log(`✅ RETRY SUCCESS: ${retryDescription.substring(0, 100)}...`)
+      console.log(`   Retry tokens: ${retryUsage?.totalTokenCount || 0}`)
+      
+      // Use retry result
+      return NextResponse.json({
+        description: retryDescription,
+        category,
+        usage: {
+          prompt_tokens: retryUsage?.promptTokenCount || 0,
+          completion_tokens: retryUsage?.candidatesTokenCount || 0,
+          total_tokens: retryUsage?.totalTokenCount || 0
+        }
+      })
     }
 
     return NextResponse.json({
-      description,
+      description, // now a ONE-LINE JSON string with attributes + ecom_title
       category,
       usage: {
         prompt_tokens: usageMetadata?.promptTokenCount || 0,
@@ -309,4 +370,3 @@ Return ONLY the product title.`,
     )
   }
 }
-

@@ -12,8 +12,13 @@ interface ProductOption {
   title: string | null
 }
 
+interface TwoStageResults {
+  colorMatches: ProductOption[]
+  styleMatches: ProductOption[]
+}
+
 interface ResultsBottomSheetProps {
-  results: Record<string, ProductOption[]>
+  results: Record<string, ProductOption[] | TwoStageResults>
   isLoading: boolean
   croppedImages?: Record<string, string>
   originalImageUrl: string // Background image
@@ -690,16 +695,78 @@ export default function ResultsBottomSheet({
           ) : (
             <div className="space-y-8 pb-8">
               {/* Each category = one section */}
-              {Object.entries(results).map(([category, links]) => {
+              {Object.entries(results).map(([category, data]) => {
                 // Extract category name and item number (format: "categoryName_number")
                 const parts = category.split('_')
                 const itemNumber = parts[parts.length - 1] || '1'
                 const categoryKey = parts.slice(0, -1).join('_')
                 const displayName = getCategoryName(categoryKey)
 
+                // Check if data is in two-stage format
+                const isTwoStage = data && typeof data === 'object' && 'colorMatches' in data
+                const colorMatches = isTwoStage ? (data as TwoStageResults).colorMatches : []
+                const styleMatches = isTwoStage ? (data as TwoStageResults).styleMatches : []
+                const legacyLinks = !isTwoStage ? (data as ProductOption[]) : []
+                const totalProducts = isTwoStage ? (colorMatches.length + styleMatches.length) : legacyLinks.length
+
+                // Helper to render product cards
+                const renderProducts = (products: ProductOption[]) => (
+                  <div 
+                    className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-hide -mx-4 px-4"
+                    style={{ 
+                      touchAction: 'auto',
+                      overscrollBehaviorX: 'contain'
+                    }}
+                  >
+                    {products.map((option, index) => (
+                      <a
+                        key={index}
+                        href={option.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => {
+                          e.preventDefault()
+                          handleLinkClick(category, option.link, option.title, option.thumbnail, index + 1)
+                          window.open(option.link, '_blank', 'noopener,noreferrer')
+                        }}
+                        className="flex-shrink-0 w-36 snap-start group"
+                      >
+                        <div className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all border border-gray-200 group-hover:border-gray-400">
+                          {/* Product image */}
+                          <div className="aspect-square bg-gray-100 relative overflow-hidden">
+                            {option.thumbnail ? (
+                              <img
+                                src={option.thumbnail}
+                                alt={option.title || 'Product'}
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                              />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center text-gray-400">
+                                <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Product info */}
+                          <div className="p-3 space-y-1">
+                            <p className="text-xs text-gray-500 uppercase tracking-wide truncate">
+                              {option.link ? new URL(option.link).hostname.replace('www.', '') : 'Store'}
+                            </p>
+                            <p className="text-sm font-medium text-gray-900 line-clamp-2 leading-tight">
+                              {option.title || 'View Product'}
+                            </p>
+                          </div>
+                        </div>
+                      </a>
+                    ))}
+                  </div>
+                )
+
                 return (
-                  <div key={category} className="space-y-3">
-                    {/* Category header with cropped image */}
+                  <div key={category} className="space-y-4">
+                    {/* Category header */}
                     <div className="flex items-center gap-3">
                       {croppedImages?.[category] && (
                         <div className="w-16 h-16 rounded-xl overflow-hidden bg-gray-100 flex-shrink-0 border-2 border-gray-300">
@@ -714,63 +781,39 @@ export default function ResultsBottomSheet({
                         <h3 className="text-xl font-bold text-gray-900">
                           {displayName} {Object.keys(results).length > 1 && `#${itemNumber}`}
                         </h3>
-                        <p className="text-sm text-gray-500">{t('results.products').replace('{count}', links.length.toString())}</p>
+                        <p className="text-sm text-gray-500">{t('results.products').replace('{count}', totalProducts.toString())}</p>
                       </div>
                     </div>
 
-                    {/* Horizontal scroll for 3 products */}
-                    <div 
-                      className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-hide -mx-4 px-4"
-                      style={{ 
-                        touchAction: 'auto',
-                        overscrollBehaviorX: 'contain'
-                      }}
-                    >
-                      {links.map((option, index) => (
-                        <a
-                          key={index}
-                          href={option.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={(e) => {
-                            e.preventDefault()
-                            handleLinkClick(category, option.link, option.title, option.thumbnail, index + 1)
-                            // Explicitly open in new tab for mobile compatibility
-                            window.open(option.link, '_blank', 'noopener,noreferrer')
-                          }}
-                          className="flex-shrink-0 w-36 snap-start group"
-                        >
-                          <div className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all border border-gray-200 group-hover:border-gray-400">
-                            {/* Product image */}
-                            <div className="aspect-square bg-gray-100 relative overflow-hidden">
-                              {option.thumbnail ? (
-                                <img
-                                  src={option.thumbnail}
-                                  alt={option.title || 'Product'}
-                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                                />
-                              ) : (
-                                <div className="w-full h-full flex items-center justify-center text-gray-400">
-                                  <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                  </svg>
-                                </div>
-                              )}
+                    {/* Two-stage format */}
+                    {isTwoStage ? (
+                      <>
+                        {/* Color Matches */}
+                        {colorMatches.length > 0 && (
+                          <div className="space-y-2">
+                            <div className="flex items-center gap-2 px-4">
+                              <span className="text-lg">🎨</span>
+                              <p className="text-sm font-semibold text-indigo-600">Color Match</p>
                             </div>
-
-                            {/* Product info */}
-                            <div className="p-3 space-y-1">
-                              <p className="text-xs text-gray-500 uppercase tracking-wide truncate">
-                                {option.link ? new URL(option.link).hostname.replace('www.', '') : 'Store'}
-                              </p>
-                              <p className="text-sm font-medium text-gray-900 line-clamp-2 leading-tight">
-                                {option.title || 'View Product'}
-                              </p>
-                            </div>
+                            {renderProducts(colorMatches)}
                           </div>
-                        </a>
-                      ))}
-                    </div>
+                        )}
+                        
+                        {/* Style Matches */}
+                        {styleMatches.length > 0 && (
+                          <div className="space-y-2">
+                            <div className="flex items-center gap-2 px-4">
+                              <span className="text-lg">✂️</span>
+                              <p className="text-sm font-semibold text-slate-600">Style Match</p>
+                            </div>
+                            {renderProducts(styleMatches)}
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      /* Legacy format */
+                      renderProducts(legacyLinks)
+                    )}
                   </div>
                 )
               })}
