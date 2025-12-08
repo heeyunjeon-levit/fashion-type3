@@ -2481,7 +2481,7 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
               console.log(`✅ Added ${additionalStyleMatches.length} more style matches (lenient validation)`)
             }
             
-            // DEDUPLICATE BY DOMAIN to ensure brand variety
+            // DEDUPLICATE BY PRODUCT/BRAND to ensure variety
             const extractDomain = (url: string): string => {
               try {
                 const urlObj = new URL(url)
@@ -2493,32 +2493,89 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
               }
             }
             
-            // Deduplicate color matches by domain
-            const uniqueColorMatches: any[] = []
-            const colorDomains = new Set<string>()
-            for (const item of colorMatches) {
-              const domain = extractDomain(item.link)
-              if (!colorDomains.has(domain)) {
-                uniqueColorMatches.push(item)
-                colorDomains.add(domain)
-                console.log(`   ✅ Color match from: ${domain}`)
-              } else {
-                console.log(`   🚫 Duplicate domain in color matches: ${domain}`)
+            // Extract product fingerprint (brand + key product words)
+            const extractProductFingerprint = (title: string): string => {
+              if (!title) return ''
+              
+              const titleLower = title.toLowerCase()
+              
+              // Extract brand/model identifiers (common patterns)
+              const brandPatterns = [
+                /\b([A-Z]{2,})\b/g, // Uppercase acronyms (RSSC, H&M, COS, etc.)
+                /\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\b/g // Title case brands (Zara, Massimo Dutti)
+              ]
+              
+              const brands: string[] = []
+              for (const pattern of brandPatterns) {
+                const matches = title.match(pattern)
+                if (matches) brands.push(...matches.map(m => m.toLowerCase()))
               }
+              
+              // Extract key product words (remove common filler words)
+              const fillerWords = new Set(['the', 'a', 'an', 'and', 'or', 'for', 'with', 'in', 'on', 'at', 'to', 'from', 'by', 'of', 'mens', 'women', 'womens', 'unisex', '|', '-', 'product', 'item'])
+              const words = titleLower
+                .replace(/[^\w\s]/g, ' ') // Remove punctuation
+                .split(/\s+/)
+                .filter(w => w.length > 2 && !fillerWords.has(w))
+                .slice(0, 5) // Take first 5 meaningful words
+              
+              // Combine brand + product words for fingerprint
+              const fingerprint = [...new Set([...brands, ...words])].sort().join(' ')
+              return fingerprint
             }
             
-            // Deduplicate style matches by domain
-            const uniqueStyleMatches: any[] = []
-            const styleDomains = new Set<string>()
-            for (const item of styleMatches) {
+            // Deduplicate color matches by product fingerprint FIRST, then by domain
+            const uniqueColorMatches: any[] = []
+            const colorFingerprints = new Set<string>()
+            const colorDomains = new Set<string>()
+            
+            for (const item of colorMatches) {
+              const fingerprint = extractProductFingerprint(item.title || '')
               const domain = extractDomain(item.link)
-              if (!styleDomains.has(domain)) {
-                uniqueStyleMatches.push(item)
-                styleDomains.add(domain)
-                console.log(`   ✅ Style match from: ${domain}`)
-              } else {
-                console.log(`   🚫 Duplicate domain in style matches: ${domain}`)
+              
+              // Check if this exact product already exists (regardless of retailer)
+              if (colorFingerprints.has(fingerprint) && fingerprint.length > 0) {
+                console.log(`   🚫 Duplicate product in color matches: "${item.title?.substring(0, 40)}..." (fingerprint: ${fingerprint.substring(0, 40)})`)
+                continue
               }
+              
+              // Check if domain already exists
+              if (colorDomains.has(domain)) {
+                console.log(`   🚫 Duplicate domain in color matches: ${domain}`)
+                continue
+              }
+              
+              uniqueColorMatches.push(item)
+              if (fingerprint.length > 0) colorFingerprints.add(fingerprint)
+              colorDomains.add(domain)
+              console.log(`   ✅ Color match: "${item.title?.substring(0, 40)}..." from ${domain}`)
+            }
+            
+            // Deduplicate style matches by product fingerprint FIRST, then by domain
+            const uniqueStyleMatches: any[] = []
+            const styleFingerprints = new Set<string>()
+            const styleDomains = new Set<string>()
+            
+            for (const item of styleMatches) {
+              const fingerprint = extractProductFingerprint(item.title || '')
+              const domain = extractDomain(item.link)
+              
+              // Check if this exact product already exists (regardless of retailer)
+              if (styleFingerprints.has(fingerprint) && fingerprint.length > 0) {
+                console.log(`   🚫 Duplicate product in style matches: "${item.title?.substring(0, 40)}..." (fingerprint: ${fingerprint.substring(0, 40)})`)
+                continue
+              }
+              
+              // Check if domain already exists
+              if (styleDomains.has(domain)) {
+                console.log(`   🚫 Duplicate domain in style matches: ${domain}`)
+                continue
+              }
+              
+              uniqueStyleMatches.push(item)
+              if (fingerprint.length > 0) styleFingerprints.add(fingerprint)
+              styleDomains.add(domain)
+              console.log(`   ✅ Style match: "${item.title?.substring(0, 40)}..." from ${domain}`)
             }
             
             // Replace with deduplicated matches
@@ -2537,6 +2594,11 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
                   // STRICT VALIDATION: Only allow product pages
                   if (!isValidProductLink(item.link, false)) return false
                   
+                  // Check for duplicate products (same product on different sites)
+                  const fingerprint = extractProductFingerprint(item.title || '')
+                  if (colorFingerprints.has(fingerprint) && fingerprint.length > 0) return false
+                  
+                  // Check for duplicate domains
                   const domain = extractDomain(item.link)
                   if (colorDomains.has(domain)) return false
                   
@@ -2567,8 +2629,12 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
                 }))
               
               colorMatches.push(...refillColorMatches)
-              refillColorMatches.forEach(item => colorDomains.add(extractDomain(item.link)))
-              console.log(`✅ Refilled to ${colorMatches.length} color matches with unique domains`)
+              refillColorMatches.forEach(item => {
+                colorDomains.add(extractDomain(item.link))
+                const fingerprint = extractProductFingerprint(item.title || '')
+                if (fingerprint.length > 0) colorFingerprints.add(fingerprint)
+              })
+              console.log(`✅ Refilled to ${colorMatches.length} color matches with unique products/domains`)
             }
             
             if (styleMatches.length < 3) {
@@ -2580,6 +2646,11 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
                   // STRICT VALIDATION: Only allow product pages
                   if (!isValidProductLink(item.link, false)) return false
                   
+                  // Check for duplicate products (same product on different sites)
+                  const fingerprint = extractProductFingerprint(item.title || '')
+                  if (styleFingerprints.has(fingerprint) && fingerprint.length > 0) return false
+                  
+                  // Check for duplicate domains
                   const domain = extractDomain(item.link)
                   if (styleDomains.has(domain)) return false
                   
@@ -2610,13 +2681,17 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
                 }))
               
               styleMatches.push(...refillStyleMatches)
-              refillStyleMatches.forEach(item => styleDomains.add(extractDomain(item.link)))
-              console.log(`✅ Refilled to ${styleMatches.length} style matches with unique domains`)
+              refillStyleMatches.forEach(item => {
+                styleDomains.add(extractDomain(item.link))
+                const fingerprint = extractProductFingerprint(item.title || '')
+                if (fingerprint.length > 0) styleFingerprints.add(fingerprint)
+              })
+              console.log(`✅ Refilled to ${styleMatches.length} style matches with unique products/domains`)
             }
             
-            console.log(`\n📊 Two-Stage Selection Complete (after domain deduplication):`)
-            console.log(`   🎨 Color Matches: ${colorMatches.length} (${colorMatches.length} unique domains)`)
-            console.log(`   ✂️  Style Matches: ${styleMatches.length} (${styleMatches.length} unique domains)`)
+            console.log(`\n📊 Two-Stage Selection Complete (after product+domain deduplication):`)
+            console.log(`   🎨 Color Matches: ${colorMatches.length} (${colorMatches.length} unique products)`)
+            console.log(`   ✂️  Style Matches: ${styleMatches.length} (${styleMatches.length} unique products)`)
           } else {
             // No primary color detected - validate garment type only (lenient)
             console.log(`ℹ️  No primary color detected - validating garment type only`)
