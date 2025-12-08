@@ -254,20 +254,31 @@ For unknown categories:
     })
 
     // NEW SDK returns text directly
-    const description = result.text?.trim() || `${category} item`
+    const rawJson = result.text?.trim() || `${category} item`
     const usageMetadata = result.usageMetadata as any
     const finishReason = result.candidates?.[0]?.finishReason || 'unknown'
     
+    // Parse JSON and extract ecom_title for clean description
+    let description = `${category} item` // fallback
+    let parsedData: any = null
+    
+    try {
+      parsedData = JSON.parse(rawJson)
+      description = parsedData.ecom_title || `${category} item`
+      console.log(`✅ Parsed JSON and extracted ecom_title: "${description}"`)
+    } catch (parseError) {
+      console.error(`❌ Failed to parse JSON response, using raw text as description`)
+      description = rawJson
+    }
+    
     // Log response for debugging
     console.log('🔍 NEW SDK Response:')
-    console.log(`   Text: "${description}"`)
+    console.log(`   Raw JSON length: ${rawJson.length} chars`)
+    console.log(`   Extracted description: "${description}"`)
     console.log(`   FinishReason: ${finishReason}`)
     console.log(`   Thinking tokens: ${usageMetadata?.thoughtsTokenCount || 0}`)
-    
-    console.log(`✅ Gemini 3 Pro Preview Description (JSON string): "${description}"`)
     console.log(`   Prompt tokens: ${usageMetadata?.promptTokenCount || 0}`)
     console.log(`   Completion tokens: ${usageMetadata?.candidatesTokenCount || 0}`)
-    console.log(`   Thoughts tokens: ${(usageMetadata as any)?.thoughtsTokenCount || 0}`)
     console.log(`   Total tokens: ${usageMetadata?.totalTokenCount || 0}`)
     
     // Check if we need to retry (detect failures BEFORE they cause issues)
@@ -275,7 +286,7 @@ For unknown categories:
       finishReason === 'MAX_TOKENS' ||  // Hit token limit (most reliable signal)
       description === `${category} item` ||  // Got fallback value (API returned nothing useful)
       (!usageMetadata?.candidatesTokenCount || usageMetadata.candidatesTokenCount === 0) ||  // No completion tokens
-      description.length < 50  // Response too short to be valid JSON
+      description.length < 20  // Response too short to be valid
     )
     
     if (needsRetry) {
@@ -320,10 +331,20 @@ For unknown categories:
           }
       })
       
-      const retryDescription = retryResult.text?.trim() || `${category} item`
+      const retryRawJson = retryResult.text?.trim() || `${category} item`
       const retryUsage = retryResult.usageMetadata as any
       
-      console.log(`✅ RETRY SUCCESS: ${retryDescription.substring(0, 100)}...`)
+      // Parse retry JSON and extract ecom_title
+      let retryDescription = `${category} item`
+      try {
+        const retryParsed = JSON.parse(retryRawJson)
+        retryDescription = retryParsed.ecom_title || `${category} item`
+        console.log(`✅ RETRY SUCCESS: Extracted ecom_title: "${retryDescription}"`)
+      } catch (retryParseError) {
+        console.error(`❌ Failed to parse retry JSON, using raw text`)
+        retryDescription = retryRawJson
+      }
+      
       console.log(`   Retry tokens: ${retryUsage?.totalTokenCount || 0}`)
       
       // Use retry result
