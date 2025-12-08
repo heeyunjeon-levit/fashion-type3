@@ -1527,18 +1527,57 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
             console.log(`📌 No character - checking if top full image results match category...`)
             
             // Category validation: Define what to accept per category
+            // Map ALL possible category keys (not just generic ones!)
             const categoryKeywords: Record<string, string[]> = {
-              'bags': ['bag', 'backpack', 'purse', 'tote', 'clutch', 'crossbody', 'shoulder bag', 'handbag', 'messenger', '가방', '백팩'],
-              'tops': ['jacket', 'coat', 'sweater', 'shirt', 'blouse', 'cardigan', 'blazer', 'hoodie', '재킷', '코트', '스웨터', '셔츠'],
-              'bottoms': ['pants', 'jeans', 'skirt', 'shorts', 'trousers', '바지', '청바지', '치마', '반바지'],
-              'shoes': ['shoe', 'sneaker', 'boot', 'sandal', 'heel', 'loafer', '신발', '부츠', '샌들'],
-              'accessory': ['sunglasses', 'glasses', 'eyewear', 'ring', 'necklace', 'earring', 'bracelet', 'watch', 'hat', 'cap', 'belt', 'scarf', '선글라스', '안경']
+              // Bags
+              'bag': ['bag', 'backpack', 'purse', 'tote', 'clutch', 'crossbody', 'shoulder bag', 'handbag', 'messenger', 'satchel', '가방', '백팩', '토트백'],
+              'bags': ['bag', 'backpack', 'purse', 'tote', 'clutch', 'crossbody', 'shoulder bag', 'handbag', 'messenger', 'satchel', '가방', '백팩', '토트백'],
+              
+              // Tops
+              'top': ['jacket', 'coat', 'sweater', 'shirt', 'blouse', 'cardigan', 'blazer', 'hoodie', 'top', '재킷', '코트', '스웨터', '셔츠', '상의'],
+              'tops': ['jacket', 'coat', 'sweater', 'shirt', 'blouse', 'cardigan', 'blazer', 'hoodie', 'top', '재킷', '코트', '스웨터', '셔츠', '상의'],
+              'shirt': ['shirt', 'blouse', 'top', 'tee', 't-shirt', 'polo', 'button-up', '셔츠', '블라우스', '상의'],
+              'sweater': ['sweater', 'cardigan', 'pullover', 'knit', 'jumper', '스웨터', '니트', '가디건'],
+              'jacket': ['jacket', 'coat', 'blazer', 'parka', 'bomber', 'windbreaker', '재킷', '코트', '아우터'],
+              'coat': ['coat', 'jacket', 'overcoat', 'trench', 'peacoat', '코트', '외투'],
+              'hoodie': ['hoodie', 'sweatshirt', 'pullover', 'zip-up', '후드', '후디'],
+              
+              // Bottoms
+              'pants': ['pants', 'jeans', 'trousers', 'slacks', 'chinos', 'joggers', 'sweatpants', '바지', '팬츠', '슬랙스'],
+              'bottoms': ['pants', 'jeans', 'skirt', 'shorts', 'trousers', 'slacks', '바지', '청바지', '치마', '반바지'],
+              'jeans': ['jeans', 'denim', 'pants', '청바지', '데님'],
+              'skirt': ['skirt', 'mini skirt', 'midi skirt', 'maxi skirt', '치마', '스커트'],
+              'shorts': ['shorts', 'short pants', 'bermuda', '반바지', '쇼츠'],
+              
+              // Dresses
+              'dress': ['dress', 'gown', 'frock', 'sundress', 'maxi dress', 'mini dress', '드레스', '원피스'],
+              
+              // Shoes
+              'shoe': ['shoe', 'sneaker', 'boot', 'sandal', 'heel', 'loafer', 'oxford', 'pump', '신발', '부츠', '샌들', '슈즈'],
+              'shoes': ['shoe', 'sneaker', 'boot', 'sandal', 'heel', 'loafer', 'oxford', 'pump', '신발', '부츠', '샌들', '슈즈'],
+              'sneaker': ['sneaker', 'trainer', 'running shoe', 'athletic shoe', '스니커즈', '운동화'],
+              'boot': ['boot', 'ankle boot', 'knee boot', 'chelsea boot', '부츠'],
+              
+              // Accessories
+              'accessory': ['sunglasses', 'glasses', 'eyewear', 'ring', 'necklace', 'earring', 'bracelet', 'watch', 'hat', 'cap', 'belt', 'scarf', '선글라스', '안경', '모자'],
+              'hat': ['hat', 'cap', 'beanie', 'beret', 'fedora', 'bucket hat', '모자', '비니', '캡'],
+              'sunglasses': ['sunglasses', 'shades', 'eyewear', 'glasses', '선글라스', '썬글라스'],
+              'eyewear': ['sunglasses', 'glasses', 'eyewear', 'spectacles', 'shades', '안경', '선글라스'],
+              'belt': ['belt', 'waist belt', 'leather belt', '벨트', '허리띠'],
+              'scarf': ['scarf', 'shawl', 'wrap', 'stole', '스카프', '목도리'],
+              'jewelry': ['ring', 'necklace', 'earring', 'bracelet', 'pendant', 'chain', '반지', '목걸이', '귀걸이', '팔찌'],
+              'watch': ['watch', 'timepiece', 'wristwatch', '시계', '손목시계']
             }
             
+            // Also extract key descriptive words from the item description for better matching
+            const descriptionWords = itemDescription ? itemDescription.toLowerCase().split(/\s+/).filter((w: string) => 
+              w.length > 3 && !['item', 'the', 'and', 'with', 'for', 'from'].includes(w)
+            ) : []
+            
             const topFullImageLinks = fullImageResults
-              .slice(0, 10) // Check top 10 (not just 3) for better category matching
-              .filter((item: any) => {
-                if (!item.link) return false
+              .slice(0, 50) // Check top 50 to find better matches (e.g., silk-satin drawstring pants buried deep)
+              .map((item: any) => {
+                if (!item.link) return null
                 const linkLower = item.link.toLowerCase()
                 const titleLower = item.title?.toLowerCase() || ''
                 const combinedText = `${titleLower} ${linkLower}`
@@ -1555,7 +1594,7 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
                 })
                 if (isBlocked) {
                   console.log(`🚫 Blocked full image result: ${item.link.substring(0, 50)}...`)
-                  return false
+                  return null
                 }
                 
                 // CRITICAL: Check if same category (prevent bags in sunglasses results!)
@@ -1564,12 +1603,23 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
                 
                 if (!hasCategoryMatch) {
                   console.log(`🚫 WRONG CATEGORY in full image: "${item.title?.substring(0, 40)}" (not ${categoryKey})`)
-                  return false
+                  return null
                 }
                 
-                console.log(`✅ CATEGORY MATCH in full image: "${item.title?.substring(0, 40)}" (${categoryKey})`)
-                return true
+                // Calculate match score (more keyword matches = higher priority)
+                let matchScore = 1 // Base score for category match
+                descriptionWords.forEach((word: string) => {
+                  if (combinedText.includes(word)) {
+                    matchScore++
+                  }
+                })
+                
+                console.log(`✅ CATEGORY MATCH in full image: "${item.title?.substring(0, 40)}" (${categoryKey}, score: ${matchScore})`)
+                return { link: item.link, score: matchScore }
               })
+              .filter((item: any) => item !== null)
+              .sort((a: any, b: any) => b.score - a.score) // Sort by score (highest first)
+              .slice(0, 5) // Take top 5 best matches
               .map((item: any) => item.link)
             
             if (topFullImageLinks.length > 0) {
