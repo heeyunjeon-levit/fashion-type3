@@ -2353,11 +2353,11 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
               }
             })
             
-            // If we don't have enough color matches, fill from merged results (with lenient validation)
+            // If we don't have enough color matches, fill from VISUALLY VALIDATED results (with lenient validation)
             if (colorMatches.length < 3) {
-              console.log(`\n⚠️  Only ${colorMatches.length} color matches found, searching merged results for more...`)
+              console.log(`\n⚠️  Only ${colorMatches.length} color matches found, searching visually validated results for more...`)
               
-              const additionalColorMatches = mergedResults
+              const additionalColorMatches = resultsForGPT
                 .filter((item: any) => {
                   // CRITICAL: Must have a valid link
                   if (!item.link || typeof item.link !== 'string') {
@@ -2424,11 +2424,11 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
               console.log(`✅ Added ${additionalColorMatches.length} more color matches from merged results`)
             }
             
-            // If we STILL don't have enough style matches, fill from merged results (lenient)
+            // If we STILL don't have enough style matches, fill from VISUALLY VALIDATED results (lenient)
             if (styleMatches.length < 3) {
-              console.log(`⚠️  Only ${styleMatches.length} style matches found, searching for more...`)
+              console.log(`⚠️  Only ${styleMatches.length} style matches found, searching visually validated results for more...`)
               
-              const additionalStyleMatches = mergedResults
+              const additionalStyleMatches = resultsForGPT
                 .filter((item: any) => {
                   // CRITICAL: Must have a valid link
                   if (!item.link || typeof item.link !== 'string') {
@@ -2619,10 +2619,10 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
             styleMatches.length = 0
             styleMatches.push(...uniqueStyleMatches)
             
-            // If we lost too many due to deduplication, try to refill with unique domains
+            // If we lost too many due to deduplication, try to refill with unique domains (from VISUALLY VALIDATED results)
             if (colorMatches.length < 3) {
-              console.log(`⚠️  Only ${colorMatches.length} unique color matches after deduplication, refilling...`)
-              const refillColorMatches = mergedResults
+              console.log(`⚠️  Only ${colorMatches.length} unique color matches after deduplication, refilling from visually validated results...`)
+              const refillColorMatches = resultsForGPT
                 .filter((item: any) => {
                   if (!item.link || typeof item.link !== 'string') return false
                   
@@ -2673,8 +2673,8 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
             }
             
             if (styleMatches.length < 3) {
-              console.log(`⚠️  Only ${styleMatches.length} unique style matches after deduplication, refilling...`)
-              const refillStyleMatches = mergedResults
+              console.log(`⚠️  Only ${styleMatches.length} unique style matches after deduplication, refilling from visually validated results...`)
+              const refillStyleMatches = resultsForGPT
                 .filter((item: any) => {
                   if (!item.link || typeof item.link !== 'string') return false
                   
@@ -2778,6 +2778,9 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
           const styleMatchesFromText = styleMatches.filter((item: any) => item.searchType === 'text_images').length
           const styleMatchesFromVisual = styleMatches.filter((item: any) => item.searchType === 'visual_lens').length
           const styleMatchesFromOther = styleMatches.filter((item: any) => !['text_images', 'visual_lens'].includes(item.searchType)).length
+          
+          // NOTE: Additional matches and refills should ONLY pull from visually validated results
+          // This prevents items with wrong thumbnail colors from appearing in Color Matches
           
           console.log(`\n📊 FINAL RESULTS SUMMARY for ${resultKey}:`)
           console.log(`   🎨 Color Matches: ${colorMatches.length} total (📝 ${colorMatchesFromText} text_images, 🖼️  ${colorMatchesFromVisual} visual_lens, 🔍 ${colorMatchesFromOther} other)`)
