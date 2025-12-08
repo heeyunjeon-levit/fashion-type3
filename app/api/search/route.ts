@@ -637,7 +637,7 @@ export async function POST(request: NextRequest) {
             // Mark as visual search for debugging
             allOrganicResults.push(...serperData.organic.map((item: any) => ({
               ...item,
-              searchType: 'visual'
+              searchType: 'visual_lens' // Serper Lens image search
             })))
           }
         }
@@ -657,7 +657,7 @@ export async function POST(request: NextRequest) {
               thumbnail: img.thumbnailUrl || img.imageUrl,
               imageUrl: img.imageUrl,
               position: img.position,
-              searchType: 'text' // Mark as text search for debugging
+              searchType: 'text_images' // Serper /images text-based search
             })))
             
             // LOG first 10 text search results for debugging
@@ -2197,9 +2197,23 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
           const linksWithThumbnails = validLinks.slice(0, 3).map((link: string) => {
             // PRIORITY: Search full image results FIRST (these have the best metadata)
             // Then search merged results, then fallback to cropped results
-            const resultItem = fullImageResults.find((item: any) => item.link === link)
-              || mergedResults.find((item: any) => item.link === link) 
-              || resultsForGPT.find((item: any) => item.link === link)
+            let searchSource = 'unknown'
+            const fullImageItem = fullImageResults.find((item: any) => item.link === link)
+            const mergedItem = mergedResults.find((item: any) => item.link === link)
+            const croppedItem = resultsForGPT.find((item: any) => item.link === link)
+            
+            const resultItem = fullImageItem || mergedItem || croppedItem
+            
+            // Determine searchType based on source
+            if (fullImageItem) {
+              searchSource = fullImageItem.searchType || 'full_image_context'
+            } else if (mergedItem) {
+              searchSource = mergedItem.searchType || 'cropped_image'
+            } else if (croppedItem) {
+              searchSource = croppedItem.searchType || 'cropped_fallback'
+            } else {
+              searchSource = 'gpt_selected' // GPT selected it but we can't find original source
+            }
             
             // Try ALL possible field names for thumbnail (Serper uses different names!)
             const thumbnail = resultItem?.thumbnailUrl || resultItem?.thumbnail || resultItem?.image || resultItem?.imageUrl || resultItem?.ogImage || null
@@ -2210,14 +2224,14 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
               console.log(`   Available fields:`, Object.keys(resultItem))
               console.log(`   Full item:`, JSON.stringify(resultItem, null, 2).substring(0, 300))
             } else if (thumbnail) {
-              console.log(`✅ Thumbnail found for ${link.substring(0, 40)}: ${thumbnail.substring(0, 60)}`)
+              console.log(`✅ Thumbnail found for ${link.substring(0, 40)}: ${thumbnail.substring(0, 60)} (source: ${searchSource})`)
             }
             
             return {
               link,
               thumbnail,
               title: resultItem?.title || null,
-              searchType: resultItem?.searchType || 'unknown' // Preserve searchType from source
+              searchType: searchSource // Detailed searchType for debugging
             }
           })
           
@@ -2318,7 +2332,7 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
               const hasGarmentTypeMatch = coreFeatures.length === 0 || !!matchedGarmentFeature
               
               // Check if this was from text search
-              const isFromTextSearch = item.searchType === 'text'
+              const isFromTextSearch = item.searchType === 'text_images'
               const searchTypeIcon = isFromTextSearch ? '📝' : '🖼️'
               
               // LENIENT: Accept if garment type matches (trust GPT for details)
@@ -2403,7 +2417,7 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
                   link: item.link,
                   thumbnail: item.thumbnailUrl || item.thumbnail || item.imageUrl || null,
                   title: item.title || null,
-                  searchType: item.searchType || 'unknown' // PRESERVE searchType!
+                  searchType: item.searchType || 'additional_color_match' // From additional color matches
                 }))
               
               colorMatches.push(...additionalColorMatches)
@@ -2474,7 +2488,7 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
                   link: item.link,
                   thumbnail: item.thumbnailUrl || item.thumbnail || item.imageUrl || null,
                   title: item.title || null,
-                  searchType: item.searchType || 'unknown' // PRESERVE searchType!
+                  searchType: item.searchType || 'additional_style_match' // From additional style matches
                 }))
               
               styleMatches.push(...additionalStyleMatches)
@@ -2493,11 +2507,11 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
               }
             }
             
-            // Extract product fingerprint (brand + key product words)
-            const extractProductFingerprint = (title: string): string => {
-              if (!title) return ''
+            // Extract product fingerprint (brand + key product words + URL path)
+            const extractProductFingerprint = (title: string, link: string): string => {
+              if (!title && !link) return ''
               
-              const titleLower = title.toLowerCase()
+              const titleLower = (title || '').toLowerCase()
               
               // Extract brand/model identifiers (common patterns)
               const brandPatterns = [
@@ -2512,15 +2526,36 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
               }
               
               // Extract key product words (remove common filler words)
-              const fillerWords = new Set(['the', 'a', 'an', 'and', 'or', 'for', 'with', 'in', 'on', 'at', 'to', 'from', 'by', 'of', 'mens', 'women', 'womens', 'unisex', '|', '-', 'product', 'item'])
+              const fillerWords = new Set(['the', 'a', 'an', 'and', 'or', 'for', 'with', 'in', 'on', 'at', 'to', 'from', 'by', 'of', 'mens', 'women', 'womens', 'unisex', '|', '-', 'product', 'item', 'com', 'www', 'http', 'https'])
               const words = titleLower
                 .replace(/[^\w\s]/g, ' ') // Remove punctuation
                 .split(/\s+/)
                 .filter(w => w.length > 2 && !fillerWords.has(w))
                 .slice(0, 5) // Take first 5 meaningful words
               
-              // Combine brand + product words for fingerprint
-              const fingerprint = [...new Set([...brands, ...words])].sort().join(' ')
+              // CRITICAL: Extract product slug from URL path
+              // e.g., "/product/rivet-knit-beanie-white/1845/" → "rivet knit beanie white"
+              let urlSlug = ''
+              try {
+                const urlObj = new URL(link)
+                const pathParts = urlObj.pathname
+                  .split('/')
+                  .filter(p => p && p !== 'product' && p !== 'item' && p !== 'p' && !/^\d+$/.test(p)) // Remove 'product', 'item', and numeric IDs
+                urlSlug = pathParts
+                  .join(' ')
+                  .replace(/[-_]/g, ' ') // Convert hyphens/underscores to spaces
+                  .toLowerCase()
+                  .split(/\s+/)
+                  .filter(w => w.length > 2 && !fillerWords.has(w))
+                  .slice(0, 5)
+                  .sort()
+                  .join(' ')
+              } catch {
+                // Invalid URL, skip
+              }
+              
+              // Combine brand + product words + URL slug for fingerprint
+              const fingerprint = [...new Set([...brands, ...words, ...urlSlug.split(' ')])].sort().join(' ')
               return fingerprint
             }
             
@@ -2530,7 +2565,7 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
             const colorDomains = new Set<string>()
             
             for (const item of colorMatches) {
-              const fingerprint = extractProductFingerprint(item.title || '')
+              const fingerprint = extractProductFingerprint(item.title || '', item.link || '')
               const domain = extractDomain(item.link)
               
               // Check if this exact product already exists (regardless of retailer)
@@ -2557,7 +2592,7 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
             const styleDomains = new Set<string>()
             
             for (const item of styleMatches) {
-              const fingerprint = extractProductFingerprint(item.title || '')
+              const fingerprint = extractProductFingerprint(item.title || '', item.link || '')
               const domain = extractDomain(item.link)
               
               // Check if this exact product already exists (regardless of retailer)
@@ -2595,7 +2630,7 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
                   if (!isValidProductLink(item.link, false)) return false
                   
                   // Check for duplicate products (same product on different sites)
-                  const fingerprint = extractProductFingerprint(item.title || '')
+                  const fingerprint = extractProductFingerprint(item.title || '', item.link || '')
                   if (colorFingerprints.has(fingerprint) && fingerprint.length > 0) return false
                   
                   // Check for duplicate domains
@@ -2625,13 +2660,13 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
                   link: item.link,
                   thumbnail: item.thumbnailUrl || item.thumbnail || item.imageUrl || null,
                   title: item.title || null,
-                  searchType: item.searchType || 'unknown'
+                  searchType: item.searchType || 'refill_color_match' // From color match refill
                 }))
               
               colorMatches.push(...refillColorMatches)
               refillColorMatches.forEach(item => {
                 colorDomains.add(extractDomain(item.link))
-                const fingerprint = extractProductFingerprint(item.title || '')
+                const fingerprint = extractProductFingerprint(item.title || '', item.link || '')
                 if (fingerprint.length > 0) colorFingerprints.add(fingerprint)
               })
               console.log(`✅ Refilled to ${colorMatches.length} color matches with unique products/domains`)
@@ -2647,7 +2682,7 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
                   if (!isValidProductLink(item.link, false)) return false
                   
                   // Check for duplicate products (same product on different sites)
-                  const fingerprint = extractProductFingerprint(item.title || '')
+                  const fingerprint = extractProductFingerprint(item.title || '', item.link || '')
                   if (styleFingerprints.has(fingerprint) && fingerprint.length > 0) return false
                   
                   // Check for duplicate domains
@@ -2677,13 +2712,13 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
                   link: item.link,
                   thumbnail: item.thumbnailUrl || item.thumbnail || item.imageUrl || null,
                   title: item.title || null,
-                  searchType: item.searchType || 'unknown'
+                  searchType: item.searchType || 'refill_style_match' // From style match refill
                 }))
               
               styleMatches.push(...refillStyleMatches)
               refillStyleMatches.forEach(item => {
                 styleDomains.add(extractDomain(item.link))
-                const fingerprint = extractProductFingerprint(item.title || '')
+                const fingerprint = extractProductFingerprint(item.title || '', item.link || '')
                 if (fingerprint.length > 0) styleFingerprints.add(fingerprint)
               })
               console.log(`✅ Refilled to ${styleMatches.length} style matches with unique products/domains`)
@@ -2736,15 +2771,25 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
           
           console.log(`✅ Found ${validLinks.length} link(s) for ${resultKey}:`, validLinks.slice(0, 3))
           
-          // Summary: Text vs Visual search distribution
-          const colorMatchesFromText = colorMatches.filter((item: any) => item.searchType === 'text').length
-          const colorMatchesFromVisual = colorMatches.filter((item: any) => item.searchType === 'visual').length
-          const styleMatchesFromText = styleMatches.filter((item: any) => item.searchType === 'text').length
-          const styleMatchesFromVisual = styleMatches.filter((item: any) => item.searchType === 'visual').length
+          // Summary: Search source distribution for debugging
+          const colorMatchesFromText = colorMatches.filter((item: any) => item.searchType === 'text_images').length
+          const colorMatchesFromVisual = colorMatches.filter((item: any) => item.searchType === 'visual_lens').length
+          const colorMatchesFromOther = colorMatches.filter((item: any) => !['text_images', 'visual_lens'].includes(item.searchType)).length
+          const styleMatchesFromText = styleMatches.filter((item: any) => item.searchType === 'text_images').length
+          const styleMatchesFromVisual = styleMatches.filter((item: any) => item.searchType === 'visual_lens').length
+          const styleMatchesFromOther = styleMatches.filter((item: any) => !['text_images', 'visual_lens'].includes(item.searchType)).length
           
           console.log(`\n📊 FINAL RESULTS SUMMARY for ${resultKey}:`)
-          console.log(`   🎨 Color Matches: ${colorMatches.length} total (📝 ${colorMatchesFromText} text, 🖼️  ${colorMatchesFromVisual} visual)`)
-          console.log(`   ✂️  Style Matches: ${styleMatches.length} total (📝 ${styleMatchesFromText} text, 🖼️  ${styleMatchesFromVisual} visual)`)
+          console.log(`   🎨 Color Matches: ${colorMatches.length} total (📝 ${colorMatchesFromText} text_images, 🖼️  ${colorMatchesFromVisual} visual_lens, 🔍 ${colorMatchesFromOther} other)`)
+          console.log(`   ✂️  Style Matches: ${styleMatches.length} total (📝 ${styleMatchesFromText} text_images, 🖼️  ${styleMatchesFromVisual} visual_lens, 🔍 ${styleMatchesFromOther} other)`)
+          
+          // Log detailed searchType breakdown for debugging
+          const allSearchTypes = [...colorMatches, ...styleMatches].map(item => item.searchType)
+          const searchTypeCounts = allSearchTypes.reduce((acc: any, type: string) => {
+            acc[type] = (acc[type] || 0) + 1
+            return acc
+          }, {})
+          console.log(`   🔎 SearchType breakdown:`, searchTypeCounts)
           
           return { 
             resultKey, 
