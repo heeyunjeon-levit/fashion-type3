@@ -1543,9 +1543,9 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
               'hoodie': ['hoodie', 'sweatshirt', 'pullover', 'zip-up', '후드', '후디'],
               
               // Bottoms
-              'pants': ['pants', 'jeans', 'trousers', 'slacks', 'chinos', 'joggers', 'sweatpants', '바지', '팬츠', '슬랙스'],
+              'pants': ['pants', 'trousers', 'slacks', 'chinos', '바지', '팬츠', '슬랙스'],  // REMOVED 'jeans'!
               'bottoms': ['pants', 'jeans', 'skirt', 'shorts', 'trousers', 'slacks', '바지', '청바지', '치마', '반바지'],
-              'jeans': ['jeans', 'denim', 'pants', '청바지', '데님'],
+              'jeans': ['jeans', 'denim', '청바지', '데님'],  // REMOVED 'pants' to separate jeans from trousers!
               'skirt': ['skirt', 'mini skirt', 'midi skirt', 'maxi skirt', '치마', '스커트'],
               'shorts': ['shorts', 'short pants', 'bermuda', '반바지', '쇼츠'],
               
@@ -1570,18 +1570,41 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
             }
             
             // Extract key descriptive words with WEIGHTED IMPORTANCE
-            // Distinctive features (collar style, patterns, special details) get 5x weight
-            // Common features (color, material) get 1x weight
+            // Distinctive features (collar style, patterns, special details, specific colors) get 5x weight
+            // Common features (generic colors like black/white, basic materials) get 1x weight
             const distinctiveKeywords = [
-              'collar', 'collared', 'shirt collar', 'pointed collar', 'shawl collar', 'v-neck', 'crew neck',
-              'drawstring', 'toggle', 'zipper', 'zip-up', 'button-down', 'snap',
-              'cropped', 'oversized', 'slim-fit', 'relaxed-fit', 'tailored',
-              'ribbed', 'cable-knit', 'chunky', 'fine-knit',
-              'pleated', 'flared', 'wide-leg', 'tapered', 'straight-leg',
-              'ruffled', 'puff sleeve', 'bell sleeve', 'cap sleeve',
-              'asymmetric', 'cutout', 'backless', 'halter',
-              'fringe', 'sequin', 'embroidered', 'studded', 'quilted',
-              'houndstooth', 'plaid', 'striped', 'polka dot', 'leopard', 'zebra'
+              // Collar styles
+              'collar', 'collared', 'shirt collar', 'pointed collar', 'shawl collar', 'v-neck', 'crew neck', 'turtle neck', 'mock neck',
+              
+              // Closures & details
+              'drawstring', 'toggle', 'zipper', 'zip-up', 'button-down', 'snap', 'velcro',
+              
+              // Fits & silhouettes
+              'cropped', 'oversized', 'slim-fit', 'relaxed-fit', 'tailored', 'boxy', 'form-fitting', 'baggy',
+              
+              // Textures & knits
+              'ribbed', 'cable-knit', 'chunky', 'fine-knit', 'waffle-knit', 'honeycomb',
+              
+              // Leg styles & trouser features  
+              'pleated', 'flared', 'wide-leg', 'tapered', 'straight-leg', 'bootcut', 'skinny',
+              'center crease', 'cuffed hem', 'turn-up cuffs', 'front pleat', 'double pleat', 'dress pants',
+              
+              // Sleeve styles
+              'ruffled', 'puff sleeve', 'bell sleeve', 'cap sleeve', 'raglan', 'dolman', 'bishop sleeve',
+              
+              // Design details
+              'asymmetric', 'cutout', 'backless', 'halter', 'off-shoulder', 'one-shoulder',
+              
+              // Embellishments
+              'fringe', 'sequin', 'embroidered', 'studded', 'quilted', 'beaded', 'applique',
+              
+              // Patterns
+              'houndstooth', 'plaid', 'striped', 'polka dot', 'leopard', 'zebra', 'gingham', 'checkered', 'herringbone', 'paisley',
+              
+              // Specific/distinctive colors (NOT generic black/white/navy/gray!)
+              'olive', 'khaki', 'burgundy', 'maroon', 'emerald', 'forest green', 'mustard', 'rust', 'terracotta',
+              'coral', 'peach', 'lavender', 'lilac', 'mint', 'teal', 'aqua', 'turquoise', 
+              'blush', 'rose', 'mauve', 'sage', 'ochre', 'camel', 'cognac', 'chocolate'
             ]
             
             const descriptionLower = itemDescription ? itemDescription.toLowerCase() : ''
@@ -1642,6 +1665,12 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
                 
                 if (!hasCategoryMatch) {
                   console.log(`🚫 WRONG CATEGORY in full image: "${item.title?.substring(0, 40)}" (not ${categoryKey})`)
+                  return null
+                }
+                
+                // CRITICAL: For pants/trousers, EXCLUDE jeans explicitly!
+                if (categoryKey === 'pants' && (combinedText.includes('jeans') || combinedText.includes('denim') || combinedText.includes('jean ') || combinedText.includes('청바지'))) {
+                  console.log(`🚫 JEANS EXCLUDED from trousers: "${item.title?.substring(0, 40)}"`)
                   return null
                 }
                 
