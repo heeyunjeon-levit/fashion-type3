@@ -35,6 +35,70 @@ const categoryLabels: Record<string, string> = {
   dress: '드레스 (dress - dresses, gowns)',
 }
 
+/**
+ * STRICT VALIDATION: Check if a link is a valid product page (not catalog/category/article)
+ * This is the single source of truth for product link validation
+ */
+function isValidProductLink(link: string, logReason: boolean = true): boolean {
+  if (!link || typeof link !== 'string' || !link.startsWith('http')) {
+    if (logReason) console.log(`🚫 VALIDATION: Invalid URL format`)
+    return false
+  }
+  
+  const linkLower = link.toLowerCase()
+  
+  // Check for catalog/category/listing pages
+  const isCatalogPage = 
+    // Search pages
+    linkLower.includes('/search?') ||
+    linkLower.includes('/search.') ||
+    linkLower.includes('/search_') ||
+    linkLower.includes('/searchresult') ||
+    linkLower.includes('search-result') ||
+    // List/category pages
+    linkLower.includes('/list?') ||
+    linkLower.includes('/list.') ||
+    linkLower.includes('/category?') ||
+    linkLower.includes('/category/') && !linkLower.match(/\/category\/[^\/]+\/product/) ||
+    linkLower.includes('/shop/list') ||
+    // Query parameters that indicate search/listing
+    linkLower.match(/[?&]query=/i) ||
+    linkLower.match(/[?&]keyword=/i) ||
+    linkLower.match(/[?&]q=/i) && !linkLower.includes('/product') ||
+    // Collection/product listing endpoints
+    linkLower.match(/\/products\?/i) && !linkLower.match(/\/products\/[^?]+\?/) ||
+    linkLower.match(/\/collections\?/i) && !linkLower.match(/\/collections\/[^?]+\/products/) ||
+    // Catalog pages ending with generic plural category names
+    linkLower.match(/\/(bags|shoes|accessories|clothing|apparel|dresses|pants|trousers|shirts|tops|bottoms|outerwear|jackets|coats|sweaters|knitwear|skirts|shorts|jeans|sneakers|boots|sandals|jewelry|watches|belts|scarves|hats|gloves|sunglasses|wallets|purses|backpacks|luggage|travel-bags|duffle|tote|crossbody|handbags|clutches|shoulder-bags)\.html?$/i) ||
+    linkLower.match(/\/(bags|shoes|accessories|clothing|travel-bags|duffle|handbags)\/?$/i) && !linkLower.match(/\/product/i) ||
+    // Multi-level category paths without product identifiers
+    linkLower.match(/\/(men|women|kids|unisex)\/(accessories|clothing|shoes|bags)\/.+\.(html?|aspx?)$/i) && !linkLower.match(/\/(product|item|p)[\/-]/i) && !linkLower.match(/\d{5,}/i) ||
+    // Non-product pages (reviews, Q&A, etc.)
+    linkLower.endsWith('/reviews') ||
+    linkLower.endsWith('/reviews/') ||
+    linkLower.includes('/reviews?') ||
+    linkLower.endsWith('/questions') ||
+    linkLower.endsWith('/qa') ||
+    linkLower.endsWith('/ratings') ||
+    linkLower.includes('/customer-reviews') ||
+    linkLower.includes('/product-reviews')
+  
+  if (isCatalogPage) {
+    if (logReason) console.log(`🚫 VALIDATION: Catalog/category page blocked: ${link.substring(0, 80)}`)
+    return false
+  }
+  
+  // Additional strict checks for common catalog patterns
+  // Block if URL ends with just a category name (no product identifier)
+  const endsWithCategoryOnly = linkLower.match(/\/(bags|shoes|accessories|travel-bags|handbags|clothing|jewelry|watches)\/?$/i)
+  if (endsWithCategoryOnly) {
+    if (logReason) console.log(`🚫 VALIDATION: URL ends with category name only: ${link.substring(0, 80)}`)
+    return false
+  }
+  
+  return true
+}
+
 // Fallback search handler when no items are detected
 async function handleFallbackSearch(originalImageUrl: string, requestStartTime: number) {
   console.log('🔍 FALLBACK: Starting full image search...')
@@ -1825,45 +1889,8 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
             }
           }
           
-          // Filter out category/search/listing pages (not actual products)
-          // Be precise to avoid false positives on actual product pages with query params
-          const isCategoryPage = 
-            // Search pages
-            linkLower.includes('/search?') ||
-            linkLower.includes('/search.') ||
-            linkLower.includes('/search_') ||
-            linkLower.includes('/searchresult') ||
-            linkLower.includes('search-result') ||
-            // List/category pages
-            linkLower.includes('/list?') ||
-            linkLower.includes('/list.') ||
-            linkLower.includes('/category?') ||
-            linkLower.includes('/category/') && !linkLower.match(/\/category\/[^\/]+\/product/) || // Allow /category/xyz/product/123
-            linkLower.includes('/shop/list') ||
-            // Query parameters that indicate search/listing (but not product params)
-            linkLower.match(/[?&]query=/i) ||
-            linkLower.match(/[?&]keyword=/i) ||
-            linkLower.match(/[?&]q=/i) && !linkLower.includes('/product') || // Allow /product?q=... but not /search?q=...
-            // Collection/product listing endpoints (but allow specific products)
-            linkLower.match(/\/products\?/i) && !linkLower.match(/\/products\/[^?]+\?/) || // Block /products? but allow /products/123?
-            linkLower.match(/\/collections\?/i) && !linkLower.match(/\/collections\/[^?]+\/products/) ||  // Block /collections? but allow /collections/xyz/products/123
-            // Catalog pages ending with generic plural category names (e.g., /bags/, /shoes/, /travel-bags.html)
-            linkLower.match(/\/(bags|shoes|accessories|clothing|apparel|dresses|pants|trousers|shirts|tops|bottoms|outerwear|jackets|coats|sweaters|knitwear|skirts|shorts|jeans|sneakers|boots|sandals|jewelry|watches|belts|scarves|hats|gloves|sunglasses|wallets|purses|backpacks|luggage|travel-bags|duffle|tote|crossbody|handbags|clutches|shoulder-bags)\.html?$/i) ||
-            linkLower.match(/\/(bags|shoes|accessories|clothing|travel-bags|duffle|handbags)\/?$/i) && !linkLower.match(/\/product/i) ||
-            // Multi-level category paths without product identifiers (e.g., /men/accessories/bags/travel-bags.html)
-            linkLower.match(/\/(men|women|kids|unisex)\/(accessories|clothing|shoes|bags)\/.+\.(html?|aspx?)$/i) && !linkLower.match(/\/(product|item|p)[\/-]/i) && !linkLower.match(/\d{5,}/i) || // Allow if has product ID (5+ digits)
-            // Non-product pages (reviews, Q&A, etc.)
-            linkLower.endsWith('/reviews') ||
-            linkLower.endsWith('/reviews/') ||
-            linkLower.includes('/reviews?') ||
-            linkLower.endsWith('/questions') ||
-            linkLower.endsWith('/qa') ||
-            linkLower.endsWith('/ratings') ||
-            linkLower.includes('/customer-reviews') ||
-            linkLower.includes('/product-reviews')
-          
-          if (isCategoryPage) {
-            console.log(`🚫 Blocked category/search page: ${link.substring(0, 60)}...`)
+          // Use centralized product link validation
+          if (!isValidProductLink(link)) {
             return false
           }
           
@@ -2323,6 +2350,12 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
                     return false
                   }
                   
+                  // STRICT VALIDATION: Only allow product pages
+                  if (!isValidProductLink(item.link, false)) {
+                    console.log(`   🚫 Skipping non-product link: ${item.link.substring(0, 60)}...`)
+                    return false
+                  }
+                  
                   const title = item.title?.toLowerCase() || ''
                   const link = item.link?.toLowerCase() || ''
                   const combinedText = `${title} ${link}`
@@ -2385,6 +2418,12 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
                   // CRITICAL: Must have a valid link
                   if (!item.link || typeof item.link !== 'string') {
                     console.log(`   🚫 Skipping item with invalid link`)
+                    return false
+                  }
+                  
+                  // STRICT VALIDATION: Only allow product pages
+                  if (!isValidProductLink(item.link, false)) {
+                    console.log(`   🚫 Skipping non-product link: ${item.link.substring(0, 60)}...`)
                     return false
                   }
                   
@@ -2493,6 +2532,10 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
               const refillColorMatches = mergedResults
                 .filter((item: any) => {
                   if (!item.link || typeof item.link !== 'string') return false
+                  
+                  // STRICT VALIDATION: Only allow product pages
+                  if (!isValidProductLink(item.link, false)) return false
+                  
                   const domain = extractDomain(item.link)
                   if (colorDomains.has(domain)) return false
                   
@@ -2532,6 +2575,10 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
               const refillStyleMatches = mergedResults
                 .filter((item: any) => {
                   if (!item.link || typeof item.link !== 'string') return false
+                  
+                  // STRICT VALIDATION: Only allow product pages
+                  if (!isValidProductLink(item.link, false)) return false
+                  
                   const domain = extractDomain(item.link)
                   if (styleDomains.has(domain)) return false
                   
