@@ -74,6 +74,10 @@ export default function Home() {
   const [useOCRSearch, setUseOCRSearch] = useState(false)
   const [ocrStep, setOcrStep] = useState<'extracting' | 'mapping' | 'searching' | 'selecting'>('extracting')
   
+  // Single item mode (skip detection for faster results)
+  const [showSingleItemQuestion, setShowSingleItemQuestion] = useState(false)
+  const [isSingleItem, setIsSingleItem] = useState<boolean | null>(null)
+  
   const [currentStep, setCurrentStep] = useState<'upload' | 'detecting' | 'selecting' | 'processing' | 'gallery' | 'searching' | 'results'>('upload')
   const [autoDrawMode, setAutoDrawMode] = useState(false)  // Auto-enable drawing when no items detected
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string>('')
@@ -239,6 +243,74 @@ export default function Home() {
 
     // Old fallback function removed - now using /api/ocr-search directly
 
+    // SHOW SINGLE ITEM QUESTION (before detection)
+    // This allows users to skip detection for faster results
+    setShowSingleItemQuestion(true)
+    return
+  }
+
+  // Handle single item question response
+  const handleSingleItemResponse = async (isSingle: boolean) => {
+    setIsSingleItem(isSingle)
+    setShowSingleItemQuestion(false)
+    
+    if (isSingle) {
+      // SINGLE ITEM MODE: Skip detection, go straight to full image search
+      console.log('🚀 Single Item Mode: Skipping detection for faster results')
+      await handleSingleItemSearch()
+      return
+    }
+    
+    // Multiple items: proceed with normal detection
+    console.log('👔 Multiple Items Mode: Starting detection...')
+    await startDetectionProcess()
+  }
+
+  // Single item search (skip detection)
+  const handleSingleItemSearch = async () => {
+    console.log('⚡ Single item search: Using full image without detection')
+    setCurrentStep('searching')
+    setIsLoading(true)
+    setOverallProgress(0)
+    
+    try {
+      // Use fallback search (full image search without detection)
+      const searchResponse = await fetch('/api/search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          originalImageUrl: uploadedImageUrl,
+          croppedImages: null, // No cropped images - use full image
+          descriptions: null,
+          skipDetection: true // Flag to skip detection validation
+        })
+      })
+      
+      if (!searchResponse.ok) {
+        throw new Error(`Search failed: ${searchResponse.status}`)
+      }
+      
+      const searchData = await searchResponse.json()
+      console.log('✅ Single item search complete:', searchData)
+      
+      setResults(searchData.results || {})
+      setCurrentStep('results')
+      setOverallProgress(100)
+      
+      if (sessionManager) {
+        sessionManager.logSearchResults(searchData.results, { mode: 'single_item_fast' })
+      }
+    } catch (error) {
+      console.error('Error in single item search:', error)
+      alert('검색 중 오류가 발생했습니다. 다시 시도해주세요.')
+      setCurrentStep('upload')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  // Start normal detection process (multiple items)
+  const startDetectionProcess = async () => {
     // V3.1 OCR MODE: Skip detection, go directly to OCR search with full image
     if (useOCRSearch) {
       console.log('🚀 OCR Mode: Skipping detection, using full image for OCR search')
@@ -256,7 +328,7 @@ export default function Home() {
         const ocrResponse = await fetch('/api/ocr-search', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ imageUrl }),
+          body: JSON.stringify({ imageUrl: uploadedImageUrl }),
         })
         
         if (!ocrResponse.ok) {
@@ -362,7 +434,7 @@ export default function Home() {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ imageUrl }),
+          body: JSON.stringify({ imageUrl: uploadedImageUrl }),
           signal: AbortSignal.timeout(120000)  // 2 min timeout
         })
 
@@ -384,7 +456,7 @@ export default function Home() {
         console.log('📦 Detection data:', {
           bboxes: detectData.bboxes,
           source: detectData.source || 'fallback',
-          imageUrl: imageUrl
+          imageUrl: uploadedImageUrl
         })
         setBboxes(detectData.bboxes || [])
         setImageSize(detectData.image_size || [0, 0])
@@ -409,7 +481,7 @@ export default function Home() {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ imageUrl }),
+          body: JSON.stringify({ imageUrl: uploadedImageUrl }),
         })
 
         const analyzeData = await analyzeResponse.json()
@@ -588,7 +660,16 @@ export default function Home() {
               
               if (descResponse.ok) {
                 const descData = await descResponse.json()
-                description = descData.description || description
+                // Parse JSON if it's in the new structured format
+                let cleanDescription = descData.description || description
+                try {
+                  const parsed = JSON.parse(cleanDescription)
+                  // Extract just the ecom_title for search
+                  cleanDescription = parsed.ecom_title || cleanDescription
+                } catch {
+                  // If not JSON, use as-is (fallback for old format)
+                }
+                description = cleanDescription
                 console.log(`✅ Description (${descTime}s): "${description.substring(0, 60)}..."`)
               } else {
                 const errorText = await descResponse.text()
@@ -851,7 +932,7 @@ export default function Home() {
       {currentStep !== 'results' && <LanguageToggle />}
       
       <div className="container mx-auto px-4 py-8">
-        {currentStep === 'upload' && (
+        {currentStep === 'upload' && !showSingleItemQuestion && (
           <div className="max-w-2xl mx-auto space-y-4">
             <ImageUpload onImageUploaded={handleImageUploaded} />
             
@@ -895,6 +976,65 @@ export default function Home() {
                       }`}
                     >
                       아니오
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+        
+        {/* Single Item Question Modal */}
+        {showSingleItemQuestion && (
+          <div className="max-w-2xl mx-auto space-y-6">
+            {/* Uploaded Image Preview */}
+            <div className="bg-white rounded-2xl shadow-xl p-6 border border-gray-100">
+              <img
+                src={uploadedImageUrl}
+                alt="Uploaded"
+                className="w-full h-96 object-contain rounded-xl"
+              />
+            </div>
+            
+            {/* Single Item Question */}
+            <div className="relative inline-block w-full">
+              {/* Outer container for gradient border */}
+              <div className="absolute -inset-[3px] rounded-[20px] overflow-hidden">
+                {/* Large rotating gradient (scaled up to hide corners) */}
+                <div 
+                  className="absolute inset-[-500%] animate-gradient-rotate"
+                  style={{
+                    background: 'conic-gradient(from 0deg at 50% 50%, #F5A623, #FF6B9D, #C644FC, #00C7BE, #F5A623)'
+                  }}
+                />
+              </div>
+              
+              {/* White background to create border effect */}
+              <div className="absolute inset-0 bg-white rounded-2xl"></div>
+              
+              {/* Content container */}
+              <div className="relative bg-white rounded-2xl p-2">
+                <div className="bg-white rounded-xl p-6 space-y-4">
+                  <div className="text-center space-y-2">
+                    <p className="text-lg font-bold text-gray-800">
+                      사진 속 패션 아이템이 하나만 있나요?
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      하나만 있다면 더 빠르게 정확한 결과를 보실 수 있어요
+                    </p>
+                  </div>
+                  <div className="flex gap-3 justify-center">
+                    <button
+                      onClick={() => handleSingleItemResponse(true)}
+                      className="py-3 px-8 bg-black text-white rounded-xl font-semibold text-sm hover:bg-gray-800 transition-all shadow-lg hover:shadow-xl active:scale-95"
+                    >
+                      네, 하나만 있어요
+                    </button>
+                    <button
+                      onClick={() => handleSingleItemResponse(false)}
+                      className="py-3 px-8 bg-gray-100 text-gray-700 rounded-xl font-semibold text-sm hover:bg-gray-200 transition-all active:scale-95"
+                    >
+                      여러 개 있어요
                     </button>
                   </div>
                 </div>
