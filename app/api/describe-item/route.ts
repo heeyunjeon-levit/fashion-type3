@@ -258,13 +258,6 @@ For unknown categories:
     const usageMetadata = result.usageMetadata as any
     const finishReason = result.candidates?.[0]?.finishReason || 'unknown'
     
-    // Log thinking content if available (helpful for debugging color accuracy)
-    const thinkingContent = result.candidates?.[0]?.content?.parts?.find((p: any) => p.thought)?.thought
-    if (thinkingContent && typeof thinkingContent === 'string') {
-      console.log('💭 Gemini Thinking Process:')
-      console.log(`   ${thinkingContent.substring(0, 300)}...`)
-    }
-    
     // Log response for debugging
     console.log('🔍 NEW SDK Response:')
     console.log(`   Text: "${description}"`)
