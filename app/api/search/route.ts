@@ -2216,7 +2216,8 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
             return {
               link,
               thumbnail,
-              title: resultItem?.title || null
+              title: resultItem?.title || null,
+              searchType: resultItem?.searchType || 'unknown' // Preserve searchType from source
             }
           })
           
