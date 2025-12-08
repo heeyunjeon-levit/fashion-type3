@@ -2436,9 +2436,134 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
               console.log(`✅ Added ${additionalStyleMatches.length} more style matches (lenient validation)`)
             }
             
-            console.log(`\n📊 Two-Stage Selection Complete:`)
-            console.log(`   🎨 Color Matches: ${colorMatches.length}`)
-            console.log(`   ✂️  Style Matches: ${styleMatches.length}`)
+            // DEDUPLICATE BY DOMAIN to ensure brand variety
+            const extractDomain = (url: string): string => {
+              try {
+                const urlObj = new URL(url)
+                // Extract main domain (e.g., "hm.com" from "www2.hm.com")
+                const parts = urlObj.hostname.split('.')
+                return parts.length > 2 ? parts.slice(-2).join('.') : urlObj.hostname
+              } catch {
+                return url
+              }
+            }
+            
+            // Deduplicate color matches by domain
+            const uniqueColorMatches: any[] = []
+            const colorDomains = new Set<string>()
+            for (const item of colorMatches) {
+              const domain = extractDomain(item.link)
+              if (!colorDomains.has(domain)) {
+                uniqueColorMatches.push(item)
+                colorDomains.add(domain)
+                console.log(`   ✅ Color match from: ${domain}`)
+              } else {
+                console.log(`   🚫 Duplicate domain in color matches: ${domain}`)
+              }
+            }
+            
+            // Deduplicate style matches by domain
+            const uniqueStyleMatches: any[] = []
+            const styleDomains = new Set<string>()
+            for (const item of styleMatches) {
+              const domain = extractDomain(item.link)
+              if (!styleDomains.has(domain)) {
+                uniqueStyleMatches.push(item)
+                styleDomains.add(domain)
+                console.log(`   ✅ Style match from: ${domain}`)
+              } else {
+                console.log(`   🚫 Duplicate domain in style matches: ${domain}`)
+              }
+            }
+            
+            // Replace with deduplicated matches
+            colorMatches.length = 0
+            colorMatches.push(...uniqueColorMatches)
+            styleMatches.length = 0
+            styleMatches.push(...uniqueStyleMatches)
+            
+            // If we lost too many due to deduplication, try to refill with unique domains
+            if (colorMatches.length < 3) {
+              console.log(`⚠️  Only ${colorMatches.length} unique color matches after deduplication, refilling...`)
+              const refillColorMatches = mergedResults
+                .filter((item: any) => {
+                  if (!item.link || typeof item.link !== 'string') return false
+                  const domain = extractDomain(item.link)
+                  if (colorDomains.has(domain)) return false
+                  
+                  const title = item.title?.toLowerCase() || ''
+                  const link = item.link?.toLowerCase() || ''
+                  const combinedText = `${title} ${link}`
+                  
+                  const hasColorMatch = matchingKeywords.some(keyword => combinedText.includes(keyword))
+                  if (!hasColorMatch) return false
+                  
+                  const hasGarmentTypeMatch = coreFeatures.length === 0 || coreFeatures.some(feature => {
+                    if (combinedText.includes(feature)) return true
+                    if (feature === 'pants' && (combinedText.includes('trouser') || combinedText.includes('slacks') || combinedText.includes('chino') || combinedText.includes('팬츠') || combinedText.includes('바지') || combinedText.includes('치노') || combinedText.includes('슬랙스'))) return true
+                    if (feature === 'cardigan' && combinedText.includes('가디건')) return true
+                    if (feature === 'sweater' && (combinedText.includes('스웨터') || combinedText.includes('니트'))) return true
+                    return false
+                  })
+                  if (!hasGarmentTypeMatch) return false
+                  
+                  return !colorMatches.some(existing => existing.link === item.link)
+                })
+                .slice(0, 3 - colorMatches.length)
+                .map((item: any) => ({
+                  link: item.link,
+                  thumbnail: item.thumbnailUrl || item.thumbnail || item.imageUrl || null,
+                  title: item.title || null,
+                  searchType: item.searchType || 'unknown'
+                }))
+              
+              colorMatches.push(...refillColorMatches)
+              refillColorMatches.forEach(item => colorDomains.add(extractDomain(item.link)))
+              console.log(`✅ Refilled to ${colorMatches.length} color matches with unique domains`)
+            }
+            
+            if (styleMatches.length < 3) {
+              console.log(`⚠️  Only ${styleMatches.length} unique style matches after deduplication, refilling...`)
+              const refillStyleMatches = mergedResults
+                .filter((item: any) => {
+                  if (!item.link || typeof item.link !== 'string') return false
+                  const domain = extractDomain(item.link)
+                  if (styleDomains.has(domain)) return false
+                  
+                  const title = item.title?.toLowerCase() || ''
+                  const link = item.link?.toLowerCase() || ''
+                  const combinedText = `${title} ${link}`
+                  
+                  const hasTargetColor = matchingKeywords.some(keyword => combinedText.includes(keyword))
+                  if (hasTargetColor) return false
+                  
+                  const hasGarmentTypeMatch = coreFeatures.length === 0 || coreFeatures.some(feature => {
+                    if (combinedText.includes(feature)) return true
+                    if (feature === 'pants' && (combinedText.includes('trouser') || combinedText.includes('slacks') || combinedText.includes('chino') || combinedText.includes('팬츠') || combinedText.includes('바지') || combinedText.includes('치노') || combinedText.includes('슬랙스'))) return true
+                    if (feature === 'cardigan' && combinedText.includes('가디건')) return true
+                    if (feature === 'sweater' && (combinedText.includes('스웨터') || combinedText.includes('니트'))) return true
+                    return false
+                  })
+                  if (!hasGarmentTypeMatch) return false
+                  
+                  return !styleMatches.some(existing => existing.link === item.link) && !colorMatches.some(existing => existing.link === item.link)
+                })
+                .slice(0, 3 - styleMatches.length)
+                .map((item: any) => ({
+                  link: item.link,
+                  thumbnail: item.thumbnailUrl || item.thumbnail || item.imageUrl || null,
+                  title: item.title || null,
+                  searchType: item.searchType || 'unknown'
+                }))
+              
+              styleMatches.push(...refillStyleMatches)
+              refillStyleMatches.forEach(item => styleDomains.add(extractDomain(item.link)))
+              console.log(`✅ Refilled to ${styleMatches.length} style matches with unique domains`)
+            }
+            
+            console.log(`\n📊 Two-Stage Selection Complete (after domain deduplication):`)
+            console.log(`   🎨 Color Matches: ${colorMatches.length} (${colorMatches.length} unique domains)`)
+            console.log(`   ✂️  Style Matches: ${styleMatches.length} (${styleMatches.length} unique domains)`)
           } else {
             // No primary color detected - validate garment type only (lenient)
             console.log(`ℹ️  No primary color detected - validating garment type only`)
