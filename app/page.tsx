@@ -243,6 +243,13 @@ export default function Home() {
 
     // Old fallback function removed - now using /api/ocr-search directly
 
+    // If OCR mode is enabled, skip single item question and go straight to OCR search
+    if (useOCRSearch) {
+      console.log('🔤 OCR Mode enabled: Skipping single item question, going to OCR search')
+      await startDetectionProcess()
+      return
+    }
+
     // SHOW SINGLE ITEM QUESTION (before detection)
     // This allows users to skip detection for faster results
     setShowSingleItemQuestion(true)
