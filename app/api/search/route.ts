@@ -306,9 +306,11 @@ Return TOP 3-5 BEST matches only. Quality over quantity.`
     // Format results
     const products = validLinks.slice(0, 3).map((link: string) => {
       const resultItem = uniqueResults.find((item: any) => item.link === link)
+      // Try ALL possible field names for thumbnail (Serper uses different names!)
+      const thumbnail = resultItem?.thumbnailUrl || resultItem?.thumbnail || resultItem?.image || resultItem?.imageUrl || resultItem?.ogImage || null
       return {
         link,
-        thumbnail: resultItem?.thumbnail || resultItem?.image || null,
+        thumbnail,
         title: resultItem?.title || 'Product'
       }
     })
