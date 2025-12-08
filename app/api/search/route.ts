@@ -584,11 +584,16 @@ export async function POST(request: NextRequest) {
               'bag', 'backpack', 'purse', 'tote', '가방', '백팩'
             ],
             'accessory': [
-              // EXCLUDE clothing
-              'shirt', 'sweater', 'jacket', 'pants', 'dress', '셔츠', '스웨터', '재킷', '바지',
-              // EXCLUDE bags/shoes (unless it's a bag accessory like charm)
-              'bag', 'backpack', 'purse', 'tote', '가방', '백팩',
-              'sneaker', 'boot', 'shoe', '신발', '부츠'
+              // EXCLUDE ALL clothing
+              'shirt', 'sweater', 'jacket', 'coat', 'pants', 'dress', 'skirt', 'shorts', 
+              '셔츠', '스웨터', '재킷', '코트', '바지', '원피스', '치마', '반바지',
+              // EXCLUDE ALL bags (critical for sunglasses/jewelry searches!)
+              'bag', 'backpack', 'purse', 'tote', 'clutch', 'crossbody', 'shoulder bag', 
+              'handbag', 'belt bag', 'fanny pack', 'bum bag', 'messenger', 'satchel',
+              '가방', '백팩', '토트백', '크로스백', '숄더백', '클러치',
+              // EXCLUDE ALL shoes
+              'sneaker', 'boot', 'shoe', 'sandal', 'heel', 'slipper',
+              '신발', '부츠', '샌들', '슬리퍼', '운동화'
             ]
           }
           
@@ -826,17 +831,17 @@ export async function POST(request: NextRequest) {
             else if (desc.includes('sunglasses') || desc.includes('glasses')) specificSubType = 'eyewear'
             
             const accessoryExclusions: Record<string, string> = {
-              'ring': 'necklaces, earrings, bracelets, watches, hats, belts, scarves, sunglasses',
-              'necklace': 'rings, earrings, bracelets, watches, hats, belts, scarves, sunglasses',
-              'earrings': 'rings, necklaces, bracelets, watches, hats, belts, scarves, sunglasses',
-              'bracelet': 'rings, necklaces, earrings, watches, hats, belts, scarves, sunglasses',
-              'watch': 'rings, necklaces, earrings, bracelets, hats, belts, scarves, sunglasses',
-              'headwear': 'rings, necklaces, earrings, bracelets, watches, belts, scarves, sunglasses',
-              'belt': 'rings, necklaces, earrings, bracelets, watches, hats, scarves, sunglasses',
-              'scarf': 'rings, necklaces, earrings, bracelets, watches, hats, belts, sunglasses',
-              'eyewear': 'rings, necklaces, earrings, bracelets, watches, hats, belts, scarves'
+              'ring': 'necklaces, earrings, bracelets, watches, hats, belts, scarves, sunglasses, ALL BAGS, ALL CLOTHING',
+              'necklace': 'rings, earrings, bracelets, watches, hats, belts, scarves, sunglasses, ALL BAGS, ALL CLOTHING',
+              'earrings': 'rings, necklaces, bracelets, watches, hats, belts, scarves, sunglasses, ALL BAGS, ALL CLOTHING',
+              'bracelet': 'rings, necklaces, earrings, watches, hats, belts, scarves, sunglasses, ALL BAGS, ALL CLOTHING',
+              'watch': 'rings, necklaces, earrings, bracelets, hats, belts, scarves, sunglasses, ALL BAGS, ALL CLOTHING',
+              'headwear': 'rings, necklaces, earrings, bracelets, watches, belts, scarves, sunglasses, ALL BAGS, ALL CLOTHING',
+              'belt': 'rings, necklaces, earrings, bracelets, watches, hats, scarves, sunglasses, ALL BAGS, ALL CLOTHING',
+              'scarf': 'rings, necklaces, earrings, bracelets, watches, hats, belts, sunglasses, ALL BAGS, ALL CLOTHING',
+              'eyewear': 'rings, necklaces, earrings, bracelets, watches, hats, belts, scarves, ALL BAGS (purses, totes, backpacks, crossbody, shoulder bags, clutches, belt bags, fanny packs, handbags), ALL CLOTHING'
             }
-            if (specificSubType && accessoryExclusions[specificSubType]) subTypeExclusion = `- ⚠️ CRITICAL: You are searching for ${specificSubType} ONLY. ❌ EXCLUDE: ${accessoryExclusions[specificSubType]}, clothing, shoes, bags`
+            if (specificSubType && accessoryExclusions[specificSubType]) subTypeExclusion = `- ⚠️ CRITICAL: You are searching for ${specificSubType} ONLY. ❌ ABSOLUTELY EXCLUDE: ${accessoryExclusions[specificSubType]}. ONLY ${specificSubType.toUpperCase()}!`
           }
         }
         
@@ -1020,7 +1025,8 @@ ${subTypeExclusion ? subTypeExclusion : ''}
 - ${categoryKey === 'bottoms' && !specificSubType ? '❌ ABSOLUTELY REJECT: Any title mentioning "shirt", "blouse", "jacket", "hoodie", "sweater", "coat", "blazer", "top", "modal-blend", "tie-front", "셔츠", "블라우스", "재킷", "후드", "코트", "상의", "티셔츠", "아우터"' : ''}
 - ${categoryKey === 'shoes' && !specificSubType ? '❌ ABSOLUTELY REJECT: clothing items, bags, accessories' : ''}
 - ${categoryKey === 'bag' && !specificSubType ? '❌ ABSOLUTELY REJECT: clothing items (sweaters, cardigans, jackets, shirts, coats, tops), shoes, accessories (except bags). ONLY BAGS/PURSES/BACKPACKS!' : ''}
-- ${categoryKey === 'accessory' && !specificSubType ? '❌ ABSOLUTELY REJECT: clothing items, shoes, bags' : ''}
+- ${categoryKey === 'accessory' && !specificSubType ? '❌ ABSOLUTELY REJECT: ALL clothing, ALL shoes, ALL bags (purses, backpacks, totes, crossbody, belt bags, fanny packs)' : ''}
+- ${categoryKey === 'accessory' && specificSubType === 'eyewear' ? '🕶️ SUNGLASSES/EYEWEAR ONLY! ❌ REJECT: ALL bags, belts, wallets, clothing, shoes. ONLY glasses/sunglasses!' : ''}
 - ${categoryKey === 'dress' ? '❌ ABSOLUTELY REJECT: Any title mentioning "pants", "jeans", "shorts", "shirt", "jacket", "바지", "셔츠", "재킷"' : ''}
 
 CRITICAL SELECTION RULES (in order of priority):
