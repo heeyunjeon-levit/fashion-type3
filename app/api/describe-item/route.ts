@@ -262,7 +262,7 @@ For unknown categories:
     console.log('🔍 NEW SDK Response:')
     console.log(`   Text: "${description}"`)
     console.log(`   FinishReason: ${finishReason}`)
-    console.log(`   Thinking tokens: ${usageMetadata?.thoughtsTokenCount || 0}${thinkingContent ? ' (with thinking content)' : ''}`)
+    console.log(`   Thinking tokens: ${usageMetadata?.thoughtsTokenCount || 0}`)
     
     console.log(`✅ Gemini 3 Pro Preview Description (JSON string): "${description}"`)
     console.log(`   Prompt tokens: ${usageMetadata?.promptTokenCount || 0}`)
