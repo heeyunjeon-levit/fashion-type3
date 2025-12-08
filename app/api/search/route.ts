@@ -1504,7 +1504,7 @@ ${itemDescription ? `\n🎯 **SPECIFIC ITEM DESCRIPTION: "${itemDescription}"**\
 - The first ${fullImageResults.length} results are from full image search - these are likely EXACT or very close matches
 ${subTypeExclusion ? subTypeExclusion : ''}
 - ${categoryKey === 'tops' && !specificSubType ? '❌ ABSOLUTELY REJECT: Any title mentioning "jeans", "pants", "trousers", "shorts", "skirt", "dress", "바지", "청바지", "반바지", "치마"' : ''}
-- ${categoryKey === 'bottoms' && !specificSubType ? '❌ ABSOLUTELY REJECT: Any title mentioning "shirt", "blouse", "jacket", "hoodie", "sweater", "coat", "blazer", "top", "modal-blend", "tie-front", "셔츠", "블라우스", "재킷", "후드", "코트", "상의", "티셔츠", "아우터"' : ''}
+- ${categoryKey === 'bottoms' && !specificSubType ? '❌ ABSOLUTELY REJECT: Any title mentioning "shirt", "blouse", "jacket", "hoodie", "sweater", "coat", "blazer", "top", "modal-blend", "tie-front", "셔츠", "블라우스", "재킷", "후드", "코트", "상의", "티셔츠", "아우터". ⚠️ For FORMAL/CASUAL pants, also REJECT "track pants", "sweatpants", "joggers", "트랙 팬츠", "조거", "트레이닝" (athletic pants are different category!)' : ''}
 - ${categoryKey === 'shoes' && !specificSubType ? '❌ ABSOLUTELY REJECT: Any title mentioning clothing (shirt, dress, skirt, pants, jeans, jacket, coat, sweater, hoodie, blouse, top, bottom, shorts, 셔츠, 드레스, 치마, 바지, 재킷, 상의, 하의), bags (bag, backpack, purse, tote, 가방, 백팩), or accessories (belt, watch, hat, 벨트, 시계, 모자). ONLY FOOTWEAR (shoes, boots, sneakers, sandals, heels, 신발, 부츠, 운동화, 샌들)!' : ''}
 - ${categoryKey === 'bag' && !specificSubType ? '❌ ABSOLUTELY REJECT: clothing items (sweaters, cardigans, jackets, shirts, coats, tops), shoes, accessories (except bags). ONLY BAGS/PURSES/BACKPACKS!' : ''}
 - ${categoryKey === 'accessory' && !specificSubType ? '❌ ABSOLUTELY REJECT: ALL clothing, ALL shoes, ALL bags (purses, backpacks, totes, crossbody, belt bags, fanny packs)' : ''}
@@ -1952,6 +1952,32 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
             }
           }
           
+          // ADDITIONAL: Filter out track pants when searching for formal/casual pants
+          // Track pants = athletic pants with side stripes, very different from dress pants/chinos
+          if ((categoryKey === 'bottoms' || categoryKey === 'pants') && resultItem && resultItem.title) {
+            const title = resultItem.title.toLowerCase()
+            const athleticPantsKeywords = [
+              'track pant', 'trackpant', 'track pants', '트랙 팬츠', '트랙팬츠', '트랙',
+              'sweatpant', 'sweat pant', '조거', 'jogger', 'jogging pant',
+              'training pant', '트레이닝', 'athletic pant', 'sports pant'
+            ]
+            
+            // Only filter if title explicitly mentions athletic pants (don't filter by URL alone)
+            const hasAthleticKeyword = athleticPantsKeywords.some(keyword => title.includes(keyword))
+            if (hasAthleticKeyword) {
+              // Allow if description explicitly requests these types
+              const descLower = (itemDescription || '').toLowerCase()
+              const requestsAthletic = descLower.includes('track') || descLower.includes('jogger') || 
+                                      descLower.includes('sweat') || descLower.includes('트랙') || 
+                                      descLower.includes('조거') || descLower.includes('트레이닝')
+              
+              if (!requestsAthletic) {
+                console.log(`🚫 Athletic pants filter: "${resultItem.title.substring(0, 60)}..." (track/jogger pants excluded from formal pants search)`)
+                return false
+              }
+            }
+          }
+          
           // Use centralized product link validation
           if (!isValidProductLink(link)) {
             return false
@@ -1992,6 +2018,10 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
               { desc: ['collar', 'collared'], exclude: ['halter', 'v-neck', 'vneck', 'crew neck', 'crewneck'] },
               { desc: ['halter'], exclude: ['collar', 'v-neck', 'vneck', 'crew neck', 'crewneck'] },
               { desc: ['v-neck', 'vneck'], exclude: ['collar', 'halter', 'crew neck', 'crewneck'] },
+              
+              // Pants type mismatches - formal vs athletic
+              { desc: ['trouser', 'trousers', 'dress pant', 'chino', 'slack', 'tailored', 'pleated'], 
+                exclude: ['track pant', 'trackpant', 'sweatpant', 'jogger', '트랙', '조거', '트레이닝', 'training pant', 'athletic pant', 'sports pant'] },
               
               // Completely wrong item types
               { desc: ['hoodie', 'hooded'], exclude: ['cardigan', 'blazer', 'vest', 'socks', '양말', '스타킹', 'stockings'] },
