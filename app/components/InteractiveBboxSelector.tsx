@@ -696,6 +696,18 @@ export default function InteractiveBboxSelector({
             }
           </button>
           
+          {/* Warning message for multiple items */}
+          {selectedCount > 1 && (
+            <div className="flex items-center justify-center gap-1.5 text-xs text-amber-600 bg-amber-50 py-2.5 px-3 rounded-xl border border-amber-200 animate-fadeIn">
+              <span className="text-sm">⏱️</span>
+              <span className="font-medium">
+                {language === 'ko' 
+                  ? '여러 개 선택 시 1-2분 정도 더 소요될 수 있어요' 
+                  : 'Selecting multiple items may take 1-2 minutes longer'}
+              </span>
+            </div>
+          )}
+          
           {/* Confirm button */}
           <button
             onClick={onConfirm}

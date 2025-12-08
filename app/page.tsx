@@ -1045,12 +1045,6 @@ export default function Home() {
                       여러 개 있어요
                     </button>
                   </div>
-                  
-                  {/* Warning message */}
-                  <div className="flex items-center justify-center gap-1.5 text-xs text-amber-600 bg-amber-50 py-2 px-3 rounded-lg">
-                    <span className="text-sm">⏱️</span>
-                    <span className="font-medium">여러 개 선택 시 1-2분 정도 더 소요될 수 있어요</span>
-                  </div>
                 </div>
               </div>
             </div>
