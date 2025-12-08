@@ -160,3 +160,4 @@ Your OCR **has worked before**:
 
 **The backend is working correctly. The issue is with the image content, not the code.** ✅
 
+

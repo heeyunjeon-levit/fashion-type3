@@ -374,3 +374,4 @@ Check backend logs to see filtering effectiveness:
 
 Only high-confidence items shown, less clutter, better UX! ✨🚀
 
+

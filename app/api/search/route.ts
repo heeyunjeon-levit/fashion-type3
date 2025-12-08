@@ -47,6 +47,33 @@ function isValidProductLink(link: string, logReason: boolean = true): boolean {
   
   const linkLower = link.toLowerCase()
   
+  // 🚫 CRITICAL: Block blogs, news, forums, and social media FIRST
+  const nonProductSites = [
+    // Blogs (Korean + International)
+    'blog.naver.com', 'm.blog.naver.com', 'blog.daum.net', 'tistory.com', 
+    'medium.com', 'blogger.com', 'wordpress.com', 'brunch.co.kr', 'velog.io', 'oopy.io',
+    // News/media
+    '/news/', 'newsen.com', 'xportsnews.com', 'dispatch.co.kr', 
+    'sportsseoul.com', 'sportalkorea.com', 'osen.co.kr', 'entertain.naver.com',
+    'sports.naver.com', 'starnewskorea.com', 'tenasia.co.kr', 'mydaily.co.kr',
+    'joins.com', 'chosun.com', 'donga.com', 'hankyung.com', 'mk.co.kr',
+    // Forums/communities
+    'theqoo.net', 'pann.nate.com', 'dcinside.com', 'fmkorea.com', 'clien.net',
+    'ppomppu.co.kr', 'bobaedream.co.kr', 'mlbpark.donga.com', 'ruliweb.com',
+    'instiz.net', 'reddit.com', 'quora.com', 'kin.naver.com',
+    // Social media
+    'youtube.com', 'youtu.be', 'instagram.com', 'facebook.com', 'twitter.com',
+    'tiktok.com', 'pinterest.com',
+    // Wiki/reference
+    'wikipedia.org', 'namu.wiki', 'wikiwand.com'
+  ]
+  
+  const isNonProductSite = nonProductSites.some(domain => linkLower.includes(domain))
+  if (isNonProductSite) {
+    if (logReason) console.log(`🚫 VALIDATION: Non-product site blocked (blog/news/forum): ${link.substring(0, 80)}`)
+    return false
+  }
+  
   // Check for catalog/category/listing pages
   const isCatalogPage = 
     // Search pages
@@ -2301,6 +2328,32 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
               const link = item.link?.toLowerCase() || ''
               const combinedText = `${title} ${link}`
               
+              // 🚫 CRITICAL: Filter out blogs, news, forums FIRST (before any matching)
+              const nonProductSites = [
+                // Blogs (Korean + International)
+                'blog.naver.com', 'm.blog.naver.com', 'blog.daum.net', 'tistory.com', 
+                'medium.com', 'blogger.com', 'wordpress.com', 'brunch.co.kr', 'velog.io', 'oopy.io',
+                // News/media
+                'news', '/news/', 'newsen.com', 'xportsnews.com', 'dispatch.co.kr', 
+                'sportsseoul.com', 'sportalkorea.com', 'osen.co.kr', 'entertain.naver.com',
+                'sports.naver.com', 'starnewskorea.com', 'tenasia.co.kr', 'mydaily.co.kr',
+                // Forums/communities
+                'theqoo.net', 'pann.nate.com', 'dcinside.com', 'fmkorea.com', 'clien.net',
+                'ppomppu.co.kr', 'bobaedream.co.kr', 'mlbpark.donga.com', 'ruliweb.com',
+                'instiz.net', 'reddit.com', 'quora.com',
+                // Social media
+                'youtube.com', 'youtu.be', 'instagram.com', 'facebook.com', 'twitter.com',
+                'tiktok.com', 'pinterest.com',
+                // Wiki/reference
+                'wikipedia.org', 'namu.wiki', 'wikiwand.com'
+              ]
+              
+              const isNonProductSite = nonProductSites.some(domain => link.includes(domain))
+              if (isNonProductSite) {
+                console.log(`🚫 BLOCKED (non-product site): "${title.substring(0, 60)}..." (${link.substring(0, 50)})`)
+                return // Skip this item entirely
+              }
+              
               // Check color match with detailed logging
               const matchedColorKeyword = matchingKeywords.find(keyword => combinedText.includes(keyword))
               const hasColorMatch = !!matchedColorKeyword
@@ -2735,6 +2788,32 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
               const title = item.title?.toLowerCase() || ''
               const link = item.link?.toLowerCase() || ''
               const combinedText = `${title} ${link}`
+              
+              // 🚫 CRITICAL: Filter out blogs, news, forums FIRST (before any matching)
+              const nonProductSites = [
+                // Blogs (Korean + International)
+                'blog.naver.com', 'm.blog.naver.com', 'blog.daum.net', 'tistory.com', 
+                'medium.com', 'blogger.com', 'wordpress.com', 'brunch.co.kr', 'velog.io', 'oopy.io',
+                // News/media
+                'news', '/news/', 'newsen.com', 'xportsnews.com', 'dispatch.co.kr', 
+                'sportsseoul.com', 'sportalkorea.com', 'osen.co.kr', 'entertain.naver.com',
+                'sports.naver.com', 'starnewskorea.com', 'tenasia.co.kr', 'mydaily.co.kr',
+                // Forums/communities
+                'theqoo.net', 'pann.nate.com', 'dcinside.com', 'fmkorea.com', 'clien.net',
+                'ppomppu.co.kr', 'bobaedream.co.kr', 'mlbpark.donga.com', 'ruliweb.com',
+                'instiz.net', 'reddit.com', 'quora.com',
+                // Social media
+                'youtube.com', 'youtu.be', 'instagram.com', 'facebook.com', 'twitter.com',
+                'tiktok.com', 'pinterest.com',
+                // Wiki/reference
+                'wikipedia.org', 'namu.wiki', 'wikiwand.com'
+              ]
+              
+              const isNonProductSite = nonProductSites.some(domain => link.includes(domain))
+              if (isNonProductSite) {
+                console.log(`🚫 BLOCKED (non-product site): "${title.substring(0, 60)}..." (${link.substring(0, 50)})`)
+                return // Skip this item entirely
+              }
               
               // Check if garment type matches (lenient) WITH KOREAN SUPPORT
               const hasGarmentTypeMatch = coreFeatures.length === 0 || coreFeatures.some(feature => {

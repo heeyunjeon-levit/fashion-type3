@@ -367,8 +367,8 @@ export default function Home() {
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
                 categories: [brand],
-                croppedImages: { [brand]: imageUrl }, // Use full image for Lens search
-                originalImageUrl: imageUrl,
+                croppedImages: { [brand]: uploadedImageUrl }, // Use full image for Lens search
+                originalImageUrl: uploadedImageUrl,
                 useOCRSearch: false, // Use regular hybrid search, not OCR mode
               }),
             })

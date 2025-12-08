@@ -150,3 +150,4 @@ All documentation created:
 
 **You have a fully functional, beautiful search MVP with two modes. Ship it!** 🚀
 
+

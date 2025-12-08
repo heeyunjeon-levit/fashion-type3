@@ -67,3 +67,4 @@ WHERE u.norm_phone IN (SELECT norm_phone FROM normalized_batch);
 
 
 
+

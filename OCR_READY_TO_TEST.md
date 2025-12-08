@@ -129,3 +129,4 @@ All optimizations are in place:
 
 Upload → Wait 4 min → See all 3 products with images! 🎉
 
+

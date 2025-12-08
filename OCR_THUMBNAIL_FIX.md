@@ -115,3 +115,4 @@ The OCR search is working but slow:
 
 **Upload again and wait patiently - you'll see all products with beautiful thumbnails!** 🎉
 
+

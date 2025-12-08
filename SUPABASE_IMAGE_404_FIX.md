@@ -170,3 +170,4 @@ But the **proper solution is to fix the Supabase bucket** configuration.
 
 **Next Step: Check Supabase Dashboard → Verify "images" bucket is public**
 
+

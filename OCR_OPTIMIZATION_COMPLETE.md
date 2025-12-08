@@ -137,3 +137,4 @@ The optimizations target the **slowest parts**:
 
 **Upload now - OCR should complete in ~4 minutes and show all results with thumbnails!** 🎉
 
+

@@ -308,3 +308,4 @@ Backend restarted with thumbnail extraction enabled.
 
 **Quality over speed - worth the extra 10 seconds!** 🖼️
 
+
