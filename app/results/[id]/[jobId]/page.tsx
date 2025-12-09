@@ -15,7 +15,7 @@ interface JobStatus {
 
 export default function ResultsPage() {
   const params = useParams();
-  const jobId = params.jobId as string;
+  const jobId = params.id as string;
   
   const [jobStatus, setJobStatus] = useState<JobStatus | null>(null);
   const [loading, setLoading] = useState(true);
