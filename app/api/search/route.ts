@@ -4,6 +4,7 @@ import { GoogleGenAI, ThinkingLevel } from '@google/genai'
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic'
+export const maxDuration = 60 // Allow up to 60 seconds for complex searches
 
 // Initialize OpenAI lazily to read fresh env vars on each request
 function getOpenAIClient() {

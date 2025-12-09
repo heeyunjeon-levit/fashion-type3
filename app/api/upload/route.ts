@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js'
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic'
+export const maxDuration = 30 // Allow up to 30 seconds for large uploads
 
 export async function POST(request: NextRequest) {
   try {
