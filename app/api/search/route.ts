@@ -392,15 +392,16 @@ Return 3-5 BEST matches. Quality over quantity.`
       })
     }
     
-    // Format results
-    const products = validLinks.slice(0, 3).map((link: string) => {
+    // Format results - MATCH multi-item two-stage structure
+    const products = validLinks.slice(0, 5).map((link: string) => {
       const resultItem = uniqueResults.find((item: any) => item.link === link)
       // Try ALL possible field names for thumbnail (Serper uses different names!)
       const thumbnail = resultItem?.thumbnailUrl || resultItem?.thumbnail || resultItem?.image || resultItem?.imageUrl || resultItem?.ogImage || null
       return {
         link,
         thumbnail,
-        title: resultItem?.title || 'Product'
+        title: resultItem?.title || 'Product',
+        searchType: 'single_item_search' // Mark as single-item search
       }
     })
     
@@ -411,15 +412,25 @@ Return 3-5 BEST matches. Quality over quantity.`
     console.log(`✅ Fallback SUCCESS: ${products.length} products found`)
     console.log(`⏱️  Fallback total time: ${totalTime.toFixed(2)}s`)
     
+    // Return in TWO-STAGE format to match multi-item search structure
     return NextResponse.json({
       results: {
-        [category]: products
+        [category]: {
+          colorMatches: [], // Single-item doesn't do color matching
+          styleMatches: products // All results go to styleMatches
+        }
       },
       meta: {
         fallbackMode: true,
         success: true,
         detectedCategory: gptResult.detected_category,
         reasoning: gptResult.reasoning,
+        sourceCounts: {
+          gpt: 1,
+          fallback: 0,
+          none: 0,
+          error: 0
+        },
         timing: {
           serper_api_seconds: timingData.serper_api_time,
           gpt4_turbo_seconds: timingData.gpt4_turbo_api_time,
