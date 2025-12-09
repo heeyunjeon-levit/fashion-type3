@@ -164,270 +164,7 @@ function isValidProductLink(link: string, logReason: boolean = true): boolean {
   return true
 }
 
-// Process single-item search (with description from describe-item)
-async function processSingleItemSearch(
-  croppedImages: Record<string, any>,
-  timingData: Record<string, number>,
-  requestStartTime: number
-) {
-  const [itemKey, itemData] = Object.entries(croppedImages)[0]
-  const { imageUrl, description } = itemData
-  
-  console.log(`   📝 Item: ${itemKey}`)
-  console.log(`   🖼️ Image: ${imageUrl}`)
-  console.log(`   📄 Description: "${description}"`)
-  
-  try {
-    // Step 1: Visual search with Google Lens (3x for coverage)
-    console.log('\n🔍 Running visual search (3x)...')
-    const lensPromises = Array.from({ length: 3 }, (_, i) => {
-      console.log(`   Visual search run ${i + 1}/3...`)
-      return fetch('https://google.serper.dev/lens', {
-        method: 'POST',
-        headers: {
-          'X-API-KEY': process.env.SERPER_API_KEY!,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          url: imageUrl,
-          gl: 'kr',
-          hl: 'ko',
-        }),
-      })
-    })
-    
-    const serperStart = Date.now()
-    const lensResponses = await Promise.all(lensPromises)
-    const serperTime = (Date.now() - serperStart) / 1000
-    timingData.serper_total_api_time = serperTime
-    timingData.serper_count = 3
-    console.log(`   ⏱️  Visual search (3x): ${serperTime.toFixed(2)}s`)
-    
-    // Aggregate and deduplicate results
-    const allResults: any[] = []
-    for (let i = 0; i < lensResponses.length; i++) {
-      if (lensResponses[i].ok) {
-        const data = await lensResponses[i].json()
-        if (data.organic) {
-          allResults.push(...data.organic)
-        }
-      }
-    }
-    
-    const uniqueResults = Array.from(
-      new Map(allResults.map(item => [item.link, item])).values()
-    )
-    
-    console.log(`📊 Found ${uniqueResults.length} unique results`)
-    
-    if (uniqueResults.length === 0) {
-      console.log('❌ No results from visual search')
-      return NextResponse.json({
-        results: {},
-        meta: {
-          singleItemMode: true,
-          success: false,
-          message: 'No results found'
-        }
-      })
-    }
-    
-    // Step 2: Apply validation filters
-    console.log('🔍 Applying validation filters...')
-    const validResults = uniqueResults.filter((item: any) => {
-      if (!item.link) return false
-      if (!isValidProductLink(item.link, false)) return false
-      if (!isValidProductTitle(item.title || '')) return false
-      return true
-    })
-    
-    console.log(`📊 ${validResults.length}/${uniqueResults.length} results passed validation`)
-    
-    if (validResults.length === 0) {
-      console.log('❌ No valid products after filtering')
-      return NextResponse.json({
-        results: {},
-        meta: {
-          singleItemMode: true,
-          success: false,
-          message: 'No valid products found after filtering'
-        }
-      })
-    }
-    
-    // Step 3: Prioritize Korean sites
-    const koreanDomains = ['fruitsfamily.com', 'croket.co.kr', 'kream.co.kr', 'bunjang.co.kr',
-                           'coupang.com', 'gmarket.co.kr', '11st.co.kr', 'musinsa.com', 
-                           'zigzag.kr', 'elandmall.co.kr', 'wconcept.co.kr', '29cm.co.kr', 'ssg.com']
-    
-    const koreanResults = validResults.filter((item: any) => 
-      koreanDomains.some(domain => item.link?.toLowerCase().includes(domain))
-    )
-    const internationalResults = validResults.filter((item: any) => 
-      !koreanDomains.some(domain => item.link?.toLowerCase().includes(domain))
-    )
-    
-    console.log(`📊 ${koreanResults.length} Korean, ${internationalResults.length} international`)
-    
-    // Step 4: Use GPT-4 with description + results
-    const topResults = [
-      ...koreanResults.slice(0, 20),
-      ...internationalResults.slice(0, 10)
-    ].slice(0, 30)
-    
-    const prompt = `You are analyzing visual search results for a fashion product.
-
-Product description: "${description}"
-
-Your task: Select the TOP 3-5 products that best match this description.
-
-CRITICAL RULES:
-1. ✅ **PRIORITIZE Korean sites**: ${koreanDomains.join(', ')}
-2. ✅ Match must be visually similar AND match the description
-3. ✅ Look for exact matches (same color, style, details)
-4. ❌ REJECT: duplicates, category pages, non-product sites
-
-Search results:
-${JSON.stringify(topResults, null, 2)}
-
-Respond with JSON:
-{
-  "detected_category": "tops|bottoms|shoes|bag|accessory|dress|jacket|coat|sweater|scarf|pants|skirt|unknown",
-  "product_links": ["url1", "url2", "url3"],
-  "reasoning": "why these products match the description"
-}
-
-Return 3-5 BEST matches. Quality over quantity.`
-    
-    const { default: OpenAI } = await import('openai')
-    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
-    
-    const gptStart = Date.now()
-    const completion = await openai.chat.completions.create({
-      model: 'gpt-4-turbo-2024-04-09',
-      messages: [
-        {
-          role: 'system',
-          content: 'You are a fashion product analyzer. Return only valid JSON without markdown formatting.'
-        },
-        {
-          role: 'user',
-          content: prompt
-        }
-      ],
-      temperature: 0,
-      max_tokens: 2000,
-      response_format: { type: 'json_object' }
-    })
-    
-    const gptTime = (Date.now() - gptStart) / 1000
-    timingData.gpt4_turbo_total_api_time = gptTime
-    timingData.gpt4_turbo_count = 1
-    console.log(`   ⏱️  GPT-4 Turbo: ${gptTime.toFixed(2)}s`)
-    
-    // Parse response
-    const responseText = completion.choices[0]?.message?.content || '{}'
-    let gptResult: any
-    try {
-      const cleaned = responseText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim()
-      const firstBrace = cleaned.indexOf('{')
-      let braceCount = 0
-      let lastBrace = firstBrace
-      for (let i = firstBrace; i < cleaned.length; i++) {
-        if (cleaned[i] === '{') braceCount++
-        if (cleaned[i] === '}') {
-          braceCount--
-          if (braceCount === 0) {
-            lastBrace = i
-            break
-          }
-        }
-      }
-      const jsonStr = cleaned.substring(firstBrace, lastBrace + 1)
-      gptResult = JSON.parse(jsonStr)
-    } catch (parseError) {
-      console.error(`❌ JSON parse error:`, parseError)
-      gptResult = { product_links: [] }
-    }
-    
-    console.log(`📋 GPT detected: ${gptResult.detected_category}`)
-    console.log(`📋 GPT reasoning: ${gptResult.reasoning}`)
-    
-    // Format results
-    const validLinks = (gptResult.product_links || []).filter((link: string) => 
-      typeof link === 'string' && link.startsWith('http')
-    )
-    
-    if (validLinks.length === 0) {
-      console.log('❌ GPT found no valid products')
-      return NextResponse.json({
-        results: {},
-        meta: {
-          singleItemMode: true,
-          success: false,
-          message: 'No valid products found after analysis'
-        }
-      })
-    }
-    
-    const products = validLinks.slice(0, 5).map((link: string) => {
-      const resultItem = uniqueResults.find((item: any) => item.link === link)
-      const thumbnail = resultItem?.thumbnailUrl || resultItem?.thumbnail || resultItem?.image || resultItem?.imageUrl || null
-      return {
-        link,
-        thumbnail,
-        title: resultItem?.title || 'Product',
-        searchType: 'single_item_search'
-      }
-    })
-    
-    const category = gptResult.detected_category === 'unknown' ? 'item_1' : `${gptResult.detected_category}_1`
-    const totalTime = (Date.now() - requestStartTime) / 1000
-    
-    console.log(`✅ Single-item search SUCCESS: ${products.length} products found`)
-    console.log(`⏱️  Total time: ${totalTime.toFixed(2)}s`)
-    
-    // Return in two-stage format
-    return NextResponse.json({
-      results: {
-        [category]: {
-          colorMatches: [],
-          styleMatches: products
-        }
-      },
-      meta: {
-        singleItemMode: true,
-        success: true,
-        detectedCategory: gptResult.detected_category,
-        reasoning: gptResult.reasoning,
-        sourceCounts: {
-          gpt: 1,
-          fallback: 0,
-          none: 0,
-          error: 0
-        },
-        timing: {
-          serper_api_seconds: serperTime,
-          gpt4_turbo_seconds: gptTime,
-          total_seconds: totalTime
-        }
-      }
-    })
-    
-  } catch (error) {
-    console.error('❌ Single-item search error:', error)
-    return NextResponse.json({
-      results: {},
-      meta: {
-        singleItemMode: true,
-        success: false,
-        error: 'Single-item search failed'
-      }
-    })
-  }
-}
-
-// Fallback search handler when no items are detected
+// Fallback search handler when no items are detected (old synchronous method)
 async function handleFallbackSearch(originalImageUrl: string, requestStartTime: number) {
   console.log('🔍 FALLBACK: Starting full image search...')
   
@@ -933,10 +670,10 @@ export async function POST(request: NextRequest) {
       search_wall_clock_start: Date.now()  // Actual elapsed time
     }
     
-    // Handle single-item jobs differently
+    // Single-item jobs are just treated as 1 category - they flow through the same pipeline!
     if (isSingleItemJob) {
-      console.log('\n✨ Processing single-item job...')
-      return await processSingleItemSearch(croppedImages, timingData, requestStartTime)
+      console.log('\n✨ Single-item job detected - will use SAME pipeline as multi-item')
+      console.log('   (Single-item = 1 category with full image + description)')
     }
     
     console.log(`🔍 Searching categories: ${categories.join(', ')}`)
@@ -1009,14 +746,25 @@ export async function POST(request: NextRequest) {
     }
     
     // Search each cropped image entry in parallel (handles tops, tops_1, tops_2, ...)
-    const croppedEntries = Object.entries(croppedImages || {}) as [string, string][]
+    const croppedEntries = Object.entries(croppedImages || {}) as [string, string | {imageUrl: string, description?: string, isSingleItemMode?: boolean}][]
     
     // Process all cropped images in parallel for maximum speed
     const categoriesStart = Date.now()
-    const searchPromises = croppedEntries.map(async ([resultKey, croppedImageUrl]) => {
+    const searchPromises = croppedEntries.map(async ([resultKey, croppedImageData]) => {
+      // Handle both string URLs (multi-item) and object format (single-item)
+      const croppedImageUrl = typeof croppedImageData === 'string' 
+        ? croppedImageData 
+        : croppedImageData.imageUrl
+      
+      const isSingleItem = typeof croppedImageData === 'object' && croppedImageData.isSingleItemMode
+      
       if (!croppedImageUrl) {
         console.log(`⚠️ No cropped image for ${resultKey}`)
         return { resultKey, results: null }
+      }
+      
+      if (isSingleItem) {
+        console.log(`✨ Processing single-item: ${resultKey}`)
       }
 
       const categoryKey = resultKey.split('_')[0] // base category without instance suffix
