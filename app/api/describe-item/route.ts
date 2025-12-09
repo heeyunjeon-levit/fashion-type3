@@ -3,7 +3,7 @@ import { GoogleGenAI } from '@google/genai'
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic'
-export const maxDuration = 30 // Allow up to 30 seconds for AI description
+export const maxDuration = 60 // Allow up to 60 seconds for AI description (Gemini can be slow)
 
 // Use dedicated Gemini API key (project-specific, not gcloud)
 const client = new GoogleGenAI({
