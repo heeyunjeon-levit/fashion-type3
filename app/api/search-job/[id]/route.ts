@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getJob } from '@/lib/jobQueue'
+import { getJobWithFallback } from '@/lib/jobQueue'
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic'
@@ -17,7 +17,8 @@ export async function GET(
     const { id: jobId } = await params
     
     console.log(`🔍 Checking status for job: ${jobId}`)
-    const job = getJob(jobId)
+    // Try memory first, then database (for shareable links)
+    const job = await getJobWithFallback(jobId)
     
     if (!job) {
       console.log(`❌ Job not found: ${jobId}`)

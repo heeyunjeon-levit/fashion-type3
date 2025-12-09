@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createJob, updateJobProgress, completeJob, failJob, getJob } from '@/lib/jobQueue'
+import { sendSearchResultsNotification } from '@/lib/sms'
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic'
@@ -12,7 +13,7 @@ export const dynamic = 'force-dynamic'
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { categories, croppedImages, descriptions, originalImageUrl, useOCRSearch } = body
+    const { categories, croppedImages, descriptions, originalImageUrl, useOCRSearch, phoneNumber, countryCode } = body
     
     // Create job
     const job = createJob({
@@ -20,10 +21,12 @@ export async function POST(request: NextRequest) {
       croppedImages,
       descriptions,
       originalImageUrl,
-      useOCRSearch
+      useOCRSearch,
+      phoneNumber,
+      countryCode
     })
     
-    console.log(`🚀 Created search job ${job.id}`)
+    console.log(`🚀 Created search job ${job.id}${phoneNumber ? ' with SMS notification' : ''}`)
     
     // Start background processing (don't await - let it run in background)
     processSearchJob(job.id, body).catch(error => {
@@ -40,7 +43,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       jobId: job.id,
       status: 'processing',
-      message: 'Search started. Poll /api/search-job/[id] for status.'
+      message: phoneNumber 
+        ? 'Search started. You will receive an SMS when results are ready.'
+        : 'Search started. Poll /api/search-job/[id] for status.'
     })
     
   } catch (error) {
@@ -101,8 +106,20 @@ async function processSearchJob(jobId: string, body: any) {
       console.log(`✅ Search handler returned results for job ${jobId}`)
       
       // Complete the job with results
-      completeJob(jobId, results.results, results.meta)
+      await completeJob(jobId, results.results, results.meta)
       console.log(`✅ Job ${jobId} marked as completed`)
+      
+      // Send SMS notification if phone number was provided
+      const job = getJob(jobId)
+      if (job?.phoneNumber) {
+        console.log(`📱 Sending SMS notification to ${job.phoneNumber}`)
+        const smsSent = await sendSearchResultsNotification(job.phoneNumber, jobId)
+        if (smsSent) {
+          console.log(`✅ SMS notification sent successfully for job ${jobId}`)
+        } else {
+          console.error(`❌ Failed to send SMS notification for job ${jobId}`)
+        }
+      }
       
     } catch (searchError: any) {
       clearInterval(progressInterval)
