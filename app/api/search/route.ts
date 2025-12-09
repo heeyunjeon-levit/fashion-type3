@@ -227,37 +227,88 @@ async function handleFallbackSearch(originalImageUrl: string, requestStartTime: 
       })
     }
     
-    // Use GPT-4.1 to analyze and categorize the results
-    const topResults = uniqueResults.slice(0, 30)
+    // CRITICAL: Apply validation filters BEFORE sending to GPT-4
+    console.log('🔍 Fallback: Applying validation filters...')
+    const validResults = uniqueResults.filter((item: any) => {
+      if (!item.link) {
+        console.log(`   🚫 No link`)
+        return false
+      }
+      
+      // STRICT: Block non-product sites (news, blogs, forums, social)
+      if (!isValidProductLink(item.link, false)) {
+        console.log(`   🚫 Invalid link: ${item.link.substring(0, 60)}`)
+        return false
+      }
+      
+      // STRICT: Block news/editorial titles
+      if (!isValidProductTitle(item.title || '')) {
+        console.log(`   🚫 Invalid title: "${item.title?.substring(0, 60)}..."`)
+        return false
+      }
+      
+      return true
+    })
     
-    const prompt = `You are analyzing image search results for a fashion product where automatic detection failed.
+    console.log(`📊 Fallback: ${validResults.length}/${uniqueResults.length} results passed validation`)
+    
+    if (validResults.length === 0) {
+      console.log('❌ Fallback: No valid products after filtering')
+      return NextResponse.json({
+        results: {},
+        meta: {
+          fallbackMode: true,
+          success: false,
+          message: 'No valid products found after filtering'
+        }
+      })
+    }
+    
+    // Prioritize Korean sites
+    const koreanDomains = ['fruitsfamily.com', 'croket.co.kr', 'kream.co.kr', 'bunjang.co.kr',
+                           'coupang.com', 'gmarket.co.kr', '11st.co.kr', 'musinsa.com', 
+                           'zigzag.kr', 'elandmall.co.kr', 'wconcept.co.kr', '29cm.co.kr', 'ssg.com']
+    
+    const koreanResults = validResults.filter((item: any) => 
+      koreanDomains.some(domain => item.link?.toLowerCase().includes(domain))
+    )
+    const internationalResults = validResults.filter((item: any) => 
+      !koreanDomains.some(domain => item.link?.toLowerCase().includes(domain))
+    )
+    
+    console.log(`📊 Fallback: ${koreanResults.length} Korean, ${internationalResults.length} international`)
+    
+    // Use GPT-4 Turbo to analyze - prioritize Korean results
+    const topResults = [
+      ...koreanResults.slice(0, 20),
+      ...internationalResults.slice(0, 10)
+    ].slice(0, 30)
+    
+    const prompt = `You are analyzing image search results for a fashion product.
 
-The user uploaded an image but our AI couldn't detect specific items. These are visual search results from the full image.
-
-Your task: Analyze these results and extract the TOP 3-5 BEST product links that match what you see.
+The user uploaded a product image. Your task: Select the TOP 3-5 BEST matching products.
 
 CRITICAL RULES:
-1. ✅ MUST be fashion items (clothing, shoes, bags, accessories)
-2. ✅ MUST be actual product pages (not category pages, not social media)
-3. ✅ Prefer reputable retailers and e-commerce sites
-4. ✅ Look for consistent product types across results (what is this image showing?)
-5. ❌ REJECT: Instagram, TikTok, Pinterest, YouTube, blogs, forums
-6. ❌ REJECT: Category/search/listing pages
-7. ❌ REJECT: Non-shopping sites
+1. ✅ MUST be actual product pages (not blogs, news, social media, category pages)
+2. ✅ **PRIORITIZE Korean sites**: fruitsfamily.com, kream.co.kr, croket.co.kr, musinsa.com, zigzag.kr, coupang.com, gmarket.co.kr, 11st.co.kr
+3. ✅ Look for exact visual matches - same color, style, and details
+4. ✅ Prefer results that appear multiple times (higher confidence)
+5. ❌ REJECT: Instagram, Pinterest, YouTube, TikTok, blogs, forums, news
+6. ❌ REJECT: Category/search/listing pages (must be specific products)
 
-Determine what type of fashion item this is based on the search results, then select the best product matches.
+Korean sites are HIGHLY PREFERRED. If Korean results match well, prioritize them over international sites.
 
 Search results:
 ${JSON.stringify(topResults, null, 2)}
 
 Respond with JSON:
 {
-  "detected_category": "tops|bottoms|shoes|bag|accessory|dress|unknown",
+  "detected_category": "tops|bottoms|shoes|bag|accessory|dress|jacket|coat|sweater|scarf|pants|skirt|unknown",
   "product_links": ["url1", "url2", "url3"],
-  "reasoning": "brief explanation of what you detected"
+  "reasoning": "what product type detected and why these links were chosen"
 }
 
-Return TOP 3-5 BEST matches only. Quality over quantity.`
+Return 3-5 BEST matches. Quality over quantity.`
 
     const openai = getOpenAIClient()
     const gptStart = Date.now()

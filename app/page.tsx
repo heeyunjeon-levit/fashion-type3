@@ -1112,26 +1112,26 @@ export default function Home() {
                 <div className="bg-white rounded-xl p-6 space-y-4">
                   <div className="text-center space-y-2">
                     <p className="text-lg font-bold text-gray-800">
-                      사진 속 패션 아이템이 하나만 있나요?
+                      제품 사진만 있나요?
                     </p>
                     <p className="text-sm text-gray-500">
-                      하나만 있다면 더 빠르게 정확한 결과를 보실 수 있어요
+                      배경 없이 제품만 찍힌 상품 사진이라면 더 빠른 검색이 가능해요
                     </p>
                   </div>
                   
-                  {/* Buttons - Keep on one line */}
+                  {/* Buttons - Default to "여러 개" (safer) */}
                   <div className="flex gap-2 justify-center flex-nowrap">
                     <button
-                      onClick={() => handleSingleItemResponse(true)}
+                      onClick={() => handleSingleItemResponse(false)}
                       className="py-3 px-6 bg-black text-white rounded-xl font-semibold text-sm hover:bg-gray-800 transition-all shadow-lg hover:shadow-xl active:scale-95 whitespace-nowrap"
                     >
-                      네, 하나만 있어요
+                      여러 개 있어요
                     </button>
                     <button
-                      onClick={() => handleSingleItemResponse(false)}
+                      onClick={() => handleSingleItemResponse(true)}
                       className="py-3 px-6 bg-gray-100 text-gray-700 rounded-xl font-semibold text-sm hover:bg-gray-200 transition-all active:scale-95 whitespace-nowrap"
                     >
-                      여러 개 있어요
+                      제품 사진만 있어요
                     </button>
                   </div>
                 </div>
