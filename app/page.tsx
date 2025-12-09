@@ -824,7 +824,8 @@ export default function Home() {
       console.log(`🔍 Searching ${items.length} items with background job queue...`)
       
       const totalItems = items.length
-      const allResults: Record<string, Array<{ link: string; thumbnail: string | null; title: string | null }>> = {}
+      // Support both legacy array format and two-stage format (colorMatches/styleMatches)
+      const allResults: Record<string, Array<{ link: string; thumbnail: string | null; title: string | null }> | { colorMatches: Array<{ link: string; thumbnail: string | null; title: string | null }>; styleMatches: Array<{ link: string; thumbnail: string | null; title: string | null }> }> = {}
       
       // Process searches in parallel but track completion
       const searchPromises = items.map(async (item, idx) => {

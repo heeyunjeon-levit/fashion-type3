@@ -25,11 +25,14 @@ export interface SearchJob {
 
 // In-memory storage (will persist during server lifetime)
 // Use globalThis to ensure singleton across module instances in dev mode
-const GLOBAL_KEY = Symbol.for('__job_queue__')
-if (!globalThis[GLOBAL_KEY as any]) {
-  globalThis[GLOBAL_KEY as any] = new Map<string, SearchJob>()
+declare global {
+  var __job_queue__: Map<string, SearchJob> | undefined
 }
-const jobs = globalThis[GLOBAL_KEY as any] as Map<string, SearchJob>
+
+if (!globalThis.__job_queue__) {
+  globalThis.__job_queue__ = new Map<string, SearchJob>()
+}
+const jobs = globalThis.__job_queue__
 
 // Cleanup old jobs after 1 hour
 const JOB_EXPIRY_MS = 60 * 60 * 1000
