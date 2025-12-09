@@ -16,6 +16,13 @@ const nextConfig = {
       type: 'asset/resource',
     })
 
+    // Ignore optional WebSocket dependencies for @google/genai
+    // These are only needed for streaming/real-time features we don't use
+    if (isServer) {
+      config.externals = config.externals || []
+      config.externals.push('bufferutil', 'utf-8-validate')
+    }
+
     return config
   },
 }
