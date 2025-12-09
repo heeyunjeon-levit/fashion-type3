@@ -1678,10 +1678,15 @@ Don't confuse them just because they have similar silhouettes!
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ` : ''}
 
-🎯 **IMPORTANT: Results are ordered by quality - TOP results are from full-image search (most accurate for iconic items)**
-- First ${fullImageResults.length} results are from full image search (recognizes context, celebrity outfits, exact matches)
-- Remaining results are from cropped image search (visual similarity) + text-based search (keyword matching)
-- STRONGLY PREFER selecting from the TOP results - they're higher quality matches
+🎯 **IMPORTANT: Result Sources and Quality Prioritization**
+1. **TEXT-BASED SEARCH RESULTS (searchType: "text_images")** → HIGHEST ACCURACY for exact keyword matches!
+   - These results match specific product attributes in the title (e.g., "Herringbone Double-Breasted")
+   - ⭐⭐⭐ **CRITICAL**: When description has specific keywords (herringbone, double-breasted, paisley, etc.), PRIORITIZE text_images results with those EXACT words in the title!
+   - Example: Searching for "Herringbone Double-Breasted Coat"? → SELECT results with "herringbone" AND "double-breasted" in title FIRST!
+2. **FULL IMAGE SEARCH (first ${fullImageResults.length} results)** → Good for iconic items, celebrity outfits
+   - Use when NO specific keywords in description, or as backup alternatives
+3. **VISUAL LENS (searchType: "visual_lens")** → Visual similarity only, may miss specific details
+   - Use as last resort when text/full image don't have matches
 
 The original cropped image shows: ${searchTerms.join(', ')}
 ${itemDescription ? `\n🎯 **SPECIFIC ITEM DESCRIPTION: "${itemDescription}"**\n${primaryColor ? `   🎨 **PRIMARY COLOR: ${primaryColor.toUpperCase()} - MATCH THIS COLOR!**` : ''}\nYou SHOULD find products that match THIS DESCRIPTION, especially the COLOR.` : ''}
@@ -1788,7 +1793,16 @@ ${characterName ? '8' : '7'}. 🇰🇷 PREFER: Korean sites often have exact cha
 **IMPORTANT: Return your BEST 3-5 HIGH-QUALITY matches ONLY. Quality over quantity.**
 
 🌟 **SELECTION STRATEGY:**
-- 🔥 **STEP 1 - BRAND FREQUENCY (HIGHEST PRIORITY)**:
+- 🔥 **STEP 0 - TEXT-BASED EXACT KEYWORD MATCHING (SCAN FIRST!)**:
+  * ⭐⭐⭐ **CRITICAL**: Before selecting ANYTHING, scan ALL results for "searchType": "text_images"
+  * Look at the description: "${itemDescription || 'N/A'}"
+  * Extract key attributes: ${itemDescription ? itemDescription.split(/\s+/).filter((w: string) => w.length > 4 && !['womens', 'women', 'mens', 'item'].includes(w.toLowerCase())).slice(0, 5).join(', ') : 'N/A'}
+  * **MANDATORY**: If description has specific keywords (herringbone, double-breasted, paisley, cable-knit, etc.):
+    → SCAN results for text_images entries with those EXACT words in title
+    → Example: "Herringbone Double-Breasted" → Find "text_images" result with "herringbone" AND "double-breasted" in title
+    → **THESE ARE MORE ACCURATE** than visual_lens that only look similar visually!
+  * If you find 2+ text_images with exact keyword matches → SELECT THEM FIRST (they're the exact products!)
+- 🔥 **STEP 1 - BRAND FREQUENCY**:
   ${topRepeatedBrands ? `* ⭐⭐⭐ REPEATED BRANDS DETECTED: ${topRepeatedBrands}
   * **CRITICAL RULE**: When you see repeated brand names (e.g., "KAPITAL" appearing 3+ times):
     → YOU MUST SELECT products with those EXACT brand names from the search results
@@ -1798,11 +1812,11 @@ ${characterName ? '8' : '7'}. 🇰🇷 PREFER: Korean sites often have exact cha
     → Find results with "KAPITAL" AND "SPEAKEASY" in the title
     → These are the EXACT product the user wants!
   * **DO NOT** select random similar-looking scarves from other brands when exact brand matches exist
-  * **PREFER**: Korean sites (fruitsfamily.com, kream.co.kr, croket.co.kr) + international retailers with exact brand` : '* No repeated brands detected - proceed with visual matching'}
-- **STEP 2**: Review the first ${fullImageResults.length} results (full image search)
+  * **PREFER**: Korean sites (fruitsfamily.com, kream.co.kr, croket.co.kr) + international retailers with exact brand` : '* No repeated brands detected - proceed with keyword/visual matching'}
+- **STEP 2**: Review the first ${fullImageResults.length} results (full image search) - Use as backup if text_images don't have exact matches
   * Full image search often finds EXACT matches or designer pieces
   * ${topRepeatedBrands ? '**WARNING**: If repeated brands exist, full image results may be GENERIC alternatives - check if they match the repeated brand first!' : 'High-end brands with good visual match are excellent selections'}
-- **STEP 3**: Balance: exact brand matches (MUST HAVE if brands repeated) + visual similarity + product quality
+- **STEP 3**: Balance: exact keyword matches (MUST HAVE if description has specific attributes) + exact brand matches (MUST HAVE if brands repeated) + visual similarity + product quality
 - **STEP 4**: Include 3-5 best matches considering ALL factors
 - Return [] ONLY if literally no results are for the correct body part
 
@@ -1827,7 +1841,10 @@ ${JSON.stringify(resultsForGPT, null, 2)}
 **VALIDATION PROCESS:**
 For EACH result you consider:
 1. 📖 READ the "title" field first
-${topRepeatedBrands ? `2. 🔥 **BRAND CHECK (HIGHEST PRIORITY)**: ${topRepeatedBrands}
+2. 🔍 **CHECK searchType** - Is this from "text_images" (text search) or "visual_lens" (visual search)?
+   - ⭐ **text_images results** = Found via keyword search, titles contain specific product attributes
+   - **visual_lens results** = Found via visual similarity, may miss specific details
+${topRepeatedBrands ? `3. 🔥 **BRAND CHECK (HIGHEST PRIORITY)**: ${topRepeatedBrands}
    - ✅ Does the title contain these exact brand names? → **SELECT THIS IMMEDIATELY**
    - ✅ Check BOTH cropped image results AND full image results for brand matches
    - ❌ If title is a different brand (e.g., "Zadig&Voltaire" when looking for "KAPITAL") → SKIP unless no brand matches exist
@@ -1848,10 +1865,14 @@ ${topRepeatedBrands ? '8' : '7'}. ✅ FLEXIBLE: Category labels can vary - sweat
 ${topRepeatedBrands ? '9' : '8'}. ✅ CHECK: Is it a specific product (not "Shop", "Category", "Homepage")?
 
 Find the TOP 3-5 BEST AVAILABLE MATCHES. Prioritize IN THIS ORDER:
-1. **STRONGLY PREFER the first ${fullImageResults.length} results** (full image search = most accurate)
-2. Visual similarity (Google Lens already filtered by appearance!)
-3. Similar style/vibe/quality level (luxury vs fast fashion)
-4. Similar color or aesthetic
+1. **TEXT-BASED EXACT KEYWORD MATCHES (searchType: "text_images")** ⭐⭐⭐ HIGHEST PRIORITY!
+   - If description contains specific keywords (herringbone, double-breasted, paisley, cable-knit, etc.):
+   - → SCAN ALL results for text_images entries with those EXACT keywords in the title
+   - → Example: "Herringbone Double-Breasted Coat" → Find titles with "herringbone" AND "double-breasted"
+   - → These are MORE ACCURATE than visual_lens results that only look similar
+2. **Full image search results** (first ${fullImageResults.length} results) - Good for iconic/celebrity items
+3. Visual similarity (visual_lens) - Use only if text_images don't have exact matches
+4. Product quality level (luxury vs fast fashion)  
 5. Product variety (different retailers when possible)
 6. Accessibility (prefer major retailers)
 
@@ -1867,6 +1888,12 @@ Find the TOP 3-5 BEST AVAILABLE MATCHES. Prioritize IN THIS ORDER:
 - Return [] ONLY if results are completely unrelated (e.g., shoes when looking for tops)
 
 🚨 **FINAL VALIDATION - BEFORE RETURNING YOUR RESULTS:**
+0. **⭐ TEXT-BASED KEYWORD CHECK** (DO THIS FIRST!):
+   - Description: "${itemDescription || 'N/A'}"
+   - Does description have specific attributes (herringbone, double-breasted, paisley, cable-knit, etc.)?
+   - If YES → Did you scan for "searchType": "text_images" results with those EXACT keywords in title?
+   - If NO → GO BACK and find text_images results with exact keyword matches - they're more accurate than visual-only results!
+   - Example: Description has "Herringbone Double-Breasted"? → You MUST include results with "herringbone" AND "double-breasted" in title if they exist
 ${topRepeatedBrands ? `1. **BRAND CHECK**: ${topRepeatedBrands}
    - Did you select products with these EXACT brand names in the title?
    - If NO → GO BACK and find products matching these brands from the search results
@@ -1874,11 +1901,11 @@ ${topRepeatedBrands ? `1. **BRAND CHECK**: ${topRepeatedBrands}
    - Example: If "KAPITAL" appears 4 times, you MUST have selected products with "KAPITAL" in the title
 2. Count Korean sites in your selection: fruitsfamily.com, kream.co.kr, bunjang.co.kr, croket.co.kr, coupang.com, gmarket.co.kr, 11st.co.kr, musinsa.com, zigzag.kr, wconcept.co.kr, 29cm.co.kr, ssg.com
 3. If you have fewer than 2 Korean sites → GO BACK and find more Korean options from the search results
-4. Only include international sites (Zara, Gap, Etsy, Amazon, etc.) AFTER you have exact brand matches + 2+ Korean sites
-5. **REQUIRED PATTERN**: [Exact brand Korean site 1, Exact brand Korean site 2, Exact brand international OR Korean site 3]` : `1. Count Korean sites in your selection: fruitsfamily.com, kream.co.kr, bunjang.co.kr, croket.co.kr, coupang.com, gmarket.co.kr, 11st.co.kr, musinsa.com, zigzag.kr, elandmall.co.kr, wconcept.co.kr, 29cm.co.kr, ssg.com
+4. Only include international sites (Zara, Gap, Etsy, Amazon, etc.) AFTER you have exact keyword matches + exact brand matches + 2+ Korean sites
+5. **REQUIRED PATTERN**: [Exact keyword match 1, Exact keyword/brand match 2, Alternative match 3]` : `1. Count Korean sites in your selection: fruitsfamily.com, kream.co.kr, bunjang.co.kr, croket.co.kr, coupang.com, gmarket.co.kr, 11st.co.kr, musinsa.com, zigzag.kr, elandmall.co.kr, wconcept.co.kr, 29cm.co.kr, ssg.com
 2. If you have fewer than 2 Korean sites → GO BACK and find more Korean options from the search results
-3. Only include international sites (Zara, Gap, Etsy, Amazon, etc.) AFTER you have 2+ Korean sites
-4. **REQUIRED PATTERN**: [Korean site 1, Korean site 2, Korean site 3] OR [Korean site 1, Korean site 2, International site]`}
+3. Only include international sites (Zara, Gap, Etsy, Amazon, etc.) AFTER you have exact keyword matches + 2+ Korean sites
+4. **REQUIRED PATTERN**: [Exact keyword match 1, Exact keyword match 2, Alternative match OR Korean site 3]`}
 
 Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MUST be Korean sites) or {"${resultKey}": []} ONLY if zero valid products found.`
 
