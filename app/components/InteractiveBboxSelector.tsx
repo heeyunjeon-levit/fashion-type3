@@ -281,6 +281,19 @@ export default function InteractiveBboxSelector({
     }).sort((a, b) => a.originalIndex - b.originalIndex); // Restore original order
   };
 
+  // Attach global mouse listeners when drawing (allows dragging outside canvas)
+  useEffect(() => {
+    if (isDrawing) {
+      window.addEventListener('mousemove', handleGlobalMouseMove);
+      window.addEventListener('mouseup', handleGlobalMouseUp);
+      
+      return () => {
+        window.removeEventListener('mousemove', handleGlobalMouseMove);
+        window.removeEventListener('mouseup', handleGlobalMouseUp);
+      };
+    }
+  }, [isDrawing, drawStart, scale]);
+
   // Debug logging
   useEffect(() => {
     console.log('🎨 InteractiveBboxSelector mounted:', {
@@ -479,6 +492,50 @@ export default function InteractiveBboxSelector({
     setDrawCurrent(coords);
   };
   
+  // Global mouse move handler for when mouse leaves canvas
+  const handleGlobalMouseMove = (e: MouseEvent) => {
+    if (!isDrawingMode || !isDrawing || !drawStart || !canvasRef.current) return;
+    
+    const canvas = canvasRef.current;
+    const rect = canvas.getBoundingClientRect();
+    const coords = {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    };
+    
+    setDrawCurrent(coords);
+  };
+  
+  // Global mouse up handler
+  const handleGlobalMouseUp = (e: MouseEvent) => {
+    if (!isDrawingMode || !isDrawing || !drawStart || !drawCurrent || !canvasRef.current) return;
+    
+    const canvas = canvasRef.current;
+    const rect = canvas.getBoundingClientRect();
+    
+    // Use current mouse position for final coordinates
+    const finalCoords = {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    };
+    
+    // Calculate bbox in original image coordinates
+    const x1 = Math.min(drawStart.x, finalCoords.x) / scale;
+    const y1 = Math.min(drawStart.y, finalCoords.y) / scale;
+    const x2 = Math.max(drawStart.x, finalCoords.x) / scale;
+    const y2 = Math.max(drawStart.y, finalCoords.y) / scale;
+    
+    // Only accept box if it's large enough (at least 30x30 pixels)
+    if (x2 - x1 > 30 && y2 - y1 > 30) {
+      setPendingManualBox([x1, y1, x2, y2]);
+      setShowCategoryModal(true);
+    }
+    
+    setIsDrawing(false);
+    setDrawStart(null);
+    setDrawCurrent(null);
+  };
+  
   const handleDrawEnd = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
     if (!isDrawingMode || !isDrawing || !drawStart || !drawCurrent) return;
     e.preventDefault();
@@ -580,9 +637,6 @@ export default function InteractiveBboxSelector({
               onMouseDown={handleDrawStart}
               onMouseMove={handleDrawMove}
               onMouseUp={handleDrawEnd}
-              onMouseLeave={(e) => {
-                if (isDrawing) handleDrawEnd(e);
-              }}
               onTouchStart={handleDrawStart}
               onTouchMove={handleDrawMove}
               onTouchEnd={handleDrawEnd}

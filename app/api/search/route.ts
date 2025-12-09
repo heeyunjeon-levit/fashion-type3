@@ -1808,10 +1808,11 @@ ${characterName ? '8' : '7'}. 🇰🇷 PREFER: Korean sites often have exact cha
   * Example: "Herringbone Double-Breasted Coat" → key attributes: ["herringbone", "double-breasted"]
   * Scan all results for titles containing ALL key attributes
   * Select products with all key attributes first (✅ "herringbone double-breasted coat")
-  * Avoid partial matches (❌ "double-breasted coat" missing herringbone)
-  * If 5+ exact matches exist → select 3-5 of them
-  * If fewer than 3 exact matches → then add visual alternatives
-  * Quality > Quantity: better to return 2 exact matches than 3 mixed results
+  * **IMPORTANT EXCEPTION - Premium/Contemporary Brands**: If you find products from high-quality brands (Guest in Residence, The Row, Lemaire, Max Mara, Loro Piana, Toteme, Loulou Studio, Joseph, etc.) that match MOST attributes (e.g., double-breasted coat in right color) but missing 1 specific detail (e.g., herringbone pattern), INCLUDE at least 1 premium brand option alongside exact matches
+  * Avoid generic partial matches (❌ "double-breasted coat" from fast fashion missing herringbone)
+  * If 5+ exact matches exist → select 2-3 exact matches + 1 premium brand alternative
+  * If fewer than 3 exact matches → prioritize premium brands that match well
+  * Quality > Quantity: better to return 2 exact matches + 1 premium alternative than 3 mixed generic results
 - 🔥 **STEP 1 - BRAND FREQUENCY**:
   ${topRepeatedBrands ? `* ⭐⭐⭐ REPEATED BRANDS DETECTED: ${topRepeatedBrands}
   * **CRITICAL RULE**: When you see repeated brand names (e.g., "KAPITAL" appearing 3+ times):
@@ -1884,6 +1885,11 @@ Find the TOP 3-5 BEST AVAILABLE MATCHES. Prioritize IN THIS ORDER:
    - → SCAN ALL results for text_images entries with those EXACT keywords in the title
    - → Example: "Herringbone Double-Breasted Coat" → Find titles with "herringbone" AND "double-breasted"
    - → These are MORE ACCURATE than visual_lens results that only look similar
+1b. **PREMIUM/CONTEMPORARY BRANDS** ⭐⭐ VERY HIGH PRIORITY!
+   - Brands like: Guest in Residence, The Row, Lemaire, Max Mara, Loro Piana, Toteme, Loulou Studio, Joseph, Brunello Cucinelli, Jil Sander, Khaite, Nanushka, Acne Studios
+   - → If you find these brands matching the core item type + color (even without 1 specific pattern detail), INCLUDE at least 1 as an alternative
+   - → Example: "Herringbone Double-Breasted Coat" → "Guest in Residence Double-Breasted Coat" (missing herringbone but premium brand) = INCLUDE
+   - → Balance: 2-3 exact keyword matches + 1 premium brand = ideal selection
 2. **Full image search results** (first ${fullImageResults.length} results) - Good for iconic/celebrity items
 3. Visual similarity (visual_lens) - Use only if text_images don't have exact matches
 4. Product quality level (luxury vs fast fashion)  
@@ -1904,8 +1910,12 @@ Find the TOP 3-5 BEST AVAILABLE MATCHES. Prioritize IN THIS ORDER:
 🚨 **FINAL VALIDATION:**
 1. **Check top ${fullImageResults.length} results**: Did you examine the full image search results at the top for exact matches?
 2. **Verify key attributes**: Does each selected product's title contain ALL key attributes from "${itemDescription || 'N/A'}"?
-3. **No partial matches**: If description has specific attributes (herringbone, double-breasted), all results should have them
-4. **Quality over quantity**: Better to return 2-3 exact matches than mix exact + partial results
+3. **Balance exact matches with premium brands**: If description has specific attributes (herringbone, double-breasted):
+   - IDEAL: 2-3 products with ALL attributes + 1 premium brand with MOST attributes
+   - ACCEPTABLE: All exact matches if no premium brands found
+   - AVOID: Generic fast-fashion partial matches (e.g., ETRO, Golden Goose, Dolce & Gabbana are good; H&M, Zara partial matches are not)
+4. **Quality over quantity**: Better to return 2-3 exact matches + 1 premium alternative than 3 mixed generic results
+5. **Premium brand check**: Did you scan for Guest in Residence, The Row, Max Mara, Lemaire, Loro Piana, Toteme, Loulou Studio, etc.?
 ${topRepeatedBrands ? `1. **BRAND CHECK**: ${topRepeatedBrands}
    - Did you select products with these EXACT brand names in the title?
    - If NO → GO BACK and find products matching these brands from the search results
