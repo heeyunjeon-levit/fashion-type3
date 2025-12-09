@@ -50,18 +50,17 @@ function isValidProductTitle(title: string): boolean {
   
   // Reject news/editorial content patterns in titles
   const newsPatterns = [
-    'premiere of',
-    '| national',
-    '| local',
-    '| news',
-    'breaking:',
-    'exclusive:',
-    'interview:',
-    'behind the scenes',
-    'red carpet',
-    'fashion week coverage',
-    'at the event',
-    'spotted wearing'
+    // News/event coverage
+    'premiere of', '| national', '| local', '| news', 'breaking:', 'exclusive:',
+    'interview:', 'behind the scenes', 'red carpet', 'fashion week coverage',
+    'at the event', 'spotted wearing',
+    // Celebrity editorial patterns (e.g. "Gigi Hadid Found the 2025 Way")
+    ' found the ', ' declares ', ' reveals ', ' shows off ', ' steps out ',
+    ' wore ', ' was spotted ', ' street style', ' outfit details',
+    ' proves ', ' confirms ', ' swears by', ' style file',
+    // Editorial verbs indicating articles, not products
+    'how to', 'why you', 'best way to', 'trend alert', 'style guide',
+    'must-have', 'guide to', 'secrets to', 'tips for'
   ]
   
   return !newsPatterns.some(pattern => titleLower.includes(pattern))
@@ -88,6 +87,12 @@ function isValidProductLink(link: string, logReason: boolean = true): boolean {
     'joins.com', 'chosun.com', 'donga.com', 'hankyung.com', 'mk.co.kr',
     'guardonline.com', // News site
     '/premiere', '/event/', '/events/', '/show/', '/shows/', // Event pages
+    // Fashion editorial/magazine sites (NOT retailers!)
+    'whowhatwear.com', 'glamour.com', 'vogue.com', 'elle.com', 'harpersbazaar.com',
+    'instyle.com', 'cosmopolitan.com', 'marieclaire.com', 'wmagazine.com', 'wkorea.com',
+    'starstyle.com', 'thecut.com', 'fashionista.com', 'refinery29.com', 'popsugar.com',
+    'gq.com', 'esquire.com', 'nylon.com', 'allure.com', 'byrdie.com', 'thezoereport.com',
+    'fashionbombdaily.com', 'whowhatwhat.com', 'celebritystyle.com', 'justjared.com'
     // Forums/communities
     'theqoo.net', 'pann.nate.com', 'dcinside.com', 'fmkorea.com', 'clien.net',
     'ppomppu.co.kr', 'bobaedream.co.kr', 'mlbpark.donga.com', 'ruliweb.com',
