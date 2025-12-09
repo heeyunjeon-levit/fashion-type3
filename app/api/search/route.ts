@@ -92,7 +92,7 @@ function isValidProductLink(link: string, logReason: boolean = true): boolean {
     'instyle.com', 'cosmopolitan.com', 'marieclaire.com', 'wmagazine.com', 'wkorea.com',
     'starstyle.com', 'thecut.com', 'fashionista.com', 'refinery29.com', 'popsugar.com',
     'gq.com', 'esquire.com', 'nylon.com', 'allure.com', 'byrdie.com', 'thezoereport.com',
-    'fashionbombdaily.com', 'whowhatwhat.com', 'celebritystyle.com', 'justjared.com'
+    'fashionbombdaily.com', 'whowhatwhat.com', 'celebritystyle.com', 'justjared.com',
     // Forums/communities
     'theqoo.net', 'pann.nate.com', 'dcinside.com', 'fmkorea.com', 'clien.net',
     'ppomppu.co.kr', 'bobaedream.co.kr', 'mlbpark.donga.com', 'ruliweb.com',
