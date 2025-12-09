@@ -1110,12 +1110,9 @@ export default function Home() {
               {/* Content container */}
               <div className="relative bg-white rounded-2xl p-2">
                 <div className="bg-white rounded-xl p-6 space-y-4">
-                  <div className="text-center space-y-2">
-                    <p className="text-lg font-bold text-gray-800">
+                  <div className="text-center">
+                    <p className="text-base font-bold text-gray-800">
                       사진 속 패션 아이템이 하나만 있나요?
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      하나만 있다면 더 빠르게 정확한 결과를 보실 수 있어요
                     </p>
                   </div>
                   
