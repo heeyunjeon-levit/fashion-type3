@@ -1716,7 +1716,9 @@ ${topRepeatedBrands ? `
 ` : ''}
 ${characterName ? `1. 🎭 **CHARACTER/GRAPHIC MATCH**: Item MUST feature "${characterName.toUpperCase()}"! Reject different characters!` : ''}
 ${primaryColor ? `2. 🎨 **COLOR MATCH**: Item MUST be ${primaryColor.toUpperCase()} colored! Reject inverted colors!` : ''}
-3. 🇰🇷 **MANDATORY: AT LEAST 2 KOREAN SITES**: Your final selection MUST include minimum 2 Korean e-commerce sites!
+3. 🇰🇷 **STRONGLY PREFER: AT LEAST 2 KOREAN SITES**: Aim to include minimum 2 Korean e-commerce sites when available!
+   - **EXCEPTION**: If exact keyword matches exist ONLY on international sites, prioritize accuracy over Korean sites
+   - Example: Searching for "Herringbone Double-Breasted"? If only international sites have BOTH keywords → select them!
 4. CATEGORY MATCH: Must be correct garment type (${categorySearchTerms[categoryKey]?.join(' OR ')})
 5. VISUAL MATCH: Look for similar style, color, material
 4. Accept ANY e-commerce/product website (Korean, international, boutique)
@@ -1820,19 +1822,23 @@ ${characterName ? '8' : '7'}. 🇰🇷 PREFER: Korean sites often have exact cha
 - **STEP 4**: Include 3-5 best matches considering ALL factors
 - Return [] ONLY if literally no results are for the correct body part
 
-🇰🇷 **KOREAN SITE REQUIREMENT** (search was done with gl=kr, hl=ko):
-- ⚠️ **MANDATORY**: You MUST select AT LEAST 2 KOREAN SITES in your results!
-- **Korean e-commerce sites** (PRIMARY - prefer these):
+🇰🇷 **KOREAN SITE PREFERENCE** (search was done with gl=kr, hl=ko):
+- 🎯 **GOAL**: Include AT LEAST 2 KOREAN SITES when available!
+- **EXCEPTION**: If searching for specific attributes (herringbone, paisley, cable-knit, etc.):
+  * → Prioritize EXACT KEYWORD MATCHES over Korean site requirement
+  * → Example: "Herringbone Double-Breasted" search finds perfect matches ONLY on international sites? → SELECT THEM!
+  * → Better to show 3 perfect international matches than 2 Korean generic alternatives
+- **Korean e-commerce sites** (PRIMARY - prefer these when quality is equal):
   * Retailers: musinsa.com, wconcept.co.kr, 29cm.co.kr, ssg.com, elandmall.co.kr, gmarket.co.kr, 11st.co.kr, coupang.com, zigzag.kr
   * Resale/secondhand (ACCEPTABLE but prefer retailers): fruitsfamily.com, kream.co.kr, bunjang.co.kr, croket.co.kr
 - Korean sites often have EXACT matches with better prices and faster shipping in Korea
 - **IMPORTANT**: If you see repeated brand names (e.g., "KAPITAL" ×4), prioritize finding that brand's actual retailers FIRST, then include resale/secondhand as alternatives
-- **Required selection pattern**: 
-  * If you find 3+ Korean matches → Select 3 Korean sites (prefer mix of retailers + resale if available)
-  * If you find 2 Korean matches → Select 2 Korean + 1 international alternative
-  * If you find only 1 Korean match → Select 1 Korean + look harder for a 2nd Korean + 1 international
-  * If you find 0 Korean matches → Return international sites BUT LOG THIS AS UNUSUAL
-- International alternatives (use ONLY if you have 2+ Korean already): Amazon, Zara, H&M, ASOS, Uniqlo, Mango, brand official sites
+- **Selection pattern (in priority order)**: 
+  * HIGHEST: Exact keyword matches (herringbone + double-breasted) from ANY site
+  * HIGH: Repeated brand matches from ANY site  
+  * MEDIUM: Korean sites with visual similarity
+  * LOW: International sites with visual similarity only
+- International alternatives: Amazon, Zara, H&M, ASOS, Uniqlo, Mango, brand official sites, Net-a-Porter, Farfetch, Mytheresa
 - ❌ NEVER select: Etsy, Depop, Poshmark, Gap, Old Navy (wrong market, often sold out)
 
 Search results (scan all ${resultsForGPT.length} for best matches):
@@ -1899,15 +1905,23 @@ ${topRepeatedBrands ? `1. **BRAND CHECK**: ${topRepeatedBrands}
    - If NO → GO BACK and find products matching these brands from the search results
    - The cropped image results (visual_lens) often have the exact brand products
    - Example: If "KAPITAL" appears 4 times, you MUST have selected products with "KAPITAL" in the title
-2. Count Korean sites in your selection: fruitsfamily.com, kream.co.kr, bunjang.co.kr, croket.co.kr, coupang.com, gmarket.co.kr, 11st.co.kr, musinsa.com, zigzag.kr, wconcept.co.kr, 29cm.co.kr, ssg.com
-3. If you have fewer than 2 Korean sites → GO BACK and find more Korean options from the search results
-4. Only include international sites (Zara, Gap, Etsy, Amazon, etc.) AFTER you have exact keyword matches + exact brand matches + 2+ Korean sites
-5. **REQUIRED PATTERN**: [Exact keyword match 1, Exact keyword/brand match 2, Alternative match 3]` : `1. Count Korean sites in your selection: fruitsfamily.com, kream.co.kr, bunjang.co.kr, croket.co.kr, coupang.com, gmarket.co.kr, 11st.co.kr, musinsa.com, zigzag.kr, elandmall.co.kr, wconcept.co.kr, 29cm.co.kr, ssg.com
-2. If you have fewer than 2 Korean sites → GO BACK and find more Korean options from the search results
-3. Only include international sites (Zara, Gap, Etsy, Amazon, etc.) AFTER you have exact keyword matches + 2+ Korean sites
-4. **REQUIRED PATTERN**: [Exact keyword match 1, Exact keyword match 2, Alternative match OR Korean site 3]`}
+2. **KOREAN SITE CHECK** (flexible rule):
+   - Count Korean sites: fruitsfamily.com, kream.co.kr, bunjang.co.kr, croket.co.kr, coupang.com, gmarket.co.kr, 11st.co.kr, musinsa.com, zigzag.kr, wconcept.co.kr, 29cm.co.kr, ssg.com
+   - **PREFERRED**: 2+ Korean sites when quality is equal
+   - **EXCEPTION**: If you found exact keyword matches (e.g., "herringbone" + "double-breasted") ONLY on international sites → SELECT THEM!
+   - Don't return empty array just because you can't find Korean sites with exact keywords
+3. **PRIORITY HIERARCHY**: Exact keywords > Exact brands > Korean sites > Visual similarity
+4. **REQUIRED PATTERN**: [Best match 1, Best match 2, Best match 3] (regardless of country if they're exact matches)` : `1. **KOREAN SITE CHECK** (flexible rule):
+   - Count Korean sites: fruitsfamily.com, kream.co.kr, bunjang.co.kr, croket.co.kr, coupang.com, gmarket.co.kr, 11st.co.kr, musinsa.com, zigzag.kr, elandmall.co.kr, wconcept.co.kr, 29cm.co.kr, ssg.com
+   - **PREFERRED**: 2+ Korean sites when quality is equal
+   - **EXCEPTION**: If you found exact keyword matches (e.g., "herringbone" + "double-breasted") ONLY on international sites → SELECT THEM!
+   - Don't return empty array just because you can't find Korean sites with exact keywords
+2. **PRIORITY HIERARCHY**: Exact keywords > Korean sites with good matches > Visual similarity
+3. **REQUIRED PATTERN**: [Best match 1, Best match 2, Best match 3] (prioritize accuracy over country)`}
 
-Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MUST be Korean sites) or {"${resultKey}": []} ONLY if zero valid products found.`
+Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 best links) or {"${resultKey}": []} ONLY if literally zero valid products found.
+
+**CRITICAL**: Don't return empty array [] just because you can't find Korean sites! If perfect international matches exist, SELECT THEM!`
 
         const openai = getOpenAIClient()
         const gptStart = Date.now()
