@@ -1796,14 +1796,25 @@ ${characterName ? '8' : '7'}. 🇰🇷 PREFER: Korean sites often have exact cha
 
 🌟 **SELECTION STRATEGY:**
 - 🔥 **STEP 0 - TEXT-BASED EXACT KEYWORD MATCHING (SCAN FIRST!)**:
-  * ⭐⭐⭐ **CRITICAL**: Before selecting ANYTHING, scan ALL results for "searchType": "text_images"
+  * ⭐⭐⭐ **CRITICAL**: Before selecting ANYTHING, identify KEY ATTRIBUTES in the description
   * Look at the description: "${itemDescription || 'N/A'}"
-  * Extract key attributes: ${itemDescription ? itemDescription.split(/\s+/).filter((w: string) => w.length > 4 && !['womens', 'women', 'mens', 'item'].includes(w.toLowerCase())).slice(0, 5).join(', ') : 'N/A'}
-  * **MANDATORY**: If description has specific keywords (herringbone, double-breasted, paisley, cable-knit, etc.):
-    → SCAN results for text_images entries with those EXACT words in title
-    → Example: "Herringbone Double-Breasted" → Find "text_images" result with "herringbone" AND "double-breasted" in title
-    → **THESE ARE MORE ACCURATE** than visual_lens that only look similar visually!
-  * If you find 2+ text_images with exact keyword matches → SELECT THEM FIRST (they're the exact products!)
+  * Extract key attributes (materials/patterns/styles): ${itemDescription ? itemDescription.split(/\s+/).filter((w: string) => w.length > 4 && !['womens', 'women', 'mens', 'item'].includes(w.toLowerCase())).slice(0, 5).join(', ') : 'N/A'}
+  * **MANDATORY PROCESS**:
+    → STEP A: Identify 1-2 key attributes (e.g., "herringbone" + "double-breasted", "paisley" + "wrap", "cable-knit" + "turtleneck")
+    → STEP B: SCAN ALL results (all searchTypes) for titles containing BOTH/ALL key attributes
+    → STEP C: **ONLY SELECT products with ALL key attributes in the title**
+    → STEP D: If you find 5+ exact matches → select 3-5 of them (prioritize Korean sites when quality is equal)
+    → STEP E: If you find 3-4 exact matches → select ALL of them (don't add partial matches!)
+    → STEP F: If you find fewer than 3 exact matches → THEN add high-quality visual alternatives
+  * **EXAMPLES**:
+    → Description: "Brown Herringbone Double-Breasted Coat"
+    → Key attributes: ["herringbone", "double-breasted"]
+    → ✅ CORRECT: "Herringbone-pattern double-breasted Coat" (has BOTH!)
+    → ✅ CORRECT: "Double-breasted herringbone wool Coat" (has BOTH!)
+    → ❌ WRONG: "Double-breasted alpaca coat" (missing herringbone → NOT exact match!)
+    → ❌ WRONG: "Herringbone wool coat" (missing double-breasted → NOT exact match!)
+    → ❌ WRONG: "Harris Wool Overfit Coat" (missing BOTH → NOT even close!)
+  * **DO NOT MIX**: Don't select 1 exact match + 2 partial matches. Find 3+ exact matches or return fewer results!
 - 🔥 **STEP 1 - BRAND FREQUENCY**:
   ${topRepeatedBrands ? `* ⭐⭐⭐ REPEATED BRANDS DETECTED: ${topRepeatedBrands}
   * **CRITICAL RULE**: When you see repeated brand names (e.g., "KAPITAL" appearing 3+ times):
@@ -1894,12 +1905,22 @@ Find the TOP 3-5 BEST AVAILABLE MATCHES. Prioritize IN THIS ORDER:
 - Return [] ONLY if results are completely unrelated (e.g., shoes when looking for tops)
 
 🚨 **FINAL VALIDATION - BEFORE RETURNING YOUR RESULTS:**
-0. **⭐ TEXT-BASED KEYWORD CHECK** (DO THIS FIRST!):
+0. **⭐⭐⭐ EXACT ATTRIBUTE MATCHING CHECK** (DO THIS FIRST! MOST CRITICAL!):
    - Description: "${itemDescription || 'N/A'}"
-   - Does description have specific attributes (herringbone, double-breasted, paisley, cable-knit, etc.)?
-   - If YES → Did you scan for "searchType": "text_images" results with those EXACT keywords in title?
-   - If NO → GO BACK and find text_images results with exact keyword matches - they're more accurate than visual-only results!
-   - Example: Description has "Herringbone Double-Breasted"? → You MUST include results with "herringbone" AND "double-breasted" in title if they exist
+   - **STEP 1**: Identify 1-2 key attributes (herringbone, double-breasted, paisley, cable-knit, wrap, turtleneck, etc.)
+   - **STEP 2**: Check EACH of your 3-5 selected products:
+     * ✅ Does Product #1's title contain ALL key attributes? (e.g., both "herringbone" AND "double-breasted")
+     * ✅ Does Product #2's title contain ALL key attributes?
+     * ✅ Does Product #3's title contain ALL key attributes?
+   - **STEP 3**: If ANY product is missing key attributes:
+     → ❌ REJECT IT and find a replacement with ALL key attributes
+     → Only include partial matches if you found fewer than 3 products with ALL attributes
+   - **EXAMPLES** (Description: "Herringbone Double-Breasted Coat"):
+     * ✅ Product #1: "Ermanno Scervino herringbone-pattern double-breasted Coat" → PERFECT (has both!)
+     * ✅ Product #2: "Maison Margiela Herringbone double-breasted Coat" → PERFECT (has both!)
+     * ❌ Product #3: "Dolce & Gabbana Double-breasted alpaca coat" → REJECT (missing herringbone!)
+     * → GO BACK and find another product with "herringbone" + "double-breasted" instead!
+   - **CRITICAL**: If description has specific attributes → ALL 3-5 results MUST have those attributes (don't mix 1 exact + 2 partial!)
 ${topRepeatedBrands ? `1. **BRAND CHECK**: ${topRepeatedBrands}
    - Did you select products with these EXACT brand names in the title?
    - If NO → GO BACK and find products matching these brands from the search results
@@ -1919,9 +1940,13 @@ ${topRepeatedBrands ? `1. **BRAND CHECK**: ${topRepeatedBrands}
 2. **PRIORITY HIERARCHY**: Exact keywords > Korean sites with good matches > Visual similarity
 3. **REQUIRED PATTERN**: [Best match 1, Best match 2, Best match 3] (prioritize accuracy over country)`}
 
-Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 best links) or {"${resultKey}": []} ONLY if literally zero valid products found.
+Return JSON: {"${resultKey}": ["url1", "url2", "url3", ...]} (3-5 best links, or fewer if only exact matches available)
 
-**CRITICAL**: Don't return empty array [] just because you can't find Korean sites! If perfect international matches exist, SELECT THEM!`
+**CRITICAL RULES**:
+1. Don't return empty array [] just because you can't find Korean sites! If perfect international matches exist, SELECT THEM!
+2. **QUALITY > QUANTITY**: Better to return 2 exact attribute matches than 3 mixed (1 exact + 2 partial)!
+3. If description has key attributes (herringbone, double-breasted) → ALL results MUST have those attributes
+4. Only mix exact + partial matches if you found fewer than 3 products with ALL key attributes`
 
         const openai = getOpenAIClient()
         const gptStart = Date.now()
