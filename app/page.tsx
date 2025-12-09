@@ -1110,23 +1110,26 @@ export default function Home() {
               {/* Content container */}
               <div className="relative bg-white rounded-2xl p-2">
                 <div className="bg-white rounded-xl p-6 space-y-4">
-                  <div className="text-center">
-                    <p className="text-base font-bold text-gray-800">
+                  <div className="text-center space-y-2">
+                    <p className="text-lg font-bold text-gray-800">
                       사진 속 패션 아이템이 하나만 있나요?
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      하나만 있다면 더 빠르게 정확한 결과를 보실 수 있어요
                     </p>
                   </div>
                   
-                  {/* Buttons */}
-                  <div className="flex gap-3 justify-center">
+                  {/* Buttons - Keep on one line */}
+                  <div className="flex gap-2 justify-center flex-nowrap">
                     <button
                       onClick={() => handleSingleItemResponse(true)}
-                      className="py-3 px-8 bg-black text-white rounded-xl font-semibold text-sm hover:bg-gray-800 transition-all shadow-lg hover:shadow-xl active:scale-95"
+                      className="py-3 px-6 bg-black text-white rounded-xl font-semibold text-sm hover:bg-gray-800 transition-all shadow-lg hover:shadow-xl active:scale-95 whitespace-nowrap"
                     >
                       네, 하나만 있어요
                     </button>
                     <button
                       onClick={() => handleSingleItemResponse(false)}
-                      className="py-3 px-8 bg-gray-100 text-gray-700 rounded-xl font-semibold text-sm hover:bg-gray-200 transition-all active:scale-95"
+                      className="py-3 px-6 bg-gray-100 text-gray-700 rounded-xl font-semibold text-sm hover:bg-gray-200 transition-all active:scale-95 whitespace-nowrap"
                     >
                       여러 개 있어요
                     </button>
