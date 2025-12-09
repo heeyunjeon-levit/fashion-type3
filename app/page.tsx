@@ -88,7 +88,8 @@ export default function Home() {
   const [detectedItems, setDetectedItems] = useState<DetectedItem[]>([])
   const [selectedItems, setSelectedItems] = useState<DetectedItem[]>([])
   const [processingItems, setProcessingItems] = useState<{category: string}[]>([])
-  const [results, setResults] = useState<Record<string, Array<{ link: string; thumbnail: string | null; title: string | null }>>>({})
+  // Results can be either legacy array format OR two-stage format with colorMatches/styleMatches
+  const [results, setResults] = useState<Record<string, Array<{ link: string; thumbnail: string | null; title: string | null }> | { colorMatches: Array<{ link: string; thumbnail: string | null; title: string | null }>; styleMatches: Array<{ link: string; thumbnail: string | null; title: string | null }> }>>({})
   const [isLoading, setIsLoading] = useState(false)
   const [sessionManager, setSessionManager] = useState<any>(null)
   const [overallProgress, setOverallProgress] = useState(0)
