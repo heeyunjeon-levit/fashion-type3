@@ -39,6 +39,30 @@ const categoryLabels: Record<string, string> = {
  * STRICT VALIDATION: Check if a link is a valid product page (not catalog/category/article)
  * This is the single source of truth for product link validation
  */
+function isValidProductTitle(title: string): boolean {
+  if (!title) return true // If no title, rely on link validation
+  
+  const titleLower = title.toLowerCase()
+  
+  // Reject news/editorial content patterns in titles
+  const newsPatterns = [
+    'premiere of',
+    '| national',
+    '| local',
+    '| news',
+    'breaking:',
+    'exclusive:',
+    'interview:',
+    'behind the scenes',
+    'red carpet',
+    'fashion week coverage',
+    'at the event',
+    'spotted wearing'
+  ]
+  
+  return !newsPatterns.some(pattern => titleLower.includes(pattern))
+}
+
 function isValidProductLink(link: string, logReason: boolean = true): boolean {
   if (!link || typeof link !== 'string' || !link.startsWith('http')) {
     if (logReason) console.log(`🚫 VALIDATION: Invalid URL format`)
@@ -52,18 +76,21 @@ function isValidProductLink(link: string, logReason: boolean = true): boolean {
     // Blogs (Korean + International)
     'blog.naver.com', 'm.blog.naver.com', 'blog.daum.net', 'tistory.com', 
     'medium.com', 'blogger.com', 'wordpress.com', 'brunch.co.kr', 'velog.io', 'oopy.io',
-    // News/media
-    '/news/', 'newsen.com', 'xportsnews.com', 'dispatch.co.kr', 
+    // News/media - domains and paths
+    '/news/', '/article/', '/articles/', '/story/', '/stories/', 
+    'newsen.com', 'xportsnews.com', 'dispatch.co.kr', 
     'sportsseoul.com', 'sportalkorea.com', 'osen.co.kr', 'entertain.naver.com',
     'sports.naver.com', 'starnewskorea.com', 'tenasia.co.kr', 'mydaily.co.kr',
     'joins.com', 'chosun.com', 'donga.com', 'hankyung.com', 'mk.co.kr',
+    'guardonline.com', // News site
+    '/premiere', '/event/', '/events/', '/show/', '/shows/', // Event pages
     // Forums/communities
     'theqoo.net', 'pann.nate.com', 'dcinside.com', 'fmkorea.com', 'clien.net',
     'ppomppu.co.kr', 'bobaedream.co.kr', 'mlbpark.donga.com', 'ruliweb.com',
     'instiz.net', 'reddit.com', 'quora.com', 'kin.naver.com',
     // Social media
     'youtube.com', 'youtu.be', 'instagram.com', 'facebook.com', 'twitter.com',
-    'tiktok.com', 'pinterest.com',
+    'tiktok.com', 'pinterest.com', 'threads.net',
     // Wiki/reference
     'wikipedia.org', 'namu.wiki', 'wikiwand.com'
   ]
@@ -71,6 +98,17 @@ function isValidProductLink(link: string, logReason: boolean = true): boolean {
   const isNonProductSite = nonProductSites.some(domain => linkLower.includes(domain))
   if (isNonProductSite) {
     if (logReason) console.log(`🚫 VALIDATION: Non-product site blocked (blog/news/forum): ${link.substring(0, 80)}`)
+    return false
+  }
+  
+  // Additional path-based checks for news/editorial content
+  if (linkLower.includes('/image_') || // News image pages
+      linkLower.match(/\/(national|local|world|sports|entertainment)\//) || // News sections
+      linkLower.includes('/premiere-of-') || // Event coverage
+      linkLower.includes('-premiere/') ||
+      linkLower.includes('/gallery/') || // Photo galleries
+      linkLower.includes('/editorial/')) { // Editorial content
+    if (logReason) console.log(`🚫 VALIDATION: News/editorial content blocked: ${link.substring(0, 80)}`)
     return false
   }
   
@@ -2596,6 +2634,12 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
                     return false
                   }
                   
+                  // TITLE VALIDATION: Reject news/editorial content
+                  if (!isValidProductTitle(item.title || '')) {
+                    console.log(`   🚫 Skipping news/editorial title: "${item.title?.substring(0, 60)}..."`)
+                    return false
+                  }
+                  
                   const title = item.title?.toLowerCase() || ''
                   const link = item.link?.toLowerCase() || ''
                   const combinedText = `${title} ${link}`
@@ -2691,6 +2735,12 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
                   // STRICT VALIDATION: Only allow product pages
                   if (!isValidProductLink(item.link, false)) {
                     console.log(`   🚫 Skipping non-product link: ${item.link.substring(0, 60)}...`)
+                    return false
+                  }
+                  
+                  // TITLE VALIDATION: Reject news/editorial content
+                  if (!isValidProductTitle(item.title || '')) {
+                    console.log(`   🚫 Skipping news/editorial title: "${item.title?.substring(0, 60)}..."`)
                     return false
                   }
                   
@@ -2908,6 +2958,9 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
                   // STRICT VALIDATION: Only allow product pages
                   if (!isValidProductLink(item.link, false)) return false
                   
+                  // TITLE VALIDATION: Reject news/editorial content
+                  if (!isValidProductTitle(item.title || '')) return false
+                  
                   // Check for duplicate products (same product on different sites)
                   const fingerprint = extractProductFingerprint(item.title || '', item.link || '')
                   if (colorFingerprints.has(fingerprint) && fingerprint.length > 0) return false
@@ -2959,6 +3012,9 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
                   
                   // STRICT VALIDATION: Only allow product pages
                   if (!isValidProductLink(item.link, false)) return false
+                  
+                  // TITLE VALIDATION: Reject news/editorial content
+                  if (!isValidProductTitle(item.title || '')) return false
                   
                   // Check for duplicate products (same product on different sites)
                   const fingerprint = extractProductFingerprint(item.title || '', item.link || '')
