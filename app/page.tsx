@@ -470,8 +470,58 @@ export default function Home() {
           source: detectData.source || 'fallback',
           imageUrl: uploadedImageUrl
         })
-        setBboxes(detectData.bboxes || [])
-        setImageSize(detectData.image_size || [0, 0])
+        
+        // Get actual image dimensions from the uploaded image (as Promise)
+        const actualImageSize = await new Promise<[number, number]>((resolve, reject) => {
+          const img = new Image()
+          img.onload = () => {
+            const dims: [number, number] = [img.naturalWidth, img.naturalHeight]
+            console.log(`📐 Actual image dimensions: ${dims[0]}x${dims[1]}`)
+            resolve(dims)
+          }
+          img.onerror = () => {
+            console.error('❌ Failed to load image for dimension detection')
+            reject(new Error('Image load failed'))
+          }
+          img.src = uploadedImageUrl
+        }).catch(() => {
+          console.warn('⚠️  Using fallback dimensions')
+          return [0, 0] as [number, number]
+        })
+        
+        setImageSize(actualImageSize)
+        
+        // Check if bboxes are normalized or pixel coordinates
+        const bboxes = detectData.bboxes || []
+        if (bboxes.length > 0 && actualImageSize[0] > 0) {
+          const sampleBbox = bboxes[0].bbox
+          const maxVal = Math.max(...sampleBbox)
+          const areNormalized = maxVal <= 1
+          
+          console.log(`📏 Bbox format: ${areNormalized ? 'NORMALIZED [0-1]' : 'PIXEL coordinates'} (max value: ${maxVal})`)
+          
+          // Convert normalized bboxes to pixel coordinates for consistent handling
+          if (areNormalized) {
+            console.log('🔄 Converting normalized bboxes to pixel coordinates...')
+            const pixelBboxes = bboxes.map((bbox: any) => ({
+              ...bbox,
+              bbox: [
+                bbox.bbox[0] * actualImageSize[0],
+                bbox.bbox[1] * actualImageSize[1],
+                bbox.bbox[2] * actualImageSize[0],
+                bbox.bbox[3] * actualImageSize[1]
+              ]
+            }))
+            console.log(`✅ Sample bbox converted: ${JSON.stringify(bboxes[0].bbox)} → ${JSON.stringify(pixelBboxes[0].bbox)}`)
+            setBboxes(pixelBboxes)
+          } else {
+            console.log('✅ Already in pixel coordinates')
+            setBboxes(bboxes)
+          }
+        } else {
+          console.log('ℹ️  No bboxes or invalid dimensions, using raw bboxes')
+          setBboxes(bboxes)
+        }
         
         setCurrentStep('selecting')
       } catch (error: any) {
@@ -593,11 +643,12 @@ export default function Home() {
           console.log(`✂️ Cropping ${bbox.category} locally...`)
           const { cropImage } = await import('@/lib/imageCropper')
           
-          // Get local data URL first (needed for cropping)
-          const localDataUrl = localImageDataUrlRef.current || localImageDataUrl
-          if (!localDataUrl) {
-            throw new Error('No local data URL available for cropping')
-          }
+          // CRITICAL: Crop the SAME image that DINOx analyzed (Supabase URL)
+          // NOT the local data URL, because they might have different dimensions!
+          // DINOx analyzes the uploaded/compressed Supabase image
+          const imageUrlForCropping = uploadedImageUrl
+          
+          console.log(`   📸 Cropping from: ${imageUrlForCropping.includes('supabase') ? 'Supabase (compressed)' : 'Local data URL'}`)
           
           // Convert pixel bbox to normalized (0-1) coordinates
           const [x1, y1, x2, y2] = bbox.bbox
@@ -625,29 +676,40 @@ export default function Home() {
             // Bboxes are in pixel coordinates - need to normalize
             console.log(`   ⚠️  Bboxes are in PIXEL coordinates, need to normalize`)
             
-            // Load image to get actual dimensions
-            const img = new Image()
-            const imgDimensions = await new Promise<{width: number, height: number}>((resolve, reject) => {
-              img.onload = () => resolve({ width: img.naturalWidth, height: img.naturalHeight })
-              img.onerror = reject
-              img.src = localDataUrl
-            })
-            
-            console.log(`   📐 Loaded image dimensions: ${imgDimensions.width}x${imgDimensions.height}`)
-            
-            // Normalize pixel coordinates to 0-1 range
-            normalizedBbox = [
-              x1 / imgDimensions.width,
-              y1 / imgDimensions.height,
-              x2 / imgDimensions.width,
-              y2 / imgDimensions.height
-            ]
+            // IMPORTANT: Use imageSize from detection (same image DINOx analyzed)
+            if (imageSize[0] > 0 && imageSize[1] > 0) {
+              console.log(`   📐 Using detection imageSize: ${imageSize[0]}x${imageSize[1]}`)
+              normalizedBbox = [
+                x1 / imageSize[0],
+                y1 / imageSize[1],
+                x2 / imageSize[0],
+                y2 / imageSize[1]
+              ]
+            } else {
+              // Fallback: Load image to get dimensions
+              console.log(`   ⚠️  imageSize not available, loading image to get dimensions...`)
+              const img = new Image()
+              img.crossOrigin = 'anonymous' // For Supabase URLs
+              const imgDimensions = await new Promise<{width: number, height: number}>((resolve, reject) => {
+                img.onload = () => resolve({ width: img.naturalWidth, height: img.naturalHeight })
+                img.onerror = reject
+                img.src = imageUrlForCropping
+              })
+              
+              console.log(`   📐 Loaded image dimensions: ${imgDimensions.width}x${imgDimensions.height}`)
+              normalizedBbox = [
+                x1 / imgDimensions.width,
+                y1 / imgDimensions.height,
+                x2 / imgDimensions.width,
+                y2 / imgDimensions.height
+              ]
+            }
             
             console.log(`   ✅ Normalized bbox: [${normalizedBbox.map(v => v.toFixed(4)).join(', ')}]`)
           }
             
           const croppedDataUrl = await cropImage({
-            imageUrl: localDataUrl,
+            imageUrl: imageUrlForCropping,
             bbox: normalizedBbox,
             padding: 0.05
           })
@@ -757,11 +819,10 @@ export default function Home() {
     }
 
     try {
-      // Search each item individually for real-time progress tracking
-      console.log(`🔍 Searching ${items.length} items with real-time progress...`)
+      // Prepare search data
+      console.log(`🔍 Searching ${items.length} items with background job queue...`)
       
       const totalItems = items.length
-      let completedSearches = 0
       const allResults: Record<string, Array<{ link: string; thumbnail: string | null; title: string | null }>> = {}
       
       // Process searches in parallel but track completion
@@ -797,65 +858,83 @@ export default function Home() {
         const descriptions = { [key]: item.description } // Pass GPT-4o descriptions!
         
         try {
-          console.log(`🔍 Searching for ${itemName}...`)
+          console.log(`🔍 Starting job for ${itemName}...`)
           console.log(`   Description: "${item.description.substring(0, 80)}..."`)
           
-          const response = await fetch('/api/search', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
+          // Use job queue for background processing
+          const { searchWithJobQueue } = await import('@/lib/searchJobClient')
+          
+          const { results: data, meta } = await searchWithJobQueue(
+            {
               categories,
               croppedImages,
-              descriptions, // Include descriptions for better search!
+              descriptions,
               originalImageUrl: uploadedImageUrl,
               useOCRSearch: useOCRSearch,
-            }),
-          })
-
-          const data = await response.json()
+            },
+            {
+              // Progress callback
+              onProgress: (progress) => {
+                // Update overall progress (20% to 95% range for searching)
+                const itemProgress = progress / 100 // 0 to 1
+                const overallProgress = Math.min(95, 20 + (itemProgress / totalItems) * 75)
+                setOverallProgress(prev => Math.max(prev, overallProgress))
+              },
+              // Enable notifications when tab is inactive
+              enableNotifications: true,
+              // Slower polling to reduce server load (especially with multiple items)
+              fastPollInterval: 2500,  // 2.5s when tab visible
+              slowPollInterval: 5000   // 5s when tab hidden
+            }
+          )
           
-          // Check for API errors
-          if (data.error) {
-            console.error(`❌ Search API error for ${itemName}:`, data.error)
-            throw new Error(data.error)
-          }
-          
-          // Update real-time progress: searching is 75% (from 20% to 95%)
-          completedSearches++
-          const targetProgress = Math.min(95, 20 + (completedSearches / totalItems) * 75)
-          setOverallProgress(prev => Math.max(prev, targetProgress))
-          console.log(`📊 Search progress: ${completedSearches}/${totalItems} items (${Math.floor(20 + (completedSearches / totalItems) * 75)}%)`)
-          
-          // Debug: Log search API response
-          console.log(`🔍 Search API response for ${itemName}:`, {
-            hasResults: !!data.results,
-            resultsCount: data.results ? Object.keys(data.results).length : 0,
-            meta: data.meta,
-            error: data.error
-          })
+          console.log(`✅ Job complete for ${itemName}`)
+          console.log(`📦 Results structure:`, JSON.stringify(data).substring(0, 400))
+          console.log(`📦 Results type:`, typeof data)
+          console.log(`📦 Results is null?:`, data === null)
+          console.log(`📦 Results is undefined?:`, data === undefined)
           
           // Merge results
-          if (data.results) {
-            const resultCount = Object.keys(data.results).length
+          if (data) {
+            const resultCount = Object.keys(data).length
+            console.log(`📊 Result object has ${resultCount} keys:`, Object.keys(data))
             if (resultCount === 0) {
               console.warn(`⚠️  Search returned 0 results for ${itemName}`)
             }
-            Object.entries(data.results).forEach(([category, links]) => {
-              allResults[category] = links as Array<{ link: string; thumbnail: string | null; title: string | null }>
-              console.log(`   Added ${(links as any[]).length} products for ${category}`)
+            Object.entries(data).forEach(([category, categoryData]) => {
+              console.log(`   Processing category: ${category}`)
+              
+              // Handle new structure: { colorMatches: [...], styleMatches: [...] }
+              if (categoryData && typeof categoryData === 'object' && !Array.isArray(categoryData)) {
+                // New structure with colorMatches and styleMatches
+                const colorMatches = (categoryData as any).colorMatches || []
+                const styleMatches = (categoryData as any).styleMatches || []
+                
+                console.log(`   🎨 Color matches: ${colorMatches.length}`)
+                console.log(`   ✂️  Style matches: ${styleMatches.length}`)
+                console.log(`   ✅ Total: ${colorMatches.length + styleMatches.length} products for ${category}`)
+                
+                // PRESERVE two-stage structure for ResultsBottomSheet
+                allResults[category] = {
+                  colorMatches: colorMatches as Array<{ link: string; thumbnail: string | null; title: string | null }>,
+                  styleMatches: styleMatches as Array<{ link: string; thumbnail: string | null; title: string | null }>
+                }
+                console.log(`   ✅ Populated allResults['${category}']`, Object.keys(allResults))
+              } else if (Array.isArray(categoryData)) {
+                // Old structure: array of links
+                allResults[category] = categoryData as Array<{ link: string; thumbnail: string | null; title: string | null }>
+                console.log(`   ✅ Added ${categoryData.length} products for ${category}`)
+              } else {
+                console.error(`   ❌ Unexpected data type for ${category}:`, typeof categoryData)
+              }
             })
           } else {
             console.warn(`⚠️  No results object for ${itemName}`)
           }
           
-          return data
+          return { results: data, meta }
         } catch (error) {
           console.error(`Error searching ${itemName}:`, error)
-          completedSearches++
-          const targetProgress = Math.min(95, 20 + (completedSearches / totalItems) * 75)
-          setOverallProgress(prev => Math.max(prev, targetProgress))
           return null
         }
       })
@@ -863,7 +942,9 @@ export default function Home() {
       // Wait for all searches to complete
       await Promise.all(searchPromises)
       
-      console.log(`✅ All searches complete: ${completedSearches}/${totalItems}`)
+      console.log(`✅ All searches complete`)
+      console.log(`📊 Final allResults keys: ${Object.keys(allResults).length}`, Object.keys(allResults))
+      console.log(`📦 Final allResults structure:`, JSON.stringify(allResults, null, 2).substring(0, 500))
       setOverallProgress(prev => Math.max(prev, 95)) // Ensure we're at least 95%
       
       setResults(allResults)
@@ -871,9 +952,8 @@ export default function Home() {
       // Log combined search results
       if (sessionManager) {
         await sessionManager.logSearchResults(allResults, { 
-          mode: 'real_time_parallel_search',
-          totalItems: totalItems,
-          completedSearches: completedSearches
+          mode: 'background_job_queue',
+          totalItems: totalItems
         })
       }
       

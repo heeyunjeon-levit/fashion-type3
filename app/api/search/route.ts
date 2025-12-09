@@ -1599,29 +1599,33 @@ ${characterName ? '8' : '7'}. 🇰🇷 PREFER: Korean sites often have exact cha
 **IMPORTANT: Return your BEST 3-5 HIGH-QUALITY matches ONLY. Quality over quantity.**
 
 🌟 **SELECTION STRATEGY:**
-- 🔥 **STEP 1 - BRAND FREQUENCY (strong signal, use with judgment)**:
-  ${topRepeatedBrands ? `* Consider these repeated brands: ${topRepeatedBrands}
-  * Check if products from these brands have good visual/color match
-  * If they DO match visually, PREFER them (high confidence)!
-  * If they DON'T match well, trust your visual judgment over frequency
-  * Example: Berluti bag with perfect match > Louis Vuitton (×4) if LV products don't match style` : '* No repeated brands detected - proceed with visual matching'}
+- 🔥 **STEP 1 - BRAND FREQUENCY (VERY STRONG SIGNAL)**:
+  ${topRepeatedBrands ? `* ⭐⭐⭐ REPEATED BRANDS DETECTED: ${topRepeatedBrands}
+  * **CRITICAL**: If a brand appears 3+ times, this is VERY likely the exact product!
+  * **PRIORITIZE** products from these brands if they match visually
+  * **Example**: "KAPITAL" (×4) + "SPEAKEASY" (×8) → This is definitely Kapital Speakeasy product!
+  * **PREFER**: Actual retailer/brand sites over resale/secondhand sites when possible
+  * If resale sites are your only option with the repeated brand, include them but note it` : '* No repeated brands detected - proceed with visual matching'}
 - **STEP 2**: Review the first ${fullImageResults.length} results (full image search)
   * Full image search often finds EXACT matches or designer pieces
   * High-end brands with good visual match are excellent selections
-- **STEP 3**: Balance: repeated brands (if good match) + visual similarity + product quality
+- **STEP 3**: Balance: exact brand matches (highest priority) + visual similarity + product quality
 - **STEP 4**: Include 3-5 best matches considering ALL factors
 - Return [] ONLY if literally no results are for the correct body part
 
 🇰🇷 **KOREAN SITE REQUIREMENT** (search was done with gl=kr, hl=ko):
 - ⚠️ **MANDATORY**: You MUST select AT LEAST 2 KOREAN SITES in your results!
-- **Korean e-commerce sites**: gmarket.co.kr, 11st.co.kr, coupang.com, musinsa.com, zigzag.kr, wconcept.co.kr, 29cm.co.kr, ssg.com, elandmall.co.kr
+- **Korean e-commerce sites** (PRIMARY - prefer these):
+  * Retailers: musinsa.com, wconcept.co.kr, 29cm.co.kr, ssg.com, elandmall.co.kr, gmarket.co.kr, 11st.co.kr, coupang.com, zigzag.kr
+  * Resale/secondhand (ACCEPTABLE but prefer retailers): fruitsfamily.com, kream.co.kr, bunjang.co.kr, croket.co.kr
 - Korean sites often have EXACT matches with better prices and faster shipping in Korea
+- **IMPORTANT**: If you see repeated brand names (e.g., "KAPITAL" ×4), prioritize finding that brand's actual retailers FIRST, then include resale/secondhand as alternatives
 - **Required selection pattern**: 
-  * If you find 3+ Korean matches → Select 3 Korean sites (all Korean)
+  * If you find 3+ Korean matches → Select 3 Korean sites (prefer mix of retailers + resale if available)
   * If you find 2 Korean matches → Select 2 Korean + 1 international alternative
   * If you find only 1 Korean match → Select 1 Korean + look harder for a 2nd Korean + 1 international
   * If you find 0 Korean matches → Return international sites BUT LOG THIS AS UNUSUAL
-- International alternatives (use ONLY if you have 2+ Korean already): Amazon, Zara, H&M, ASOS, Uniqlo, Mango
+- International alternatives (use ONLY if you have 2+ Korean already): Amazon, Zara, H&M, ASOS, Uniqlo, Mango, brand official sites
 - ❌ NEVER select: Etsy, Depop, Poshmark, Gap, Old Navy (wrong market, often sold out)
 
 Search results (scan all ${resultsForGPT.length} for best matches):
@@ -2048,7 +2052,10 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
           // KOREAN SITE VALIDATION: Ensure at least 2 Korean sites
           const koreanDomains = ['coupang.com', 'gmarket.co.kr', '11st.co.kr', 'musinsa.com', 'zigzag.kr', 
                                  'elandmall.co.kr', 'wconcept.co.kr', '29cm.co.kr', 'ssg.com', 
-                                 'oottbebe.co.kr', 'jenybiny.com', 'ably.co.kr', 'brandi.co.kr']
+                                 'oottbebe.co.kr', 'jenybiny.com', 'ably.co.kr', 'brandi.co.kr',
+                                 // Resale/secondhand marketplaces (popular in Korea)
+                                 'fruitsfamily.com', 'croket.co.kr', 'kream.co.kr', 'bunjang.co.kr',
+                                 'karrot.com', 'daangn.com']
           
           const koreanLinks = validLinks.filter((link: string) => 
             koreanDomains.some(domain => link.toLowerCase().includes(domain))
