@@ -2064,6 +2064,62 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
         })
         
         if (validLinks.length > 0) {
+          // BRAND MATCHING ENFORCEMENT: Override GPT-4 if repeated brands exist
+          if (topRepeatedBrands) {
+            console.log(`🔥 BRAND ENFORCEMENT: Detected repeated brands: ${topRepeatedBrands}`)
+            
+            // Extract brand keywords from the repeated brands string
+            // Example: "SPEAKEASY" (×8), "HAPPY" (×4) → ["SPEAKEASY", "HAPPY"]
+            const brandKeywords = topRepeatedBrands
+              .split(',')
+              .map(b => b.trim().split('(')[0].trim().replace(/["""]/g, ''))
+              .filter(b => b.length > 0)
+            
+            console.log(`   Brand keywords to match: ${brandKeywords.join(', ')}`)
+            
+            // Find results that match the repeated brands
+            const brandMatchingResults = resultsForGPT.filter(result => {
+              const title = result.title?.toLowerCase() || ''
+              // Must match at least ONE of the brand keywords
+              return brandKeywords.some(brand => 
+                title.includes(brand.toLowerCase())
+              )
+            })
+            
+            console.log(`   Found ${brandMatchingResults.length} results matching repeated brands`)
+            
+            // If we found brand matches, prioritize them
+            if (brandMatchingResults.length > 0) {
+              // Check how many of GPT-4's selections match the brands
+              const gptBrandMatches = validLinks.filter((link: string) => {
+                const foundResult = resultsForGPT.find(r => r.link === link)
+                if (!foundResult) return false
+                const title = foundResult.title?.toLowerCase() || ''
+                return brandKeywords.some(brand => title.includes(brand.toLowerCase()))
+              })
+              
+              console.log(`   GPT-4 selected ${gptBrandMatches.length}/${validLinks.length} brand-matching links`)
+              
+              // If GPT-4 selected fewer than 2 brand matches, override with exact matches
+              if (gptBrandMatches.length < 2) {
+                console.log(`   ⚠️  OVERRIDING GPT-4: Too few brand matches, using exact matches instead`)
+                
+                // Replace validLinks with brand-matching results (take top 5)
+                const brandMatchLinks = brandMatchingResults
+                  .slice(0, 5)
+                  .map(r => r.link)
+                  .filter((link): link is string => !!link)
+                
+                validLinks.length = 0
+                validLinks.push(...brandMatchLinks)
+                
+                console.log(`   ✅ Replaced with ${validLinks.length} exact brand matches`)
+              } else {
+                console.log(`   ✅ GPT-4 selection has enough brand matches, keeping it`)
+              }
+            }
+          }
+          
           // KOREAN SITE VALIDATION: Ensure at least 2 Korean sites
           const koreanDomains = ['coupang.com', 'gmarket.co.kr', '11st.co.kr', 'musinsa.com', 'zigzag.kr', 
                                  'elandmall.co.kr', 'wconcept.co.kr', '29cm.co.kr', 'ssg.com', 
