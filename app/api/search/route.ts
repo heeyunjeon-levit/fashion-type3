@@ -92,7 +92,13 @@ function isValidProductLink(link: string, logReason: boolean = true): boolean {
     'youtube.com', 'youtu.be', 'instagram.com', 'facebook.com', 'twitter.com',
     'tiktok.com', 'pinterest.com', 'threads.net',
     // Wiki/reference
-    'wikipedia.org', 'namu.wiki', 'wikiwand.com'
+    'wikipedia.org', 'namu.wiki', 'wikiwand.com',
+    // Storage/CDN (NOT product pages!)
+    'amazonaws.com', 's3.amazonaws', '.s3.', 's3-', // AWS S3
+    'cloudfront.net', // AWS CloudFront CDN
+    'storage.googleapis.com', // Google Cloud Storage
+    'blob.core.windows.net', // Azure Blob Storage
+    '.r2.dev', // Cloudflare R2
   ]
   
   const isNonProductSite = nonProductSites.some(domain => linkLower.includes(domain))
@@ -2355,6 +2361,7 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
               'tops': ['jacket', 'coat', 'sweater', 'shirt', 'blouse', 'cardigan', 'blazer', 'hoodie', 'top', '재킷', '코트', '스웨터', '셔츠', '상의'],
               'shirt': ['shirt', 'blouse', 'top', 'tee', 't-shirt', 'polo', 'button-up', '셔츠', '블라우스', '상의'],
               'sweater': ['sweater', 'cardigan', 'pullover', 'knit', 'jumper', '스웨터', '니트', '가디건'],
+              'sweatshirt': ['sweatshirt', 'pullover', 'crewneck', '맨투맨', '스웨트셔츠', 'crew neck'],
               'jacket': ['jacket', 'coat', 'blazer', 'parka', 'bomber', 'windbreaker', '재킷', '코트', '아우터'],
               'coat': ['coat', 'jacket', 'overcoat', 'trench', 'peacoat', '코트', '외투'],
               'hoodie': ['hoodie', 'sweatshirt', 'pullover', 'zip-up', '후드', '후디'],
@@ -2601,16 +2608,20 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
             // Skip detail features like collar, pleat, cuff - GPT handles those visually
             if (descLower.includes('cardigan') || descLower.includes('가디건')) coreFeatures.push('cardigan')
             if (descLower.includes('sweater') || descLower.includes('스웨터')) coreFeatures.push('sweater')
+            if (descLower.includes('sweatshirt') || descLower.includes('맨투맨') || descLower.includes('스웨트셔츠')) coreFeatures.push('sweatshirt')
             if (descLower.includes('hoodie') || descLower.includes('후드')) coreFeatures.push('hoodie')
             if (descLower.includes('jacket') || descLower.includes('재킷')) coreFeatures.push('jacket')
             if (descLower.includes('coat') || descLower.includes('코트')) coreFeatures.push('coat')
             if (descLower.includes('shirt') || descLower.includes('셔츠')) coreFeatures.push('shirt')
             if (descLower.includes('blouse') || descLower.includes('블라우스')) coreFeatures.push('blouse')
-            if (descLower.includes('dress') || descLower.includes('드레스')) coreFeatures.push('dress')
+            if (descLower.includes('dress') || descLower.includes('드레스') || descLower.includes('원피스')) coreFeatures.push('dress')
             if (descLower.includes('pants') || descLower.includes('trouser') || descLower.includes('바지') || descLower.includes('팬츠')) coreFeatures.push('pants')
             if (descLower.includes('jeans') || descLower.includes('청바지') || descLower.includes('denim')) coreFeatures.push('jeans')
             if (descLower.includes('skirt') || descLower.includes('치마')) coreFeatures.push('skirt')
             if (descLower.includes('shorts') || descLower.includes('반바지')) coreFeatures.push('shorts')
+            if (descLower.includes('scarf') || descLower.includes('스카프') || descLower.includes('머플러')) coreFeatures.push('scarf')
+            if (descLower.includes('bag') || descLower.includes('가방') || descLower.includes('백팩')) coreFeatures.push('bag')
+            if (descLower.includes('shoe') || descLower.includes('신발') || descLower.includes('스니커즈')) coreFeatures.push('shoe')
             
             return coreFeatures
           }
@@ -2684,7 +2695,12 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
                 'jacket': ['blanket', 'rug', '담요'],
                 'pants': ['shorts', 'skirt', '반바지', '치마'],
                 'shorts': ['pants', 'trousers', '바지', '긴바지'],
-                'skirt': ['pants', 'shorts', '바지', '반바지']
+                'skirt': ['pants', 'shorts', '바지', '반바지'],
+                'sweater': ['t-shirt', 'tee', '티셔츠', '반팔', '반팔티', 'short sleeve', 'tank top'],
+                'sweatshirt': ['t-shirt', 'tee', '티셔츠', '반팔', '반팔티', 'short sleeve', 'tank top'],
+                'hoodie': ['t-shirt', 'tee', '티셔츠', '반팔', '반팔티', 'short sleeve', 'tank top'],
+                'shirt': ['hoodie', 'sweatshirt', '후드', '맨투맨', '후디'], // Shirt should reject hoodies/sweatshirts
+                'top': [] // Top is too generic, don't reject
               }
               
               // Check if this item contains any wrong garment type keywords
@@ -2726,6 +2742,9 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
                 
                 // Sweater variations (Korean)
                 if (feature === 'sweater' && (combinedText.includes('스웨터') || combinedText.includes('니트'))) return true
+                
+                // Sweatshirt variations (Korean + English)
+                if (feature === 'sweatshirt' && (combinedText.includes('맨투맨') || combinedText.includes('스웨트셔츠') || combinedText.includes('crewneck') || combinedText.includes('crew neck'))) return true
                 
                 // Scarf variations (Korean + English)
                 if (feature === 'scarf' && (combinedText.includes('머플러') || combinedText.includes('스카프') || combinedText.includes('muffler'))) return true
@@ -2793,7 +2812,10 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
                     'jacket': ['blanket', 'rug', '담요'],
                     'pants': ['shorts', 'skirt', '반바지', '치마'],
                     'shorts': ['pants', 'trousers', '바지', '긴바지'],
-                    'skirt': ['pants', 'shorts', '바지', '반바지']
+                    'skirt': ['pants', 'shorts', '바지', '반바지'],
+                    'sweater': ['t-shirt', 'tee', '티셔츠', '반팔', '반팔티', 'short sleeve'],
+                    'sweatshirt': ['t-shirt', 'tee', '티셔츠', '반팔', '반팔티', 'short sleeve'],
+                    'hoodie': ['t-shirt', 'tee', '티셔츠', '반팔', '반팔티', 'short sleeve']
                   }
                   
                   // Check if this item contains any wrong garment type keywords
@@ -2892,7 +2914,10 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
                     'jacket': ['blanket', 'rug', '담요'],
                     'pants': ['shorts', 'skirt', '반바지', '치마'],
                     'shorts': ['pants', 'trousers', '바지', '긴바지'],
-                    'skirt': ['pants', 'shorts', '바지', '반바지']
+                    'skirt': ['pants', 'shorts', '바지', '반바지'],
+                    'sweater': ['t-shirt', 'tee', '티셔츠', '반팔', '반팔티', 'short sleeve'],
+                    'sweatshirt': ['t-shirt', 'tee', '티셔츠', '반팔', '반팔티', 'short sleeve'],
+                    'hoodie': ['t-shirt', 'tee', '티셔츠', '반팔', '반팔티', 'short sleeve']
                   }
                   
                   // Check if this item contains any wrong garment type keywords
