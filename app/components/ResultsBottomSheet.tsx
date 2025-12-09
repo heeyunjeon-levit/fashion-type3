@@ -51,16 +51,9 @@ export default function ResultsBottomSheet({
     return (data.colorMatches?.length || 0) + (data.styleMatches?.length || 0) > 0
   })
   
-  // Log when we skip phone modal due to no results
-  useEffect(() => {
-    if (!hasResults && !isSharedView) {
-      console.log('⚠️ No results found - phone modal will be skipped')
-    }
-  }, [hasResults, isSharedView])
-  
-  // Initialize phone modal state - ONLY show if we have actual results
-  const [showPhoneModal, setShowPhoneModal] = useState(!isSharedView && hasResults)
-  const [phoneSubmitted, setPhoneSubmitted] = useState(isSharedView || !hasResults)
+  // Initialize phone modal state - start optimistically (will check results later)
+  const [showPhoneModal, setShowPhoneModal] = useState(!isSharedView)
+  const [phoneSubmitted, setPhoneSubmitted] = useState(isSharedView)
   const [isReturningUser, setIsReturningUser] = useState(false)
   const [sessionManager, setSessionManager] = useState<any>(null)
   const [sheetPosition, setSheetPosition] = useState<'peek' | 'half' | 'full'>('half')
@@ -81,19 +74,26 @@ export default function ResultsBottomSheet({
   const [shareUrl, setShareUrl] = useState<string | null>(null)
   const [showShareSuccess, setShowShareSuccess] = useState(false)
 
+  // Check if results are empty after loading completes
+  useEffect(() => {
+    // Only check after loading is complete
+    if (!isLoading && !isSharedView) {
+      // If we finished loading and have no results, skip phone modal
+      if (!hasResults) {
+        console.log('⚠️ No results found after search completed - skipping phone modal')
+        setPhoneSubmitted(true)
+        setShowPhoneModal(false)
+      } else {
+        console.log('✅ Results found - phone modal logic will proceed')
+      }
+    }
+  }, [isLoading, hasResults, isSharedView])
+
   // Initialize session manager
   useEffect(() => {
     // Skip session manager setup for shared views
     if (isSharedView) {
       console.log('👁️ Shared view - no session manager needed')
-      return
-    }
-    
-    // Skip if no results to show
-    if (!hasResults) {
-      console.log('⚠️ No results to show - skipping phone modal')
-      setPhoneSubmitted(true)
-      setShowPhoneModal(false)
       return
     }
 
@@ -112,9 +112,11 @@ export default function ResultsBottomSheet({
           setUserPhoneNumber(phone)
         }
         console.log('👋 Returning user detected, skipping phone modal')
+      } else {
+        console.log('👤 New user detected, phone modal will show (if results exist)')
       }
     }
-  }, [isSharedView, hasResults])
+  }, [isSharedView])
 
   const handlePhoneSubmit = async (phoneNumber: string) => {
     if (!sessionManager) return
