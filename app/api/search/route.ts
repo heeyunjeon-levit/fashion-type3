@@ -1599,17 +1599,21 @@ ${characterName ? '8' : '7'}. 🇰🇷 PREFER: Korean sites often have exact cha
 **IMPORTANT: Return your BEST 3-5 HIGH-QUALITY matches ONLY. Quality over quantity.**
 
 🌟 **SELECTION STRATEGY:**
-- 🔥 **STEP 1 - BRAND FREQUENCY (VERY STRONG SIGNAL)**:
+- 🔥 **STEP 1 - BRAND FREQUENCY (HIGHEST PRIORITY)**:
   ${topRepeatedBrands ? `* ⭐⭐⭐ REPEATED BRANDS DETECTED: ${topRepeatedBrands}
-  * **CRITICAL**: If a brand appears 3+ times, this is VERY likely the exact product!
-  * **PRIORITIZE** products from these brands if they match visually
-  * **Example**: "KAPITAL" (×4) + "SPEAKEASY" (×8) → This is definitely Kapital Speakeasy product!
-  * **PREFER**: Actual retailer/brand sites over resale/secondhand sites when possible
-  * If resale sites are your only option with the repeated brand, include them but note it` : '* No repeated brands detected - proceed with visual matching'}
+  * **CRITICAL RULE**: When you see repeated brand names (e.g., "KAPITAL" appearing 3+ times):
+    → YOU MUST SELECT products with those EXACT brand names from the search results
+    → Look through ALL results (not just full image results) to find the matching brand products
+    → The cropped image search often has the EXACT product with the exact brand
+  * **Example**: If "SPEAKEASY" appears 8 times and "KAPITAL" appears 4 times:
+    → Find results with "KAPITAL" AND "SPEAKEASY" in the title
+    → These are the EXACT product the user wants!
+  * **DO NOT** select random similar-looking scarves from other brands when exact brand matches exist
+  * **PREFER**: Korean sites (fruitsfamily.com, kream.co.kr, croket.co.kr) + international retailers with exact brand` : '* No repeated brands detected - proceed with visual matching'}
 - **STEP 2**: Review the first ${fullImageResults.length} results (full image search)
   * Full image search often finds EXACT matches or designer pieces
-  * High-end brands with good visual match are excellent selections
-- **STEP 3**: Balance: exact brand matches (highest priority) + visual similarity + product quality
+  * ${topRepeatedBrands ? '**WARNING**: If repeated brands exist, full image results may be GENERIC alternatives - check if they match the repeated brand first!' : 'High-end brands with good visual match are excellent selections'}
+- **STEP 3**: Balance: exact brand matches (MUST HAVE if brands repeated) + visual similarity + product quality
 - **STEP 4**: Include 3-5 best matches considering ALL factors
 - Return [] ONLY if literally no results are for the correct body part
 
@@ -1631,25 +1635,28 @@ ${characterName ? '8' : '7'}. 🇰🇷 PREFER: Korean sites often have exact cha
 Search results (scan all ${resultsForGPT.length} for best matches):
 ${JSON.stringify(resultsForGPT, null, 2)}
 
-**VALIDATION PROCESS (COLOR-FIRST, THEN VISUAL):**
+**VALIDATION PROCESS:**
 For EACH result you consider:
 1. 📖 READ the "title" field first
-${primaryColor ? `2. 🎨 **COLOR CHECK (MANDATORY)**: Does the title mention "${primaryColor.toUpperCase()}" or a matching color?
-   - ✅ If YES → Proceed to next step
-   - ❌ If NO (title says different color) → REJECT and move to next result
-   - Example: Looking for "Olive Green"? Title says "Neutrals" → REJECT!` : '2. 🚫 CHECK THE URL: Does it end with /reviews, /questions, /qa? → SKIP IMMEDIATELY (not a product page)'}
-3. 🚫 CHECK THE URL: Does it end with /reviews, /questions, /qa? → SKIP IMMEDIATELY (not a product page)
-4. ⭐ **PRIORITY**: First ${fullImageResults.length} results are from FULL IMAGE SEARCH - strongly prefer these!
+${topRepeatedBrands ? `2. 🔥 **BRAND CHECK (HIGHEST PRIORITY)**: ${topRepeatedBrands}
+   - ✅ Does the title contain these exact brand names? → **SELECT THIS IMMEDIATELY**
+   - ✅ Check BOTH cropped image results AND full image results for brand matches
+   - ❌ If title is a different brand (e.g., "Zadig&Voltaire" when looking for "KAPITAL") → SKIP unless no brand matches exist
+   - **Example**: Searching for "KAPITAL SPEAKEASY"? Title says "KAPITAL Felted Wool SPEAKEASY" → **MUST SELECT**` : ''}
+${primaryColor ? `${topRepeatedBrands ? '3' : '2'}. 🎨 **COLOR CHECK**: Does the title mention "${primaryColor.toUpperCase()}" or a matching color?
+   - For exact brand matches: Color is less critical (brand match is more important)
+   - For alternative matches: Color must match
+   - ❌ If NO exact brand match AND wrong color → REJECT` : `${topRepeatedBrands ? '3' : '2'}. 🚫 CHECK THE URL: Does it end with /reviews, /questions, /qa? → SKIP IMMEDIATELY (not a product page)`}
+${topRepeatedBrands ? '4' : '3'}. 🚫 CHECK THE URL: Does it end with /reviews, /questions, /qa? → SKIP IMMEDIATELY (not a product page)
+${topRepeatedBrands ? '5' : '4'}. ${topRepeatedBrands ? '⚠️ **FULL IMAGE RESULTS**: Check these for alternatives, but prioritize exact brand matches from cropped results!' : '⭐ **PRIORITY**: First ' + fullImageResults.length + ' results are from FULL IMAGE SEARCH - strongly prefer these!'}
    - Full image search recognizes complete context (celebrity outfits, iconic pieces, exact scenes)
-   - If any of the top results look like quality matches, SELECT THEM FIRST
-   - Example: If category is "sweater" but top result shows luxury fur coat that matches the image, INCLUDE IT
-4. ✅ Visual similarity - Google Lens found these because they LOOK similar to the user's image
-5. ✅ CHECK: Does it seem like similar style/vibe/quality? (luxury vs casual, designer vs fast fashion)
-6. ✅ PREFER: Similar or complementary colors (but allow variations)
-7. ✅ FLEXIBLE: Category labels can vary - sweater/jacket/coat/cardigan are all upper body outerwear
+   - ${topRepeatedBrands ? 'Use these as BACKUP options if they match the repeated brand, otherwise deprioritize' : 'If any of the top results look like quality matches, SELECT THEM FIRST'}
+${topRepeatedBrands ? '6' : '5'}. ✅ Visual similarity - Google Lens found these because they LOOK similar to the user's image
+${topRepeatedBrands ? '7' : '6'}. ✅ CHECK: Does it seem like similar style/vibe/quality? (luxury vs casual, designer vs fast fashion)
+${topRepeatedBrands ? '8' : '7'}. ✅ FLEXIBLE: Category labels can vary - sweater/jacket/coat/cardigan are all upper body outerwear
    ${categoryKey === 'tops' ? '⚠️ ONLY REJECT: pants/jeans/shorts/skirts (clearly wrong body part)' : ''}
    ${categoryKey === 'bottoms' ? '⚠️ ONLY REJECT: if it\'s clearly NOT lower body wear' : ''}
-8. ✅ CHECK: Is it a specific product (not "Shop", "Category", "Homepage")?
+${topRepeatedBrands ? '9' : '8'}. ✅ CHECK: Is it a specific product (not "Shop", "Category", "Homepage")?
 
 Find the TOP 3-5 BEST AVAILABLE MATCHES. Prioritize IN THIS ORDER:
 1. **STRONGLY PREFER the first ${fullImageResults.length} results** (full image search = most accurate)
@@ -1671,10 +1678,18 @@ Find the TOP 3-5 BEST AVAILABLE MATCHES. Prioritize IN THIS ORDER:
 - Return [] ONLY if results are completely unrelated (e.g., shoes when looking for tops)
 
 🚨 **FINAL VALIDATION - BEFORE RETURNING YOUR RESULTS:**
-1. Count Korean sites in your selection: coupang.com, gmarket.co.kr, 11st.co.kr, musinsa.com, zigzag.kr, elandmall.co.kr, wconcept.co.kr, 29cm.co.kr, ssg.com
+${topRepeatedBrands ? `1. **BRAND CHECK**: ${topRepeatedBrands}
+   - Did you select products with these EXACT brand names in the title?
+   - If NO → GO BACK and find products matching these brands from the search results
+   - The cropped image results (visual_lens) often have the exact brand products
+   - Example: If "KAPITAL" appears 4 times, you MUST have selected products with "KAPITAL" in the title
+2. Count Korean sites in your selection: fruitsfamily.com, kream.co.kr, bunjang.co.kr, croket.co.kr, coupang.com, gmarket.co.kr, 11st.co.kr, musinsa.com, zigzag.kr, wconcept.co.kr, 29cm.co.kr, ssg.com
+3. If you have fewer than 2 Korean sites → GO BACK and find more Korean options from the search results
+4. Only include international sites (Zara, Gap, Etsy, Amazon, etc.) AFTER you have exact brand matches + 2+ Korean sites
+5. **REQUIRED PATTERN**: [Exact brand Korean site 1, Exact brand Korean site 2, Exact brand international OR Korean site 3]` : `1. Count Korean sites in your selection: fruitsfamily.com, kream.co.kr, bunjang.co.kr, croket.co.kr, coupang.com, gmarket.co.kr, 11st.co.kr, musinsa.com, zigzag.kr, elandmall.co.kr, wconcept.co.kr, 29cm.co.kr, ssg.com
 2. If you have fewer than 2 Korean sites → GO BACK and find more Korean options from the search results
 3. Only include international sites (Zara, Gap, Etsy, Amazon, etc.) AFTER you have 2+ Korean sites
-4. **REQUIRED PATTERN**: [Korean site 1, Korean site 2, Korean site 3] OR [Korean site 1, Korean site 2, International site]
+4. **REQUIRED PATTERN**: [Korean site 1, Korean site 2, Korean site 3] OR [Korean site 1, Korean site 2, International site]`}
 
 Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MUST be Korean sites) or {"${resultKey}": []} ONLY if zero valid products found.`
 
