@@ -1804,15 +1804,14 @@ ${characterName ? '8' : '7'}. 🇰🇷 PREFER: Korean sites often have exact cha
   * If you find 3+ matches in the top ${Math.min(12, fullImageResults.length)} results → prioritize them
 
 - **STEP 2 - Identify key attributes and scan all results**:
-  * Extract 1-2 key attributes from description (materials, patterns, styles)
-  * Example: "Herringbone Double-Breasted Coat" → key attributes: ["herringbone", "double-breasted"]
-  * Scan all results for titles containing ALL key attributes
-  * Select products with all key attributes first (✅ "herringbone double-breasted coat")
-  * **IMPORTANT EXCEPTION - Premium/Contemporary Brands**: If you find products from high-quality brands (Guest in Residence, The Row, Lemaire, Max Mara, Loro Piana, Toteme, Loulou Studio, Joseph, etc.) that match MOST attributes (e.g., double-breasted coat in right color) but missing 1 specific detail (e.g., herringbone pattern), INCLUDE at least 1 premium brand option alongside exact matches
-  * Avoid generic partial matches (❌ "double-breasted coat" from fast fashion missing herringbone)
-  * If 5+ exact matches exist → select 2-3 exact matches + 1 premium brand alternative
-  * If fewer than 3 exact matches → prioritize premium brands that match well
-  * Quality > Quantity: better to return 2 exact matches + 1 premium alternative than 3 mixed generic results
+  * Extract 1-2 MOST distinctive attributes from description (unique patterns, rare styles)
+  * Example: "Fuzzy Wool Herringbone Double-Breasted Maxi Coat" → focus on RARE attributes: ["herringbone", "double-breasted"]
+  * Ignore common/generic attributes like "wool", "blend", "maxi" when there are more distinctive features
+  * PRIORITIZE products matching distinctive attributes (✅ "herringbone double-breasted coat")
+  * **FALLBACK**: If no exact matches for distinctive attributes, select best visual matches with correct item type + color
+  * **Premium Brands Are Great Alternatives**: Products from quality brands (Max Mara, Loro Piana, Toteme, The Row, etc.) matching item type + color are excellent selections even without every specific detail
+  * ALWAYS return 3-5 products - don't return empty array just because you can't find perfect matches
+  * Quality > Quantity: 3 good visual matches > 0 results because no "perfect" match exists
 - 🔥 **STEP 1 - BRAND FREQUENCY**:
   ${topRepeatedBrands ? `* ⭐⭐⭐ REPEATED BRANDS DETECTED: ${topRepeatedBrands}
   * **CRITICAL RULE**: When you see repeated brand names (e.g., "KAPITAL" appearing 3+ times):
@@ -1907,15 +1906,18 @@ Find the TOP 3-5 BEST AVAILABLE MATCHES. Prioritize IN THIS ORDER:
 - A luxury fur coat might be tagged as "sweater", "jacket", or "cardigan" - ALL VALID
 - Return [] ONLY if results are completely unrelated (e.g., shoes when looking for tops)
 
-🚨 **FINAL VALIDATION:**
+🚨 **FINAL VALIDATION - ALWAYS RETURN 3-5 RESULTS:**
 1. **Check top ${fullImageResults.length} results**: Did you examine the full image search results at the top for exact matches?
-2. **Verify key attributes**: Does each selected product's title contain ALL key attributes from "${itemDescription || 'N/A'}"?
-3. **Balance exact matches with premium brands**: If description has specific attributes (herringbone, double-breasted):
-   - IDEAL: 2-3 products with ALL attributes + 1 premium brand with MOST attributes
-   - ACCEPTABLE: All exact matches if no premium brands found
-   - AVOID: Generic fast-fashion partial matches (e.g., ETRO, Golden Goose, Dolce & Gabbana are good; H&M, Zara partial matches are not)
-4. **Quality over quantity**: Better to return 2-3 exact matches + 1 premium alternative than 3 mixed generic results
-5. **Premium brand check**: Did you scan for Guest in Residence, The Row, Max Mara, Lemaire, Loro Piana, Toteme, Loulou Studio, etc.?
+2. **Focus on MOST distinctive attributes**: Does each product match the 1-2 MOST distinctive/rare features from "${itemDescription || 'N/A'}"?
+   - Example: "Fuzzy Wool Herringbone Double-Breasted" → focus on "Herringbone" + "Double-Breasted" (distinctive), not "Fuzzy" + "Wool" (common)
+   - DON'T require ALL attributes - just the most distinctive ones
+3. **SELECTION PRIORITY**:
+   - BEST: Products matching distinctive attributes + color + item type
+   - GOOD: Premium brands (Max Mara, The Row, Toteme, etc.) matching item type + color
+   - ACCEPTABLE: Good visual matches with correct item type + color
+   - ⚠️ NEVER return empty array - ALWAYS select 3-5 best available products
+4. **Don't be perfectionist**: 3-5 good visual matches > 0 results because you couldn't find "perfect" matches
+5. **Premium brand check**: Scan for quality brands - they're great selections even without every specific detail
 ${topRepeatedBrands ? `1. **BRAND CHECK**: ${topRepeatedBrands}
    - Did you select products with these EXACT brand names in the title?
    - If NO → GO BACK and find products matching these brands from the search results
@@ -1939,9 +1941,9 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3", ...]} (3-5 best links, or
 
 **CRITICAL RULES**:
 1. Don't return empty array [] just because you can't find Korean sites! If perfect international matches exist, SELECT THEM!
-2. **QUALITY > QUANTITY**: Better to return 2 exact attribute matches than 3 mixed (1 exact + 2 partial)!
-3. If description has key attributes (herringbone, double-breasted) → ALL results MUST have those attributes
-4. Only mix exact + partial matches if you found fewer than 3 products with ALL key attributes`
+2. **PRIORITIZE matches with key attributes**: If description has distinctive features (herringbone, paisley, cable-knit, etc.), PREFER products with those attributes
+3. **FLEXIBILITY**: If description has multiple attributes (e.g., "fuzzy wool herringbone double-breasted maxi"), focus on the 2-3 MOST distinctive/rare attributes (herringbone + double-breasted), rather than requiring ALL attributes (fuzzy + wool + herringbone + double-breasted + maxi)
+4. **ALWAYS SELECT 3-5 BEST AVAILABLE products** - even if they don't have every single attribute, as long as they match the core item type, color, and general style`
 
         const openai = getOpenAIClient()
         const gptStart = Date.now()
