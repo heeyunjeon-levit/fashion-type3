@@ -2498,6 +2498,35 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
                 return // Skip this item entirely
               }
               
+              // Check if this was from text search (for logging)
+              const isFromTextSearch = item.searchType === 'text_images'
+              const searchTypeIcon = isFromTextSearch ? '📝' : '🖼️'
+              
+              // CRITICAL: Explicit rejection of wrong garment types FIRST
+              const wrongGarmentTypes: Record<string, string[]> = {
+                'scarf': ['blanket', 'throw', 'tapestry', 'rug', 'carpet', 'cushion', 'pillow', '담요', '블랭킷', '러그'],
+                'blanket': ['scarf', 'muffler', 'stole', '스카프', '머플러'],
+                'bag': ['wallet', 'belt', 'shoe', '지갑', '벨트'],
+                'jacket': ['blanket', 'rug', '담요'],
+                'pants': ['shorts', 'skirt', '반바지', '치마'],
+                'shorts': ['pants', 'trousers', '바지', '긴바지'],
+                'skirt': ['pants', 'shorts', '바지', '반바지']
+              }
+              
+              // Check if this item contains any wrong garment type keywords
+              let hasWrongType = false
+              for (const feature of coreFeatures) {
+                const rejectKeywords = wrongGarmentTypes[feature] || []
+                hasWrongType = rejectKeywords.some(wrongKeyword => 
+                  combinedText.includes(wrongKeyword)
+                )
+                if (hasWrongType) {
+                  const matchedWrong = rejectKeywords.find(k => combinedText.includes(k))
+                  console.log(`${searchTypeIcon} ❌ REJECTED: "${title.substring(0, 50)}..." - contains "${matchedWrong}" (searching for ${feature})`)
+                  return // Skip this item entirely
+                }
+              }
+              
               // Check color match with detailed logging
               const matchedColorKeyword = matchingKeywords.find(keyword => combinedText.includes(keyword))
               const hasColorMatch = !!matchedColorKeyword
@@ -2524,13 +2553,12 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
                 // Sweater variations (Korean)
                 if (feature === 'sweater' && (combinedText.includes('스웨터') || combinedText.includes('니트'))) return true
                 
+                // Scarf variations (Korean + English)
+                if (feature === 'scarf' && (combinedText.includes('머플러') || combinedText.includes('스카프') || combinedText.includes('muffler'))) return true
+                
                 return false
               })
               const hasGarmentTypeMatch = coreFeatures.length === 0 || !!matchedGarmentFeature
-              
-              // Check if this was from text search
-              const isFromTextSearch = item.searchType === 'text_images'
-              const searchTypeIcon = isFromTextSearch ? '📝' : '🖼️'
               
               // LENIENT: Accept if garment type matches (trust GPT for details)
               if (hasColorMatch && hasGarmentTypeMatch) {
@@ -2577,6 +2605,30 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
                   const hasColorMatch = !!matchedKeyword
                   if (!hasColorMatch) return false
                   
+                  // CRITICAL: Explicit rejection of wrong garment types
+                  const wrongGarmentTypes: Record<string, string[]> = {
+                    'scarf': ['blanket', 'throw', 'tapestry', 'rug', 'carpet', 'cushion', 'pillow', '담요', '블랭킷', '러그'],
+                    'blanket': ['scarf', 'muffler', 'stole', '스카프', '머플러'],
+                    'bag': ['wallet', 'belt', 'shoe', '지갑', '벨트'],
+                    'jacket': ['blanket', 'rug', '담요'],
+                    'pants': ['shorts', 'skirt', '반바지', '치마'],
+                    'shorts': ['pants', 'trousers', '바지', '긴바지'],
+                    'skirt': ['pants', 'shorts', '바지', '반바지']
+                  }
+                  
+                  // Check if this item contains any wrong garment type keywords
+                  for (const feature of coreFeatures) {
+                    const rejectKeywords = wrongGarmentTypes[feature] || []
+                    const hasWrongType = rejectKeywords.some(wrongKeyword => 
+                      combinedText.includes(wrongKeyword)
+                    )
+                    if (hasWrongType) {
+                      const matchedWrong = rejectKeywords.find(k => combinedText.includes(k))
+                      console.log(`   ❌ REJECTED: "${title.substring(0, 50)}..." - contains "${matchedWrong}" (searching for ${feature})`)
+                      return false
+                    }
+                  }
+                  
                   // Must have garment type (lenient - only core feature) WITH KOREAN SUPPORT
                   const hasGarmentTypeMatch = coreFeatures.length === 0 || coreFeatures.some(feature => {
                     if (combinedText.includes(feature)) return true
@@ -2597,6 +2649,9 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
                     
                     // Sweater variations (Korean)
                     if (feature === 'sweater' && (combinedText.includes('스웨터') || combinedText.includes('니트'))) return true
+                    
+                    // Scarf variations (Korean + English)
+                    if (feature === 'scarf' && (combinedText.includes('머플러') || combinedText.includes('스카프') || combinedText.includes('muffler'))) return true
                     
                     return false
                   })
@@ -2643,6 +2698,30 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
                   const link = item.link?.toLowerCase() || ''
                   const combinedText = `${title} ${link}`
                   
+                  // CRITICAL: Explicit rejection of wrong garment types
+                  const wrongGarmentTypes: Record<string, string[]> = {
+                    'scarf': ['blanket', 'throw', 'tapestry', 'rug', 'carpet', 'cushion', 'pillow', '담요', '블랭킷', '러그'],
+                    'blanket': ['scarf', 'muffler', 'stole', '스카프', '머플러'],
+                    'bag': ['wallet', 'belt', 'shoe', '지갑', '벨트'],
+                    'jacket': ['blanket', 'rug', '담요'],
+                    'pants': ['shorts', 'skirt', '반바지', '치마'],
+                    'shorts': ['pants', 'trousers', '바지', '긴바지'],
+                    'skirt': ['pants', 'shorts', '바지', '반바지']
+                  }
+                  
+                  // Check if this item contains any wrong garment type keywords
+                  for (const feature of coreFeatures) {
+                    const rejectKeywords = wrongGarmentTypes[feature] || []
+                    const hasWrongType = rejectKeywords.some(wrongKeyword => 
+                      combinedText.includes(wrongKeyword)
+                    )
+                    if (hasWrongType) {
+                      const matchedWrong = rejectKeywords.find(k => combinedText.includes(k))
+                      console.log(`   ❌ REJECTED (style): "${title.substring(0, 50)}..." - contains "${matchedWrong}" (searching for ${feature})`)
+                      return false
+                    }
+                  }
+                  
                   // Must have garment type (ignore color, ignore detail features) WITH KOREAN SUPPORT
                   const hasGarmentTypeMatch = coreFeatures.length === 0 || coreFeatures.some(feature => {
                     if (combinedText.includes(feature)) return true
@@ -2663,6 +2742,9 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3"]} (3-5 links, minimum 2 MU
                     
                     // Sweater variations (Korean)
                     if (feature === 'sweater' && (combinedText.includes('스웨터') || combinedText.includes('니트'))) return true
+                    
+                    // Scarf variations (Korean + English)
+                    if (feature === 'scarf' && (combinedText.includes('머플러') || combinedText.includes('스카프') || combinedText.includes('muffler'))) return true
                     
                     return false
                   })
