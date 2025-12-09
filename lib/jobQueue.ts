@@ -12,7 +12,7 @@ export interface SearchJob {
   
   // Input data
   categories: string[]
-  croppedImages: Record<string, string>
+  croppedImages: Record<string, string | { imageUrl: string; description?: string; isSingleItemMode?: boolean }>
   descriptions?: Record<string, string>
   originalImageUrl?: string
   useOCRSearch?: boolean
@@ -39,7 +39,7 @@ const JOB_EXPIRY_MS = 60 * 60 * 1000
 
 export function createJob(input: {
   categories: string[]
-  croppedImages: Record<string, string>
+  croppedImages: Record<string, string | { imageUrl: string; description?: string; isSingleItemMode?: boolean }>
   descriptions?: Record<string, string>
   originalImageUrl?: string
   useOCRSearch?: boolean
