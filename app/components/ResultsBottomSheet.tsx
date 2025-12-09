@@ -41,9 +41,26 @@ export default function ResultsBottomSheet({
   isSharedView = false
 }: ResultsBottomSheetProps) {
   const { t, language } = useLanguage()
-  // Initialize phone modal state based on isSharedView to prevent flash
-  const [showPhoneModal, setShowPhoneModal] = useState(!isSharedView)
-  const [phoneSubmitted, setPhoneSubmitted] = useState(isSharedView)
+  
+  // Check if we actually have results to show
+  const hasResults = Object.keys(results).length > 0 && Object.values(results).some(data => {
+    if (Array.isArray(data)) {
+      return data.length > 0
+    }
+    // Two-stage format
+    return (data.colorMatches?.length || 0) + (data.styleMatches?.length || 0) > 0
+  })
+  
+  // Log when we skip phone modal due to no results
+  useEffect(() => {
+    if (!hasResults && !isSharedView) {
+      console.log('⚠️ No results found - phone modal will be skipped')
+    }
+  }, [hasResults, isSharedView])
+  
+  // Initialize phone modal state - ONLY show if we have actual results
+  const [showPhoneModal, setShowPhoneModal] = useState(!isSharedView && hasResults)
+  const [phoneSubmitted, setPhoneSubmitted] = useState(isSharedView || !hasResults)
   const [isReturningUser, setIsReturningUser] = useState(false)
   const [sessionManager, setSessionManager] = useState<any>(null)
   const [sheetPosition, setSheetPosition] = useState<'peek' | 'half' | 'full'>('half')
@@ -71,6 +88,14 @@ export default function ResultsBottomSheet({
       console.log('👁️ Shared view - no session manager needed')
       return
     }
+    
+    // Skip if no results to show
+    if (!hasResults) {
+      console.log('⚠️ No results to show - skipping phone modal')
+      setPhoneSubmitted(true)
+      setShowPhoneModal(false)
+      return
+    }
 
     if (typeof window !== 'undefined') {
       const manager = getSessionManager()
@@ -89,7 +114,7 @@ export default function ResultsBottomSheet({
         console.log('👋 Returning user detected, skipping phone modal')
       }
     }
-  }, [isSharedView])
+  }, [isSharedView, hasResults])
 
   const handlePhoneSubmit = async (phoneNumber: string) => {
     if (!sessionManager) return
@@ -590,8 +615,8 @@ export default function ResultsBottomSheet({
 
   return (
     <>
-      {/* Phone Modal */}
-      {showPhoneModal && !phoneSubmitted && (
+      {/* Phone Modal - Only show if we have actual results */}
+      {showPhoneModal && !phoneSubmitted && hasResults && (
         <PhoneModal
           onPhoneSubmit={handlePhoneSubmit}
           isReturningUser={isReturningUser}
