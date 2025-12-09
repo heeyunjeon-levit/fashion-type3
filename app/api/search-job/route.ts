@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createJob, updateJobProgress, completeJob, failJob, getJob } from '@/lib/jobQueue'
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
+
 /**
  * POST /api/search-job
  * Create a new search job and start processing in the background

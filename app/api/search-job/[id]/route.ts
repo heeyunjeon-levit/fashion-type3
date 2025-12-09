@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getJob } from '@/lib/jobQueue'
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
+
 /**
  * GET /api/search-job/[id]
  * Check the status of a search job

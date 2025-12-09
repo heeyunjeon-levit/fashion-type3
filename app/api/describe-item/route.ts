@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { GoogleGenAI } from '@google/genai'
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
+
 // Use dedicated Gemini API key (project-specific, not gcloud)
 const client = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY || process.env.GCLOUD_API_KEY || ''

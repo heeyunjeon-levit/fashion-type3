@@ -132,19 +132,21 @@ export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
       let fileToUpload = image
       let compressionTime = 0
 
-      // Compress image if it's larger than 4MB
-      if (image.size > 4 * 1024 * 1024) {
+      // Compress image if it's larger than 2MB (more aggressive threshold)
+      if (image.size > 2 * 1024 * 1024) {
         console.log('🗜️ Compressing large image...')
         const compressionStart = performance.now()
         try {
           const compressed = await imageCompression(image, {
-            maxSizeMB: 3.5,
-            maxWidthOrHeight: 2048,
+            maxSizeMB: 1.5,          // Much smaller: 3.5MB → 1.5MB (faster!)
+            maxWidthOrHeight: 1200,  // Lower resolution: 2048px → 1200px (faster!)
+            maxIteration: 10,        // Limit iterations for speed
+            initialQuality: 0.8,     // Start with lower quality for speed
             useWebWorker: true,
             fileType: 'image/jpeg',
           })
           compressionTime = (performance.now() - compressionStart) / 1000
-          console.log(`✅ Compressed: ${image.size} → ${compressed.size} bytes (${compressionTime.toFixed(2)}s)`)
+          console.log(`✅ Compressed: ${(image.size / 1024 / 1024).toFixed(2)}MB → ${(compressed.size / 1024 / 1024).toFixed(2)}MB in ${compressionTime.toFixed(2)}s`)
           fileToUpload = compressed
         } catch (compressionError) {
           console.error('⚠️ Compression failed, uploading original:', compressionError)

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notification Test</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+    }
+    button {
+      padding: 12px 24px;
+      font-size: 16px;
+      background: #0070f3;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin: 10px 5px;
+    }
+    button:hover {
+      background: #0051cc;
+    }
+    .status {
+      margin: 20px 0;
+      padding: 15px;
+      border-radius: 6px;
+      background: #f5f5f5;
+    }
+    .log {
+      margin-top: 20px;
+      padding: 10px;
+      background: #000;
+      color: #0f0;
+      font-family: monospace;
+      border-radius: 6px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔔 Browser Notification Test</h1>
+  
+  <div class="status">
+    <strong>Permission:</strong> <span id="permission">Checking...</span>
+  </div>
+  
+  <button onclick="requestPermission()">Request Permission</button>
+  <button onclick="testNotification()">Test Notification</button>
+  <button onclick="testWithoutIcon()">Test Without Icon</button>
+  <button onclick="clearLog()">Clear Log</button>
+  
+  <div class="log" id="log"></div>
+  
+  <script>
+    function log(message) {
+      const logEl = document.getElementById('log')
+      const time = new Date().toLocaleTimeString()
+      logEl.innerHTML += `[${time}] ${message}<br>`
+      logEl.scrollTop = logEl.scrollHeight
+      console.log(message)
+    }
+    
+    function clearLog() {
+      document.getElementById('log').innerHTML = ''
+    }
+    
+    function updatePermissionStatus() {
+      const permEl = document.getElementById('permission')
+      const perm = Notification.permission
+      permEl.textContent = perm
+      permEl.style.color = perm === 'granted' ? 'green' : perm === 'denied' ? 'red' : 'orange'
+      log(`Permission status: ${perm}`)
+    }
+    
+    async function requestPermission() {
+      log('🔔 Requesting notification permission...')
+      try {
+        const permission = await Notification.requestPermission()
+        log(`✅ Permission result: ${permission}`)
+        updatePermissionStatus()
+      } catch (err) {
+        log(`❌ Error requesting permission: ${err}`)
+      }
+    }
+    
+    function testNotification() {
+      if (Notification.permission !== 'granted') {
+        log('⚠️  Permission not granted. Click "Request Permission" first.')
+        return
+      }
+      
+      log('🔔 Creating notification WITH icon...')
+      try {
+        const notification = new Notification('✨ Test Notification', {
+          body: 'This is a test with an icon',
+          icon: '/favicon.ico',
+          tag: 'test',
+          requireInteraction: false
+        })
+        
+        notification.onshow = () => log('👀 Notification shown!')
+        notification.onerror = (err) => log(`❌ Notification error: ${err}`)
+        notification.onclick = () => {
+          log('🖱️ Notification clicked!')
+          notification.close()
+        }
+        
+        log('✅ Notification created successfully')
+        
+        setTimeout(() => {
+          log('⏰ Auto-closing notification')
+          notification.close()
+        }, 5000)
+      } catch (err) {
+        log(`❌ Failed to create notification: ${err}`)
+      }
+    }
+    
+    function testWithoutIcon() {
+      if (Notification.permission !== 'granted') {
+        log('⚠️  Permission not granted. Click "Request Permission" first.')
+        return
+      }
+      
+      log('🔔 Creating notification WITHOUT icon...')
+      try {
+        const notification = new Notification('✨ Test Notification', {
+          body: 'This is a test without an icon',
+          tag: 'test-no-icon',
+          requireInteraction: false
+        })
+        
+        notification.onshow = () => log('👀 Notification shown!')
+        notification.onerror = (err) => log(`❌ Notification error: ${err}`)
+        notification.onclick = () => {
+          log('🖱️ Notification clicked!')
+          notification.close()
+        }
+        
+        log('✅ Notification created successfully')
+        
+        setTimeout(() => {
+          log('⏰ Auto-closing notification')
+          notification.close()
+        }, 5000)
+      } catch (err) {
+        log(`❌ Failed to create notification: ${err}`)
+      }
+    }
+    
+    // Check permission on load
+    if ('Notification' in window) {
+      updatePermissionStatus()
+      log('✅ Notification API is supported')
+    } else {
+      log('❌ Notification API is NOT supported in this browser')
+    }
+  </script>
+</body>
+</html>
+

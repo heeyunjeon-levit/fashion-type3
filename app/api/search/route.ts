@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import OpenAI from 'openai'
 import { GoogleGenAI, ThinkingLevel } from '@google/genai'
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
+
 // Initialize OpenAI lazily to read fresh env vars on each request
 function getOpenAIClient() {
   return new OpenAI({

@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
+
 // Type declaration for heic-convert
 interface HeicConvertOptions {
   buffer: Buffer

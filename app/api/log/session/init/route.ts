@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseServerClient } from '../../../../../lib/supabaseServer'
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
+
 export async function POST(request: NextRequest) {
   try {
     const { sessionId, userId, phoneNumber } = await request.json()

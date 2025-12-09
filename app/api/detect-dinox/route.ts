@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
+
 const DINOX_API_BASE = 'https://api.deepdataspace.com'
 const DINOX_API_TOKEN = process.env.DINOX_API_TOKEN || 'bdf2ed490ebe69a28be81ea9d9b0b0e3'
 
@@ -214,6 +217,14 @@ export async function POST(request: NextRequest) {
     const objects = result.objects || []
     console.log(`📦 DINO-X returned ${objects.length} raw objects`)
     console.log('   Raw result structure:', JSON.stringify(result, null, 2).substring(0, 500))
+    
+    // Log sample bboxes for debugging
+    if (objects.length > 0) {
+      console.log('📏 Sample bboxes from DINOx:')
+      objects.slice(0, 3).forEach((obj, i) => {
+        console.log(`   [${i}] ${obj.category}: bbox=${JSON.stringify(obj.bbox)} (score=${obj.score})`)
+      })
+    }
 
     // Filter and score items for main subject focus
     const CONFIDENCE_THRESHOLD = 0.40  // Keep reasonable for detection
