@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server'
 import fs from 'fs'
 import path from 'path'
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
+
 export async function GET() {
   try {
     const htmlPath = path.join(process.cwd(), 'app', 'batch-results.html')

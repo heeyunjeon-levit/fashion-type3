@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
+
 const BACKEND_URL = process.env.BACKEND_URL || 'https://heeyunjeon-levit--fashion-crop-api-gpu-fastapi-app-v2.modal.run'
 
 export interface DetectedItem {
