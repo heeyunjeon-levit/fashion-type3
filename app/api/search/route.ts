@@ -1295,8 +1295,10 @@ export async function POST(request: NextRequest) {
         console.log(`   🎯 Full image search: ${fullImageResults.length} results (for exact matches)`)
         console.log(`   ✂️  Cropped+Text search: ${organicResults.length} results (for alternatives)`)
         
-        // Use cropped results for category-based search
-        const mergedResults: any[] = [...organicResults]
+        // CRITICAL: Put full image results FIRST (they're the exact matches!)
+        // Then add cropped results for alternatives
+        const mergedResults: any[] = [...fullImageResults, ...organicResults]
+        console.log(`   📦 Merged: ${mergedResults.length} total results (full image at top for GPT priority)`)
         
         // Filter merged results BEFORE GPT to save time and improve quality
         let filteredResults = mergedResults
@@ -1795,15 +1797,29 @@ ${characterName ? '8' : '7'}. 🇰🇷 PREFER: Korean sites often have exact cha
 **IMPORTANT: Return your BEST 3-5 HIGH-QUALITY matches ONLY. Quality over quantity.**
 
 🌟 **SELECTION STRATEGY:**
-- 🔥 **STEP 0 - TEXT-BASED EXACT KEYWORD MATCHING (SCAN FIRST!)**:
-  * ⭐⭐⭐ **CRITICAL**: Before selecting ANYTHING, identify KEY ATTRIBUTES in the description
+- 🔥🔥🔥 **STEP 0A - CHECK FULL IMAGE RESULTS FIRST (TOP ${fullImageResults.length} RESULTS ARE EXACT MATCHES!)**:
+  * ⭐⭐⭐ **MANDATORY**: The first ${fullImageResults.length} results in the list are from FULL IMAGE SEARCH
+  * These are searching the ENTIRE uploaded photo → they often find the EXACT product (including brand!)
+  * **PROCESS**:
+    → 1️⃣ Look at description: "${itemDescription || 'N/A'}"
+    → 2️⃣ Identify key attributes: ${itemDescription ? itemDescription.split(/\s+/).filter((w: string) => w.length > 4 && !['womens', 'women', 'mens', 'item'].includes(w.toLowerCase())).slice(0, 5).join(', ') : 'N/A'}
+    → 3️⃣ **CHECK THE FIRST ${Math.min(10, fullImageResults.length)} RESULTS** for exact keyword matches
+    → 4️⃣ If Results #1-10 include products with ALL key attributes → **SELECT THEM IMMEDIATELY** (these are the exact products!)
+  * **EXAMPLE**:
+    → If Result #1 is "Guest in Residence Grizzly double-breasted herringbone coat" and description has "herringbone" + "double-breasted"
+    → ✅✅✅ THIS IS THE EXACT PRODUCT! Select it + find 2 more similar ones
+  * **WHY**: Full image search finds exact products because it sees the whole photo context (style, setting, quality level)
+  * **DON'T SKIP**: Don't browse through all 60+ results and pick random ones - CHECK THE TOP 10 FULL IMAGE RESULTS FIRST!
+
+- 🔥 **STEP 0B - TEXT-BASED EXACT KEYWORD MATCHING (IF FULL IMAGE DIDN'T HAVE ENOUGH)**:
+  * ⭐⭐⭐ **If you didn't find 3+ exact matches in the top ${Math.min(10, fullImageResults.length)} full image results**:
   * Look at the description: "${itemDescription || 'N/A'}"
   * Extract key attributes (materials/patterns/styles): ${itemDescription ? itemDescription.split(/\s+/).filter((w: string) => w.length > 4 && !['womens', 'women', 'mens', 'item'].includes(w.toLowerCase())).slice(0, 5).join(', ') : 'N/A'}
   * **MANDATORY PROCESS**:
     → STEP A: Identify 1-2 key attributes (e.g., "herringbone" + "double-breasted", "paisley" + "wrap", "cable-knit" + "turtleneck")
-    → STEP B: SCAN ALL results (all searchTypes) for titles containing BOTH/ALL key attributes
+    → STEP B: SCAN remaining results (results #${Math.min(10, fullImageResults.length) + 1}+) for titles containing BOTH/ALL key attributes
     → STEP C: **ONLY SELECT products with ALL key attributes in the title**
-    → STEP D: If you find 5+ exact matches → select 3-5 of them (prioritize Korean sites when quality is equal)
+    → STEP D: If you find 5+ exact matches total → select 3-5 of them (prioritize Korean sites when quality is equal)
     → STEP E: If you find 3-4 exact matches → select ALL of them (don't add partial matches!)
     → STEP F: If you find fewer than 3 exact matches → THEN add high-quality visual alternatives
   * **EXAMPLES**:
@@ -1905,7 +1921,20 @@ Find the TOP 3-5 BEST AVAILABLE MATCHES. Prioritize IN THIS ORDER:
 - Return [] ONLY if results are completely unrelated (e.g., shoes when looking for tops)
 
 🚨 **FINAL VALIDATION - BEFORE RETURNING YOUR RESULTS:**
-0. **⭐⭐⭐ EXACT ATTRIBUTE MATCHING CHECK** (DO THIS FIRST! MOST CRITICAL!):
+0A. **⭐⭐⭐ DID YOU CHECK FULL IMAGE RESULTS FIRST?** (MOST CRITICAL!):
+   - The first ${fullImageResults.length} results are from FULL IMAGE SEARCH (exact matches!)
+   - **MANDATORY CHECK**:
+     * Did you look at Results #1-${Math.min(10, fullImageResults.length)} BEFORE selecting anything?
+     * Did any of those top results have ALL key attributes from the description?
+     * If YES → Did you SELECT them? (If NO, GO BACK and select them!)
+   - **EXAMPLE**:
+     * If Result #2 is "Guest in Residence Grizzly double-breasted herringbone coat"
+     * And description has "herringbone" + "double-breasted"
+     * → You MUST select this result! It's the exact product from full image search!
+   - **WHY THIS MATTERS**: Full image results are often the EXACT product (brand + style + all attributes)
+   - Don't skip them to select random products from results #40-60!
+
+0B. **⭐⭐⭐ EXACT ATTRIBUTE MATCHING CHECK** (SECOND MOST CRITICAL!):
    - Description: "${itemDescription || 'N/A'}"
    - **STEP 1**: Identify 1-2 key attributes (herringbone, double-breasted, paisley, cable-knit, wrap, turtleneck, etc.)
    - **STEP 2**: Check EACH of your 3-5 selected products:
@@ -1916,8 +1945,9 @@ Find the TOP 3-5 BEST AVAILABLE MATCHES. Prioritize IN THIS ORDER:
      → ❌ REJECT IT and find a replacement with ALL key attributes
      → Only include partial matches if you found fewer than 3 products with ALL attributes
    - **EXAMPLES** (Description: "Herringbone Double-Breasted Coat"):
-     * ✅ Product #1: "Ermanno Scervino herringbone-pattern double-breasted Coat" → PERFECT (has both!)
-     * ✅ Product #2: "Maison Margiela Herringbone double-breasted Coat" → PERFECT (has both!)
+     * ✅ Product #1: "Guest in Residence double-breasted herringbone coat" → PERFECT (has both + from full image!)
+     * ✅ Product #2: "Ermanno Scervino herringbone-pattern double-breasted Coat" → PERFECT (has both!)
+     * ✅ Product #3: "Maison Margiela Herringbone double-breasted Coat" → PERFECT (has both!)
      * ❌ Product #3: "Dolce & Gabbana Double-breasted alpaca coat" → REJECT (missing herringbone!)
      * → GO BACK and find another product with "herringbone" + "double-breasted" instead!
    - **CRITICAL**: If description has specific attributes → ALL 3-5 results MUST have those attributes (don't mix 1 exact + 2 partial!)
