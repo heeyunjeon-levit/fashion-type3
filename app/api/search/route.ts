@@ -1996,9 +1996,10 @@ Result: Return these 5 links!
           additionalProperties: false
         }
         
-        // Use GPT-4 Turbo with Structured Outputs for guaranteed format consistency
+        // Use GPT-4o with Structured Outputs for guaranteed format consistency
+        // Note: gpt-4-turbo doesn't support json_schema, need gpt-4o-2024-08-06 or later
         const completion = await openai.chat.completions.create({
-          model: 'gpt-4-turbo-2024-04-09',
+          model: 'gpt-4o-2024-08-06',
           messages: [
             {
               role: 'system',
