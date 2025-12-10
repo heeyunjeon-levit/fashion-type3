@@ -632,7 +632,7 @@ export async function POST(request: NextRequest) {
         // Step 2: Create a job with the full image as a single item
         const { createJob } = await import('@/lib/jobQueue')
         
-        const job = createJob({
+        const job = await createJob({
           categories: ['single_item_1'],
           croppedImages: {
             'single_item_1': {
