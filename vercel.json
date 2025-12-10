@@ -9,6 +9,9 @@
     },
     "app/api/search/route.ts": {
       "maxDuration": 300
+    },
+    "app/api/search-job/route.ts": {
+      "maxDuration": 300
     }
   }
 }

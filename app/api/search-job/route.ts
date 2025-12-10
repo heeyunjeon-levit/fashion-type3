@@ -4,6 +4,9 @@ import { createJob, updateJobProgress, completeJob, failJob, getJob } from '@/li
 // Force dynamic rendering
 export const dynamic = 'force-dynamic'
 
+// Allow up to 5 minutes for search processing (Vercel Pro plan)
+export const maxDuration = 300
+
 /**
  * POST /api/search-job
  * Create a new search job and start processing in the background
@@ -27,24 +30,24 @@ export async function POST(request: NextRequest) {
     
     console.log(`🚀 Created search job ${job.id}${phoneNumber ? ' with SMS notification' : ''} (persisted to DB)`)
     
-    // Start background processing (don't await - let it run in background)
-    processSearchJob(job.id, body).catch(async error => {
+    // CRITICAL FIX: Process the job in the SAME request to keep serverless function alive
+    // Vercel serverless functions only run while handling a request
+    // Fire-and-forget background processing gets killed when request completes
+    try {
+      await processSearchJob(job.id, body)
+      console.log(`✅ Job ${job.id} completed successfully`)
+    } catch (error: any) {
       console.error(`❌ Job ${job.id} failed during processing:`, error)
-      // Make sure job is marked as failed
-      try {
-        await failJob(job.id, error.message || 'Unknown error')
-      } catch (e) {
-        console.error('Failed to mark job as failed:', e)
-      }
-    })
+      await failJob(job.id, error.message || 'Unknown error')
+    }
     
-    // Return job ID immediately
+    // Return job ID after processing completes
     return NextResponse.json({
       jobId: job.id,
-      status: 'processing',
+      status: 'completed',
       message: phoneNumber 
-        ? 'Search started. You will receive an SMS when results are ready.'
-        : 'Search started. Poll /api/search-job/[id] for status.'
+        ? 'Search complete. You will receive an SMS shortly.'
+        : 'Search complete. Check results below.'
     })
     
   } catch (error) {
