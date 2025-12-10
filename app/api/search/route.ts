@@ -1904,7 +1904,7 @@ Find the TOP 3-5 BEST AVAILABLE MATCHES. Prioritize IN THIS ORDER:
 - ${categoryKey === 'bottoms' ? 'For bottoms: pants, jeans, shorts, skirts are all valid lower body wear' : ''}
 - Focus on: Does this product have a similar LOOK and FEEL?
 - A luxury fur coat might be tagged as "sweater", "jacket", or "cardigan" - ALL VALID
-- Return [] ONLY if results are completely unrelated (e.g., shoes when looking for tops)
+- **YOU MUST SELECT 3-5 PRODUCTS** - the search results were carefully curated for this category
 
 🚨 **FINAL VALIDATION - ALWAYS RETURN 3-5 RESULTS:**
 1. **Check top ${fullImageResults.length} results**: Did you examine the full image search results at the top for exact matches?
@@ -1937,13 +1937,36 @@ ${topRepeatedBrands ? `1. **BRAND CHECK**: ${topRepeatedBrands}
 2. **PRIORITY HIERARCHY**: Exact keywords > Korean sites with good matches > Visual similarity
 3. **REQUIRED PATTERN**: [Best match 1, Best match 2, Best match 3] (prioritize accuracy over country)`}
 
-Return JSON: {"${resultKey}": ["url1", "url2", "url3", ...]} (3-5 best links, or fewer if only exact matches available)
+Return JSON: {"${resultKey}": ["url1", "url2", "url3", ...]}
 
-**CRITICAL RULES**:
-1. Don't return empty array [] just because you can't find Korean sites! If perfect international matches exist, SELECT THEM!
-2. **PRIORITIZE matches with key attributes**: If description has distinctive features (herringbone, paisley, cable-knit, etc.), PREFER products with those attributes
-3. **FLEXIBILITY**: If description has multiple attributes (e.g., "fuzzy wool herringbone double-breasted maxi"), focus on the 2-3 MOST distinctive/rare attributes (herringbone + double-breasted), rather than requiring ALL attributes (fuzzy + wool + herringbone + double-breasted + maxi)
-4. **ALWAYS SELECT 3-5 BEST AVAILABLE products** - even if they don't have every single attribute, as long as they match the core item type, color, and general style`
+🚨🚨🚨 **MANDATORY OVERRIDE - READ THIS LAST** 🚨🚨🚨
+YOU **MUST** RETURN 3-5 PRODUCT LINKS. NEVER RETURN EMPTY ARRAY [].
+- Looking for brown coat? Select 3-5 best brown coats from the ${resultsForGPT.length} candidates
+- Looking for fuzzy wool herringbone double-breasted coat? Select best matches with "herringbone" + "double-breasted" (don't worry about fuzzy/wool/maxi)
+- Found "Guest In Residence Grizzly Double-Breasted Herringbone Coat"? → SELECT IT!
+- Can't find perfect match? → Select 3-5 visually similar products matching color + item type
+- **EMPTY ARRAY [] IS NEVER ACCEPTABLE** - you have ${resultsForGPT.length} candidates, always pick the best 3-5!
+
+SELECTION PRIORITY (simple):
+1. Exact keyword matches (e.g., "herringbone" + "double-breasted" in title)
+2. Premium brand visual matches (Guest In Residence, Max Mara, The Row, etc.)
+3. Any good visual matches with correct color + item type
+4. Korean sites are nice-to-have but NOT required
+
+**FINAL CHECK BEFORE RETURNING**:
+- Did you select 3-5 links? ✅ Good!
+- Did you return empty array []? ❌ GO BACK AND SELECT 3-5 BEST AVAILABLE MATCHES!
+
+**CONCRETE EXAMPLE (so you understand)**:
+Searching for "Brown Fuzzy Wool Herringbone Double-Breasted Maxi Coat"
+Candidates include:
+- "Guest In Residence Grizzly Double-Breasted Herringbone Coat" ← ✅ SELECT THIS! (has herringbone + double-breasted)
+- "Weekday Hairy Alpaca Wool Oversized Coat Brown" ← ✅ SELECT THIS! (has fuzzy/hairy + brown + oversized)
+- "Max Mara Brown Wool Funnel Neck Coat" ← ✅ SELECT THIS! (premium brand, brown, wool, coat)
+- "S Max Mara Giorgia Long Coat" ← ✅ SELECT THIS! (premium brand, long/maxi coat)
+- "Loulou Studio Long Coat Brown" ← ✅ SELECT THIS! (premium, brown, long)
+Result: Return these 5 links!
+❌ NEVER: Return {"${resultKey}": []} - this is unacceptable when you have good candidates!`
 
         const openai = getOpenAIClient()
         const gptStart = Date.now()
@@ -1954,14 +1977,14 @@ Return JSON: {"${resultKey}": ["url1", "url2", "url3", ...]} (3-5 best links, or
           messages: [
             {
               role: 'system',
-              content: 'You extract product links from search results. Return only valid JSON without any markdown formatting.'
+              content: 'You are a fashion product selector. Your job is to ALWAYS select 3-5 best matching product links from the provided search results. NEVER return empty arrays. Return only valid JSON without any markdown formatting.'
             },
             {
               role: 'user',
               content: prompt
             }
           ],
-          temperature: 0,
+          temperature: 0.3,  // Slightly higher temperature to encourage selection
           max_tokens: 2000,
           response_format: { type: 'json_object' }
         })
