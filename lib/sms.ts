@@ -79,8 +79,13 @@ export async function sendSMS({ to, message }: SendSMSParams): Promise<boolean> 
     
     console.log(`📱 Sending Kakao message to ${normalizedPhone}`)
     
-    // Generate unique message ID
-    const msgid = `sms-${Date.now()}-${Math.random().toString(36).substring(7)}`
+    // Generate unique message ID (max 20 chars for SweetTracker)
+    // Use last 10 digits of timestamp + 5 char random = 15 chars total
+    const timestamp = Date.now().toString().slice(-10)
+    const random = Math.random().toString(36).substring(2, 7)
+    const msgid = `${timestamp}${random}` // e.g., "5377730130q23se" (15 chars)
+    
+    console.log(`📝 Generated msgid: ${msgid} (${msgid.length} chars)`)
     
     // API endpoint
     const url = `https://alimtalk-api.sweettracker.net/v2/${PROFILE_KEY}/sendMessage`
@@ -128,47 +133,21 @@ export async function sendSMS({ to, message }: SendSMSParams): Promise<boolean> 
 
 /**
  * Send search results notification via Kakao Brand Message (SweetTracker)
+ * This is a convenience wrapper around sendSMS
  */
 export async function sendSearchResultsNotification(
   phoneNumber: string,
   jobId: string
-) {
+): Promise<boolean> {
   const baseUrl =
     process.env.NEXT_PUBLIC_BASE_URL || 'https://fashionsource.vercel.app'
   const resultsUrl = `${baseUrl}/search-results/${jobId}`
   const message = `✨ Your fashion search is ready!\nView your results here:\n${resultsUrl}`
 
-  const PROFILE_KEY = process.env.SWEETTRACKER_PROFILE_KEY!
-  const USER_ID = process.env.SWEETTRACKER_USER_ID!
-
-  const url = `https://alimtalk-api.sweettracker.net/v2/${PROFILE_KEY}/sendMessage`
-
-  const payload = [
-    {
-      msgid: `search-${jobId}`,        // ✅ must be unique
-      message_type: 'BM',              // ✅ Brand Message (no template)
-      profile_key: PROFILE_KEY,
-      receiver_num: normalizePhone(phoneNumber), // ✅ 8210... format
-      message,
-      reserved_time: '00000000000000'  // ✅ send immediately
-    }
-  ]
-
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      userid: USER_ID
-    },
-    body: JSON.stringify(payload)
+  // Use the main sendSMS function (handles msgid generation correctly)
+  return await sendSMS({
+    to: phoneNumber,
+    message
   })
-
-  const data = await res.json()
-
-  return {
-    ok: res.ok,
-    status: res.status,
-    data
-  }
 }
 
