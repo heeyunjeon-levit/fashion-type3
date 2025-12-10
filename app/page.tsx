@@ -1272,6 +1272,22 @@ export default function Home() {
                     ></div>
                   </div>
                 </div>
+
+                {/* SMS notification message - only show if phone number was provided */}
+                {phoneNumber && (
+                  <div className="mt-8 p-4 bg-blue-50 rounded-xl border border-blue-100">
+                    <div className="flex items-start gap-3 text-left">
+                      <div className="text-2xl mt-0.5">📱</div>
+                      <div className="flex-1">
+                        <p className="text-sm text-gray-700 leading-relaxed">
+                          <span className="font-semibold text-gray-900">앱을 닫거나 휴대폰을 잠가도 괜찮아요!</span>
+                          <br />
+                          검색이 완료되면 문자 메시지로 알려드릴게요.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>

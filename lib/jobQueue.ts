@@ -42,7 +42,7 @@ const jobs = globalThis.__job_queue__
 // Cleanup old jobs after 1 hour
 const JOB_EXPIRY_MS = 60 * 60 * 1000
 
-export function createJob(input: {
+export async function createJob(input: {
   categories: string[]
   croppedImages: Record<string, string | { imageUrl: string; description?: string; isSingleItemMode?: boolean }>
   descriptions?: Record<string, string>
@@ -50,7 +50,7 @@ export function createJob(input: {
   useOCRSearch?: boolean
   phoneNumber?: string
   countryCode?: string
-}): SearchJob {
+}): Promise<SearchJob> {
   const id = generateJobId()
   const job: SearchJob = {
     id,
@@ -61,13 +61,17 @@ export function createJob(input: {
     ...input
   }
   
+  // Store in memory for fast access
   jobs.set(id, job)
   console.log(`✅ Created job ${id}${job.phoneNumber ? ` with phone number ${job.phoneNumber}` : ''}`)
   
-  // Schedule cleanup
+  // CRITICAL: Save to database immediately so job persists across server restarts
+  await saveJobToDatabase(job)
+  
+  // Schedule cleanup from memory only (DB entries cleaned up separately)
   setTimeout(() => {
     if (jobs.has(id)) {
-      console.log(`🗑️  Cleaning up expired job ${id}`)
+      console.log(`🗑️  Cleaning up expired job ${id} from memory`)
       jobs.delete(id)
     }
   }, JOB_EXPIRY_MS)
@@ -91,7 +95,7 @@ export function updateJob(id: string, updates: Partial<SearchJob>): void {
   }
 }
 
-export function updateJobProgress(id: string, progress: number, status?: SearchJob['status']): void {
+export async function updateJobProgress(id: string, progress: number, status?: SearchJob['status']): Promise<void> {
   const job = jobs.get(id)
   if (job) {
     job.progress = progress
@@ -101,6 +105,11 @@ export function updateJobProgress(id: string, progress: number, status?: SearchJ
     }
     jobs.set(id, job)
     console.log(`📊 Job ${id} progress: ${progress}% (${job.status})`)
+    
+    // Persist to database so progress survives server restarts
+    await saveJobToDatabase(job).catch(err => {
+      console.error(`Failed to persist progress for job ${id}:`, err)
+    })
   }
 }
 
@@ -122,7 +131,7 @@ export async function completeJob(id: string, results: any, meta?: any): Promise
   }
 }
 
-export function failJob(id: string, error: string): void {
+export async function failJob(id: string, error: string): Promise<void> {
   const job = jobs.get(id)
   if (job) {
     job.status = 'failed'
@@ -130,6 +139,11 @@ export function failJob(id: string, error: string): void {
     job.updatedAt = Date.now()
     jobs.set(id, job)
     console.log(`❌ Job ${id} failed: ${error}`)
+    
+    // Persist failure to database
+    await saveJobToDatabase(job).catch(err => {
+      console.error(`Failed to persist failure for job ${id}:`, err)
+    })
   }
 }
 
@@ -221,6 +235,7 @@ export async function loadJobFromDatabase(jobId: string): Promise<SearchJob | nu
 /**
  * Get job from memory or database
  * First checks in-memory cache, then falls back to database
+ * If found in DB but not in memory, populates memory cache
  */
 export async function getJobWithFallback(jobId: string): Promise<SearchJob | undefined> {
   // Try memory first (faster)
@@ -229,9 +244,18 @@ export async function getJobWithFallback(jobId: string): Promise<SearchJob | und
     return memoryJob
   }
   
-  // Fall back to database (for shareable links)
+  // Fall back to database (for shareable links or cross-instance jobs)
+  console.log(`🔄 Job ${jobId} not in memory, loading from database...`)
   const dbJob = await loadJobFromDatabase(jobId)
-  return dbJob || undefined
+  
+  if (dbJob) {
+    // Populate memory cache for faster subsequent access
+    jobs.set(jobId, dbJob)
+    console.log(`✅ Loaded job ${jobId} from database into memory cache`)
+    return dbJob
+  }
+  
+  return undefined
 }
 
 // Debug: Log job count periodically

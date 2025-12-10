@@ -15,8 +15,8 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { categories, croppedImages, descriptions, originalImageUrl, useOCRSearch, phoneNumber, countryCode } = body
     
-    // Create job
-    const job = createJob({
+    // Create job (now async - saves to DB immediately)
+    const job = await createJob({
       categories,
       croppedImages,
       descriptions,
@@ -26,14 +26,14 @@ export async function POST(request: NextRequest) {
       countryCode
     })
     
-    console.log(`🚀 Created search job ${job.id}${phoneNumber ? ' with SMS notification' : ''}`)
+    console.log(`🚀 Created search job ${job.id}${phoneNumber ? ' with SMS notification' : ''} (persisted to DB)`)
     
     // Start background processing (don't await - let it run in background)
-    processSearchJob(job.id, body).catch(error => {
+    processSearchJob(job.id, body).catch(async error => {
       console.error(`❌ Job ${job.id} failed during processing:`, error)
       // Make sure job is marked as failed
       try {
-        failJob(job.id, error.message || 'Unknown error')
+        await failJob(job.id, error.message || 'Unknown error')
       } catch (e) {
         console.error('Failed to mark job as failed:', e)
       }
@@ -64,15 +64,15 @@ export async function POST(request: NextRequest) {
 async function processSearchJob(jobId: string, body: any) {
   try {
     console.log(`⚙️ Processing job ${jobId}...`)
-    updateJobProgress(jobId, 5, 'processing')
+    await updateJobProgress(jobId, 5, 'processing')
     
     // Update progress periodically during the search
-    const progressInterval = setInterval(() => {
+    const progressInterval = setInterval(async () => {
       const job = getJob(jobId)
       if (job && job.status === 'processing' && job.progress < 90) {
         // Gradually increment progress - realistic pacing for typical 1-2 min searches
         // 3% every 4 seconds = ~2 minutes to reach 90%
-        updateJobProgress(jobId, Math.min(90, job.progress + 3))
+        await updateJobProgress(jobId, Math.min(90, job.progress + 3))
       }
     }, 4000) // Update every 4 seconds
     
@@ -130,7 +130,7 @@ async function processSearchJob(jobId: string, body: any) {
     
   } catch (error: any) {
     console.error(`❌ Job ${jobId} processing error:`, error)
-    failJob(jobId, error.message || 'Unknown error')
+    await failJob(jobId, error.message || 'Unknown error')
   }
 }
 
