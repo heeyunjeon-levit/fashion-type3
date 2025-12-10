@@ -808,14 +808,14 @@ export default function Home() {
       const results = await Promise.all(processingPromises)
       const processedItems = results.filter(item => item !== null) as DetectedItem[]
 
-      console.log(`✅ All items processed in parallel: ${processedItems.length}/${selectedBboxes.length}`)
+      console.log(`✅ All items processed in parallel: ${processedItems.length}/${pendingBboxes.length}`)
       // Ensure we're at least 20% after processing completes
       setOverallProgress(prev => Math.max(prev, 20))
       setDetectedItems(processedItems)
       setSelectedItems(processedItems)
 
       // Now search with processed items
-      await handleItemsSelected(processedItems)
+      await handleItemsSelected(processedItems, phoneNum)
 
     } catch (error) {
       console.error('❌ Processing error:', error)
@@ -824,7 +824,7 @@ export default function Home() {
     }
   }
 
-  const handleItemsSelected = async (items: DetectedItem[]) => {
+  const handleItemsSelected = async (items: DetectedItem[], phoneForSearch?: string) => {
     setSelectedItems(items)
     // Also set processingItems if not already set (for progress bars)
     if (processingItems.length === 0) {
@@ -885,8 +885,9 @@ export default function Home() {
           // Use job queue for background processing
           const { searchWithJobQueue } = await import('@/lib/searchJobClient')
           
-          // Format phone number for SMS
-          const formattedPhone = phoneNumber ? (phoneNumber.startsWith('+82') ? phoneNumber : `+82${phoneNumber.replace(/^0/, '')}`) : undefined
+          // Format phone number for SMS - use parameter if provided, otherwise use state
+          const phoneToUse = phoneForSearch || phoneNumber
+          const formattedPhone = phoneToUse ? (phoneToUse.startsWith('+82') ? phoneToUse : `+82${phoneToUse.replace(/^0/, '')}`) : undefined
           
           const { results: data, meta } = await searchWithJobQueue(
             {
@@ -1301,7 +1302,7 @@ export default function Home() {
             if (sessionManager) {
               try {
                 const formattedPhone = phone.startsWith('+82') ? phone : `+82${phone.replace(/^0/, '')}`
-                await sessionManager.logPhone(formattedPhone, '+82')
+                await sessionManager.logPhoneNumber(formattedPhone, '+82')
                 console.log(`✅ Phone logged: ${formattedPhone}`)
               } catch (error) {
                 console.error('❌ Failed to log phone:', error)
