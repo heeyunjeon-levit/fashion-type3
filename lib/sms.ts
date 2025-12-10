@@ -59,7 +59,7 @@ export async function sendSMS({ to, message }: SendSMSParams): Promise<boolean> 
  */
 export async function sendSearchResultsNotification(phoneNumber: string, jobId: string) {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
-  const resultsUrl = `${baseUrl}/results/${jobId}`
+  const resultsUrl = `${baseUrl}/search-results/${jobId}`
   
   const message = `✨ Your fashion search is ready! View your results here: ${resultsUrl}`
   

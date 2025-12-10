@@ -13,9 +13,9 @@ interface JobStatus {
   error?: string;
 }
 
-export default function ResultsPage() {
+export default function SearchResultsPage() {
   const params = useParams();
-  const jobId = params.id as string;
+  const jobId = params.jobId as string;
   
   const [jobStatus, setJobStatus] = useState<JobStatus | null>(null);
   const [loading, setLoading] = useState(true);
@@ -24,7 +24,7 @@ export default function ResultsPage() {
   useEffect(() => {
     async function loadResults() {
       try {
-        console.log(`📂 Loading results for job: ${jobId}`);
+        console.log(`📂 Loading search results for job: ${jobId}`);
         
         const response = await fetch(`/api/search-job/${jobId}`);
         
