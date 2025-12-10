@@ -636,13 +636,8 @@ export default function Home() {
   const processPendingItems = async (phoneNum: string) => {
     if (!pendingBboxes) return
     
-    // Save phone number for search
-    setPhoneNumber(phoneNum)
-    
-    // Set items for progress tracking
-    setProcessingItems(pendingBboxes.map(bbox => ({ category: bbox.category })))
-    
-    setCurrentStep('processing')
+    // Note: State updates (setPhoneNumber, setProcessingItems, setCurrentStep) are now done
+    // by the caller BEFORE this function is called, so the UI updates instantly!
     console.log(`🎯 Processing ${pendingBboxes.length} selected items with phone: ${phoneNum}...`)
 
     try {
@@ -1336,6 +1331,13 @@ export default function Home() {
             
             // Close modal immediately for instant feedback (no delay!)
             setShowPhoneModal(false)
+            
+            // IMMEDIATELY update UI state (synchronous - no delay!)
+            setPhoneNumber(phone)
+            if (pendingBboxes) {
+              setProcessingItems(pendingBboxes.map(bbox => ({ category: bbox.category })))
+            }
+            setCurrentStep('processing') // Show progress bar instantly!
             
             // Process in background (non-blocking) - fire and forget
             // This ensures the modal closes instantly without waiting for API calls
