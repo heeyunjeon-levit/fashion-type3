@@ -52,10 +52,17 @@ function isValidPhoneNumber(phone: string): boolean {
  * Send notification via Kakao Brand Message (alim-talk-api / SweetTracker)
  */
 export async function sendSMS({ to, message }: SendSMSParams): Promise<boolean> {
+  console.log(`🚀 sendSMS called with:`, { to, messageLength: message.length })
+  
   try {
     // Validate environment variables
     const PROFILE_KEY = process.env.SWEETTRACKER_PROFILE_KEY
     const USER_ID = process.env.SWEETTRACKER_USER_ID
+    
+    console.log(`🔑 Checking SweetTracker credentials:`, {
+      hasProfileKey: !!PROFILE_KEY,
+      hasUserId: !!USER_ID
+    })
     
     if (!PROFILE_KEY || !USER_ID) {
       console.error('❌ SweetTracker credentials not configured')

@@ -79,11 +79,24 @@ export async function createJob(input: {
   return job
 }
 
-export function getJob(id: string): SearchJob | undefined {
-  const job = jobs.get(id)
+export async function getJob(id: string): Promise<SearchJob | undefined> {
+  // Check memory first (fast path)
+  let job = jobs.get(id)
+  
+  // If not in memory, check database (for cross-instance persistence)
   if (!job) {
-    console.log(`⚠️  Job ${id} not in queue. Available jobs: [${Array.from(jobs.keys()).join(', ')}]`)
+    console.log(`⚠️  Job ${id} not in memory. Checking database...`)
+    job = await loadJobFromDatabase(id)
+    
+    if (job) {
+      // Cache in memory for future access
+      jobs.set(id, job)
+      console.log(`✅ Loaded job ${id} from database (phone: ${job.phoneNumber ? '✓' : '✗'})`)
+    } else {
+      console.log(`❌ Job ${id} not found in database. Available jobs in memory: [${Array.from(jobs.keys()).join(', ')}]`)
+    }
   }
+  
   return job
 }
 
@@ -238,8 +251,8 @@ export async function loadJobFromDatabase(jobId: string): Promise<SearchJob | nu
  * If found in DB but not in memory, populates memory cache
  */
 export async function getJobWithFallback(jobId: string): Promise<SearchJob | undefined> {
-  // Try memory first (faster)
-  const memoryJob = getJob(jobId)
+  // Try memory first (faster), then database
+  const memoryJob = await getJob(jobId)
   if (memoryJob) {
     return memoryJob
   }

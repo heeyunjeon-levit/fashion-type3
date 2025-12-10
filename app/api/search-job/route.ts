@@ -67,7 +67,7 @@ async function processSearchJob(jobId: string, body: any) {
     
     // Update progress periodically during the search
     const progressInterval = setInterval(async () => {
-      const job = getJob(jobId)
+      const job = await getJob(jobId)
       if (job && job.status === 'processing' && job.progress < 90) {
         // Gradually increment progress - realistic pacing for typical 1-2 min searches
         // 3% every 4 seconds = ~2 minutes to reach 90%
@@ -110,7 +110,13 @@ async function processSearchJob(jobId: string, body: any) {
       console.log(`✅ Job ${jobId} marked as completed`)
       
       // Send SMS notification if phone number was provided
-      const job = getJob(jobId)
+      const job = await getJob(jobId)
+      console.log(`🔍 Checking SMS eligibility for job ${jobId}:`, {
+        hasJob: !!job,
+        hasPhoneNumber: !!job?.phoneNumber,
+        phoneNumber: job?.phoneNumber
+      })
+      
       if (job?.phoneNumber) {
         console.log(`📱 Creating shareable result for SMS notification...`)
         
