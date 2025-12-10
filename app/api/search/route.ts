@@ -2108,7 +2108,7 @@ Result: Return these 5 links!
             links = [links]
           } else {
             links = []
-          }
+        }
         }
         
         console.log(`📋 Parsed ${links.length} links from GPT response for ${resultKey}`)

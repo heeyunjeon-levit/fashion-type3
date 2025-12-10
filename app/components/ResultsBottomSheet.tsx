@@ -632,7 +632,8 @@ export default function ResultsBottomSheet({
       <div 
         className="fixed inset-0 bg-cover bg-center bg-no-repeat"
         style={{ 
-          backgroundImage: `url(${originalImageUrl})`,
+          backgroundImage: originalImageUrl ? `url(${originalImageUrl})` : 'none',
+          backgroundColor: originalImageUrl ? 'transparent' : '#9ca3af', // Gray fallback
           backgroundSize: 'cover',
           touchAction: 'none' // Prevent pull-to-refresh on background
         }}

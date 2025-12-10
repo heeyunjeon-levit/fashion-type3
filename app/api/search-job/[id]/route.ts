@@ -46,7 +46,9 @@ export async function GET(
       // Include results if completed
       ...(job.status === 'completed' && {
         results: job.results,
-        meta: job.meta
+        meta: job.meta,
+        originalImageUrl: job.originalImageUrl,
+        croppedImages: job.croppedImages
       }),
       // Include error if failed
       ...(job.status === 'failed' && {

@@ -130,18 +130,21 @@ export default function SearchResultsPage() {
 
   // Completed - show results (no header, just results with background image like main page)
   if (jobStatus.status === 'completed' && jobStatus.results) {
+    console.log('🖼️ Rendering shared results with originalImageUrl:', jobStatus.originalImageUrl);
+    console.log('📦 Cropped images count:', Object.keys(jobStatus.croppedImages || {}).length);
+    
     return (
-      <ResultsBottomSheet
-        results={jobStatus.results}
-        isLoading={false}
-        croppedImages={jobStatus.croppedImages || {}}
-        originalImageUrl={jobStatus.originalImageUrl || ''}
-        onReset={() => window.location.href = '/'}
-        onBack={() => window.location.href = '/'}
-        onResearch={() => window.location.href = '/'}
-        selectedItems={Object.keys(jobStatus.results)}
-        isSharedView={true}
-      />
+          <ResultsBottomSheet
+            results={jobStatus.results}
+            isLoading={false}
+            croppedImages={jobStatus.croppedImages || {}}
+            originalImageUrl={jobStatus.originalImageUrl || ''}
+            onReset={() => window.location.href = '/'}
+            onBack={() => window.location.href = '/'}
+            onResearch={() => window.location.href = '/'}
+            selectedItems={Object.keys(jobStatus.results)}
+            isSharedView={true}
+          />
     );
   }
 
