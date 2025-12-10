@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createJob, updateJobProgress, completeJob, failJob, getJob } from '@/lib/jobQueue'
-import { sendSearchResultsNotification } from '@/lib/sms'
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic'
@@ -113,12 +112,58 @@ async function processSearchJob(jobId: string, body: any) {
       // Send SMS notification if phone number was provided
       const job = getJob(jobId)
       if (job?.phoneNumber) {
-        console.log(`📱 Sending SMS notification to ${job.phoneNumber}`)
-        const smsSent = await sendSearchResultsNotification(job.phoneNumber, jobId)
-        if (smsSent) {
-          console.log(`✅ SMS notification sent successfully for job ${jobId}`)
-        } else {
-          console.error(`❌ Failed to send SMS notification for job ${jobId}`)
+        console.log(`📱 Creating shareable result for SMS notification...`)
+        
+        try {
+          // Create a shareable result directly in Supabase to get a permanent UUID link
+          const { getSupabaseServerClient } = await import('@/lib/supabaseServer')
+          const supabase = getSupabaseServerClient()
+          
+          const { data: shareData, error: shareError } = await supabase
+            .from('shared_results')
+            .insert({
+              results: results.results,
+              original_image_url: job.originalImageUrl,
+              selected_items: job.categories.map((cat: string) => ({
+                category: cat,
+                description: job.descriptions?.[cat] || '',
+                croppedImageUrl: ''
+              })),
+              session_id: jobId,
+              user_phone: job.phoneNumber,
+              search_mode: job.useOCRSearch ? 'ocr' : 'interactive'
+            })
+            .select('id')
+            .single()
+          
+          if (shareError || !shareData) {
+            console.error(`❌ Failed to create shareable result:`, shareError)
+            throw shareError
+          }
+          
+          const shareId = shareData.id
+          const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+          const shareUrl = `${baseUrl}/results/${shareId}`
+          
+          console.log(`✅ Created shareable result: ${shareId}`)
+          console.log(`📱 Sending SMS with shareable link: ${shareUrl}`)
+          
+          // Send SMS with the shareable UUID link
+          const { sendSMS } = await import('@/lib/sms')
+          const message = `✨ Your fashion search is ready! View your results here: ${shareUrl}`
+          const smsSent = await sendSMS({
+            to: job.phoneNumber,
+            message,
+            subject: 'Search Complete'
+          })
+          
+          if (smsSent) {
+            console.log(`✅ SMS notification sent successfully for job ${jobId}`)
+          } else {
+            console.error(`❌ Failed to send SMS notification for job ${jobId}`)
+          }
+        } catch (error) {
+          console.error(`❌ Error creating shareable result or sending SMS:`, error)
         }
       }
       
