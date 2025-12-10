@@ -1997,10 +1997,10 @@ Result: Return these 5 links!
         }
         
         // Use GPT-5-mini with Structured Outputs for guaranteed format consistency
-        // GPT-5-mini is optimized for well-defined tasks like product selection
-        // Faster and cheaper than GPT-4o-mini while maintaining strong reasoning
+        // GPT-4o-mini: Proven reliability with structured outputs support
+        // Fast, cheap ($0.15/$0.60 per 1M tokens), and supports all parameters we need
         const completion = await openai.chat.completions.create({
-          model: 'gpt-5-mini',
+          model: 'gpt-4o-mini',
           messages: [
             {
               role: 'system',
@@ -2011,8 +2011,8 @@ Result: Return these 5 links!
               content: prompt
             }
           ],
-          // GPT-5-mini only supports default temperature (1) - cannot customize
-          max_completion_tokens: 2000,  // GPT-5 models use max_completion_tokens instead of max_tokens
+          temperature: 0.3,  // Lower temperature for more focused, deterministic selection
+          max_tokens: 2000,
           response_format: { 
             type: 'json_schema',
             json_schema: {
