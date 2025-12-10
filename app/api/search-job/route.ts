@@ -153,8 +153,7 @@ async function processSearchJob(jobId: string, body: any) {
           const message = `✨ Your fashion search is ready! View your results here: ${shareUrl}`
           const smsSent = await sendSMS({
             to: job.phoneNumber,
-            message,
-            subject: 'Search Complete'
+            message
           })
           
           if (smsSent) {

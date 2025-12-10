@@ -1,71 +1,167 @@
-import twilio from 'twilio'
-
-// Initialize Twilio client
-function getTwilioClient() {
-  const accountSid = process.env.TWILIO_ACCOUNT_SID
-  const authToken = process.env.TWILIO_AUTH_TOKEN
-  
-  if (!accountSid || !authToken) {
-    console.error('❌ Twilio credentials not configured')
-    return null
-  }
-  
-  return twilio(accountSid, authToken)
-}
-
 export interface SendSMSParams {
   to: string
   message: string
 }
 
 /**
- * Send SMS notification using Twilio
+ * Normalize phone number to 82XXXXXXXXXX format (Korea country code)
+ * Handles various input formats:
+ * - 010-1234-5678 -> 821012345678
+ * - 01012345678 -> 821012345678
+ * - +821012345678 -> 821012345678
+ * - 821012345678 -> 821012345678
+ */
+function normalizePhone(phone: string): string {
+  // Remove all hyphens and spaces
+  let cleaned = phone.replace(/[-\s]/g, '')
+  
+  // Remove + prefix if present
+  if (cleaned.startsWith('+')) {
+    cleaned = cleaned.substring(1)
+  }
+  
+  // If starts with 010, replace with 8210
+  if (cleaned.startsWith('010')) {
+    return '82' + cleaned.substring(1)
+  }
+  
+  // If starts with 82, return as is
+  if (cleaned.startsWith('82')) {
+    return cleaned
+  }
+  
+  // If starts with 0, replace with 82
+  if (cleaned.startsWith('0')) {
+    return '82' + cleaned.substring(1)
+  }
+  
+  // Otherwise assume it's just the local number without 0
+  return '82' + cleaned
+}
+
+/**
+ * Validate Korean phone number format
+ */
+function isValidPhoneNumber(phone: string): boolean {
+  const normalized = normalizePhone(phone)
+  // Should be 82 followed by 10 (for mobile starting with 10) or 9 digits
+  return /^8210\d{8}$/.test(normalized)
+}
+
+/**
+ * Send notification via Kakao Brand Message (alim-talk-api / SweetTracker)
  */
 export async function sendSMS({ to, message }: SendSMSParams): Promise<boolean> {
   try {
-    const client = getTwilioClient()
+    // Validate environment variables
+    const PROFILE_KEY = process.env.SWEETTRACKER_PROFILE_KEY
+    const USER_ID = process.env.SWEETTRACKER_USER_ID
     
-    if (!client) {
-      console.error('❌ Twilio client not initialized')
+    if (!PROFILE_KEY || !USER_ID) {
+      console.error('❌ SweetTracker credentials not configured')
+      console.error('Required: SWEETTRACKER_PROFILE_KEY, SWEETTRACKER_USER_ID')
       return false
     }
     
-    const fromNumber = process.env.TWILIO_PHONE_NUMBER
-    
-    if (!fromNumber) {
-      console.error('❌ TWILIO_PHONE_NUMBER not configured')
+    // Normalize and validate phone number
+    const normalizedPhone = normalizePhone(to)
+    if (!isValidPhoneNumber(to)) {
+      console.error(`❌ Invalid phone number format: ${to}`)
       return false
     }
     
-    console.log(`📱 Sending SMS to ${to}`)
+    console.log(`📱 Sending Kakao message to ${normalizedPhone}`)
     
-    const result = await client.messages.create({
-      body: message,
-      to: to,
-      from: fromNumber
+    // Generate unique message ID
+    const msgid = `sms-${Date.now()}-${Math.random().toString(36).substring(7)}`
+    
+    // API endpoint
+    const url = `https://alimtalk-api.sweettracker.net/v2/${PROFILE_KEY}/sendMessage`
+    
+    // Request payload
+    const payload = [
+      {
+        msgid,                           // ✅ must be unique
+        message_type: 'BM',              // ✅ Brand Message (no template)
+        profile_key: PROFILE_KEY,
+        receiver_num: normalizedPhone,   // ✅ 8210... format
+        message,
+        reserved_time: '00000000000000'  // ✅ send immediately
+      }
+    ]
+    
+    // Send request
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        userid: USER_ID
+      },
+      body: JSON.stringify(payload)
     })
     
-    console.log(`✅ SMS sent successfully. SID: ${result.sid}`)
-    return true
+    const responseData = await response.json()
+    
+    if (response.ok) {
+      console.log(`✅ Kakao message sent successfully`)
+      console.log(`   Response:`, responseData)
+      return true
+    } else {
+      console.error(`❌ Kakao message sending failed:`)
+      console.error(`   Status: ${response.status}`)
+      console.error(`   Response:`, responseData)
+      return false
+    }
     
   } catch (error) {
-    console.error('❌ Failed to send SMS:', error)
+    console.error('❌ Failed to send Kakao message:', error)
     return false
   }
 }
 
 /**
- * Send search results notification via SMS
+ * Send search results notification via Kakao Brand Message (SweetTracker)
  */
-export async function sendSearchResultsNotification(phoneNumber: string, jobId: string) {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
+export async function sendSearchResultsNotification(
+  phoneNumber: string,
+  jobId: string
+) {
+  const baseUrl =
+    process.env.NEXT_PUBLIC_BASE_URL || 'https://fashionsource.vercel.app'
   const resultsUrl = `${baseUrl}/search-results/${jobId}`
-  
-  const message = `✨ Your fashion search is ready! View your results here: ${resultsUrl}`
-  
-  return await sendSMS({
-    to: phoneNumber,
-    message
+  const message = `✨ Your fashion search is ready!\nView your results here:\n${resultsUrl}`
+
+  const PROFILE_KEY = process.env.SWEETTRACKER_PROFILE_KEY!
+  const USER_ID = process.env.SWEETTRACKER_USER_ID!
+
+  const url = `https://alimtalk-api.sweettracker.net/v2/${PROFILE_KEY}/sendMessage`
+
+  const payload = [
+    {
+      msgid: `search-${jobId}`,        // ✅ must be unique
+      message_type: 'BM',              // ✅ Brand Message (no template)
+      profile_key: PROFILE_KEY,
+      receiver_num: normalizePhone(phoneNumber), // ✅ 8210... format
+      message,
+      reserved_time: '00000000000000'  // ✅ send immediately
+    }
+  ]
+
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      userid: USER_ID
+    },
+    body: JSON.stringify(payload)
   })
+
+  const data = await res.json()
+
+  return {
+    ok: res.ok,
+    status: res.status,
+    data
+  }
 }
 
