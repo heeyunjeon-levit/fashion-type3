@@ -4,7 +4,7 @@ import { GoogleGenAI, ThinkingLevel } from '@google/genai'
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic'
-export const maxDuration = 60 // Allow up to 60 seconds for complex searches
+export const maxDuration = 120 // Allow up to 120 seconds for Gemini 3 Pro vision (can take 40-60s with 15 images)
 
 // Initialize OpenAI lazily to read fresh env vars on each request
 function getOpenAIClient() {
@@ -18,6 +18,42 @@ function getGeminiClient() {
   return new GoogleGenAI({
     apiKey: process.env.GEMINI_API_KEY || process.env.GCLOUD_API_KEY || ''
   })
+}
+
+// Helper: Fetch image as base64 for Gemini vision
+async function fetchImageAsBase64(url: string): Promise<string> {
+  try {
+    const response = await fetch(url, {
+      signal: AbortSignal.timeout(10000) // 10s timeout per image
+    })
+    
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+    }
+    
+    const contentType = response.headers.get('content-type')
+    if (!contentType || !contentType.startsWith('image/')) {
+      throw new Error(`Invalid content-type: ${contentType}`)
+    }
+    
+    const arrayBuffer = await response.arrayBuffer()
+    const sizeKB = (arrayBuffer.byteLength / 1024).toFixed(1)
+    
+    // Warn if image is very large (might cause issues with Gemini)
+    if (arrayBuffer.byteLength > 4 * 1024 * 1024) { // 4MB
+      console.warn(`   ⚠️ Large image (${sizeKB} KB): ${url.substring(0, 60)}`)
+    }
+    
+    const base64 = Buffer.from(arrayBuffer).toString('base64')
+    return base64
+  } catch (error: any) {
+    // Enhanced error logging with more context
+    const errorMsg = error.name === 'AbortError' 
+      ? 'Timeout (>10s)' 
+      : error.message || 'Unknown error'
+    console.error(`   ❌ Image fetch failed (${errorMsg}): ${url.substring(0, 70)}`)
+    throw error
+  }
 }
 
 // Map categories to search terms
@@ -141,6 +177,12 @@ function isValidProductLink(link: string, logReason: boolean = true): boolean {
     linkLower.includes('/category?') ||
     linkLower.includes('/category/') && !linkLower.match(/\/category\/[^\/]+\/product/) ||
     linkLower.includes('/shop/list') ||
+    // PHP listing pages (common in Korean sites)
+    linkLower.includes('goods_list.php') ||
+    linkLower.includes('product_list.php') ||
+    linkLower.includes('item_list.php') ||
+    linkLower.includes('_list.php') ||
+    linkLower.match(/\/list\.php\?/i) ||
     // Query parameters that indicate search/listing
     linkLower.match(/[?&]query=/i) ||
     linkLower.match(/[?&]keyword=/i) ||
@@ -148,11 +190,46 @@ function isValidProductLink(link: string, logReason: boolean = true): boolean {
     // Collection/product listing endpoints
     linkLower.match(/\/products\?/i) && !linkLower.match(/\/products\/[^?]+\?/) ||
     linkLower.match(/\/collections\?/i) && !linkLower.match(/\/collections\/[^?]+\/products/) ||
-    // Catalog pages ending with generic plural category names
-    linkLower.match(/\/(bags|shoes|accessories|clothing|apparel|dresses|pants|trousers|shirts|tops|bottoms|outerwear|jackets|coats|sweaters|knitwear|skirts|shorts|jeans|sneakers|boots|sandals|jewelry|watches|belts|scarves|hats|gloves|sunglasses|wallets|purses|backpacks|luggage|travel-bags|duffle|tote|crossbody|handbags|clutches|shoulder-bags)\.html?$/i) ||
-    linkLower.match(/\/(bags|shoes|accessories|clothing|travel-bags|duffle|handbags)\/?$/i) && !linkLower.match(/\/product/i) ||
-    // Multi-level category paths without product identifiers
-    linkLower.match(/\/(men|women|kids|unisex)\/(accessories|clothing|shoes|bags)\/.+\.(html?|aspx?)$/i) && !linkLower.match(/\/(product|item|p)[\/-]/i) && !linkLower.match(/\d{5,}/i) ||
+    // Catalog pages ending with category names (SIMPLIFIED - just check endings!)
+    // Catches: /blouson-jackets/, /clothing/jackets/, /fashion/coats/, etc.
+    
+    // OUTERWEAR
+    linkLower.match(/jackets?\/?$/i) && !linkLower.match(/\/(product|item|p|goods)[\/-]|\/[\w-]+-jackets?-\d{4,}/i) ||
+    linkLower.match(/coats?\/?$/i) && !linkLower.match(/\/(product|item|p|goods)[\/-]|\/[\w-]+-coats?-\d{4,}/i) ||
+    linkLower.match(/(blazers?|vests?|parkas?|bombers?|blousons?|puffers?|anoraks?)\/?$/i) && !linkLower.match(/\/(product|item|p|goods)[\/-]/i) ||
+    
+    // TOPS
+    linkLower.match(/(sweaters?|cardigans?|pullovers?|jumpers?)\/?$/i) && !linkLower.match(/\/(product|item|p|goods)[\/-]|\/[\w-]+-\d{4,}/i) ||
+    linkLower.match(/(tops?|shirts?|blouses?|t-?shirts?|tees?)\/?$/i) && !linkLower.match(/\/(product|item|p|goods)[\/-]/i) ||
+    linkLower.match(/(hoodies?|sweatshirts?|tank-?tops?|camisoles?|camis?|tunics?)\/?$/i) && !linkLower.match(/\/(product|item|p|goods)[\/-]/i) ||
+    linkLower.match(/(polos?|turtlenecks?|crewnecks?|v-?necks?|bodysuits?)\/?$/i) && !linkLower.match(/\/(product|item|p|goods)[\/-]/i) ||
+    
+    // DRESSES & ONE-PIECES
+    linkLower.match(/(dresses?|gowns?|jumpsuits?|rompers?|playsuits?|overalls?)\/?$/i) && !linkLower.match(/\/(product|item|p|goods)[\/-]|\/[\w-]+-dresses?-\d{4,}/i) ||
+    
+    // BOTTOMS
+    linkLower.match(/(pants?|trousers?|jeans?|shorts?|skirts?)\/?$/i) && !linkLower.match(/\/(product|item|p|goods)[\/-]/i) ||
+    linkLower.match(/(leggings?|joggers?|chinos?|slacks?|culottes?|capris?)\/?$/i) && !linkLower.match(/\/(product|item|p|goods)[\/-]/i) ||
+    
+    // SHOES
+    linkLower.match(/(shoes?|sneakers?|boots?|sandals?|heels?|flats?|loafers?)\/?$/i) && !linkLower.match(/\/(product|item|p|goods)[\/-]/i) ||
+    linkLower.match(/(pumps?|mules?|oxfords?|slip-?ons?|wedges?|espadrilles?|slippers?|moccasins?)\/?$/i) && !linkLower.match(/\/(product|item|p|goods)[\/-]/i) ||
+    
+    // BAGS
+    linkLower.match(/(bags?|handbags?|totes?|crossbody|clutches?|shoulder-?bags?)\/?$/i) && !linkLower.match(/\/(product|item|p|goods)[\/-]/i) ||
+    linkLower.match(/(backpacks?|wallets?|purses?|messengers?|duffels?|briefcases?|satchels?)\/?$/i) && !linkLower.match(/\/(product|item|p|goods)[\/-]/i) ||
+    
+    // ACCESSORIES
+    linkLower.match(/(accessories?|jewelry|jewellery)\/?$/i) && !linkLower.match(/\/(product|item|p|goods)[\/-]/i) ||
+    linkLower.match(/(watches?|belts?|scarves?|hats?|caps?|beanies?|gloves?|mittens?)\/?$/i) && !linkLower.match(/\/(product|item|p|goods)[\/-]/i) ||
+    linkLower.match(/(sunglasses?|necklaces?|earrings?|bracelets?|rings?|hair-?accessories?)\/?$/i) && !linkLower.match(/\/(product|item|p|goods)[\/-]/i) ||
+    
+    // SPECIAL CATEGORIES
+    linkLower.match(/(swimwear|swimsuits?|bikinis?|activewear|sportswear|athletic-?wear)\/?$/i) && !linkLower.match(/\/(product|item|p|goods)[\/-]/i) ||
+    linkLower.match(/(lingerie|underwear|intimates?|sleepwear|pajamas?|nightwear)\/?$/i) && !linkLower.match(/\/(product|item|p|goods)[\/-]/i) ||
+    
+    // GENERIC CATEGORIES
+    linkLower.match(/(clothing|apparel|fashion|outerwear|knitwear|basics?|essentials?)\/?$/i) && !linkLower.match(/\/(product|item|p|goods)[\/-]/i) ||
     // Non-product pages (reviews, Q&A, etc.)
     linkLower.endsWith('/reviews') ||
     linkLower.endsWith('/reviews/') ||
@@ -168,13 +245,7 @@ function isValidProductLink(link: string, logReason: boolean = true): boolean {
     return false
   }
   
-  // Additional strict checks for common catalog patterns
-  // Block if URL ends with just a category name (no product identifier)
-  const endsWithCategoryOnly = linkLower.match(/\/(bags|shoes|accessories|travel-bags|handbags|clothing|jewelry|watches)\/?$/i)
-  if (endsWithCategoryOnly) {
-    if (logReason) console.log(`🚫 VALIDATION: URL ends with category name only: ${link.substring(0, 80)}`)
-    return false
-  }
+  // No need for additional checks - already covered above!
   
   return true
 }
@@ -191,8 +262,9 @@ async function handleFallbackSearch(originalImageUrl: string, requestStartTime: 
   
   try {
     // Run full image search multiple times for better coverage
-    const fullImagePromises = Array.from({ length: 3 }, (_, i) => {
-      console.log(`   Fallback run ${i + 1}/3...`)
+    // 4 runs = optimal balance of accuracy/time/cost
+    const fullImagePromises = Array.from({ length: 4 }, (_, i) => {
+      console.log(`   Fallback run ${i + 1}/4...`)
       return fetch('https://google.serper.dev/lens', {
         method: 'POST',
         headers: {
@@ -210,7 +282,7 @@ async function handleFallbackSearch(originalImageUrl: string, requestStartTime: 
     const serperStart = Date.now()
     const fullImageResponses = await Promise.all(fullImagePromises)
     timingData.serper_api_time = (Date.now() - serperStart) / 1000
-    console.log(`   ⏱️  Fallback Serper (3x): ${timingData.serper_api_time.toFixed(2)}s`)
+    console.log(`   ⏱️  Fallback Serper (4x): ${timingData.serper_api_time.toFixed(2)}s`)
     
     // Aggregate all results
     const allResults: any[] = []
@@ -698,8 +770,9 @@ export async function POST(request: NextRequest) {
     if (originalImageUrl) {
       console.log('\n🔍 Doing full image search for all item types...')
       try {
-        const fullImagePromises = Array.from({ length: 3 }, (_, i) => {
-          console.log(`   Full image run ${i + 1}/3...`)
+        // 4 runs = optimal balance of accuracy/time/cost
+        const fullImagePromises = Array.from({ length: 4 }, (_, i) => {
+          console.log(`   Full image run ${i + 1}/4...`)
           return fetch('https://google.serper.dev/lens', {
             method: 'POST',
             headers: {
@@ -718,13 +791,13 @@ export async function POST(request: NextRequest) {
         const fullImageResponses = await Promise.all(fullImagePromises)
         const fullImageTime = (Date.now() - fullImageStart) / 1000
         timingData.full_image_search_time = fullImageTime
-        console.log(`   ⏱️  Full image Serper (3x parallel): ${fullImageTime.toFixed(2)}s`)
+        console.log(`   ⏱️  Full image Serper (4x parallel): ${fullImageTime.toFixed(2)}s`)
         
         const processingStart = Date.now()
         const allFullImageResults: any[] = []
         for (let i = 0; i < fullImageResponses.length; i++) {
           if (!fullImageResponses[i].ok) {
-            console.log(`   ❌ Full image run ${i + 1}/3 failed`)
+            console.log(`   ❌ Full image run ${i + 1}/4 failed`)
             continue
           }
           const fullImageData = await fullImageResponses[i].json()
@@ -788,9 +861,10 @@ export async function POST(request: NextRequest) {
       console.log(`   📸 Cropped image URL: ${croppedImageUrl}`)
       
       try {
-        // Call Serper Lens 3 times for best result coverage (VISUAL SEARCH)
-        const serperCallPromises = Array.from({ length: 3 }, (_, i) => {
-          console.log(`   Run ${i + 1}/3...`)
+        // Call Serper Lens 4 times for optimal balance (VISUAL SEARCH)
+        // 4 runs = best accuracy/time/cost balance (100-115 results)
+        const serperCallPromises = Array.from({ length: 4 }, (_, i) => {
+          console.log(`   Run ${i + 1}/4...`)
           return fetch('https://google.serper.dev/lens', {
             method: 'POST',
             headers: {
@@ -832,24 +906,24 @@ export async function POST(request: NextRequest) {
           : serperCallPromises
         
         const allResponses = await Promise.all(allPromises)
-        const serperResponses = allResponses.slice(0, 3) // First 3 are visual
-        const textSearchResponse = textSearchPromise ? allResponses[3] : null
+        const serperResponses = allResponses.slice(0, 4) // First 4 are visual
+        const textSearchResponse = textSearchPromise ? allResponses[4] : null
         
         const serperTime = (Date.now() - serperStart) / 1000
         timingData.serper_total_api_time += serperTime
         timingData.serper_count += textSearchPromise ? 2 : 1 // Count visual + text searches
-        console.log(`   ⏱️  Serper API (${textSearchPromise ? '3x visual + 1x text' : '3x visual'}): ${serperTime.toFixed(2)}s`)
+        console.log(`   ⏱️  Serper API (${textSearchPromise ? '4x visual + 1x text' : '4x visual'}): ${serperTime.toFixed(2)}s`)
         
-        // Aggregate results from 3 visual search runs
+        // Aggregate results from 4 visual search runs
         const allOrganicResults: any[] = []
         for (let i = 0; i < serperResponses.length; i++) {
           if (!serperResponses[i].ok) {
             const errorText = await serperResponses[i].text()
-            console.log(`   ❌ Run ${i + 1}/3 failed:`, errorText.substring(0, 200))
+            console.log(`   ❌ Run ${i + 1}/4 failed:`, errorText.substring(0, 200))
             continue
           }
           const serperData = await serperResponses[i].json()
-          console.log(`   ✅ Run ${i + 1}/3 returned ${serperData.organic?.length || 0} results`)
+          console.log(`   ✅ Run ${i + 1}/4 returned ${serperData.organic?.length || 0} results`)
           
           if (serperData.organic) {
             // Mark as visual search for debugging
@@ -1037,8 +1111,9 @@ export async function POST(request: NextRequest) {
         // This describes the specific item in detail (color, style, material, etc.)
         const itemDescription = descriptions?.[resultKey] || null
         
-        // Extract primary color from description for strict matching
+        // Extract primary AND secondary colors from description for multi-color matching
         let primaryColor: string | null = null
+        let secondaryColor: string | null = null
         let characterName: string | null = null
         
         if (itemDescription) {
@@ -1061,22 +1136,36 @@ export async function POST(request: NextRequest) {
             }
           }
           
-          // Extract color
+          // Extract ALL colors from description (for multi-color items like raglan, colorblock)
           const colorPatterns = [
             // English colors
-            /\b(black|white|cream|ivory|beige|brown|tan|gray|grey|navy|blue|red|pink|green|yellow|orange|purple|burgundy|maroon|olive|khaki|charcoal|mint)\b/i,
+            /\b(black|white|cream|ivory|beige|brown|tan|gray|grey|navy|blue|red|pink|green|yellow|orange|purple|burgundy|maroon|olive|khaki|charcoal|mint)\b/gi,
             // Korean colors
-            /(검정|검은|블랙|흰|화이트|크림|아이보리|베이지|브라운|네이비|블루|레드|핑크|그린|옐로우|퍼플|민트)/
+            /(검정|검은|블랙|흰|화이트|크림|아이보리|베이지|브라운|네이비|블루|레드|핑크|그린|옐로우|퍼플|민트)/gi
           ]
+          const foundColors: string[] = []
           for (const pattern of colorPatterns) {
-            const match = itemDescription.match(pattern)
-            if (match) {
-              primaryColor = match[1] || match[0]
-              break
+            const matches = itemDescription.matchAll(pattern)
+            for (const match of matches) {
+              const color = (match[1] || match[0]).toLowerCase()
+              // Avoid duplicates (e.g., "beige" and "beige" again)
+              if (!foundColors.some(c => c.toLowerCase() === color)) {
+                foundColors.push(color)
+              }
             }
           }
+          
+          // Assign primary and secondary colors
+          if (foundColors.length > 0) {
+            primaryColor = foundColors[0]
+            if (foundColors.length > 1) {
+              secondaryColor = foundColors[1]
+            }
+          }
+          
           console.log(`   📝 Using GPT description: "${itemDescription.substring(0, 80)}..."`)
           console.log(`   🎨 Extracted primary color: ${primaryColor || 'none detected'}`)
+          console.log(`   🎨 Extracted secondary color: ${secondaryColor || 'none detected'}`)
           console.log(`   🎭 Extracted character/graphic: ${characterName || 'none detected'}`)
         } else {
           console.log(`   ℹ️  No description provided for ${resultKey}`)
@@ -1797,11 +1886,18 @@ ${characterName ? '8' : '7'}. 🇰🇷 PREFER: Korean sites often have exact cha
 **IMPORTANT: Return your BEST 3-5 HIGH-QUALITY matches ONLY. Quality over quantity.**
 
 🌟 **SELECTION STRATEGY:**
-- **STEP 1 - Scan top results first (full image search = exact matches)**:
+- **STEP 0 - SCAN ALL RESULTS FOR EXACT VISUAL MATCHES FIRST** ⭐⭐⭐:
+  * Look through ALL ${resultsForGPT.length} results (cropped + full image + text)
+  * **Priority**: Exact visual match > Brand name > Everything else
+  * If you spot an EXACT match (same colors, same pattern, same details) → **SELECT IT FIRST**
+  * Korean e-commerce and resale sites frequently have exact matches - don't skip them!
+  * **Don't be biased toward or against any brands** - the exact match is more valuable than a "similar" alternative
+
+- **STEP 1 - Scan top results (full image search)**:
   * The first ${fullImageResults.length} results are from full image search (entire photo context)
-  * These often contain the exact product with correct brand + all attributes
-  * Check these first for matches with key attributes from description: "${itemDescription || 'N/A'}"
-  * If you find 3+ matches in the top ${Math.min(12, fullImageResults.length)} results → prioritize them
+  * These often contain similar/alternative products
+  * Use as BACKUP OPTIONS if exact matches weren't found in cropped image results
+  * Check these for matches with key attributes from description: "${itemDescription || 'N/A'}"
 
 - **STEP 2 - Identify key attributes and scan all results**:
   * Extract 1-2 MOST distinctive attributes from description (unique patterns, rare styles)
@@ -1809,20 +1905,19 @@ ${characterName ? '8' : '7'}. 🇰🇷 PREFER: Korean sites often have exact cha
   * Ignore common/generic attributes like "wool", "blend", "maxi" when there are more distinctive features
   * PRIORITIZE products matching distinctive attributes (✅ "herringbone double-breasted coat")
   * **FALLBACK**: If no exact matches for distinctive attributes, select best visual matches with correct item type + color
-  * **Premium Brands Are Great Alternatives**: Products from quality brands (Max Mara, Loro Piana, Toteme, The Row, etc.) matching item type + color are excellent selections even without every specific detail
+  * **Quality Brands Are Great Alternatives**: Products from quality brands matching item type + color are excellent selections even without every specific detail
   * ALWAYS return 3-5 products - don't return empty array just because you can't find perfect matches
   * Quality > Quantity: 3 good visual matches > 0 results because no "perfect" match exists
-- 🔥 **STEP 1 - BRAND FREQUENCY**:
+- 🔥 **STEP 1 - EXACT VISUAL MATCH FIRST, THEN BRAND FREQUENCY**:
   ${topRepeatedBrands ? `* ⭐⭐⭐ REPEATED BRANDS DETECTED: ${topRepeatedBrands}
-  * **CRITICAL RULE**: When you see repeated brand names (e.g., "KAPITAL" appearing 3+ times):
-    → YOU MUST SELECT products with those EXACT brand names from the search results
-    → Look through ALL results (not just full image results) to find the matching brand products
-    → The cropped image search often has the EXACT product with the exact brand
-  * **Example**: If "SPEAKEASY" appears 8 times and "KAPITAL" appears 4 times:
-    → Find results with "KAPITAL" AND "SPEAKEASY" in the title
-    → These are the EXACT product the user wants!
-  * **DO NOT** select random similar-looking scarves from other brands when exact brand matches exist
-  * **PREFER**: Korean sites (fruitsfamily.com, kream.co.kr, croket.co.kr) + international retailers with exact brand` : '* No repeated brands detected - proceed with keyword/visual matching'}
+  * **IMPORTANT RULE**: Brand frequency is a STRONG SIGNAL, but VISUAL EXACTNESS is more important!
+  * **STEP A**: First scan ALL results for EXACT visual matches (same colors, patterns, details)
+    → If you find an exact match from any site → **SELECT IT FIRST**
+  * **STEP B**: Then look for products with repeated brand names appearing 3+ times
+    → If they ALSO visually match → **SELECT THEM TOO**
+    → If they DON'T visually match as well → Use as alternatives
+  * **PREFER**: Exact matches from ANY site > Brand matches > Style alternatives
+  * **Korean e-commerce/resale sites often have the EXACT product** - don't skip them!` : '* No repeated brands detected - focus on exact visual matches and keyword matching'}
 - **STEP 2**: Review the first ${fullImageResults.length} results (full image search) - Use as backup if text_images don't have exact matches
   * Full image search often finds EXACT matches or designer pieces
   * ${topRepeatedBrands ? '**WARNING**: If repeated brands exist, full image results may be GENERIC alternatives - check if they match the repeated brand first!' : 'High-end brands with good visual match are excellent selections'}
@@ -1846,23 +1941,29 @@ ${characterName ? '8' : '7'}. 🇰🇷 PREFER: Korean sites often have exact cha
   * HIGH: Repeated brand matches from ANY site  
   * MEDIUM: Korean sites with visual similarity
   * LOW: International sites with visual similarity only
-- International alternatives: Amazon, Zara, H&M, ASOS, Uniqlo, Mango, brand official sites, Net-a-Porter, Farfetch, Mytheresa
-- ❌ NEVER select: Etsy, Depop, Poshmark, Gap, Old Navy (wrong market, often sold out)
+- International alternatives: Major e-commerce sites and brand official sites are acceptable
+- ❌ Avoid: Sites known for sold-out items or wrong market
 
 Search results (scan all ${resultsForGPT.length} for best matches):
 ${JSON.stringify(resultsForGPT, null, 2)}
 
 **VALIDATION PROCESS:**
 For EACH result you consider:
-1. 📖 READ the "title" field first
-2. 🔍 **CHECK searchType** - Is this from "text_images" (text search) or "visual_lens" (visual search)?
+1. 🎯 **VISUAL MATCH CHECK (STEP 1 - MOST IMPORTANT)**: 
+   - Look at the thumbnail (if available) or imagine the product from the title
+   - Does this look like the EXACT SAME ITEM as the uploaded image?
+   - Same colors? Same pattern? Same style? Same details?
+   - **If YES** → **SELECT THIS FIRST**, regardless of brand name or site!
+   - Korean sites (fruitsfamily.com, kream.co.kr) often have exact matches - prioritize them!
+2. 📖 READ the "title" field carefully
+3. 🔍 **CHECK searchType** - Is this from "text_images" (text search) or "visual_lens" (visual search)?
    - ⭐ **text_images results** = Found via keyword search, titles contain specific product attributes
-   - **visual_lens results** = Found via visual similarity, may miss specific details
-${topRepeatedBrands ? `3. 🔥 **BRAND CHECK (HIGHEST PRIORITY)**: ${topRepeatedBrands}
-   - ✅ Does the title contain these exact brand names? → **SELECT THIS IMMEDIATELY**
+   - **visual_lens results** = Found via visual similarity, may contain EXACT matches!
+${topRepeatedBrands ? `4. 🔥 **BRAND CHECK (SECONDARY PRIORITY)**: ${topRepeatedBrands}
+   - ✅ Does the title contain these exact brand names? → Good signal, but VISUAL MATCH is more important
    - ✅ Check BOTH cropped image results AND full image results for brand matches
-   - ❌ If title is a different brand (e.g., "Zadig&Voltaire" when looking for "KAPITAL") → SKIP unless no brand matches exist
-   - **Example**: Searching for "KAPITAL SPEAKEASY"? Title says "KAPITAL Felted Wool SPEAKEASY" → **MUST SELECT**` : ''}
+   - ⚠️ **IMPORTANT**: An exact visual match from any site > similar alternative from another site
+   - Don't favor international brands over Korean sites if the Korean site has the exact match` : ''}
 ${primaryColor ? `${topRepeatedBrands ? '3' : '2'}. 🎨 **COLOR CHECK**: Does the title mention "${primaryColor.toUpperCase()}" or a matching color?
    - For exact brand matches: Color is less critical (brand match is more important)
    - For alternative matches: Color must match
@@ -1885,16 +1986,23 @@ ${topRepeatedBrands ? '9' : '8'}. ✅ CHECK: Is it a specific product (not "Shop
 - ✅ Valid domains: farfetch.com, net-a-porter.com, asos.com, musinsa.com, 29cm.co.kr, zigzag.kr, ssense.com, shopbop.com, nordstrom.com, etc.
 
 Find the TOP 3-5 BEST AVAILABLE MATCHES FROM SHOPPING SITES ONLY. Prioritize IN THIS ORDER:
-1. **TEXT-BASED EXACT KEYWORD MATCHES (searchType: "text_images")** ⭐⭐⭐ HIGHEST PRIORITY!
+
+🎯🎯🎯 **#0 PRIORITY: EXACT VISUAL MATCH** 🎯🎯🎯 (NEW - HIGHEST PRIORITY!)
+- **CRITICAL**: If you see a result that is an EXACT visual match (same item, same colors, same pattern, same style):
+  → **YOU MUST SELECT IT FIRST**, regardless of brand name, country, or frequency!
+- **Visual exactness > Brand prestige > Everything else**
+- If title is in Korean and you see matching colors/patterns in the thumbnail → **THIS IS LIKELY THE EXACT MATCH!**
+- Korean e-commerce and resale sites often have the EXACT product, don't skip them for international brands!
+- Don't be biased toward or against any specific brand - focus on visual accuracy
+
+1. **TEXT-BASED EXACT KEYWORD MATCHES (searchType: "text_images")** ⭐⭐⭐
    - If description contains specific keywords (herringbone, double-breasted, paisley, cable-knit, etc.):
    - → SCAN ALL results for text_images entries with those EXACT keywords in the title
    - → Example: "Herringbone Double-Breasted Coat" → Find titles with "herringbone" AND "double-breasted"
    - → These are MORE ACCURATE than visual_lens results that only look similar
-1b. **PREMIUM/CONTEMPORARY BRANDS** ⭐⭐ VERY HIGH PRIORITY!
-   - Brands like: Guest in Residence, The Row, Lemaire, Max Mara, Loro Piana, Toteme, Loulou Studio, Joseph, Brunello Cucinelli, Jil Sander, Khaite, Nanushka, Acne Studios
-   - → If you find these brands matching the core item type + color (even without 1 specific pattern detail), INCLUDE at least 1 as an alternative
-   - → Example: "Herringbone Double-Breasted Coat" → "Guest in Residence Double-Breasted Coat" (missing herringbone but premium brand) = INCLUDE
-   - → Balance: 2-3 exact keyword matches + 1 premium brand = ideal selection
+1b. **QUALITY BRANDS** ⭐⭐
+   - → If you find quality brands matching the core item type + color (even without 1 specific pattern detail), INCLUDE at least 1 as an alternative
+   - → Balance: 2-3 exact keyword/visual matches + 1 quality brand = ideal selection
 2. **Full image search results** (first ${fullImageResults.length} results) - ONLY select SHOPPING sites, skip celebrity/magazine content
 3. Visual similarity (visual_lens) - Use only if text_images don't have exact matches
 4. Product quality level (luxury vs fast fashion)  
@@ -1919,16 +2027,15 @@ Find the TOP 3-5 BEST AVAILABLE MATCHES FROM SHOPPING SITES ONLY. Prioritize IN 
    - DON'T require ALL attributes - just the most distinctive ones
 3. **SELECTION PRIORITY**:
    - BEST: Products matching distinctive attributes + color + item type
-   - GOOD: Premium brands (Max Mara, The Row, Toteme, etc.) matching item type + color
+   - GOOD: Quality brands matching item type + color
    - ACCEPTABLE: Good visual matches with correct item type + color
    - ⚠️ NEVER return empty array - ALWAYS select 3-5 best available products
 4. **Don't be perfectionist**: 3-5 good visual matches > 0 results because you couldn't find "perfect" matches
-5. **Premium brand check**: Scan for quality brands - they're great selections even without every specific detail
+5. **Quality brand check**: Scan for quality brands - they're great selections even without every specific detail
 ${topRepeatedBrands ? `1. **BRAND CHECK**: ${topRepeatedBrands}
    - Did you select products with these EXACT brand names in the title?
    - If NO → GO BACK and find products matching these brands from the search results
    - The cropped image results (visual_lens) often have the exact brand products
-   - Example: If "KAPITAL" appears 4 times, you MUST have selected products with "KAPITAL" in the title
 2. **KOREAN SITE CHECK** (flexible rule):
    - Count Korean sites: fruitsfamily.com, kream.co.kr, bunjang.co.kr, croket.co.kr, coupang.com, gmarket.co.kr, 11st.co.kr, musinsa.com, zigzag.kr, wconcept.co.kr, 29cm.co.kr, ssg.com
    - **PREFERRED**: 2+ Korean sites when quality is equal
@@ -1953,25 +2060,25 @@ YOU **MUST** RETURN 3-5 PRODUCT LINKS. NEVER RETURN EMPTY ARRAY [].
 - Can't find perfect match? → Select 3-5 visually similar products matching color + item type
 - **EMPTY ARRAY [] IS NEVER ACCEPTABLE** - you have ${resultsForGPT.length} candidates, always pick the best 3-5!
 
-SELECTION PRIORITY (simple):
+SELECTION PRIORITY (simple - UPDATED):
+0. **EXACT VISUAL MATCHES** - Same item, same colors, same pattern (HIGHEST PRIORITY!)
+   - Korean sites often have these - don't skip them!
 1. Exact keyword matches (e.g., "herringbone" + "double-breasted" in title)
-2. Premium brand visual matches (Guest In Residence, Max Mara, The Row, etc.)
-3. Any good visual matches with correct color + item type
-4. Korean sites are nice-to-have but NOT required
+2. Brand frequency matches (repeated brands in titles)  
+3. Quality brand visual alternatives
+4. Any good visual matches with correct color + item type
 
 **FINAL CHECK BEFORE RETURNING**:
 - Did you select 3-5 links? ✅ Good!
 - Did you return empty array []? ❌ GO BACK AND SELECT 3-5 BEST AVAILABLE MATCHES!
 
 **CONCRETE EXAMPLE (so you understand)**:
-Searching for "Brown Fuzzy Wool Herringbone Double-Breasted Maxi Coat"
-Candidates include:
-- "Guest In Residence Grizzly Double-Breasted Herringbone Coat" ← ✅ SELECT THIS! (has herringbone + double-breasted)
-- "Weekday Hairy Alpaca Wool Oversized Coat Brown" ← ✅ SELECT THIS! (has fuzzy/hairy + brown + oversized)
-- "Max Mara Brown Wool Funnel Neck Coat" ← ✅ SELECT THIS! (premium brand, brown, wool, coat)
-- "S Max Mara Giorgia Long Coat" ← ✅ SELECT THIS! (premium brand, long/maxi coat)
-- "Loulou Studio Long Coat Brown" ← ✅ SELECT THIS! (premium, brown, long)
-Result: Return these 5 links!
+Searching for descriptive item with specific attributes
+Candidates include products with:
+- Exact keyword matches (specific patterns/styles in title) ← ✅ SELECT THESE!
+- Quality brands matching item type + color ← ✅ SELECT THESE!
+- Good visual matches with correct attributes ← ✅ SELECT THESE!
+Result: Return 3-5 best links!
 ❌ NEVER: Return {"${resultKey}": []} - this is unacceptable when you have good candidates!`
 
         const openai = getOpenAIClient()
@@ -1996,46 +2103,201 @@ Result: Return these 5 links!
           additionalProperties: false
         }
         
-        // Use GPT-5-mini with Structured Outputs for guaranteed format consistency
-        // GPT-4o-mini: Proven reliability with structured outputs support
-        // Fast, cheap ($0.15/$0.60 per 1M tokens), and supports all parameters we need
-        const completion = await openai.chat.completions.create({
-          model: 'gpt-4o-mini',
-          messages: [
-            {
-              role: 'system',
-              content: 'You are a fashion product selector. Your job is to ALWAYS select 3-5 best matching product links from the provided search results. NEVER return empty arrays.'
-            },
-            {
-              role: 'user',
-              content: prompt
+        // Use GPT-4o-mini with VISION for thumbnail comparison
+        // This allows matching Korean/foreign titles with visual thumbnails
+        // Without vision, "캐피탈 펠티드 울 스카프" can't be matched to "Beige Knit Scarf with Eye Print"
+        
+        // Prepare images for vision model: cropped item + top result thumbnails
+        const visionContent: any[] = [
+          {
+            type: 'text',
+            text: `You are comparing the CROPPED ITEM IMAGE with THUMBNAIL IMAGES from search results.
+
+YOUR TASK: Select 3-5 products whose THUMBNAILS look most similar to the CROPPED ITEM.
+
+CROPPED ITEM DESCRIPTION: "${itemDescription || 'N/A'}"
+
+CRITICAL: Compare VISUAL APPEARANCE, not text descriptions!
+- Korean titles like "캐피탈 펠티드 울 스피크이지 해피 스카프" might be EXACT matches
+- Don't skip them just because the title is in Korean - CHECK THE THUMBNAIL!
+
+${prompt}
+
+Now examine the CROPPED ITEM IMAGE and THUMBNAIL IMAGES below:`
+          },
+          {
+            type: 'image_url',
+            image_url: {
+              url: croppedImageUrl,
+              detail: 'low' // Low detail for speed
             }
-          ],
-          temperature: 0.3,  // Lower temperature for more focused, deterministic selection
-          max_tokens: 2000,
-          response_format: { 
-            type: 'json_schema',
-            json_schema: {
-              name: 'product_selection',
-              strict: true,
-              schema: responseSchema
+          },
+          { type: 'text', text: '↑ THIS IS THE CROPPED ITEM TO MATCH\n\n━━━ CANDIDATE THUMBNAILS ━━━\n' }
+        ]
+        
+        // Add up to 15 thumbnails (prioritize top results)
+        const thumbnailsToShow = resultsForGPT.slice(0, 15).filter(r => r.thumbnailUrl)
+        thumbnailsToShow.forEach((result, idx) => {
+          visionContent.push(
+            { type: 'text', text: `\n[${idx + 1}] ${result.title}\nLink: ${result.link}\n` },
+            {
+              type: 'image_url',
+              image_url: {
+                url: result.thumbnailUrl,
+                detail: 'low'
+              }
             }
-          }
+          )
         })
         
-        const gptTime = (Date.now() - gptStart) / 1000
-        timingData.gpt4_turbo_total_api_time += gptTime
-        timingData.gpt4_turbo_count += 1
-        console.log(`   ⏱️  GPT-4 Turbo filtering: ${gptTime.toFixed(2)}s`)
+        visionContent.push({
+          type: 'text',
+          text: `\n\nBased on VISUAL COMPARISON, which thumbnails match the cropped item best?\nReturn JSON: {"${resultKey}": ["url1", "url2", "url3"]}`
+        })
+        
+        // Use OpenAI GPT-5.1 for vision (best visual understanding, multilingual support)
+        // Upgraded from GPT-4.1-mini after observing poor selection quality
+        // Note: openai client already initialized at the start of this block
+        
+        // Build OpenAI vision messages (OpenAI supports URLs directly - no base64 needed!)
+        const visionMessages: any[] = []
+        
+        // Add system instructions
+        visionMessages.push({
+          role: 'user',
+          content: [
+            { type: 'text', text: visionContent[0].text }, // Instructions
+            { type: 'text', text: '\n↑ THIS IS THE CROPPED ITEM TO MATCH:\n' },
+            { type: 'image_url', image_url: { url: croppedImageUrl, detail: 'high' } }
+          ]
+        })
+        
+        console.log(`   📸 Added cropped item image for visual comparison (GPT-5.1)`)
+        
+        // Add top 15 result thumbnails for visual comparison
+        const thumbnailContent: any[] = [
+          { type: 'text', text: '\n━━━ CANDIDATE THUMBNAILS ━━━\n' }
+        ]
+        
+        let thumbnailCount = 0
+        let thumbnailErrors = 0
+        for (let i = 0; i < Math.min(15, resultsForGPT.length); i++) {
+          const searchResult = resultsForGPT[i]
+          if (searchResult.thumbnailUrl) {
+            try {
+              thumbnailContent.push({ 
+                type: 'text', 
+                text: `\n[${i + 1}] ${searchResult.title}\nLink: ${searchResult.link}\n` 
+              })
+              thumbnailContent.push({ 
+                type: 'image_url', 
+                image_url: { url: searchResult.thumbnailUrl, detail: 'low' } 
+              })
+              thumbnailCount++
+            } catch (err: any) {
+              thumbnailErrors++
+              console.log(`   ⚠️ Failed to add thumbnail ${i + 1}: ${err.message || 'Unknown error'}`)
+            }
+          }
+        }
+        
+        console.log(`   📊 Thumbnail stats: ${thumbnailCount} added, ${thumbnailErrors} failed`)
+        
+        thumbnailContent.push({
+          type: 'text',
+          text: `\n\nBased on VISUAL COMPARISON of the cropped item with these ${thumbnailCount} thumbnails, select 3-5 that match BEST.
+
+SELECTION CRITERIA (in order of importance):
+1. Visual similarity (colors, patterns, graphic design, style)
+2. Position in list (earlier results are from more targeted search - prefer results near the top)
+3. Korean shopping sites preferred when visual quality is similar
+4. Product pages over category/catalog pages
+
+CRITICAL: The FIRST few results are from the most targeted search. If they look like good matches, prioritize them!
+
+Return ONLY valid JSON (no markdown, no explanation):
+{"${resultKey}": ["url1", "url2", "url3"]}`
+        })
+        
+        visionMessages.push({
+          role: 'user',
+          content: thumbnailContent
+        })
+        
+        // Check if we have enough thumbnails for visual matching
+        let completion: any = null
+        
+        if (thumbnailCount === 0) {
+          console.error(`   ❌ NO thumbnails loaded successfully! Cannot do visual matching.`)
+          console.error(`   ⚠️ Skipping GPT-5.1 call and using top Serper results directly`)
+          
+          const topLinks = resultsForGPT.slice(0, 5).map((r: any) => r.link)
+          completion = { 
+            choices: [{ 
+              message: { content: JSON.stringify({ [resultKey]: topLinks }) }
+            }] 
+          }
+          
+          // Skip API call entirely
+          const gptTime = (Date.now() - gptStart) / 1000
+          timingData.gpt4_turbo_total_api_time += gptTime
+          timingData.gpt4_turbo_count += 1
+          console.log(`   ⏱️  Skipped GPT-5.1 (no thumbnails): ${gptTime.toFixed(2)}s`)
+          
+        } else {
+          console.log(`   🖼️  Ready for GPT-5.1 with ${thumbnailCount} thumbnails`)
+        
+          try {
+          console.log(`   🚀 Calling GPT-5.1 with ${thumbnailCount} thumbnails (vision + JSON)...`)
+          
+          completion = await openai.chat.completions.create({
+            model: 'gpt-5.1',  // Best model for visual comparison and multilingual understanding
+            messages: visionMessages,
+            response_format: { type: 'json_object' },
+            temperature: 0.3,
+            max_completion_tokens: 2000
+          })
+          
+          const responseText = completion.choices[0]?.message?.content || ''
+          console.log(`   📦 GPT-5.1 response length: ${responseText.length} chars`)
+          console.log(`   📦 GPT-5.1 response preview: ${responseText.substring(0, 200)}`)
+          
+          // No need to check for empty response - OpenAI is reliable
+        } catch (openaiError: any) {
+          console.error(`   ❌ GPT-5.1 API error:`, openaiError)
+          console.error(`   Error type: ${openaiError.constructor?.name}`)
+          console.error(`   Error message: ${openaiError.message}`)
+          console.error(`   📊 ${resultsForGPT.length} Serper results available for fallback`)
+          
+          // Fallback to top results
+          const topLinks = resultsForGPT
+            .slice(0, 5)
+            .map((r: any) => r.link)
+            .filter((link: string) => link && link.startsWith('http'))
+          
+          console.log(`   🛟 GPT-5.1 error fallback: Using ${topLinks.length} top Serper results`)
+          
+          completion = { 
+            choices: [{ 
+              message: { content: JSON.stringify({ [resultKey]: topLinks }) }
+            }] 
+          }
+        }
+          
+          const gptTime = (Date.now() - gptStart) / 1000
+          timingData.gpt4_turbo_total_api_time += gptTime
+          timingData.gpt4_turbo_count += 1
+          console.log(`   ⏱️  GPT-5.1 vision filtering: ${gptTime.toFixed(2)}s`)
+        } // End of if (thumbnailCount === 0) else block
 
         // Parse response from GPT-4 Turbo
         const responseText = completion.choices[0]?.message?.content || '{}'
         
         if (!responseText || responseText === '{}') {
-          console.error(`❌ No response from GPT-4 Turbo for ${resultKey}`)
+          console.error(`❌ No response from GPT-5.1 for ${resultKey}`)
         }
 
-        console.log(`📄 GPT-4 Turbo response for ${resultKey}:`, responseText.substring(0, 200))
+        console.log(`📄 GPT-5.1 response for ${resultKey}:`, responseText.substring(0, 200))
         
         // Store GPT reasoning/response for this category
         gptReasoningData[resultKey] = {
@@ -2432,11 +2694,12 @@ Result: Return these 5 links!
                 return brandKeywords.some(brand => title.includes(brand.toLowerCase()))
               })
               
-              console.log(`   GPT-4 selected ${gptBrandMatches.length}/${validLinks.length} brand-matching links`)
+              console.log(`   GPT-5.1 selected ${gptBrandMatches.length}/${validLinks.length} brand-matching links`)
               
-              // If GPT-4 selected fewer than 2 brand matches, override with exact matches
-              if (gptBrandMatches.length < 2) {
-                console.log(`   ⚠️  OVERRIDING GPT-4: Too few brand matches, using exact matches instead`)
+              // If GPT-5.1 selected 0 brand matches (completely missed the brands), override
+              // But if it selected at least 1, trust its visual analysis
+              if (gptBrandMatches.length === 0 && validLinks.length > 0) {
+                console.log(`   ⚠️  OVERRIDING GPT-5.1: No brand matches selected, using brand matches instead`)
                 
                 // Replace validLinks with brand-matching results (take top 5)
                 const brandMatchLinks = brandMatchingResults
@@ -2449,7 +2712,7 @@ Result: Return these 5 links!
                 
                 console.log(`   ✅ Replaced with ${validLinks.length} exact brand matches`)
               } else {
-                console.log(`   ✅ GPT-4 selection has enough brand matches, keeping it`)
+                console.log(`   ✅ GPT-5.1 selected ${gptBrandMatches.length} brand matches - trusting visual analysis`)
               }
             }
           }
@@ -2686,12 +2949,12 @@ Result: Return these 5 links!
               
               console.log(`✅ Final links (full image + GPT-4):`, validLinks.slice(0, 3))
             } else {
-              console.log(`⚠️  No category-matched full image results - using GPT-4 only`)
-              console.log(`✅ Final links (GPT-4 only):`, validLinks.slice(0, 3))
+              console.log(`⚠️  No category-matched full image results - using GPT-5.1 only`)
+              console.log(`✅ Final links (GPT-5.1 only):`, validLinks.slice(0, 3))
             }
           } else {
             console.log(`🎭 Character item (${characterName}) - skipping full image results (may be different characters)`)
-            console.log(`✅ Final links (GPT-4 only):`, validLinks.slice(0, 3))
+            console.log(`✅ Final links (GPT-5.1 only):`, validLinks.slice(0, 3))
           }
           
           // Debug: Check first result structure
@@ -2780,9 +3043,54 @@ Result: Return these 5 links!
             return coreFeatures
           }
           
+          // Extract STYLE DETAILS (raglan, crew neck, button-front, etc.)
+          const extractStyleDetails = (desc: string): string[] => {
+            const descLower = desc.toLowerCase()
+            const styleDetails: string[] = []
+            
+            // Sleeve styles (CRITICAL for matching raglan, dolman, etc.)
+            if (descLower.includes('raglan') || descLower.includes('래글런') || descLower.includes('baseball')) styleDetails.push('raglan')
+            if (descLower.includes('dolman') || descLower.includes('dolman sleeve')) styleDetails.push('dolman')
+            if (descLower.includes('puff sleeve') || descLower.includes('puffed sleeve')) styleDetails.push('puff-sleeve')
+            if (descLower.includes('bell sleeve') || descLower.includes('flare sleeve')) styleDetails.push('bell-sleeve')
+            if (descLower.includes('cap sleeve')) styleDetails.push('cap-sleeve')
+            
+            // Necklines (crew, v-neck, collar, etc.)
+            if (descLower.includes('crew neck') || descLower.includes('crewneck') || descLower.includes('round neck')) styleDetails.push('crew-neck')
+            if (descLower.includes('v-neck') || descLower.includes('v neck') || descLower.includes('vneck')) styleDetails.push('v-neck')
+            if (descLower.includes('turtleneck') || descLower.includes('turtle neck') || descLower.includes('mock neck')) styleDetails.push('turtleneck')
+            if (descLower.includes('boat neck') || descLower.includes('boatneck')) styleDetails.push('boat-neck')
+            if (descLower.includes('scoop neck')) styleDetails.push('scoop-neck')
+            if (descLower.includes('collar') && !descLower.includes('collarless')) styleDetails.push('collar')
+            
+            // Closures (button, zip, pullover)
+            if (descLower.includes('button-front') || descLower.includes('button front') || descLower.includes('buttons down')) styleDetails.push('button-front')
+            if (descLower.includes('zip') || descLower.includes('zipper')) styleDetails.push('zip')
+            if (descLower.includes('pullover') || descLower.includes('pull-over')) styleDetails.push('pullover')
+            
+            // Silhouettes (cropped, oversized, slim, etc.)
+            if (descLower.includes('cropped') || descLower.includes('crop')) styleDetails.push('cropped')
+            if (descLower.includes('oversized') || descLower.includes('over-sized') || descLower.includes('loose')) styleDetails.push('oversized')
+            if (descLower.includes('slim') || descLower.includes('fitted') || descLower.includes('slim-fit')) styleDetails.push('slim-fit')
+            if (descLower.includes('relaxed') || descLower.includes('relaxed-fit')) styleDetails.push('relaxed')
+            
+            // Material/texture details
+            if (descLower.includes('ribbed') || descLower.includes('rib knit')) styleDetails.push('ribbed')
+            if (descLower.includes('cable knit') || descLower.includes('cable-knit')) styleDetails.push('cable-knit')
+            if (descLower.includes('quilted')) styleDetails.push('quilted')
+            if (descLower.includes('pleated')) styleDetails.push('pleated')
+            
+            return styleDetails
+          }
+          
           const coreFeatures = extractCoreFeatures(itemDescription || '')
-          console.log(`🎯 Core features (garment type only): ${coreFeatures.join(', ')}`)
-          console.log(`ℹ️  Trusting GPT-4 Turbo for style details (collar, pleat, cuff, etc.)`)
+          const styleDetails = extractStyleDetails(itemDescription || '')
+          
+          console.log(`🎯 Core features (garment type): ${coreFeatures.join(', ') || 'none'}`)
+          console.log(`✨ Style details (raglan, crew neck, etc.): ${styleDetails.join(', ') || 'none'}`)
+          
+          // IMPORTANT: Color Match = Colors + Garment + Style Details
+          //            Style Match = Garment + Style Details but DIFFERENT colors
           
           if (primaryColor && linksWithThumbnails.length > 0) {
             // Define color matching keywords (exact and synonyms)
@@ -2796,20 +3104,64 @@ Result: Return these 5 links!
               'brown': ['brown', '브라운', '갈색', 'chocolate'],
               'grey': ['grey', 'gray', '그레이', '회색', 'charcoal'],
               'green': ['green', '그린', '녹색', 'emerald', 'forest'],
-              'blue': ['blue', '블루', '파랑', 'azure', 'cobalt']
+              'blue': ['blue', '블루', '파랑', 'azure', 'cobalt'],
+              'red': ['red', '레드', '빨강', '빨간색', 'crimson', 'scarlet'],
+              'pink': ['pink', '핑크', '분홍'],
+              'yellow': ['yellow', '옐로우', '노랑', '노란색'],
+              'purple': ['purple', '퍼플', '보라', '보라색', 'violet'],
+              'orange': ['orange', '오렌지', '주황']
             }
             
-            const matchingKeywords = colorKeywords[primaryColor.toLowerCase()] || [primaryColor.toLowerCase()]
+            const primaryMatchingKeywords = colorKeywords[primaryColor.toLowerCase()] || [primaryColor.toLowerCase()]
+            const secondaryMatchingKeywords = secondaryColor 
+              ? (colorKeywords[secondaryColor.toLowerCase()] || [secondaryColor.toLowerCase()])
+              : null
+            
+            const hasMultipleColors = !!secondaryColor
+            
             console.log(`\n🎨 COLOR MATCHING DEBUG:`)
             console.log(`   Primary color: "${primaryColor}"`)
-            console.log(`   Matching keywords: [${matchingKeywords.join(', ')}]`)
+            console.log(`   Primary keywords: [${primaryMatchingKeywords.join(', ')}]`)
+            if (hasMultipleColors) {
+              console.log(`   🎨🎨 MULTI-COLOR ITEM: Secondary color: "${secondaryColor}"`)
+              console.log(`   Secondary keywords: [${secondaryMatchingKeywords?.join(', ')}]`)
+              console.log(`   ℹ️  Will require BOTH colors for Color Match (e.g., raglan, colorblock)`)
+            }
+            
+            // Helper function to check if text contains any color keyword (with word boundaries)
+            const hasColorKeyword = (text: string, keywords: string[]): { found: boolean; keyword: string | null } => {
+              for (const keyword of keywords) {
+                // Use word boundary regex for English words (3+ chars) to avoid false positives
+                if (keyword.length >= 3 && /^[a-z\s]+$/.test(keyword)) {
+                  const wordBoundaryRegex = new RegExp(`\\b${keyword}\\b`, 'i')
+                  if (wordBoundaryRegex.test(text)) {
+                    return { found: true, keyword }
+                  }
+                } else {
+                  // For short keywords (< 3 chars) or non-English (Korean), use exact substring match
+                  if (text.includes(keyword)) {
+                    return { found: true, keyword }
+                  }
+                }
+              }
+              return { found: false, keyword: null }
+            }
             
             // LENIENT VALIDATION: Only check CORE features (garment type + color)
-            // Trust GPT-4 Turbo for style details (collar, pleat, cuff, etc.)
+            // Trust GPT-5.1 for style details (collar, pleat, cuff, etc.)
             linksWithThumbnails.forEach((item: any, idx: number) => {
               const title = item.title?.toLowerCase() || ''
               const link = item.link?.toLowerCase() || ''
               const combinedText = `${title} ${link}`
+              
+              // 🔥 TRUST GPT-5.1: Always keep the first item (likely exact match from visual analysis)
+              // Only validate subsequent items with text matching
+              if (idx === 0) {
+                colorMatches.push(item)
+                console.log(`🖼️ 🎨 COLOR MATCH #1 (GPT-5.1 top pick - trusted): "${item.title?.substring(0, 60)}..."`)
+                console.log(`   ✓ Trusting GPT-5.1 visual analysis (exact match candidate)`)
+                return
+              }
               
               // 🚫 CRITICAL: Filter out blogs, news, forums FIRST (before any matching)
               const nonProductSites = [
@@ -2841,7 +3193,8 @@ Result: Return these 5 links!
               const isFromTextSearch = item.searchType === 'text_images'
               const searchTypeIcon = isFromTextSearch ? '📝' : '🖼️'
               
-              // CRITICAL: Explicit rejection of wrong garment types FIRST
+              // CRITICAL: Explicit rejection of VERY wrong garment types (not similar items)
+              // UPDATED: Be more lenient with tops - t-shirts, tees, sweatshirts, sweaters are similar styles
               const wrongGarmentTypes: Record<string, string[]> = {
                 'scarf': ['blanket', 'throw', 'tapestry', 'rug', 'carpet', 'cushion', 'pillow', '담요', '블랭킷', '러그'],
                 'blanket': ['scarf', 'muffler', 'stole', '스카프', '머플러'],
@@ -2850,10 +3203,12 @@ Result: Return these 5 links!
                 'pants': ['shorts', 'skirt', '반바지', '치마'],
                 'shorts': ['pants', 'trousers', '바지', '긴바지'],
                 'skirt': ['pants', 'shorts', '바지', '반바지'],
-                'sweater': ['t-shirt', 'tee', '티셔츠', '반팔', '반팔티', 'short sleeve', 'tank top'],
-                'sweatshirt': ['t-shirt', 'tee', '티셔츠', '반팔', '반팔티', 'short sleeve', 'tank top'],
-                'hoodie': ['t-shirt', 'tee', '티셔츠', '반팔', '반팔티', 'short sleeve', 'tank top'],
-                'shirt': ['hoodie', 'sweatshirt', '후드', '맨투맨', '후디'], // Shirt should reject hoodies/sweatshirts
+                // LENIENT: Don't reject similar tops (t-shirt ≈ sweatshirt for style matching)
+                // Only reject completely different categories
+                'sweater': ['dress', 'pants', 'skirt', '원피스', '바지', '치마'],
+                'sweatshirt': ['dress', 'pants', 'skirt', '원피스', '바지', '치마'],
+                'hoodie': ['dress', 'pants', 'skirt', '원피스', '바지', '치마'],
+                'shirt': ['dress', 'pants', 'skirt', '원피스', '바지', '치마'],
                 'top': [] // Top is too generic, don't reject
               }
               
@@ -2871,9 +3226,15 @@ Result: Return these 5 links!
                 }
               }
               
-              // Check color match with detailed logging
-              const matchedColorKeyword = matchingKeywords.find(keyword => combinedText.includes(keyword))
-              const hasColorMatch = !!matchedColorKeyword
+              // Check color match with detailed logging (using word boundaries to avoid false positives like "botanical" matching "tan")
+              const primaryColorResult = hasColorKeyword(combinedText, primaryMatchingKeywords)
+              const secondaryColorResult = hasMultipleColors && secondaryMatchingKeywords
+                ? hasColorKeyword(combinedText, secondaryMatchingKeywords)
+                : { found: true, keyword: null } // If no secondary color, consider it matched
+              
+              // For multi-color items (e.g., raglan), require BOTH colors
+              const hasColorMatch = primaryColorResult.found && secondaryColorResult.found
+              const matchedColorKeyword = primaryColorResult.keyword
               
               // Check if GARMENT TYPE matches (core feature) - WITH KOREAN SUPPORT
               const matchedGarmentFeature = coreFeatures.find(feature => {
@@ -2907,21 +3268,52 @@ Result: Return these 5 links!
               })
               const hasGarmentTypeMatch = coreFeatures.length === 0 || !!matchedGarmentFeature
               
-              // LENIENT: Accept if garment type matches (trust GPT for details)
-              if (hasColorMatch && hasGarmentTypeMatch) {
-                // Perfect match: right color + right garment type
+              // Check if STYLE DETAILS match (raglan, crew neck, button-front, etc.)
+              const matchedStyleDetails = styleDetails.filter(detail => {
+                // Direct match
+                if (combinedText.includes(detail)) return true
+                
+                // Raglan variations
+                if (detail === 'raglan' && (combinedText.includes('baseball') || combinedText.includes('래글런'))) return true
+                
+                // Crew neck variations
+                if (detail === 'crew-neck' && (combinedText.includes('round neck') || combinedText.includes('roundneck'))) return true
+                
+                // Button variations
+                if (detail === 'button-front' && (combinedText.includes('button up') || combinedText.includes('button down') || combinedText.includes('cardigan'))) return true
+                
+                return false
+              })
+              
+              // LENIENT: For items with style details (e.g., raglan), require at least SOME to match
+              // - If 1-2 style details: require at least 1 to match (50%)
+              // - If 3+ style details: require at least 50% to match
+              const hasStyleDetailMatch = styleDetails.length === 0 || 
+                matchedStyleDetails.length >= Math.max(1, Math.ceil(styleDetails.length * 0.5))
+              
+              // NEW STRICT LOGIC: Require style detail matching for BOTH Color Match and Style Match
+              if (hasColorMatch && hasGarmentTypeMatch && hasStyleDetailMatch) {
+                // Perfect match: right color + right garment type + right style details
                 colorMatches.push(item)
                 console.log(`${searchTypeIcon} 🎨 COLOR MATCH #${idx + 1}: "${item.title?.substring(0, 60)}..."`)
-                console.log(`   ✓ Color: "${matchedColorKeyword}" | ✓ Garment: "${matchedGarmentFeature}" ${isFromTextSearch ? '(TEXT SEARCH)' : ''}`)
-              } else if (!hasColorMatch && hasGarmentTypeMatch) {
-                // Style match: wrong color but right garment type
+                if (hasMultipleColors) {
+                  console.log(`   ✓ Primary: "${primaryColorResult.keyword}" | ✓ Secondary: "${secondaryColorResult.keyword}" | ✓ Garment: "${matchedGarmentFeature}" | ✓ Style: ${matchedStyleDetails.length}/${styleDetails.length} details ${isFromTextSearch ? '(TEXT SEARCH)' : ''}`)
+                } else {
+                  console.log(`   ✓ Color: "${matchedColorKeyword}" | ✓ Garment: "${matchedGarmentFeature}" | ✓ Style: ${matchedStyleDetails.length}/${styleDetails.length} details ${isFromTextSearch ? '(TEXT SEARCH)' : ''}`)
+                }
+              } else if (!hasColorMatch && hasGarmentTypeMatch && hasStyleDetailMatch) {
+                // Style match: wrong color but right garment type + right style details
                 styleMatches.push(item)
                 console.log(`${searchTypeIcon} ✂️  STYLE MATCH #${idx + 1}: "${item.title?.substring(0, 60)}..."`)
-                console.log(`   ✗ Color (no match) | ✓ Garment: "${matchedGarmentFeature}" ${isFromTextSearch ? '(TEXT SEARCH)' : ''}`)
+                if (hasMultipleColors) {
+                  console.log(`   ${primaryColorResult.found ? '✓' : '✗'} Primary | ${secondaryColorResult.found ? '✗' : '✗'} Secondary (different colors) | ✓ Garment: "${matchedGarmentFeature}" | ✓ Style: ${matchedStyleDetails.length}/${styleDetails.length} details ${isFromTextSearch ? '(TEXT SEARCH)' : ''}`)
+                } else {
+                  console.log(`   ✗ Color (different color) | ✓ Garment: "${matchedGarmentFeature}" | ✓ Style: ${matchedStyleDetails.length}/${styleDetails.length} details ${isFromTextSearch ? '(TEXT SEARCH)' : ''}`)
+                }
               } else {
-                // Rejected: wrong garment type
+                // Rejected: wrong garment type or wrong style details
                 console.log(`${searchTypeIcon} ❌ REJECTED #${idx + 1}: "${item.title?.substring(0, 60)}..."`)
-                console.log(`   Color: ${hasColorMatch ? '✓' : '✗'} | Garment: ✗ (expected: ${coreFeatures.join(', ')})`)
+                console.log(`   Color: ${hasColorMatch ? '✓' : '✗'} | Garment: ${hasGarmentTypeMatch ? '✓' : '✗'} | Style: ${hasStyleDetailMatch ? '✓' : '✗'} (${matchedStyleDetails.length}/${styleDetails.length} details)`)
               }
             })
             
@@ -2953,10 +3345,14 @@ Result: Return these 5 links!
                   const link = item.link?.toLowerCase() || ''
                   const combinedText = `${title} ${link}`
                   
-                  // Must have color match
-                  const matchedKeyword = matchingKeywords.find(keyword => combinedText.includes(keyword))
-                  const hasColorMatch = !!matchedKeyword
-                  if (!hasColorMatch) return false
+                  // Must have color match (check for both colors if multi-color item)
+                  const primaryCheck = hasColorKeyword(combinedText, primaryMatchingKeywords)
+                  const secondaryCheck = hasMultipleColors && secondaryMatchingKeywords
+                    ? hasColorKeyword(combinedText, secondaryMatchingKeywords)
+                    : { found: true, keyword: null }
+                  
+                  const hasBothColors = primaryCheck.found && secondaryCheck.found
+                  if (!hasBothColors) return false
                   
                   // CRITICAL: Explicit rejection of wrong garment types
                   const wrongGarmentTypes: Record<string, string[]> = {
@@ -2967,9 +3363,10 @@ Result: Return these 5 links!
                     'pants': ['shorts', 'skirt', '반바지', '치마'],
                     'shorts': ['pants', 'trousers', '바지', '긴바지'],
                     'skirt': ['pants', 'shorts', '바지', '반바지'],
-                    'sweater': ['t-shirt', 'tee', '티셔츠', '반팔', '반팔티', 'short sleeve'],
-                    'sweatshirt': ['t-shirt', 'tee', '티셔츠', '반팔', '반팔티', 'short sleeve'],
-                    'hoodie': ['t-shirt', 'tee', '티셔츠', '반팔', '반팔티', 'short sleeve']
+                    // LENIENT: Don't reject similar tops (t-shirt ≈ sweatshirt for style matching)
+                    'sweater': ['dress', 'pants', 'skirt', '원피스', '바지', '치마'],
+                    'sweatshirt': ['dress', 'pants', 'skirt', '원피스', '바지', '치마'],
+                    'hoodie': ['dress', 'pants', 'skirt', '원피스', '바지', '치마']
                   }
                   
                   // Check if this item contains any wrong garment type keywords
@@ -3013,10 +3410,28 @@ Result: Return these 5 links!
                   })
                   if (!hasGarmentTypeMatch) return false
                   
+                  // Must match style details (raglan, crew neck, etc.)
+                  const itemStyleMatches = styleDetails.filter(detail => {
+                    if (combinedText.includes(detail)) return true
+                    if (detail === 'raglan' && (combinedText.includes('baseball') || combinedText.includes('래글런'))) return true
+                    if (detail === 'crew-neck' && (combinedText.includes('round neck') || combinedText.includes('roundneck'))) return true
+                    if (detail === 'button-front' && (combinedText.includes('button up') || combinedText.includes('button down') || combinedText.includes('cardigan'))) return true
+                    return false
+                  })
+                  const hasStyleDetailMatch = styleDetails.length === 0 || itemStyleMatches.length >= Math.max(1, Math.ceil(styleDetails.length * 0.5))
+                  if (!hasStyleDetailMatch) {
+                    console.log(`   ❌ REJECTED: "${title.substring(0, 50)}..." - missing style details (${itemStyleMatches.length}/${styleDetails.length})`)
+                    return false
+                  }
+                  
                   // Not already included
                   const notAlreadyIncluded = !colorMatches.some(existing => existing.link === item.link)
                   if (notAlreadyIncluded) {
-                    console.log(`   💡 Found potential: "${title.substring(0, 60)}..." (matched: "${matchedKeyword}")`)
+                    if (hasMultipleColors) {
+                      console.log(`   💡 Found potential: "${title.substring(0, 60)}..." (matched: "${primaryCheck.keyword}" + "${secondaryCheck.keyword}")`)
+                    } else {
+                      console.log(`   💡 Found potential: "${title.substring(0, 60)}..." (matched: "${primaryCheck.keyword}")`)
+                    }
                   }
                   return notAlreadyIncluded
                 })
@@ -3069,9 +3484,10 @@ Result: Return these 5 links!
                     'pants': ['shorts', 'skirt', '반바지', '치마'],
                     'shorts': ['pants', 'trousers', '바지', '긴바지'],
                     'skirt': ['pants', 'shorts', '바지', '반바지'],
-                    'sweater': ['t-shirt', 'tee', '티셔츠', '반팔', '반팔티', 'short sleeve'],
-                    'sweatshirt': ['t-shirt', 'tee', '티셔츠', '반팔', '반팔티', 'short sleeve'],
-                    'hoodie': ['t-shirt', 'tee', '티셔츠', '반팔', '반팔티', 'short sleeve']
+                    // LENIENT: Don't reject similar tops (t-shirt ≈ sweatshirt for style matching)
+                    'sweater': ['dress', 'pants', 'skirt', '원피스', '바지', '치마'],
+                    'sweatshirt': ['dress', 'pants', 'skirt', '원피스', '바지', '치마'],
+                    'hoodie': ['dress', 'pants', 'skirt', '원피스', '바지', '치마']
                   }
                   
                   // Check if this item contains any wrong garment type keywords
@@ -3116,9 +3532,29 @@ Result: Return these 5 links!
                   if (!hasGarmentTypeMatch) return false
                   
                   // CRITICAL: Must NOT have the target color (this is STYLE match, not COLOR match!)
-                  const hasTargetColor = matchingKeywords.some(keyword => combinedText.includes(keyword))
-                  if (hasTargetColor) {
+                  const primaryCheck = hasColorKeyword(combinedText, primaryMatchingKeywords)
+                  const secondaryCheck = hasMultipleColors && secondaryMatchingKeywords
+                    ? hasColorKeyword(combinedText, secondaryMatchingKeywords)
+                    : { found: false, keyword: null }
+                  
+                  // If item has target colors, skip (should be in colorMatches instead)
+                  const hasBothTargetColors = primaryCheck.found && (hasMultipleColors ? secondaryCheck.found : true)
+                  if (hasBothTargetColors) {
                     console.log(`   🚫 Skipping "${title.substring(0, 40)}..." (has target color, should be in colorMatches)`)
+                    return false
+                  }
+                  
+                  // Must match style details (raglan, crew neck, etc.) - SAME as color matches!
+                  const itemStyleMatches = styleDetails.filter(detail => {
+                    if (combinedText.includes(detail)) return true
+                    if (detail === 'raglan' && (combinedText.includes('baseball') || combinedText.includes('래글런'))) return true
+                    if (detail === 'crew-neck' && (combinedText.includes('round neck') || combinedText.includes('roundneck'))) return true
+                    if (detail === 'button-front' && (combinedText.includes('button up') || combinedText.includes('button down') || combinedText.includes('cardigan'))) return true
+                    return false
+                  })
+                  const hasStyleDetailMatch = styleDetails.length === 0 || itemStyleMatches.length >= Math.max(1, Math.ceil(styleDetails.length * 0.5))
+                  if (!hasStyleDetailMatch) {
+                    console.log(`   ❌ REJECTED (style): "${title.substring(0, 50)}..." - missing style details (${itemStyleMatches.length}/${styleDetails.length})`)
                     return false
                   }
                   
@@ -3288,8 +3724,13 @@ Result: Return these 5 links!
                   const link = item.link?.toLowerCase() || ''
                   const combinedText = `${title} ${link}`
                   
-                  const hasColorMatch = matchingKeywords.some(keyword => combinedText.includes(keyword))
-                  if (!hasColorMatch) return false
+                  const primaryCheck = hasColorKeyword(combinedText, primaryMatchingKeywords)
+                  const secondaryCheck = hasMultipleColors && secondaryMatchingKeywords
+                    ? hasColorKeyword(combinedText, secondaryMatchingKeywords)
+                    : { found: true, keyword: null }
+                  
+                  const hasBothColors = primaryCheck.found && secondaryCheck.found
+                  if (!hasBothColors) return false
                   
                   const hasGarmentTypeMatch = coreFeatures.length === 0 || coreFeatures.some(feature => {
                     if (combinedText.includes(feature)) return true
@@ -3299,6 +3740,17 @@ Result: Return these 5 links!
                     return false
                   })
                   if (!hasGarmentTypeMatch) return false
+                  
+                  // Must match style details (raglan, crew neck, etc.)
+                  const itemStyleMatches = styleDetails.filter(detail => {
+                    if (combinedText.includes(detail)) return true
+                    if (detail === 'raglan' && (combinedText.includes('baseball') || combinedText.includes('래글런'))) return true
+                    if (detail === 'crew-neck' && (combinedText.includes('round neck') || combinedText.includes('roundneck'))) return true
+                    if (detail === 'button-front' && (combinedText.includes('button up') || combinedText.includes('button down') || combinedText.includes('cardigan'))) return true
+                    return false
+                  })
+                  const hasStyleDetailMatch = styleDetails.length === 0 || itemStyleMatches.length >= Math.max(1, Math.ceil(styleDetails.length * 0.5))
+                  if (!hasStyleDetailMatch) return false
                   
                   return !colorMatches.some(existing => existing.link === item.link)
                 })
@@ -3343,8 +3795,13 @@ Result: Return these 5 links!
                   const link = item.link?.toLowerCase() || ''
                   const combinedText = `${title} ${link}`
                   
-                  const hasTargetColor = matchingKeywords.some(keyword => combinedText.includes(keyword))
-                  if (hasTargetColor) return false
+                  const primaryCheck = hasColorKeyword(combinedText, primaryMatchingKeywords)
+                  const secondaryCheck = hasMultipleColors && secondaryMatchingKeywords
+                    ? hasColorKeyword(combinedText, secondaryMatchingKeywords)
+                    : { found: false, keyword: null }
+                  
+                  const hasBothTargetColors = primaryCheck.found && (hasMultipleColors ? secondaryCheck.found : true)
+                  if (hasBothTargetColors) return false
                   
                   const hasGarmentTypeMatch = coreFeatures.length === 0 || coreFeatures.some(feature => {
                     if (combinedText.includes(feature)) return true
@@ -3354,6 +3811,17 @@ Result: Return these 5 links!
                     return false
                   })
                   if (!hasGarmentTypeMatch) return false
+                  
+                  // Must match style details (raglan, crew neck, etc.) - SAME as color matches!
+                  const itemStyleMatches = styleDetails.filter(detail => {
+                    if (combinedText.includes(detail)) return true
+                    if (detail === 'raglan' && (combinedText.includes('baseball') || combinedText.includes('래글런'))) return true
+                    if (detail === 'crew-neck' && (combinedText.includes('round neck') || combinedText.includes('roundneck'))) return true
+                    if (detail === 'button-front' && (combinedText.includes('button up') || combinedText.includes('button down') || combinedText.includes('cardigan'))) return true
+                    return false
+                  })
+                  const hasStyleDetailMatch = styleDetails.length === 0 || itemStyleMatches.length >= Math.max(1, Math.ceil(styleDetails.length * 0.5))
+                  if (!hasStyleDetailMatch) return false
                   
                   return !styleMatches.some(existing => existing.link === item.link) && !colorMatches.some(existing => existing.link === item.link)
                 })
@@ -3567,7 +4035,8 @@ Result: Return these 5 links!
                 return false
               }
               
-              // Positive signal: Must have shopping indicators (RELAXED for better results)
+              // Positive signal: Must have shopping indicators (VERY RELAXED for better fallback results)
+              // When Gemini fails, we want to give users SOMETHING rather than nothing
               const hasShoppingIndicators = 
                 linkLower.includes('/product') ||
                 linkLower.includes('/item') ||
@@ -3575,20 +4044,32 @@ Result: Return these 5 links!
                 linkLower.includes('/shop') ||
                 linkLower.includes('/store') ||
                 linkLower.includes('/detail') ||
+                linkLower.includes('/buy') ||
+                linkLower.includes('/cart') ||
+                linkLower.includes('/commerce') ||
+                linkLower.includes('/clothing') ||
+                linkLower.includes('/fashion') ||
+                linkLower.includes('/wear') ||
+                linkLower.includes('/collections/') ||
+                linkLower.includes('/catalog/') ||
                 linkLower.includes('smartstore.naver.com') ||
+                linkLower.includes('coupang.com') ||
+                linkLower.includes('gmarket.com') ||
+                linkLower.includes('11st.co.kr') ||
+                linkLower.includes('a-bly.com') ||
+                linkLower.includes('29cm.co.kr') ||
+                linkLower.includes('musinsa.com') ||
+                linkLower.includes('wconcept.co.kr') ||
+                linkLower.includes('ssg.com') ||
+                linkLower.includes('lotteon.com') ||
                 linkLower.includes('.com/kr/') ||
                 linkLower.includes('.co.kr') ||
-                linkLower.includes('.com') ||  // Allow any .com (many shopping sites)
-                linkLower.match(/\/(p|pd|prd|prod)\/\d+/) || // product ID patterns
-                linkLower.match(/\/buy/) ||
-                linkLower.match(/\/cart/) ||
-                linkLower.match(/\/commerce/) ||
-                linkLower.match(/\/clothing/) ||
-                linkLower.match(/\/fashion/) ||
-                linkLower.match(/\/wear/)
+                linkLower.includes('.com') ||  // Allow most .com domains (very permissive)
+                linkLower.match(/\/(p|pd|prd|prod|product|products)\/[\w-]+/) || // product ID patterns (more flexible)
+                linkLower.match(/\/[\w-]+-\d+\.(html|htm|jsp|asp|php)/) // Korean site patterns like /product-123.html
               
               if (!hasShoppingIndicators) {
-                console.log(`🛟 Fallback: No shopping indicators: ${item.link.substring(0, 60)}...`)
+                console.log(`🛟 Fallback: No shopping indicators in: ${item.link.substring(0, 70)}`)
                 return false
               }
               
@@ -3673,7 +4154,7 @@ Result: Return these 5 links!
     
     // Timing summary with detailed breakdown
     console.log('\n⏱️  TIMING SUMMARY (Search API) - Chronological:')
-    console.log(`   1️⃣  Full image search (3x Serper): ${timingData.full_image_search_time.toFixed(2)}s`)
+    console.log(`   1️⃣  Full image search (4x Serper): ${timingData.full_image_search_time.toFixed(2)}s`)
     console.log(`   2️⃣  Per-category searches (${timingData.serper_count}x parallel): ${timingData.per_category_search_time.toFixed(2)}s`)
     console.log(`      → Serper API time (accumulated): ${timingData.serper_total_api_time.toFixed(2)}s`)
     console.log(`      → Avg per category: ${(timingData.serper_total_api_time / Math.max(timingData.serper_count, 1)).toFixed(2)}s`)
