@@ -1977,13 +1977,32 @@ Result: Return these 5 links!
         const openai = getOpenAIClient()
         const gptStart = Date.now()
         
-        // Use GPT-4 Turbo for filtering (fast & reliable!)
+        // Define strict JSON schema for structured outputs
+        const responseSchema = {
+          type: "object",
+          properties: {
+            [resultKey]: {
+              type: "array",
+              description: "Array of 3-5 selected product URLs",
+              items: {
+                type: "string",
+                description: "Full product URL starting with http:// or https://"
+              },
+              minItems: 3,
+              maxItems: 5
+            }
+          },
+          required: [resultKey],
+          additionalProperties: false
+        }
+        
+        // Use GPT-4 Turbo with Structured Outputs for guaranteed format consistency
         const completion = await openai.chat.completions.create({
           model: 'gpt-4-turbo-2024-04-09',
           messages: [
             {
               role: 'system',
-              content: 'You are a fashion product selector. Your job is to ALWAYS select 3-5 best matching product links from the provided search results. NEVER return empty arrays. Return only valid JSON without any markdown formatting.'
+              content: 'You are a fashion product selector. Your job is to ALWAYS select 3-5 best matching product links from the provided search results. NEVER return empty arrays.'
             },
             {
               role: 'user',
@@ -1992,7 +2011,14 @@ Result: Return these 5 links!
           ],
           temperature: 0.3,  // Slightly higher temperature to encourage selection
           max_tokens: 2000,
-          response_format: { type: 'json_object' }
+          response_format: { 
+            type: 'json_schema',
+            json_schema: {
+              name: 'product_selection',
+              strict: true,
+              schema: responseSchema
+            }
+          }
         })
         
         const gptTime = (Date.now() - gptStart) / 1000
@@ -2055,39 +2081,35 @@ Result: Return these 5 links!
           result = {}
         }
         
-        // Handle both single string and array responses
+        // With structured outputs, we should get consistent format: {"outerwear_1": ["url1", "url2", ...]}
         let links = result[resultKey]
         
-        // Handle nested object formats with various field names
-        // GPT-4 sometimes returns: {"selections": [...]}, {"selected_products": [...]}, {"products": [...]}, etc.
-        if (links && typeof links === 'object' && !Array.isArray(links)) {
-          // Try multiple possible field names for the nested array
-          const possibleFields = ['selections', 'selected_products', 'products', 'links', 'items', 'results']
-          let foundArray = null
-          
-          for (const field of possibleFields) {
-            if (Array.isArray(links[field])) {
-              foundArray = links[field]
-              console.log(`📦 GPT returned nested "${field}" format for ${resultKey}`)
-              break
+        if (!Array.isArray(links)) {
+          // Fallback: Try to handle legacy nested formats if GPT somehow still returns them
+          // (e.g., {"selections": [...]}, {"selected_products": [...]})
+          if (links && typeof links === 'object') {
+            const possibleFields = ['selections', 'selected_products', 'products', 'links', 'items', 'results']
+            for (const field of possibleFields) {
+              if (Array.isArray(links[field])) {
+                console.log(`⚠️ GPT returned legacy nested "${field}" format - using fallback parser`)
+                links = links[field].map((item: any) => 
+                  typeof item === 'string' ? item : item?.link
+                ).filter((link: string | null) => link && link.startsWith('http'))
+                break
+              }
             }
-          }
-          
-          if (foundArray) {
-            // Extract links from the array (handle both string arrays and object arrays with .link property)
-            links = foundArray.map((item: any) => {
-              if (typeof item === 'string') return item
-              if (item && item.link) return item.link
-              return null
-            }).filter((link: string | null) => link && link.startsWith('http'))
+            if (!Array.isArray(links)) {
+              links = []
+            }
+          } else if (typeof links === 'string' && links.startsWith('http')) {
+            // Single string link
+            links = [links]
           } else {
-            // Not a recognized nested format
             links = []
           }
-        } else if (!Array.isArray(links)) {
-          // If GPT returns a single link string, convert to array
-          links = links && typeof links === 'string' && links.startsWith('http') ? [links] : []
         }
+        
+        console.log(`📋 Parsed ${links.length} links from GPT response for ${resultKey}`)
         
         // Blocked domains - social media and non-product sites
         const blockedDomains = [
