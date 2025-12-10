@@ -1878,7 +1878,13 @@ ${topRepeatedBrands ? '8' : '7'}. ✅ FLEXIBLE: Category labels can vary - sweat
    ${categoryKey === 'bottoms' ? '⚠️ ONLY REJECT: if it\'s clearly NOT lower body wear' : ''}
 ${topRepeatedBrands ? '9' : '8'}. ✅ CHECK: Is it a specific product (not "Shop", "Category", "Homepage")?
 
-Find the TOP 3-5 BEST AVAILABLE MATCHES. Prioritize IN THIS ORDER:
+🚫 **CRITICAL: ONLY SELECT SHOPPING SITES - AVOID ALL EDITORIAL/CELEBRITY CONTENT**:
+- ❌ NEVER select: Vogue, Elle, Harper's Bazaar, PurseBlog, celebrity fan accounts, fashion magazines, news sites
+- ❌ Skip titles containing: "Celebrity", "출근길", "공항패션", "Street Style", "spotted", "seen wearing"
+- ✅ ONLY select: E-commerce sites (ASOS, Farfetch, Net-a-Porter, Musinsa, Zigzag, etc.)
+- ✅ Valid domains: farfetch.com, net-a-porter.com, asos.com, musinsa.com, 29cm.co.kr, zigzag.kr, ssense.com, shopbop.com, nordstrom.com, etc.
+
+Find the TOP 3-5 BEST AVAILABLE MATCHES FROM SHOPPING SITES ONLY. Prioritize IN THIS ORDER:
 1. **TEXT-BASED EXACT KEYWORD MATCHES (searchType: "text_images")** ⭐⭐⭐ HIGHEST PRIORITY!
    - If description contains specific keywords (herringbone, double-breasted, paisley, cable-knit, etc.):
    - → SCAN ALL results for text_images entries with those EXACT keywords in the title
@@ -1889,7 +1895,7 @@ Find the TOP 3-5 BEST AVAILABLE MATCHES. Prioritize IN THIS ORDER:
    - → If you find these brands matching the core item type + color (even without 1 specific pattern detail), INCLUDE at least 1 as an alternative
    - → Example: "Herringbone Double-Breasted Coat" → "Guest in Residence Double-Breasted Coat" (missing herringbone but premium brand) = INCLUDE
    - → Balance: 2-3 exact keyword matches + 1 premium brand = ideal selection
-2. **Full image search results** (first ${fullImageResults.length} results) - Good for iconic/celebrity items
+2. **Full image search results** (first ${fullImageResults.length} results) - ONLY select SHOPPING sites, skip celebrity/magazine content
 3. Visual similarity (visual_lens) - Use only if text_images don't have exact matches
 4. Product quality level (luxury vs fast fashion)  
 5. Product variety (different retailers when possible)
@@ -2051,7 +2057,13 @@ Result: Return these 5 links!
         
         // Handle both single string and array responses
         let links = result[resultKey]
-        if (!Array.isArray(links)) {
+        
+        // Handle nested "selections" format: {"outerwear_1": {"selections": [...]}}
+        if (links && typeof links === 'object' && !Array.isArray(links) && links.selections) {
+          console.log(`📦 GPT returned nested selections format for ${resultKey}`)
+          // Extract links from selections array
+          links = links.selections.map((item: any) => item.link).filter((link: string) => link && link.startsWith('http'))
+        } else if (!Array.isArray(links)) {
           // If GPT returns a single link, convert to array
           links = links && typeof links === 'string' && links.startsWith('http') ? [links] : []
         }
@@ -2074,10 +2086,12 @@ Result: Return these 5 links!
           'images.google.com', 'google.com/images', 'www.google.com/images',
           'yandex.com/images', 'images.search.yahoo.com',
           // Magazines and editorial sites (not shopping)
-          'vogue.com', 'elle.com', 'elle.co.kr', 'harpersbazaar.com', 'cosmopolitan.com',
-          'gq.com', 'wmagazine.com', 'instyle.com', 'marieclaire.com',
+          'vogue.com', 'vogue.co.kr', 'elle.com', 'elle.co.kr', 'harpersbazaar.com', 'cosmopolitan.com',
+          'gq.com', 'wmagazine.com', 'w korea', 'wkorea.com', 'instyle.com', 'marieclaire.com',
           'glamour.com', 'allure.com', 'nylon.com', 'refinery29.com',
           'whowhatwear.com', 'popsugar.com', 'byrdie.com',
+          // Celebrity/fashion blogs
+          'purseblog.com', 'thepurseblog.com', 'bagsnob.com', 'fashionista.com',
           // Korean entertainment/news sites (celebrity photos, not products)
           'newsen.com', 'm.newsen.com', 'www.newsen.com',
           'xportsnews.com', 'www.xportsnews.com',
@@ -3327,11 +3341,16 @@ Result: Return these 5 links!
               const link = item.link?.toLowerCase() || ''
               const combinedText = `${title} ${link}`
               
-              // 🚫 CRITICAL: Filter out blogs, news, forums FIRST (before any matching)
+              // 🚫 CRITICAL: Filter out blogs, news, forums, MAGAZINES FIRST (before any matching)
               const nonProductSites = [
                 // Blogs (Korean + International)
                 'blog.naver.com', 'm.blog.naver.com', 'blog.daum.net', 'tistory.com', 
                 'medium.com', 'blogger.com', 'wordpress.com', 'brunch.co.kr', 'velog.io', 'oopy.io',
+                // Magazines and editorial
+                'vogue.com', 'vogue.co.kr', 'elle.com', 'elle.co.kr', 'wkorea.com', 
+                'harpersbazaar.com', 'cosmopolitan.com', 'gq.com', 'wmagazine.com',
+                // Celebrity/fashion blogs
+                'purseblog.com', 'thepurseblog.com', 'bagsnob.com', 'fashionista.com',
                 // News/media
                 'news', '/news/', 'newsen.com', 'xportsnews.com', 'dispatch.co.kr', 
                 'sportsseoul.com', 'sportalkorea.com', 'osen.co.kr', 'entertain.naver.com',
@@ -3342,7 +3361,7 @@ Result: Return these 5 links!
                 'instiz.net', 'reddit.com', 'quora.com',
                 // Social media
                 'youtube.com', 'youtu.be', 'instagram.com', 'facebook.com', 'twitter.com',
-                'tiktok.com', 'pinterest.com',
+                'tiktok.com', 'pinterest.com', 'threads.net',
                 // Wiki/reference
                 'wikipedia.org', 'namu.wiki', 'wikiwand.com'
               ]
@@ -3432,7 +3451,7 @@ Result: Return these 5 links!
                 return false
               }
               
-              // Filter out forums, communities, blogs, media sites (NON-SHOPPING)
+              // Filter out forums, communities, blogs, MAGAZINES, media sites (NON-SHOPPING)
               const nonShoppingSites = [
                 // Korean forums/communities
                 'theqoo.net', 'pann.nate.com', 'dcinside.com', 'fmkorea.com', 'clien.net',
@@ -3441,9 +3460,14 @@ Result: Return these 5 links!
                 // Blogs
                 'blog.naver.com', 'tistory.com', 'medium.com', 'blogger.com', 'wordpress.com',
                 'brunch.co.kr', 'velog.io', 'oopy.io',
+                // Magazines and editorial
+                'vogue.com', 'vogue.co.kr', 'elle.com', 'elle.co.kr', 'wkorea.com',
+                'harpersbazaar.com', 'cosmopolitan.com', 'gq.com', 'wmagazine.com',
+                // Celebrity/fashion blogs
+                'purseblog.com', 'thepurseblog.com', 'bagsnob.com', 'fashionista.com',
                 // Media/streaming
                 'youtube.com', 'youtu.be', 'soundcloud.com', 'spotify.com', 'apple.com/music',
-                'vimeo.com', 'twitch.tv', 'tiktok.com',
+                'vimeo.com', 'twitch.tv', 'tiktok.com', 'threads.net',
                 // News/media
                 'naver.com/news', 'daum.net/news', 'joins.com', 'chosun.com', 'donga.com',
                 'hankyung.com', 'mk.co.kr', 'sedaily.com', 'mt.co.kr', 'hani.co.kr',

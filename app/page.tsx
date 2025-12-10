@@ -159,8 +159,8 @@ export default function Home() {
     }
   }, [currentStep])
 
-  // Smooth progress bar animation - gradually increment to create constant movement
-  // This ensures progress only moves forward, never backwards
+  // Very slow fallback progress animation - only as backup if backend updates stall
+  // This ensures progress shows some movement even if backend updates are slow
   // NOTE: Only runs for interactive mode, not OCR mode
   useEffect(() => {
     // Skip animation for OCR mode (it doesn't have real-time progress)
@@ -175,15 +175,15 @@ export default function Home() {
     const interval = setInterval(() => {
       setOverallProgress(prev => {
         // Only move forward, never backwards
-        // Gradually increment, but cap at 94% to leave room for real completion updates
+        // VERY slow increment as fallback - backend progress should be primary
         if (prev < 94) {
-          // Very small increment for smooth, constant movement
-          const increment = 0.1
+          // Slow increment: 0.05% every 1 second = 3% per minute (much slower than before)
+          const increment = 0.05
           return Math.min(94, prev + increment)
         }
         return prev
       })
-    }, 100) // Update every 100ms for smooth animation
+    }, 1000) // Update every 1 second (10x slower than before)
 
     return () => clearInterval(interval)
   }, [currentStep, useOCRSearch])

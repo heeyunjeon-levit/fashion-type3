@@ -70,10 +70,11 @@ async function processSearchJob(jobId: string, body: any) {
     const progressInterval = setInterval(() => {
       const job = getJob(jobId)
       if (job && job.status === 'processing' && job.progress < 90) {
-        // Gradually increment progress (simulated)
-        updateJobProgress(jobId, Math.min(90, job.progress + 5))
+        // Gradually increment progress - realistic pacing for typical 1-2 min searches
+        // 3% every 4 seconds = ~2 minutes to reach 90%
+        updateJobProgress(jobId, Math.min(90, job.progress + 3))
       }
-    }, 3000) // Update every 3 seconds
+    }, 4000) // Update every 4 seconds
     
     try {
       console.log(`🔗 Calling search handler directly for job ${jobId}`)
