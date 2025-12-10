@@ -934,15 +934,30 @@ export async function POST(request: NextRequest) {
           }
         }
 
+        // FILTER visual search results EARLY (remove editorial/celebrity sites)
+        console.log(`\n🔍 Filtering visual search results (${allOrganicResults.length} total)...`)
+        const filteredVisualResults = allOrganicResults.filter((result: any) => {
+          if (!isValidProductLink(result.link, false)) {
+            console.log(`   🚫 VISUAL: Blocked non-product site: ${result.link?.substring(0, 60)}...`)
+            return false
+          }
+          if (!isValidProductTitle(result.title || '')) {
+            console.log(`   🚫 VISUAL: Blocked editorial title: "${result.title?.substring(0, 60)}..."`)
+            return false
+          }
+          return true
+        })
+        console.log(`✅ Visual search: ${allOrganicResults.length} → ${filteredVisualResults.length} results after filtering`)
+
         // Process text-based search results if available
-        const textSearchResults: any[] = []
+        let textSearchResults: any[] = []
         if (textSearchResponse && textSearchResponse.ok) {
           const textData = await textSearchResponse.json()
           console.log(`   ✅ Text search returned ${textData.images?.length || 0} results`)
           
           if (textData.images) {
             // Transform text search results to match visual search format AND mark them as text search
-            textSearchResults.push(...textData.images.map((img: any) => ({
+            const rawTextResults = textData.images.map((img: any) => ({
               title: img.title,
               link: img.link,
               source: img.source,
@@ -950,22 +965,39 @@ export async function POST(request: NextRequest) {
               imageUrl: img.imageUrl,
               position: img.position,
               searchType: 'text_images' // Serper /images text-based search
-            })))
+            }))
             
-            // LOG first 10 text search results for debugging
-            console.log(`\n📝 TEXT SEARCH RESULTS (first 10):`)
-            textSearchResults.slice(0, 10).forEach((item, idx) => {
-              console.log(`   ${idx + 1}. "${item.title?.substring(0, 60)}..." - ${item.link}`)
+            // FILTER text search results EARLY too
+            console.log(`\n🔍 Filtering text search results (${rawTextResults.length} total)...`)
+            textSearchResults = rawTextResults.filter((result: any) => {
+              if (!isValidProductLink(result.link, false)) {
+                console.log(`   🚫 TEXT: Blocked non-product site: ${result.link?.substring(0, 60)}...`)
+                return false
+              }
+              if (!isValidProductTitle(result.title || '')) {
+                console.log(`   🚫 TEXT: Blocked editorial title: "${result.title?.substring(0, 60)}..."`)
+                return false
+              }
+              return true
             })
+            console.log(`✅ Text search: ${rawTextResults.length} → ${textSearchResults.length} results after filtering`)
+            
+            // LOG first 10 FILTERED text search results for debugging
+            if (textSearchResults.length > 0) {
+              console.log(`\n📝 TEXT SEARCH RESULTS (first 10 after filtering):`)
+              textSearchResults.slice(0, 10).forEach((item, idx) => {
+                console.log(`   ${idx + 1}. "${item.title?.substring(0, 60)}..." - ${item.link}`)
+              })
+            }
           }
         } else if (textSearchResponse) {
           const errorText = await textSearchResponse.text()
           console.log(`   ❌ Text search failed:`, errorText.substring(0, 200))
         }
 
-        // Merge visual + text search results
-        const combinedSearchResults = [...allOrganicResults, ...textSearchResults]
-        console.log(`📊 Combined search: ${allOrganicResults.length} visual + ${textSearchResults.length} text = ${combinedSearchResults.length} total`)
+        // Merge FILTERED visual + text search results
+        const combinedSearchResults = [...filteredVisualResults, ...textSearchResults]
+        console.log(`📊 Combined search (filtered): ${filteredVisualResults.length} visual + ${textSearchResults.length} text = ${combinedSearchResults.length} total`)
 
         // Deduplicate by URL and keep unique results
         const uniqueCroppedResults = Array.from(
@@ -1484,35 +1516,27 @@ export async function POST(request: NextRequest) {
           console.log(`🎨 Color pre-filter (text): ${colorBefore} → ${resultsForGPT.length} results (removed ${colorBefore - resultsForGPT.length} wrong colors for "${primaryColor}")`)
         }
         
-        // PRE-FILTER: Remove blocked domains (news sites, social media) BEFORE sending to GPT
-        const blockedDomainsPreFilter = [
-          // Social media
-          'instagram.com', 'tiktok.com', 'youtube.com', 'youtu.be', 'pinterest.com', 'pin.it',
-          'facebook.com', 'fb.com', 'twitter.com', 'x.com', 'reddit.com', 'tumblr.com',
-          'snapchat.com', 'threads.net', 'threads.com', 'weibo.com',
-          // News & entertainment sites
-          'newsen.com', 'm.newsen.com', 'www.newsen.com',
-          'xportsnews.com', 'dispatch.co.kr', 'sportsseoul.com', 'sportalkorea.com',
-          'osen.co.kr', 'm.osen.co.kr', 'entertain.naver.com', 'sports.naver.com',
-          'starnewskorea.com', 'tenasia.co.kr', 'mydaily.co.kr',
-          'news.nate.com', 'news.zum.com', 'news.chosun.com', 'news.joins.com',
-          // Magazines
-          'vogue.com', 'elle.com', 'elle.co.kr', 'harpersbazaar.com', 'gq.com'
-        ]
-        
+        // CRITICAL PRE-FILTER: Use centralized validation to block non-product sites
+        // This uses isValidProductLink() which includes justjared.com, dailymail.co.uk, vogue, etc.
         const beforeBlockedFilter = resultsForGPT.length
         resultsForGPT = resultsForGPT.filter((result: any) => {
-          const linkLower = (result.link || '').toLowerCase()
-          const isBlocked = blockedDomainsPreFilter.some(domain => linkLower.includes(domain))
-          if (isBlocked) {
-            console.log(`🚫 PRE-FILTER: Blocked news/social site: ${result.link?.substring(0, 60)}...`)
+          // Use the centralized isValidProductLink function (comprehensive blocklist)
+          if (!isValidProductLink(result.link, false)) {
+            console.log(`🚫 PRE-FILTER: Blocked non-product site: ${result.link?.substring(0, 60)}...`)
             return false
           }
+          
+          // Also check title for editorial patterns
+          if (!isValidProductTitle(result.title || '')) {
+            console.log(`🚫 PRE-FILTER: Blocked editorial title: "${result.title?.substring(0, 60)}..."`)
+            return false
+          }
+          
           return true
         })
         
         if (beforeBlockedFilter > resultsForGPT.length) {
-          console.log(`✅ PRE-FILTER complete: ${beforeBlockedFilter} → ${resultsForGPT.length} results (removed ${beforeBlockedFilter - resultsForGPT.length} news/social sites)`)
+          console.log(`✅ PRE-FILTER complete: ${beforeBlockedFilter} → ${resultsForGPT.length} results (removed ${beforeBlockedFilter - resultsForGPT.length} non-product sites)`)
         }
         
         // VISUAL VALIDATION: Analyze thumbnails with Gemini Flash
