@@ -1287,6 +1287,7 @@ export default function Home() {
             onBack={handleBack}
             onResearch={handleResearch}
             selectedItems={selectedItems}
+            userPhoneNumber={phoneNumber}
           />
         )}
       </div>

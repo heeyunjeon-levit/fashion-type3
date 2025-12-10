@@ -27,6 +27,7 @@ interface ResultsBottomSheetProps {
   onResearch?: () => void // Re-run search with same items
   selectedItems?: any[]
   isSharedView?: boolean // If true, this is a shared results page (disable some features)
+  userPhoneNumber?: string | null // Phone number already collected in main flow
 }
 
 export default function ResultsBottomSheet({
@@ -38,7 +39,8 @@ export default function ResultsBottomSheet({
   onBack,
   onResearch,
   selectedItems,
-  isSharedView = false
+  isSharedView = false,
+  userPhoneNumber
 }: ResultsBottomSheetProps) {
   const { t, language } = useLanguage()
   
@@ -51,9 +53,10 @@ export default function ResultsBottomSheet({
     return (data.colorMatches?.length || 0) + (data.styleMatches?.length || 0) > 0
   })
   
-  // Initialize phone modal state - start optimistically (will check results later)
-  const [showPhoneModal, setShowPhoneModal] = useState(!isSharedView)
-  const [phoneSubmitted, setPhoneSubmitted] = useState(isSharedView)
+  // Initialize phone modal state - if phone already collected in main flow, skip modal
+  const hasPhoneAlready = !!userPhoneNumber || isSharedView
+  const [showPhoneModal, setShowPhoneModal] = useState(!hasPhoneAlready)
+  const [phoneSubmitted, setPhoneSubmitted] = useState(hasPhoneAlready)
   const [isReturningUser, setIsReturningUser] = useState(false)
   const [sessionManager, setSessionManager] = useState<any>(null)
   const [sheetPosition, setSheetPosition] = useState<'peek' | 'half' | 'full'>('half')
@@ -64,7 +67,7 @@ export default function ResultsBottomSheet({
   // Feedback modal
   const feedbackModalRef = useRef<any>(null)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
-  const [userPhoneNumber, setUserPhoneNumber] = useState<string>('')
+  const [localPhoneNumber, setLocalPhoneNumber] = useState<string>(userPhoneNumber || '')
   const feedbackTimerRef = useRef<NodeJS.Timeout | null>(null)
   const scrollTimerRef = useRef<NodeJS.Timeout | null>(null)
   const productClickTimeKey = 'product_click_time_main_app'
@@ -109,7 +112,7 @@ export default function ResultsBottomSheet({
         setShowPhoneModal(false)
         const phone = manager.getPhoneNumber()
         if (phone) {
-          setUserPhoneNumber(phone)
+          setLocalPhoneNumber(phone)
         }
         console.log('👋 Returning user detected, skipping phone modal')
       } else {
@@ -125,7 +128,7 @@ export default function ResultsBottomSheet({
       const result = await sessionManager.logPhoneNumber(phoneNumber)
       setPhoneSubmitted(true)
       setShowPhoneModal(false)
-      setUserPhoneNumber(phoneNumber)
+      setLocalPhoneNumber(phoneNumber)
       
       console.log('📱 Phone submitted:', phoneNumber)
       console.log('🎯 FeedbackModal will render with phone:', phoneNumber)
@@ -354,7 +357,7 @@ export default function ResultsBottomSheet({
 
   // Feedback modal: Check for product click on page return
   useEffect(() => {
-    if (!userPhoneNumber) return
+    if (!localPhoneNumber) return
 
     const handleVisibilityChange = () => {
       console.log('👁️ Visibility changed:', document.visibilityState)
@@ -393,11 +396,11 @@ export default function ResultsBottomSheet({
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange)
     }
-  }, [userPhoneNumber, productClickTimeKey])
+  }, [localPhoneNumber, productClickTimeKey])
 
   // Feedback modal: Detect scroll to bottom
   useEffect(() => {
-    if (!userPhoneNumber || !scrollContainerRef.current) return
+    if (!localPhoneNumber || !scrollContainerRef.current) return
 
     const handleScroll = () => {
       const container = scrollContainerRef.current
@@ -440,7 +443,7 @@ export default function ResultsBottomSheet({
     return () => {
       container.removeEventListener('scroll', handleScroll)
     }
-  }, [userPhoneNumber])
+  }, [localPhoneNumber])
 
   // Cleanup timers on unmount
   useEffect(() => {
@@ -934,10 +937,10 @@ export default function ResultsBottomSheet({
       </div>
 
       {/* Feedback Modal */}
-      {userPhoneNumber && (
+      {localPhoneNumber && (
         <FeedbackModal
           ref={feedbackModalRef}
-          phoneNumber={userPhoneNumber}
+          phoneNumber={localPhoneNumber}
           resultPageUrl="main_app_result_page"
         />
       )}
