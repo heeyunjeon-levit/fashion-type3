@@ -125,9 +125,12 @@ async function processSearchJob(jobId: string, body: any) {
         
         try {
           // Create a shareable result directly in Supabase to get a permanent UUID link
+          console.log(`   📦 Importing supabaseServer...`)
           const { getSupabaseServerClient } = await import('@/lib/supabaseServer')
           const supabase = getSupabaseServerClient()
+          console.log(`   ✅ Supabase client created`)
           
+          console.log(`   📝 Inserting shareable result to database...`)
           const { data: shareData, error: shareError } = await supabase
             .from('shared_results')
             .insert({
@@ -144,6 +147,12 @@ async function processSearchJob(jobId: string, body: any) {
             })
             .select('id')
             .single()
+          
+          console.log(`   📊 Supabase response:`, { 
+            hasData: !!shareData, 
+            hasError: !!shareError,
+            error: shareError 
+          })
           
           if (shareError || !shareData) {
             console.error(`❌ Failed to create shareable result:`, shareError)
