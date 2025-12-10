@@ -2058,13 +2058,34 @@ Result: Return these 5 links!
         // Handle both single string and array responses
         let links = result[resultKey]
         
-        // Handle nested "selections" format: {"outerwear_1": {"selections": [...]}}
-        if (links && typeof links === 'object' && !Array.isArray(links) && links.selections) {
-          console.log(`📦 GPT returned nested selections format for ${resultKey}`)
-          // Extract links from selections array
-          links = links.selections.map((item: any) => item.link).filter((link: string) => link && link.startsWith('http'))
+        // Handle nested object formats with various field names
+        // GPT-4 sometimes returns: {"selections": [...]}, {"selected_products": [...]}, {"products": [...]}, etc.
+        if (links && typeof links === 'object' && !Array.isArray(links)) {
+          // Try multiple possible field names for the nested array
+          const possibleFields = ['selections', 'selected_products', 'products', 'links', 'items', 'results']
+          let foundArray = null
+          
+          for (const field of possibleFields) {
+            if (Array.isArray(links[field])) {
+              foundArray = links[field]
+              console.log(`📦 GPT returned nested "${field}" format for ${resultKey}`)
+              break
+            }
+          }
+          
+          if (foundArray) {
+            // Extract links from the array (handle both string arrays and object arrays with .link property)
+            links = foundArray.map((item: any) => {
+              if (typeof item === 'string') return item
+              if (item && item.link) return item.link
+              return null
+            }).filter((link: string | null) => link && link.startsWith('http'))
+          } else {
+            // Not a recognized nested format
+            links = []
+          }
         } else if (!Array.isArray(links)) {
-          // If GPT returns a single link, convert to array
+          // If GPT returns a single link string, convert to array
           links = links && typeof links === 'string' && links.startsWith('http') ? [links] : []
         }
         
