@@ -1996,11 +1996,11 @@ Result: Return these 5 links!
           additionalProperties: false
         }
         
-        // Use GPT-4o-mini with Structured Outputs for guaranteed format consistency
-        // Note: gpt-4-turbo doesn't support json_schema, need gpt-4o or gpt-4o-mini
-        // gpt-4o-mini is faster and cheaper, perfect for product selection
+        // Use GPT-5-mini with Structured Outputs for guaranteed format consistency
+        // GPT-5-mini is optimized for well-defined tasks like product selection
+        // Faster and cheaper than GPT-4o-mini while maintaining strong reasoning
         const completion = await openai.chat.completions.create({
-          model: 'gpt-4o-mini',
+          model: 'gpt-5-mini',
           messages: [
             {
               role: 'system',
