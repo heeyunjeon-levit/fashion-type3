@@ -86,7 +86,8 @@ export async function getJob(id: string): Promise<SearchJob | undefined> {
   // If not in memory, check database (for cross-instance persistence)
   if (!job) {
     console.log(`⚠️  Job ${id} not in memory. Checking database...`)
-    job = await loadJobFromDatabase(id)
+    const dbJob = await loadJobFromDatabase(id)
+    job = dbJob ?? undefined  // Convert null to undefined for consistent typing
     
     if (job) {
       // Cache in memory for future access
