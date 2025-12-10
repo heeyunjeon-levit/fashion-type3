@@ -2012,7 +2012,7 @@ Result: Return these 5 links!
             }
           ],
           temperature: 0.3,  // Slightly higher temperature to encourage selection
-          max_tokens: 2000,
+          max_completion_tokens: 2000,  // GPT-5 models use max_completion_tokens instead of max_tokens
           response_format: { 
             type: 'json_schema',
             json_schema: {
