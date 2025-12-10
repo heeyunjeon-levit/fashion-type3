@@ -124,34 +124,36 @@ export default function ResultsBottomSheet({
   const handlePhoneSubmit = async (phoneNumber: string) => {
     if (!sessionManager) return
     
-    try {
-      const result = await sessionManager.logPhoneNumber(phoneNumber)
-      setPhoneSubmitted(true)
-      setShowPhoneModal(false)
-      setLocalPhoneNumber(phoneNumber)
-      
-      console.log('📱 Phone submitted:', phoneNumber)
-      console.log('🎯 FeedbackModal will render with phone:', phoneNumber)
-      
-      // Start 45-second fallback timer for feedback modal
-      feedbackTimerRef.current = setTimeout(() => {
-        console.log('⏰ 45s fallback - attempting to show feedback modal')
-        console.log('📍 feedbackModalRef.current:', feedbackModalRef.current)
-        if (feedbackModalRef.current) {
-          console.log('✅ Ref exists, calling show()')
-          feedbackModalRef.current.show()
-        } else {
-          console.error('❌ feedbackModalRef.current is null!')
-        }
-      }, 45000)
-      
-      if (result.isReturningUser) {
-        console.log(`환영합니다! 총 ${result.totalSearches}번 방문하셨습니다.`)
+    // Close modal immediately for instant feedback (no delay!)
+    setShowPhoneModal(false)
+    setPhoneSubmitted(true)
+    setLocalPhoneNumber(phoneNumber)
+    
+    console.log('📱 Phone submitted:', phoneNumber)
+    console.log('🎯 FeedbackModal will render with phone:', phoneNumber)
+    
+    // Start 45-second fallback timer for feedback modal
+    feedbackTimerRef.current = setTimeout(() => {
+      console.log('⏰ 45s fallback - attempting to show feedback modal')
+      console.log('📍 feedbackModalRef.current:', feedbackModalRef.current)
+      if (feedbackModalRef.current) {
+        console.log('✅ Ref exists, calling show()')
+        feedbackModalRef.current.show()
+      } else {
+        console.error('❌ feedbackModalRef.current is null!')
       }
-    } catch (error) {
-      console.error('Failed to submit phone number:', error)
-      throw error
-    }
+    }, 45000)
+    
+    // Log phone number in background (non-blocking)
+    sessionManager.logPhoneNumber(phoneNumber)
+      .then((result: any) => {
+        if (result.isReturningUser) {
+          console.log(`환영합니다! 총 ${result.totalSearches}번 방문하셨습니다.`)
+        }
+      })
+      .catch((error: any) => {
+        console.error('Failed to submit phone number:', error)
+      })
   }
 
   const handleLinkClick = async (

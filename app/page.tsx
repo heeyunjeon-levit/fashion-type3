@@ -735,11 +735,25 @@ export default function Home() {
           })
             console.log(`✅ Cropped locally: ${Math.round(croppedDataUrl.length / 1024)}KB data URL`)
             
+            // Update progress after cropping (show we're making progress)
+            completedItems += 0.3 // 30% of this item done (cropping)
+            const croppingProgress = Math.min(20, (completedItems / totalItems) * 20)
+            setOverallProgress(prev => Math.max(prev, croppingProgress))
+            
             // Continue with description...
             let description = `${bbox.category} item`
             const descStartTime = Date.now()
+            let descProgressInterval: NodeJS.Timeout | undefined // Declare outside try block
             try {
               console.log(`🔄 Fetching description for ${bbox.category}...`)
+              
+              // Start a progress simulator for description (shows activity while waiting)
+              descProgressInterval = setInterval(() => {
+                completedItems += 0.05 // Small increments to show progress
+                const currentProgress = Math.min(20, (completedItems / totalItems) * 20)
+                setOverallProgress(prev => Math.max(prev, currentProgress))
+              }, 2000) // Update every 2 seconds
+              
               const descResponse = await fetch('/api/describe-item', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -751,6 +765,9 @@ export default function Home() {
               })
               
               const descTime = ((Date.now() - descStartTime) / 1000).toFixed(1)
+              
+              // Clear the progress simulator
+              clearInterval(descProgressInterval)
               
               if (descResponse.ok) {
                 const descData = await descResponse.json()
@@ -771,6 +788,7 @@ export default function Home() {
               }
             } catch (descError) {
               const descTime = ((Date.now() - descStartTime) / 1000).toFixed(1)
+              if (descProgressInterval) clearInterval(descProgressInterval) // Clear interval on error too
               console.error(`❌ Description failed for ${bbox.category} (${descTime}s):`, descError)
               if (descError instanceof Error) {
                 console.error(`   Error name: ${descError.name}`)
@@ -784,7 +802,9 @@ export default function Home() {
             }
             
             const croppedImageUrl = croppedDataUrl
-            completedItems++
+            
+            // Final progress update for this item (round up to full completion)
+            completedItems = Math.ceil(completedItems) // Round up any fractional progress
             const targetProgress = Math.min(20, (completedItems / totalItems) * 20)
             setOverallProgress(prev => Math.max(prev, targetProgress))
             
@@ -797,7 +817,7 @@ export default function Home() {
             }
         } catch (error) {
           console.error(`Error processing ${bbox.category}:`, error)
-          completedItems++
+          completedItems = Math.ceil(completedItems) // Round up
           const targetProgress = Math.min(20, (completedItems / totalItems) * 20)
           setOverallProgress(prev => Math.max(prev, targetProgress))
           return null
@@ -1313,21 +1333,23 @@ export default function Home() {
         <PhoneModal
           onPhoneSubmit={async (phone: string) => {
             console.log(`📱 Phone submitted: ${phone}`)
+            
+            // Close modal immediately for instant feedback (no delay!)
             setShowPhoneModal(false)
             
-            // Log phone number with session
+            // Process in background (non-blocking) - fire and forget
+            // This ensures the modal closes instantly without waiting for API calls
+            const formattedPhone = phone.startsWith('+82') ? phone : `+82${phone.replace(/^0/, '')}`
+            
+            // Log phone number (non-blocking)
             if (sessionManager) {
-              try {
-                const formattedPhone = phone.startsWith('+82') ? phone : `+82${phone.replace(/^0/, '')}`
-                await sessionManager.logPhoneNumber(formattedPhone, '+82')
-                console.log(`✅ Phone logged: ${formattedPhone}`)
-              } catch (error) {
-                console.error('❌ Failed to log phone:', error)
-              }
+              sessionManager.logPhoneNumber(formattedPhone, '+82')
+                .then(() => console.log(`✅ Phone logged: ${formattedPhone}`))
+                .catch((error: any) => console.error('❌ Failed to log phone:', error))
             }
             
-            // Continue with processing using the saved pendingBboxes
-            await processPendingItems(phone)
+            // Start search immediately (non-blocking)
+            processPendingItems(phone).catch((error: any) => console.error('❌ Search error:', error))
           }}
           onClose={() => {
             setShowPhoneModal(false)

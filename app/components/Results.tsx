@@ -52,19 +52,21 @@ export default function Results({ results, isLoading, croppedImages, onReset, se
   const handlePhoneSubmit = async (phoneNumber: string) => {
     if (!sessionManager) return
     
-    try {
-      const result = await sessionManager.logPhoneNumber(phoneNumber)
-      setPhoneSubmitted(true)
-      setShowPhoneModal(false)
-      
-      // Show welcome message for returning users
-      if (result.isReturningUser) {
-        console.log(`환영합니다! 총 ${result.totalSearches}번 방문하셨습니다.`)
-      }
-    } catch (error) {
-      console.error('Failed to submit phone number:', error)
-      throw error
-    }
+    // Close modal immediately for instant feedback (no delay!)
+    setPhoneSubmitted(true)
+    setShowPhoneModal(false)
+    
+    // Log phone number in background (non-blocking)
+    sessionManager.logPhoneNumber(phoneNumber)
+      .then((result: any) => {
+        // Show welcome message for returning users
+        if (result.isReturningUser) {
+          console.log(`환영합니다! 총 ${result.totalSearches}번 방문하셨습니다.`)
+        }
+      })
+      .catch((error: any) => {
+        console.error('Failed to submit phone number:', error)
+      })
   }
 
   const handleLinkClick = async (
