@@ -49,7 +49,8 @@ function isValidPhoneNumber(phone: string): boolean {
 }
 
 /**
- * Send notification via Kakao Brand Message (alim-talk-api / SweetTracker)
+ * Send SMS/LMS notification via SweetTracker API
+ * Automatically chooses SMS (≤90 bytes) or LMS (>90 bytes) based on message length
  */
 export async function sendSMS({ to, message }: SendSMSParams): Promise<boolean> {
   console.log(`🚀 sendSMS called with:`, { to, messageLength: message.length })
@@ -77,7 +78,15 @@ export async function sendSMS({ to, message }: SendSMSParams): Promise<boolean> 
       return false
     }
     
-    console.log(`📱 Sending Kakao message to ${normalizedPhone}`)
+    console.log(`📱 Sending SMS/LMS to ${normalizedPhone}`)
+    
+    // Determine message type based on length
+    // SMS: up to 90 bytes (~45 Korean chars or 90 English chars)
+    // LMS: 91-2000 bytes (~1000 Korean chars or 2000 English chars)
+    const byteLength = Buffer.byteLength(message, 'utf8')
+    const messageType = byteLength <= 90 ? 'SMS' : 'LMS'
+    
+    console.log(`📝 Message type: ${messageType} (${byteLength} bytes)`)
     
     // Generate unique message ID (max 20 chars for SweetTracker)
     // Use last 10 digits of timestamp + 5 char random = 15 chars total
@@ -90,11 +99,11 @@ export async function sendSMS({ to, message }: SendSMSParams): Promise<boolean> 
     // API endpoint
     const url = `https://alimtalk-api.sweettracker.net/v2/${PROFILE_KEY}/sendMessage`
     
-    // Request payload
+    // Request payload for SMS/LMS (simpler than BM - no template needed!)
     const payload = [
       {
         msgid,                           // ✅ must be unique
-        message_type: 'BM',              // ✅ Brand Message (no template)
+        message_type: messageType,       // ✅ SMS or LMS (auto-detected)
         profile_key: PROFILE_KEY,
         receiver_num: normalizedPhone,   // ✅ 8210... format
         message,
@@ -115,24 +124,24 @@ export async function sendSMS({ to, message }: SendSMSParams): Promise<boolean> 
     const responseData = await response.json()
     
     if (response.ok) {
-      console.log(`✅ Kakao message sent successfully`)
+      console.log(`✅ ${messageType} sent successfully`)
       console.log(`   Response:`, responseData)
       return true
     } else {
-      console.error(`❌ Kakao message sending failed:`)
+      console.error(`❌ ${messageType} sending failed:`)
       console.error(`   Status: ${response.status}`)
       console.error(`   Response:`, responseData)
       return false
     }
     
   } catch (error) {
-    console.error('❌ Failed to send Kakao message:', error)
+    console.error('❌ Failed to send SMS/LMS:', error)
     return false
   }
 }
 
 /**
- * Send search results notification via Kakao Brand Message (SweetTracker)
+ * Send search results notification via SMS/LMS (SweetTracker)
  * This is a convenience wrapper around sendSMS
  */
 export async function sendSearchResultsNotification(
