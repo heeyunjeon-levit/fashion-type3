@@ -99,7 +99,10 @@ export async function sendSMS({ to, message }: SendSMSParams): Promise<boolean> 
     // API endpoint
     const url = `https://alimtalk-api.sweettracker.net/v2/${PROFILE_KEY}/sendMessage`
     
-    // Request payload for SMS/LMS (simpler than BM - no template needed!)
+    // Request payload for SMS/LMS (simpler - no template needed!)
+    // Note: We use direct SMS/LMS instead of Alimtalk (AI) because:
+    // - AI requires template registration with KakaoTalk (complex setup)
+    // - SMS/LMS works immediately without templates
     const payload = [
       {
         msgid,                           // ✅ must be unique
@@ -107,7 +110,12 @@ export async function sendSMS({ to, message }: SendSMSParams): Promise<boolean> 
         profile_key: PROFILE_KEY,
         receiver_num: normalizedPhone,   // ✅ 8210... format
         message,
-        reserved_time: '00000000000000'  // ✅ send immediately
+        reserved_time: '00000000000000', // ✅ send immediately
+        // Future: Can add Alimtalk (AI) with SMS fallback:
+        // message_type: 'AI',
+        // template_code: 'search_complete',
+        // fall_back_yn: true,
+        // fall_back_message_type: 'SM'
       }
     ]
     
