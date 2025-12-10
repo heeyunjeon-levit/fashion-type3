@@ -30,6 +30,8 @@ export async function startSearchJob(params: {
   descriptions?: Record<string, string>
   originalImageUrl?: string
   useOCRSearch?: boolean
+  phoneNumber?: string
+  countryCode?: string
 }): Promise<string> {
   const response = await fetch('/api/search-job', {
     method: 'POST',
@@ -282,10 +284,13 @@ export async function searchWithJobQueue(
     descriptions?: Record<string, string>
     originalImageUrl?: string
     useOCRSearch?: boolean
+    phoneNumber?: string
+    countryCode?: string
   },
   options: JobPollOptions = {}
 ): Promise<{ results: any; meta?: any }> {
   console.log('🚀 Starting search with job queue...')
+  console.log(params.phoneNumber ? `📱 SMS notification enabled for: ${params.phoneNumber}` : '📱 No SMS notification')
   
   // Start the job
   const jobId = await startSearchJob(params)

@@ -6,6 +6,7 @@ import CroppedImageGallery from './components/CroppedImageGallery'
 import InteractiveBboxSelector from './components/InteractiveBboxSelector'
 import ResultsBottomSheet from './components/ResultsBottomSheet'
 import LanguageToggle from './components/LanguageToggle'
+import PhoneModal from './components/PhoneModal'
 import { getSessionManager } from '../lib/sessionManager'
 import { usePageTracking } from '../lib/hooks/usePageTracking'
 import { useLanguage } from './contexts/LanguageContext'
@@ -93,6 +94,11 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false)
   const [sessionManager, setSessionManager] = useState<any>(null)
   const [overallProgress, setOverallProgress] = useState(0)
+  
+  // Phone number collection for SMS notifications
+  const [showPhoneModal, setShowPhoneModal] = useState(false)
+  const [phoneNumber, setPhoneNumber] = useState<string | null>(null)
+  const [pendingBboxes, setPendingBboxes] = useState<BboxItem[] | null>(null)
 
   // Persist results and state to localStorage for mobile tab recovery
   useEffect(() => {
@@ -620,20 +626,33 @@ export default function Home() {
       return
     }
 
+    // 📱 SMS NOTIFICATION: Show phone modal BEFORE starting search
+    console.log('📱 Showing phone modal before search...')
+    setPendingBboxes(selectedBboxes)
+    setShowPhoneModal(true)
+  }
+
+  // Process items after phone number is collected
+  const processPendingItems = async (phoneNum: string) => {
+    if (!pendingBboxes) return
+    
+    // Save phone number for search
+    setPhoneNumber(phoneNum)
+    
     // Set items for progress tracking
-    setProcessingItems(selectedBboxes.map(bbox => ({ category: bbox.category })))
+    setProcessingItems(pendingBboxes.map(bbox => ({ category: bbox.category })))
     
     setCurrentStep('processing')
-    console.log(`🎯 Processing ${selectedBboxes.length} selected items...`)
+    console.log(`🎯 Processing ${pendingBboxes.length} selected items with phone: ${phoneNum}...`)
 
     try {
       // Process ALL items in parallel for efficiency with real-time progress tracking
-      console.log(`🚀 Processing ${selectedBboxes.length} items in parallel...`)
+      console.log(`🚀 Processing ${pendingBboxes.length} items in parallel...`)
       
-      const totalItems = selectedBboxes.length
+      const totalItems = pendingBboxes.length
       let completedItems = 0
       
-      const processingPromises = selectedBboxes.map(async (bbox) => {
+      const processingPromises = pendingBboxes.map(async (bbox) => {
         console.log(`Processing ${bbox.category}...`)
         
         try {
@@ -866,6 +885,9 @@ export default function Home() {
           // Use job queue for background processing
           const { searchWithJobQueue } = await import('@/lib/searchJobClient')
           
+          // Format phone number for SMS
+          const formattedPhone = phoneNumber ? (phoneNumber.startsWith('+82') ? phoneNumber : `+82${phoneNumber.replace(/^0/, '')}`) : undefined
+          
           const { results: data, meta } = await searchWithJobQueue(
             {
               categories,
@@ -873,6 +895,8 @@ export default function Home() {
               descriptions,
               originalImageUrl: uploadedImageUrl,
               useOCRSearch: useOCRSearch,
+              phoneNumber: formattedPhone,  // 📱 SMS notification
+              countryCode: '+82',
             },
             {
               // Progress callback
@@ -1265,6 +1289,34 @@ export default function Home() {
           />
         )}
       </div>
+      
+      {/* Phone Modal - Show before search starts */}
+      {showPhoneModal && (
+        <PhoneModal
+          onPhoneSubmit={async (phone: string) => {
+            console.log(`📱 Phone submitted: ${phone}`)
+            setShowPhoneModal(false)
+            
+            // Log phone number with session
+            if (sessionManager) {
+              try {
+                const formattedPhone = phone.startsWith('+82') ? phone : `+82${phone.replace(/^0/, '')}`
+                await sessionManager.logPhone(formattedPhone, '+82')
+                console.log(`✅ Phone logged: ${formattedPhone}`)
+              } catch (error) {
+                console.error('❌ Failed to log phone:', error)
+              }
+            }
+            
+            // Continue with processing using the saved pendingBboxes
+            await processPendingItems(phone)
+          }}
+          onClose={() => {
+            setShowPhoneModal(false)
+            setPendingBboxes(null)
+          }}
+        />
+      )}
     </main>
   )
 }
