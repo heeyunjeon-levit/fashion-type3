@@ -2011,7 +2011,7 @@ Result: Return these 5 links!
               content: prompt
             }
           ],
-          temperature: 0.3,  // Slightly higher temperature to encourage selection
+          // GPT-5-mini only supports default temperature (1) - cannot customize
           max_completion_tokens: 2000,  // GPT-5 models use max_completion_tokens instead of max_tokens
           response_format: { 
             type: 'json_schema',
