@@ -11,6 +11,9 @@ interface JobStatus {
   results?: any;
   meta?: any;
   error?: string;
+  originalImageUrl?: string;
+  croppedImages?: Record<string, string>;
+  categories?: string[];
 }
 
 export default function SearchResultsPage() {
@@ -125,43 +128,20 @@ export default function SearchResultsPage() {
     );
   }
 
-  // Completed - show results
+  // Completed - show results (no header, just results with background image like main page)
   if (jobStatus.status === 'completed' && jobStatus.results) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        {/* Header */}
-        <div className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-10">
-          <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
-            <div>
-              <h1 className="text-xl font-bold text-gray-800">Your Search Results</h1>
-              <p className="text-sm text-gray-500">
-                {Object.keys(jobStatus.results).length} item(s) found
-              </p>
-            </div>
-            <a
-              href="/"
-              className="text-sm text-gray-600 hover:text-gray-800 underline"
-            >
-              New Search
-            </a>
-          </div>
-        </div>
-
-        {/* Results */}
-        <div className="max-w-4xl mx-auto p-6">
-          <ResultsBottomSheet
-            results={jobStatus.results}
-            isLoading={false}
-            croppedImages={{}}
-            originalImageUrl=""
-            onReset={() => window.location.href = '/'}
-            onBack={() => window.location.href = '/'}
-            onResearch={() => window.location.href = '/'}
-            selectedItems={Object.keys(jobStatus.results)}
-            isSharedView={true}
-          />
-        </div>
-      </div>
+      <ResultsBottomSheet
+        results={jobStatus.results}
+        isLoading={false}
+        croppedImages={jobStatus.croppedImages || {}}
+        originalImageUrl={jobStatus.originalImageUrl || ''}
+        onReset={() => window.location.href = '/'}
+        onBack={() => window.location.href = '/'}
+        onResearch={() => window.location.href = '/'}
+        selectedItems={Object.keys(jobStatus.results)}
+        isSharedView={true}
+      />
     );
   }
 
