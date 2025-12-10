@@ -30,24 +30,26 @@ export async function POST(request: NextRequest) {
     
     console.log(`🚀 Created search job ${job.id}${phoneNumber ? ' with SMS notification' : ''} (persisted to DB)`)
     
-    // CRITICAL FIX: Process the job in the SAME request to keep serverless function alive
-    // Vercel serverless functions only run while handling a request
-    // Fire-and-forget background processing gets killed when request completes
-    try {
-      await processSearchJob(job.id, body)
-      console.log(`✅ Job ${job.id} completed successfully`)
-    } catch (error: any) {
+    // Start background processing
+    // NOTE: Serverless functions may terminate after response completes
+    // The client polling keeps some function instance alive to continue work
+    // For guaranteed completion, consider using a dedicated worker or queue system
+    processSearchJob(job.id, body).catch(async error => {
       console.error(`❌ Job ${job.id} failed during processing:`, error)
-      await failJob(job.id, error.message || 'Unknown error')
-    }
+      try {
+        await failJob(job.id, error.message || 'Unknown error')
+      } catch (e) {
+        console.error('Failed to mark job as failed:', e)
+      }
+    })
     
-    // Return job ID after processing completes
+    // Return job ID immediately so frontend can start polling
     return NextResponse.json({
       jobId: job.id,
-      status: 'completed',
+      status: 'processing',
       message: phoneNumber 
-        ? 'Search complete. You will receive an SMS shortly.'
-        : 'Search complete. Check results below.'
+        ? 'Search started. You will receive an SMS when results are ready.'
+        : 'Search started. Poll /api/search-job/[id] for status.'
     })
     
   } catch (error) {
