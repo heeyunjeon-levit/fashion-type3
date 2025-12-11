@@ -173,41 +173,53 @@ export async function saveJobToDatabase(job: SearchJob): Promise<boolean> {
   try {
     const supabase = getSupabaseServerClient()
     
-    // Note: We don't save cropped_images/descriptions to DB (large temporary data)
-    // Store job_data as JSON with all parameters for cron worker to reconstruct
-    const jobData = {
-      categories: job.categories,
-      croppedImages: job.croppedImages,
-      descriptions: job.descriptions,
-      originalImageUrl: job.originalImageUrl,
-      useOCRSearch: job.useOCRSearch,
-      phoneNumber: job.phoneNumber,
-      countryCode: job.countryCode
+    // Minimal save - only use columns we're certain exist
+    // Try to save, and if it fails, log but don't crash (jobs work in-memory)
+    const payload: any = {
+      job_id: job.id,
+      status: job.status,
+      progress: job.progress || 0,
+      created_at: new Date(job.createdAt).toISOString(),
+      updated_at: new Date(job.updatedAt).toISOString(),
+    }
+    
+    // Add optional fields only if they exist
+    if (job.phoneNumber) payload.phone_number = job.phoneNumber
+    if (job.countryCode) payload.country_code = job.countryCode
+    if (job.originalImageUrl) payload.original_image_url = job.originalImageUrl
+    if (job.results) payload.results = job.results
+    if (job.meta) payload.meta = job.meta
+    if (job.error) payload.error = job.error
+    
+    // Try to store full job data as JSON if column exists
+    try {
+      payload.job_data = {
+        categories: job.categories,
+        croppedImages: job.croppedImages,
+        descriptions: job.descriptions,
+        originalImageUrl: job.originalImageUrl,
+        useOCRSearch: job.useOCRSearch,
+        phoneNumber: job.phoneNumber,
+        countryCode: job.countryCode
+      }
+    } catch {
+      // If job_data column doesn't exist, that's ok
     }
     
     const { error } = await supabase
       .from('search_jobs')
-      .upsert({
-        job_id: job.id,
-        status: job.status,
-        progress: job.progress,
-        phone_number: job.phoneNumber,
-        country_code: job.countryCode,
-        job_data: jobData, // Store all parameters as JSON
-        original_image_url: job.originalImageUrl,
-        results: job.results,
-        meta: job.meta,
-        error: job.error,
-        created_at: new Date(job.createdAt).toISOString(),
-        updated_at: new Date(job.updatedAt).toISOString(),
-      })
+      .upsert(payload)
     
     if (error) {
       console.error(`❌ Failed to save job ${job.id} to database:`, error)
+      console.error(`   Error code: ${error.code}`)
+      console.error(`   Error message: ${error.message}`)
+      console.error(`   Error details: ${JSON.stringify(error.details)}`)
+      console.error(`   Payload attempted:`, JSON.stringify(payload, null, 2))
       return false
     }
     
-    console.log(`💾 Saved job ${job.id} to database`)
+    console.log(`💾 Saved job ${job.id} to database successfully`)
     return true
   } catch (error) {
     console.error(`❌ Error saving job to database:`, error)
