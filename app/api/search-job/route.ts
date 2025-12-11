@@ -28,19 +28,35 @@ export async function POST(request: NextRequest) {
       countryCode
     })
     
-    console.log(`🚀 Created search job ${job.id}${phoneNumber ? ' with SMS notification' : ''} (persisted to DB)`)
+    console.log(`🚀 Created search job ${job.id}${phoneNumber ? ' with SMS notification' : ''}`)
     
-    // ✨ NEW: Return immediately - background worker will process the job
-    // This allows frontend to close/die while job continues processing
-    console.log(`✅ Job ${job.id} queued for background processing`)
+    // TEMPORARY: Process synchronously until database is set up
+    // TODO: Once database table exists, switch back to background processing
+    console.log(`⏳ Processing job ${job.id} synchronously (database not available)...`)
     
-    return NextResponse.json({
-      jobId: job.id,
-      status: 'pending',
-      message: phoneNumber 
-        ? 'Job queued! You will receive SMS when complete.'
-        : 'Job queued! Poll for status updates.'
-    })
+    try {
+      await processSearchJob(job.id, body)
+      console.log(`✅ Job ${job.id} completed`)
+      
+      const completedJob = await getJob(job.id)
+      
+      return NextResponse.json({
+        jobId: job.id,
+        status: 'completed',
+        results: completedJob?.results,
+        meta: completedJob?.meta,
+        message: 'Search complete!'
+      })
+    } catch (error: any) {
+      console.error(`❌ Job ${job.id} failed:`, error)
+      await failJob(job.id, error.message || 'Unknown error')
+      
+      return NextResponse.json({
+        jobId: job.id,
+        status: 'failed',
+        error: error.message || 'Unknown error'
+      }, { status: 500 })
+    }
     
   } catch (error) {
     console.error('Error creating search job:', error)

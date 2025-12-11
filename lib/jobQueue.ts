@@ -240,7 +240,17 @@ export async function loadJobFromDatabase(jobId: string): Promise<SearchJob | nu
       .eq('job_id', jobId)
       .single()
     
-    if (error || !data) {
+    if (error) {
+      // If table doesn't exist, that's OK - we work in-memory only
+      if (error.code === 'PGRST116' || error.message?.includes('relation') || error.message?.includes('does not exist')) {
+        console.log(`⚠️  Database table not setup - working in-memory only`)
+        return null
+      }
+      console.log(`⚠️  Job ${jobId} not found in database:`, error.message)
+      return null
+    }
+    
+    if (!data) {
       console.log(`⚠️  Job ${jobId} not found in database`)
       return null
     }
