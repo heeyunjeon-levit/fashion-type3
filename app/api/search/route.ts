@@ -3220,20 +3220,21 @@ Return ONLY valid JSON (no markdown, no explanation):
               // CRITICAL: Explicit rejection of VERY wrong garment types (not similar items)
               // UPDATED: Be more lenient with tops - t-shirts, tees, sweatshirts, sweaters are similar styles
               const wrongGarmentTypes: Record<string, string[]> = {
-                'scarf': ['blanket', 'throw', 'tapestry', 'rug', 'carpet', 'cushion', 'pillow', '담요', '블랭킷', '러그'],
-                'blanket': ['scarf', 'muffler', 'stole', '스카프', '머플러'],
-                'bag': ['wallet', 'belt', 'shoe', '지갑', '벨트'],
-                'jacket': ['blanket', 'rug', '담요'],
-                'pants': ['shorts', 'skirt', '반바지', '치마'],
-                'shorts': ['pants', 'trousers', '바지', '긴바지'],
-                'skirt': ['pants', 'shorts', '바지', '반바지'],
+                'scarf': ['blanket', 'throw', 'tapestry', 'rug', 'carpet', 'cushion', 'pillow', '담요', '블랭킷', '러그', 'bag', '가방', '백'],
+                'blanket': ['scarf', 'muffler', 'stole', '스카프', '머플러', 'bag', '가방', '백'],
+                'bag': ['wallet', 'belt', 'shoe', '지갑', '벨트', 'jacket', 'coat', 'blazer', '재킷', '자켓', '코트'],
+                'jacket': ['blanket', 'rug', '담요', 'bag', 'handbag', 'purse', 'tote', 'crossbody', '가방', '백', '핸드백', '숄더백', '크로스백'],
+                'coat': ['blanket', 'rug', '담요', 'bag', 'handbag', 'purse', 'tote', 'crossbody', '가방', '백', '핸드백', '숄더백', '크로스백'],
+                'pants': ['shorts', 'skirt', '반바지', '치마', 'bag', '가방', '백'],
+                'shorts': ['pants', 'trousers', '바지', '긴바지', 'bag', '가방', '백'],
+                'skirt': ['pants', 'shorts', '바지', '반바지', 'bag', '가방', '백'],
                 // LENIENT: Don't reject similar tops (t-shirt ≈ sweatshirt for style matching)
                 // Only reject completely different categories
-                'sweater': ['dress', 'pants', 'skirt', '원피스', '바지', '치마'],
-                'sweatshirt': ['dress', 'pants', 'skirt', '원피스', '바지', '치마'],
-                'hoodie': ['dress', 'pants', 'skirt', '원피스', '바지', '치마'],
-                'shirt': ['dress', 'pants', 'skirt', '원피스', '바지', '치마'],
-                'top': [] // Top is too generic, don't reject
+                'sweater': ['dress', 'pants', 'skirt', '원피스', '바지', '치마', 'bag', '가방', '백'],
+                'sweatshirt': ['dress', 'pants', 'skirt', '원피스', '바지', '치마', 'bag', '가방', '백'],
+                'hoodie': ['dress', 'pants', 'skirt', '원피스', '바지', '치마', 'bag', '가방', '백'],
+                'shirt': ['dress', 'pants', 'skirt', '원피스', '바지', '치마', 'bag', '가방', '백'],
+                'top': ['bag', '가방', '백'] // Reject bags for tops
               }
               
               // Check if this item contains any wrong garment type keywords
@@ -3380,17 +3381,18 @@ Return ONLY valid JSON (no markdown, no explanation):
                   
                   // CRITICAL: Explicit rejection of wrong garment types
                   const wrongGarmentTypes: Record<string, string[]> = {
-                    'scarf': ['blanket', 'throw', 'tapestry', 'rug', 'carpet', 'cushion', 'pillow', '담요', '블랭킷', '러그'],
-                    'blanket': ['scarf', 'muffler', 'stole', '스카프', '머플러'],
-                    'bag': ['wallet', 'belt', 'shoe', '지갑', '벨트'],
-                    'jacket': ['blanket', 'rug', '담요'],
-                    'pants': ['shorts', 'skirt', '반바지', '치마'],
-                    'shorts': ['pants', 'trousers', '바지', '긴바지'],
-                    'skirt': ['pants', 'shorts', '바지', '반바지'],
+                    'scarf': ['blanket', 'throw', 'tapestry', 'rug', 'carpet', 'cushion', 'pillow', '담요', '블랭킷', '러그', 'bag', '가방', '백'],
+                    'blanket': ['scarf', 'muffler', 'stole', '스카프', '머플러', 'bag', '가방', '백'],
+                    'bag': ['wallet', 'belt', 'shoe', '지갑', '벨트', 'jacket', 'coat', 'blazer', '재킷', '자켓', '코트'],
+                    'jacket': ['blanket', 'rug', '담요', 'bag', 'handbag', 'purse', 'tote', 'crossbody', '가방', '백', '핸드백', '숄더백', '크로스백'],
+                    'coat': ['blanket', 'rug', '담요', 'bag', 'handbag', 'purse', 'tote', 'crossbody', '가방', '백', '핸드백', '숄더백', '크로스백'],
+                    'pants': ['shorts', 'skirt', '반바지', '치마', 'bag', '가방', '백'],
+                    'shorts': ['pants', 'trousers', '바지', '긴바지', 'bag', '가방', '백'],
+                    'skirt': ['pants', 'shorts', '바지', '반바지', 'bag', '가방', '백'],
                     // LENIENT: Don't reject similar tops (t-shirt ≈ sweatshirt for style matching)
-                    'sweater': ['dress', 'pants', 'skirt', '원피스', '바지', '치마'],
-                    'sweatshirt': ['dress', 'pants', 'skirt', '원피스', '바지', '치마'],
-                    'hoodie': ['dress', 'pants', 'skirt', '원피스', '바지', '치마']
+                    'sweater': ['dress', 'pants', 'skirt', '원피스', '바지', '치마', 'bag', '가방', '백'],
+                    'sweatshirt': ['dress', 'pants', 'skirt', '원피스', '바지', '치마', 'bag', '가방', '백'],
+                    'hoodie': ['dress', 'pants', 'skirt', '원피스', '바지', '치마', 'bag', '가방', '백']
                   }
                   
                   // Check if this item contains any wrong garment type keywords
@@ -3501,17 +3503,18 @@ Return ONLY valid JSON (no markdown, no explanation):
                   
                   // CRITICAL: Explicit rejection of wrong garment types
                   const wrongGarmentTypes: Record<string, string[]> = {
-                    'scarf': ['blanket', 'throw', 'tapestry', 'rug', 'carpet', 'cushion', 'pillow', '담요', '블랭킷', '러그'],
-                    'blanket': ['scarf', 'muffler', 'stole', '스카프', '머플러'],
-                    'bag': ['wallet', 'belt', 'shoe', '지갑', '벨트'],
-                    'jacket': ['blanket', 'rug', '담요'],
-                    'pants': ['shorts', 'skirt', '반바지', '치마'],
-                    'shorts': ['pants', 'trousers', '바지', '긴바지'],
-                    'skirt': ['pants', 'shorts', '바지', '반바지'],
+                    'scarf': ['blanket', 'throw', 'tapestry', 'rug', 'carpet', 'cushion', 'pillow', '담요', '블랭킷', '러그', 'bag', '가방', '백'],
+                    'blanket': ['scarf', 'muffler', 'stole', '스카프', '머플러', 'bag', '가방', '백'],
+                    'bag': ['wallet', 'belt', 'shoe', '지갑', '벨트', 'jacket', 'coat', 'blazer', '재킷', '자켓', '코트'],
+                    'jacket': ['blanket', 'rug', '담요', 'bag', 'handbag', 'purse', 'tote', 'crossbody', '가방', '백', '핸드백', '숄더백', '크로스백'],
+                    'coat': ['blanket', 'rug', '담요', 'bag', 'handbag', 'purse', 'tote', 'crossbody', '가방', '백', '핸드백', '숄더백', '크로스백'],
+                    'pants': ['shorts', 'skirt', '반바지', '치마', 'bag', '가방', '백'],
+                    'shorts': ['pants', 'trousers', '바지', '긴바지', 'bag', '가방', '백'],
+                    'skirt': ['pants', 'shorts', '바지', '반바지', 'bag', '가방', '백'],
                     // LENIENT: Don't reject similar tops (t-shirt ≈ sweatshirt for style matching)
-                    'sweater': ['dress', 'pants', 'skirt', '원피스', '바지', '치마'],
-                    'sweatshirt': ['dress', 'pants', 'skirt', '원피스', '바지', '치마'],
-                    'hoodie': ['dress', 'pants', 'skirt', '원피스', '바지', '치마']
+                    'sweater': ['dress', 'pants', 'skirt', '원피스', '바지', '치마', 'bag', '가방', '백'],
+                    'sweatshirt': ['dress', 'pants', 'skirt', '원피스', '바지', '치마', 'bag', '가방', '백'],
+                    'hoodie': ['dress', 'pants', 'skirt', '원피스', '바지', '치마', 'bag', '가방', '백']
                   }
                   
                   // Check if this item contains any wrong garment type keywords
