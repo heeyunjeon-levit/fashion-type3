@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react'
 import { categories } from '../constants/categories'
 
 export interface DetectedItem {
-  category: string
-  groundingdino_prompt: string
+  category: string // DINO-X detected category
+  parent_category: string // Parent for filtering only
   description: string
 }
 

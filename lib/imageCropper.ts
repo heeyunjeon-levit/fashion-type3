@@ -147,6 +147,114 @@ export async function cropImages(options: CropOptions[]): Promise<string[]> {
 }
 
 /**
+ * Generate multiple bounding box variations
+ * This helps reduce influence of background objects by trying different crop regions
+ */
+export function generateBboxVariations(
+  bbox: [number, number, number, number],
+  numVariations: number = 7
+): [number, number, number, number][] {
+  const [x1, y1, x2, y2] = bbox
+  const width = x2 - x1
+  const height = y2 - y1
+  
+  const variations: [number, number, number, number][] = [
+    // 1. Original bbox (baseline)
+    [x1, y1, x2, y2],
+    
+    // 2. Tighter crop (shrink by 8% on all sides - removes outer background)
+    [
+      Math.max(0, x1 + width * 0.08),
+      Math.max(0, y1 + height * 0.08),
+      Math.min(1, x2 - width * 0.08),
+      Math.min(1, y2 - height * 0.08)
+    ],
+    
+    // 3. Slightly tighter (shrink by 5% on all sides)
+    [
+      Math.max(0, x1 + width * 0.05),
+      Math.max(0, y1 + height * 0.05),
+      Math.min(1, x2 - width * 0.05),
+      Math.min(1, y2 - height * 0.05)
+    ],
+    
+    // DIRECTIONAL VARIATIONS (remove 15% from each side to avoid edge objects)
+    
+    // 4. Remove bottom 15% (helps if bag/shoes at bottom)
+    [
+      x1,
+      y1,
+      x2,
+      Math.min(1, y2 - height * 0.15)
+    ],
+    
+    // 5. Remove top 15% (helps if hat/background at top)
+    [
+      x1,
+      Math.max(0, y1 + height * 0.15),
+      x2,
+      y2
+    ],
+    
+    // 6. Remove right 15% (helps if person/object on right side)
+    [
+      x1,
+      y1,
+      Math.min(1, x2 - width * 0.15),
+      y2
+    ],
+    
+    // 7. Remove left 15% (helps if person/object on left side)
+    [
+      Math.max(0, x1 + width * 0.15),
+      y1,
+      x2,
+      y2
+    ]
+  ]
+  
+  // Return requested number of variations (no "wider" version - we already search full image separately)
+  return variations.slice(0, numVariations)
+}
+
+/**
+ * Crop multiple variations of the same item with different bounding boxes
+ * This helps improve search accuracy by reducing influence of background objects
+ */
+export async function cropImageVariations(
+  imageUrl: string,
+  bbox: [number, number, number, number],
+  numVariations: number = 7,
+  padding: number = 0.05
+): Promise<string[]> {
+  const bboxVariations = generateBboxVariations(bbox, numVariations)
+  
+  console.log(`🎯 Generating ${bboxVariations.length} bbox variations for improved accuracy`)
+  console.log(`   Strategy: Original + Tighter crops + 4 directional variations (no wider - we search full image separately)`)
+  bboxVariations.forEach((variation, idx) => {
+    const labels = [
+      'Original',
+      'Tighter -8%',
+      'Tighter -5%',
+      'Remove bottom 15%',
+      'Remove top 15%',
+      'Remove right 15%',
+      'Remove left 15%'
+    ]
+    console.log(`   ${idx + 1}. ${labels[idx]}: [${variation.map(v => v.toFixed(3)).join(', ')}]`)
+  })
+  
+  // Crop all variations in parallel
+  const cropOptions: CropOptions[] = bboxVariations.map(bboxVar => ({
+    imageUrl,
+    bbox: bboxVar,
+    padding
+  }))
+  
+  return cropImages(cropOptions)
+}
+
+/**
  * Upload cropped image data URL to Supabase
  */
 export async function uploadCroppedImage(

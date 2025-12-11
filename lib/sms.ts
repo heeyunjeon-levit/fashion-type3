@@ -1,15 +1,16 @@
+import crypto from 'crypto'
+
 export interface SendSMSParams {
   to: string
   message: string
 }
 
 /**
- * Normalize phone number to 82XXXXXXXXXX format (Korea country code)
+ * Normalize phone number to 010XXXXXXXX format (Korean local format for NCP)
  * Handles various input formats:
- * - 010-1234-5678 -> 821012345678
- * - 01012345678 -> 821012345678
- * - +821012345678 -> 821012345678
- * - 821012345678 -> 821012345678
+ * - 010-1234-5678 -> 01012345678
+ * - +821012345678 -> 01012345678
+ * - 821012345678 -> 01012345678
  */
 function normalizePhone(phone: string): string {
   // Remove all hyphens and spaces
@@ -20,54 +21,85 @@ function normalizePhone(phone: string): string {
     cleaned = cleaned.substring(1)
   }
   
-  // If starts with 010, replace with 8210
-  if (cleaned.startsWith('010')) {
-    return '82' + cleaned.substring(1)
+  // If starts with 82, replace with 0
+  if (cleaned.startsWith('82')) {
+    return '0' + cleaned.substring(2)
   }
   
-  // If starts with 82, return as is
-  if (cleaned.startsWith('82')) {
+  // If starts with 010, return as is
+  if (cleaned.startsWith('010')) {
     return cleaned
   }
   
-  // If starts with 0, replace with 82
-  if (cleaned.startsWith('0')) {
-    return '82' + cleaned.substring(1)
+  // If starts with 10 (without country code or 0), add 0
+  if (cleaned.startsWith('10')) {
+    return '0' + cleaned
   }
   
-  // Otherwise assume it's just the local number without 0
-  return '82' + cleaned
+  return cleaned
 }
 
 /**
- * Validate Korean phone number format
+ * Validate Korean phone number format (010XXXXXXXX)
  */
 function isValidPhoneNumber(phone: string): boolean {
   const normalized = normalizePhone(phone)
-  // Should be 82 followed by 10 (for mobile starting with 10) or 9 digits
-  return /^8210\d{8}$/.test(normalized)
+  // Should be 010 followed by 8 digits
+  return /^010\d{8}$/.test(normalized)
 }
 
 /**
- * Send SMS/LMS notification via SweetTracker API
- * Automatically chooses SMS (≤90 bytes) or LMS (>90 bytes) based on message length
+ * Generate HMAC SHA256 signature for NCP authentication
+ */
+function generateSignature(
+  method: string,
+  url: string,
+  timestamp: string,
+  accessKey: string,
+  secretKey: string
+): string {
+  const space = ' '
+  const newLine = '\n'
+  const hmac = crypto.createHmac('sha256', secretKey)
+  
+  const message = [
+    method,
+    space,
+    url,
+    newLine,
+    timestamp,
+    newLine,
+    accessKey
+  ].join('')
+  
+  return hmac.update(message).digest('base64')
+}
+
+/**
+ * Send SMS/LMS notification via NCP SENS API
+ * Automatically chooses SMS (≤80 bytes) or LMS (>80 bytes) based on message length
  */
 export async function sendSMS({ to, message }: SendSMSParams): Promise<boolean> {
   console.log(`🚀 sendSMS called with:`, { to, messageLength: message.length })
   
   try {
     // Validate environment variables
-    const PROFILE_KEY = process.env.SWEETTRACKER_PROFILE_KEY
-    const USER_ID = process.env.SWEETTRACKER_USER_ID
+    const ACCESS_KEY = process.env.NCP_ACCESS_KEY
+    const SECRET_KEY = process.env.NCP_SECRET_KEY
+    const SERVICE_ID = process.env.NCP_SMS_SERVICE_ID
+    const FROM_NUMBER = process.env.NCP_FROM_NUMBER
     
-    console.log(`🔑 Checking SweetTracker credentials:`, {
-      hasProfileKey: !!PROFILE_KEY,
-      hasUserId: !!USER_ID
+    console.log(`🔑 Checking NCP SENS credentials:`, {
+      hasAccessKey: !!ACCESS_KEY,
+      hasSecretKey: !!SECRET_KEY,
+      hasServiceId: !!SERVICE_ID,
+      hasFromNumber: !!FROM_NUMBER
     })
     
-    if (!PROFILE_KEY || !USER_ID) {
-      console.error('❌ SweetTracker credentials not configured')
-      console.error('Required: SWEETTRACKER_PROFILE_KEY, SWEETTRACKER_USER_ID')
+    if (!ACCESS_KEY || !SECRET_KEY || !SERVICE_ID || !FROM_NUMBER) {
+      console.error('❌ NCP SMS credentials not configured')
+      console.error('Required: NCP_ACCESS_KEY, NCP_SECRET_KEY, NCP_SMS_SERVICE_ID, NCP_FROM_NUMBER')
+      console.error('See NCP_SMS_SETUP.md for setup instructions')
       return false
     }
     
@@ -75,65 +107,65 @@ export async function sendSMS({ to, message }: SendSMSParams): Promise<boolean> 
     const normalizedPhone = normalizePhone(to)
     if (!isValidPhoneNumber(to)) {
       console.error(`❌ Invalid phone number format: ${to}`)
+      console.error(`   Expected: 010XXXXXXXX, got: ${to}`)
       return false
     }
     
     console.log(`📱 Sending SMS/LMS to ${normalizedPhone}`)
     
     // Determine message type based on length
-    // SMS: up to 90 bytes (~45 Korean chars or 90 English chars)
-    // LMS: 91-2000 bytes (~1000 Korean chars or 2000 English chars)
+    // SMS: up to 80 bytes (~40 Korean chars or 80 English chars)
+    // LMS: 81-2000 bytes (~1000 Korean chars or 2000 English chars)
     const byteLength = Buffer.byteLength(message, 'utf8')
-    const messageType = byteLength <= 90 ? 'SMS' : 'LMS'
+    const messageType = byteLength <= 80 ? 'SMS' : 'LMS'
     
     console.log(`📝 Message type: ${messageType} (${byteLength} bytes)`)
     
-    // Generate unique message ID (max 20 chars for SweetTracker)
-    // Use last 10 digits of timestamp + 5 char random = 15 chars total
-    const timestamp = Date.now().toString().slice(-10)
-    const random = Math.random().toString(36).substring(2, 7)
-    const msgid = `${timestamp}${random}` // e.g., "5377730130q23se" (15 chars)
-    
-    console.log(`📝 Generated msgid: ${msgid} (${msgid.length} chars)`)
+    // Generate timestamp and signature for authentication
+    const timestamp = Date.now().toString()
+    const method = 'POST'
+    const uri = `/sms/v2/services/${SERVICE_ID}/messages`
+    const signature = generateSignature(method, uri, timestamp, ACCESS_KEY, SECRET_KEY)
     
     // API endpoint
-    const url = `https://alimtalk-api.sweettracker.net/v2/${PROFILE_KEY}/sendMessage`
+    const url = `https://sens.apigw.ntruss.com${uri}`
     
-    // Request payload for SMS/LMS (simpler - no template needed!)
-    // Note: We use direct SMS/LMS instead of Alimtalk (AI) because:
-    // - AI requires template registration with KakaoTalk (complex setup)
-    // - SMS/LMS works immediately without templates
-    const payload = [
-      {
-        msgid,                           // ✅ must be unique
-        message_type: messageType,       // ✅ SMS or LMS (auto-detected)
-        profile_key: PROFILE_KEY,
-        receiver_num: normalizedPhone,   // ✅ 8210... format
-        message,
-        reserved_time: '00000000000000', // ✅ send immediately
-        // Future: Can add Alimtalk (AI) with SMS fallback:
-        // message_type: 'AI',
-        // template_code: 'search_complete',
-        // fall_back_yn: true,
-        // fall_back_message_type: 'SM'
-      }
-    ]
+    // Request payload
+    const payload = {
+      type: messageType,
+      from: FROM_NUMBER,
+      content: message,
+      messages: [
+        {
+          to: normalizedPhone
+        }
+      ]
+    }
+    
+    console.log(`📤 Sending to NCP SENS API...`)
+    console.log(`   URL: ${url}`)
+    console.log(`   From: ${FROM_NUMBER}`)
+    console.log(`   To: ${normalizedPhone}`)
     
     // Send request
     const response = await fetch(url, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        userid: USER_ID
+        'Content-Type': 'application/json; charset=utf-8',
+        'x-ncp-apigw-timestamp': timestamp,
+        'x-ncp-iam-access-key': ACCESS_KEY,
+        'x-ncp-apigw-signature-v2': signature
       },
       body: JSON.stringify(payload)
     })
     
     const responseData = await response.json()
     
-    if (response.ok) {
-      console.log(`✅ ${messageType} sent successfully`)
-      console.log(`   Response:`, responseData)
+    // NCP returns 202 for successful message acceptance
+    if (response.ok && response.status === 202) {
+      console.log(`✅ ${messageType} sent successfully via NCP SENS`)
+      console.log(`   Request ID: ${responseData.requestId}`)
+      console.log(`   Status: ${responseData.statusName}`)
       return true
     } else {
       console.error(`❌ ${messageType} sending failed:`)

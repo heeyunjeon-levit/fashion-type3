@@ -168,7 +168,7 @@ export default function ResultsBottomSheet({
     const categoryKey = category.split('_')[0]
     const itemIndex = parseInt(category.split('_')[1] || '1') - 1
     const selectedItem = selectedItems?.[itemIndex]
-    const itemDescription = selectedItem?.groundingdino_prompt || selectedItem?.description || categoryKey
+    const itemDescription = selectedItem?.category || selectedItem?.description || categoryKey
 
     await sessionManager.logLinkClick({
       itemCategory: categoryKey,

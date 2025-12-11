@@ -56,6 +56,427 @@ async function fetchImageAsBase64(url: string): Promise<string> {
   }
 }
 
+/**
+ * Enrich search results with ACTUAL product page thumbnails (not Serper's)
+ * This provides high-quality images for GPT-5.1 visual selection
+ */
+async function enrichWithActualThumbnails(
+  searchResults: any[],
+  fullImageResults: any[],
+  maxResults: number = 10
+): Promise<Array<{ link: string; thumbnail: string | null; title: string; serperThumbnail: string | null }>> {
+  console.log(`\n📸 Fetching ACTUAL product thumbnails for top ${maxResults} results...`)
+  
+  const enriched = []
+  const limit = Math.min(maxResults, searchResults.length)
+  
+  for (let i = 0; i < limit; i++) {
+    const result = searchResults[i]
+    const link = result.link
+    const title = result.title || ''
+    const serperThumbnail = result.thumbnailUrl || result.thumbnail || null
+    
+    // Try to find actual thumbnail from full image results (better quality)
+    const fullImageMatch = fullImageResults.find((item: any) => item.link === link)
+    const actualThumbnail = fullImageMatch?.thumbnailUrl || 
+                           fullImageMatch?.thumbnail || 
+                           fullImageMatch?.imageUrl || 
+                           fullImageMatch?.ogImage ||
+                           serperThumbnail // Fallback to Serper's if no actual found
+    
+    enriched.push({
+      link,
+      thumbnail: actualThumbnail,
+      title,
+      serperThumbnail // Keep for comparison
+    })
+    
+    if (actualThumbnail && actualThumbnail !== serperThumbnail) {
+      console.log(`   ✅ [${i + 1}] Found actual thumbnail (not Serper's): ${link.substring(0, 50)}`)
+    } else if (actualThumbnail) {
+      console.log(`   📷 [${i + 1}] Using Serper thumbnail: ${link.substring(0, 50)}`)
+    } else {
+      console.log(`   ⚠️  [${i + 1}] No thumbnail available: ${link.substring(0, 50)}`)
+    }
+  }
+  
+  const withThumbnails = enriched.filter(r => r.thumbnail).length
+  console.log(`📊 Enrichment complete: ${withThumbnails}/${enriched.length} have thumbnails`)
+  
+  return enriched
+}
+
+/**
+ * Verify thumbnails using GPT-5.1 Vision to check actual visual similarity
+ * Returns candidates with visual similarity scores
+ */
+async function verifyThumbnailsWithVision(
+  originalImageUrl: string,
+  candidates: Array<{ link: string; thumbnail: string; title: string }>,
+  itemDescription: string,
+  primaryColor?: string
+): Promise<Array<{ link: string; thumbnail: string; title: string; visualScore: number; visualReason: string }>> {
+  try {
+    console.log(`\n🔍 VISION VERIFICATION: Checking ${candidates.length} thumbnails against original...`)
+    
+    const openai = getOpenAIClient()
+    
+    // Prepare image content for GPT-4 Vision
+    const imageContent: any[] = [
+      {
+        type: 'image_url',
+        image_url: { url: originalImageUrl }
+      },
+      {
+        type: 'text',
+        text: `Original item (what we're searching for):`
+      }
+    ]
+    
+    // Add candidate thumbnails
+    candidates.forEach((candidate, idx) => {
+      imageContent.push({
+        type: 'image_url',
+        image_url: { url: candidate.thumbnail }
+      })
+      imageContent.push({
+        type: 'text',
+        text: `Candidate ${idx + 1}: "${candidate.title}"`
+      })
+    })
+    
+    const prompt = `You are a fashion expert comparing product images. The first image is the ORIGINAL item we're searching for.
+
+ORIGINAL ITEM DESCRIPTION: "${itemDescription}"
+${primaryColor ? `PRIMARY COLOR: ${primaryColor}` : ''}
+
+For each candidate image (Candidates 1-${candidates.length}), evaluate:
+1. **Color Match** (0-10): How well do the colors match? ${primaryColor ? `Focus on ${primaryColor}!` : ''}
+2. **Style Match** (0-10): Similar garment type, cut, design details?
+3. **Overall Similarity** (0-10): Would a customer think this is a similar product?
+
+CRITICAL:
+- Be STRICT about color matching! White ≠ Beige, Navy ≠ Black
+- A different color should score LOW on Color Match (0-3)
+- Focus on the garment itself, not background/model
+
+Return JSON array (one object per candidate):
+[
+  {
+    "candidate": 1,
+    "colorMatch": 8,
+    "styleMatch": 9,
+    "overallScore": 8.5,
+    "reason": "Exact beige color match, similar ribbed knit texture"
+  },
+  ...
+]
+
+Be honest! If colors don't match, say so.`
+
+    const response = await openai.chat.completions.create({
+      model: 'gpt-5.1',  // Use same model as main search for consistency
+      messages: [{
+        role: 'user',
+        content: imageContent as any
+      }, {
+        role: 'user',
+        content: prompt
+      }],
+      temperature: 0.1,
+      max_completion_tokens: 2000
+    })
+    
+    const content = response.choices[0]?.message?.content || '[]'
+    console.log(`📸 Vision API response: ${content.substring(0, 200)}...`)
+    
+    // Parse JSON response
+    const jsonMatch = content.match(/\[[\s\S]*\]/)
+    if (!jsonMatch) {
+      console.warn(`⚠️ Could not parse vision response as JSON`)
+      return candidates.map(c => ({ ...c, visualScore: 5, visualReason: 'Could not verify' }))
+    }
+    
+    const scores = JSON.parse(jsonMatch[0])
+    
+    // Merge scores with candidates
+    const verified = candidates.map((candidate, idx) => {
+      const score = scores[idx] || { overallScore: 5, reason: 'No score' }
+      console.log(`   📸 Candidate ${idx + 1}: ${score.overallScore}/10 - ${score.reason}`)
+      return {
+        ...candidate,
+        visualScore: score.overallScore,
+        visualReason: score.reason
+      }
+    })
+    
+    // Sort by visual score (highest first)
+    verified.sort((a, b) => b.visualScore - a.visualScore)
+    
+    return verified
+    
+  } catch (error) {
+    console.error(`❌ Vision verification failed:`, error)
+    // Return candidates unchanged if vision fails
+    return candidates.map(c => ({ ...c, visualScore: 5, visualReason: 'Verification failed' }))
+  }
+}
+
+/**
+ * NEW: Verify thumbnails for EXACT COLOR + DESIGN matches
+ * Returns candidates that match BOTH color and design
+ */
+async function verifyColorAndDesignMatches(
+  originalImageUrl: string,
+  candidates: Array<{ link: string; thumbnail: string; title: string }>,
+  itemDescription: string,
+  primaryColor?: string
+): Promise<Array<{ link: string; thumbnail: string; title: string; colorScore: number; designScore: number; visualReason: string; matchType: 'color_and_design' }>> {
+  try {
+    console.log(`\n🎨 VISION CHECK 1: Finding EXACT COLOR + DESIGN matches (${candidates.length} candidates)...`)
+    
+    const openai = getOpenAIClient()
+    
+    // Prepare image content
+    const imageContent: any[] = [
+      {
+        type: 'image_url',
+        image_url: { url: originalImageUrl }
+      },
+      {
+        type: 'text',
+        text: `Original item (what we're searching for):`
+      }
+    ]
+    
+    // Add candidate thumbnails
+    candidates.forEach((candidate, idx) => {
+      imageContent.push({
+        type: 'image_url',
+        image_url: { url: candidate.thumbnail }
+      })
+      imageContent.push({
+        type: 'text',
+        text: `Candidate ${idx + 1}: "${candidate.title}"`
+      })
+    })
+    
+    const prompt = `You are a fashion expert. Your task: Find products with MATCHING COLOR AND MATCHING DESIGN.
+
+ORIGINAL ITEM: "${itemDescription}"
+${primaryColor ? `TARGET COLOR: ${primaryColor}` : ''}
+
+For each candidate (1-${candidates.length}), score STRICTLY:
+
+1. **Color Match** (0-10): Is the color NEARLY IDENTICAL to the original?
+   - 9-10: Exact same color (${primaryColor || 'same as original'})
+   - 7-8: Very close color match
+   - 4-6: Similar but noticeably different
+   - 0-3: Different color (white ≠ beige, navy ≠ black)
+
+2. **Design Match** (0-10): Is the design/style similar?
+   - 9-10: Nearly identical design (same garment type, cut, details)
+   - 7-8: Very similar style
+   - 4-6: Same category but different details
+   - 0-3: Different garment type
+
+CRITICAL RULES:
+- Be STRICT on color! White ≠ Beige, Navy ≠ Black, Cream ≠ Off-white
+- Only score high (7+) if BOTH color AND design match well
+- Focus on the garment, ignore background/model
+
+Return JSON array:
+[
+  {
+    "candidate": 1,
+    "colorMatch": 9,
+    "designMatch": 9,
+    "reason": "Exact beige color, identical button-front cardigan style"
+  },
+  ...
+]`
+
+    const response = await openai.chat.completions.create({
+      model: 'gpt-5.1',
+      messages: [{
+        role: 'user',
+        content: imageContent as any
+      }, {
+        role: 'user',
+        content: prompt
+      }],
+      temperature: 0.1,
+      max_completion_tokens: 2000
+    })
+    
+    const content = response.choices[0]?.message?.content || '[]'
+    console.log(`   📸 API response: ${content.substring(0, 150)}...`)
+    
+    const jsonMatch = content.match(/\[[\s\S]*\]/)
+    if (!jsonMatch) {
+      console.warn(`   ⚠️ Could not parse JSON response`)
+      return []
+    }
+    
+    const scores = JSON.parse(jsonMatch[0])
+    
+    // Filter: Only keep candidates with BOTH high color (≥7) AND high design (≥7)
+    const matches = candidates
+      .map((candidate, idx) => {
+        const score = scores[idx] || { colorMatch: 0, designMatch: 0, reason: 'No score' }
+        const colorScore = score.colorMatch || 0
+        const designScore = score.designMatch || 0
+        
+        return {
+          ...candidate,
+          colorScore,
+          designScore,
+          visualReason: score.reason || 'No reason provided',
+          matchType: 'color_and_design' as const
+        }
+      })
+      .filter(item => item.colorScore >= 7 && item.designScore >= 7)
+    
+    console.log(`   ✅ Found ${matches.length} color+design matches (colorScore≥7 AND designScore≥7)`)
+    matches.forEach((item, idx) => {
+      console.log(`      ${idx + 1}. Color:${item.colorScore}/10, Design:${item.designScore}/10 - ${item.visualReason}`)
+    })
+    
+    return matches
+  } catch (error) {
+    console.error('   ❌ Color+design verification failed:', error)
+    return []
+  }
+}
+
+/**
+ * NEW: Verify thumbnails for DESIGN ONLY matches (varying colors)
+ * Returns candidates that match design but have DIFFERENT colors
+ */
+async function verifyDesignOnlyMatches(
+  originalImageUrl: string,
+  candidates: Array<{ link: string; thumbnail: string; title: string }>,
+  itemDescription: string,
+  primaryColor?: string
+): Promise<Array<{ link: string; thumbnail: string; title: string; colorScore: number; designScore: number; visualReason: string; matchType: 'design_only' }>> {
+  try {
+    console.log(`\n✂️  VISION CHECK 2: Finding DESIGN matches with VARYING COLORS (${candidates.length} candidates)...`)
+    
+    const openai = getOpenAIClient()
+    
+    // Prepare image content
+    const imageContent: any[] = [
+      {
+        type: 'image_url',
+        image_url: { url: originalImageUrl }
+      },
+      {
+        type: 'text',
+        text: `Original item (reference for design only):`
+      }
+    ]
+    
+    // Add candidate thumbnails
+    candidates.forEach((candidate, idx) => {
+      imageContent.push({
+        type: 'image_url',
+        image_url: { url: candidate.thumbnail }
+      })
+      imageContent.push({
+        type: 'text',
+        text: `Candidate ${idx + 1}: "${candidate.title}"`
+      })
+    })
+    
+    const prompt = `You are a fashion expert. Your task: Find products with MATCHING DESIGN but DIFFERENT COLORS.
+
+ORIGINAL ITEM: "${itemDescription}"
+${primaryColor ? `ORIGINAL COLOR: ${primaryColor} (we want DIFFERENT colors!)` : ''}
+
+For each candidate (1-${candidates.length}), score:
+
+1. **Color Difference** (0-10 scale, but INVERTED logic):
+   - Score 0-3: Same/similar color as original (${primaryColor || 'original'}) - GOOD for this search!
+   - Score 4-6: Somewhat different color - ACCEPTABLE
+   - Score 7-10: Very different color - IDEAL for this search!
+   
+   **Note: Lower color score = better for this "design only" search**
+
+2. **Design Match** (0-10): Is the design/style similar?
+   - 9-10: Nearly identical design (same cut, details, silhouette)
+   - 7-8: Very similar style
+   - 4-6: Same category but different details
+   - 0-3: Different garment type
+
+WHAT WE WANT:
+- ✅ Same design/style as original (high designMatch)
+- ✅ Different color from original (low colorMatch)
+- ✅ Example: Original is beige cardigan → Find navy/black/white cardigans with same style
+
+Return JSON array:
+[
+  {
+    "candidate": 1,
+    "colorMatch": 2,
+    "designMatch": 9,
+    "reason": "Navy color (different from ${primaryColor || 'original'}), but identical cardigan design"
+  },
+  ...
+]`
+
+    const response = await openai.chat.completions.create({
+      model: 'gpt-5.1',
+      messages: [{
+        role: 'user',
+        content: imageContent as any
+      }, {
+        role: 'user',
+        content: prompt
+      }],
+      temperature: 0.1,
+      max_completion_tokens: 2000
+    })
+    
+    const content = response.choices[0]?.message?.content || '[]'
+    console.log(`   📸 API response: ${content.substring(0, 150)}...`)
+    
+    const jsonMatch = content.match(/\[[\s\S]*\]/)
+    if (!jsonMatch) {
+      console.warn(`   ⚠️ Could not parse JSON response`)
+      return []
+    }
+    
+    const scores = JSON.parse(jsonMatch[0])
+    
+    // Filter: Only keep candidates with high design (≥8) AND low color (≤5)
+    const matches = candidates
+      .map((candidate, idx) => {
+        const score = scores[idx] || { colorMatch: 10, designMatch: 0, reason: 'No score' }
+        const colorScore = score.colorMatch || 10
+        const designScore = score.designMatch || 0
+        
+        return {
+          ...candidate,
+          colorScore,
+          designScore,
+          visualReason: score.reason || 'No reason provided',
+          matchType: 'design_only' as const
+        }
+      })
+      .filter(item => item.designScore >= 8 && item.colorScore <= 5)
+    
+    console.log(`   ✅ Found ${matches.length} design-only matches (designScore≥8 AND colorScore≤5)`)
+    matches.forEach((item, idx) => {
+      console.log(`      ${idx + 1}. Design:${item.designScore}/10, Color:${item.colorScore}/10 - ${item.visualReason}`)
+    })
+    
+    return matches
+  } catch (error) {
+    console.error('   ❌ Design-only verification failed:', error)
+    return []
+  }
+}
+
 // Map categories to search terms
 const categorySearchTerms: Record<string, string[]> = {
   tops: ['jacket', 'coat', 'outerwear', 'shirt', 'sweater', 'blouse', 'top', 'blazer', 'cardigan'],
@@ -839,15 +1260,30 @@ export async function POST(request: NextRequest) {
     // Process all cropped images in parallel for maximum speed
     const categoriesStart = Date.now()
     const searchPromises = croppedEntries.map(async ([resultKey, croppedImageData]) => {
-      // Handle both string URLs (multi-item) and object format (single-item)
-      const croppedImageUrl = typeof croppedImageData === 'string' 
-        ? croppedImageData 
-        : croppedImageData.imageUrl
+      // Handle multiple formats:
+      // 1. String URL (old single-image format)
+      // 2. Object with imageUrl (single-item mode)
+      // 3. Object with urls array (new multi-variation format)
+      let croppedImageUrls: string[] = []
+      let isSingleItem = false
       
-      const isSingleItem = typeof croppedImageData === 'object' && croppedImageData.isSingleItemMode
+      if (typeof croppedImageData === 'string') {
+        croppedImageUrls = [croppedImageData]
+      } else if (typeof croppedImageData === 'object') {
+        const dataObj = croppedImageData as any
+        if (dataObj.imageUrl) {
+          croppedImageUrls = [dataObj.imageUrl]
+          isSingleItem = dataObj.isSingleItemMode || false
+        } else if (dataObj.urls && Array.isArray(dataObj.urls)) {
+          croppedImageUrls = dataObj.urls
+          console.log(`✨ Using ${croppedImageUrls.length} bbox variations for improved accuracy`)
+        } else if (dataObj.primaryUrl) {
+          croppedImageUrls = [dataObj.primaryUrl]
+        }
+      }
       
-      if (!croppedImageUrl) {
-        console.log(`⚠️ No cropped image for ${resultKey}`)
+      if (croppedImageUrls.length === 0) {
+        console.log(`⚠️ No cropped images for ${resultKey}`)
         return { resultKey, results: null }
       }
       
@@ -855,29 +1291,96 @@ export async function POST(request: NextRequest) {
         console.log(`✨ Processing single-item: ${resultKey}`)
       }
 
-      const categoryKey = resultKey.split('_')[0] // base category without instance suffix
+      // Extract specific category from DINO-X (e.g., "jeans", "jacket", "handbag")
+      const specificCategory = resultKey.split('_')[0] // base category without instance suffix
       
-      console.log(`\n🔍 Searching for ${resultKey} (3 runs for best coverage)...`)
-      console.log(`   📸 Cropped image URL: ${croppedImageUrl}`)
+      // Map specific item types to parent categories ONLY for validation/filtering
+      const categoryToParentMap: Record<string, string> = {
+        // Accessory items → accessory
+        'necklace': 'accessory',
+        'bracelet': 'accessory',
+        'earring': 'accessory',
+        'earrings': 'accessory',
+        'watch': 'accessory',
+        'hat': 'accessory',
+        'cap': 'accessory',
+        'scarf': 'accessory',
+        'belt': 'accessory',
+        'sunglasses': 'accessory',
+        'ring': 'accessory',
+        'jewelry': 'accessory',
+        // Bag items → bag
+        'backpack': 'bag',
+        'purse': 'bag',
+        'tote': 'bag',
+        'clutch': 'bag',
+        'handbag': 'bag',
+        // Shoe items → shoes
+        'sneaker': 'shoes',
+        'sneakers': 'shoes',
+        'boot': 'shoes',
+        'boots': 'shoes',
+        'sandal': 'shoes',
+        'sandals': 'shoes',
+        'heel': 'shoes',
+        'heels': 'shoes',
+        // Tops items → tops
+        'jacket': 'tops',
+        'coat': 'tops',
+        'shirt': 'tops',
+        'blouse': 'tops',
+        'sweater': 'tops',
+        'hoodie': 'tops',
+        'cardigan': 'tops',
+        'blazer': 'tops',
+        'vest': 'tops',
+        // Bottoms items → bottoms
+        'pants': 'bottoms',
+        'jeans': 'bottoms',
+        'shorts': 'bottoms',
+        'skirt': 'bottoms',
+        'trousers': 'bottoms',
+        'leggings': 'bottoms'
+      }
+      
+      // Get parent category for validation/filtering, but KEEP specific category for search
+      const parentCategory = categoryToParentMap[specificCategory] || specificCategory
+      const categoryKey = parentCategory // Used for validation and fallback
+      
+      if (parentCategory !== specificCategory) {
+        console.log(`📂 Category hierarchy: "${specificCategory}" (specific) → "${parentCategory}" (parent)`)
+      } else {
+        console.log(`📂 Using category: "${specificCategory}"`)
+      }
+      
+      console.log(`\n🔍 Searching for ${resultKey} with ${croppedImageUrls.length} crop variation(s)...`)
+      croppedImageUrls.forEach((url, idx) => {
+        console.log(`   📸 Variation ${idx + 1}: ${url.substring(0, 80)}...`)
+      })
       
       try {
-        // Call Serper Lens 4 times for optimal balance (VISUAL SEARCH)
-        // 4 runs = best accuracy/time/cost balance (100-115 results)
-        const serperCallPromises = Array.from({ length: 4 }, (_, i) => {
-          console.log(`   Run ${i + 1}/4...`)
-          return fetch('https://google.serper.dev/lens', {
-            method: 'POST',
-            headers: {
-              'X-API-KEY': process.env.SERPER_API_KEY!,
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              url: croppedImageUrl,
-              gl: 'kr',
-              hl: 'ko',
-            }),
-          })
+        // Call Serper Lens on EACH crop variation for optimal balance (VISUAL SEARCH)
+        // Instead of 4 runs on 1 image, we now do 1 run per variation
+        // This gives us more diverse results and reduces background object influence
+        const serperCallPromises = croppedImageUrls.flatMap((cropUrl, idx) => {
+          console.log(`   🔍 Searching with variation ${idx + 1}/${croppedImageUrls.length}...`)
+          return [
+            fetch('https://google.serper.dev/lens', {
+              method: 'POST',
+              headers: {
+                'X-API-KEY': process.env.SERPER_API_KEY!,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                url: cropUrl,
+                gl: 'kr',
+                hl: 'ko',
+              }),
+            })
+          ]
         })
+        
+        console.log(`   📊 Total Serper calls: ${serperCallPromises.length} (${croppedImageUrls.length} variations)`)
 
         // NEW: Text-based image search using description (KEYWORD SEARCH)
         const descriptionForSearch = descriptions?.[resultKey]
@@ -906,24 +1409,25 @@ export async function POST(request: NextRequest) {
           : serperCallPromises
         
         const allResponses = await Promise.all(allPromises)
-        const serperResponses = allResponses.slice(0, 4) // First 4 are visual
-        const textSearchResponse = textSearchPromise ? allResponses[4] : null
+        const numSerperCalls = serperCallPromises.length
+        const serperResponses = allResponses.slice(0, numSerperCalls) // Visual searches (one per variation)
+        const textSearchResponse = textSearchPromise ? allResponses[numSerperCalls] : null
         
         const serperTime = (Date.now() - serperStart) / 1000
         timingData.serper_total_api_time += serperTime
         timingData.serper_count += textSearchPromise ? 2 : 1 // Count visual + text searches
-        console.log(`   ⏱️  Serper API (${textSearchPromise ? '4x visual + 1x text' : '4x visual'}): ${serperTime.toFixed(2)}s`)
+        console.log(`   ⏱️  Serper API (${numSerperCalls}x visual${textSearchPromise ? ' + 1x text' : ''}): ${serperTime.toFixed(2)}s`)
         
-        // Aggregate results from 4 visual search runs
+        // Aggregate results from all visual search runs (one per crop variation)
         const allOrganicResults: any[] = []
         for (let i = 0; i < serperResponses.length; i++) {
           if (!serperResponses[i].ok) {
             const errorText = await serperResponses[i].text()
-            console.log(`   ❌ Run ${i + 1}/4 failed:`, errorText.substring(0, 200))
+            console.log(`   ❌ Variation ${i + 1}/${numSerperCalls} failed:`, errorText.substring(0, 200))
             continue
           }
           const serperData = await serperResponses[i].json()
-          console.log(`   ✅ Run ${i + 1}/4 returned ${serperData.organic?.length || 0} results`)
+          console.log(`   ✅ Variation ${i + 1}/${numSerperCalls} returned ${serperData.organic?.length || 0} results`)
           
           if (serperData.organic) {
             // Mark as visual search for debugging
@@ -1045,9 +1549,12 @@ export async function POST(request: NextRequest) {
               'bag', 'backpack', 'purse', 'tote', '가방', '백팩'
             ],
             'accessory': [
-              // EXCLUDE ALL clothing
+              // EXCLUDE ALL clothing (CRITICAL: accessories should NEVER be clothing!)
               'shirt', 'sweater', 'jacket', 'coat', 'pants', 'dress', 'skirt', 'shorts', 
+              'blouse', 'top', 'tee', 't-shirt', 'hoodie', 'cardigan', 'blazer', 'vest',
+              'sweatshirt', 'pullover', 'jumper', 'trousers', 'jeans', 'leggings',
               '셔츠', '스웨터', '재킷', '코트', '바지', '원피스', '치마', '반바지',
+              '블라우스', '상의', '티셔츠', '후드', '가디건', '맨투맨', '티',
               // EXCLUDE ALL bags (critical for sunglasses/jewelry searches!)
               'bag', 'backpack', 'purse', 'tote', 'clutch', 'crossbody', 'shoulder bag', 
               'handbag', 'belt bag', 'fanny pack', 'bum bag', 'messenger', 'satchel',
@@ -1072,12 +1579,12 @@ export async function POST(request: NextRequest) {
             return false
           }
           
-          // Check if the result contains keywords relevant to this category
-          const categoryTerms = categorySearchTerms[categoryKey] || [categoryKey]
-          const hasRelevantKeyword = categoryTerms.some(term => combinedText.includes(term.toLowerCase()))
+          // Check if the result contains the SPECIFIC category keyword
+          // Use specific category (e.g., "jeans"), NOT parent category (e.g., "bottoms")
+          const hasRelevantKeyword = combinedText.includes(specificCategory.toLowerCase())
           
           if (!hasRelevantKeyword) {
-            console.log(`ℹ️  No relevant keyword for ${categoryKey}: "${item.title?.substring(0, 40)}"`)
+            console.log(`ℹ️  No "${specificCategory}" keyword found: "${item.title?.substring(0, 40)}"`)
           }
           
           return hasRelevantKeyword
@@ -1097,7 +1604,7 @@ export async function POST(request: NextRequest) {
             'tops': ['pants', 'jeans', 'trousers', 'shorts', 'skirt', '바지', '청바지', '반바지', '치마', 'slacks', 'bag', 'backpack', 'purse', 'tote', 'clutch', '가방', '백팩', 'sneaker', 'boot', 'shoe', '신발', '부츠'],
             'bottoms': ['shirt', 'blouse', 'sweater', 'jacket', 'coat', 'hoodie', 'cardigan', 'blazer', '셔츠', '블라우스', '스웨터', '재킷', '코트', '후드', '가디건', 'bag', 'backpack', 'purse', 'tote', '가방', '백팩', 'sneaker', 'boot', 'shoe', '신발', '부츠'],
             'shoes': ['shirt', 'sweater', 'jacket', 'pants', 'dress', 'skirt', '셔츠', '스웨터', '재킷', '바지', '원피스', 'bag', 'backpack', 'purse', 'tote', '가방', '백팩'],
-            'accessory': ['shirt', 'sweater', 'jacket', 'pants', 'dress', '셔츠', '스웨터', '재킷', '바지', 'bag', 'backpack', 'purse', 'tote', '가방', '백팩', 'sneaker', 'boot', 'shoe', '신발', '부츠']
+            'accessory': ['shirt', 'sweater', 'jacket', 'coat', 'pants', 'dress', 'skirt', 'shorts', 'blouse', 'top', 'tee', 't-shirt', 'hoodie', 'cardigan', 'blazer', 'vest', 'sweatshirt', 'pullover', 'jumper', 'trousers', 'jeans', 'leggings', '셔츠', '스웨터', '재킷', '코트', '바지', '원피스', '치마', '반바지', '블라우스', '상의', '티셔츠', '후드', '가디건', '맨투맨', '티', 'bag', 'backpack', 'purse', 'tote', 'clutch', 'crossbody', 'handbag', '가방', '백팩', '토트백', '크로스백', 'sneaker', 'boot', 'shoe', 'sandal', 'heel', '신발', '부츠', '샌들', '슬리퍼', '운동화']
           }
           
           const exclusionList = categoryExclusions[categoryKey] || []
@@ -1206,11 +1713,15 @@ export async function POST(request: NextRequest) {
         console.log(`🎯 Detected item: ${itemDescription || 'generic terms'}`)
 
         // Ask GPT to extract product links from results
+        // Use ONLY the specific description if available (more accurate than mixing with generic terms)
+        // Only fall back to generic category terms when no description exists
+        // PRIORITY: Use specific category from DINO-X (e.g., "jeans" not "bottoms")
+        // This gives much more targeted search results
         const searchTerms = itemDescription 
-          ? [itemDescription, ...(categorySearchTerms[categoryKey] || [categoryKey])]
-          : (categorySearchTerms[categoryKey] || [categoryKey])
+          ? [itemDescription]  // Use ONLY the specific description (don't dilute with generic terms)
+          : [specificCategory]  // Use DINO-X specific category (e.g., "jeans", "cardigan", "blazer")
         
-        console.log(`🎯 Search terms for GPT: ${searchTerms.join(', ')}`)
+        console.log(`🎯 Search terms for GPT: ${searchTerms.join(', ')} (specific: "${specificCategory}", parent: "${parentCategory}")`)
         
         // Determine specific sub-type for ALL categories to filter correctly
         let specificSubType = null
@@ -2152,7 +2663,7 @@ Now examine the CROPPED ITEM IMAGE and THUMBNAIL IMAGES below:`
           {
             type: 'image_url',
             image_url: {
-              url: croppedImageUrl,
+              url: croppedImageUrls[0], // Use primary crop for vision comparison
               detail: 'low' // Low detail for speed
             }
           },
@@ -2192,30 +2703,37 @@ Now examine the CROPPED ITEM IMAGE and THUMBNAIL IMAGES below:`
           content: [
             { type: 'text', text: visionContent[0].text }, // Instructions
             { type: 'text', text: '\n↑ THIS IS THE CROPPED ITEM TO MATCH:\n' },
-            { type: 'image_url', image_url: { url: croppedImageUrl, detail: 'high' } }
+            { type: 'image_url', image_url: { url: croppedImageUrls[0], detail: 'high' } } // Use primary crop
           ]
         })
         
         console.log(`   📸 Added cropped item image for visual comparison (GPT-5.1)`)
         
-        // Add top 15 result thumbnails for visual comparison
+        // 🔥 NEW: Fetch ACTUAL product thumbnails (not Serper's low-quality ones)
+        const enrichedResults = await enrichWithActualThumbnails(
+          resultsForGPT,
+          fullImageResults,
+          12 // Top 12 results to balance accuracy vs cost
+        )
+        
+        // Add enriched thumbnails for visual comparison
         const thumbnailContent: any[] = [
-          { type: 'text', text: '\n━━━ CANDIDATE THUMBNAILS ━━━\n' }
+          { type: 'text', text: '\n━━━ CANDIDATE THUMBNAILS (Actual Product Images) ━━━\n' }
         ]
         
         let thumbnailCount = 0
         let thumbnailErrors = 0
-        for (let i = 0; i < Math.min(15, resultsForGPT.length); i++) {
-          const searchResult = resultsForGPT[i]
-          if (searchResult.thumbnailUrl) {
+        for (let i = 0; i < enrichedResults.length; i++) {
+          const result = enrichedResults[i]
+          if (result.thumbnail) {
             try {
               thumbnailContent.push({ 
                 type: 'text', 
-                text: `\n[${i + 1}] ${searchResult.title}\nLink: ${searchResult.link}\n` 
+                text: `\n[${i + 1}] ${result.title}\nLink: ${result.link}\n` 
               })
               thumbnailContent.push({ 
                 type: 'image_url', 
-                image_url: { url: searchResult.thumbnailUrl, detail: 'low' } 
+                image_url: { url: result.thumbnail, detail: 'auto' } // Auto quality for actual thumbnails
               })
               thumbnailCount++
             } catch (err: any) {
@@ -2225,19 +2743,23 @@ Now examine the CROPPED ITEM IMAGE and THUMBNAIL IMAGES below:`
           }
         }
         
-        console.log(`   📊 Thumbnail stats: ${thumbnailCount} added, ${thumbnailErrors} failed`)
+        console.log(`   📊 Actual thumbnail stats: ${thumbnailCount} added, ${thumbnailErrors} failed`)
         
         thumbnailContent.push({
           type: 'text',
-          text: `\n\nBased on VISUAL COMPARISON of the cropped item with these ${thumbnailCount} thumbnails, select 3-5 that match BEST.
+          text: `\n\nBased on VISUAL COMPARISON of the cropped item with these ${thumbnailCount} ACTUAL PRODUCT IMAGES, select 3-5 that match BEST.
 
 SELECTION CRITERIA (in order of importance):
-1. Visual similarity (colors, patterns, graphic design, style)
-2. Position in list (earlier results are from more targeted search - prefer results near the top)
-3. Korean shopping sites preferred when visual quality is similar
-4. Product pages over category/catalog pages
+1. Visual similarity (colors, patterns, graphic design, style) - BE STRICT ABOUT COLORS!
+2. Garment type match (same category - sweater, pants, bag, etc.)
+3. Style details (collar type, button placement, fit, etc.)
+4. Position in list (earlier results are from more targeted search - prefer results near the top)
+5. Korean shopping sites preferred when visual quality is similar
 
-CRITICAL: The FIRST few results are from the most targeted search. If they look like good matches, prioritize them!
+CRITICAL COLOR MATCHING:
+- White ≠ Beige ≠ Cream ≠ Off-white (be precise!)
+- Navy ≠ Black ≠ Dark blue (distinguish clearly)
+- These are ACTUAL product photos, so color accuracy is important!
 
 Return ONLY valid JSON (no markdown, no explanation):
 {"${resultKey}": ["url1", "url2", "url3"]}`
@@ -3012,7 +3534,7 @@ Return ONLY valid JSON (no markdown, no explanation):
           }
           
           // Find the thumbnail images from multiple sources (priority order: full image > merged > cropped)
-          const linksWithThumbnails = validLinks.slice(0, 3).map((link: string) => {
+          let linksWithThumbnails = validLinks.slice(0, 3).map((link: string) => {
             // PRIORITY: Search full image results FIRST (these have the best metadata)
             // Then search merged results, then fallback to cropped results
             let searchSource = 'unknown'
@@ -3061,12 +3583,95 @@ Return ONLY valid JSON (no markdown, no explanation):
           }))
           gptReasoningData[resultKey].selectionCount = linksWithThumbnails.length
           
+          // 🔍 NEW: TWO-STAGE VISION VERIFICATION
+          // Stage 1: Exact color + design matches
+          // Stage 2: Design matches with varying colors
+          
+          // Filter candidates with valid thumbnails
+          const candidatesForVision = linksWithThumbnails
+            .filter((item: any) => item.thumbnail && item.thumbnail.startsWith('http'))
+            .slice(0, 12) // Verify top 12 candidates max (6 per stage, cost control)
+          
+          let visionColorMatches: any[] = []
+          let visionDesignMatches: any[] = []
+          
+          if (candidatesForVision.length > 0 && croppedImageUrls.length > 0) {
+            console.log(`\n🔍 Running TWO-STAGE VISION VERIFICATION on ${candidatesForVision.length} candidates...`)
+            try {
+              // Run both vision checks in parallel for speed
+              const [colorAndDesignResults, designOnlyResults] = await Promise.all([
+                // Stage 1: Find exact color + design matches
+                verifyColorAndDesignMatches(
+                  croppedImageUrls[0], // Original cropped image
+                  candidatesForVision.slice(0, 8), // Top 8 for color+design
+                  itemDescription,
+                  primaryColor || undefined
+                ),
+                // Stage 2: Find design matches with different colors
+                verifyDesignOnlyMatches(
+                  croppedImageUrls[0], // Original cropped image
+                  candidatesForVision, // All candidates for design variations
+                  itemDescription,
+                  primaryColor || undefined
+                )
+              ])
+              
+              visionColorMatches = colorAndDesignResults
+              visionDesignMatches = designOnlyResults
+              
+              console.log(`\n✅ VISION VERIFICATION COMPLETE:`)
+              console.log(`   🎨 ${visionColorMatches.length} color+design matches found`)
+              console.log(`   ✂️  ${visionDesignMatches.length} design-only matches found`)
+              
+              // Mark these items as vision-verified for later processing
+              const visionVerifiedLinks = new Set([
+                ...visionColorMatches.map(v => v.link),
+                ...visionDesignMatches.map(v => v.link)
+              ])
+              
+              // Add vision scores to linksWithThumbnails for downstream processing
+              linksWithThumbnails = linksWithThumbnails.map((item: any) => {
+                const colorMatch = visionColorMatches.find(v => v.link === item.link)
+                const designMatch = visionDesignMatches.find(v => v.link === item.link)
+                
+                if (colorMatch) {
+                  return {
+                    ...item,
+                    visionVerified: true,
+                    visionMatchType: 'color_and_design',
+                    colorScore: colorMatch.colorScore,
+                    designScore: colorMatch.designScore,
+                    visualScore: (colorMatch.colorScore + colorMatch.designScore) / 2, // Overall score for backward compat
+                    visualReason: colorMatch.visualReason
+                  }
+                } else if (designMatch) {
+                  return {
+                    ...item,
+                    visionVerified: true,
+                    visionMatchType: 'design_only',
+                    colorScore: designMatch.colorScore,
+                    designScore: designMatch.designScore,
+                    visualScore: designMatch.designScore, // Use design score as overall
+                    visualReason: designMatch.visualReason
+                  }
+                }
+                
+                return item
+              })
+              
+            } catch (error) {
+              console.error(`⚠️ Vision verification failed, proceeding without it:`, error)
+            }
+          } else {
+            console.log(`⚠️ Skipping vision verification (no valid thumbnails or cropped images)`)
+          }
+          
           // TWO-STAGE SELECTION: Split into Color Matches and Style Matches
           const colorMatches: any[] = []
           const styleMatches: any[] = []
           
           // Extract CORE features ONLY (garment type) - trust GPT for style details
-          const extractCoreFeatures = (desc: string): string[] => {
+          const extractCoreFeatures = (desc: string, fallbackCategory?: string): string[] => {
             const descLower = desc.toLowerCase()
             const coreFeatures: string[] = []
             
@@ -3080,6 +3685,7 @@ Return ONLY valid JSON (no markdown, no explanation):
             if (descLower.includes('coat') || descLower.includes('코트')) coreFeatures.push('coat')
             if (descLower.includes('shirt') || descLower.includes('셔츠')) coreFeatures.push('shirt')
             if (descLower.includes('blouse') || descLower.includes('블라우스')) coreFeatures.push('blouse')
+            if (descLower.includes('top') || descLower.includes('탑')) coreFeatures.push('top')
             if (descLower.includes('dress') || descLower.includes('드레스') || descLower.includes('원피스')) coreFeatures.push('dress')
             if (descLower.includes('pants') || descLower.includes('trouser') || descLower.includes('바지') || descLower.includes('팬츠')) coreFeatures.push('pants')
             if (descLower.includes('jeans') || descLower.includes('청바지') || descLower.includes('denim')) coreFeatures.push('jeans')
@@ -3088,6 +3694,42 @@ Return ONLY valid JSON (no markdown, no explanation):
             if (descLower.includes('scarf') || descLower.includes('스카프') || descLower.includes('머플러')) coreFeatures.push('scarf')
             if (descLower.includes('bag') || descLower.includes('가방') || descLower.includes('백팩')) coreFeatures.push('bag')
             if (descLower.includes('shoe') || descLower.includes('신발') || descLower.includes('스니커즈')) coreFeatures.push('shoe')
+            
+            // 🆕 CATEGORY MISMATCH FIX: If GPT description conflicts with user's category, trust the category
+            // Example: User selects "tops" but GPT says "dress" → Use "tops" garment types
+            if (coreFeatures.length === 0 && fallbackCategory) {
+              console.log(`⚠️ No garment type found in description, using category fallback: ${fallbackCategory}`)
+              // Add appropriate garment types for this category
+              if (fallbackCategory === 'tops') {
+                coreFeatures.push('top', 'shirt', 'blouse', 'sweater', 'cardigan')
+              } else if (fallbackCategory === 'bottoms') {
+                coreFeatures.push('pants', 'shorts', 'skirt')
+              } else if (fallbackCategory === 'dress') {
+                coreFeatures.push('dress')
+              } else if (fallbackCategory === 'bag') {
+                coreFeatures.push('bag')
+              } else if (fallbackCategory === 'shoes') {
+                coreFeatures.push('shoe')
+              }
+            } else if (coreFeatures.length > 0 && fallbackCategory) {
+              // Check for category conflict (e.g., description says "dress" but category is "tops")
+              const categoryMap: Record<string, string[]> = {
+                'tops': ['top', 'shirt', 'blouse', 'sweater', 'cardigan', 'jacket', 'coat', 'hoodie', 'sweatshirt'],
+                'bottoms': ['pants', 'shorts', 'skirt', 'jeans'],
+                'dress': ['dress'],
+                'bag': ['bag'],
+                'shoes': ['shoe']
+              }
+              
+              const expectedGarments = categoryMap[fallbackCategory] || []
+              const hasConflict = expectedGarments.length > 0 && !coreFeatures.some(f => expectedGarments.includes(f))
+              
+              if (hasConflict) {
+                console.log(`⚠️ CATEGORY MISMATCH: Description says "${coreFeatures.join(',')}" but category is "${fallbackCategory}"`)
+                console.log(`   Trusting user's category selection, using: ${expectedGarments.join(', ')}`)
+                return expectedGarments
+              }
+            }
             
             return coreFeatures
           }
@@ -3132,7 +3774,7 @@ Return ONLY valid JSON (no markdown, no explanation):
             return styleDetails
           }
           
-          const coreFeatures = extractCoreFeatures(itemDescription || '')
+          const coreFeatures = extractCoreFeatures(itemDescription || '', categoryKey)
           const styleDetails = extractStyleDetails(itemDescription || '')
           
           console.log(`🎯 Core features (garment type): ${coreFeatures.join(', ') || 'none'}`)
@@ -3203,12 +3845,43 @@ Return ONLY valid JSON (no markdown, no explanation):
               const link = item.link?.toLowerCase() || ''
               const combinedText = `${title} ${link}`
               
-              // 🔥 TRUST GPT-5.1: Always keep the first item (likely exact match from visual analysis)
-              // Only validate subsequent items with text matching
-              if (idx === 0) {
+              // 🔍 NEW: Check vision verification results FIRST
+              const isVisionVerified = item.visionVerified === true
+              const visionMatchType = item.visionMatchType || null
+              const colorScore = item.colorScore || 0
+              const designScore = item.designScore || 0
+              const visualReason = item.visualReason || ''
+              
+              // 🎯 PRIORITY 1: Vision-verified COLOR+DESIGN matches → Go straight to colorMatches
+              if (isVisionVerified && visionMatchType === 'color_and_design') {
                 colorMatches.push(item)
-                console.log(`🖼️ 🎨 COLOR MATCH #1 (GPT-5.1 top pick - trusted): "${item.title?.substring(0, 60)}..."`)
-                console.log(`   ✓ Trusting GPT-5.1 visual analysis (exact match candidate)`)
+                console.log(`🖼️ 🎨 COLOR MATCH #${colorMatches.length} (Vision: Color ${colorScore}/10, Design ${designScore}/10): "${item.title?.substring(0, 60)}..."`)
+                console.log(`   ✓ ${visualReason}`)
+                return
+              }
+              
+              // 🎯 PRIORITY 2: Vision-verified DESIGN-ONLY matches → Go straight to styleMatches
+              if (isVisionVerified && visionMatchType === 'design_only') {
+                styleMatches.push(item)
+                console.log(`🖼️ ✂️  STYLE MATCH #${styleMatches.length} (Vision: Design ${designScore}/10, Color ${colorScore}/10): "${item.title?.substring(0, 60)}..."`)
+                console.log(`   ✓ ${visualReason}`)
+                return
+              }
+              
+              // 🔍 Fallback: Legacy vision score (backward compatibility with old verifyThumbnailsWithVision)
+              const hasVisionScore = typeof item.visualScore === 'number'
+              const visualScore = item.visualScore || 5
+              
+              // ⚠️ LOW VISION SCORE: Skip items with poor visual match (<4.0)
+              if (hasVisionScore && visualScore < 4.0) {
+                console.log(`❌ REJECTED (Legacy vision ${visualScore}/10): "${item.title?.substring(0, 60)}..."`)
+                return
+              }
+              
+              // 🎯 HIGH LEGACY VISION SCORE: Trust it for color matches
+              if (hasVisionScore && visualScore >= 7.0 && !isVisionVerified) {
+                colorMatches.push(item)
+                console.log(`🖼️ 🎨 COLOR MATCH #${colorMatches.length} (Legacy vision ${visualScore}/10): "${item.title?.substring(0, 60)}..."`)
                 return
               }
               

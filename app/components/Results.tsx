@@ -82,7 +82,7 @@ export default function Results({ results, isLoading, croppedImages, onReset, se
     const categoryKey = category.split('_')[0]
     const itemIndex = parseInt(category.split('_')[1] || '1') - 1
     const selectedItem = selectedItems?.[itemIndex]
-    const itemDescription = selectedItem?.groundingdino_prompt || selectedItem?.description || categoryKey
+    const itemDescription = selectedItem?.category || selectedItem?.description || categoryKey
 
     await sessionManager.logLinkClick({
       itemCategory: categoryKey,
@@ -108,12 +108,56 @@ export default function Results({ results, isLoading, croppedImages, onReset, se
   }
 
   const categoryNames: Record<string, string> = {
+    // Parent categories
     tops: '상의',
     bottoms: '하의',
     bag: '가방',
     shoes: '신발',
     accessory: '악세사리',
+    accessories: '악세사리',
     dress: '드레스',
+    // Specific DINO-X categories (tops)
+    jacket: '재킷',
+    coat: '코트',
+    'fur coat': '퍼 코트',
+    'fur jacket': '퍼 재킷',
+    'leather jacket': '가죽 재킷',
+    shirt: '셔츠',
+    'button up shirt': '셔츠',
+    'button_up_shirt': '셔츠',
+    blouse: '블라우스',
+    sweater: '스웨터',
+    cardigan: '가디건',
+    hoodie: '후드티',
+    vest: '조끼',
+    blazer: '블레이저',
+    // Specific DINO-X categories (bottoms)
+    pants: '바지',
+    jeans: '청바지',
+    shorts: '반바지',
+    skirt: '치마',
+    trousers: '바지',
+    // Specific DINO-X categories (shoes)
+    sneakers: '운동화',
+    boots: '부츠',
+    sandals: '샌들',
+    heels: '힐',
+    // Specific DINO-X categories (bags)
+    backpack: '백팩',
+    purse: '지갑',
+    handbag: '핸드백',
+    // Specific DINO-X categories (accessories)
+    sunglasses: '선글라스',
+    hat: '모자',
+    cap: '모자',
+    scarf: '스카프',
+    belt: '벨트',
+    watch: '시계',
+    jewelry: '주얼리',
+    necklace: '목걸이',
+    bracelet: '팔찌',
+    earrings: '귀걸이',
+    ring: '반지',
   }
 
   const totalCroppedImages = croppedImages ? Object.keys(croppedImages).length : 0

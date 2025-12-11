@@ -3,7 +3,7 @@ import { GoogleGenAI } from '@google/genai'
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic'
-export const maxDuration = 60 // Allow up to 60 seconds for AI description (Gemini can be slow)
+export const maxDuration = 90 // Allow up to 90 seconds for Gemini 3 Pro (can be slow with complex images)
 
 // Use dedicated Gemini API key (project-specific, not gcloud)
 const client = new GoogleGenAI({
@@ -235,7 +235,7 @@ For unknown categories:
     console.log(`   Using Gemini 3 Pro Preview with HIGH thinking mode for improved accuracy`)
     
     const result = await client.models.generateContent({
-      model: 'gemini-3-pro-preview',
+      model: 'gemini-3-pro-preview',  // SOTA model - best descriptions
       contents: [
         {
           role: 'user',
@@ -253,23 +253,57 @@ For unknown categories:
       config: {
         maxOutputTokens: 16384,  // Maximum for Gemini 2.0 - ensure we never hit token limit
         temperature: 0.3,  // More deterministic for color accuracy
-        responseMimeType: 'application/json'  // Force JSON output
+        // NOTE: responseMimeType not supported by gemini-3-pro-preview - rely on prompt instead
       }
     })
 
-    // NEW SDK returns text directly
-    const rawJson = result.text?.trim() || `${category} item`
+    // NEW SDK returns text directly (but structure varies by model)
+    let rawJson = result.text?.trim()
+    
+    // Fallback: Try accessing response from candidates structure
+    if (!rawJson) {
+      const candidate = result.candidates?.[0]
+      const parts = candidate?.content?.parts
+      if (parts && parts.length > 0) {
+        rawJson = parts[0]?.text?.trim()
+        console.log(`   ℹ️ Extracted text from candidates structure`)
+      }
+    }
+    
+    // Log response status for debugging
+    console.log(`   📦 Gemini response length: ${rawJson?.length || 0} chars`)
+    console.log(`   📦 Gemini response preview: ${rawJson?.substring(0, 100) || 'EMPTY'}`)
+    
+    // Final fallback if still empty
+    if (!rawJson) {
+      console.error(`   ❌ Gemini 3 Pro returned EMPTY response!`)
+      console.error(`   ℹ️ Response structure:`, JSON.stringify(result).substring(0, 300))
+      rawJson = `${category} item`
+    }
+    
     const usageMetadata = result.usageMetadata as any
     const finishReason = result.candidates?.[0]?.finishReason || 'unknown'
     
-    // Parse JSON and extract ecom_title for clean description
+    // CRITICAL: Strip markdown code fences if present (Gemini sometimes adds them)
+    if (rawJson.startsWith('```json')) {
+      rawJson = rawJson.replace(/^```json\s*\n?/i, '').replace(/\n?```\s*$/i, '').trim()
+      console.log(`🧹 Cleaned markdown code fences from response`)
+    } else if (rawJson.startsWith('```')) {
+      rawJson = rawJson.replace(/^```\s*\n?/, '').replace(/\n?```\s*$/, '').trim()
+      console.log(`🧹 Cleaned generic code fences from response`)
+    }
+    
+    // Parse JSON and build DETAILED description for search
     let description = `${category} item` // fallback
     let parsedData: any = null
     
     try {
       parsedData = JSON.parse(rawJson)
+      
+      // CRITICAL: Use ecom_title directly (clean, concise, perfect for GPT-4.1-mini vision)
+      // Building from parts is too verbose and confuses the vision model
       description = parsedData.ecom_title || `${category} item`
-      console.log(`✅ Parsed JSON and extracted ecom_title: "${description}"`)
+      console.log(`✅ Extracted clean ecom_title: "${description}"`)
     } catch (parseError) {
       console.error(`❌ Failed to parse JSON response, using raw text as description`)
       description = rawJson
@@ -308,9 +342,9 @@ For unknown categories:
       }
       
       // RETRY with ultra-minimal prompt (no thinking mode encouragement)
-      console.log('🔄 Retry attempt with minimal prompt...')
+      console.log('🔄 Retry attempt with gemini-2.0-flash-exp (supports JSON mode)...')
       const retryResult = await client.models.generateContent({
-          model: 'gemini-2.0-flash-exp',
+          model: 'gemini-2.0-flash-exp',  // This model DOES support JSON mode
           contents: [
             {
               role: 'user',
@@ -331,12 +365,39 @@ For unknown categories:
           config: {
             maxOutputTokens: 2048,  // Much smaller - just enough for the JSON
             temperature: 0.1,
-            responseMimeType: 'application/json'
+            responseMimeType: 'application/json'  // OK for gemini-2.0-flash-exp
           }
       })
       
-      const retryRawJson = retryResult.text?.trim() || `${category} item`
+      let retryRawJson = retryResult.text?.trim()
+      
+      // Fallback: Try accessing from candidates structure
+      if (!retryRawJson) {
+        const candidate = retryResult.candidates?.[0]
+        const parts = candidate?.content?.parts
+        if (parts && parts.length > 0) {
+          retryRawJson = parts[0]?.text?.trim()
+          console.log(`   ℹ️ Retry: Extracted text from candidates structure`)
+        }
+      }
+      
+      console.log(`   📦 Retry response length: ${retryRawJson?.length || 0} chars`)
+      
+      if (!retryRawJson) {
+        console.error(`   ❌ Retry (gemini-2.0-flash-exp) returned EMPTY response!`)
+        retryRawJson = `${category} item`
+      }
+      
       const retryUsage = retryResult.usageMetadata as any
+      
+      // CRITICAL: Strip markdown code fences if present
+      if (retryRawJson.startsWith('```json')) {
+        retryRawJson = retryRawJson.replace(/^```json\s*\n?/i, '').replace(/\n?```\s*$/i, '').trim()
+        console.log(`🧹 Cleaned markdown code fences from retry response`)
+      } else if (retryRawJson.startsWith('```')) {
+        retryRawJson = retryRawJson.replace(/^```\s*\n?/, '').replace(/\n?```\s*$/, '').trim()
+        console.log(`🧹 Cleaned generic code fences from retry response`)
+      }
       
       // Parse retry JSON and extract ecom_title
       let retryDescription = `${category} item`
@@ -364,7 +425,7 @@ For unknown categories:
     }
 
     return NextResponse.json({
-      description, // now a ONE-LINE JSON string with attributes + ecom_title
+      description, // Clean ecom_title like "Women's Beige Knit Scarf with Eye Pattern"
       category,
       usage: {
         prompt_tokens: usageMetadata?.promptTokenCount || 0,

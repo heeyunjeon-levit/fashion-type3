@@ -1,44 +1,62 @@
 # 📱 SMS Notification Setup Guide
 
-Your app now supports sending search results via SMS! Users can provide their phone number and receive a text message with a link to their results when the search completes.
+⚠️ **DEPRECATED**: This guide is for the old Twilio setup. The app now uses **NCP SENS** for SMS.
+
+**Please refer to `NCP_SMS_SETUP.md` for the current setup instructions.**
 
 ---
 
-## 🚀 Quick Setup (5 minutes)
+## 🔄 Migration Notice
 
-### 1. Create Twilio Account
+This app has been migrated from Twilio to **Naver Cloud Platform (NCP) SENS** for SMS notifications.
 
-1. Go to [https://www.twilio.com/try-twilio](https://www.twilio.com/try-twilio)
-2. Sign up for a free account
-3. Verify your email and phone number
-4. You'll get **$15 free credit** to test with!
+### Why the Change?
 
-### 2. Get Your Twilio Credentials
+- **Cost-effective for Korean users**: NCP is optimized for Korea
+- **Better pricing**: ₩8-50 per message vs Twilio's $0.06+
+- **Local support**: Korean sender number registration
+- **Batch sending**: Up to 100 messages per API call
 
-After signing up:
+### Migration Guide
 
-1. Go to **Console Dashboard**: [https://console.twilio.com/](https://console.twilio.com/)
-2. Find these credentials:
-   - **Account SID**: Starts with `AC...`
-   - **Auth Token**: Click "View" to reveal it
+See `TWILIO_TO_NCP_MIGRATION.md` for detailed migration instructions.
 
-### 3. Get a Twilio Phone Number
+### New Setup Guide
 
-1. In Twilio Console, go to **Phone Numbers** → **Manage** → **Buy a number**
-2. Choose your country (Korea recommended: `+82`)
-3. Click **Search** and select a number
-4. Click **Buy** (free with trial credit!)
-5. Your number will look like: `+821234567890`
+See `NCP_SMS_SETUP.md` for complete NCP SENS setup instructions.
+
+---
+
+## 🚀 Quick Setup (NCP SENS)
+
+### 1. Create NCP Account
+
+1. Go to [https://console.ncloud.com/](https://console.ncloud.com/)
+2. Sign up for a new account
+3. Enable SENS service
+
+### 2. Get Your NCP Credentials
+
+1. Go to **My Page** → **API Key Management**
+2. Create new API key
+3. Note your Access Key and Secret Key
+
+### 3. Register Sender Phone Number
+
+1. In SENS console, create SMS project
+2. Register your Korean phone number (010xxxxxxxx)
+3. Verify via ARS or document verification
 
 ### 4. Add Environment Variables
 
 Add these to your `.env.local` file:
 
 ```bash
-# Twilio SMS Configuration
-TWILIO_ACCOUNT_SID=your_account_sid_here
-TWILIO_AUTH_TOKEN=your_auth_token_here
-TWILIO_PHONE_NUMBER=your_twilio_phone_number_here
+# NCP SMS Configuration
+NCP_ACCESS_KEY=your_access_key_here
+NCP_SECRET_KEY=your_secret_key_here
+NCP_SMS_SERVICE_ID=your_service_id_here
+NCP_FROM_NUMBER=01012345678
 
 # Base URL for SMS links (change to your production domain when deploying)
 NEXT_PUBLIC_BASE_URL=http://localhost:3000
@@ -46,24 +64,20 @@ NEXT_PUBLIC_BASE_URL=http://localhost:3000
 
 **Example:**
 ```bash
-TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-TWILIO_AUTH_TOKEN=your_auth_token_from_twilio_console
-TWILIO_PHONE_NUMBER=+821234567890
+NCP_ACCESS_KEY=eGFtcGxlQWNjZXNzS2V5
+NCP_SECRET_KEY=eGFtcGxlU2VjcmV0S2V5MTIzNDU2Nzg=
+NCP_SMS_SERVICE_ID=ncp:sms:kr:123456789012:your-project
+NCP_FROM_NUMBER=01012345678
 NEXT_PUBLIC_BASE_URL=http://localhost:3000
 ```
 
-### 5. Create Supabase Table
+### 5. Install Dependencies
 
-Run this SQL in your Supabase SQL Editor:
-
-```sql
--- Copy and paste the contents of supabase_search_jobs_migration.sql
-```
-
-Or use the Supabase CLI:
 ```bash
-supabase db push supabase_search_jobs_migration.sql
+npm install
 ```
+
+Note: Twilio has been removed. NCP uses Node.js built-in `crypto` module.
 
 ### 6. Restart Your Server
 
@@ -80,22 +94,19 @@ npm run dev
 1. Start your dev server: `npm run dev`
 2. Upload a fashion image
 3. Select items to search
-4. **Enter your phone number** when prompted
+4. **Enter your Korean phone number** (010-xxxx-xxxx)
 5. Click search
 6. **Wait 1-2 minutes**
-7. **You'll receive an SMS** with a link like: `http://localhost:3000/results/job_abc123`
+7. **You'll receive an SMS** with a link like: `http://localhost:3000/search-results/job_abc123`
 8. Click the link to view your results!
 
-### During Trial Period
+### Phone Number Requirements
 
-⚠️ **Important**: Twilio trial accounts can only send SMS to **verified phone numbers**
+⚠️ **Important**: NCP SENS requires Korean phone numbers
 
-To test:
-1. Go to Twilio Console → **Phone Numbers** → **Manage** → **Verified Caller IDs**
-2. Click **Add a new Caller ID**
-3. Enter your test phone number
-4. Verify it with the code Twilio sends you
-5. Now you can send SMS to this number!
+- Format: `010-1234-5678` or `01012345678`
+- System auto-converts `+821012345678` to `01012345678`
+- Must be a valid Korean mobile number starting with 010
 
 ---
 
@@ -107,26 +118,28 @@ When deploying to production (Vercel):
 
 ```bash
 # In Vercel Dashboard → Settings → Environment Variables
-TWILIO_ACCOUNT_SID=your_account_sid
-TWILIO_AUTH_TOKEN=your_auth_token
-TWILIO_PHONE_NUMBER=your_twilio_phone
+NCP_ACCESS_KEY=your_access_key
+NCP_SECRET_KEY=your_secret_key
+NCP_SMS_SERVICE_ID=your_service_id
+NCP_FROM_NUMBER=01012345678
 NEXT_PUBLIC_BASE_URL=https://yourdomain.com
 ```
 
-### 2. Upgrade Twilio Account
+### 2. NCP Account Setup
 
 For production use:
-1. Go to Twilio Console → **Billing**
-2. Add payment method
-3. Upgrade to paid account
-4. Now you can send SMS to **any phone number** (not just verified ones)
+1. Ensure your sender number is fully verified
+2. Set up billing in NCP console
+3. Configure usage alerts (optional)
+4. You can send SMS to any Korean phone number
 
 ### 3. Pricing
 
-Twilio SMS pricing (as of 2025):
-- **Outbound SMS (Korea)**: ~$0.06 per message
-- **Outbound SMS (US)**: ~$0.0079 per message
-- Very affordable for your use case!
+NCP SMS pricing (as of 2025):
+- **SMS (≤80 bytes)**: ~₩8-15 per message
+- **LMS (81-2000 bytes)**: ~₩25-50 per message
+- **MMS (with images)**: ~₩150-200 per message
+- Very affordable for Korean users!
 
 ---
 
@@ -200,17 +213,22 @@ User clicks link
 
 ## 🐛 Troubleshooting
 
-### "Twilio credentials not configured"
+### "NCP SMS credentials not configured"
 
-**Solution**: Make sure you added all 3 Twilio env variables to `.env.local` and restarted your server
+**Solution**: Make sure you added all 4 NCP env variables to `.env.local` and restarted your server
+- `NCP_ACCESS_KEY`
+- `NCP_SECRET_KEY`
+- `NCP_SMS_SERVICE_ID`
+- `NCP_FROM_NUMBER`
 
 ### "SMS not received"
 
 **Possible causes**:
-1. **Trial account**: Phone number not verified in Twilio
-2. **Wrong format**: Phone number must include country code (e.g., `+821234567890`)
-3. **Twilio balance**: Check your Twilio balance
+1. **Phone format**: Must be Korean number (010xxxxxxxx)
+2. **Sender not verified**: Check sender number registration in NCP SENS console
+3. **Wrong format**: Use `010-1234-5678` or `01012345678`
 4. **Check logs**: Look in terminal for "SMS sent successfully" or error messages
+5. **NCP balance**: Check your NCP billing status
 
 ### "Job not found" when clicking SMS link
 
@@ -231,12 +249,15 @@ User clicks link
 ### Check SMS Status
 
 View all SMS sent by your app:
-1. Go to Twilio Console → **Monitor** → **Logs** → **Messaging**
-2. See delivery status, timestamps, errors
+1. Go to NCP Console → **SENS** → **SMS**
+2. Select your project
+3. Go to **발송 내역** (Send History)
+4. See delivery status, timestamps, errors
 
 ### Track Usage
 
-- Twilio Console shows: Message count, costs, delivery rates
+- NCP Console shows: Message count, costs, delivery rates
+- Go to **My Page** → **이용 현황** (Usage Status) for billing
 - Monitor `search_jobs` table in Supabase for job completion rates
 
 ---
@@ -245,14 +266,16 @@ View all SMS sent by your app:
 
 Your app now supports:
 - ✅ Background job processing
-- ✅ SMS notifications with results links
+- ✅ SMS notifications via NCP SENS
+- ✅ Korean phone number validation
+- ✅ Auto SMS/LMS type detection
 - ✅ Shareable results pages
 - ✅ Persistent storage in Supabase
 
 Users can now:
 1. Start a search
 2. Close the app
-3. Receive SMS when ready
+3. Receive SMS when ready (Korean numbers only)
 4. View results anytime via link
 
 ---
@@ -261,22 +284,28 @@ Users can now:
 
 ### Enhancements
 
-1. **Add phone number input UI** (currently needs to be added to frontend)
-2. **Customize SMS message** (brand name, custom text)
-3. **Add SMS opt-out** (for marketing compliance)
-4. **Add retry logic** (if Twilio fails)
+1. **Optimize message length** (keep under 80 bytes for SMS pricing)
+2. **Add URL shortener** (reduce byte count)
+3. **Customize SMS message** (brand name, custom text)
+4. **Add retry logic** (if NCP SENS fails)
 5. **Track SMS delivery** (save delivery status in database)
-6. **Add internationalization** (SMS in user's language)
+6. **Add internationalization** (Korean/English messages)
+7. **Implement batch sending** (up to 100 recipients per call)
 
 ### Cost Optimization
 
-- **Batch notifications** (send 1 SMS for multiple completed jobs)
-- **Use push notifications instead** (free, requires app install)
-- **Add SMS/Push toggle** (let users choose)
+- **Keep messages short**: SMS (₩8-15) vs LMS (₩25-50)
+- **Use URL shortener**: Reduces message byte count
+- **Batch notifications**: Send to multiple users in one API call
+- **Use push notifications**: Free alternative (requires app install)
 
 ---
 
-**Questions?** Check Twilio docs: https://www.twilio.com/docs/sms
+**Questions?** 
+
+- **NCP SENS Docs**: https://api.ncloud-docs.com/docs/ai-application-service-sens-smsv2
+- **Setup Guide**: See `NCP_SMS_SETUP.md`
+- **Migration Guide**: See `TWILIO_TO_NCP_MIGRATION.md`
 
 **Ready to test?** Run `npm run dev` and try uploading an image! 🚀
 

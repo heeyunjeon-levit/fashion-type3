@@ -12,18 +12,19 @@ import { usePageTracking } from '../lib/hooks/usePageTracking'
 import { useLanguage } from './contexts/LanguageContext'
 
 export interface DetectedItem {
-  category: string
-  groundingdino_prompt: string
-  description: string
+  category: string // DINO-X detected category (e.g., "jeans", "cardigan", "blazer") - used for search
+  parent_category: string // Parent category for filtering only (e.g., "bottoms", "tops") - NOT used by UI
+  description: string // GPT-4o description
   croppedImageUrl?: string
+  croppedImageUrls?: string[] // Multiple crop variations for better search accuracy
   confidence?: number
 }
 
 interface BboxItem {
   id: string
   bbox: [number, number, number, number]
-  category: string
-  mapped_category: string
+  category: string // Specific DINO-X category (e.g., "jeans", "cardigan")
+  mapped_category: string // Parent category (e.g., "bottoms", "tops")
   confidence: number
   selected?: boolean
 }
@@ -654,9 +655,10 @@ export default function Home() {
           // FRONTEND PROCESSING: Crop locally + get description from Next.js API
           // This is faster and more reliable than Modal (no Supabase DNS issues)
           
-          // Step 1: Crop image locally using Canvas API
-          console.log(`✂️ Cropping ${bbox.category} locally...`)
-          const { cropImage } = await import('@/lib/imageCropper')
+          // Step 1: Crop image locally using Canvas API with MULTIPLE VARIATIONS
+          // This helps reduce influence of background objects (like bags in coat photos)
+          console.log(`✂️ Cropping ${bbox.category} locally with multiple bbox variations...`)
+          const { cropImageVariations } = await import('@/lib/imageCropper')
           
           // CRITICAL: Crop the SAME image that DINOx analyzed (Supabase URL)
           // NOT the local data URL, because they might have different dimensions!
@@ -723,12 +725,20 @@ export default function Home() {
             console.log(`   ✅ Normalized bbox: [${normalizedBbox.map(v => v.toFixed(4)).join(', ')}]`)
           }
             
-          const croppedDataUrl = await cropImage({
-            imageUrl: imageUrlForCropping,
-            bbox: normalizedBbox,
-            padding: 0.05
-          })
-            console.log(`✅ Cropped locally: ${Math.round(croppedDataUrl.length / 1024)}KB data URL`)
+          // Crop with 7 variations to improve accuracy (reduces background object influence)
+          // Includes: original, 2 tighter crops, and 4 directional variations (remove top/bottom/left/right)
+          // No "wider" version - we already search the full image separately
+          console.log(`   🎯 Generating 7 bbox variations for better search accuracy...`)
+          const croppedDataUrls = await cropImageVariations(
+            imageUrlForCropping,
+            normalizedBbox,
+            7, // numVariations (original + 2 tighter + 4 directional)
+            0.05 // padding
+          )
+          console.log(`✅ Cropped ${croppedDataUrls.length} variations locally: ${croppedDataUrls.map(d => Math.round(d.length / 1024)).join(', ')}KB`)
+          
+          // Use the first (original) crop for description, but all crops for search
+          const croppedDataUrl = croppedDataUrls[0]
             
             // Update progress after cropping (show we're making progress)
             completedItems += 0.3 // 30% of this item done (cropping)
@@ -796,7 +806,15 @@ export default function Home() {
               }
             }
             
-            const croppedImageUrl = croppedDataUrl
+            // Upload all crop variations to Supabase for search
+            console.log(`📤 Uploading ${croppedDataUrls.length} crop variations to Supabase...`)
+            const { uploadCroppedImage } = await import('@/lib/imageCropper')
+            
+            const uploadPromises = croppedDataUrls.map((dataUrl, idx) => 
+              uploadCroppedImage(dataUrl, `${bbox.category}_var${idx}`)
+            )
+            const uploadedUrls = await Promise.all(uploadPromises)
+            console.log(`✅ Uploaded ${uploadedUrls.length} variations`)
             
             // Final progress update for this item (round up to full completion)
             completedItems = Math.ceil(completedItems) // Round up any fractional progress
@@ -804,10 +822,11 @@ export default function Home() {
             setOverallProgress(prev => Math.max(prev, targetProgress))
             
             return {
-              category: bbox.mapped_category || bbox.category,
-              groundingdino_prompt: bbox.category,
+              category: bbox.category, // DINO-X category: "jeans", "cardigan", "blazer"
+              parent_category: bbox.mapped_category, // Parent for filtering: "bottoms", "tops"
               description: description,
-              croppedImageUrl: croppedImageUrl,
+              croppedImageUrl: uploadedUrls[0], // Primary crop for display
+              croppedImageUrls: uploadedUrls, // All variations for search
               confidence: bbox.confidence
             }
         } catch (error) {
@@ -865,8 +884,8 @@ export default function Home() {
       const searchPromises = items.map(async (item, idx) => {
         if (!item.croppedImageUrl) return null
         
-        // Use the specific item name (groundingdino_prompt) instead of broad category
-        const itemName = item.groundingdino_prompt || item.category
+        // Use the specific DINO-X category (e.g., "jeans", "cardigan")
+        const itemName = item.category
         const key = `${itemName}_${idx + 1}`
         
         // If cropped URL is a data URL, upload it to Supabase first
@@ -889,7 +908,10 @@ export default function Home() {
           }
         }
         
-        const croppedImages = { [key]: croppedUrl }
+        // Use cropped variations if available, otherwise use single crop
+        const croppedImages = item.croppedImageUrls && item.croppedImageUrls.length > 0
+          ? { [key]: { urls: item.croppedImageUrls, primaryUrl: croppedUrl } }
+          : { [key]: croppedUrl }
         const categories = [item.category]
         const descriptions = { [key]: item.description } // Pass GPT-4o descriptions!
         
@@ -1053,8 +1075,8 @@ export default function Home() {
   const croppedImagesForResults: Record<string, string> = {}
   selectedItems.forEach((item, idx) => {
     if (item.croppedImageUrl) {
-      // Use the specific item name to match search results keys
-      const itemName = item.groundingdino_prompt || item.category
+      // Use the specific DINO-X category to match search results keys
+      const itemName = item.category
       const key = `${itemName}_${idx + 1}`
       croppedImagesForResults[key] = item.croppedImageUrl
     }

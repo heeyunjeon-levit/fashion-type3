@@ -790,17 +790,12 @@ export default function InteractiveBboxSelector({
             <div className="grid grid-cols-2 gap-3">
               {[
                 { ko: '상의', en: 'top', value: 'top' },
+                { ko: '아우터', en: 'outerwear', value: 'outerwear' },
                 { ko: '하의', en: 'bottom', value: 'bottom' },
                 { ko: '원피스', en: 'dress', value: 'dress' },
-                { ko: '아우터', en: 'outerwear', value: 'outerwear' },
                 { ko: '신발', en: 'shoes', value: 'shoes' },
                 { ko: '가방', en: 'bag', value: 'bag' },
-                { ko: '모자', en: 'hat', value: 'hat' },
                 { ko: '악세사리', en: 'accessories', value: 'accessories' },
-                { ko: '치마', en: 'skirt', value: 'skirt' },
-                { ko: '바지', en: 'pants', value: 'pants' },
-                { ko: '재킷', en: 'jacket', value: 'jacket' },
-                { ko: '스웨터', en: 'sweater', value: 'sweater' },
               ].map((category) => (
                 <button
                   key={category.value}

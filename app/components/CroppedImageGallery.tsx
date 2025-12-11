@@ -5,8 +5,8 @@ import { categories } from '../constants/categories'
 import { useLanguage } from '../contexts/LanguageContext'
 
 export interface DetectedItem {
-  category: string
-  groundingdino_prompt: string
+  category: string // DINO-X detected category
+  parent_category: string // Parent for filtering only
   description: string
   croppedImageUrl?: string
   confidence?: number
@@ -149,7 +149,7 @@ export default function CroppedImageGallery({
                         {item.croppedImageUrl ? (
                           <img
                             src={item.croppedImageUrl}
-                            alt={item.groundingdino_prompt}
+                            alt={item.category}
                             className="w-full h-full object-contain"
                           />
                         ) : (
@@ -168,7 +168,7 @@ export default function CroppedImageGallery({
                           </span>
                         </div>
                         <p className="text-xs text-gray-600 line-clamp-2">
-                          {item.description || item.groundingdino_prompt}
+                          {item.description || item.category}
                         </p>
                       </div>
                     </button>
