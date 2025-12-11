@@ -208,7 +208,10 @@ export async function saveJobToDatabase(job: SearchJob): Promise<boolean> {
     
     const { error } = await supabase
       .from('search_jobs')
-      .upsert(payload)
+      .upsert(payload, {
+        onConflict: 'job_id',  // Use job_id as unique key for updates
+        ignoreDuplicates: false // Always update if exists
+      })
     
     if (error) {
       console.error(`❌ Failed to save job ${job.id} to database:`, error)
