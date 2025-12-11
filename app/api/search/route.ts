@@ -2537,6 +2537,31 @@ Return ONLY valid JSON (no markdown, no explanation):
                 // Korean - comprehensive non-dress items
                 '바지', '청바지', '반바지', '셔츠', '재킷', '팬츠', '슬랙스',
                 '신발', '가방', '스웨터', '후드', '코트', '블레이저'
+              ],
+              // CRITICAL: Outerwear categories must reject bags!
+              'jacket': [
+                // Bags are NOT jackets
+                'bag', 'handbag', 'purse', 'tote', 'crossbody', 'shoulder bag', 'messenger bag', 'satchel',
+                '가방', '백', '핸드백', '숄더백', '크로스백', '토트백', '메신저백', '에블린', 'evelyne',
+                // Other non-jacket items
+                'pant', 'pants', 'jean', 'jeans', 'short', 'shorts', 'skirt', 'dress', 'shoe', 'shoes',
+                '바지', '청바지', '반바지', '치마', '원피스', '신발'
+              ],
+              'coat': [
+                // Bags are NOT coats
+                'bag', 'handbag', 'purse', 'tote', 'crossbody', 'shoulder bag', 'messenger bag', 'satchel',
+                '가방', '백', '핸드백', '숄더백', '크로스백', '토트백', '메신저백', '에블린', 'evelyne',
+                // Other non-coat items
+                'pant', 'pants', 'jean', 'jeans', 'short', 'shorts', 'skirt', 'dress', 'shoe', 'shoes',
+                '바지', '청바지', '반바지', '치마', '원피스', '신발'
+              ],
+              'outerwear': [
+                // Bags are NOT outerwear
+                'bag', 'handbag', 'purse', 'tote', 'crossbody', 'shoulder bag', 'messenger bag', 'satchel',
+                '가방', '백', '핸드백', '숄더백', '크로스백', '토트백', '메신저백', '에블린', 'evelyne',
+                // Other non-outerwear items
+                'pant', 'pants', 'jean', 'jeans', 'short', 'shorts', 'skirt', 'dress', 'shoe', 'shoes',
+                '바지', '청바지', '반바지', '치마', '원피스', '신발'
               ]
             }
             
