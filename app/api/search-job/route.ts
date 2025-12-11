@@ -30,27 +30,37 @@ export async function POST(request: NextRequest) {
     
     console.log(`🚀 Created search job ${job.id}${phoneNumber ? ' with SMS notification' : ''} (persisted to DB)`)
     
-    // Start background processing
-    // NOTE: Serverless functions may terminate after response completes
-    // The client polling keeps some function instance alive to continue work
-    // For guaranteed completion, consider using a dedicated worker or queue system
-    processSearchJob(job.id, body).catch(async error => {
-      console.error(`❌ Job ${job.id} failed during processing:`, error)
-      try {
-        await failJob(job.id, error.message || 'Unknown error')
-      } catch (e) {
-        console.error('Failed to mark job as failed:', e)
-      }
-    })
+    // IMPORTANT: Must await processing to keep serverless function alive
+    // Serverless functions terminate after response - background work gets killed
+    // Client should set a timeout and start polling if POST doesn't return quickly
+    console.log(`⏳ Starting synchronous processing for job ${job.id}...`)
     
-    // Return job ID immediately so frontend can start polling
-    return NextResponse.json({
-      jobId: job.id,
-      status: 'processing',
-      message: phoneNumber 
-        ? 'Search started. You will receive an SMS when results are ready.'
-        : 'Search started. Poll /api/search-job/[id] for status.'
-    })
+    try {
+      await processSearchJob(job.id, body)
+      console.log(`✅ Job ${job.id} completed successfully`)
+      
+      // Get the completed job with results
+      const completedJob = await getJob(job.id)
+      
+      return NextResponse.json({
+        jobId: job.id,
+        status: 'completed',
+        results: completedJob?.results,
+        meta: completedJob?.meta,
+        message: phoneNumber 
+          ? 'Search complete! SMS sent.'
+          : 'Search complete!'
+      })
+    } catch (error: any) {
+      console.error(`❌ Job ${job.id} failed during processing:`, error)
+      await failJob(job.id, error.message || 'Unknown error')
+      
+      return NextResponse.json({
+        jobId: job.id,
+        status: 'failed',
+        error: error.message || 'Unknown error'
+      }, { status: 500 })
+    }
     
   } catch (error) {
     console.error('Error creating search job:', error)

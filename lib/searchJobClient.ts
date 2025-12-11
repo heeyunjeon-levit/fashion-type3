@@ -22,7 +22,7 @@ export interface JobPollOptions {
 }
 
 /**
- * Start a search job and return job ID
+ * Start a search job and return job ID (and possibly complete results if server processed synchronously)
  */
 export async function startSearchJob(params: {
   categories: string[]
@@ -32,20 +32,40 @@ export async function startSearchJob(params: {
   useOCRSearch?: boolean
   phoneNumber?: string
   countryCode?: string
-}): Promise<string> {
-  const response = await fetch('/api/search-job', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(params)
-  })
+}): Promise<{ jobId: string; status?: string; results?: any; meta?: any }> {
+  // Set a long timeout (5 minutes) since serverless functions now process synchronously
+  const controller = new AbortController()
+  const timeout = setTimeout(() => controller.abort(), 300000) // 5 minutes
   
-  if (!response.ok) {
-    const error = await response.text()
-    throw new Error(`Failed to start search job: ${error}`)
+  try {
+    const response = await fetch('/api/search-job', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(params),
+      signal: controller.signal
+    })
+    
+    clearTimeout(timeout)
+    
+    if (!response.ok) {
+      const error = await response.text()
+      throw new Error(`Failed to start search job: ${error}`)
+    }
+    
+    const data = await response.json()
+    return {
+      jobId: data.jobId,
+      status: data.status,
+      results: data.results,
+      meta: data.meta
+    }
+  } catch (error: any) {
+    clearTimeout(timeout)
+    if (error.name === 'AbortError') {
+      throw new Error('Search request timed out after 5 minutes')
+    }
+    throw error
   }
-  
-  const data = await response.json()
-  return data.jobId
 }
 
 /**
@@ -293,10 +313,23 @@ export async function searchWithJobQueue(
   console.log(params.phoneNumber ? `📱 SMS notification enabled for: ${params.phoneNumber}` : '📱 No SMS notification')
   
   // Start the job
-  const jobId = await startSearchJob(params)
-  console.log(`📋 Job created: ${jobId}`)
+  const jobResponse = await startSearchJob(params)
+  console.log(`📋 Job created: ${jobResponse.jobId}`)
   
-  // Poll until complete
-  return await pollJobUntilComplete(jobId, options)
+  // Check if job completed synchronously (serverless functions now await processing)
+  if (jobResponse.status === 'completed' && jobResponse.results) {
+    console.log(`✅ Job completed synchronously - no polling needed`)
+    if (options.onProgress) {
+      options.onProgress(100)
+    }
+    if (options.onComplete) {
+      options.onComplete(jobResponse.results, jobResponse.meta)
+    }
+    return { results: jobResponse.results, meta: jobResponse.meta }
+  }
+  
+  // If not complete, poll until done (shouldn't happen with new sync approach)
+  console.log(`⏳ Job still processing - starting polling...`)
+  return await pollJobUntilComplete(jobResponse.jobId, options)
 }
 
