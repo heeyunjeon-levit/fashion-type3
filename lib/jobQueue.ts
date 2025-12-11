@@ -173,6 +173,18 @@ export async function saveJobToDatabase(job: SearchJob): Promise<boolean> {
   try {
     const supabase = getSupabaseServerClient()
     
+    // Note: We don't save cropped_images/descriptions to DB (large temporary data)
+    // Store job_data as JSON with all parameters for cron worker to reconstruct
+    const jobData = {
+      categories: job.categories,
+      croppedImages: job.croppedImages,
+      descriptions: job.descriptions,
+      originalImageUrl: job.originalImageUrl,
+      useOCRSearch: job.useOCRSearch,
+      phoneNumber: job.phoneNumber,
+      countryCode: job.countryCode
+    }
+    
     const { error } = await supabase
       .from('search_jobs')
       .upsert({
@@ -181,10 +193,7 @@ export async function saveJobToDatabase(job: SearchJob): Promise<boolean> {
         progress: job.progress,
         phone_number: job.phoneNumber,
         country_code: job.countryCode,
-        categories: job.categories,
-        cropped_images: job.croppedImages,
-        descriptions: job.descriptions,
-        use_ocr_search: job.useOCRSearch,
+        job_data: jobData, // Store all parameters as JSON
         original_image_url: job.originalImageUrl,
         results: job.results,
         meta: job.meta,
@@ -225,17 +234,22 @@ export async function loadJobFromDatabase(jobId: string): Promise<SearchJob | nu
     }
     
     // Convert database row back to SearchJob format
+    // Reconstruct from job_data JSON field if available
+    const jobData = data.job_data || {}
+    
     const job: SearchJob = {
       id: data.job_id,
       status: data.status,
       progress: data.progress,
       createdAt: new Date(data.created_at).getTime(),
       updatedAt: new Date(data.updated_at).getTime(),
-      categories: data.categories || [],
-      croppedImages: {}, // Not stored in DB (temporary data)
-      originalImageUrl: data.original_image_url,
-      phoneNumber: data.phone_number,
-      countryCode: data.country_code,
+      categories: jobData.categories || data.categories || [],
+      croppedImages: jobData.croppedImages || {},
+      descriptions: jobData.descriptions || {},
+      originalImageUrl: jobData.originalImageUrl || data.original_image_url,
+      useOCRSearch: jobData.useOCRSearch || false,
+      phoneNumber: jobData.phoneNumber || data.phone_number,
+      countryCode: jobData.countryCode || data.country_code,
       results: data.results,
       meta: data.meta,
       error: data.error,

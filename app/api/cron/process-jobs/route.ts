@@ -80,20 +80,21 @@ export async function GET(request: Request) {
         // Import and run the actual search processing
         const { processSearchJob } = await import('@/app/api/search-job/route')
         
-        const jobData = {
-          categories: job.categories || [],
-          croppedImages: job.cropped_images || {},
-          descriptions: job.descriptions || {},
+        // Get job data from JSON field (contains all processing parameters)
+        const jobData = job.job_data || {
+          categories: [],
+          croppedImages: {},
+          descriptions: {},
           originalImageUrl: job.original_image_url || '',
-          useOCRSearch: job.use_ocr_search || false,
-          phoneNumber: job.phone_number || undefined,
-          countryCode: job.country_code || undefined
+          useOCRSearch: false,
+          phoneNumber: job.phone_number,
+          countryCode: job.country_code
         }
         
         console.log(`   Job data:`, {
           categories: jobData.categories,
-          hasCroppedImages: Object.keys(jobData.croppedImages).length > 0,
-          hasDescriptions: Object.keys(jobData.descriptions).length > 0,
+          hasCroppedImages: Object.keys(jobData.croppedImages || {}).length > 0,
+          hasDescriptions: Object.keys(jobData.descriptions || {}).length > 0,
           hasPhone: !!jobData.phoneNumber
         })
 
