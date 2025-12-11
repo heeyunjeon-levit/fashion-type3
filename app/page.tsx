@@ -1407,7 +1407,6 @@ export default function Home() {
             // Start search immediately (non-blocking) - SMS sent when job completes
             processPendingItems(phone).catch((error: any) => console.error('❌ Search error:', error))
           }}
-          {/* No onClose - phone is REQUIRED for tracking/SMS */}
         />
       )}
     </main>
