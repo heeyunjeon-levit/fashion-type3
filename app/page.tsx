@@ -254,7 +254,7 @@ export default function Home() {
     // If OCR mode is enabled, skip single item question and go straight to OCR search
     if (useOCRSearch) {
       console.log('🔤 OCR Mode enabled: Skipping single item question, going to OCR search')
-      await startDetectionProcess()
+      await startDetectionProcess(imageUrl)  // Pass imageUrl directly to avoid race condition
       return
     }
 
@@ -330,10 +330,21 @@ export default function Home() {
   }
 
   // Start normal detection process (multiple items)
-  const startDetectionProcess = async () => {
+  const startDetectionProcess = async (imageUrlOverride?: string) => {
     // V3.1 OCR MODE: Skip detection, go directly to OCR search with full image
     if (useOCRSearch) {
+      const imageUrlToUse = imageUrlOverride || uploadedImageUrl
       console.log('🚀 OCR Mode: Skipping detection, using full image for OCR search')
+      console.log(`   Using imageUrl: ${imageUrlToUse ? imageUrlToUse.substring(0, 80) : 'MISSING!'}`)
+      
+      if (!imageUrlToUse) {
+        console.error('❌ No image URL available for OCR search!')
+        alert('이미지 URL을 찾을 수 없습니다. 다시 시도해주세요.')
+        setCurrentStep('upload')
+        setIsLoading(false)
+        return
+      }
+      
       setCurrentStep('searching')
       setIsLoading(true)
       setOverallProgress(0)
@@ -348,7 +359,7 @@ export default function Home() {
         const ocrResponse = await fetch('/api/ocr-search', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ imageUrl: uploadedImageUrl }),
+          body: JSON.stringify({ imageUrl: imageUrlToUse }),
         })
         
         if (!ocrResponse.ok) {
@@ -387,8 +398,8 @@ export default function Home() {
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
                 categories: [brand],
-                croppedImages: { [brand]: uploadedImageUrl }, // Use full image for Lens search
-                originalImageUrl: uploadedImageUrl,
+                croppedImages: { [brand]: imageUrlToUse }, // Use full image for Lens search
+                originalImageUrl: imageUrlToUse,
                 useOCRSearch: false, // Use regular hybrid search, not OCR mode
               }),
             })
