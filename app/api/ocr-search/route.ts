@@ -328,7 +328,8 @@ If NO fashion brands found, return: {"products": []}`
         console.log(`   Searching: ${query.substring(0, 80)}...`)
         
         try {
-          const serperResponse = await fetch('https://google.serper.dev/search', {
+          // Use images API to get thumbnails (not organic search)
+          const serperResponse = await fetch('https://google.serper.dev/images', {
             method: 'POST',
             headers: {
               'X-API-KEY': process.env.SERPER_API_KEY || '',
@@ -336,18 +337,19 @@ If NO fashion brands found, return: {"products": []}`
             },
             body: JSON.stringify({
               q: query,
-              gl: 'us',
+              gl: 'kr',
+              hl: 'ko',
               num: 20, // Get more to filter out
             }),
           })
           
           const serperData = await serperResponse.json()
-          const organicResults = serperData.organic || []
+          const imageResults = serperData.images || []
           
-          console.log(`   Found ${organicResults.length} results for ${product.brand}`)
+          console.log(`   Found ${imageResults.length} results for ${product.brand}`)
           
           // Filter out blocked domains and non-fashion results
-          const filteredResults = organicResults.filter((r: any) => {
+          const filteredResults = imageResults.filter((r: any) => {
             const link = r.link?.toLowerCase() || ''
             const title = r.title?.toLowerCase() || ''
             
@@ -379,10 +381,10 @@ If NO fashion brands found, return: {"products": []}`
             model_number: product.model_number || '',
             confidence: product.confidence || 'medium',
             results: filteredResults.slice(0, 5).map((r: any) => ({
-              title: r.title,
+              title: r.title || 'Product',
               link: r.link,
-              thumbnail: r.thumbnail || null,
-              snippet: r.snippet
+              thumbnail: r.thumbnailUrl || r.imageUrl || null,
+              snippet: r.source || ''
             }))
           }
         } catch (error) {
