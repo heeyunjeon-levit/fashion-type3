@@ -930,7 +930,7 @@ export default function Home() {
             const uploadData = await uploadResponse.json()
             if (uploadData.url) {
               croppedUrl = uploadData.url
-              console.log(`✅ Uploaded to Supabase: ${croppedUrl.substring(0, 60)}...`)
+              console.log(`✅ Uploaded to Supabase: ${croppedUrl?.substring(0, 60) || croppedUrl}...`)
             }
           } catch (uploadError) {
             console.error(`⚠️ Failed to upload ${itemName}, using data URL:`, uploadError)
@@ -939,14 +939,15 @@ export default function Home() {
         
         // Use cropped variations if available, otherwise use single crop
         // For the search API, we only pass the primary URL (not the variations object)
-        const croppedImages = { [key]: croppedUrl }
+        // TypeScript safety: croppedUrl should always be defined here since we filtered validItems
+        const croppedImages = { [key]: croppedUrl! }
         const categories = [item.category]
         const descriptions = { [key]: item.description } // Pass GPT-4o descriptions!
         
         try {
           console.log(`🔍 [ITEM ${idx + 1}/${totalItems}] Starting job for ${itemName}...`)
           console.log(`   Description: "${item.description.substring(0, 80)}..."`)
-          console.log(`   Cropped URL: ${croppedUrl.substring(0, 60)}...`)
+          console.log(`   Cropped URL: ${croppedUrl?.substring(0, 60) || croppedUrl || 'undefined'}...`)
           console.log(`   Category: ${item.category}`)
           
           // Use job queue for background processing
