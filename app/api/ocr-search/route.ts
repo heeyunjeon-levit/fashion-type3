@@ -9,7 +9,7 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 })
 
-const genAI = new GoogleGenerativeAI(process.env.GCLOUD_API_KEY || '')
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || process.env.GCLOUD_API_KEY || '')
 
 export async function POST(request: Request) {
   try {
@@ -29,13 +29,14 @@ export async function POST(request: Request) {
     // Step 1: Use Gemini for OCR text extraction
     console.log('\n📖 Step 1: Extracting text with Gemini 2.0 Flash...')
     
-    const geminiApiKey = process.env.GCLOUD_API_KEY
-    console.log(`   GCLOUD_API_KEY configured: ${geminiApiKey ? 'YES' : 'NO'}`)
+    const geminiApiKey = process.env.GEMINI_API_KEY || process.env.GCLOUD_API_KEY
+    console.log(`   GEMINI_API_KEY configured: ${process.env.GEMINI_API_KEY ? 'YES' : 'NO'}`)
+    console.log(`   GCLOUD_API_KEY configured: ${process.env.GCLOUD_API_KEY ? 'YES' : 'NO'}`)
     console.log(`   OPENAI_API_KEY configured: ${process.env.OPENAI_API_KEY ? 'YES' : 'NO'}`)
     console.log(`   SERPER_API_KEY configured: ${process.env.SERPER_API_KEY ? 'YES' : 'NO'}`)
     
     if (!geminiApiKey) {
-      console.error('   ❌ GCLOUD_API_KEY not set in environment!')
+      console.error('   ❌ GEMINI_API_KEY or GCLOUD_API_KEY not set in environment!')
       return NextResponse.json({
         success: false,
         reason: 'Gemini API key not configured in Vercel environment variables'
