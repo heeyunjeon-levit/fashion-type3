@@ -909,9 +909,8 @@ export default function Home() {
         }
         
         // Use cropped variations if available, otherwise use single crop
-        const croppedImages = item.croppedImageUrls && item.croppedImageUrls.length > 0
-          ? { [key]: { urls: item.croppedImageUrls, primaryUrl: croppedUrl } }
-          : { [key]: croppedUrl }
+        // For the search API, we only pass the primary URL (not the variations object)
+        const croppedImages = { [key]: croppedUrl }
         const categories = [item.category]
         const descriptions = { [key]: item.description } // Pass GPT-4o descriptions!
         
