@@ -11,6 +11,162 @@ const openai = new OpenAI({
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || process.env.GCLOUD_API_KEY || '')
 
+/**
+ * Extract primary color from image using GPT-4 Vision
+ */
+async function detectPrimaryColor(imageUrl: string): Promise<string | null> {
+  try {
+    console.log('🎨 Detecting primary color from image...')
+    
+    const response = await openai.chat.completions.create({
+      model: 'gpt-4o',
+      messages: [{
+        role: 'user',
+        content: [
+          {
+            type: 'image_url',
+            image_url: { url: imageUrl }
+          },
+          {
+            type: 'text',
+            text: `What is the PRIMARY/DOMINANT color of the main clothing item in this image? 
+            
+Return ONLY ONE WORD (the most specific color name):
+- Examples: "beige", "navy", "charcoal", "olive", "burgundy", "cream", "khaki", "gray"
+- Be specific: Use "navy" not "blue", "charcoal" not "dark gray"
+- If multiple items: Focus on the MOST PROMINENT item
+
+ONE WORD ONLY:`
+          }
+        ]
+      }],
+      max_tokens: 20,
+      temperature: 0
+    })
+    
+    const color = response.choices[0]?.message?.content?.trim().toLowerCase() || null
+    console.log(`   ✅ Detected color: ${color}`)
+    return color
+    
+  } catch (error) {
+    console.error('   ❌ Color detection failed:', error)
+    return null
+  }
+}
+
+/**
+ * Filter results by color using GPT-5.1 Vision
+ */
+async function filterResultsByColor(
+  originalImageUrl: string,
+  results: Array<{ title: string; link: string; thumbnail: string | null }>,
+  primaryColor: string
+): Promise<Array<{ title: string; link: string; thumbnail: string | null; colorScore: number }>> {
+  try {
+    // Only process results with thumbnails
+    const resultsWithThumbnails = results.filter(r => r.thumbnail)
+    
+    if (resultsWithThumbnails.length === 0) {
+      console.log('   ⚠️  No thumbnails to filter')
+      return []
+    }
+    
+    console.log(`🎨 Filtering ${resultsWithThumbnails.length} results by color (${primaryColor})...`)
+    
+    // Prepare image content - original + candidates
+    const imageContent: any[] = [
+      {
+        type: 'image_url',
+        image_url: { url: originalImageUrl }
+      },
+      {
+        type: 'text',
+        text: 'ORIGINAL IMAGE (reference color)'
+      }
+    ]
+    
+    // Add candidate thumbnails (max 10 to avoid token limits)
+    const candidatesToCheck = resultsWithThumbnails.slice(0, 10)
+    candidatesToCheck.forEach((result, idx) => {
+      imageContent.push({
+        type: 'image_url',
+        image_url: { url: result.thumbnail! }
+      })
+      imageContent.push({
+        type: 'text',
+        text: `Candidate ${idx + 1}: "${result.title}"`
+      })
+    })
+    
+    const prompt = `You are a fashion color expert. Compare the color of each candidate product to the ORIGINAL image.
+
+TARGET COLOR: ${primaryColor}
+
+For each candidate (1-${candidatesToCheck.length}), rate the COLOR MATCH (0-10):
+- 9-10: Exact same color as original (${primaryColor})
+- 7-8: Very close color match
+- 4-6: Similar but noticeably different
+- 0-3: Different color
+
+CRITICAL:
+- Be STRICT! White ≠ Beige, Navy ≠ Black, Gray ≠ Charcoal
+- Focus on the garment color, ignore background
+- Only high scores (7+) for true color matches
+
+Return JSON array:
+[
+  {"candidate": 1, "colorMatch": 9, "reason": "Exact ${primaryColor} match"},
+  {"candidate": 2, "colorMatch": 3, "reason": "Wrong color - black not ${primaryColor}"},
+  ...
+]`
+    
+    const response = await openai.chat.completions.create({
+      model: 'gpt-4o',
+      messages: [{
+        role: 'user',
+        content: imageContent as any
+      }, {
+        role: 'user',
+        content: prompt
+      }],
+      max_tokens: 1000,
+      temperature: 0
+    })
+    
+    const content = response.choices[0]?.message?.content || '[]'
+    const jsonMatch = content.match(/\[[\s\S]*\]/)
+    if (!jsonMatch) {
+      console.warn('   ⚠️  Could not parse color scores')
+      return []
+    }
+    
+    const scores = JSON.parse(jsonMatch[0])
+    
+    // Map scores to results and filter by colorScore ≥ 7
+    const colorMatches = candidatesToCheck
+      .map((result, idx) => {
+        const score = scores[idx] || { colorMatch: 0, reason: 'No score' }
+        return {
+          ...result,
+          colorScore: score.colorMatch || 0,
+          colorReason: score.reason || 'Unknown'
+        }
+      })
+      .filter(item => item.colorScore >= 7)
+    
+    console.log(`   ✅ Found ${colorMatches.length}/${candidatesToCheck.length} color matches (score≥7)`)
+    colorMatches.forEach((item, idx) => {
+      console.log(`      ${idx + 1}. ${item.colorScore}/10 - ${item.colorReason}`)
+    })
+    
+    return colorMatches
+    
+  } catch (error) {
+    console.error('   ❌ Color filtering failed:', error)
+    return []
+  }
+}
+
 export async function POST(request: Request) {
   try {
     console.log('\n🔍 OCR SEARCH REQUEST (Google Vision + GPT)')
@@ -412,12 +568,59 @@ If NO fashion brands found, return: {"products": []}`
       })
     }
     
-    console.log(`\n✅ OCR Search Complete: ${successfulSearches.length} products with results`)
+    // Step 4: COLOR FILTERING (Filter results to match original image color)
+    console.log('\n🎨 Step 4: Color filtering...')
+    
+    // Detect primary color from original image
+    const primaryColor = await detectPrimaryColor(imageUrl)
+    
+    let finalResults = successfulSearches
+    
+    if (primaryColor) {
+      console.log(`   ✅ Detected color: ${primaryColor}`)
+      console.log(`   🔍 Filtering results to match ${primaryColor} color...`)
+      
+      // Filter each product's results by color
+      finalResults = await Promise.all(
+        successfulSearches.map(async (productResult: any) => {
+          const colorFilteredResults = await filterResultsByColor(
+            imageUrl,
+            productResult.results,
+            primaryColor
+          )
+          
+          return {
+            ...productResult,
+            results: colorFilteredResults,
+            primary_color: primaryColor  // Include detected color in response
+          }
+        })
+      )
+      
+      // Remove products with no color-matching results
+      finalResults = finalResults.filter(p => p.results.length > 0)
+      
+      console.log(`   ✅ Color filtering complete: ${finalResults.length} products with color-matching results`)
+    } else {
+      console.log('   ⚠️  Could not detect color, skipping color filter')
+    }
+    
+    if (finalResults.length === 0) {
+      console.log('   ⚠️  No color-matching results found')
+      return NextResponse.json({
+        success: false,
+        reason: `No ${primaryColor || ''} products found matching your search`,
+        detected_color: primaryColor
+      })
+    }
+    
+    console.log(`\n✅ OCR Search Complete: ${finalResults.length} products with color-filtered results`)
     
     return NextResponse.json({
       success: true,
-      product_results: successfulSearches,
-      extracted_text: fullText
+      product_results: finalResults,
+      extracted_text: fullText,
+      detected_color: primaryColor
     })
     
   } catch (error) {
