@@ -410,7 +410,9 @@ export default function Home() {
         setOverallProgress(80)
         
         // ✨ Show phone modal BEFORE displaying results (OCR is fast enough!)
-        console.log('📱 OCR results ready, showing phone modal...')
+        // NOTE: Phone number is ONLY for analytics tracking in OCR mode (NO SMS sent)
+        // OCR is so fast (2-5s) that SMS would arrive after user already sees results
+        console.log('📱 OCR results ready, showing phone modal for analytics...')
         
         // Store results and OCR data temporarily
         const tempResults = results
@@ -422,9 +424,9 @@ export default function Home() {
         
         // Wait for phone submission (handled in PhoneModal onPhoneSubmit)
         // The modal callback will:
-        // 1. Store phone number
+        // 1. Store phone number (analytics only, NO SMS)
         // 2. Log results with sessionManager
-        // 3. Display results
+        // 3. Display results immediately
         
         // Store results in state for modal callback to access
         setResults(tempResults)
@@ -1353,6 +1355,7 @@ export default function Home() {
       {/* Phone Modal - REQUIRED to see results (for tracking & SMS) */}
       {showPhoneModal && (
         <PhoneModal
+          ocrMode={useOCRSearch}  // Pass OCR mode flag for different messaging
           onPhoneSubmit={async (phone: string) => {
             console.log(`📱 Phone submitted: ${phone}`)
             
@@ -1372,10 +1375,12 @@ export default function Home() {
             }
             
             // OCR MODE: Results are already ready, just show them!
+            // ⚡ NO SMS SENT - OCR is fast (2-5s), user sees results immediately
+            // Phone number used ONLY for analytics tracking, not SMS
             if (useOCRSearch && Object.keys(results).length > 0) {
-              console.log('✅ OCR mode: Showing results immediately')
+              console.log('✅ OCR mode: Showing results immediately (NO SMS - results instant)')
               
-              // Log search results with phone number for tracking
+              // Log search results with phone number for tracking (analytics only, no SMS)
               if (sessionManager) {
                 sessionManager.logSearchResults(results, { 
                   mode: 'ocr_hybrid_nextjs',
@@ -1389,12 +1394,14 @@ export default function Home() {
             }
             
             // NORMAL MODE: Process pending items
+            // 🐌 SMS WILL BE SENT - Normal search is slow (20-60s), user might leave
+            // Phone number used for SMS notification with shareable results link
             if (pendingBboxes) {
               setProcessingItems(pendingBboxes.map(bbox => ({ category: bbox.category })))
             }
             setCurrentStep('processing') // Show progress bar instantly!
             
-            // Start search immediately (non-blocking)
+            // Start search immediately (non-blocking) - SMS sent when job completes
             processPendingItems(phone).catch((error: any) => console.error('❌ Search error:', error))
           }}
           {/* No onClose - phone is REQUIRED for tracking/SMS */}

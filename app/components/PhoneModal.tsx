@@ -7,9 +7,10 @@ interface PhoneModalProps {
   onPhoneSubmit: (phoneNumber: string) => void
   onClose?: () => void
   isReturningUser?: boolean
+  ocrMode?: boolean  // True if using OCR mode (fast results, no SMS)
 }
 
-export default function PhoneModal({ onPhoneSubmit, onClose, isReturningUser }: PhoneModalProps) {
+export default function PhoneModal({ onPhoneSubmit, onClose, isReturningUser, ocrMode }: PhoneModalProps) {
   const { t, language } = useLanguage()
   const [phoneNumber, setPhoneNumber] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -107,12 +108,12 @@ export default function PhoneModal({ onPhoneSubmit, onClose, isReturningUser }: 
 
           {/* Title */}
           <h2 className="text-2xl font-bold text-gray-800 text-center mb-2">
-            {isReturningUser ? t('phone.returning') : t('phone.title')}
+            {isReturningUser ? t('phone.returning') : (ocrMode ? t('phone.titleOcr') : t('phone.title'))}
           </h2>
 
           {/* Description */}
           <p className="text-gray-700 text-center mb-6 leading-relaxed whitespace-pre-line">
-            {isReturningUser ? t('phone.returningDesc') : t('phone.desc')}
+            {isReturningUser ? t('phone.returningDesc') : (ocrMode ? t('phone.descOcr') : t('phone.desc'))}
           </p>
 
           {/* Form */}
@@ -142,7 +143,7 @@ export default function PhoneModal({ onPhoneSubmit, onClose, isReturningUser }: 
               disabled={isSubmitting || phoneNumber.length < 10}
               className="w-full bg-gradient-to-r from-yellow-600 to-amber-600 text-white py-3 rounded-xl font-bold text-lg hover:from-yellow-700 hover:to-amber-700 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95"
             >
-              {isSubmitting ? t('phone.submitting') : t('phone.submit')}
+              {isSubmitting ? t('phone.submitting') : (ocrMode ? t('phone.submitOcr') : t('phone.submit'))}
             </button>
           </form>
 

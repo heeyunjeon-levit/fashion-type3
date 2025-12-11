@@ -56,13 +56,16 @@ const translations = {
     // PhoneModal
     'phone.returning': 'Welcome back! 👋',
     'phone.title': 'Just a moment! 📱',
+    'phone.titleOcr': 'Just a moment! 📱',
     'phone.returningDesc': 'Thanks for coming back!\nPlease enter your phone number again',
     'phone.desc': 'To view product links,\nplease enter your phone number\n(Used for user interviews to improve our service)',
+    'phone.descOcr': 'Your phone number is used only\nfor future user interviews\nto improve our service',
     'phone.placeholder': '555-123-4567',
     'phone.error': 'Please enter a valid phone number (e.g., 555-123-4567)',
     'phone.errorPrefix': 'Please enter a valid phone number',
     'phone.submitting': 'Processing...',
     'phone.submit': 'View Links 🔗',
+    'phone.submitOcr': 'View Results 🔗',
     'phone.privacy': '🔒 Your phone number is securely stored\nand used only for user interviews',
     'phone.locked': '🔒 Enter your phone number\nto view product links!',
 
@@ -128,13 +131,16 @@ const translations = {
     // PhoneModal
     'phone.returning': '다시 찾아주셨네요! 👋',
     'phone.title': '잠깐만요! 📱',
+    'phone.titleOcr': '잠깐만요! 📱',
     'phone.returningDesc': '재방문 감사합니다!\n전화번호를 다시 입력해주세요',
     'phone.desc': '검색을 하는데 1분 이상 소요될 예정이예요.\n기다리실 필요없이 전화번호를 적어주시면\n결과링크를 문자로 보내드릴께요!',
+    'phone.descOcr': '전화번호는 향후 사용자 인터뷰 목적으로만\n사용됩니다. 서비스 개선을 위해\n협조 부탁드립니다.',
     'phone.placeholder': '010-1234-5678',
     'phone.error': '올바른 전화번호를 입력해주세요 (예: 010-1234-5678)',
     'phone.errorPrefix': '010으로 시작하는 전화번호를 입력해주세요',
     'phone.submitting': '처리중...',
     'phone.submit': '검색 시작하기 🔗',
+    'phone.submitOcr': '결과 보기 🔗',
     'phone.privacy': '🔒 전화번호는 안전하게 보관됩니다',
     'phone.locked': '🔒 전화번호 입력 후\n상품 링크를 확인하세요!',
 
