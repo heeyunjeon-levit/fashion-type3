@@ -30,37 +30,17 @@ export async function POST(request: NextRequest) {
     
     console.log(`🚀 Created search job ${job.id}${phoneNumber ? ' with SMS notification' : ''} (persisted to DB)`)
     
-    // IMPORTANT: Must await processing to keep serverless function alive
-    // Serverless functions terminate after response - background work gets killed
-    // Client should set a timeout and start polling if POST doesn't return quickly
-    console.log(`⏳ Starting synchronous processing for job ${job.id}...`)
+    // ✨ NEW: Return immediately - background worker will process the job
+    // This allows frontend to close/die while job continues processing
+    console.log(`✅ Job ${job.id} queued for background processing`)
     
-    try {
-      await processSearchJob(job.id, body)
-      console.log(`✅ Job ${job.id} completed successfully`)
-      
-      // Get the completed job with results
-      const completedJob = await getJob(job.id)
-      
-      return NextResponse.json({
-        jobId: job.id,
-        status: 'completed',
-        results: completedJob?.results,
-        meta: completedJob?.meta,
-        message: phoneNumber 
-          ? 'Search complete! SMS sent.'
-          : 'Search complete!'
-      })
-    } catch (error: any) {
-      console.error(`❌ Job ${job.id} failed during processing:`, error)
-      await failJob(job.id, error.message || 'Unknown error')
-      
-      return NextResponse.json({
-        jobId: job.id,
-        status: 'failed',
-        error: error.message || 'Unknown error'
-      }, { status: 500 })
-    }
+    return NextResponse.json({
+      jobId: job.id,
+      status: 'pending',
+      message: phoneNumber 
+        ? 'Job queued! You will receive SMS when complete.'
+        : 'Job queued! Poll for status updates.'
+    })
     
   } catch (error) {
     console.error('Error creating search job:', error)
@@ -74,8 +54,9 @@ export async function POST(request: NextRequest) {
 /**
  * Process the search job in the background
  * This calls the existing /api/search logic DIRECTLY (not via HTTP)
+ * EXPORTED so cron worker can call it
  */
-async function processSearchJob(jobId: string, body: any) {
+export async function processSearchJob(jobId: string, body: any) {
   try {
     console.log(`⚙️ Processing job ${jobId}...`)
     await updateJobProgress(jobId, 5, 'processing')

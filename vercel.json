@@ -12,7 +12,16 @@
     },
     "app/api/search-job/route.ts": {
       "maxDuration": 300
+    },
+    "app/api/cron/process-jobs/route.ts": {
+      "maxDuration": 300
     }
-  }
+  },
+  "crons": [
+    {
+      "path": "/api/cron/process-jobs",
+      "schedule": "* * * * *"
+    }
+  ]
 }
 
