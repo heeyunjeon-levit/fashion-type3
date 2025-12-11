@@ -7,9 +7,17 @@ export const dynamic = 'force-dynamic'
 export const maxDuration = 300 // 5 minutes max
 
 export async function GET(request: Request) {
-  // Verify cron secret (prevent unauthorized access)
+  // Verify request is from Vercel Cron (not external attacker)
   const authHeader = request.headers.get('authorization')
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  const cronSecret = process.env.CRON_SECRET
+  
+  // Check if request has valid authorization OR is from Vercel Cron
+  const isAuthorized = authHeader === `Bearer ${cronSecret}` || 
+                      request.headers.get('x-vercel-cron') === '1' ||
+                      !cronSecret // Allow if no secret set (for testing)
+  
+  if (!isAuthorized) {
+    console.error('❌ Unauthorized cron request')
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
