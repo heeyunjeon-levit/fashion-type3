@@ -3094,6 +3094,17 @@ Return ONLY valid JSON (no markdown, no explanation):
                 // Other non-outerwear items
                 'pant', 'pants', 'jean', 'jeans', 'short', 'shorts', 'skirt', 'dress', 'shoe', 'shoes',
                 '바지', '청바지', '반바지', '치마', '원피스', '신발'
+              ],
+              // 🕶️ ACCESSORIES: Sunglasses, jewelry, belts, hats
+              'sunglasses': [
+                // Clothing is NOT sunglasses
+                'jacket', 'coat', 'puffer', 'blazer', 'vest', 'shirt', 'blouse', 'sweater', 'cardigan', 'hoodie',
+                'pant', 'pants', 'jean', 'jeans', 'short', 'shorts', 'legging', 'trouser', 'skirt', 'dress',
+                'shoe', 'shoes', 'boot', 'boots', 'sneaker', 'sandal', 'heel',
+                'bag', 'handbag', 'purse', 'backpack', 'tote',
+                // Korean clothing terms
+                '재킷', '코트', '패딩', '점퍼', '셔츠', '바지', '팬츠', '청바지', '반바지', '레깅스',
+                '치마', '드레스', '원피스', '신발', '부츠', '운동화', '샌들', '가방', '백팩'
               ]
             }
             
