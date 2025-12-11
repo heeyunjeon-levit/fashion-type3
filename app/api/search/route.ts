@@ -2774,10 +2774,20 @@ Return ONLY valid JSON (no markdown, no explanation):
         let completion: any = null
         
         if (thumbnailCount === 0) {
-          console.error(`   ❌ NO thumbnails loaded successfully! Cannot do visual matching.`)
-          console.error(`   ⚠️ Skipping GPT-5.1 call and using top Serper results directly`)
+          console.error(`\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`)
+          console.error(`❌ THUMBNAIL FETCH FAILURE for ${resultKey}!`)
+          console.error(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`)
+          console.error(`   Attempted to fetch: ${enrichedResults.length} product thumbnails`)
+          console.error(`   Successful: 0 thumbnails`)
+          console.error(`   Failed: ${thumbnailErrors} errors`)
+          console.error(`   ⚠️ This causes poor results because GPT-5.1 vision cannot run!`)
+          console.error(`   🔍 Check Vercel logs for "Image fetch failed" errors`)
+          console.error(`   📋 Falling back to top ${Math.min(5, resultsForGPT.length)} Serper results (will be post-filtered)`)
+          console.error(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`)
           
           const topLinks = resultsForGPT.slice(0, 5).map((r: any) => r.link)
+          console.log(`   Top links (pre-filter):`, topLinks)
+          
           completion = { 
             choices: [{ 
               message: { content: JSON.stringify({ [resultKey]: topLinks }) }
@@ -3229,6 +3239,24 @@ Return ONLY valid JSON (no markdown, no explanation):
           
           return true
         })
+        
+        console.log(`\n📊 POST-FILTER RESULTS for ${resultKey}:`)
+        console.log(`   GPT-5.1 returned: ${links.length} links`)
+        console.log(`   After filtering: ${validLinks.length} valid links`)
+        
+        if (validLinks.length === 0 && links.length > 0) {
+          console.error(`\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`)
+          console.error(`❌ ALL GPT-5.1 LINKS WERE FILTERED OUT!`)
+          console.error(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`)
+          console.error(`   Item: ${resultKey}`)
+          console.error(`   Description: ${itemDescription}`)
+          console.error(`   GPT-5.1 selected: ${links.length} links`)
+          console.error(`   After post-filter: 0 links`)
+          console.error(`   ⚠️ All links were blocked (social media, wrong category, etc.)`)
+          console.error(`   🔍 Check above logs for "🚫 Blocked" messages`)
+          console.error(`   📋 Will use FALLBACK mode (lower quality)`)
+          console.error(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`)
+        }
         
         if (validLinks.length > 0) {
           // BRAND MATCHING ENFORCEMENT: Override GPT-4 if repeated brands exist
@@ -4676,11 +4704,44 @@ Return ONLY valid JSON (no markdown, no explanation):
           }
         } else {
           // Fallback: take top 3 organic results directly (with STRICT filtering)
+          console.log(`\n⚠️ FALLBACK MODE for ${resultKey} (GPT returned 0 valid links)`)
+          console.log(`   Falling back to filtered Serper results`)
+          console.log(`   Organic results available: ${organicResults.length}`)
+          
           const fallback = organicResults
             .filter((item: any) => {
               if (typeof item?.link !== 'string' || !item.link.startsWith('http')) return false
               
               const linkLower = item.link.toLowerCase()
+              const titleLower = (item.title || '').toLowerCase()
+              
+              // CRITICAL: Check if result matches the item description
+              if (itemDescription) {
+                const desc = itemDescription.toLowerCase()
+                
+                // Extract key garment type from description
+                const garmentTypes = ['jeans', 'pants', 'shirt', 'sweater', 'jacket', 'coat', 'dress', 'skirt', 'shoes', 'bag', 'handbag']
+                const descGarment = garmentTypes.find(type => desc.includes(type))
+                
+                if (descGarment) {
+                  // Korean equivalents
+                  const koreanMap: Record<string, string[]> = {
+                    'jeans': ['청바지', '진', 'jean'],
+                    'pants': ['바지', 'pant', 'trouser'],
+                    'sweater': ['니트', '스웨터', 'knit', 'sweater'],
+                    'bag': ['가방', '백', 'bag'],
+                    'handbag': ['핸드백', '가방', 'handbag']
+                  }
+                  
+                  const allowedTerms = [descGarment, ...(koreanMap[descGarment] || [])]
+                  const hasMatch = allowedTerms.some(term => titleLower.includes(term) || linkLower.includes(term))
+                  
+                  if (!hasMatch) {
+                    console.log(`🛟 Fallback: Wrong garment type: "${item.title?.substring(0, 50)}..." (looking for ${descGarment})`)
+                    return false
+                  }
+                }
+              }
               
               // Filter out social media
               const isSocialMedia = blockedDomains.some(domain => linkLower.includes(domain))
