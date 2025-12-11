@@ -68,36 +68,43 @@ export async function GET(request: Request) {
         break
       }
       
-      try {
-        console.log(`🚀 Processing job ${job.id}... (${Math.round(elapsedMs / 1000)}s elapsed)`)
-
-        // Mark as processing
-        await supabase
-          .from('search_jobs')
-          .update({ status: 'processing', updated_at: new Date().toISOString() })
-          .eq('id', job.id)
+       try {
+         console.log(`🚀 Processing job ${job.job_id}... (${Math.round(elapsedMs / 1000)}s elapsed)`)
+  
+         // Mark as processing
+         await supabase
+           .from('search_jobs')
+           .update({ status: 'processing', updated_at: new Date().toISOString() })
+           .eq('job_id', job.job_id)
 
         // Import and run the actual search processing
         const { processSearchJob } = await import('@/app/api/search-job/route')
         
         const jobData = {
-          categories: job.categories,
-          croppedImages: job.cropped_images,
-          descriptions: job.descriptions,
-          originalImageUrl: job.original_image_url,
-          useOCRSearch: job.use_ocr_search,
-          phoneNumber: job.phone_number,
-          countryCode: job.country_code
+          categories: job.categories || [],
+          croppedImages: job.cropped_images || {},
+          descriptions: job.descriptions || {},
+          originalImageUrl: job.original_image_url || '',
+          useOCRSearch: job.use_ocr_search || false,
+          phoneNumber: job.phone_number || undefined,
+          countryCode: job.country_code || undefined
         }
-
-        await processSearchJob(job.id, jobData)
         
-        console.log(`✅ Job ${job.id} completed`)
-        results.push({ status: 'fulfilled', value: { id: job.id, status: 'completed' } })
-      } catch (jobError) {
-        console.error(`❌ Job ${job.id} failed:`, jobError)
-        results.push({ status: 'rejected', reason: jobError })
-      }
+        console.log(`   Job data:`, {
+          categories: jobData.categories,
+          hasCroppedImages: Object.keys(jobData.croppedImages).length > 0,
+          hasDescriptions: Object.keys(jobData.descriptions).length > 0,
+          hasPhone: !!jobData.phoneNumber
+        })
+
+        await processSearchJob(job.job_id, jobData)
+        
+        console.log(`✅ Job ${job.job_id} completed`)
+        results.push({ status: 'fulfilled', value: { id: job.job_id, status: 'completed' } })
+       } catch (jobError) {
+         console.error(`❌ Job ${job.job_id} failed:`, jobError)
+         results.push({ status: 'rejected', reason: jobError })
+       }
     }
 
     const successful = results.filter(r => r.status === 'fulfilled').length
