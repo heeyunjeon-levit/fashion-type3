@@ -883,14 +883,35 @@ export default function Home() {
     try {
       // Prepare search data
       console.log(`🔍 Searching ${items.length} items with background job queue...`)
+      console.log(`📋 Items to search:`, items.map((item, idx) => ({
+        idx: idx + 1,
+        category: item.category,
+        description: item.description?.substring(0, 50),
+        hasCroppedUrl: !!item.croppedImageUrl,
+        croppedUrlType: item.croppedImageUrl?.startsWith('data:') ? 'data URL' : item.croppedImageUrl?.startsWith('http') ? 'HTTP URL' : 'missing'
+      })))
       
-      const totalItems = items.length
+      // ⚠️  SAFETY CHECK: Filter out items without cropped URLs
+      const validItems = items.filter(item => item.croppedImageUrl)
+      const skippedItems = items.filter(item => !item.croppedImageUrl)
+      
+      if (skippedItems.length > 0) {
+        console.error(`❌ SKIPPING ${skippedItems.length} item(s) without cropped URLs:`, 
+          skippedItems.map(i => i.category))
+        alert(`Warning: ${skippedItems.length} item(s) failed to upload and will be skipped. Searching the remaining ${validItems.length} item(s).`)
+      }
+      
+      if (validItems.length === 0) {
+        throw new Error('No valid items to search - all items are missing cropped images')
+      }
+      
+      const totalItems = validItems.length
       // Support both legacy array format and two-stage format (colorMatches/styleMatches)
       const allResults: Record<string, Array<{ link: string; thumbnail: string | null; title: string | null }> | { colorMatches: Array<{ link: string; thumbnail: string | null; title: string | null }>; styleMatches: Array<{ link: string; thumbnail: string | null; title: string | null }> }> = {}
       
       // Process searches in parallel but track completion
-      const searchPromises = items.map(async (item, idx) => {
-        if (!item.croppedImageUrl) return null
+      // NOTE: We now use validItems instead of items (filtered above)
+      const searchPromises = validItems.map(async (item, idx) => {
         
         // Use the specific DINO-X category (e.g., "jeans", "cardigan")
         const itemName = item.category
@@ -923,8 +944,10 @@ export default function Home() {
         const descriptions = { [key]: item.description } // Pass GPT-4o descriptions!
         
         try {
-          console.log(`🔍 Starting job for ${itemName}...`)
+          console.log(`🔍 [ITEM ${idx + 1}/${totalItems}] Starting job for ${itemName}...`)
           console.log(`   Description: "${item.description.substring(0, 80)}..."`)
+          console.log(`   Cropped URL: ${croppedUrl.substring(0, 60)}...`)
+          console.log(`   Category: ${item.category}`)
           
           // Use job queue for background processing
           const { searchWithJobQueue } = await import('@/lib/searchJobClient')
@@ -932,6 +955,9 @@ export default function Home() {
           // Format phone number for SMS - use parameter if provided, otherwise use state
           const phoneToUse = phoneForSearch || phoneNumber
           const formattedPhone = phoneToUse ? (phoneToUse.startsWith('+82') ? phoneToUse : `+82${phoneToUse.replace(/^0/, '')}`) : undefined
+          
+          console.log(`   📞 Phone for search: ${formattedPhone || 'none'}`)
+          console.log(`   🔑 Search key: ${key}`)
           
           const { results: data, meta } = await searchWithJobQueue(
             {
@@ -1011,9 +1037,12 @@ export default function Home() {
       })
       
       // Wait for all searches to complete
-      await Promise.all(searchPromises)
+      const searchResults = await Promise.all(searchPromises)
       
       console.log(`✅ All searches complete`)
+      console.log(`📊 Search promises resolved: ${searchPromises.length} total`)
+      console.log(`📊 Non-null results: ${searchResults.filter(r => r !== null).length}`)
+      console.log(`📊 Null results: ${searchResults.filter(r => r === null).length}`)
       console.log(`📊 Final allResults keys: ${Object.keys(allResults).length}`, Object.keys(allResults))
       console.log(`📦 Final allResults structure:`, JSON.stringify(allResults, null, 2).substring(0, 500))
       setOverallProgress(prev => Math.max(prev, 95)) // Ensure we're at least 95%

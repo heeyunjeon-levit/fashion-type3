@@ -14,6 +14,9 @@ export async function GET(request: Request) {
   }
 
   console.log('🔄 Cron job started - checking for pending jobs...')
+  
+  const cronStartTime = Date.now()
+  const MAX_CRON_DURATION_MS = 280000 // 4 min 40 sec (leave 20s buffer before 5 min timeout)
 
   try {
     const supabase = getSupabaseServerClient()
@@ -24,7 +27,7 @@ export async function GET(request: Request) {
       .select('*')
       .eq('status', 'pending')
       .order('created_at', { ascending: true })
-      .limit(5) // Process up to 5 jobs per cron run
+      .limit(2) // Process up to 2 jobs per cron run (reduced from 5 to avoid timeout)
 
     if (error) {
       console.error('❌ Error fetching pending jobs:', error)
@@ -41,10 +44,24 @@ export async function GET(request: Request) {
 
     console.log(`📋 Found ${pendingJobs.length} pending job(s)`)
 
-    // Process each job
-    const results = await Promise.allSettled(
-      pendingJobs.map(async (job) => {
-        console.log(`🚀 Processing job ${job.id}...`)
+    // ⚠️ IMPORTANT: Process jobs SEQUENTIALLY to avoid timeout
+    // Processing 2 jobs in parallel could take 4-6 minutes (exceeds 5 min limit)
+    // Sequential processing: 2 jobs × 2-3 min = 4-6 min (within limit, safer)
+    const results = []
+    
+    for (const job of pendingJobs) {
+      // Check if we're approaching timeout (leave at least 30s for current job + cleanup)
+      const elapsedMs = Date.now() - cronStartTime
+      const remainingMs = MAX_CRON_DURATION_MS - elapsedMs
+      
+      if (remainingMs < 30000) {
+        console.warn(`⏰ Approaching timeout (${Math.round(remainingMs / 1000)}s remaining) - stopping after ${results.length} jobs`)
+        console.warn(`   Unprocessed jobs: ${pendingJobs.length - results.length}`)
+        break
+      }
+      
+      try {
+        console.log(`🚀 Processing job ${job.id}... (${Math.round(elapsedMs / 1000)}s elapsed)`)
 
         // Mark as processing
         await supabase
@@ -68,9 +85,12 @@ export async function GET(request: Request) {
         await processSearchJob(job.id, jobData)
         
         console.log(`✅ Job ${job.id} completed`)
-        return { id: job.id, status: 'completed' }
-      })
-    )
+        results.push({ status: 'fulfilled', value: { id: job.id, status: 'completed' } })
+      } catch (jobError) {
+        console.error(`❌ Job ${job.id} failed:`, jobError)
+        results.push({ status: 'rejected', reason: jobError })
+      }
+    }
 
     const successful = results.filter(r => r.status === 'fulfilled').length
     const failed = results.filter(r => r.status === 'rejected').length
