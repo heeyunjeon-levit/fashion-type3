@@ -136,7 +136,7 @@ export default function Results({ results, isLoading, croppedImages, onReset, se
     jeans: '청바지',
     shorts: '반바지',
     skirt: '치마',
-    trousers: '바지',
+    trousers: '정장바지',
     // Specific DINO-X categories (shoes)
     sneakers: '운동화',
     boots: '부츠',

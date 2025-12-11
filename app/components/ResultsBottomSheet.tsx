@@ -540,6 +540,7 @@ export default function ResultsBottomSheet({
         'blazer': '블레이저',
         'sweater': '스웨터',
         'pants': '바지',
+        'trousers': '정장바지',
         'jeans': '청바지',
         'skirt': '치마',
         'shorts': '반바지',

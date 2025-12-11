@@ -50,6 +50,7 @@ export default function InteractiveBboxSelector({
       'belt': '벨트',
       'pants': '바지',
       'jeans': '청바지',
+      'trousers': '정장바지',
       'handbag': '핸드백',
       'bag': '가방',
       'shoes': '신발',
