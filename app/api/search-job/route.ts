@@ -30,33 +30,20 @@ export async function POST(request: NextRequest) {
     
     console.log(`🚀 Created search job ${job.id}${phoneNumber ? ' with SMS notification' : ''}`)
     
-    // TEMPORARY: Process synchronously until database is set up
-    // TODO: Once database table exists, switch back to background processing
-    console.log(`⏳ Processing job ${job.id} synchronously (database not available)...`)
+    // ✅ BACKGROUND MODE: Job will be processed by cron worker
+    // Return immediately so user can lock phone/close browser
+    console.log(`📤 Job ${job.id} queued for background processing`)
+    console.log(`   Cron worker will process this job within 1 minute`)
+    console.log(`   ${phoneNumber ? `SMS will be sent to ${countryCode}${phoneNumber} when complete` : 'No SMS (phone number not provided)'}`)
     
-    try {
-      await processSearchJob(job.id, body)
-      console.log(`✅ Job ${job.id} completed`)
-      
-      const completedJob = await getJob(job.id)
-      
-      return NextResponse.json({
-        jobId: job.id,
-        status: 'completed',
-        results: completedJob?.results,
-        meta: completedJob?.meta,
-        message: 'Search complete!'
-      })
-    } catch (error: any) {
-      console.error(`❌ Job ${job.id} failed:`, error)
-      await failJob(job.id, error.message || 'Unknown error')
-      
-      return NextResponse.json({
-        jobId: job.id,
-        status: 'failed',
-        error: error.message || 'Unknown error'
-      }, { status: 500 })
-    }
+    return NextResponse.json({
+      jobId: job.id,
+      status: 'pending',
+      message: phoneNumber 
+        ? 'Search started! We\'ll text you when it\'s ready. Feel free to lock your phone or close the browser.' 
+        : 'Search started in background. Job will be processed by cron worker.',
+      estimatedTime: '1-2 minutes'
+    })
     
   } catch (error) {
     console.error('Error creating search job:', error)

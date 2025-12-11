@@ -18,13 +18,13 @@ interface DINOXDetectionResult {
 
 // Fashion categories for detection (ordered by priority for better detection)
 const FASHION_CATEGORIES = [
-  "fur coat", "fur jacket", "leather jacket", "coat", "jacket",
-  "dress", "blouse", "shirt", "button up shirt", "sweater", "cardigan", "hoodie", "vest",
-  "pants", "jeans", "shorts", "skirt",
-  "shoes", "sneakers", "boots", "sandals",
-  "bag", "backpack", "purse", "handbag",
+  "fur coat", "leather jacket", "coat", "jacket",
+  "dress", "blouse", "button up shirt", "sweater", "cardigan", "hoodie", "vest", "shirt",
+  "jeans", "pants", "trousers", "shorts", "skirt",
+  "heels","sneakers", "shoes", "boots", "sandals",
+  "clutch", "handbag", "bag", 
   "sunglasses", "hat", "cap", "scarf", "belt", "watch",
-  "jewelry", "necklace", "bracelet", "earrings", "ring"
+  "necklace", "bracelet", "earrings", "ring", "jewelry"
 ]
 
 const FASHION_PROMPT = FASHION_CATEGORIES.join(". ")

@@ -42,6 +42,8 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: 'Database error' }, { status: 500 })
     }
 
+    console.log(`📊 Found ${pendingJobs?.length || 0} pending job(s) in database`)
+    
     if (!pendingJobs || pendingJobs.length === 0) {
       console.log('✅ No pending jobs to process')
       return NextResponse.json({ 
