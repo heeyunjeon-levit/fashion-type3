@@ -922,18 +922,19 @@ export default function Home() {
       // Support both legacy array format and two-stage format (colorMatches/styleMatches)
       const allResults: Record<string, Array<{ link: string; thumbnail: string | null; title: string | null }> | { colorMatches: Array<{ link: string; thumbnail: string | null; title: string | null }>; styleMatches: Array<{ link: string; thumbnail: string | null; title: string | null }> }> = {}
       
-      // Process searches in parallel but track completion
-      // NOTE: We now use validItems instead of items (filtered above)
-      const searchPromises = validItems.map(async (item, idx) => {
-        
-        // Use the specific DINO-X category (e.g., "jeans", "cardigan")
+      // 🔧 FIX: Create ONE job with ALL items (not separate jobs per item)
+      // This ensures only ONE SMS is sent with all results combined
+      console.log(`🎯 Creating ONE job for ${totalItems} item(s)...`)
+      
+      // Step 1: Upload all data URLs to Supabase in parallel
+      console.log(`📤 Step 1: Uploading ${totalItems} images in parallel...`)
+      const uploadedItems = await Promise.all(validItems.map(async (item, idx) => {
         const itemName = item.category
         const key = `${itemName}_${idx + 1}`
-        
-        // If cropped URL is a data URL, upload it to Supabase first
         let croppedUrl = item.croppedImageUrl
+        
         if (croppedUrl && croppedUrl.startsWith('data:')) {
-          console.log(`📤 Uploading data URL to Supabase for ${itemName}...`)
+          console.log(`   📤 Uploading ${itemName}...`)
           try {
             const uploadResponse = await fetch('/api/upload-cropped', {
               method: 'POST',
@@ -943,123 +944,96 @@ export default function Home() {
             const uploadData = await uploadResponse.json()
             if (uploadData.url) {
               croppedUrl = uploadData.url
-              console.log(`✅ Uploaded to Supabase: ${croppedUrl?.substring(0, 60) || croppedUrl}...`)
+              console.log(`   ✅ ${itemName} uploaded`)
             }
           } catch (uploadError) {
-            console.error(`⚠️ Failed to upload ${itemName}, using data URL:`, uploadError)
+            console.error(`   ⚠️ Failed to upload ${itemName}:`, uploadError)
           }
         }
         
-        // Use cropped variations if available, otherwise use single crop
-        // For the search API, we only pass the primary URL (not the variations object)
-        // TypeScript safety: croppedUrl should always be defined here since we filtered validItems
-        const croppedImages = { [key]: croppedUrl! }
-        const categories = [item.category]
-        const descriptions = { [key]: item.description } // Pass GPT-4o descriptions!
-        
-        try {
-          console.log(`🔍 [ITEM ${idx + 1}/${totalItems}] Starting job for ${itemName}...`)
-          console.log(`   Description: "${item.description.substring(0, 80)}..."`)
-          console.log(`   Cropped URL: ${croppedUrl?.substring(0, 60) || croppedUrl || 'undefined'}...`)
-          console.log(`   Category: ${item.category}`)
-          
-          // Use job queue for background processing
-          const { searchWithJobQueue } = await import('@/lib/searchJobClient')
-          
-          // Format phone number for SMS - use parameter if provided, otherwise use state
-          const phoneToUse = phoneForSearch || phoneNumber
-          const formattedPhone = phoneToUse ? (phoneToUse.startsWith('+82') ? phoneToUse : `+82${phoneToUse.replace(/^0/, '')}`) : undefined
-          
-          console.log(`   📞 Phone for search: ${formattedPhone || 'none'}`)
-          console.log(`   🔑 Search key: ${key}`)
-          
-          const { results: data, meta } = await searchWithJobQueue(
-            {
-              categories,
-              croppedImages,
-              descriptions,
-              originalImageUrl: uploadedImageUrl,
-              useOCRSearch: useOCRSearch,
-              phoneNumber: formattedPhone,  // 📱 SMS notification
-              countryCode: '+82',
-            },
-            {
-              // Progress callback
-              onProgress: (progress) => {
-                // Update overall progress (20% to 95% range for searching)
-                const itemProgress = progress / 100 // 0 to 1
-                const overallProgress = Math.min(95, 20 + (itemProgress / totalItems) * 75)
-                setOverallProgress(prev => Math.max(prev, overallProgress))
-              },
-              // Enable notifications when tab is inactive
-              enableNotifications: true,
-              // Slower polling to reduce server load (especially with multiple items)
-              fastPollInterval: 2500,  // 2.5s when tab visible
-              slowPollInterval: 5000   // 5s when tab hidden
-            }
-          )
-          
-          console.log(`✅ Job complete for ${itemName}`)
-          console.log(`📦 Results structure:`, JSON.stringify(data).substring(0, 400))
-          console.log(`📦 Results type:`, typeof data)
-          console.log(`📦 Results is null?:`, data === null)
-          console.log(`📦 Results is undefined?:`, data === undefined)
-          
-          // Merge results
-          if (data) {
-            const resultCount = Object.keys(data).length
-            console.log(`📊 Result object has ${resultCount} keys:`, Object.keys(data))
-            if (resultCount === 0) {
-              console.warn(`⚠️  Search returned 0 results for ${itemName}`)
-            }
-            Object.entries(data).forEach(([category, categoryData]) => {
-              console.log(`   Processing category: ${category}`)
-              
-              // Handle new structure: { colorMatches: [...], styleMatches: [...] }
-              if (categoryData && typeof categoryData === 'object' && !Array.isArray(categoryData)) {
-                // New structure with colorMatches and styleMatches
-                const colorMatches = (categoryData as any).colorMatches || []
-                const styleMatches = (categoryData as any).styleMatches || []
-                
-                console.log(`   🎨 Color matches: ${colorMatches.length}`)
-                console.log(`   ✂️  Style matches: ${styleMatches.length}`)
-                console.log(`   ✅ Total: ${colorMatches.length + styleMatches.length} products for ${category}`)
-                
-                // PRESERVE two-stage structure for ResultsBottomSheet
-                allResults[category] = {
-                  colorMatches: colorMatches as Array<{ link: string; thumbnail: string | null; title: string | null }>,
-                  styleMatches: styleMatches as Array<{ link: string; thumbnail: string | null; title: string | null }>
-                }
-                console.log(`   ✅ Populated allResults['${category}']`, Object.keys(allResults))
-              } else if (Array.isArray(categoryData)) {
-                // Old structure: array of links
-                allResults[category] = categoryData as Array<{ link: string; thumbnail: string | null; title: string | null }>
-                console.log(`   ✅ Added ${categoryData.length} products for ${category}`)
-              } else {
-                console.error(`   ❌ Unexpected data type for ${category}:`, typeof categoryData)
-              }
-            })
-          } else {
-            console.warn(`⚠️  No results object for ${itemName}`)
-          }
-          
-          return { results: data, meta }
-        } catch (error) {
-          console.error(`Error searching ${itemName}:`, error)
-          return null
-        }
+        return { key, croppedUrl, item }
+      }))
+      
+      // Step 2: Combine all items into ONE job payload
+      console.log(`🎯 Step 2: Combining ${totalItems} items into ONE job...`)
+      const allCategories: string[] = []
+      const allCroppedImages: Record<string, string> = {}
+      const allDescriptions: Record<string, string> = {}
+      
+      uploadedItems.forEach(({ key, croppedUrl, item }) => {
+        allCategories.push(item.category)
+        allCroppedImages[key] = croppedUrl!
+        allDescriptions[key] = item.description
+        console.log(`   ✅ Added ${item.category} (${key})`)
       })
       
-      // Wait for all searches to complete
-      const searchResults = await Promise.all(searchPromises)
+      // Step 3: Create ONE job with ALL items
+      console.log(`🚀 Step 3: Starting ONE job for all ${totalItems} items...`)
+      const phoneToUse = phoneForSearch || phoneNumber
+      const formattedPhone = phoneToUse ? (phoneToUse.startsWith('+82') ? phoneToUse : `+82${phoneToUse.replace(/^0/, '')}`) : undefined
       
-      console.log(`✅ All searches complete`)
-      console.log(`📊 Search promises resolved: ${searchPromises.length} total`)
-      console.log(`📊 Non-null results: ${searchResults.filter(r => r !== null).length}`)
-      console.log(`📊 Null results: ${searchResults.filter(r => r === null).length}`)
-      console.log(`📊 Final allResults keys: ${Object.keys(allResults).length}`, Object.keys(allResults))
-      console.log(`📦 Final allResults structure:`, JSON.stringify(allResults, null, 2).substring(0, 500))
-      setOverallProgress(prev => Math.max(prev, 95)) // Ensure we're at least 95%
+      console.log(`   📞 Phone for SMS: ${formattedPhone || 'none'}`)
+      console.log(`   📦 Categories:`, allCategories)
+      console.log(`   🖼️  Cropped images: ${Object.keys(allCroppedImages).length}`)
+      console.log(`   📝 Descriptions: ${Object.keys(allDescriptions).length}`)
+      
+      try {
+        const { searchWithJobQueue } = await import('@/lib/searchJobClient')
+        
+        const { results: data, meta } = await searchWithJobQueue(
+          {
+            categories: allCategories,
+            croppedImages: allCroppedImages,
+            descriptions: allDescriptions,
+            originalImageUrl: uploadedImageUrl,
+            useOCRSearch: useOCRSearch,
+            phoneNumber: formattedPhone,  // 📱 ONE SMS for all items!
+            countryCode: '+82',
+          },
+          {
+            onProgress: (progress) => {
+              const overallProgress = Math.min(95, 20 + (progress / 100) * 75)
+              setOverallProgress(prev => Math.max(prev, overallProgress))
+            },
+            enableNotifications: true,
+            fastPollInterval: 2500,
+            slowPollInterval: 5000
+          }
+        )
+        
+        console.log(`✅ Combined job complete for ${totalItems} items!`)
+        console.log(`📦 Results:`, JSON.stringify(data).substring(0, 400))
+        
+        // Process combined results
+        if (data) {
+          const resultCount = Object.keys(data).length
+          console.log(`📊 Got results for ${resultCount} items`)
+          
+          Object.entries(data).forEach(([category, categoryData]) => {
+            // Handle new structure: { colorMatches: [...], styleMatches: [...] }
+            if (categoryData && typeof categoryData === 'object' && !Array.isArray(categoryData)) {
+              const colorMatches = (categoryData as any).colorMatches || []
+              const styleMatches = (categoryData as any).styleMatches || []
+              
+              console.log(`   ✅ ${category}: ${colorMatches.length} color + ${styleMatches.length} style`)
+              
+              allResults[category] = {
+                colorMatches: colorMatches as Array<{ link: string; thumbnail: string | null; title: string | null }>,
+                styleMatches: styleMatches as Array<{ link: string; thumbnail: string | null; title: string | null }>
+              }
+            } else if (Array.isArray(categoryData)) {
+              console.log(`   ✅ ${category}: ${categoryData.length} products`)
+              allResults[category] = categoryData as Array<{ link: string; thumbnail: string | null; title: string | null }>
+            }
+          })
+        }
+        
+        console.log(`✅ Search complete - ${Object.keys(allResults).length} categories`)
+        setOverallProgress(95)
+      } catch (error) {
+        console.error(`❌ Combined search error:`, error)
+        throw error
+      }
       
       setResults(allResults)
       
