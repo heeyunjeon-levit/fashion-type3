@@ -77,8 +77,8 @@ export default function PhoneModal({ onPhoneSubmit, onClose, isReturningUser }: 
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ touchAction: 'auto' }}>
-      {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} style={{ touchAction: 'auto' }} />
+      {/* Backdrop - No click to close (phone required for tracking) */}
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" style={{ touchAction: 'auto' }} />
       
       {/* Modal - Post-it style */}
       <div className="relative bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-2xl shadow-2xl max-w-md w-full p-8 transform rotate-1 hover:rotate-0 transition-transform" style={{ touchAction: 'auto' }}>

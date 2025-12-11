@@ -1350,7 +1350,7 @@ export default function Home() {
         )}
       </div>
       
-      {/* Phone Modal - Show before showing results */}
+      {/* Phone Modal - REQUIRED to see results (for tracking & SMS) */}
       {showPhoneModal && (
         <PhoneModal
           onPhoneSubmit={async (phone: string) => {
@@ -1375,7 +1375,7 @@ export default function Home() {
             if (useOCRSearch && Object.keys(results).length > 0) {
               console.log('✅ OCR mode: Showing results immediately')
               
-              // Log search results
+              // Log search results with phone number for tracking
               if (sessionManager) {
                 sessionManager.logSearchResults(results, { 
                   mode: 'ocr_hybrid_nextjs',
@@ -1397,17 +1397,7 @@ export default function Home() {
             // Start search immediately (non-blocking)
             processPendingItems(phone).catch((error: any) => console.error('❌ Search error:', error))
           }}
-          onClose={() => {
-            setShowPhoneModal(false)
-            setPendingBboxes(null)
-            
-            // OCR MODE: If user closes modal, show results anyway (don't block them)
-            if (useOCRSearch && Object.keys(results).length > 0) {
-              console.log('⚠️  User closed phone modal, showing OCR results anyway')
-              setOverallProgress(100)
-              setCurrentStep('results')
-            }
-          }}
+          {/* No onClose - phone is REQUIRED for tracking/SMS */}
         />
       )}
     </main>
