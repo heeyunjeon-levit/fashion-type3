@@ -19,28 +19,59 @@
 .DS_Store
 *.pem
 
-# batch test results
-/batch_test_results
-/test_images
-
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# local env files
-.env*.local
-
-# Private phone number mapping (DO NOT COMMIT!)
-phone_hash_mapping.json
+# Environment files
 .env
+.env*
+*.env
+.env.local
+.env.*.local
 
-# vercel
+# Private data (DO NOT COMMIT!)
+phone_hash_mapping.json
+
+# Vercel
 .vercel
 
-# typescript
+# TypeScript
 *.tsbuildinfo
 next-env.d.ts
+
+# Logs and test results
+*.log
+*.log.*
+/batch_test_results
+/batch_results
+/batch*_results
+batch*.log
+dev-server*.log
+test_*.json
+pipeline_*.json
+*_test_*.json
+serper_stats.log
+
+# Test files and scripts (keep in archive only)
+/test_images
+test_*.js
+test_*.py
+debug_*.js
+check_*.js
+verify_*.js
+rerun_*.js
+analyze_*.js
+generate_*.js
+monitor_*.sh
+
+# Batch processing data
+*.csv
+batch*.json
+final_*.json
+retry_*.json
+
+# Test HTML files
+public/batch*.html
+public/test*.html
+public/ocr-test*.html
+public/*-results*.html
 
 # Python
 __pycache__/
@@ -59,10 +90,22 @@ python_backend/venv/
 python_backend/out_optimized/
 python_backend/data/weights/*.pt
 python_backend/data/weights/*.pth
+python_backend/backend.log
+python_backend/__pycache__/
 
-.env
-.env*
-*.env
-.env
-.env*
-*.env
+# Archive (already committed, no need to track new files)
+/archive
+
+# Temporary documentation (keep only essential docs in root)
+*_GUIDE.md
+*_SUMMARY.md
+*_FIX.md
+*_DEBUG.md
+*_DEPLOYMENT.md
+*_ANALYSIS.md
+*_INSTRUCTIONS.md
+*_CHECKLIST.md
+*_README.md
+*_STATUS.md
+*_COMPLETE.md
+*_SUCCESS.md
