@@ -408,19 +408,35 @@ export default function Home() {
         }
         
         setOverallProgress(80)
-        setResults(results)
         
+        // ✨ Show phone modal BEFORE displaying results (OCR is fast enough!)
+        console.log('📱 OCR results ready, showing phone modal...')
+        
+        // Store results and OCR data temporarily
+        const tempResults = results
+        const tempOcrData = ocrData
+        
+        // Show phone modal
+        setIsLoading(false) // Stop loading so modal is visible
+        setShowPhoneModal(true)
+        
+        // Wait for phone submission (handled in PhoneModal onPhoneSubmit)
+        // The modal callback will:
+        // 1. Store phone number
+        // 2. Log results with sessionManager
+        // 3. Display results
+        
+        // Store results in state for modal callback to access
+        setResults(tempResults)
+        
+        // Store OCR data in sessionManager for analytics
         if (sessionManager) {
-          sessionManager.logSearchResults(results, { 
-            mode: 'ocr_hybrid_nextjs',
-            extracted_text: ocrData.extracted_text,
-            brands_detected: ocrData.product_results.map((p: any) => p.brand).join(', ')
+          await sessionManager.logEvent('ocr_results_ready', {
+            extracted_text: tempOcrData.extracted_text,
+            brands_detected: tempOcrData.product_results.map((p: any) => p.brand).join(', '),
+            results_count: Object.keys(tempResults).length
           })
         }
-        
-        setOverallProgress(100)
-        setCurrentStep('results')
-        setIsLoading(false)
       } catch (error) {
         console.error('Error in OCR search:', error)
         alert('OCR 검색 중 오류가 발생했습니다. 다시 시도해주세요.')
@@ -1334,7 +1350,7 @@ export default function Home() {
         )}
       </div>
       
-      {/* Phone Modal - Show before search starts */}
+      {/* Phone Modal - Show before showing results */}
       {showPhoneModal && (
         <PhoneModal
           onPhoneSubmit={async (phone: string) => {
@@ -1345,13 +1361,7 @@ export default function Home() {
             
             // IMMEDIATELY update UI state (synchronous - no delay!)
             setPhoneNumber(phone)
-            if (pendingBboxes) {
-              setProcessingItems(pendingBboxes.map(bbox => ({ category: bbox.category })))
-            }
-            setCurrentStep('processing') // Show progress bar instantly!
             
-            // Process in background (non-blocking) - fire and forget
-            // This ensures the modal closes instantly without waiting for API calls
             const formattedPhone = phone.startsWith('+82') ? phone : `+82${phone.replace(/^0/, '')}`
             
             // Log phone number (non-blocking)
@@ -1361,12 +1371,42 @@ export default function Home() {
                 .catch((error: any) => console.error('❌ Failed to log phone:', error))
             }
             
+            // OCR MODE: Results are already ready, just show them!
+            if (useOCRSearch && Object.keys(results).length > 0) {
+              console.log('✅ OCR mode: Showing results immediately')
+              
+              // Log search results
+              if (sessionManager) {
+                sessionManager.logSearchResults(results, { 
+                  mode: 'ocr_hybrid_nextjs',
+                  phone_number: formattedPhone
+                }).catch((error: any) => console.error('❌ Failed to log results:', error))
+              }
+              
+              setOverallProgress(100)
+              setCurrentStep('results')
+              return
+            }
+            
+            // NORMAL MODE: Process pending items
+            if (pendingBboxes) {
+              setProcessingItems(pendingBboxes.map(bbox => ({ category: bbox.category })))
+            }
+            setCurrentStep('processing') // Show progress bar instantly!
+            
             // Start search immediately (non-blocking)
             processPendingItems(phone).catch((error: any) => console.error('❌ Search error:', error))
           }}
           onClose={() => {
             setShowPhoneModal(false)
             setPendingBboxes(null)
+            
+            // OCR MODE: If user closes modal, show results anyway (don't block them)
+            if (useOCRSearch && Object.keys(results).length > 0) {
+              console.log('⚠️  User closed phone modal, showing OCR results anyway')
+              setOverallProgress(100)
+              setCurrentStep('results')
+            }
           }}
         />
       )}
