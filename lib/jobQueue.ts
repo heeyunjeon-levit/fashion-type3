@@ -64,9 +64,14 @@ export async function createJob(input: {
   // Store in memory for fast access
   jobs.set(id, job)
   console.log(`✅ Created job ${id}${job.phoneNumber ? ` with phone number ${job.phoneNumber}` : ''}`)
+  console.log(`   Supabase URL: ${process.env.NEXT_PUBLIC_SUPABASE_URL}`)
+  console.log(`   Has Service Role Key: ${process.env.SUPABASE_SERVICE_ROLE_KEY ? 'yes' : 'NO'}`)
   
   // CRITICAL: Save to database immediately so job persists across server restarts
-  await saveJobToDatabase(job)
+  const saved = await saveJobToDatabase(job)
+  if (!saved) {
+    console.error(`⚠️  WARNING: Job ${id} was NOT saved to database! It will only exist in memory.`)
+  }
   
   // Schedule cleanup from memory only (DB entries cleaned up separately)
   setTimeout(() => {

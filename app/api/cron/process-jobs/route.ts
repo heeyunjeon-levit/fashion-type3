@@ -22,6 +22,9 @@ export async function GET(request: Request) {
   }
 
   console.log('🔄 Cron job started - checking for pending jobs...')
+  console.log(`   Environment: ${process.env.VERCEL_ENV || 'unknown'}`)
+  console.log(`   Supabase URL: ${process.env.NEXT_PUBLIC_SUPABASE_URL || 'not set'}`)
+  console.log(`   Has Service Role Key: ${process.env.SUPABASE_SERVICE_ROLE_KEY ? 'yes' : 'NO'}`)
   
   const cronStartTime = Date.now()
   const MAX_CRON_DURATION_MS = 280000 // 4 min 40 sec (leave 20s buffer before 5 min timeout)
@@ -43,6 +46,22 @@ export async function GET(request: Request) {
     }
 
     console.log(`📊 Found ${pendingJobs?.length || 0} pending job(s) in database`)
+    
+    // DEBUG: Show ALL jobs in database (first 5) to diagnose issue
+    const { data: allJobs } = await supabase
+      .from('search_jobs')
+      .select('job_id, status, created_at')
+      .order('created_at', { ascending: false })
+      .limit(5)
+    
+    if (allJobs && allJobs.length > 0) {
+      console.log(`   🔍 Recent jobs in DB (total: ${allJobs.length}):`)
+      allJobs.forEach(j => {
+        console.log(`      - ${j.job_id}: ${j.status} (created ${new Date(j.created_at).toLocaleString()})`)
+      })
+    } else {
+      console.log(`   ⚠️  Database appears EMPTY - no jobs found at all!`)
+    }
     
     if (!pendingJobs || pendingJobs.length === 0) {
       console.log('✅ No pending jobs to process')
