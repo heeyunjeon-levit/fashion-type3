@@ -377,49 +377,27 @@ export default function Home() {
           return
         }
         
-        setOverallProgress(30)
-        
-        // Step 2: For each brand, do hybrid search with /api/search (has Lens + GPT)
-        console.log(`\n🔎 Step 2: Hybrid search for ${ocrData.product_results.length} brand(s)...`)
+        // Step 2: Transform OCR results to frontend format (no additional searches needed!)
+        console.log(`\n✅ Formatting ${ocrData.product_results.length} product(s) for display...`)
         
         const results: Record<string, any> = {}
-        let completedSearches = 0
         
         for (const productResult of ocrData.product_results) {
           const brand = productResult.brand
           const searchTerm = productResult.exact_ocr_text || productResult.product_type
           
-          console.log(`   Searching: ${brand} - ${searchTerm}`)
+          // Create a readable key for the frontend
+          const resultKey = `${brand} - ${searchTerm}`.substring(0, 80)
           
-          try {
-            // Use existing /api/search with Lens + GPT
-            const searchResponse = await fetch('/api/search', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                categories: [brand],
-                croppedImages: { [brand]: imageUrlToUse }, // Use full image for Lens search
-                originalImageUrl: imageUrlToUse,
-                useOCRSearch: false, // Use regular hybrid search, not OCR mode
-              }),
-            })
-            
-            const searchData = await searchResponse.json()
-            
-            if (searchData.results && searchData.results[brand] && searchData.results[brand].length > 0) {
-              const resultKey = `${brand} - ${searchTerm}`.substring(0, 80)
-              results[resultKey] = searchData.results[brand]
-              console.log(`   ✅ Found ${searchData.results[brand].length} results for ${brand}`)
-            } else {
-              console.log(`   ⚠️  No results for ${brand}`)
-            }
-          } catch (searchError) {
-            console.error(`   ❌ Search failed for ${brand}:`, searchError)
-          }
+          // Transform OCR results to match frontend expected format
+          results[resultKey] = productResult.results.map((r: any) => ({
+            title: r.title || 'Product',
+            link: r.link || '',
+            thumbnail: r.thumbnail || null,
+            snippet: r.snippet || ''
+          }))
           
-          completedSearches++
-          const progress = 30 + (completedSearches / ocrData.product_results.length) * 60
-          setOverallProgress(Math.min(progress, 90))
+          console.log(`   ✅ ${brand}: ${productResult.results.length} results`)
         }
         
         if (Object.keys(results).length === 0) {
@@ -429,6 +407,7 @@ export default function Home() {
           return
         }
         
+        setOverallProgress(80)
         setResults(results)
         
         if (sessionManager) {
