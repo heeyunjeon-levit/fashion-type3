@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import ImageUpload from './components/ImageUpload'
 import CroppedImageGallery from './components/CroppedImageGallery'
 import InteractiveBboxSelector from './components/InteractiveBboxSelector'
@@ -1078,16 +1078,19 @@ export default function Home() {
     window.location.reload()
   }
 
-  // Build croppedImages map for Results component
-  const croppedImagesForResults: Record<string, string> = {}
-  selectedItems.forEach((item, idx) => {
-    if (item.croppedImageUrl) {
-      // Use the specific DINO-X category to match search results keys
-      const itemName = item.category
-      const key = `${itemName}_${idx + 1}`
-      croppedImagesForResults[key] = item.croppedImageUrl
-    }
-  })
+  // Build croppedImages map for Results component (computed value)
+  const croppedImagesForResults = useMemo(() => {
+    const map: Record<string, string> = {}
+    selectedItems.forEach((item, idx) => {
+      if (item.croppedImageUrl) {
+        // Use the specific DINO-X category to match search results keys
+        const itemName = item.category
+        const key = `${itemName}_${idx + 1}`
+        map[key] = item.croppedImageUrl
+      }
+    })
+    return map
+  }, [selectedItems])
 
   return (
     <main className="min-h-screen bg-white">
