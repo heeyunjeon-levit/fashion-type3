@@ -636,9 +636,22 @@ export default function Home() {
     }
 
     // 📱 SMS NOTIFICATION: Show phone modal BEFORE starting search
-    console.log('📱 Showing phone modal before search...')
-    setPendingBboxes(selectedBboxes)
-    setShowPhoneModal(true)
+    // BUT: If phone number is already known (backfilled), skip modal and start immediately!
+    if (phoneNumber) {
+      console.log(`📱 Phone number already known (${phoneNumber}) - starting search immediately!`)
+      setPendingBboxes(selectedBboxes)
+      
+      // Set processing state immediately
+      setProcessingItems(selectedBboxes.map(bbox => ({ category: bbox.category })))
+      setCurrentStep('processing')
+      
+      // Start search with existing phone number
+      await processPendingItems(phoneNumber)
+    } else {
+      console.log('📱 No phone number - showing modal...')
+      setPendingBboxes(selectedBboxes)
+      setShowPhoneModal(true)
+    }
   }
 
   // Process items after phone number is collected
