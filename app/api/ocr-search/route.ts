@@ -12,11 +12,19 @@ const openai = new OpenAI({
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || process.env.GCLOUD_API_KEY || '')
 
 /**
- * Extract primary color from image using GPT-4 Vision
+ * Extract color of a SPECIFIC item from image using GPT-4 Vision
+ * @param imageUrl - The original image URL
+ * @param productType - Type of item (e.g., "tops", "bottoms", "bag")
+ * @param productDescription - OCR text describing the item (e.g., "울 케이블 라운드넥 카디건")
+ * @returns Color name (e.g., "gray", "navy", "beige")
  */
-async function detectPrimaryColor(imageUrl: string): Promise<string | null> {
+async function detectItemColor(
+  imageUrl: string, 
+  productType: string, 
+  productDescription: string
+): Promise<string | null> {
   try {
-    console.log('🎨 Detecting primary color from image...')
+    console.log(`🎨 Detecting color for ${productType}: "${productDescription}"`)
     
     const response = await openai.chat.completions.create({
       model: 'gpt-4o',
@@ -29,12 +37,15 @@ async function detectPrimaryColor(imageUrl: string): Promise<string | null> {
           },
           {
             type: 'text',
-            text: `What is the PRIMARY/DOMINANT color of the main clothing item in this image? 
-            
+            text: `Look at this image. There is a ${productType} (${productDescription}).
+
+What is the PRIMARY COLOR of this ${productType}?
+
 Return ONLY ONE WORD (the most specific color name):
-- Examples: "beige", "navy", "charcoal", "olive", "burgundy", "cream", "khaki", "gray"
-- Be specific: Use "navy" not "blue", "charcoal" not "dark gray"
-- If multiple items: Focus on the MOST PROMINENT item
+- Examples: "gray", "black", "navy", "white", "beige", "brown", "olive", "cream"
+- Be specific: Use "navy" not "blue", "charcoal" not "gray"
+- Focus ONLY on the ${productType}, ignore other items
+- If there are multiple colors, return the DOMINANT one
 
 ONE WORD ONLY:`
           }
@@ -45,11 +56,11 @@ ONE WORD ONLY:`
     })
     
     const color = response.choices[0]?.message?.content?.trim().toLowerCase() || null
-    console.log(`   ✅ Detected color: ${color}`)
+    console.log(`   ✅ Detected color for ${productType}: ${color}`)
     return color
     
   } catch (error) {
-    console.error('   ❌ Color detection failed:', error)
+    console.error(`   ❌ Color detection failed for ${productType}:`, error)
     return null
   }
 }
@@ -568,49 +579,51 @@ If NO fashion brands found, return: {"products": []}`
       })
     }
     
-    // Step 4: COLOR FILTERING (Filter results to match original image color)
-    console.log('\n🎨 Step 4: Color filtering...')
+    // Step 4: COLOR FILTERING (Detect color for EACH item and filter)
+    console.log('\n🎨 Step 4: Per-item color detection and filtering...')
     
-    // Detect primary color from original image
-    const primaryColor = await detectPrimaryColor(imageUrl)
-    
-    let finalResults = successfulSearches
-    
-    if (primaryColor) {
-      console.log(`   ✅ Detected color: ${primaryColor}`)
-      console.log(`   🔍 Filtering results to match ${primaryColor} color...`)
-      
-      // Filter each product's results by color
-      finalResults = await Promise.all(
-        successfulSearches.map(async (productResult: any) => {
-          const colorFilteredResults = await filterResultsByColor(
-            imageUrl,
-            productResult.results,
-            primaryColor
-          )
-          
+    let finalResults = await Promise.all(
+      successfulSearches.map(async (productResult: any) => {
+        // Detect color of THIS SPECIFIC ITEM in the image
+        const itemColor = await detectItemColor(
+          imageUrl,
+          productResult.product_type,
+          productResult.exact_ocr_text || productResult.brand
+        )
+        
+        if (!itemColor) {
+          console.log(`   ⚠️  Could not detect color for ${productResult.brand}, skipping color filter`)
           return {
             ...productResult,
-            results: colorFilteredResults,
-            primary_color: primaryColor  // Include detected color in response
+            detected_color: null
           }
-        })
-      )
-      
-      // Remove products with no color-matching results
-      finalResults = finalResults.filter(p => p.results.length > 0)
-      
-      console.log(`   ✅ Color filtering complete: ${finalResults.length} products with color-matching results`)
-    } else {
-      console.log('   ⚠️  Could not detect color, skipping color filter')
-    }
+        }
+        
+        console.log(`   🔍 Filtering ${productResult.brand} results to match ${itemColor} color...`)
+        
+        // Filter this product's results by its detected color
+        const colorFilteredResults = await filterResultsByColor(
+          imageUrl,
+          productResult.results,
+          itemColor
+        )
+        
+        return {
+          ...productResult,
+          results: colorFilteredResults,
+          detected_color: itemColor  // Include detected color for this item
+        }
+      })
+    )
+    
+    // Remove products with no color-matching results
+    finalResults = finalResults.filter(p => p.results.length > 0)
     
     if (finalResults.length === 0) {
       console.log('   ⚠️  No color-matching results found')
       return NextResponse.json({
         success: false,
-        reason: `No ${primaryColor || ''} products found matching your search`,
-        detected_color: primaryColor
+        reason: 'No color-matching products found'
       })
     }
     
@@ -619,8 +632,7 @@ If NO fashion brands found, return: {"products": []}`
     return NextResponse.json({
       success: true,
       product_results: finalResults,
-      extracted_text: fullText,
-      detected_color: primaryColor
+      extracted_text: fullText
     })
     
   } catch (error) {
