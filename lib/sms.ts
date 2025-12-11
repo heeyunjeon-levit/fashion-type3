@@ -191,7 +191,7 @@ export async function sendSearchResultsNotification(
   const baseUrl =
     process.env.NEXT_PUBLIC_BASE_URL || 'https://fashionsource.vercel.app'
   const resultsUrl = `${baseUrl}/search-results/${jobId}`
-  const message = `✨ Your fashion search is ready!\nView your results here:\n${resultsUrl}`
+  const message = `요청하신 상품 검색이 완료되었습니다! 링크를 통해 결과를 확인하세요: ${resultsUrl}`
 
   // Use the main sendSMS function (handles msgid generation correctly)
   return await sendSMS({

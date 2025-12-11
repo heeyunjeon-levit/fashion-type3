@@ -180,7 +180,7 @@ async function processSearchJob(jobId: string, body: any) {
           
           // Send SMS with the shareable UUID link
           const { sendSMS } = await import('@/lib/sms')
-          const message = `✨ Your fashion search is ready! View your results here: ${shareUrl}`
+          const message = `요청하신 상품 검색이 완료되었습니다! 링크를 통해 결과를 확인하세요: ${shareUrl}`
           const smsSent = await sendSMS({
             to: job.phoneNumber,
             message
