@@ -32,11 +32,14 @@ export async function GET(request: Request) {
   try {
     const supabase = getSupabaseServerClient()
 
-    // Find all pending jobs (oldest first)
+    // Find all pending jobs OR stale processing jobs (oldest first)
+    // Stale = jobs that have been "processing" for more than 10 minutes (likely crashed)
+    const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000).toISOString()
+    
     const { data: pendingJobs, error } = await supabase
       .from('search_jobs')
       .select('*')
-      .eq('status', 'pending')
+      .or(`status.eq.pending,and(status.eq.processing,updated_at.lt.${tenMinutesAgo})`)
       .order('created_at', { ascending: true })
       .limit(2) // Process up to 2 jobs per cron run (reduced from 5 to avoid timeout)
 
@@ -45,19 +48,44 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: 'Database error' }, { status: 500 })
     }
 
-    console.log(`📊 Found ${pendingJobs?.length || 0} pending job(s) in database`)
+    console.log(`📊 Found ${pendingJobs?.length || 0} job(s) to process (pending or stale)`)
+    
+    // CLEANUP: Mark very old processing jobs as failed (stuck for > 1 hour)
+    const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString()
+    const { data: veryStaleJobs } = await supabase
+      .from('search_jobs')
+      .select('job_id, updated_at')
+      .eq('status', 'processing')
+      .lt('updated_at', oneHourAgo)
+    
+    if (veryStaleJobs && veryStaleJobs.length > 0) {
+      console.log(`   🧹 Cleaning up ${veryStaleJobs.length} very stale job(s) (stuck > 1 hour)`)
+      for (const staleJob of veryStaleJobs) {
+        await supabase
+          .from('search_jobs')
+          .update({ 
+            status: 'failed', 
+            error: 'Job timed out - stuck in processing for over 1 hour',
+            updated_at: new Date().toISOString()
+          })
+          .eq('job_id', staleJob.job_id)
+        console.log(`      ❌ Marked ${staleJob.job_id} as failed (stuck since ${new Date(staleJob.updated_at).toLocaleString()})`)
+      }
+    }
     
     // DEBUG: Show ALL jobs in database (first 5) to diagnose issue
     const { data: allJobs } = await supabase
       .from('search_jobs')
-      .select('job_id, status, created_at')
+      .select('job_id, status, created_at, updated_at')
       .order('created_at', { ascending: false })
       .limit(5)
     
     if (allJobs && allJobs.length > 0) {
       console.log(`   🔍 Recent jobs in DB (total: ${allJobs.length}):`)
       allJobs.forEach(j => {
-        console.log(`      - ${j.job_id}: ${j.status} (created ${new Date(j.created_at).toLocaleString()})`)
+        const age = Math.floor((Date.now() - new Date(j.updated_at).getTime()) / 60000)
+        const isStale = j.status === 'processing' && age > 10
+        console.log(`      - ${j.job_id}: ${j.status} ${isStale ? '⚠️ STALE!' : ''} (updated ${age}m ago)`)
       })
     } else {
       console.log(`   ⚠️  Database appears EMPTY - no jobs found at all!`)
@@ -90,7 +118,12 @@ export async function GET(request: Request) {
       }
       
        try {
-         console.log(`🚀 Processing job ${job.job_id}... (${Math.round(elapsedMs / 1000)}s elapsed)`)
+         const isRetry = job.status === 'processing'
+         console.log(`${isRetry ? '🔄 RETRYING' : '🚀 Processing'} job ${job.job_id}... (${Math.round(elapsedMs / 1000)}s elapsed)`)
+         if (isRetry) {
+           const lastUpdated = Math.floor((Date.now() - new Date(job.updated_at).getTime()) / 60000)
+           console.log(`   ⚠️ Job was stuck in 'processing' for ${lastUpdated} minutes - retrying now`)
+         }
   
          // Mark as processing
          await supabase

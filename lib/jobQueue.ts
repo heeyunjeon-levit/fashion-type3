@@ -126,9 +126,11 @@ export async function updateJobProgress(id: string, progress: number, status?: S
     console.log(`📊 Job ${id} progress: ${progress}% (${job.status})`)
     
     // Persist to database so progress survives server restarts
-    await saveJobToDatabase(job).catch(err => {
-      console.error(`Failed to persist progress for job ${id}:`, err)
-    })
+    const saved = await saveJobToDatabase(job)
+    if (!saved) {
+      console.error(`⚠️ Failed to persist progress for job ${id} to database`)
+      // Non-critical - progress updates can fail without breaking the job
+    }
   }
 }
 
@@ -143,10 +145,15 @@ export async function completeJob(id: string, results: any, meta?: any): Promise
     jobs.set(id, job)
     console.log(`✅ Job ${id} completed`)
     
-    // Save to database for persistence (don't await - fire and forget)
-    saveJobToDatabase(job).catch(err => {
-      console.error(`Failed to save completed job ${id} to database:`, err)
-    })
+    // CRITICAL: MUST save to database for persistence (await it!)
+    const saved = await saveJobToDatabase(job)
+    if (!saved) {
+      console.error(`⚠️ CRITICAL: Failed to save completed job ${id} to database!`)
+      console.error(`   Job will appear completed in memory but stuck in 'processing' in database`)
+      // Don't throw - job is still completed in memory for immediate access
+    } else {
+      console.log(`💾 Job ${id} completion saved to database successfully`)
+    }
   }
 }
 
