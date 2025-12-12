@@ -14,6 +14,9 @@ export async function POST(request: NextRequest) {
   try {
     const { imageUrl, category, bbox, imageSize } = await request.json()
 
+    console.log(`🚨 DESCRIBE-ITEM DEBUG: category=${category}, imageUrl type=${typeof imageUrl}, starts with data:${imageUrl?.startsWith('data:')}`)
+    console.log(`🚨 imageUrl preview: ${imageUrl?.substring(0, 100)}`)
+
     if (!imageUrl || !category) {
       console.error('❌ Missing required fields:', { imageUrl: !!imageUrl, category: !!category })
       return NextResponse.json(
@@ -27,6 +30,8 @@ export async function POST(request: NextRequest) {
     
     // Convert HTTP URL to data URL if needed (Gemini requires data URLs)
     let finalImageUrl = imageUrl
+    
+    console.log(`🚨 Checking if conversion needed: imageUrl.startsWith('data:') = ${imageUrl.startsWith('data:')}`)
     
     if (!imageUrl.startsWith('data:')) {
       console.log(`🔄 Converting HTTP URL to data URL for Gemini...`)
@@ -249,8 +254,11 @@ For unknown categories:
     const promptConfig = getCategoryPrompt(category)
     
     // Prepare image data for new SDK
-    if (!imageUrl.startsWith('data:')) {
-      throw new Error('HTTP URLs not yet supported with Gemini - please use data URLs')
+    // finalImageUrl is guaranteed to be a data URL after conversion above
+    if (!finalImageUrl.startsWith('data:')) {
+      console.error(`❌ CRITICAL: finalImageUrl is not a data URL! This should never happen!`)
+      console.error(`   finalImageUrl: ${finalImageUrl.substring(0, 100)}`)
+      throw new Error('Internal error: Image conversion failed')
     }
     
     // Data URL - extract base64 and MIME type
