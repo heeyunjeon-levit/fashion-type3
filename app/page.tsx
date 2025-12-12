@@ -795,6 +795,8 @@ export default function Home() {
               // Clear the progress simulator
               clearInterval(descProgressInterval)
               
+              let finalCategory = bbox.category // Default to DINO-X category
+              
               if (descResponse.ok) {
                 const descData = await descResponse.json()
                 // Parse JSON if it's in the new structured format
@@ -807,6 +809,13 @@ export default function Home() {
                   // If not JSON, use as-is (fallback for old format)
                 }
                 description = cleanDescription
+                
+                // 🔥 CRITICAL: Use overridden category from description API (e.g. "robe" instead of "sweater")
+                if (descData.category && descData.category !== bbox.category) {
+                  console.log(`🔄 Category override: "${bbox.category}" → "${descData.category}" (from description API)`)
+                  finalCategory = descData.category
+                }
+                
                 console.log(`✅ Description (${descTime}s): "${description.substring(0, 60)}..."`)
               } else {
                 const errorText = await descResponse.text()
@@ -843,8 +852,8 @@ export default function Home() {
             setOverallProgress(prev => Math.max(prev, targetProgress))
             
             return {
-              category: bbox.category, // DINO-X category: "jeans", "cardigan", "blazer"
-              parent_category: bbox.mapped_category, // Parent for filtering: "bottoms", "tops"
+              category: finalCategory, // ✅ Use overridden category from description API (e.g. "robe" not "sweater")
+              parent_category: bbox.mapped_category, // Parent from DINO-X (may be overridden in search)
               description: description,
               croppedImageUrl: uploadedUrls[0], // Primary crop for display
               croppedImageUrls: uploadedUrls, // All variations for search
