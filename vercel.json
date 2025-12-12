@@ -21,7 +21,6 @@
     {
       "path": "/api/cron/process-jobs",
       "schedule": "* * * * *"
-  }
+    }
   ]
 }
-
