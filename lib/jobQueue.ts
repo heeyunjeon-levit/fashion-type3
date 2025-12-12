@@ -218,12 +218,30 @@ export async function saveJobToDatabase(job: SearchJob): Promise<boolean> {
       // If job_data column doesn't exist, that's ok
     }
     
-    const { error } = await supabase
+    // Try UPDATE first (for existing jobs), then INSERT if it doesn't exist
+    const { data: existingJob } = await supabase
       .from('search_jobs')
-      .upsert(payload, {
-        onConflict: 'job_id',  // Use job_id as unique key for updates
-        ignoreDuplicates: false // Always update if exists
-      })
+      .select('job_id')
+      .eq('job_id', job.id)
+      .single()
+    
+    let error
+    if (existingJob) {
+      // Job exists - do UPDATE
+      console.log(`   📝 Updating existing job ${job.id}...`)
+      const { error: updateError } = await supabase
+        .from('search_jobs')
+        .update(payload)
+        .eq('job_id', job.id)
+      error = updateError
+    } else {
+      // Job doesn't exist - do INSERT
+      console.log(`   ✨ Inserting new job ${job.id}...`)
+      const { error: insertError } = await supabase
+        .from('search_jobs')
+        .insert(payload)
+      error = insertError
+    }
     
     if (error) {
       console.error(`❌ Failed to save job ${job.id} to database:`, error)
