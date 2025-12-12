@@ -768,6 +768,7 @@ export default function Home() {
             
             // Continue with description...
             let description = `${bbox.category} item`
+            let finalCategory = bbox.category // Default to DINO-X category (may be overridden by description API)
             const descStartTime = Date.now()
             let descProgressInterval: NodeJS.Timeout | undefined // Declare outside try block
             try {
@@ -794,8 +795,6 @@ export default function Home() {
               
               // Clear the progress simulator
               clearInterval(descProgressInterval)
-              
-              let finalCategory = bbox.category // Default to DINO-X category
               
               if (descResponse.ok) {
                 const descData = await descResponse.json()
