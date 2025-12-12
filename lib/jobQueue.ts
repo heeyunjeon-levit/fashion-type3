@@ -256,25 +256,49 @@ export async function saveJobToDatabase(job: SearchJob): Promise<boolean> {
     console.log(`   Status saved: ${job.status}`)
     console.log(`   Progress saved: ${job.progress}%`)
     
-    // Small delay to ensure database transaction commits (Supabase async replication)
-    await new Promise(resolve => setTimeout(resolve, 100))
+    // CRITICAL: Wait for database transaction to commit
+    // Supabase uses async replication, need to wait for write to propagate
+    await new Promise(resolve => setTimeout(resolve, 200))
     
     // Verify the save by reading it back with fresh query
-    const { data: verifyData } = await supabase
-      .from('search_jobs')
-      .select('status, progress, updated_at')
-      .eq('job_id', job.id)
-      .single()
-    
-    if (verifyData) {
-      console.log(`   ✅ Verified in DB: status=${verifyData.status}, progress=${verifyData.progress}`)
-      if (verifyData.status !== job.status) {
-        console.error(`   ⚠️  DATABASE MISMATCH! Saved ${job.status} but DB shows ${verifyData.status}`)
-        console.error(`   This indicates the upsert is not updating existing rows!`)
-        return false // Treat as failure
+    // Try up to 3 times with delays to handle async replication
+    let verifyData = null
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      const { data } = await supabase
+        .from('search_jobs')
+        .select('status, progress, updated_at')
+        .eq('job_id', job.id)
+        .single()
+      
+      verifyData = data
+      
+      if (verifyData && verifyData.status === job.status && verifyData.progress === job.progress) {
+        // Success! Data matches what we saved
+        console.log(`   ✅ Verified in DB (attempt ${attempt}): status=${verifyData.status}, progress=${verifyData.progress}`)
+        break
+      } else if (verifyData) {
+        // Data exists but doesn't match
+        console.warn(`   ⚠️  Verification attempt ${attempt}: Saved ${job.status}/${job.progress}% but DB shows ${verifyData.status}/${verifyData.progress}%`)
+        if (attempt < 3) {
+          await new Promise(resolve => setTimeout(resolve, 300)) // Wait before retry
+        }
+      } else {
+        console.warn(`   ⚠️  Verification attempt ${attempt}: Job not found in DB`)
+        if (attempt < 3) {
+          await new Promise(resolve => setTimeout(resolve, 300)) // Wait before retry
+        }
       }
-    } else {
-      console.error(`   ⚠️  Could not verify save - job not found in DB immediately after save!`)
+    }
+    
+    if (!verifyData) {
+      console.error(`   ❌ CRITICAL: Job not found in DB after 3 verification attempts!`)
+      return false
+    }
+    
+    if (verifyData.status !== job.status || verifyData.progress !== job.progress) {
+      console.error(`   ❌ CRITICAL: Database mismatch persists after 3 attempts!`)
+      console.error(`   Expected: ${job.status}/${job.progress}%`)
+      console.error(`   Got: ${verifyData.status}/${verifyData.progress}%`)
       return false // Treat as failure
     }
     
