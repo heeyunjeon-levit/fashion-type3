@@ -1,11 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { GoogleGenAI } from '@google/genai'
-import sharp from 'sharp'
 import { createClient } from '@supabase/supabase-js'
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic'
 export const maxDuration = 90 // Allow up to 90 seconds for Gemini 3 Pro (can be slow with complex images)
+
+// Dynamically import sharp (has native bindings, might fail on some platforms)
+let sharp: any = null
+try {
+  sharp = require('sharp')
+  console.log('✅ Sharp loaded successfully')
+} catch (error) {
+  console.warn('⚠️  Sharp failed to load - backend cropping disabled:', error)
+}
 
 // Use dedicated Gemini API key (project-specific, not gcloud)
 const client = new GoogleGenAI({
@@ -36,11 +44,14 @@ export async function POST(request: NextRequest) {
     console.log(`🤖 Getting Gemini 3 Pro Preview description for ${category}...`)
     console.log(`   Model: gemini-3-pro-preview (most intelligent model!)`)
     
-    // Step 1: BACKEND CROPPING (if bbox provided)
+    // Step 1: BACKEND CROPPING (if bbox provided and sharp available)
     let croppedImageUrl: string | undefined
     let imageToAnalyze = imageUrl // Will be either original or cropped image URL
     
     if (bbox && imageSize && !imageUrl.startsWith('data:')) {
+      if (!sharp) {
+        console.warn(`⚠️  Backend cropping requested but sharp not available - using full image`)
+      } else if (sharp) {
       console.log(`✂️ BACKEND CROPPING with bbox:`, bbox)
       console.log(`   Image size: ${imageSize[0]}x${imageSize[1]}`)
       
@@ -105,7 +116,8 @@ export async function POST(request: NextRequest) {
         console.warn('   ⚠️  Falling back to full image')
         // Continue with full image if cropping fails
       }
-    }
+      } // end of else if (sharp)
+    } // end of if (bbox && imageSize...)
     
     // Step 2: Convert image to data URL for Gemini (required by Gemini API)
     let finalImageUrl = imageToAnalyze
