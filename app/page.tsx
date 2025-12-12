@@ -764,15 +764,10 @@ export default function Home() {
               }
             }
             
-            // Upload all crop variations to Supabase for search
-            console.log(`📤 Uploading ${croppedDataUrls.length} crop variations to Supabase...`)
-            const { uploadCroppedImage } = await import('@/lib/imageCropper')
-            
-            const uploadPromises = croppedDataUrls.map((dataUrl, idx) => 
-              uploadCroppedImage(dataUrl, `${bbox.category}_var${idx}`)
-            )
-            const uploadedUrls = await Promise.all(uploadPromises)
-            console.log(`✅ Uploaded ${uploadedUrls.length} variations`)
+            // ✅ SKIP UPLOAD - We're using full image (already in Supabase)
+            // croppedDataUrls already contains the Supabase HTTP URL(s)
+            console.log(`✅ Using full image from Supabase (no upload needed)`)
+            console.log(`   URL: ${croppedDataUrls[0].substring(0, 80)}`)
             
             // Final progress update for this item (round up to full completion)
             completedItems = Math.ceil(completedItems) // Round up any fractional progress
@@ -783,8 +778,8 @@ export default function Home() {
               category: finalCategory, // ✅ Use overridden category from description API (e.g. "robe" not "sweater")
               parent_category: bbox.mapped_category, // Parent from DINO-X (may be overridden in search)
               description: description,
-              croppedImageUrl: uploadedUrls[0], // Primary crop for display
-              croppedImageUrls: uploadedUrls, // All variations for search
+              croppedImageUrl: croppedDataUrls[0], // Full image URL (already in Supabase)
+              croppedImageUrls: croppedDataUrls, // All variations for search (just full image for now)
               confidence: bbox.confidence
             }
         } catch (error) {
