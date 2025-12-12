@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getJobWithFallback } from '@/lib/jobQueue'
+import { getJobWithFallback, getJob } from '@/lib/jobQueue'
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic'
@@ -17,18 +17,35 @@ export async function GET(
     const { id: jobId } = await params
     
     console.log(`🔍 Checking status for job: ${jobId}`)
+    console.log(`   Instance: ${process.env.VERCEL_REGION || 'local'}-${Date.now()}`)
+    
+    // Check memory first (synchronous check)
+    const memoryJob = await getJob(jobId)
+    console.log(`   Memory check: ${memoryJob ? `Found (${memoryJob.status})` : 'Not found'}`)
+    
     // Try memory first, then database (for shareable links)
     const job = await getJobWithFallback(jobId)
     
     if (!job) {
       console.log(`❌ Job not found: ${jobId}`)
+      console.log(`   Not in memory AND not in database`)
       return NextResponse.json(
         { error: 'Job not found', jobId },
         { status: 404 }
       )
     }
     
-    console.log(`✅ Job found: ${jobId}, status: ${job.status}, progress: ${job.progress}%`)
+    const jobSource = memoryJob ? 'memory' : 'database'
+    console.log(`✅ Job found: ${jobId}`)
+    console.log(`   Status: ${job.status}`)
+    console.log(`   Progress: ${job.progress}%`)
+    console.log(`   Source: ${jobSource}`)
+    console.log(`   Updated: ${new Date(job.updatedAt).toISOString()}`)
+    
+    if (jobSource === 'database') {
+      console.log(`   ⚠️  Job was loaded from DATABASE (not in memory on this instance)`)
+      console.log(`   This suggests job was processed by a different serverless instance`)
+    }
     
     // Debug: Log results structure
     if (job.status === 'completed') {

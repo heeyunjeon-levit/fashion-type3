@@ -235,6 +235,25 @@ export async function saveJobToDatabase(job: SearchJob): Promise<boolean> {
     }
     
     console.log(`💾 Saved job ${job.id} to database successfully`)
+    console.log(`   Status saved: ${job.status}`)
+    console.log(`   Progress saved: ${job.progress}%`)
+    
+    // Verify the save by reading it back
+    const { data: verifyData } = await supabase
+      .from('search_jobs')
+      .select('status, progress, updated_at')
+      .eq('job_id', job.id)
+      .single()
+    
+    if (verifyData) {
+      console.log(`   ✅ Verified in DB: status=${verifyData.status}, progress=${verifyData.progress}`)
+      if (verifyData.status !== job.status) {
+        console.error(`   ⚠️  DATABASE MISMATCH! Saved ${job.status} but DB shows ${verifyData.status}`)
+      }
+    } else {
+      console.error(`   ⚠️  Could not verify save - job not found in DB immediately after save!`)
+    }
+    
     return true
   } catch (error) {
     console.error(`❌ Error saving job to database:`, error)
@@ -248,6 +267,8 @@ export async function saveJobToDatabase(job: SearchJob): Promise<boolean> {
 export async function loadJobFromDatabase(jobId: string): Promise<SearchJob | null> {
   try {
     const supabase = getSupabaseServerClient()
+    
+    console.log(`🔍 Querying database for job ${jobId}...`)
     
     const { data, error } = await supabase
       .from('search_jobs')
@@ -266,9 +287,14 @@ export async function loadJobFromDatabase(jobId: string): Promise<SearchJob | nu
     }
     
     if (!data) {
-      console.log(`⚠️  Job ${jobId} not found in database`)
+      console.log(`⚠️  Job ${jobId} not found in database (no data)`)
       return null
     }
+    
+    console.log(`📂 Found ${jobId} in database:`)
+    console.log(`   Status in DB: ${data.status}`)
+    console.log(`   Progress in DB: ${data.progress}%`)
+    console.log(`   Updated in DB: ${data.updated_at}`)
     
     // Convert database row back to SearchJob format
     // Reconstruct from job_data JSON field if available
