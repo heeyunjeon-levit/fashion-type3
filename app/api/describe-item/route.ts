@@ -25,31 +25,53 @@ export async function POST(request: NextRequest) {
     console.log(`🤖 Getting Gemini 3 Pro Preview description for ${category}...`)
     console.log(`   Model: gemini-3-pro-preview (most intelligent model!)`)
     
-    // If bbox provided, crop on backend first
+    // Convert HTTP URL to data URL if needed (Gemini requires data URLs)
     let finalImageUrl = imageUrl
-    let croppedUrls: string[] = []
     
-    if (bbox && imageSize) {
-      console.log(`✂️ Backend cropping with bbox: ${JSON.stringify(bbox)}`)
-      console.log(`   Original image: ${imageUrl.substring(0, 80)}`)
+    if (!imageUrl.startsWith('data:')) {
+      console.log(`🔄 Converting HTTP URL to data URL for Gemini...`)
+      console.log(`   Source: ${imageUrl.substring(0, 80)}`)
       
-      // TODO: Implement backend cropping here
-      // For now, use the original image
-      console.warn(`⚠️ Backend cropping not implemented yet - using original image`)
+      try {
+        // Fetch the image from Supabase
+        const imageResponse = await fetch(imageUrl)
+        if (!imageResponse.ok) {
+          throw new Error(`Failed to fetch image: ${imageResponse.status} ${imageResponse.statusText}`)
+        }
+        
+        // Get the image as an ArrayBuffer
+        const arrayBuffer = await imageResponse.arrayBuffer()
+        const buffer = Buffer.from(arrayBuffer)
+        
+        // Detect MIME type from response headers or URL
+        const contentType = imageResponse.headers.get('content-type') || 'image/jpeg'
+        
+        // Convert to base64 data URL
+        const base64 = buffer.toString('base64')
+        finalImageUrl = `data:${contentType};base64,${base64}`
+        
+        console.log(`✅ Converted to data URL: ${contentType}, ${Math.round(base64.length / 1024)}KB`)
+      } catch (error) {
+        console.error('❌ Failed to convert HTTP URL to data URL:', error)
+        return NextResponse.json(
+          { error: 'Failed to fetch and convert image' },
+          { status: 500 }
+        )
+      }
     }
     
     console.log(`   Image type: ${finalImageUrl.startsWith('data:') ? 'data URL' : 'HTTP URL'}`)
     console.log(`   Image size: ${Math.round(finalImageUrl.length / 1024)}KB`)
     
     // Validate data URL format
-    if (imageUrl.startsWith('data:')) {
+    if (finalImageUrl.startsWith('data:')) {
       // Log first 100 chars to debug
-      console.log(`   Data URL start: ${imageUrl.substring(0, 100)}`)
+      console.log(`   Data URL start: ${finalImageUrl.substring(0, 100)}`)
       
-      const mimeMatch = imageUrl.match(/^data:([^;]+);base64,/)
+      const mimeMatch = finalImageUrl.match(/^data:([^;]+);base64,/)
       if (!mimeMatch) {
         console.error('❌ Invalid data URL format - missing MIME type or base64 prefix')
-        console.error(`   Received format: ${imageUrl.substring(0, 200)}`)
+        console.error(`   Received format: ${finalImageUrl.substring(0, 200)}`)
         return NextResponse.json(
           { error: 'Invalid data URL format' },
           { status: 400 }
@@ -64,7 +86,7 @@ export async function POST(request: NextRequest) {
         )
       }
       // Check if data URL has actual content
-      const base64Part = imageUrl.split(',')[1]
+      const base64Part = finalImageUrl.split(',')[1]
       if (!base64Part || base64Part.length < 100) {
         console.error(`❌ Data URL appears empty or too small: ${base64Part?.length || 0} chars`)
         return NextResponse.json(
@@ -232,7 +254,7 @@ For unknown categories:
     }
     
     // Data URL - extract base64 and MIME type
-    const match = imageUrl.match(/^data:([^;]+);base64,(.+)$/)
+    const match = finalImageUrl.match(/^data:([^;]+);base64,(.+)$/)
     if (!match) {
       throw new Error('Invalid data URL format')
     }
