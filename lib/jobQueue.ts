@@ -276,13 +276,12 @@ export async function loadJobFromDatabase(jobId: string): Promise<SearchJob | nu
     
     console.log(`🔍 Querying database for job ${jobId}...`)
     
-    // Add cache-busting header to force fresh data from Supabase
+    // Query database for job (cache-busting handled at API layer)
     const { data, error } = await supabase
       .from('search_jobs')
       .select('*')
       .eq('job_id', jobId)
       .single()
-      .abortSignal(AbortSignal.timeout(5000)) // 5s timeout
     
     if (error) {
       // If table doesn't exist, that's OK - we work in-memory only
