@@ -98,6 +98,7 @@ export default function InteractiveBboxSelector({
       'heels': '힐',
       'flats': '플랫슈즈',
       'loafers': '로퍼',
+      'robe': '가운',
       'purse': '지갑',
       'earring': '귀걸이',
       'outerwear': '아우터'

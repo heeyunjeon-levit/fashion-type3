@@ -576,6 +576,7 @@ export default function ResultsBottomSheet({
         'earring': '귀걸이',
         'earrings': '귀걸이',
         'jewelry': '주얼리',
+        'robe': '가운',
       }
       const lowerKey = categoryKey.toLowerCase().replace(/_/g, ' ')
       return categoryMap[lowerKey] || categoryMap[categoryKey] || categoryKey

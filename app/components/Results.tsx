@@ -158,6 +158,7 @@ export default function Results({ results, isLoading, croppedImages, onReset, se
     bracelet: '팔찌',
     earrings: '귀걸이',
     ring: '반지',
+    robe: '가운',
   }
 
   const totalCroppedImages = croppedImages ? Object.keys(croppedImages).length : 0
