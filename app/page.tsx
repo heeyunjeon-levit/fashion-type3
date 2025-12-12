@@ -100,6 +100,8 @@ export default function Home() {
   const [showPhoneModal, setShowPhoneModal] = useState(false)
   const [phoneNumber, setPhoneNumber] = useState<string | null>(null)
   const [pendingBboxes, setPendingBboxes] = useState<BboxItem[] | null>(null)
+  const [showSmsWaitingMessage, setShowSmsWaitingMessage] = useState(false) // Show "문자가 안오면 다시 검색해보세요"
+  const [isAt21Percent, setIsAt21Percent] = useState(false) // Track if we're at the 21% safe point
 
   // Persist results and state to localStorage for mobile tab recovery
   useEffect(() => {
@@ -635,23 +637,17 @@ export default function Home() {
       return
     }
 
-    // 📱 SMS NOTIFICATION: Show phone modal BEFORE starting search
-    // BUT: If phone number is already known (backfilled), skip modal and start immediately!
-    if (phoneNumber) {
-      console.log(`📱 Phone number already known (${phoneNumber}) - starting search immediately!`)
-      setPendingBboxes(selectedBboxes)
-      
-      // Set processing state immediately
-      setProcessingItems(selectedBboxes.map(bbox => ({ category: bbox.category })))
-      setCurrentStep('processing')
-      
-      // Start search with existing phone number
-      await processPendingItems(phoneNumber)
-    } else {
-      console.log('📱 No phone number - showing modal...')
-      setPendingBboxes(selectedBboxes)
-      setShowPhoneModal(true)
-    }
+    // 🚀 NEW FLOW: Start processing immediately (no phone modal upfront!)
+    // Phone modal will appear at 21% when job is safely queued
+    console.log(`🚀 Starting processing for ${selectedBboxes.length} items...`)
+    setPendingBboxes(selectedBboxes)
+    
+    // Set processing state immediately
+    setProcessingItems(selectedBboxes.map(bbox => ({ category: bbox.category })))
+    setCurrentStep('processing')
+    
+    // Start processing WITHOUT phone number (will prompt at 21%)
+    await processPendingItems(phoneNumber || null)
   }
 
   // Process items after phone number is collected
@@ -975,12 +971,32 @@ export default function Home() {
         console.log(`   ✅ Added ${item.category} (${key})`)
       })
       
-      // Step 3: Create ONE job with ALL items
-      console.log(`🚀 Step 3: Starting ONE job for all ${totalItems} items...`)
+      // Step 3: Check if we need to show phone modal at 21% (safe point!)
       const phoneToUse = phoneForSearch || phoneNumber
-      const formattedPhone = phoneToUse ? (phoneToUse.startsWith('+82') ? phoneToUse : `+82${phoneToUse.replace(/^0/, '')}`) : undefined
       
-      console.log(`   📞 Phone for SMS: ${formattedPhone || 'none'}`)
+      if (!phoneToUse) {
+        console.log(`📱 21% reached - showing phone modal (safe to close browser now!)`)
+        setOverallProgress(21) // Show we're at the safe point
+        setIsAt21Percent(true) // Flag that we're at the 21% modal point
+        
+        // Store job data in component state for later use
+        ;(window as any).__pending21PercentJobData = {
+          allCategories,
+          allCroppedImages,
+          allDescriptions,
+          totalItems
+        }
+        
+        // Show phone modal and return (job creation will continue after phone submission)
+        setShowPhoneModal(true)
+        return // Stop here, wait for phone number
+      }
+      
+      // If phone already known, proceed directly with job creation
+      const formattedPhone = phoneToUse.startsWith('+82') ? phoneToUse : `+82${phoneToUse.replace(/^0/, '')}`
+      
+      console.log(`🚀 Step 3: Starting ONE job for all ${totalItems} items...`)
+      console.log(`   📞 Phone for SMS: ${formattedPhone}`)
       console.log(`   📦 Categories:`, allCategories)
       console.log(`   🖼️  Cropped images: ${Object.keys(allCroppedImages).length}`)
       console.log(`   📝 Descriptions: ${Object.keys(allDescriptions).length}`)
@@ -1399,10 +1415,46 @@ export default function Home() {
         )}
       </div>
       
+      {/* SMS Waiting Message - Show after phone submission at 21% */}
+      {showSmsWaitingMessage && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl">
+            <div className="text-center">
+              {/* Icon */}
+              <div className="mb-6">
+                <div className="w-20 h-20 mx-auto bg-gradient-to-br from-yellow-400 to-amber-500 rounded-full flex items-center justify-center">
+                  <span className="text-4xl">📱</span>
+                </div>
+              </div>
+              
+              {/* Message */}
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                검색이 진행중입니다!
+              </h2>
+              <p className="text-gray-700 mb-8 leading-relaxed">
+                문자가 안오면 다시 검색해보세요
+              </p>
+              
+              {/* Home Button */}
+              <button
+                onClick={() => {
+                  setShowSmsWaitingMessage(false)
+                  window.location.href = 'https://fashionsource.vercel.app'
+                }}
+                className="w-full bg-gradient-to-r from-yellow-600 to-amber-600 text-white py-4 rounded-xl font-bold text-lg hover:from-yellow-700 hover:to-amber-700 transition-all shadow-lg transform hover:scale-105 active:scale-95"
+              >
+                🏠 홈으로 가기
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      
       {/* Phone Modal - REQUIRED to see results (for tracking & SMS) */}
       {showPhoneModal && (
         <PhoneModal
           ocrMode={useOCRSearch}  // Pass OCR mode flag for different messaging
+          at21Percent={isAt21Percent}  // Pass flag for different button text
           onPhoneSubmit={async (phone: string) => {
             console.log(`📱 Phone submitted: ${phone}`)
             
@@ -1419,6 +1471,39 @@ export default function Home() {
               sessionManager.logPhoneNumber(formattedPhone, '+82')
                 .then(() => console.log(`✅ Phone logged: ${formattedPhone}`))
                 .catch((error: any) => console.error('❌ Failed to log phone:', error))
+            }
+            
+            // 🆕 21% MODAL: Job data is ready, create job and show SMS waiting message
+            if (isAt21Percent && (window as any).__pending21PercentJobData) {
+              console.log('📱 21% modal: Creating job with phone number...')
+              const jobData = (window as any).__pending21PercentJobData
+              
+              // Show SMS waiting message instead of continuing to poll
+              setShowSmsWaitingMessage(true)
+              setIsAt21Percent(false) // Reset flag
+              
+              // Create job in background (user doesn't wait)
+              const { searchWithJobQueue } = await import('@/lib/searchJobClient')
+              searchWithJobQueue(
+                {
+                  categories: jobData.allCategories,
+                  croppedImages: jobData.allCroppedImages,
+                  descriptions: jobData.allDescriptions,
+                  originalImageUrl: uploadedImageUrl,
+                  useOCRSearch: useOCRSearch,
+                  phoneNumber: formattedPhone,
+                  countryCode: '+82',
+                },
+                {
+                  enableNotifications: false, // No browser notifications, only SMS
+                  fastPollInterval: 3000,
+                  slowPollInterval: 5000
+                }
+              ).catch((error: any) => console.error('❌ Background job error:', error))
+              
+              // Clean up
+              delete (window as any).__pending21PercentJobData
+              return
             }
             
             // OCR MODE: Results are already ready, just show them!

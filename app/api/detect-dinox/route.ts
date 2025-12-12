@@ -19,7 +19,7 @@ interface DINOXDetectionResult {
 // Fashion categories for detection (ordered by priority for better detection)
 const FASHION_CATEGORIES = [
   "fur coat", "leather jacket", "coat", "jacket",
-  "dress", "blouse", "button up shirt", "sweater", "cardigan", "hoodie", "vest", "shirt",
+  "robe","dress", "blouse", "button up shirt", "sweater", "cardigan", "hoodie", "vest", "shirt",
   "jeans", "pants", "trousers", "shorts", "skirt",
   "heels","sneakers", "shoes", "boots", "sandals",
   "clutch", "handbag", "bag", 

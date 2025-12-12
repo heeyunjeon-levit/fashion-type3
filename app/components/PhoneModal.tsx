@@ -8,9 +8,10 @@ interface PhoneModalProps {
   onClose?: () => void
   isReturningUser?: boolean
   ocrMode?: boolean  // True if using OCR mode (fast results, no SMS)
+  at21Percent?: boolean  // True if showing modal at 21% safe point (job queued, can close browser)
 }
 
-export default function PhoneModal({ onPhoneSubmit, onClose, isReturningUser, ocrMode }: PhoneModalProps) {
+export default function PhoneModal({ onPhoneSubmit, onClose, isReturningUser, ocrMode, at21Percent }: PhoneModalProps) {
   const { t, language } = useLanguage()
   const [phoneNumber, setPhoneNumber] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -143,7 +144,7 @@ export default function PhoneModal({ onPhoneSubmit, onClose, isReturningUser, oc
               disabled={isSubmitting || phoneNumber.length < 10}
               className="w-full bg-gradient-to-r from-yellow-600 to-amber-600 text-white py-3 rounded-xl font-bold text-lg hover:from-yellow-700 hover:to-amber-700 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95"
             >
-              {isSubmitting ? t('phone.submitting') : (ocrMode ? t('phone.submitOcr') : t('phone.submit'))}
+              {isSubmitting ? t('phone.submitting') : (at21Percent ? '문자로 받을께요' : (ocrMode ? t('phone.submitOcr') : t('phone.submit')))}
             </button>
           </form>
 
