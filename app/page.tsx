@@ -647,29 +647,35 @@ export default function Home() {
     setCurrentStep('processing')
     
     // Start processing WITHOUT phone number (will prompt at safe point after uploads)
-    await processPendingItems(phoneNumber || '')
+    // Pass selectedBboxes directly (don't rely on state update)
+    await processPendingItems(phoneNumber || '', selectedBboxes)
   }
 
   // Process items after phone number is collected
-  const processPendingItems = async (phoneNum: string) => {
-    if (!pendingBboxes) return
+  const processPendingItems = async (phoneNum: string, bboxesToProcess?: typeof pendingBboxes) => {
+    const bboxes = bboxesToProcess || pendingBboxes
+    if (!bboxes) {
+      console.error(`❌ No bboxes to process! bboxesToProcess=${!!bboxesToProcess}, pendingBboxes=${!!pendingBboxes}`)
+      return
+    }
     
     // Note: State updates (setPhoneNumber, setProcessingItems, setCurrentStep) are now done
     // by the caller BEFORE this function is called, so the UI updates instantly!
-    console.log(`🎯 Processing ${pendingBboxes.length} selected items with phone: ${phoneNum}...`)
+    console.log(`🎯 Processing ${bboxes.length} selected items with phone: ${phoneNum}...`)
 
     try {
       console.log(`🚨 DEBUG: Starting processPendingItems`)
       console.log(`🚨 DEBUG: Phone = ${phoneNum || 'NONE'}`)
       console.log(`🚨 DEBUG: uploadedImageUrl = ${uploadedImageUrl.substring(0, 80)}`)
+      console.log(`🚨 DEBUG: bboxes count = ${bboxes.length}`)
       
       // Process ALL items in parallel for efficiency with real-time progress tracking
-      console.log(`🚀 Processing ${pendingBboxes.length} items in parallel...`)
+      console.log(`🚀 Processing ${bboxes.length} items in parallel...`)
       
-      const totalItems = pendingBboxes.length
+      const totalItems = bboxes.length
       let completedItems = 0
       
-      const processingPromises = pendingBboxes.map(async (bbox) => {
+      const processingPromises = bboxes.map(async (bbox) => {
         console.log(`🔄 Starting processing for ${bbox.category}...`)
         
         try {
@@ -797,7 +803,7 @@ export default function Home() {
       const results = await Promise.all(processingPromises)
       const processedItems = results.filter(item => item !== null) as DetectedItem[]
 
-      console.log(`✅ All items processed in parallel: ${processedItems.length}/${pendingBboxes.length}`)
+      console.log(`✅ All items processed in parallel: ${processedItems.length}/${bboxes.length}`)
       // Ensure we're at least 20% after processing completes
       setOverallProgress(prev => Math.max(prev, 20))
       setDetectedItems(processedItems)
