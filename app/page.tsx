@@ -673,85 +673,12 @@ export default function Home() {
         console.log(`🔄 Starting processing for ${bbox.category}...`)
         
         try {
-          // FRONTEND PROCESSING: Crop locally + get description from Next.js API
-          // This is faster and more reliable than Modal (no Supabase DNS issues)
-          
-          // Step 1: Crop image locally using Canvas API with MULTIPLE VARIATIONS
-          // This helps reduce influence of background objects (like bags in coat photos)
-          console.log(`✂️ [${bbox.category}] Step 1: Cropping locally with multiple bbox variations...`)
-          const { cropImageVariations } = await import('@/lib/imageCropper')
-          console.log(`✅ [${bbox.category}] Cropper module loaded`)
-          
-          // CRITICAL: Crop the SAME image that DINOx analyzed (Supabase URL)
-          // NOT the local data URL, because they might have different dimensions!
-          // DINOx analyzes the uploaded/compressed Supabase image
+          // 🚀 SKIP ALL FRONTEND PROCESSING - Use full image directly
+          // No cropping, no bbox normalization, no image loading
+          // Just pass the full Supabase URL to describe-item API
+          console.log(`⚡ [${bbox.category}] Using full image (no frontend cropping)`)
           const imageUrlForCropping = uploadedImageUrl
-          console.log(`✅ [${bbox.category}] Image URL for cropping: ${imageUrlForCropping.substring(0, 80)}...`)
-          
-          console.log(`   📸 Cropping from: ${imageUrlForCropping.includes('supabase') ? 'Supabase (compressed)' : 'Local data URL'}`)
-          
-          // Convert pixel bbox to normalized (0-1) coordinates
-          const [x1, y1, x2, y2] = bbox.bbox
-          
-          console.log(`   📏 Bbox conversion:`, {
-            'bbox (pixels)': bbox.bbox,
-            'bbox values': `[${x1}, ${y1}, ${x2}, ${y2}]`,
-            'imageSize': imageSize,
-            'imageSize valid': imageSize[0] > 0 && imageSize[1] > 0
-          })
-          
-          // Check if bboxes are already normalized (0-1 range) or in pixel coordinates
-          const bboxValuesMax = Math.max(x1, y1, x2, y2)
-          const bboxesAreNormalized = bboxValuesMax <= 1
-          
-          console.log(`   🔍 Bbox format detection: max value = ${bboxValuesMax}, normalized = ${bboxesAreNormalized}`)
-          
-          let normalizedBbox: [number, number, number, number]
-          
-          if (bboxesAreNormalized) {
-            // Bboxes are already in 0-1 range
-            console.log(`   ✅ Using bbox as already normalized`)
-            normalizedBbox = [x1, y1, x2, y2]
-          } else {
-            // Bboxes are in pixel coordinates - need to normalize
-            console.log(`   ⚠️  Bboxes are in PIXEL coordinates, need to normalize`)
-            
-            // IMPORTANT: Use imageSize from detection (same image DINOx analyzed)
-            if (imageSize[0] > 0 && imageSize[1] > 0) {
-              console.log(`   📐 Using detection imageSize: ${imageSize[0]}x${imageSize[1]}`)
-              normalizedBbox = [
-                x1 / imageSize[0],
-                y1 / imageSize[1],
-                x2 / imageSize[0],
-                y2 / imageSize[1]
-              ]
-            } else {
-              // Fallback: Load image to get dimensions
-              console.log(`   ⚠️  imageSize not available, loading image to get dimensions...`)
-              const img = new Image()
-              img.crossOrigin = 'anonymous' // For Supabase URLs
-              const imgDimensions = await new Promise<{width: number, height: number}>((resolve, reject) => {
-                img.onload = () => resolve({ width: img.naturalWidth, height: img.naturalHeight })
-                img.onerror = reject
-                img.src = imageUrlForCropping
-              })
-              
-              console.log(`   📐 Loaded image dimensions: ${imgDimensions.width}x${imgDimensions.height}`)
-              normalizedBbox = [
-                x1 / imgDimensions.width,
-                y1 / imgDimensions.height,
-                x2 / imgDimensions.width,
-                y2 / imgDimensions.height
-              ]
-            }
-            
-            console.log(`   ✅ Normalized bbox: [${normalizedBbox.map(v => v.toFixed(4)).join(', ')}]`)
-          }
-            
-          // 🚀 TEMPORARY: Skip frontend cropping (causes hangs) - use full image
-          // TODO: Implement backend cropping in /api/describe-item
-          console.log(`⚡ [${bbox.category}] SKIPPING frontend cropping - using full image for speed`)
-          console.log(`   Full image: ${imageUrlForCropping.substring(0, 80)}`)
+          console.log(`   Image: ${imageUrlForCropping.substring(0, 80)}...`)
           
           // Use full image directly (no cropping for now)
           const croppedDataUrl = imageUrlForCropping
