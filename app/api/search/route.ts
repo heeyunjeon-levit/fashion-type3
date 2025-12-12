@@ -485,6 +485,7 @@ const categorySearchTerms: Record<string, string[]> = {
   shoes: ['shoes', 'sneakers', 'boots', 'sandals', 'heels', 'flats', 'loafers', 'oxford'],
   accessory: ['accessory', 'jewelry', 'watch', 'necklace', 'earrings', 'bracelet', 'ring', 'hat', 'cap', 'beanie', 'belt', 'scarf', 'sunglasses'],
   dress: ['dress', 'gown', 'maxi dress', 'midi dress', 'mini dress', 'cocktail dress', 'casual dress'],
+  robe: ['robe', 'bathrobe', 'bath robe', 'loungewear', 'lounge wear', 'dressing gown', 'kimono robe', 'spa robe', 'terry robe', 'house coat'],
 }
 
 const categoryLabels: Record<string, string> = {
@@ -494,6 +495,7 @@ const categoryLabels: Record<string, string> = {
   shoes: '신발 (shoes - sneakers, boots, sandals)',
   accessory: '악세사리 (accessories - jewelry, watches, hats, belts)',
   dress: '드레스 (dress - dresses, gowns)',
+  robe: '가운 (robe - bathrobes, loungewear, dressing gowns)',
 }
 
 /**
@@ -1340,7 +1342,9 @@ export async function POST(request: NextRequest) {
         'shorts': 'bottoms',
         'skirt': 'bottoms',
         'trousers': 'bottoms',
-        'leggings': 'bottoms'
+        'leggings': 'bottoms',
+        // Robe stays as its own category (not mapped to tops)
+        'robe': 'robe'
       }
       
       // Get parent category for validation/filtering, but KEEP specific category for search

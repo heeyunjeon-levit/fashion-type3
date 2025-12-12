@@ -424,9 +424,40 @@ For unknown categories:
       })
     }
 
+    // 🔍 SMART ROBE DETECTION: Override "sweater" → "robe" if it looks like a robe
+    let finalCategory = category
+    if (category === 'sweater' || category === 'cardigan' || category === 'jacket') {
+      const descLower = description.toLowerCase()
+      const keyDetails = (parsedData && Array.isArray(parsedData.key_details)) ? parsedData.key_details : []
+      const keyDetailsStr = keyDetails.join(' ').toLowerCase()
+      
+      // Robe indicators: belt, shawl collar, loungewear, bathrobe, etc.
+      const robeIndicators = [
+        'robe', 'bathrobe', 'bath robe', 'loungewear', 'lounge wear',
+        'shawl collar', 'tie belt', 'wrap style', 'kimono', 'terry',
+        'toweling', 'towelling', 'spa', 'dressing gown', 'house coat'
+      ]
+      
+      const hasRobeIndicator = robeIndicators.some(indicator => 
+        descLower.includes(indicator) || keyDetailsStr.includes(indicator)
+      )
+      
+      // Also check if it has a belt AND loose fit (strong robe signal)
+      const hasBelt = descLower.includes('belt') || keyDetailsStr.includes('belt')
+      const isLoose = descLower.includes('oversized') || descLower.includes('loose') || 
+                      keyDetailsStr.includes('oversized') || keyDetailsStr.includes('relaxed')
+      
+      if (hasRobeIndicator || (hasBelt && isLoose)) {
+        console.log(`🔄 ROBE OVERRIDE: "${category}" → "robe" (detected robe characteristics)`)
+        console.log(`   Indicators: ${robeIndicators.filter(i => descLower.includes(i) || keyDetailsStr.includes(i)).join(', ')}`)
+        console.log(`   Has belt: ${hasBelt}, Is loose: ${isLoose}`)
+        finalCategory = 'robe'
+      }
+    }
+
     return NextResponse.json({
       description, // Clean ecom_title like "Women's Beige Knit Scarf with Eye Pattern"
-      category,
+      category: finalCategory, // May be overridden to "robe"
       usage: {
         prompt_tokens: usageMetadata?.promptTokenCount || 0,
         completion_tokens: usageMetadata?.candidatesTokenCount || 0,
