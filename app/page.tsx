@@ -646,8 +646,8 @@ export default function Home() {
     setProcessingItems(selectedBboxes.map(bbox => ({ category: bbox.category })))
     setCurrentStep('processing')
     
-    // Start processing WITHOUT phone number (will prompt at 21%)
-    await processPendingItems(phoneNumber || null)
+    // Start processing WITHOUT phone number (will prompt at safe point after uploads)
+    await processPendingItems(phoneNumber || '')
   }
 
   // Process items after phone number is collected
@@ -971,28 +971,30 @@ export default function Home() {
         console.log(`   ✅ Added ${item.category} (${key})`)
       })
       
-      // Step 3: Check if we need to show phone modal at 21% (safe point!)
+      // Step 3: SAFE POINT! All uploads complete (network response ✅), safe to ask for phone
       const phoneToUse = phoneForSearch || phoneNumber
       
       if (!phoneToUse) {
-        console.log(`📱 21% reached - showing phone modal (safe to close browser now!)`)
-        setOverallProgress(21) // Show we're at the safe point
-        setIsAt21Percent(true) // Flag that we're at the 21% modal point
+        // 🔥 SAFE POINT: All images uploaded to Supabase (network confirmed!)
+        // Don't create job yet - wait for phone number first
+        console.log(`✅ All uploads complete (network confirmed) - showing phone modal`)
+        console.log(`   User can safely close browser now - data is persisted`)
+        setIsAt21Percent(true)
         
-        // Store job data in component state for later use
-        ;(window as any).__pending21PercentJobData = {
+        // Store job data to create after phone submission
+        ;(window as any).__pendingJobData = {
           allCategories,
           allCroppedImages,
           allDescriptions,
           totalItems
         }
         
-        // Show phone modal and return (job creation will continue after phone submission)
+        // Show phone modal and stop here
         setShowPhoneModal(true)
-        return // Stop here, wait for phone number
+        return // Don't create job until phone is provided
       }
       
-      // If phone already known, proceed directly with job creation
+      // Phone exists - create job immediately with phone number
       const formattedPhone = phoneToUse.startsWith('+82') ? phoneToUse : `+82${phoneToUse.replace(/^0/, '')}`
       
       console.log(`🚀 Step 3: Starting ONE job for all ${totalItems} items...`)
@@ -1473,16 +1475,12 @@ export default function Home() {
                 .catch((error: any) => console.error('❌ Failed to log phone:', error))
             }
             
-            // 🆕 21% MODAL: Job data is ready, create job and show SMS waiting message
-            if (isAt21Percent && (window as any).__pending21PercentJobData) {
-              console.log('📱 21% modal: Creating job with phone number...')
-              const jobData = (window as any).__pending21PercentJobData
+            // 🆕 SAFE POINT MODAL: Create job NOW with phone number
+            if (isAt21Percent && (window as any).__pendingJobData) {
+              console.log('📱 Creating job with phone number after safe upload point...')
+              const jobData = (window as any).__pendingJobData
               
-              // Show SMS waiting message instead of continuing to poll
-              setShowSmsWaitingMessage(true)
-              setIsAt21Percent(false) // Reset flag
-              
-              // Create job in background (user doesn't wait)
+              // Create job in background (don't wait for completion)
               const { searchWithJobQueue } = await import('@/lib/searchJobClient')
               searchWithJobQueue(
                 {
@@ -1491,18 +1489,26 @@ export default function Home() {
                   descriptions: jobData.allDescriptions,
                   originalImageUrl: uploadedImageUrl,
                   useOCRSearch: useOCRSearch,
-                  phoneNumber: formattedPhone,
+                  phoneNumber: formattedPhone,  // ✅ Phone included from start!
                   countryCode: '+82',
                 },
                 {
-                  enableNotifications: false, // No browser notifications, only SMS
+                  enableNotifications: false, // No browser notifications - user will leave
                   fastPollInterval: 3000,
                   slowPollInterval: 5000
                 }
-              ).catch((error: any) => console.error('❌ Background job error:', error))
+              ).then(() => {
+                console.log('✅ Background job completed!')
+              }).catch((error: any) => {
+                console.error('❌ Background job error:', error)
+              })
+              
+              // Show SMS waiting message immediately
+              setShowSmsWaitingMessage(true)
+              setIsAt21Percent(false) // Reset flag
               
               // Clean up
-              delete (window as any).__pending21PercentJobData
+              delete (window as any).__pendingJobData
               return
             }
             

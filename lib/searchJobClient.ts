@@ -15,6 +15,7 @@ export interface JobPollOptions {
   onProgress?: (progress: number) => void
   onComplete?: (results: any, meta?: any) => void
   onError?: (error: string) => void
+  onJobCreated?: (jobId: string) => void  // 🆕 Fires when job is safely created in database
   fastPollInterval?: number  // Poll interval when tab is active (default: 2500ms)
   slowPollInterval?: number  // Poll interval when tab is inactive (default: 5000ms)
   maxAttempts?: number       // Max polling attempts (default: 150 = ~6 minutes)
@@ -366,6 +367,13 @@ export async function searchWithJobQueue(
   // Start the job
   const jobResponse = await startSearchJob(params)
   console.log(`📋 Job created: ${jobResponse.jobId}`)
+  
+  // 🔥 SAFE POINT: Job is now in database, cron can take over
+  // User can safely close browser/lock screen - SMS will be sent when complete
+  if (options.onJobCreated) {
+    console.log(`✅ Job safely persisted - calling onJobCreated callback`)
+    options.onJobCreated(jobResponse.jobId)
+  }
   
   // Check if job completed synchronously (serverless functions now await processing)
   if (jobResponse.status === 'completed' && jobResponse.results) {
