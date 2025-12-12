@@ -686,9 +686,9 @@ export default function Home() {
           const imageUrlForCropping = uploadedImageUrl
           console.log(`   Image: ${imageUrlForCropping.substring(0, 80)}...`)
           
-          // Use full image directly (no cropping for now)
+          // Use full image initially (backend will crop it)
           const croppedDataUrl = imageUrlForCropping
-          const croppedDataUrls = [imageUrlForCropping]
+          let croppedDataUrls = [imageUrlForCropping] // Will be updated with backend-cropped URL
             
             // Update progress after cropping (show we're making progress)
             completedItems += 0.3 // 30% of this item done (cropping)
@@ -714,10 +714,12 @@ export default function Home() {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                  imageUrl: croppedDataUrl,
-                  category: bbox.category
+                  imageUrl: uploadedImageUrl, // Pass ORIGINAL image URL (backend will crop)
+                  category: bbox.category,
+                  bbox: bbox.bbox, // Pass bbox for backend cropping
+                  imageSize: imageSize // Pass image dimensions
                 }),
-                signal: AbortSignal.timeout(60000) // 60s timeout for Gemini 3 Pro (matches Vercel function limit)
+                signal: AbortSignal.timeout(90000) // 90s timeout for Gemini 3 Pro + cropping
               })
               
               const descTime = ((Date.now() - descStartTime) / 1000).toFixed(1)
@@ -744,6 +746,14 @@ export default function Home() {
                   finalCategory = descData.category
                 }
                 
+                // ✅ Get backend-cropped image URL
+                if (descData.croppedImageUrl) {
+                  croppedDataUrls = [descData.croppedImageUrl]
+                  console.log(`✅ Backend cropped image: ${descData.croppedImageUrl.substring(0, 80)}`)
+                } else {
+                  console.log(`⚠️  No cropped image from backend, using full image`)
+                }
+                
                 console.log(`✅ Description (${descTime}s): "${description.substring(0, 60)}..."`)
               } else {
                 const errorText = await descResponse.text()
@@ -764,10 +774,10 @@ export default function Home() {
               }
             }
             
-            // ✅ SKIP UPLOAD - We're using full image (already in Supabase)
-            // croppedDataUrls already contains the Supabase HTTP URL(s)
-            console.log(`✅ Using full image from Supabase (no upload needed)`)
-            console.log(`   URL: ${croppedDataUrls[0].substring(0, 80)}`)
+            // ✅ Backend cropping complete - no frontend upload needed
+            // croppedDataUrls contains the backend-cropped image URL(s)
+            console.log(`✅ Backend processing complete - image ready in Supabase`)
+            console.log(`   Cropped image: ${croppedDataUrls[0].substring(0, 80)}`)
             
             // Final progress update for this item (round up to full completion)
             completedItems = Math.ceil(completedItems) // Round up any fractional progress
@@ -778,8 +788,8 @@ export default function Home() {
               category: finalCategory, // ✅ Use overridden category from description API (e.g. "robe" not "sweater")
               parent_category: bbox.mapped_category, // Parent from DINO-X (may be overridden in search)
               description: description,
-              croppedImageUrl: croppedDataUrls[0], // Full image URL (already in Supabase)
-              croppedImageUrls: croppedDataUrls, // All variations for search (just full image for now)
+              croppedImageUrl: croppedDataUrls[0], // Backend-cropped image URL
+              croppedImageUrls: croppedDataUrls, // All crop variations for search
               confidence: bbox.confidence
             }
         } catch (error) {

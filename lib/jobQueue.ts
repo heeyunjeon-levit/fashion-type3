@@ -188,8 +188,8 @@ export async function saveJobToDatabase(job: SearchJob): Promise<boolean> {
     // Minimal save - only use columns we're certain exist
     // Try to save, and if it fails, log but don't crash (jobs work in-memory)
     const payload: any = {
-      job_id: job.id,
-      status: job.status,
+        job_id: job.id,
+        status: job.status,
       progress: job.progress || 0,
       created_at: new Date(job.createdAt).toISOString(),
       updated_at: new Date(job.updatedAt).toISOString(),

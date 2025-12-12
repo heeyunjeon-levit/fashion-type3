@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { GoogleGenAI } from '@google/genai'
+import sharp from 'sharp'
+import { createClient } from '@supabase/supabase-js'
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic'
@@ -9,6 +11,12 @@ export const maxDuration = 90 // Allow up to 90 seconds for Gemini 3 Pro (can be
 const client = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY || process.env.GCLOUD_API_KEY || ''
 })
+
+// Initialize Supabase client for image storage
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+)
 
 export async function POST(request: NextRequest) {
   try {
@@ -28,36 +36,99 @@ export async function POST(request: NextRequest) {
     console.log(`🤖 Getting Gemini 3 Pro Preview description for ${category}...`)
     console.log(`   Model: gemini-3-pro-preview (most intelligent model!)`)
     
-    // Convert HTTP URL to data URL if needed (Gemini requires data URLs)
-    let finalImageUrl = imageUrl
+    // Step 1: BACKEND CROPPING (if bbox provided)
+    let croppedImageUrl: string | undefined
+    let imageToAnalyze = imageUrl // Will be either original or cropped image URL
     
-    console.log(`🚨 Checking if conversion needed: imageUrl.startsWith('data:') = ${imageUrl.startsWith('data:')}`)
-    
-    if (!imageUrl.startsWith('data:')) {
-      console.log(`🔄 Converting HTTP URL to data URL for Gemini...`)
-      console.log(`   Source: ${imageUrl.substring(0, 80)}`)
+    if (bbox && imageSize && !imageUrl.startsWith('data:')) {
+      console.log(`✂️ BACKEND CROPPING with bbox:`, bbox)
+      console.log(`   Image size: ${imageSize[0]}x${imageSize[1]}`)
       
       try {
-        // Fetch the image from Supabase
+        // Download original image from Supabase
+        console.log(`   📥 Downloading original image...`)
         const imageResponse = await fetch(imageUrl)
+        if (!imageResponse.ok) {
+          throw new Error(`Failed to fetch image: ${imageResponse.status}`)
+        }
+        const imageBuffer = Buffer.from(await imageResponse.arrayBuffer())
+        console.log(`   ✅ Downloaded ${Math.round(imageBuffer.length / 1024)}KB`)
+        
+        // Parse bbox coordinates (assuming normalized 0-1 or pixel coordinates)
+        const [x1, y1, x2, y2] = bbox
+        const isNormalized = Math.max(x1, y1, x2, y2) <= 1
+        
+        // Calculate pixel coordinates
+        const left = isNormalized ? Math.round(x1 * imageSize[0]) : x1
+        const top = isNormalized ? Math.round(y1 * imageSize[1]) : y1
+        const width = (isNormalized ? Math.round(x2 * imageSize[0]) : x2) - left
+        const height = (isNormalized ? Math.round(y2 * imageSize[1]) : y2) - top
+        
+        console.log(`   📐 Crop region: left=${left}, top=${top}, width=${width}, height=${height}`)
+        
+        // Crop using sharp (FAST!)
+        const croppedBuffer = await sharp(imageBuffer)
+          .extract({ left, top, width, height })
+          .jpeg({ quality: 90 })
+          .toBuffer()
+        
+        console.log(`   ✅ Cropped to ${Math.round(croppedBuffer.length / 1024)}KB`)
+        
+        // Upload cropped image to Supabase
+        const timestamp = Date.now()
+        const filename = `cropped_${category}_${timestamp}.jpg`
+        console.log(`   📤 Uploading cropped image: ${filename}`)
+        
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from('images')
+          .upload(filename, croppedBuffer, {
+            contentType: 'image/jpeg',
+            cacheControl: '3600'
+          })
+        
+        if (uploadError) {
+          console.error(`   ❌ Upload failed:`, uploadError)
+          throw uploadError
+        }
+        
+        // Get public URL
+        const { data: { publicUrl } } = supabase.storage
+          .from('images')
+          .getPublicUrl(filename)
+        
+        croppedImageUrl = publicUrl
+        imageToAnalyze = publicUrl // Analyze the cropped image
+        console.log(`   ✅ Uploaded cropped image: ${publicUrl.substring(0, 80)}`)
+        
+      } catch (error) {
+        console.error('❌ Backend cropping failed:', error)
+        console.warn('   ⚠️  Falling back to full image')
+        // Continue with full image if cropping fails
+      }
+    }
+    
+    // Step 2: Convert image to data URL for Gemini (required by Gemini API)
+    let finalImageUrl = imageToAnalyze
+    
+    if (!imageToAnalyze.startsWith('data:')) {
+      console.log(`🔄 Converting to data URL for Gemini...`)
+      console.log(`   Source: ${imageToAnalyze.substring(0, 80)}`)
+      
+      try {
+        const imageResponse = await fetch(imageToAnalyze)
         if (!imageResponse.ok) {
           throw new Error(`Failed to fetch image: ${imageResponse.status} ${imageResponse.statusText}`)
         }
         
-        // Get the image as an ArrayBuffer
         const arrayBuffer = await imageResponse.arrayBuffer()
         const buffer = Buffer.from(arrayBuffer)
-        
-        // Detect MIME type from response headers or URL
         const contentType = imageResponse.headers.get('content-type') || 'image/jpeg'
-        
-        // Convert to base64 data URL
         const base64 = buffer.toString('base64')
         finalImageUrl = `data:${contentType};base64,${base64}`
         
         console.log(`✅ Converted to data URL: ${contentType}, ${Math.round(base64.length / 1024)}KB`)
       } catch (error) {
-        console.error('❌ Failed to convert HTTP URL to data URL:', error)
+        console.error('❌ Failed to convert to data URL:', error)
         return NextResponse.json(
           { error: 'Failed to fetch and convert image' },
           { status: 500 }
@@ -460,6 +531,7 @@ For unknown categories:
       return NextResponse.json({
         description: retryDescription,
         category,
+        croppedImageUrl, // Backend-cropped image URL (if bbox was provided)
         usage: {
           prompt_tokens: retryUsage?.promptTokenCount || 0,
           completion_tokens: retryUsage?.candidatesTokenCount || 0,
@@ -502,6 +574,7 @@ For unknown categories:
     return NextResponse.json({
       description, // Clean ecom_title like "Women's Beige Knit Scarf with Eye Pattern"
       category: finalCategory, // May be overridden to "robe"
+      croppedImageUrl, // Backend-cropped image URL (if bbox was provided)
       usage: {
         prompt_tokens: usageMetadata?.promptTokenCount || 0,
         completion_tokens: usageMetadata?.candidatesTokenCount || 0,
