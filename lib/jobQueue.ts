@@ -238,7 +238,10 @@ export async function saveJobToDatabase(job: SearchJob): Promise<boolean> {
     console.log(`   Status saved: ${job.status}`)
     console.log(`   Progress saved: ${job.progress}%`)
     
-    // Verify the save by reading it back
+    // Small delay to ensure database transaction commits (Supabase async replication)
+    await new Promise(resolve => setTimeout(resolve, 100))
+    
+    // Verify the save by reading it back with fresh query
     const { data: verifyData } = await supabase
       .from('search_jobs')
       .select('status, progress, updated_at')
@@ -249,9 +252,12 @@ export async function saveJobToDatabase(job: SearchJob): Promise<boolean> {
       console.log(`   ✅ Verified in DB: status=${verifyData.status}, progress=${verifyData.progress}`)
       if (verifyData.status !== job.status) {
         console.error(`   ⚠️  DATABASE MISMATCH! Saved ${job.status} but DB shows ${verifyData.status}`)
+        console.error(`   This indicates the upsert is not updating existing rows!`)
+        return false // Treat as failure
       }
     } else {
       console.error(`   ⚠️  Could not verify save - job not found in DB immediately after save!`)
+      return false // Treat as failure
     }
     
     return true
@@ -270,11 +276,13 @@ export async function loadJobFromDatabase(jobId: string): Promise<SearchJob | nu
     
     console.log(`🔍 Querying database for job ${jobId}...`)
     
+    // Add cache-busting header to force fresh data from Supabase
     const { data, error } = await supabase
       .from('search_jobs')
       .select('*')
       .eq('job_id', jobId)
       .single()
+      .abortSignal(AbortSignal.timeout(5000)) // 5s timeout
     
     if (error) {
       // If table doesn't exist, that's OK - we work in-memory only

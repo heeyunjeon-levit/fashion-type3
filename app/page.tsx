@@ -992,12 +992,25 @@ export default function Home() {
           },
           {
             onProgress: (progress) => {
+              console.log(`📊 Job progress update: ${progress}%`)
               const overallProgress = Math.min(95, 20 + (progress / 100) * 75)
-              setOverallProgress(prev => Math.max(prev, overallProgress))
+              setOverallProgress(prev => {
+                const newProgress = Math.max(prev, overallProgress)
+                if (newProgress !== prev) {
+                  console.log(`   🔄 UI progress: ${prev}% → ${newProgress}%`)
+                }
+                return newProgress
+              })
+            },
+            onComplete: (results, metadata) => {
+              console.log(`🎉 Job COMPLETED callback triggered!`)
+              console.log(`   Results keys:`, results ? Object.keys(results) : 'null')
+              console.log(`   Forcing UI update to 100%...`)
+              setOverallProgress(100)
             },
             enableNotifications: true,
-            fastPollInterval: 2500,
-            slowPollInterval: 5000
+            fastPollInterval: 1500,  // Poll faster (was 2500)
+            slowPollInterval: 3000   // Poll faster even when hidden (was 5000)
           }
         )
         
@@ -1035,6 +1048,7 @@ export default function Home() {
         throw error
       }
       
+      console.log(`🎯 Setting results state with ${Object.keys(allResults).length} categories...`)
       setResults(allResults)
       
       // Log combined search results
@@ -1045,7 +1059,12 @@ export default function Home() {
         })
       }
       
+      console.log(`🎯 Changing step to 'results' - UI should update now!`)
       setCurrentStep('results')
+      setOverallProgress(100)
+      setIsLoading(false)
+      
+      console.log(`✅ Frontend state fully updated - results page should be visible!`)
     } catch (error) {
       console.error('Error fetching results:', error)
       alert('An error occurred while processing your request')

@@ -35,11 +35,11 @@ export async function POST(request: NextRequest) {
     console.log(`📤 Job ${job.id} queued for background processing`)
     console.log(`   Cron worker will process this job within 1 minute`)
     console.log(`   ${phoneNumber ? `SMS will be sent to ${countryCode}${phoneNumber} when complete` : 'No SMS (phone number not provided)'}`)
-    
-    return NextResponse.json({
-      jobId: job.id,
+      
+      return NextResponse.json({
+        jobId: job.id,
       status: 'pending',
-      message: phoneNumber 
+        message: phoneNumber 
         ? 'Search started! We\'ll text you when it\'s ready. Feel free to lock your phone or close the browser.' 
         : 'Search started in background. Job will be processed by cron worker.',
       estimatedTime: '1-2 minutes'

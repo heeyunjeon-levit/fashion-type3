@@ -161,7 +161,8 @@ export async function pollJobUntilComplete(
       
       // Handle completion
       if (status.status === 'completed') {
-        console.log(`✅ Job ${jobId} completed (${attempts} polls)`)
+        console.log(`✅ Job ${jobId} completed (${attempts} polls, ${Math.round((Date.now() - Date.now()) / 1000)}s total)`)
+        console.log(`📊 Results keys:`, status.results ? Object.keys(status.results) : 'null')
         
         // Show notification if page is hidden (wrap in try-catch for iOS Safari)
         try {
@@ -184,10 +185,12 @@ export async function pollJobUntilComplete(
         }
         
         if (onComplete) {
+          console.log(`📞 Calling onComplete callback with results...`)
           onComplete(status.results, status.meta)
         }
         
         document.removeEventListener('visibilitychange', handleVisibilityChange)
+        console.log(`🎉 Returning results to caller`)
         return { results: status.results, meta: status.meta }
       }
       
@@ -204,8 +207,16 @@ export async function pollJobUntilComplete(
         throw new Error(errorMsg)
       }
       
-      // Wait before next poll (adjust based on visibility)
-      const pollInterval = isPageVisible ? fastPollInterval : slowPollInterval
+      // Wait before next poll (adjust based on visibility and progress)
+      // Poll MORE frequently when job is likely finishing (progress > 80%)
+      let pollInterval = isPageVisible ? fastPollInterval : slowPollInterval
+      
+      if (status.progress > 80) {
+        // Job is almost done - poll faster to catch completion quickly
+        pollInterval = Math.min(pollInterval, 1500) // Max 1.5s when near completion
+        console.log(`⚡ Job at ${status.progress}% - polling faster (${pollInterval}ms)`)
+      }
+      
       await sleep(pollInterval)
     }
     
@@ -223,7 +234,15 @@ export async function pollJobUntilComplete(
  * Check the status of a job
  */
 export async function checkJobStatus(jobId: string): Promise<JobStatus> {
-  const response = await fetch(`/api/search-job/${jobId}`)
+  // Add cache-busting query param to force fresh data
+  const cacheBuster = `t=${Date.now()}`
+  const response = await fetch(`/api/search-job/${jobId}?${cacheBuster}`, {
+    cache: 'no-store', // Disable browser caching
+    headers: {
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache'
+    }
+  })
   
   if (!response.ok) {
     if (response.status === 404) {
@@ -233,7 +252,14 @@ export async function checkJobStatus(jobId: string): Promise<JobStatus> {
     throw new Error(`Failed to check job status: ${response.status}`)
   }
   
-  return await response.json()
+  const statusData = await response.json()
+  
+  // Extra logging for debugging
+  if (statusData.status === 'completed' || statusData.status === 'failed') {
+    console.log(`🎯 Job ${jobId} terminal status detected: ${statusData.status}`)
+  }
+  
+  return statusData
 }
 
 /**
