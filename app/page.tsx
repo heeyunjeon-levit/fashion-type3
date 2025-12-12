@@ -755,9 +755,27 @@ export default function Home() {
                 }
                 
                 console.log(`✅ Description (${descTime}s): "${description.substring(0, 60)}..."`)
+                console.log(`✅ Backend processing complete - image ready in Supabase`)
+                
+                // Final progress update for this item (round up to full completion)
+                completedItems = Math.ceil(completedItems) // Round up any fractional progress
+                const targetProgress = Math.min(20, (completedItems / totalItems) * 20)
+                setOverallProgress(prev => Math.max(prev, targetProgress))
+                
+                // Return successful item
+                return {
+                  category: finalCategory, // ✅ Use overridden category from description API (e.g. "robe" not "sweater")
+                  parent_category: bbox.mapped_category, // Parent from DINO-X (may be overridden in search)
+                  description: description,
+                  croppedImageUrl: croppedDataUrls[0], // Backend-cropped image URL
+                  croppedImageUrls: croppedDataUrls, // All crop variations for search
+                  confidence: bbox.confidence
+                }
               } else {
                 const errorText = await descResponse.text()
                 console.error(`❌ Description API error ${descResponse.status} (${descTime}s):`, errorText.substring(0, 200))
+                // Return null on error - this item will be filtered out
+                return null
               }
             } catch (descError) {
               const descTime = ((Date.now() - descStartTime) / 1000).toFixed(1)
@@ -767,30 +785,13 @@ export default function Home() {
                 console.error(`   Error name: ${descError.name}`)
                 console.error(`   Error message: ${descError.message}`)
                 if (descError.name === 'TimeoutError') {
-                  console.error(`   🕐 Timeout after 45s - Backend still processing`)
+                  console.error(`   🕐 Timeout after 90s - Backend still processing`)
                 } else if (descError.name === 'AbortError') {
                   console.error(`   🛑 Request aborted`)
                 }
               }
-            }
-            
-            // ✅ Backend cropping complete - no frontend upload needed
-            // croppedDataUrls contains the backend-cropped image URL(s)
-            console.log(`✅ Backend processing complete - image ready in Supabase`)
-            console.log(`   Cropped image: ${croppedDataUrls[0].substring(0, 80)}`)
-            
-            // Final progress update for this item (round up to full completion)
-            completedItems = Math.ceil(completedItems) // Round up any fractional progress
-            const targetProgress = Math.min(20, (completedItems / totalItems) * 20)
-            setOverallProgress(prev => Math.max(prev, targetProgress))
-            
-            return {
-              category: finalCategory, // ✅ Use overridden category from description API (e.g. "robe" not "sweater")
-              parent_category: bbox.mapped_category, // Parent from DINO-X (may be overridden in search)
-              description: description,
-              croppedImageUrl: croppedDataUrls[0], // Backend-cropped image URL
-              croppedImageUrls: croppedDataUrls, // All crop variations for search
-              confidence: bbox.confidence
+              // Return null on exception - this item will be filtered out
+              return null
             }
         } catch (error) {
           console.error(`❌ Error processing ${bbox.category}:`, error)
