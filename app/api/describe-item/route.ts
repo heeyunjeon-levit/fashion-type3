@@ -12,7 +12,7 @@ const client = new GoogleGenAI({
 
 export async function POST(request: NextRequest) {
   try {
-    const { imageUrl, category } = await request.json()
+    const { imageUrl, category, bbox, imageSize } = await request.json()
 
     if (!imageUrl || !category) {
       console.error('❌ Missing required fields:', { imageUrl: !!imageUrl, category: !!category })
@@ -24,8 +24,22 @@ export async function POST(request: NextRequest) {
 
     console.log(`🤖 Getting Gemini 3 Pro Preview description for ${category}...`)
     console.log(`   Model: gemini-3-pro-preview (most intelligent model!)`)
-    console.log(`   Image type: ${imageUrl.startsWith('data:') ? 'data URL' : 'HTTP URL'}`)
-    console.log(`   Image size: ${Math.round(imageUrl.length / 1024)}KB`)
+    
+    // If bbox provided, crop on backend first
+    let finalImageUrl = imageUrl
+    let croppedUrls: string[] = []
+    
+    if (bbox && imageSize) {
+      console.log(`✂️ Backend cropping with bbox: ${JSON.stringify(bbox)}`)
+      console.log(`   Original image: ${imageUrl.substring(0, 80)}`)
+      
+      // TODO: Implement backend cropping here
+      // For now, use the original image
+      console.warn(`⚠️ Backend cropping not implemented yet - using original image`)
+    }
+    
+    console.log(`   Image type: ${finalImageUrl.startsWith('data:') ? 'data URL' : 'HTTP URL'}`)
+    console.log(`   Image size: ${Math.round(finalImageUrl.length / 1024)}KB`)
     
     // Validate data URL format
     if (imageUrl.startsWith('data:')) {

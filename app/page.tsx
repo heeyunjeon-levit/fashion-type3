@@ -748,28 +748,14 @@ export default function Home() {
             console.log(`   ✅ Normalized bbox: [${normalizedBbox.map(v => v.toFixed(4)).join(', ')}]`)
           }
             
-          // Crop with 7 variations to improve accuracy (reduces background object influence)
-          // Includes: original, 2 tighter crops, and 4 directional variations (remove top/bottom/left/right)
-          // No "wider" version - we already search the full image separately
-          console.log(`   🎯 Generating 7 bbox variations for better search accuracy...`)
+          // 🚀 TEMPORARY: Skip frontend cropping (causes hangs) - use full image
+          // TODO: Implement backend cropping in /api/describe-item
+          console.log(`⚡ [${bbox.category}] SKIPPING frontend cropping - using full image for speed`)
+          console.log(`   Full image: ${imageUrlForCropping.substring(0, 80)}`)
           
-          // Add timeout to prevent hanging forever on slow image loads
-          const croppingPromise = cropImageVariations(
-            imageUrlForCropping,
-            normalizedBbox,
-            7, // numVariations (original + 2 tighter + 4 directional)
-            0.05 // padding
-          )
-          
-          const timeoutPromise = new Promise<never>((_, reject) => 
-            setTimeout(() => reject(new Error('Cropping timeout after 15s')), 15000)
-          )
-          
-          const croppedDataUrls = await Promise.race([croppingPromise, timeoutPromise])
-          console.log(`✅ Cropped ${croppedDataUrls.length} variations locally: ${croppedDataUrls.map(d => Math.round(d.length / 1024)).join(', ')}KB`)
-          
-          // Use the first (original) crop for description, but all crops for search
-          const croppedDataUrl = croppedDataUrls[0]
+          // Use full image directly (no cropping for now)
+          const croppedDataUrl = imageUrlForCropping
+          const croppedDataUrls = [imageUrlForCropping]
             
             // Update progress after cropping (show we're making progress)
             completedItems += 0.3 // 30% of this item done (cropping)
