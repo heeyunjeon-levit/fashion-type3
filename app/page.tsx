@@ -668,7 +668,6 @@ export default function Home() {
       
       const totalItems = pendingBboxes.length
       let completedItems = 0
-      console.log('🚨 DEBUG LINE 670: About to start cropping')
       
       const processingPromises = pendingBboxes.map(async (bbox) => {
         console.log(`🔄 Starting processing for ${bbox.category}...`)
@@ -753,12 +752,20 @@ export default function Home() {
           // Includes: original, 2 tighter crops, and 4 directional variations (remove top/bottom/left/right)
           // No "wider" version - we already search the full image separately
           console.log(`   🎯 Generating 7 bbox variations for better search accuracy...`)
-          const croppedDataUrls = await cropImageVariations(
+          
+          // Add timeout to prevent hanging forever on slow image loads
+          const croppingPromise = cropImageVariations(
             imageUrlForCropping,
             normalizedBbox,
             7, // numVariations (original + 2 tighter + 4 directional)
             0.05 // padding
           )
+          
+          const timeoutPromise = new Promise<never>((_, reject) => 
+            setTimeout(() => reject(new Error('Cropping timeout after 15s')), 15000)
+          )
+          
+          const croppedDataUrls = await Promise.race([croppingPromise, timeoutPromise])
           console.log(`✅ Cropped ${croppedDataUrls.length} variations locally: ${croppedDataUrls.map(d => Math.round(d.length / 1024)).join(', ')}KB`)
           
           // Use the first (original) crop for description, but all crops for search
@@ -862,10 +869,13 @@ export default function Home() {
               confidence: bbox.confidence
             }
         } catch (error) {
-          console.error(`Error processing ${bbox.category}:`, error)
+          console.error(`❌ Error processing ${bbox.category}:`, error)
+          console.error(`   Error type: ${error instanceof Error ? error.name : typeof error}`)
+          console.error(`   Error message: ${error instanceof Error ? error.message : String(error)}`)
           completedItems = Math.ceil(completedItems) // Round up
           const targetProgress = Math.min(20, (completedItems / totalItems) * 20)
           setOverallProgress(prev => Math.max(prev, targetProgress))
+          console.log(`⚠️ Skipping ${bbox.category} due to error, continuing with other items...`)
           return null
         }
       })
