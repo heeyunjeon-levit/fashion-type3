@@ -88,6 +88,9 @@ export async function pollJobUntilComplete(
   let attempts = 0
   let isPageVisible = !document.hidden
   let consecutiveNotFoundErrors = 0
+  let stuckAtZeroCount = 0 // Track how many polls show 0% progress
+  let lastProgress = -1 // Track last seen progress
+  const pollStartTime = Date.now()
   
   // Request notification permission early (but don't block)
   // Wrap in try-catch for iOS Safari compatibility (doesn't support Notification API)
@@ -130,8 +133,10 @@ export async function pollJobUntilComplete(
       // Check job status
       let status
       try {
+        console.log(`🔄 Poll #${attempts} for job ${jobId} (${Math.floor((Date.now() - pollStartTime) / 1000)}s elapsed)`)
         status = await checkJobStatus(jobId)
         consecutiveNotFoundErrors = 0 // Reset counter on success
+        console.log(`   Status: ${status.status}, Progress: ${status.progress}%`)
       } catch (error: any) {
         // Handle "Job not found" errors with exponential backoff
         if (error.message?.includes('Job not found')) {
@@ -152,6 +157,26 @@ export async function pollJobUntilComplete(
           continue
         }
         throw error // Re-throw other errors
+      }
+      
+      // Track if stuck at same progress
+      if (status.progress === lastProgress && status.progress === 0) {
+        stuckAtZeroCount++
+      } else {
+        stuckAtZeroCount = 0 // Reset if progress changed
+      }
+      lastProgress = status.progress
+      
+      // Detect if stuck at 0% for too long
+      const elapsedSeconds = Math.floor((Date.now() - pollStartTime) / 1000)
+      if (stuckAtZeroCount > 20 && elapsedSeconds > 90) {
+        console.warn(`⚠️ Job ${jobId} stuck at 0% for ${stuckAtZeroCount} polls (${elapsedSeconds}s)`)
+        console.warn(`⚠️ This likely means database save failed but SMS was sent`)
+        console.warn(`⚠️ Try checking your SMS for the results link!`)
+        
+        // Give up and throw error with helpful message
+        document.removeEventListener('visibilitychange', handleVisibilityChange)
+        throw new Error('Job appears stuck - check your SMS for results link!')
       }
       
       // Update progress

@@ -73,6 +73,11 @@ export async function GET(
       })
     }
     
+    console.log(`📤 Returning to frontend:`)
+    console.log(`   Status: ${response.status}`)
+    console.log(`   Progress: ${response.progress}%`)
+    console.log(`   Has results: ${!!response.results}`)
+    
     return NextResponse.json(response)
   } catch (error) {
     console.error('Error fetching job status:', error)
