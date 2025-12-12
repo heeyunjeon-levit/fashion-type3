@@ -659,14 +659,19 @@ export default function Home() {
     console.log(`🎯 Processing ${pendingBboxes.length} selected items with phone: ${phoneNum}...`)
 
     try {
+      console.log(`🚨 DEBUG: Starting processPendingItems`)
+      console.log(`🚨 DEBUG: Phone = ${phoneNum || 'NONE'}`)
+      console.log(`🚨 DEBUG: uploadedImageUrl = ${uploadedImageUrl.substring(0, 80)}`)
+      
       // Process ALL items in parallel for efficiency with real-time progress tracking
       console.log(`🚀 Processing ${pendingBboxes.length} items in parallel...`)
       
       const totalItems = pendingBboxes.length
       let completedItems = 0
+      console.log('🚨 DEBUG LINE 670: About to start cropping')
       
       const processingPromises = pendingBboxes.map(async (bbox) => {
-        console.log(`Processing ${bbox.category}...`)
+        console.log(`🔄 Starting processing for ${bbox.category}...`)
         
         try {
           // FRONTEND PROCESSING: Crop locally + get description from Next.js API
@@ -674,13 +679,15 @@ export default function Home() {
           
           // Step 1: Crop image locally using Canvas API with MULTIPLE VARIATIONS
           // This helps reduce influence of background objects (like bags in coat photos)
-          console.log(`✂️ Cropping ${bbox.category} locally with multiple bbox variations...`)
+          console.log(`✂️ [${bbox.category}] Step 1: Cropping locally with multiple bbox variations...`)
           const { cropImageVariations } = await import('@/lib/imageCropper')
+          console.log(`✅ [${bbox.category}] Cropper module loaded`)
           
           // CRITICAL: Crop the SAME image that DINOx analyzed (Supabase URL)
           // NOT the local data URL, because they might have different dimensions!
           // DINOx analyzes the uploaded/compressed Supabase image
           const imageUrlForCropping = uploadedImageUrl
+          console.log(`✅ [${bbox.category}] Image URL for cropping: ${imageUrlForCropping.substring(0, 80)}...`)
           
           console.log(`   📸 Cropping from: ${imageUrlForCropping.includes('supabase') ? 'Supabase (compressed)' : 'Local data URL'}`)
           
