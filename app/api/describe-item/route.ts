@@ -50,10 +50,18 @@ export async function POST(request: NextRequest) {
     let croppedImageUrl: string | undefined
     let imageToAnalyze = imageUrl // Will be either original or cropped image URL
     
-    console.log(`🔍 Cropping check: bbox=${!!bbox}, imageSize=${!!imageSize}, imageSize values=${imageSize}, isDataUrl=${imageUrl.startsWith('data:')}`)
-    console.log(`🔍 Sharp available: ${!!sharp}`)
+    console.log(`🔍 Cropping check:`)
+    console.log(`   bbox: ${!!bbox} (${bbox ? JSON.stringify(bbox) : 'null'})`)
+    console.log(`   imageSize: ${!!imageSize} (${imageSize})`)
+    console.log(`   imageSize[0]: ${imageSize?.[0]} > 0? ${(imageSize?.[0] || 0) > 0}`)
+    console.log(`   imageSize[1]: ${imageSize?.[1]} > 0? ${(imageSize?.[1] || 0) > 0}`)
+    console.log(`   isDataUrl: ${imageUrl.startsWith('data:')}`)
+    console.log(`   Sharp available: ${!!sharp}`)
     
-    if (bbox && imageSize && imageSize[0] > 0 && imageSize[1] > 0 && !imageUrl.startsWith('data:')) {
+    const canCrop = bbox && imageSize && imageSize[0] > 0 && imageSize[1] > 0 && !imageUrl.startsWith('data:')
+    console.log(`   ✅ Can crop: ${canCrop}`)
+    
+    if (canCrop) {
       if (!sharp) {
         console.error(`❌ Backend cropping requested but sharp NOT available!`)
         console.error(`   This means Sharp failed to load (native bindings issue)`)
@@ -137,7 +145,15 @@ export async function POST(request: NextRequest) {
         // Continue with full image if cropping fails
       }
       } // end of else if (sharp)
-    } // end of if (bbox && imageSize...)
+    } else {
+      console.log(`⚠️  Skipping backend cropping:`)
+      if (!bbox) console.log(`   - No bbox provided`)
+      if (!imageSize) console.log(`   - No imageSize provided`)
+      if (imageSize && imageSize[0] <= 0) console.log(`   - imageSize[0] <= 0: ${imageSize[0]}`)
+      if (imageSize && imageSize[1] <= 0) console.log(`   - imageSize[1] <= 0: ${imageSize[1]}`)
+      if (imageUrl.startsWith('data:')) console.log(`   - Image is already a data URL`)
+      console.log(`   → Will analyze FULL image instead of cropped region`)
+    } // end of if (canCrop)
     
     // Step 2: Convert image to data URL for Gemini (required by Gemini API)
     let finalImageUrl = imageToAnalyze

@@ -720,6 +720,12 @@ export default function Home() {
                 setOverallProgress(prev => Math.max(prev, currentProgress))
               }, 2000) // Update every 2 seconds
               
+              console.log(`📤 Sending to describe-item:`)
+              console.log(`   category: ${bbox.category}`)
+              console.log(`   bbox: ${JSON.stringify(bbox.bbox)}`)
+              console.log(`   imageSize: ${JSON.stringify(imageSize)}`)
+              console.log(`   imageUrl: ${uploadedImageUrl.substring(0, 80)}`)
+              
               const descResponse = await fetch('/api/describe-item', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
