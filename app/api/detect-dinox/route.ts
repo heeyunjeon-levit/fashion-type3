@@ -168,6 +168,7 @@ const CATEGORY_MAP: Record<string, string> = {
   'shorts': 'bottoms',
   'skirt': 'bottoms',
   'dress': 'dress',
+  'robe': 'dress',  // Robe is a dress-like garment
   'shoes': 'shoes',
   'sneakers': 'shoes',
   'boots': 'shoes',
@@ -192,6 +193,64 @@ const CATEGORY_MAP: Record<string, string> = {
 function mapCategory(rawCategory: string): string {
   const normalized = rawCategory.toLowerCase().trim()
   return CATEGORY_MAP[normalized] || 'accessories'
+}
+
+// Calculate IoU (Intersection over Union) between two bounding boxes
+function calculateIoU(bbox1: number[], bbox2: number[]): number {
+  if (bbox1.length !== 4 || bbox2.length !== 4) return 0
+  
+  const [x1_1, y1_1, x2_1, y2_1] = bbox1
+  const [x1_2, y1_2, x2_2, y2_2] = bbox2
+  
+  // Calculate intersection
+  const x1_i = Math.max(x1_1, x1_2)
+  const y1_i = Math.max(y1_1, y1_2)
+  const x2_i = Math.min(x2_1, x2_2)
+  const y2_i = Math.min(y2_1, y2_2)
+  
+  if (x2_i < x1_i || y2_i < y1_i) {
+    return 0  // No intersection
+  }
+  
+  const intersectionArea = (x2_i - x1_i) * (y2_i - y1_i)
+  
+  // Calculate union
+  const area1 = (x2_1 - x1_1) * (y2_1 - y1_1)
+  const area2 = (x2_2 - x1_2) * (y2_2 - y1_2)
+  const unionArea = area1 + area2 - intersectionArea
+  
+  return intersectionArea / unionArea
+}
+
+// Non-Maximum Suppression: Remove overlapping duplicate detections
+// Keep only the best detection for each overlapping region
+function applyNMS(objects: DetectionObject[], iouThreshold: number = 0.5): DetectionObject[] {
+  if (objects.length === 0) return []
+  
+  // Sort by confidence score (highest first)
+  const sorted = [...objects].sort((a, b) => b.score - a.score)
+  const keep: DetectionObject[] = []
+  const suppressed = new Set<number>()
+  
+  for (let i = 0; i < sorted.length; i++) {
+    if (suppressed.has(i)) continue
+    
+    const current = sorted[i]
+    keep.push(current)
+    
+    // Suppress overlapping boxes with lower confidence
+    for (let j = i + 1; j < sorted.length; j++) {
+      if (suppressed.has(j)) continue
+      
+      const iou = calculateIoU(current.bbox, sorted[j].bbox)
+      if (iou > iouThreshold) {
+        suppressed.add(j)
+        console.log(`   🔄 NMS: Suppressed "${sorted[j].category}" (${sorted[j].score.toFixed(3)}) - overlaps with "${current.category}" (${current.score.toFixed(3)}), IoU=${iou.toFixed(3)}`)
+      }
+    }
+  }
+  
+  return keep
 }
 
 export async function POST(request: NextRequest) {
@@ -367,8 +426,13 @@ export async function POST(request: NextRequest) {
     })
     console.log(`   After category filter: ${afterCategoryFilter.length}/${afterConfidenceFilter.length}`)
     
+    // Apply Non-Maximum Suppression to remove overlapping duplicates
+    // (e.g., "dress" and "robe" detected for the same region)
+    const afterNMS = applyNMS(afterCategoryFilter, 0.5)  // IoU threshold = 0.5 (50% overlap)
+    console.log(`   After NMS: ${afterNMS.length}/${afterCategoryFilter.length} (removed ${afterCategoryFilter.length - afterNMS.length} overlapping duplicates)`)
+    
     // Calculate scores for all items
-    const allScored = afterCategoryFilter.map((obj, idx) => {
+    const allScored = afterNMS.map((obj, idx) => {
         const bbox = obj.bbox
         const confidence = obj.score
 
@@ -440,6 +504,7 @@ export async function POST(request: NextRequest) {
         raw_objects_count: objects.length,
         after_confidence_filter: afterConfidenceFilter.length,
         after_category_filter: afterCategoryFilter.length,
+        after_nms: afterNMS.length,
         after_main_subject_filter: bboxesWithScores.length,
         raw_objects: objects.map(o => ({ category: o.category, score: o.score })).slice(0, 10),
         image_dimensions: `${imageWidth}x${imageHeight}`,
