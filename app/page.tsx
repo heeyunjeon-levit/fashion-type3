@@ -648,6 +648,7 @@ export default function Home() {
     
     // Check if we already have a phone number
     const existingPhone = phoneNumber || sessionManager?.getPhoneNumber()
+    console.log(`📱 Phone check: phoneNumber=${phoneNumber}, sessionManager phone=${sessionManager?.getPhoneNumber()}, existingPhone=${existingPhone}`)
     
     if (existingPhone) {
       // Have phone - start processing immediately
@@ -658,9 +659,10 @@ export default function Home() {
     } else {
       // No phone - ask for it FIRST, then process
       console.log(`📱 No phone yet - asking user BEFORE processing`)
+      setPendingBboxes(selectedBboxes)  // Set state for modal callback
       setShowPhoneModal(true)
       
-      // Store selected bboxes for processing after phone is collected
+      // Also store in window for safety
       ;(window as any).__pendingBboxesForProcessing = selectedBboxes
     }
   }
