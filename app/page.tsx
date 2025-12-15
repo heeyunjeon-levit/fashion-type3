@@ -10,6 +10,7 @@ import PhoneModal from './components/PhoneModal'
 import { getSessionManager } from '../lib/sessionManager'
 import { usePageTracking } from '../lib/hooks/usePageTracking'
 import { useLanguage } from './contexts/LanguageContext'
+import { createClient } from '@supabase/supabase-js'
 
 export interface DetectedItem {
   category: string // DINO-X detected category (e.g., "jeans", "cardigan", "blazer") - used for search
@@ -31,6 +32,12 @@ interface BboxItem {
 
 export default function Home() {
   const { t, language } = useLanguage()
+  
+  // Initialize Supabase client for frontend uploads
+  const supabase = useMemo(() => createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+  ), [])
   
   // Helper to translate category names
   const translateCategory = (category: string): string => {
@@ -662,6 +669,71 @@ export default function Home() {
   }
 
   // Process items after phone number is collected
+  // Helper function: Crop image using Canvas API
+  const cropImageWithCanvas = async (
+    imageUrl: string,
+    bbox: [number, number, number, number],
+    imgWidth: number,
+    imgHeight: number
+  ): Promise<Blob> => {
+    return new Promise((resolve, reject) => {
+      const img = new Image()
+      img.crossOrigin = 'anonymous' // Handle CORS
+      
+      img.onload = () => {
+        try {
+          // Create canvas
+          const canvas = document.createElement('canvas')
+          const ctx = canvas.getContext('2d')
+          
+          if (!ctx) {
+            reject(new Error('Failed to get canvas context'))
+            return
+          }
+          
+          // Get crop dimensions (bbox is in pixel coordinates)
+          const [x1, y1, x2, y2] = bbox
+          const cropWidth = Math.round(x2 - x1)
+          const cropHeight = Math.round(y2 - y1)
+          
+          // Set canvas size to crop dimensions
+          canvas.width = cropWidth
+          canvas.height = cropHeight
+          
+          // Draw cropped portion
+          ctx.drawImage(
+            img,
+            Math.round(x1), Math.round(y1), // Source x, y
+            cropWidth, cropHeight,           // Source width, height
+            0, 0,                             // Dest x, y
+            cropWidth, cropHeight             // Dest width, height
+          )
+          
+          // Convert to blob
+          canvas.toBlob(
+            (blob) => {
+              if (blob) {
+                resolve(blob)
+              } else {
+                reject(new Error('Failed to create blob from canvas'))
+              }
+            },
+            'image/jpeg',
+            0.92 // Quality
+          )
+        } catch (error) {
+          reject(error)
+        }
+      }
+      
+      img.onerror = () => {
+        reject(new Error('Failed to load image for cropping'))
+      }
+      
+      img.src = imageUrl
+    })
+  }
+
   const processPendingItems = async (phoneNum: string, bboxesToProcess?: typeof pendingBboxes) => {
     const bboxes = bboxesToProcess || pendingBboxes
     if (!bboxes) {
@@ -689,16 +761,54 @@ export default function Home() {
         console.log(`🔄 Starting processing for ${bbox.category}...`)
         
         try {
-          // 🚀 SKIP ALL FRONTEND PROCESSING - Use full image directly
-          // No cropping, no bbox normalization, no image loading
-          // Just pass the full Supabase URL to describe-item API
-          console.log(`⚡ [${bbox.category}] Using full image (no frontend cropping)`)
-          const imageUrlForCropping = uploadedImageUrl
-          console.log(`   Image: ${imageUrlForCropping.substring(0, 80)}...`)
+          // 🎨 FRONTEND CANVAS CROPPING (reliable, no backend dependencies!)
+          console.log(`✂️ [${bbox.category}] Cropping with Canvas API...`)
+          console.log(`   bbox: ${JSON.stringify(bbox.bbox)}`)
+          console.log(`   imageSize: ${JSON.stringify(imageSize)}`)
           
-          // Use full image initially (backend will crop it)
-          const croppedDataUrl = imageUrlForCropping
-          let croppedDataUrls = [imageUrlForCropping] // Will be updated with backend-cropped URL
+          let croppedImageUrl = uploadedImageUrl // Fallback to full image
+          
+          try {
+            // Crop using Canvas
+            const croppedBlob = await cropImageWithCanvas(
+              uploadedImageUrl,
+              bbox.bbox,
+              imageSize[0],
+              imageSize[1]
+            )
+            
+            console.log(`✅ Cropped ${bbox.category}: ${Math.round(croppedBlob.size / 1024)}KB`)
+            
+            // Upload cropped image to Supabase
+            const timestamp = Date.now()
+            const filename = `cropped_${bbox.category}_${timestamp}.jpg`
+            
+            const { data: uploadData, error: uploadError } = await supabase.storage
+              .from('images')
+              .upload(filename, croppedBlob, {
+                contentType: 'image/jpeg',
+                cacheControl: '3600'
+              })
+            
+            if (uploadError) {
+              console.error(`❌ Supabase upload failed:`, uploadError)
+              throw uploadError
+            }
+            
+            const { data: { publicUrl } } = supabase.storage
+              .from('images')
+              .getPublicUrl(filename)
+            
+            croppedImageUrl = publicUrl
+            console.log(`✅ Uploaded cropped image: ${publicUrl.substring(0, 80)}`)
+            
+          } catch (cropError) {
+            console.error(`⚠️ Cropping failed for ${bbox.category}:`, cropError)
+            console.log(`   → Falling back to full image`)
+            // Continue with full image if cropping fails
+          }
+          
+          let croppedDataUrls = [croppedImageUrl]
             
             // Update progress after cropping (show we're making progress)
             completedItems += 0.3 // 30% of this item done (cropping)
@@ -722,20 +832,17 @@ export default function Home() {
               
               console.log(`📤 Sending to describe-item:`)
               console.log(`   category: ${bbox.category}`)
-              console.log(`   bbox: ${JSON.stringify(bbox.bbox)}`)
-              console.log(`   imageSize: ${JSON.stringify(imageSize)}`)
-              console.log(`   imageUrl: ${uploadedImageUrl.substring(0, 80)}`)
+              console.log(`   croppedImageUrl: ${croppedImageUrl.substring(0, 80)}`)
               
               const descResponse = await fetch('/api/describe-item', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                  imageUrl: uploadedImageUrl, // Pass ORIGINAL image URL (backend will crop)
-                  category: bbox.category,
-                  bbox: bbox.bbox, // Pass bbox for backend cropping
-                  imageSize: imageSize // Pass image dimensions
+                  imageUrl: croppedImageUrl, // Use PRE-CROPPED image URL (cropped on frontend!)
+                  category: bbox.category
+                  // No bbox or imageSize needed - image is already cropped!
                 }),
-                signal: AbortSignal.timeout(90000) // 90s timeout for Gemini 3 Pro + cropping
+                signal: AbortSignal.timeout(90000) // 90s timeout for Gemini 3 Pro
               })
               
               const descTime = ((Date.now() - descStartTime) / 1000).toFixed(1)
@@ -762,16 +869,8 @@ export default function Home() {
                   finalCategory = descData.category
                 }
                 
-                // ✅ Get backend-cropped image URL
-                if (descData.croppedImageUrl) {
-                  croppedDataUrls = [descData.croppedImageUrl]
-                  console.log(`✅ Backend cropped image: ${descData.croppedImageUrl.substring(0, 80)}`)
-                } else {
-                  console.log(`⚠️  No cropped image from backend, using full image`)
-                }
-                
                 console.log(`✅ Description (${descTime}s): "${description.substring(0, 60)}..."`)
-                console.log(`✅ Backend processing complete - image ready in Supabase`)
+                console.log(`✅ Using frontend-cropped image: ${croppedImageUrl.substring(0, 60)}...`)
                 
                 // Final progress update for this item (round up to full completion)
                 completedItems = Math.ceil(completedItems) // Round up any fractional progress
