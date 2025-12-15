@@ -230,9 +230,31 @@ export async function POST(request: NextRequest) {
     
     // Get image dimensions for bbox normalization
     const imageInfo: { width?: number; height?: number } = result.image || {}
-    const imageWidth = imageInfo.width || 0
-    const imageHeight = imageInfo.height || 0
-    console.log(`   Image dimensions: ${imageWidth}x${imageHeight}`)
+    let imageWidth = imageInfo.width || 0
+    let imageHeight = imageInfo.height || 0
+    
+    // Fallback: If DINO-X didn't provide dimensions, calculate from bbox coordinates
+    if ((imageWidth === 0 || imageHeight === 0) && objects.length > 0) {
+      console.log('   ⚠️  No image dimensions from DINO-X API, calculating from bboxes...')
+      
+      // Find max coordinates across all bboxes (they're in pixel coordinates)
+      let maxX = 0
+      let maxY = 0
+      objects.forEach(obj => {
+        if (obj.bbox && obj.bbox.length === 4) {
+          maxX = Math.max(maxX, obj.bbox[0], obj.bbox[2])
+          maxY = Math.max(maxY, obj.bbox[1], obj.bbox[3])
+        }
+      })
+      
+      // Add 10% padding since items at edges might not reach actual image boundaries
+      imageWidth = Math.round(maxX * 1.1)
+      imageHeight = Math.round(maxY * 1.1)
+      
+      console.log(`   📐 Calculated dimensions from bboxes: ${imageWidth}x${imageHeight} (max coords: ${maxX.toFixed(0)}x${maxY.toFixed(0)})`)
+    } else {
+      console.log(`   📐 Image dimensions from DINO-X: ${imageWidth}x${imageHeight}`)
+    }
     
     // Log sample bboxes for debugging
     if (objects.length > 0) {
