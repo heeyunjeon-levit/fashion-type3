@@ -1559,15 +1559,16 @@ export default function Home() {
             const bboxesToProcess = (window as any).__pendingBboxesForProcessing || pendingBboxes
             
             if (bboxesToProcess) {
-              console.log(`🚀 Starting processing with phone: ${phone}`)
-              setProcessingItems(bboxesToProcess.map((bbox: BboxItem) => ({ category: bbox.category })))
-              setCurrentStep('processing') // Show progress bar instantly!
+              console.log(`🚀 Starting background processing for new user with phone: ${phone}`)
+              
+              // Show SMS waiting message immediately so user can leave
+              setShowSmsWaitingMessage(true)
               
               // Clean up
               delete (window as any).__pendingBboxesForProcessing
               
-              // Start search immediately (non-blocking) - SMS sent when job completes
-              processPendingItems(phone, bboxesToProcess).catch((error: any) => console.error('❌ Search error:', error))
+              // Start background processing (non-blocking) - SMS sent when job completes
+              processPendingItems(phone, bboxesToProcess).catch((error: any) => console.error('❌ Background processing error:', error))
             } else {
               console.error('❌ No pending bboxes to process!')
             }
