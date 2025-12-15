@@ -14,6 +14,10 @@ interface DetectionObject {
 
 interface DINOXDetectionResult {
   objects: DetectionObject[]
+  image?: {
+    width: number
+    height: number
+  }
 }
 
 // Fashion categories for detection (ordered by priority for better detection)
