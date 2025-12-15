@@ -1423,7 +1423,7 @@ export default function Home() {
             <div className="text-center">
               {/* Icon - Success checkmark */}
               <div className="mb-6">
-                <div className="w-20 h-20 mx-auto bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center shadow-lg">
+                <div className="w-20 h-20 mx-auto bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg">
                   <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                   </svg>
@@ -1435,13 +1435,10 @@ export default function Home() {
                 {t('sms.title')}
               </h2>
               <div className="mb-6">
-                <p className="text-lg font-semibold text-green-600 mb-3">
+                <p className="text-lg font-bold text-black mb-3 bg-yellow-100 inline-block px-3 py-1 rounded-lg">
                   {t('sms.safeToClose')}
                 </p>
-                <p className="text-gray-700 mb-2 leading-relaxed">
-                  {t('sms.background')}
-                </p>
-                <p className="text-gray-700 leading-relaxed">
+                <p className="text-gray-700 leading-relaxed mt-4">
                   {language === 'ko' ? (
                     <><strong className="text-gray-900">1~2분 후</strong> 결과 링크를 문자로 보내드릴게요! 📱</>
                   ) : (
