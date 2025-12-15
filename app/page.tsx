@@ -643,18 +643,26 @@ export default function Home() {
       return
     }
 
-    // 🚀 NEW FLOW: Start processing immediately (no phone modal upfront!)
-    // Phone modal will appear at 21% when job is safely queued
-    console.log(`🚀 Starting processing for ${selectedBboxes.length} items...`)
+    console.log(`🚀 User selected ${selectedBboxes.length} items`)
     setPendingBboxes(selectedBboxes)
     
-    // Set processing state immediately
-    setProcessingItems(selectedBboxes.map(bbox => ({ category: bbox.category })))
-    setCurrentStep('processing')
+    // Check if we already have a phone number
+    const existingPhone = phoneNumber || sessionManager?.getPhoneNumber()
     
-    // Start processing WITHOUT phone number (will prompt at safe point after uploads)
-    // Pass selectedBboxes directly (don't rely on state update)
-    await processPendingItems(phoneNumber || '', selectedBboxes)
+    if (existingPhone) {
+      // Have phone - start processing immediately
+      console.log(`📱 Phone already collected: ${existingPhone}`)
+      setProcessingItems(selectedBboxes.map(bbox => ({ category: bbox.category })))
+      setCurrentStep('processing')
+      await processPendingItems(existingPhone, selectedBboxes)
+    } else {
+      // No phone - ask for it FIRST, then process
+      console.log(`📱 No phone yet - asking user BEFORE processing`)
+      setShowPhoneModal(true)
+      
+      // Store selected bboxes for processing after phone is collected
+      ;(window as any).__pendingBboxesForProcessing = selectedBboxes
+    }
   }
 
   // Process items after phone number is collected
@@ -1539,13 +1547,23 @@ export default function Home() {
             // NORMAL MODE: Process pending items
             // 🐌 SMS WILL BE SENT - Normal search is slow (20-60s), user might leave
             // Phone number used for SMS notification with shareable results link
-            if (pendingBboxes) {
-              setProcessingItems(pendingBboxes.map(bbox => ({ category: bbox.category })))
-            }
-            setCurrentStep('processing') // Show progress bar instantly!
             
-            // Start search immediately (non-blocking) - SMS sent when job completes
-            processPendingItems(phone).catch((error: any) => console.error('❌ Search error:', error))
+            // Check if we have pending bboxes from selection (asked for phone BEFORE processing)
+            const bboxesToProcess = (window as any).__pendingBboxesForProcessing || pendingBboxes
+            
+            if (bboxesToProcess) {
+              console.log(`🚀 Starting processing with phone: ${phone}`)
+              setProcessingItems(bboxesToProcess.map((bbox: BboxItem) => ({ category: bbox.category })))
+              setCurrentStep('processing') // Show progress bar instantly!
+              
+              // Clean up
+              delete (window as any).__pendingBboxesForProcessing
+              
+              // Start search immediately (non-blocking) - SMS sent when job completes
+              processPendingItems(phone, bboxesToProcess).catch((error: any) => console.error('❌ Search error:', error))
+            } else {
+              console.error('❌ No pending bboxes to process!')
+            }
           }}
         />
       )}
