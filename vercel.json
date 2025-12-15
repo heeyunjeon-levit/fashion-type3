@@ -15,6 +15,9 @@
     },
     "app/api/cron/process-jobs/route.ts": {
       "maxDuration": 300
+    },
+    "app/api/describe-item/route.ts": {
+      "maxDuration": 90
     }
   },
   "crons": [
