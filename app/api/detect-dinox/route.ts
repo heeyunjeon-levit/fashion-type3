@@ -115,6 +115,8 @@ async function queryTaskResult(taskUuid: string, maxWait: number = 120): Promise
       // Check for terminal states (according to official DINO-X API docs)
       if (status === 'success') {
         console.log('   ✅ Task completed successfully!')
+        console.log('   📊 DINO-X result keys:', Object.keys(data.data?.result || {}))
+        console.log('   📊 Image metadata:', JSON.stringify(data.data?.result?.image || 'NONE'))
         // Return full data including image dimensions for bbox normalization
         return {
           ...data.data?.result,

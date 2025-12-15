@@ -32,6 +32,8 @@ export async function POST(request: NextRequest) {
 
     console.log(`🚨 DESCRIBE-ITEM DEBUG: category=${category}, imageUrl type=${typeof imageUrl}, starts with data:${imageUrl?.startsWith('data:')}`)
     console.log(`🚨 imageUrl preview: ${imageUrl?.substring(0, 100)}`)
+    console.log(`🚨 bbox:`, bbox)
+    console.log(`🚨 imageSize:`, imageSize)
 
     if (!imageUrl || !category) {
       console.error('❌ Missing required fields:', { imageUrl: !!imageUrl, category: !!category })
@@ -48,7 +50,9 @@ export async function POST(request: NextRequest) {
     let croppedImageUrl: string | undefined
     let imageToAnalyze = imageUrl // Will be either original or cropped image URL
     
-    if (bbox && imageSize && !imageUrl.startsWith('data:')) {
+    console.log(`🔍 Cropping check: bbox=${!!bbox}, imageSize=${!!imageSize}, imageSize values=${imageSize}, isDataUrl=${imageUrl.startsWith('data:')}`)
+    
+    if (bbox && imageSize && imageSize[0] > 0 && imageSize[1] > 0 && !imageUrl.startsWith('data:')) {
       if (!sharp) {
         console.warn(`⚠️  Backend cropping requested but sharp not available - using full image`)
       } else if (sharp) {
