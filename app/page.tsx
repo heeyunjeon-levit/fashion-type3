@@ -648,16 +648,11 @@ export default function Home() {
     console.log(`📱 Phone check: phoneNumber=${phoneNumber}, sessionManager phone=${sessionManager?.getPhoneNumber()}, existingPhone=${existingPhone}`)
     
     if (existingPhone) {
-      // Have phone - start processing in background and show SMS waiting message
-      console.log(`📱 Phone already collected: ${existingPhone} - starting background processing`)
-      
-      // Show SMS waiting message immediately so user can leave
-      setShowSmsWaitingMessage(true)
-      
-      // Start background processing (non-blocking)
-      processPendingItems(existingPhone, selectedBboxes).catch((error: any) => {
-        console.error('❌ Background processing error:', error)
-      })
+      // Have phone - start processing with progress bar (job needs to be created first!)
+      console.log(`📱 Phone already collected: ${existingPhone}`)
+      setProcessingItems(selectedBboxes.map(bbox => ({ category: bbox.category })))
+      setCurrentStep('processing')
+      await processPendingItems(existingPhone, selectedBboxes)
     } else {
       // No phone - ask for it FIRST, then process
       console.log(`📱 No phone yet - asking user BEFORE processing`)
@@ -1553,16 +1548,15 @@ export default function Home() {
             const bboxesToProcess = (window as any).__pendingBboxesForProcessing || pendingBboxes
             
             if (bboxesToProcess) {
-              console.log(`🚀 Starting background processing for new user with phone: ${phone}`)
-              
-              // Show SMS waiting message immediately so user can leave
-              setShowSmsWaitingMessage(true)
+              console.log(`🚀 Starting processing with phone: ${phone}`)
+              setProcessingItems(bboxesToProcess.map((bbox: BboxItem) => ({ category: bbox.category })))
+              setCurrentStep('processing') // Show progress bar - job needs to be created first!
               
               // Clean up
               delete (window as any).__pendingBboxesForProcessing
               
-              // Start background processing (non-blocking) - SMS sent when job completes
-              processPendingItems(phone, bboxesToProcess).catch((error: any) => console.error('❌ Background processing error:', error))
+              // Start processing (non-blocking) - SMS waiting message at 21% (safe point)
+              processPendingItems(phone, bboxesToProcess).catch((error: any) => console.error('❌ Search error:', error))
             } else {
               console.error('❌ No pending bboxes to process!')
             }
