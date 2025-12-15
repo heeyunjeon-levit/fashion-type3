@@ -222,6 +222,33 @@ function calculateIoU(bbox1: number[], bbox2: number[]): number {
   return intersectionArea / unionArea
 }
 
+// Check if bbox2 is engulfed (completely contained) by bbox1
+// Returns true if bbox2 is inside bbox1 with some tolerance
+function isEngulfed(bbox1: number[], bbox2: number[]): boolean {
+  if (bbox1.length !== 4 || bbox2.length !== 4) return false
+  
+  const [x1_1, y1_1, x2_1, y2_1] = bbox1
+  const [x1_2, y1_2, x2_2, y2_2] = bbox2
+  
+  // Calculate areas
+  const area1 = (x2_1 - x1_1) * (y2_1 - y1_1)
+  const area2 = (x2_2 - x1_2) * (y2_2 - y1_2)
+  
+  // If bbox2 is larger, it can't be engulfed by bbox1
+  if (area2 > area1) return false
+  
+  // Check if bbox2 is completely inside bbox1 (with small tolerance for detection errors)
+  const tolerance = 0.02  // 2% tolerance
+  const engulfed = (
+    x1_2 >= (x1_1 - tolerance) &&
+    y1_2 >= (y1_1 - tolerance) &&
+    x2_2 <= (x2_1 + tolerance) &&
+    y2_2 <= (y2_1 + tolerance)
+  )
+  
+  return engulfed
+}
+
 // Non-Maximum Suppression: Remove overlapping duplicate detections
 // Keep only the best detection for each overlapping region
 function applyNMS(objects: DetectionObject[], iouThreshold: number = 0.5): DetectionObject[] {
@@ -242,14 +269,34 @@ function applyNMS(objects: DetectionObject[], iouThreshold: number = 0.5): Detec
     for (let j = i + 1; j < sorted.length; j++) {
       if (suppressed.has(j)) continue
       
+      // Check for engulfment (one box completely inside another)
+      const currentEngulfsSorted = isEngulfed(current.bbox, sorted[j].bbox)
+      const sortedEngulfsCurrent = isEngulfed(sorted[j].bbox, current.bbox)
+      
+      if (currentEngulfsSorted) {
+        // Current (higher confidence) box contains sorted[j] - suppress the smaller one
+        suppressed.add(j)
+        console.log(`      🔴 ENGULFMENT: "${current.category}" (${current.score.toFixed(3)}) contains "${sorted[j].category}" (${sorted[j].score.toFixed(3)}) - SUPPRESSED smaller box`)
+        continue
+      }
+      
+      if (sortedEngulfsCurrent) {
+        // sorted[j] (lower confidence) contains current - this shouldn't happen since we sort by confidence
+        // But if it does, keep the higher confidence one (current)
+        suppressed.add(j)
+        console.log(`      🔴 ENGULFMENT: "${sorted[j].category}" contains "${current.category}" but has lower confidence - SUPPRESSED`)
+        continue
+      }
+      
+      // Standard IoU check for overlapping boxes
       const iou = calculateIoU(current.bbox, sorted[j].bbox)
       
-      // Always log IoU for debugging
+      // Log IoU for debugging
       console.log(`      🔍 IoU between "${current.category}" and "${sorted[j].category}": ${iou.toFixed(3)} (threshold: ${iouThreshold})`)
       
       if (iou > iouThreshold) {
         suppressed.add(j)
-        console.log(`      ✅ SUPPRESSED "${sorted[j].category}" (${sorted[j].score.toFixed(3)}) - overlaps with "${current.category}" (${current.score.toFixed(3)})`)
+        console.log(`      ✅ OVERLAP: SUPPRESSED "${sorted[j].category}" (${sorted[j].score.toFixed(3)}) - overlaps with "${current.category}" (${current.score.toFixed(3)})`)
       }
     }
   }
@@ -429,8 +476,8 @@ export async function POST(request: NextRequest) {
       console.log(`      - ${obj.category} (score: ${obj.score.toFixed(3)}, bbox: ${JSON.stringify(obj.bbox.map((c: number) => c.toFixed(3)))})`)
     })
     
-    const afterNMS = applyNMS(afterConfidenceFilter, 0.3)  // IoU threshold = 0.3 (30% overlap - lowered from 0.5)
-    console.log(`   ✅ After NMS: ${afterNMS.length}/${afterConfidenceFilter.length} (removed ${afterConfidenceFilter.length - afterNMS.length} overlapping duplicates)`)
+    const afterNMS = applyNMS(afterConfidenceFilter, 0.5)  // IoU threshold = 0.5 (50% overlap) - engulfment handled separately
+    console.log(`   ✅ After NMS: ${afterNMS.length}/${afterConfidenceFilter.length} (removed ${afterConfidenceFilter.length - afterNMS.length} overlapping/engulfed duplicates)`)
     
     // Calculate scores for all items
     const allScored = afterNMS.map((obj, idx) => {
