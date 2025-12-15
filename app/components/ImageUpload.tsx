@@ -153,12 +153,9 @@ export default function ImageUpload({ onImageUploaded }: ImageUploadProps) {
         }
       }
 
-      // Upload directly to Supabase from frontend
-      const { createClient } = await import('@supabase/supabase-js')
-      const supabase = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-      )
+      // Upload directly to Supabase from frontend (using singleton client)
+      const { getSupabaseClient } = await import('@/lib/supabase')
+      const supabase = getSupabaseClient()
 
       // Convert file to buffer
       const arrayBuffer = await fileToUpload.arrayBuffer()

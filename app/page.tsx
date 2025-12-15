@@ -10,7 +10,7 @@ import PhoneModal from './components/PhoneModal'
 import { getSessionManager } from '../lib/sessionManager'
 import { usePageTracking } from '../lib/hooks/usePageTracking'
 import { useLanguage } from './contexts/LanguageContext'
-import { createClient } from '@supabase/supabase-js'
+import { getSupabaseClient } from '../lib/supabase'
 
 export interface DetectedItem {
   category: string // DINO-X detected category (e.g., "jeans", "cardigan", "blazer") - used for search
@@ -33,11 +33,8 @@ interface BboxItem {
 export default function Home() {
   const { t, language } = useLanguage()
   
-  // Initialize Supabase client for frontend uploads
-  const supabase = useMemo(() => createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
-  ), [])
+  // Initialize Supabase client for frontend uploads (using singleton)
+  const supabase = useMemo(() => getSupabaseClient(), [])
   
   // Helper to translate category names
   const translateCategory = (category: string): string => {
