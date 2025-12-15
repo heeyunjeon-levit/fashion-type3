@@ -1371,33 +1371,54 @@ export default function Home() {
       
       {/* SMS Waiting Message - Show after phone submission at 21% */}
       {showSmsWaitingMessage && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl">
+        <div className="fixed inset-0 bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl border border-gray-200">
             <div className="text-center">
-              {/* Icon */}
+              {/* Icon - Success checkmark */}
               <div className="mb-6">
-                <div className="w-20 h-20 mx-auto bg-gradient-to-br from-yellow-400 to-amber-500 rounded-full flex items-center justify-center">
-                  <span className="text-4xl">📱</span>
+                <div className="w-20 h-20 mx-auto bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center shadow-lg">
+                  <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                  </svg>
                 </div>
               </div>
               
-              {/* Message */}
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                검색이 진행중입니다!
+              {/* Message - Clear and reassuring */}
+              <h2 className="text-2xl font-bold text-gray-900 mb-3">
+                {t('sms.title')}
               </h2>
-              <p className="text-gray-700 mb-8 leading-relaxed">
-                문자가 안오면 다시 검색해보세요
-              </p>
+              <div className="mb-6">
+                <p className="text-lg font-semibold text-green-600 mb-3">
+                  {t('sms.safeToClose')}
+                </p>
+                <p className="text-gray-700 mb-2 leading-relaxed">
+                  {t('sms.background')}
+                </p>
+                <p className="text-gray-700 leading-relaxed">
+                  {language === 'ko' ? (
+                    <><strong className="text-gray-900">1~2분 후</strong> 결과 링크를 문자로 보내드릴게요! 📱</>
+                  ) : (
+                    t('sms.timing')
+                  )}
+                </p>
+              </div>
               
-              {/* Home Button */}
+              {/* Additional info box */}
+              <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6 text-left">
+                <p className="text-sm text-gray-700">
+                  {t('sms.infoNote')}
+                </p>
+              </div>
+              
+              {/* Confirm Button */}
               <button
                 onClick={() => {
                   setShowSmsWaitingMessage(false)
                   window.location.href = 'https://fashionsource.vercel.app'
                 }}
-                className="w-full bg-gradient-to-r from-yellow-600 to-amber-600 text-white py-4 rounded-xl font-bold text-lg hover:from-yellow-700 hover:to-amber-700 transition-all shadow-lg transform hover:scale-105 active:scale-95"
+                className="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white py-4 rounded-xl font-bold text-lg hover:from-green-600 hover:to-emerald-700 transition-all shadow-lg transform hover:scale-105 active:scale-95"
               >
-                🏠 홈으로 가기
+                {t('sms.confirm')}
               </button>
             </div>
           </div>

@@ -69,6 +69,14 @@ const translations = {
     'phone.privacy': '🔒 Your phone number is securely stored\nand used only for user interviews',
     'phone.locked': '🔒 Enter your phone number\nto view product links!',
 
+    // SMS Waiting Screen
+    'sms.title': 'Search started! ✨',
+    'sms.safeToClose': 'Safe to close your browser',
+    'sms.background': 'The search will continue in the background',
+    'sms.timing': 'We\'ll text you the results link in 1-2 minutes! 📱',
+    'sms.infoNote': '💡 Note: If you don\'t receive a text after 2 minutes, please try again',
+    'sms.confirm': 'Got it 👍',
+
     // FeedbackModal
     'feedback.title': 'How was your experience?',
     'feedback.subtitle': 'We\'d love to hear your feedback 💭',
@@ -143,6 +151,14 @@ const translations = {
     'phone.submitOcr': '결과 보기 🔗',
     'phone.privacy': '🔒 전화번호는 안전하게 보관됩니다',
     'phone.locked': '🔒 전화번호 입력 후\n상품 링크를 확인하세요!',
+
+    // SMS Waiting Screen
+    'sms.title': '검색을 시작했어요! ✨',
+    'sms.safeToClose': '브라우저를 닫아도 괜찮아요',
+    'sms.background': '백그라운드에서 검색이 계속 진행됩니다',
+    'sms.timing': '1~2분 후 결과 링크를 문자로 보내드릴게요! 📱',
+    'sms.infoNote': '💡 알림: 문자가 2분 이상 안 오면 다시 시도해주세요',
+    'sms.confirm': '확인 👍',
 
     // FeedbackModal
     'feedback.title': '결과가 만족스러우셨나요?',
