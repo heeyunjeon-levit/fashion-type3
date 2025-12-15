@@ -51,11 +51,15 @@ export async function POST(request: NextRequest) {
     let imageToAnalyze = imageUrl // Will be either original or cropped image URL
     
     console.log(`🔍 Cropping check: bbox=${!!bbox}, imageSize=${!!imageSize}, imageSize values=${imageSize}, isDataUrl=${imageUrl.startsWith('data:')}`)
+    console.log(`🔍 Sharp available: ${!!sharp}`)
     
     if (bbox && imageSize && imageSize[0] > 0 && imageSize[1] > 0 && !imageUrl.startsWith('data:')) {
       if (!sharp) {
-        console.warn(`⚠️  Backend cropping requested but sharp not available - using full image`)
+        console.error(`❌ Backend cropping requested but sharp NOT available!`)
+        console.error(`   This means Sharp failed to load (native bindings issue)`)
+        console.warn(`   ⚠️  Falling back to full image`)
       } else if (sharp) {
+      console.log(`✅ Sharp is available, proceeding with backend cropping`)
       console.log(`✂️ BACKEND CROPPING with bbox:`, bbox)
       console.log(`   Image size: ${imageSize[0]}x${imageSize[1]}`)
       
@@ -81,7 +85,16 @@ export async function POST(request: NextRequest) {
         
         console.log(`   📐 Crop region: left=${left}, top=${top}, width=${width}, height=${height}`)
         
+        // Validate crop region
+        if (width <= 0 || height <= 0) {
+          throw new Error(`Invalid crop dimensions: width=${width}, height=${height}`)
+        }
+        if (left < 0 || top < 0) {
+          throw new Error(`Invalid crop position: left=${left}, top=${top}`)
+        }
+        
         // Crop using sharp (FAST!)
+        console.log(`   ✂️  Calling sharp.extract()...`)
         const croppedBuffer = await sharp(imageBuffer)
           .extract({ left, top, width, height })
           .jpeg({ quality: 90 })
@@ -115,8 +128,11 @@ export async function POST(request: NextRequest) {
         imageToAnalyze = publicUrl // Analyze the cropped image
         console.log(`   ✅ Uploaded cropped image: ${publicUrl.substring(0, 80)}`)
         
-      } catch (error) {
+      } catch (error: any) {
         console.error('❌ Backend cropping failed:', error)
+        console.error('   Error type:', error.constructor?.name || typeof error)
+        console.error('   Error message:', error.message || String(error))
+        console.error('   Error stack:', error.stack?.substring(0, 500))
         console.warn('   ⚠️  Falling back to full image')
         // Continue with full image if cropping fails
       }
