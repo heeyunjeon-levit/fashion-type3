@@ -111,7 +111,11 @@ async function queryTaskResult(taskUuid: string, maxWait: number = 120): Promise
       // Check for terminal states (according to official DINO-X API docs)
       if (status === 'success') {
         console.log('   ✅ Task completed successfully!')
-        return data.data?.result
+        // Return full data including image dimensions for bbox normalization
+        return {
+          ...data.data?.result,
+          image: data.data?.result?.image // Include image metadata (width, height)
+        }
       } else if (status === 'failed') {
         console.error('   ❌ Task failed:', data)
         throw new Error('DINO-X task failed')
@@ -218,6 +222,12 @@ export async function POST(request: NextRequest) {
     console.log(`📦 DINO-X returned ${objects.length} raw objects`)
     console.log('   Raw result structure:', JSON.stringify(result, null, 2).substring(0, 500))
     
+    // Get image dimensions for bbox normalization
+    const imageInfo = result.image || {}
+    const imageWidth = imageInfo.width || 0
+    const imageHeight = imageInfo.height || 0
+    console.log(`   Image dimensions: ${imageWidth}x${imageHeight}`)
+    
     // Log sample bboxes for debugging
     if (objects.length > 0) {
       console.log('📏 Sample bboxes from DINOx:')
@@ -226,33 +236,98 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    // Filter and score items for main subject focus
-    const CONFIDENCE_THRESHOLD = 0.40  // Keep reasonable for detection
+    // Check if bboxes need normalization
+    const needsNormalization = objects.length > 0 && objects[0].bbox && objects[0].bbox.some((coord: number) => coord > 1)
+    
+    if (needsNormalization && imageWidth > 0 && imageHeight > 0) {
+      console.log(`   🔧 Normalizing pixel coordinates to 0-1 range using ${imageWidth}x${imageHeight}`)
+      
+      // Normalize all bboxes
+      objects.forEach((obj) => {
+        if (obj.bbox && obj.bbox.length === 4) {
+          const [x1, y1, x2, y2] = obj.bbox
+          obj.bbox = [
+            x1 / imageWidth,
+            y1 / imageHeight,
+            x2 / imageWidth,
+            y2 / imageHeight
+          ]
+        }
+      })
+      
+      console.log('   ✅ Bboxes normalized to 0-1 range')
+      console.log(`   Sample normalized bbox: ${JSON.stringify(objects[0]?.bbox)}`)
+    } else if (needsNormalization) {
+      console.warn(`   ⚠️  Bboxes need normalization but image dimensions not available!`)
+    } else {
+      console.log(`   ✅ Bboxes already normalized (values <= 1)`)
+    }
+
+    // Category-aware confidence thresholds
+    // Primary garments: Lower threshold (these are the main focus)
+    // Small accessories: Higher threshold (poor search quality, often false positives)
+    const CATEGORY_THRESHOLDS: Record<string, number> = {
+      // Primary garments (PRIORITY - lower threshold)
+      'dress': 0.25,
+      'robe': 0.25,
+      'coat': 0.25,
+      'jacket': 0.28,
+      'leather jacket': 0.28,
+      'fur coat': 0.28,
+      'shirt': 0.30,
+      'blouse': 0.30,
+      'button up shirt': 0.30,
+      'sweater': 0.30,
+      'cardigan': 0.30,
+      'hoodie': 0.30,
+      'pants': 0.30,
+      'jeans': 0.30,
+      'trousers': 0.30,
+      'skirt': 0.30,
+      'shorts': 0.32,
+      
+      // Footwear & bags (medium threshold)
+      'shoes': 0.35,
+      'sneakers': 0.35,
+      'boots': 0.35,
+      'sandals': 0.35,
+      'heels': 0.35,
+      'bag': 0.38,
+      'handbag': 0.38,
+      'clutch': 0.38,
+      'backpack': 0.40,
+      
+      // Medium accessories (standard threshold)
+      'sunglasses': 0.40,
+      'hat': 0.40,
+      'cap': 0.40,
+      'scarf': 0.40,
+      'belt': 0.42,
+      
+      // Small accessories (HIGH threshold - poor search results)
+      'watch': 0.50,
+      'bracelet': 0.55,
+      'necklace': 0.50,
+      'ring': 0.60,  // Rings especially problematic
+      'earrings': 0.55,
+      'jewelry': 0.55
+    }
+    
+    const DEFAULT_THRESHOLD = 0.40  // Fallback for unknown categories
     const MAIN_SUBJECT_THRESHOLD = 0.35  // Sweet spot: not too many, not zero (was 0.30→0.45→now 0.35)
     const MAX_ITEMS = 5  // Limit to top 5 items to reduce clutter
     const EXCLUDED_CATEGORIES = ['leggings', 'tights', 'stockings']
-
-    // Check if bboxes need normalization (DINOx API should return normalized, but verify)
-    let imageWidth = 0
-    let imageHeight = 0
-    if (objects.length > 0 && objects[0].bbox) {
-      // Quick check: if any bbox value > 1, it's in pixel coordinates
-      const sampleBbox = objects[0].bbox
-      const needsNormalization = sampleBbox.some(coord => coord > 1)
-      if (needsNormalization) {
-        console.log(`   ⚠️  Bboxes appear to be in pixel coordinates (${sampleBbox}), need normalization`)
-        // TODO: Get actual image dimensions if needed
-        // For now, assume DINOx returns normalized - this is a safety check
-      } else {
-        console.log(`   ✅ Bboxes appear to be normalized (${sampleBbox})`)
-      }
-    }
     
-    console.log(`   Applying filters: confidence >= ${CONFIDENCE_THRESHOLD}, excluding ${EXCLUDED_CATEGORIES.join(', ')}`)
+    console.log(`   Applying category-aware confidence thresholds, excluding ${EXCLUDED_CATEGORIES.join(', ')}`)
     
     const afterConfidenceFilter = objects.filter(obj => {
-      const pass = obj.score >= CONFIDENCE_THRESHOLD
-      if (!pass) console.log(`   ❌ Filtered out (low confidence): ${obj.category} (${obj.score})`)
+      const categoryThreshold = CATEGORY_THRESHOLDS[obj.category.toLowerCase()] || DEFAULT_THRESHOLD
+      const pass = obj.score >= categoryThreshold
+      if (!pass) {
+        console.log(`   ❌ Filtered out (low confidence): ${obj.category} (${obj.score.toFixed(3)} < ${categoryThreshold})`)
+      } else {
+        console.log(`   ✅ Passed confidence: ${obj.category} (${obj.score.toFixed(3)} >= ${categoryThreshold})`)
+      }
       return pass
     })
     console.log(`   After confidence filter: ${afterConfidenceFilter.length}/${objects.length}`)
@@ -329,7 +404,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       bboxes: bboxesWithScores,
-      image_size: [0, 0], // Not needed for normalized coords
+      image_size: [imageWidth, imageHeight], // Required for backend cropping
       processing_time: 0,
       source: 'dino-x-direct',
       // Debug info
@@ -338,7 +413,9 @@ export async function POST(request: NextRequest) {
         after_confidence_filter: afterConfidenceFilter.length,
         after_category_filter: afterCategoryFilter.length,
         after_main_subject_filter: bboxesWithScores.length,
-        raw_objects: objects.map(o => ({ category: o.category, score: o.score })).slice(0, 10)
+        raw_objects: objects.map(o => ({ category: o.category, score: o.score })).slice(0, 10),
+        image_dimensions: `${imageWidth}x${imageHeight}`,
+        bboxes_normalized: !needsNormalization || (needsNormalization && imageWidth > 0)
       }
     })
 
