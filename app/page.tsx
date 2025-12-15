@@ -83,9 +83,8 @@ export default function Home() {
   const [useOCRSearch, setUseOCRSearch] = useState(false)
   const [ocrStep, setOcrStep] = useState<'extracting' | 'mapping' | 'searching' | 'selecting'>('extracting')
   
-  // Single item mode (skip detection for faster results)
-  const [showSingleItemQuestion, setShowSingleItemQuestion] = useState(false)
-  const [isSingleItem, setIsSingleItem] = useState<boolean | null>(null)
+  // Removed: Single item mode - was confusing users
+  // Now always use interactive detection mode
   
   const [currentStep, setCurrentStep] = useState<'upload' | 'detecting' | 'selecting' | 'processing' | 'gallery' | 'searching' | 'results'>('upload')
   const [autoDrawMode, setAutoDrawMode] = useState(false)  // Auto-enable drawing when no items detected
@@ -260,47 +259,26 @@ export default function Home() {
 
     // Old fallback function removed - now using /api/ocr-search directly
 
-    // If OCR mode is enabled, skip single item question and go straight to OCR search
+    // Always start detection (removed confusing single-item question)
+    console.log('👔 Starting detection for all uploads...')
+    
     if (useOCRSearch) {
-      console.log('🔤 OCR Mode enabled: Skipping single item question, going to OCR search')
-      await startDetectionProcess(imageUrl)  // Pass imageUrl directly to avoid race condition
-      return
-    }
-
-    // SHOW SINGLE ITEM QUESTION (before detection)
-    // This allows users to skip detection for faster results
-    setShowSingleItemQuestion(true)
-    return
-  }
-
-  // Handle single item question response
-  const handleSingleItemResponse = async (isSingle: boolean) => {
-    setIsSingleItem(isSingle)
-    
-    // INSTANT FEEDBACK: Show loading state immediately (before async work)
-    setShowSingleItemQuestion(false)
-    setCurrentStep('searching')
-    setIsLoading(true)
-    setOverallProgress(0)
-    
-    if (isSingle) {
-      // SINGLE ITEM MODE: Skip detection, go straight to full image search
-      console.log('🚀 Single Item Mode: Skipping detection for faster results')
-      await handleSingleItemSearch()
+      console.log('🔤 OCR Mode enabled')
+      await startDetectionProcess(imageUrl)
       return
     }
     
-    // Multiple items: proceed with normal detection
-    console.log('👔 Multiple Items Mode: Starting detection...')
-    // Note: startDetectionProcess sets its own loading states
-    setCurrentStep('detecting')  // Show detecting screen immediately
+    // Start normal detection immediately
+    setCurrentStep('detecting')
     await startDetectionProcess()
   }
 
-  // Single item search (skip detection)
-  const handleSingleItemSearch = async () => {
-    console.log('⚡ Single item search: Using full image without detection')
-    // Loading states already set by handleSingleItemResponse for instant feedback
+  // Removed: handleSingleItemResponse() and handleSingleItemSearch()
+  // These created a confusing modal that hurt UX
+  // Now we always detect items and let users select what they want
+  
+  const handleSingleItemSearch_REMOVED = async () => {
+    console.log('⚡ This function has been removed - always use detection now')
     
     try {
       // Use fallback search (full image search without detection)
@@ -1217,7 +1195,7 @@ export default function Home() {
       {currentStep !== 'results' && <LanguageToggle />}
       
       <div className="container mx-auto px-4 py-8">
-        {currentStep === 'upload' && !showSingleItemQuestion && (
+        {currentStep === 'upload' && (
           <div className="max-w-2xl mx-auto space-y-4">
             <ImageUpload onImageUploaded={handleImageUploaded} />
             
@@ -1261,68 +1239,6 @@ export default function Home() {
                       }`}
                     >
                       아니오
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-        
-        {/* Single Item Question Modal */}
-        {showSingleItemQuestion && (
-          <div className="max-w-2xl mx-auto space-y-6 animate-fadeInUp">
-            {/* Uploaded Image Preview */}
-            <div className="bg-white rounded-2xl shadow-xl p-6 border border-gray-100 animate-fadeIn">
-              <img
-                src={localImageDataUrl || uploadedImageUrl}
-                alt="Uploaded"
-                className="w-full h-96 object-contain rounded-xl"
-                loading="eager"
-              />
-            </div>
-            
-            {/* Single Item Question */}
-            <div className="relative inline-block w-full animate-slideUp">
-              {/* Outer container for gradient border */}
-              <div className="absolute -inset-[3px] rounded-[20px] overflow-hidden">
-                {/* Large rotating gradient (scaled up to hide corners) */}
-                <div 
-                  className="absolute inset-[-500%] animate-gradient-rotate"
-                  style={{
-                    background: 'conic-gradient(from 0deg at 50% 50%, #F5A623, #FF6B9D, #C644FC, #00C7BE, #F5A623)'
-                  }}
-                />
-              </div>
-              
-              {/* White background to create border effect */}
-              <div className="absolute inset-0 bg-white rounded-2xl"></div>
-              
-              {/* Content container */}
-              <div className="relative bg-white rounded-2xl p-2">
-                <div className="bg-white rounded-xl p-6 space-y-4">
-                  <div className="text-center space-y-2">
-                    <p className="text-lg font-bold text-gray-800">
-                      제품 사진만 있나요?
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      배경 없이 제품만 찍힌 상품 사진이라면 더 빠른 검색이 가능해요
-                    </p>
-                  </div>
-                  
-                  {/* Buttons - Default to "여러 개" (safer) */}
-                  <div className="flex gap-2 justify-center flex-nowrap">
-                    <button
-                      onClick={() => handleSingleItemResponse(false)}
-                      className="py-3 px-6 bg-black text-white rounded-xl font-semibold text-sm hover:bg-gray-800 transition-all shadow-lg hover:shadow-xl active:scale-95 whitespace-nowrap"
-                    >
-                      여러 개 있어요
-                    </button>
-                    <button
-                      onClick={() => handleSingleItemResponse(true)}
-                      className="py-3 px-6 bg-gray-100 text-gray-700 rounded-xl font-semibold text-sm hover:bg-gray-200 transition-all active:scale-95 whitespace-nowrap"
-                    >
-                      제품 사진만 있어요
                     </button>
                   </div>
                 </div>
