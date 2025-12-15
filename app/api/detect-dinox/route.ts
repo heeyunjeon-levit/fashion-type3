@@ -227,7 +227,7 @@ export async function POST(request: NextRequest) {
     console.log('   Raw result structure:', JSON.stringify(result, null, 2).substring(0, 500))
     
     // Get image dimensions for bbox normalization
-    const imageInfo = result.image || {}
+    const imageInfo: { width?: number; height?: number } = result.image || {}
     const imageWidth = imageInfo.width || 0
     const imageHeight = imageInfo.height || 0
     console.log(`   Image dimensions: ${imageWidth}x${imageHeight}`)
