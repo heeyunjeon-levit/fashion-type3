@@ -651,11 +651,16 @@ export default function Home() {
     console.log(`📱 Phone check: phoneNumber=${phoneNumber}, sessionManager phone=${sessionManager?.getPhoneNumber()}, existingPhone=${existingPhone}`)
     
     if (existingPhone) {
-      // Have phone - start processing immediately
-      console.log(`📱 Phone already collected: ${existingPhone}`)
-      setProcessingItems(selectedBboxes.map(bbox => ({ category: bbox.category })))
-      setCurrentStep('processing')
-      await processPendingItems(existingPhone, selectedBboxes)
+      // Have phone - start processing in background and show SMS waiting message
+      console.log(`📱 Phone already collected: ${existingPhone} - starting background processing`)
+      
+      // Show SMS waiting message immediately so user can leave
+      setShowSmsWaitingMessage(true)
+      
+      // Start background processing (non-blocking)
+      processPendingItems(existingPhone, selectedBboxes).catch((error: any) => {
+        console.error('❌ Background processing error:', error)
+      })
     } else {
       // No phone - ask for it FIRST, then process
       console.log(`📱 No phone yet - asking user BEFORE processing`)
