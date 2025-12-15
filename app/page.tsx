@@ -1416,7 +1416,7 @@ export default function Home() {
                   setShowSmsWaitingMessage(false)
                   window.location.href = 'https://fashionsource.vercel.app'
                 }}
-                className="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white py-4 rounded-xl font-bold text-lg hover:from-green-600 hover:to-emerald-700 transition-all shadow-lg transform hover:scale-105 active:scale-95"
+                className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-4 rounded-xl font-bold text-lg hover:from-purple-600 hover:to-pink-600 transition-all shadow-lg transform hover:scale-105 active:scale-95"
               >
                 {t('sms.confirm')}
               </button>
