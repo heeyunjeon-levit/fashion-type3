@@ -243,9 +243,13 @@ function applyNMS(objects: DetectionObject[], iouThreshold: number = 0.5): Detec
       if (suppressed.has(j)) continue
       
       const iou = calculateIoU(current.bbox, sorted[j].bbox)
+      
+      // Always log IoU for debugging
+      console.log(`      🔍 IoU between "${current.category}" and "${sorted[j].category}": ${iou.toFixed(3)} (threshold: ${iouThreshold})`)
+      
       if (iou > iouThreshold) {
         suppressed.add(j)
-        console.log(`   🔄 NMS: Suppressed "${sorted[j].category}" (${sorted[j].score.toFixed(3)}) - overlaps with "${current.category}" (${current.score.toFixed(3)}), IoU=${iou.toFixed(3)}`)
+        console.log(`      ✅ SUPPRESSED "${sorted[j].category}" (${sorted[j].score.toFixed(3)}) - overlaps with "${current.category}" (${current.score.toFixed(3)})`)
       }
     }
   }
@@ -420,8 +424,13 @@ export async function POST(request: NextRequest) {
     
     // Apply Non-Maximum Suppression to remove overlapping duplicates
     // (e.g., "dress" and "robe" detected for the same region)
-    const afterNMS = applyNMS(afterConfidenceFilter, 0.5)  // IoU threshold = 0.5 (50% overlap)
-    console.log(`   After NMS: ${afterNMS.length}/${afterConfidenceFilter.length} (removed ${afterConfidenceFilter.length - afterNMS.length} overlapping duplicates)`)
+    console.log(`   📦 Before NMS: ${afterConfidenceFilter.length} items`)
+    afterConfidenceFilter.forEach(obj => {
+      console.log(`      - ${obj.category} (score: ${obj.score.toFixed(3)}, bbox: ${JSON.stringify(obj.bbox.map((c: number) => c.toFixed(3)))})`)
+    })
+    
+    const afterNMS = applyNMS(afterConfidenceFilter, 0.3)  // IoU threshold = 0.3 (30% overlap - lowered from 0.5)
+    console.log(`   ✅ After NMS: ${afterNMS.length}/${afterConfidenceFilter.length} (removed ${afterConfidenceFilter.length - afterNMS.length} overlapping duplicates)`)
     
     // Calculate scores for all items
     const allScored = afterNMS.map((obj, idx) => {
