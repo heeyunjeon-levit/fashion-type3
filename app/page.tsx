@@ -486,26 +486,36 @@ export default function Home() {
         console.log('📦 Detection data:', {
           bboxes: detectData.bboxes,
           source: detectData.source || 'fallback',
-          imageUrl: uploadedImageUrl
+          imageUrl: uploadedImageUrl,
+          image_size: detectData.image_size
         })
         
-        // Get actual image dimensions from the uploaded image (as Promise)
-        const actualImageSize = await new Promise<[number, number]>((resolve, reject) => {
-          const img = new Image()
-          img.onload = () => {
-            const dims: [number, number] = [img.naturalWidth, img.naturalHeight]
-            console.log(`📐 Actual image dimensions: ${dims[0]}x${dims[1]}`)
-            resolve(dims)
-          }
-          img.onerror = () => {
-            console.error('❌ Failed to load image for dimension detection')
-            reject(new Error('Image load failed'))
-          }
-          img.src = uploadedImageUrl
-        }).catch(() => {
-          console.warn('⚠️  Using fallback dimensions')
-          return [0, 0] as [number, number]
-        })
+        // Use image dimensions from detection API (more reliable than loading image separately)
+        const apiImageSize: [number, number] = detectData.image_size || [0, 0]
+        
+        // Fallback: Get image dimensions from browser if API didn't provide them
+        let actualImageSize: [number, number] = apiImageSize
+        if (apiImageSize[0] === 0 || apiImageSize[1] === 0) {
+          console.log('⚠️ No image dimensions from API, loading image to get dimensions...')
+          actualImageSize = await new Promise<[number, number]>((resolve, reject) => {
+            const img = new Image()
+            img.onload = () => {
+              const dims: [number, number] = [img.naturalWidth, img.naturalHeight]
+              console.log(`📐 Browser image dimensions: ${dims[0]}x${dims[1]}`)
+              resolve(dims)
+            }
+            img.onerror = () => {
+              console.error('❌ Failed to load image for dimension detection')
+              reject(new Error('Image load failed'))
+            }
+            img.src = uploadedImageUrl
+          }).catch(() => {
+            console.warn('⚠️  Using fallback dimensions')
+            return [0, 0] as [number, number]
+          })
+        } else {
+          console.log(`📐 Using API image dimensions: ${actualImageSize[0]}x${actualImageSize[1]}`)
+        }
         
         setImageSize(actualImageSize)
         
