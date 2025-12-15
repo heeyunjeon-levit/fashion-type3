@@ -403,9 +403,8 @@ export async function POST(request: NextRequest) {
     const DEFAULT_THRESHOLD = 0.40  // Fallback for unknown categories
     const MAIN_SUBJECT_THRESHOLD = 0.35  // Sweet spot: not too many, not zero (was 0.30→0.45→now 0.35)
     const MAX_ITEMS = 5  // Limit to top 5 items to reduce clutter
-    const EXCLUDED_CATEGORIES = ['leggings', 'tights', 'stockings']
     
-    console.log(`   Applying category-aware confidence thresholds, excluding ${EXCLUDED_CATEGORIES.join(', ')}`)
+    console.log(`   Applying category-aware confidence thresholds`)
     
     const afterConfidenceFilter = objects.filter(obj => {
       const categoryThreshold = CATEGORY_THRESHOLDS[obj.category.toLowerCase()] || DEFAULT_THRESHOLD
@@ -419,17 +418,10 @@ export async function POST(request: NextRequest) {
     })
     console.log(`   After confidence filter: ${afterConfidenceFilter.length}/${objects.length}`)
     
-    const afterCategoryFilter = afterConfidenceFilter.filter(obj => {
-      const excluded = EXCLUDED_CATEGORIES.includes(obj.category.toLowerCase())
-      if (excluded) console.log(`   ❌ Filtered out (excluded category): ${obj.category}`)
-      return !excluded
-    })
-    console.log(`   After category filter: ${afterCategoryFilter.length}/${afterConfidenceFilter.length}`)
-    
     // Apply Non-Maximum Suppression to remove overlapping duplicates
     // (e.g., "dress" and "robe" detected for the same region)
-    const afterNMS = applyNMS(afterCategoryFilter, 0.5)  // IoU threshold = 0.5 (50% overlap)
-    console.log(`   After NMS: ${afterNMS.length}/${afterCategoryFilter.length} (removed ${afterCategoryFilter.length - afterNMS.length} overlapping duplicates)`)
+    const afterNMS = applyNMS(afterConfidenceFilter, 0.5)  // IoU threshold = 0.5 (50% overlap)
+    console.log(`   After NMS: ${afterNMS.length}/${afterConfidenceFilter.length} (removed ${afterConfidenceFilter.length - afterNMS.length} overlapping duplicates)`)
     
     // Calculate scores for all items
     const allScored = afterNMS.map((obj, idx) => {
@@ -503,7 +495,6 @@ export async function POST(request: NextRequest) {
       debug: {
         raw_objects_count: objects.length,
         after_confidence_filter: afterConfidenceFilter.length,
-        after_category_filter: afterCategoryFilter.length,
         after_nms: afterNMS.length,
         after_main_subject_filter: bboxesWithScores.length,
         raw_objects: objects.map(o => ({ category: o.category, score: o.score })).slice(0, 10),
