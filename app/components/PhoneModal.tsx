@@ -40,8 +40,26 @@ export default function PhoneModal({ onPhoneSubmit, onClose, isReturningUser, de
     }
   }
   
+  // Convert +82 format back to 010 format for display
+  const convertToDisplayFormat = (phone: string) => {
+    if (!phone) return ''
+    
+    // Remove all non-digits
+    const cleaned = phone.replace(/[^0-9]/g, '')
+    
+    // If it starts with 82 (country code), convert to 010
+    if (cleaned.startsWith('82')) {
+      const withoutCountryCode = '0' + cleaned.slice(2) // 821234567890 → 01234567890
+      return formatPhoneNumber(withoutCountryCode)
+    }
+    
+    // Already in 010 format
+    return formatPhoneNumber(cleaned)
+  }
+  
   // Pre-fill with default phone if provided (for returning users)
-  const [phoneNumber, setPhoneNumber] = useState(defaultPhoneNumber ? formatPhoneNumber(defaultPhoneNumber) : '')
+  // Convert from +82 format to 010 format for display
+  const [phoneNumber, setPhoneNumber] = useState(defaultPhoneNumber ? convertToDisplayFormat(defaultPhoneNumber) : '')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState('')
 
