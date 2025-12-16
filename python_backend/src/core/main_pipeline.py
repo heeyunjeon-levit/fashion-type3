@@ -397,8 +397,8 @@ class OptimizedFashionCropPipeline:
         boxes_xyxy = box_cxcywh_to_xyxy(boxes) * torch.tensor([W, H, W, H])
         
         # Check if box1 is completely inside box2
-        def is_box_inside(box1, box2, threshold=0.9):
-            """Check if box1 is inside box2 (>90% overlap)"""
+        def is_box_inside(box1, box2, threshold=0.7):
+            """Check if box1 is inside box2 (>70% overlap)"""
             x1_1, y1_1, x2_1, y2_1 = box1
             x1_2, y1_2, x2_2, y2_2 = box2
             
@@ -414,8 +414,13 @@ class OptimizedFashionCropPipeline:
             intersection_area = (x2_i - x1_i) * (y2_i - y1_i)
             box1_area = (x2_1 - x1_1) * (y2_1 - y1_1)
             
-            # If >90% of smaller box is inside larger box, it's nested
+            # If >70% of smaller box is inside larger box, it's nested
             overlap_ratio = intersection_area / box1_area if box1_area > 0 else 0
+            
+            # Debug logging
+            if overlap_ratio > 0.5:  # Log any significant overlap
+                print(f"      Overlap check: {overlap_ratio:.2%} of box inside another")
+            
             return overlap_ratio > threshold
         
         # Create detection list with areas
@@ -433,6 +438,10 @@ class OptimizedFashionCropPipeline:
         # Sort by area (larger boxes first) - keep larger boxes, remove smaller nested ones
         detections.sort(key=lambda x: -x['area'])
         
+        print(f"\n   🔍 Checking {len(detections)} boxes for nesting:")
+        for i, det in enumerate(detections):
+            print(f"      {i+1}. '{det['phrase']}' (area: {det['area']:.0f}px²)")
+        
         keep_indices = []
         removed = set()
         
@@ -449,10 +458,12 @@ class OptimizedFashionCropPipeline:
                 
                 other_det = detections[j]
                 
+                print(f"   Comparing: '{det['phrase']}' vs '{other_det['phrase']}'")
+                
                 # Check if smaller box is inside this larger box
                 if is_box_inside(other_det['box'], det['box']):
                     removed.add(j)
-                    print(f"   🗑️  Removed nested box: '{other_det['phrase']}' inside '{det['phrase']}'")
+                    print(f"   🗑️  REMOVED nested box: '{other_det['phrase']}' inside '{det['phrase']}'")
         
         # Filter to kept detections
         keep_indices.sort()  # Restore original order

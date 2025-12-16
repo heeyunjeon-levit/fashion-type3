@@ -56,9 +56,12 @@ class GPT4OFashionAnalyzer:
         🚨 CRITICAL - AVOID FALSE DETECTIONS:
         - **DO NOT confuse clothing straps/harnesses with backpacks!**
         - **DO NOT confuse decorative belts/straps on clothing as bags!**
+        - **DO NOT detect parts of a dress/garment as separate items!** (e.g., top part of dress is NOT a separate jacket)
+        - **DO NOT split one garment into multiple items!** (a dress is ONE item, not "jacket + skirt")
         - A bag must be a SEPARATE item being CARRIED, not part of the clothing
         - Straps across shoulders = likely part of clothing/harness, NOT a backpack
         - Always identify the PRIMARY GARMENT first (hoodie, jacket, shirt, etc.)
+        - If it's a dress, detect it as ONE dress, not as multiple separate pieces
 
         DETECTION APPROACH:
         - For WORN items: Focus on what the person is wearing (including visible jewelry)
