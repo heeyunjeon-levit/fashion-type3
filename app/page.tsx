@@ -165,9 +165,9 @@ export default function Home() {
     }
   }, [currentStep])
 
-  // Auto-show SMS waiting message when uploads complete (safe point reached)
+  // Auto-show SMS waiting message when uploads complete (safe point reached at 100%)
   useEffect(() => {
-    if (isAt21Percent && overallProgress >= 20 && currentStep === 'searching') {
+    if (isAt21Percent && overallProgress >= 100 && (currentStep === 'processing' || currentStep === 'searching')) {
       console.log(`✅ Safe point reached at ${overallProgress}% - showing SMS message`)
       setShowSmsWaitingMessage(true)
       setIsAt21Percent(false) // Reset flag
@@ -735,18 +735,21 @@ export default function Home() {
             croppedImageUrl = publicUrl
             console.log(`✅ Uploaded cropped image: ${publicUrl.substring(0, 80)}`)
             
+            // Update progress after cropping AND uploading (major milestone!)
+            completedItems += 0.4 // 40% of this item done (cropping + upload)
+            const croppingProgress = (completedItems / totalItems) * 50 // Use 0-50% range for cropping/upload
+            setOverallProgress(prev => Math.max(prev, croppingProgress))
+            
           } catch (cropError) {
             console.error(`⚠️ Cropping failed for ${bbox.category}:`, cropError)
             console.log(`   → Falling back to full image`)
             // Continue with full image if cropping fails
+            completedItems += 0.4 // Still count this item as processed
+            const croppingProgress = (completedItems / totalItems) * 50
+            setOverallProgress(prev => Math.max(prev, croppingProgress))
           }
           
           let croppedDataUrls = [croppedImageUrl]
-            
-            // Update progress after cropping (show we're making progress)
-            completedItems += 0.3 // 30% of this item done (cropping)
-            const croppingProgress = Math.min(20, (completedItems / totalItems) * 20)
-            setOverallProgress(prev => Math.max(prev, croppingProgress))
             
             // Continue with description...
             let description = `${bbox.category} item`
@@ -759,8 +762,8 @@ export default function Home() {
               // Start a progress simulator for description (shows activity while waiting)
               descProgressInterval = setInterval(() => {
                 completedItems += 0.05 // Small increments to show progress
-                const currentProgress = Math.min(20, (completedItems / totalItems) * 20)
-                setOverallProgress(prev => Math.max(prev, currentProgress))
+                const currentProgress = 50 + ((completedItems / totalItems) * 40) // 50-90% range for descriptions
+                setOverallProgress(prev => Math.max(prev, Math.min(90, currentProgress)))
               }, 2000) // Update every 2 seconds
               
               console.log(`📤 Sending to describe-item:`)
@@ -805,9 +808,9 @@ export default function Home() {
                 console.log(`✅ Description (${descTime}s): "${description.substring(0, 60)}..."`)
                 console.log(`✅ Using frontend-cropped image: ${croppedImageUrl.substring(0, 60)}...`)
                 
-                // Final progress update for this item (round up to full completion)
+                // Final progress update for this item (this item is NOW SAFE - all data persisted!)
                 completedItems = Math.ceil(completedItems) // Round up any fractional progress
-                const targetProgress = Math.min(20, (completedItems / totalItems) * 20)
+                const targetProgress = 50 + ((completedItems / totalItems) * 50) // 50-100% range
                 setOverallProgress(prev => Math.max(prev, targetProgress))
                 
                 // Return successful item
@@ -846,7 +849,7 @@ export default function Home() {
           console.error(`   Error type: ${error instanceof Error ? error.name : typeof error}`)
           console.error(`   Error message: ${error instanceof Error ? error.message : String(error)}`)
           completedItems = Math.ceil(completedItems) // Round up
-          const targetProgress = Math.min(20, (completedItems / totalItems) * 20)
+          const targetProgress = 50 + ((completedItems / totalItems) * 50) // Still update progress
           setOverallProgress(prev => Math.max(prev, targetProgress))
           console.log(`⚠️ Skipping ${bbox.category} due to error, continuing with other items...`)
           return null
@@ -858,12 +861,16 @@ export default function Home() {
       const processedItems = results.filter(item => item !== null) as DetectedItem[]
 
       console.log(`✅ All items processed in parallel: ${processedItems.length}/${bboxes.length}`)
-      // Ensure we're at least 20% after processing completes
-      setOverallProgress(prev => Math.max(prev, 20))
+      // Ensure we're at 100% after processing completes (SAFE POINT!)
+      setOverallProgress(100)
+      console.log(`🎉 SAFE POINT REACHED! All images uploaded and descriptions saved.`)
       setDetectedItems(processedItems)
       setSelectedItems(processedItems)
+      
+      // Mark safe point flag - SMS message will show now
+      setIsAt21Percent(true)
 
-      // Now search with processed items
+      // Now search with processed items (user can leave, job will run in background)
       await handleItemsSelected(processedItems, phoneNum)
 
     } catch (error) {
@@ -920,47 +927,25 @@ export default function Home() {
       // This ensures only ONE SMS is sent with all results combined
       console.log(`🎯 Creating ONE job for ${totalItems} item(s)...`)
       
-      // Step 1: Upload all data URLs to Supabase in parallel
-      console.log(`📤 Step 1: Uploading ${totalItems} images in parallel...`)
-      let uploadedCount = 0
-      const uploadedItems = await Promise.all(validItems.map(async (item, idx) => {
+      // Step 1: Prepare items (uploads already done in processPendingItems!)
+      console.log(`📦 Step 1: Preparing ${totalItems} items for job creation...`)
+      // NOTE: Images are already uploaded in processPendingItems - no need to re-upload!
+      // This just maps items to the format needed for the job
+      const uploadedItems = validItems.map((item, idx) => {
         const itemName = item.category
         const key = `${itemName}_${idx + 1}`
-        let croppedUrl = item.croppedImageUrl
+        const croppedUrl = item.croppedImageUrl // Already a Supabase URL from processPendingItems
         
-        if (croppedUrl && croppedUrl.startsWith('data:')) {
-          console.log(`   📤 Uploading ${itemName}...`)
-          try {
-            const uploadResponse = await fetch('/api/upload-cropped', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ dataUrl: croppedUrl, category: itemName })
-            })
-            const uploadData = await uploadResponse.json()
-            if (uploadData.url) {
-              croppedUrl = uploadData.url
-              console.log(`   ✅ ${itemName} uploaded`)
-              
-              // Increment progress as each upload completes (natural progress tracking!)
-              uploadedCount++
-              const uploadProgress = 20 + ((uploadedCount / totalItems) * 5) // 20-25% range for uploads
-              setOverallProgress(prev => Math.max(prev, uploadProgress))
-            }
-          } catch (uploadError) {
-            console.error(`   ⚠️ Failed to upload ${itemName}:`, uploadError)
-          }
-        } else {
-          // No upload needed (already URL)
-          uploadedCount++
-          const uploadProgress = 20 + ((uploadedCount / totalItems) * 5)
-          setOverallProgress(prev => Math.max(prev, uploadProgress))
+        // Verify we have a valid URL (should always be true at this point)
+        if (!croppedUrl || croppedUrl.startsWith('data:')) {
+          console.warn(`⚠️ Item ${itemName} has invalid URL: ${croppedUrl?.substring(0, 50)}`)
         }
         
         return { key, croppedUrl, item }
-      }))
+      })
       
-      // All uploads confirmed - progress should now be at ~25%
-      console.log(`   ✅ All ${uploadedCount}/${totalItems} uploads confirmed by network responses`)
+      console.log(`   ✅ All ${totalItems} items ready (images already uploaded)`)
+      // Progress should already be at 100% from processPendingItems
       
       // Step 2: Combine all items into ONE job payload
       console.log(`🎯 Step 2: Combining ${totalItems} items into ONE job...`)
@@ -975,29 +960,18 @@ export default function Home() {
         console.log(`   ✅ Added ${item.category} (${key})`)
       })
       
-      // Step 3: SAFE POINT! All uploads complete (network response ✅), safe to ask for phone
+      // Step 3: Get phone number or skip job creation
       const phoneToUse = phoneForSearch || phoneNumber
       
       if (!phoneToUse) {
-        // 🔥 SAFE POINT: All images uploaded to Supabase (network confirmed!)
-        // Don't create job yet - wait for phone number first
-        console.log(`✅ All uploads complete (network confirmed) - showing phone modal`)
-        console.log(`   User can safely close browser now - data is persisted`)
+        // NOTE: This shouldn't happen anymore since phone is collected earlier!
+        // Safe point was already triggered in processPendingItems at 100%
+        console.warn(`⚠️ No phone number available at job creation stage (unexpected)`)
+        console.log(`   User should have been asked for phone already at safe point`)
         
-        // Trigger safe point flag - SMS message will show when progress naturally reaches threshold
-        setIsAt21Percent(true)
-        
-        // Store job data to create after phone submission
-        ;(window as any).__pendingJobData = {
-          allCategories,
-          allCroppedImages,
-          allDescriptions,
-          totalItems
-        }
-        
-        // Show phone modal and stop here
+        // Fallback: show phone modal
         setShowPhoneModal(true)
-        return // Don't create job until phone is provided
+        return
       }
       
       // Phone exists - create job immediately with phone number
@@ -1282,7 +1256,7 @@ export default function Home() {
               <div className="text-center space-y-6">
                 <h2 className="text-2xl font-bold text-black">선택하신 패션템을 찾고 있어요!</h2>
                 
-                {/* Circular progress bar - completes when all uploads finish (~25%) */}
+                {/* Circular progress bar - completes when all uploads finish (100%) */}
                 <div className="flex flex-col items-center gap-4">
                   <div className="relative w-48 h-48">
                     {/* Background circle */}
@@ -1295,7 +1269,7 @@ export default function Home() {
                         strokeWidth="12"
                         fill="none"
                       />
-                      {/* Progress circle - maps 0-25% progress to 0-100% of circle */}
+                      {/* Progress circle - maps 0-100% progress to 0-100% of circle */}
                       <circle
                         cx="96"
                         cy="96"
@@ -1305,7 +1279,7 @@ export default function Home() {
                         fill="none"
                         strokeLinecap="round"
                         strokeDasharray={`${2 * Math.PI * 80}`}
-                        strokeDashoffset={`${2 * Math.PI * 80 * (1 - Math.min(overallProgress / 25, 1))}`}
+                        strokeDashoffset={`${2 * Math.PI * 80 * (1 - Math.min(overallProgress / 100, 1))}`}
                         className="transition-all duration-500 ease-out"
                       />
                       {/* Gradient definition */}
@@ -1320,7 +1294,7 @@ export default function Home() {
                     <div className="absolute inset-0 flex items-center justify-center">
                       <div className="text-center">
                         <div className="text-4xl font-bold text-black">
-                          {Math.floor(Math.min((overallProgress / 25) * 100, 100))}%
+                          {Math.floor(Math.min(overallProgress, 100))}%
                         </div>
                         <div className="text-xs text-gray-500 mt-1">업로드 중...</div>
                       </div>
@@ -1329,7 +1303,7 @@ export default function Home() {
                   
                   {/* Estimated time remaining */}
                   <div className="text-xs text-gray-500 text-center">
-                    예상 소요 시간: 1-2분
+                    {overallProgress < 50 ? '예상 소요 시간: 1-2분' : '거의 완료되었습니다!'}
                   </div>
                 </div>
               </div>
@@ -1357,7 +1331,7 @@ export default function Home() {
                   <p className="text-sm text-gray-600">잠시만 기다려주세요</p>
                 </div>
                 
-                {/* Circular progress bar - completes when all uploads finish (~25%) */}
+                {/* Circular progress bar - should already be at 100% (safe point reached) */}
                 <div className="flex flex-col items-center gap-4">
                   <div className="relative w-48 h-48">
                     {/* Background circle */}
@@ -1370,7 +1344,7 @@ export default function Home() {
                         strokeWidth="12"
                         fill="none"
                       />
-                      {/* Progress circle - maps 0-25% progress to 0-100% of circle */}
+                      {/* Progress circle - maps 0-100% progress to 0-100% of circle */}
                       <circle
                         cx="96"
                         cy="96"
@@ -1380,7 +1354,7 @@ export default function Home() {
                         fill="none"
                         strokeLinecap="round"
                         strokeDasharray={`${2 * Math.PI * 80}`}
-                        strokeDashoffset={`${2 * Math.PI * 80 * (1 - Math.min(overallProgress / 25, 1))}`}
+                        strokeDashoffset={`${2 * Math.PI * 80 * (1 - Math.min(overallProgress / 100, 1))}`}
                         className="transition-all duration-500 ease-out"
                       />
                       {/* Gradient definition */}
@@ -1395,16 +1369,16 @@ export default function Home() {
                     <div className="absolute inset-0 flex items-center justify-center">
                       <div className="text-center">
                         <div className="text-4xl font-bold text-black">
-                          {Math.floor(Math.min((overallProgress / 25) * 100, 100))}%
+                          {Math.floor(Math.min(overallProgress, 100))}%
                         </div>
-                        <div className="text-xs text-gray-500 mt-1">업로드 중...</div>
+                        <div className="text-xs text-gray-500 mt-1">완료!</div>
                       </div>
                     </div>
                   </div>
                   
-                  {/* Estimated time remaining */}
+                  {/* Message */}
                   <div className="text-xs text-gray-500 text-center">
-                    예상 소요 시간: 1-2분
+                    검색 준비가 완료되었습니다
                   </div>
                 </div>
 
