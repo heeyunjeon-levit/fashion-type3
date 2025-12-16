@@ -1278,19 +1278,58 @@ export default function Home() {
 
         {currentStep === 'processing' && (
           <div className="max-w-2xl mx-auto mt-8 animate-fadeIn">
-            <div className="bg-white rounded-2xl shadow-xl p-12 border border-gray-100">
+            <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12 border border-gray-100">
               <div className="text-center space-y-6">
                 <h2 className="text-2xl font-bold text-black">선택하신 패션템을 찾고 있어요!</h2>
-                {/* Single overall progress bar */}
-                <div className="space-y-2">
-                  <div className="flex items-center justify-center text-sm text-gray-500">
-                    {Math.floor(overallProgress)}%
+                
+                {/* Circular progress bar - completes when all uploads finish (~25%) */}
+                <div className="flex flex-col items-center gap-4">
+                  <div className="relative w-48 h-48">
+                    {/* Background circle */}
+                    <svg className="w-full h-full transform -rotate-90">
+                      <circle
+                        cx="96"
+                        cy="96"
+                        r="80"
+                        stroke="#e5e7eb"
+                        strokeWidth="12"
+                        fill="none"
+                      />
+                      {/* Progress circle - maps 0-25% progress to 0-100% of circle */}
+                      <circle
+                        cx="96"
+                        cy="96"
+                        r="80"
+                        stroke="url(#gradient-processing)"
+                        strokeWidth="12"
+                        fill="none"
+                        strokeLinecap="round"
+                        strokeDasharray={`${2 * Math.PI * 80}`}
+                        strokeDashoffset={`${2 * Math.PI * 80 * (1 - Math.min(overallProgress / 25, 1))}`}
+                        className="transition-all duration-500 ease-out"
+                      />
+                      {/* Gradient definition */}
+                      <defs>
+                        <linearGradient id="gradient-processing" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="#3b82f6" />
+                          <stop offset="100%" stopColor="#a855f7" />
+                        </linearGradient>
+                      </defs>
+                    </svg>
+                    {/* Center text */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="text-center">
+                        <div className="text-4xl font-bold text-black">
+                          {Math.floor(Math.min((overallProgress / 25) * 100, 100))}%
+                        </div>
+                        <div className="text-xs text-gray-500 mt-1">업로드 중...</div>
+                      </div>
+                    </div>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
-                    <div 
-                      className="bg-black h-full rounded-full transition-all duration-500 ease-out" 
-                      style={{ width: `${overallProgress}%` }}
-                    ></div>
+                  
+                  {/* Estimated time remaining */}
+                  <div className="text-xs text-gray-500 text-center">
+                    예상 소요 시간: 1-2분
                   </div>
                 </div>
               </div>
