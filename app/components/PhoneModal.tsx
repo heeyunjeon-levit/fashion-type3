@@ -7,13 +7,41 @@ interface PhoneModalProps {
   onPhoneSubmit: (phoneNumber: string) => void
   onClose?: () => void
   isReturningUser?: boolean
+  defaultPhoneNumber?: string  // Pre-fill phone number for returning users
   ocrMode?: boolean  // True if using OCR mode (fast results, no SMS)
   at21Percent?: boolean  // True if showing modal at 21% safe point (job queued, can close browser)
 }
 
-export default function PhoneModal({ onPhoneSubmit, onClose, isReturningUser, ocrMode, at21Percent }: PhoneModalProps) {
+export default function PhoneModal({ onPhoneSubmit, onClose, isReturningUser, defaultPhoneNumber, ocrMode, at21Percent }: PhoneModalProps) {
   const { t, language } = useLanguage()
-  const [phoneNumber, setPhoneNumber] = useState('')
+  
+  // Helper function for formatting phone numbers
+  const formatPhoneNumber = (value: string) => {
+    const cleaned = value.replace(/[^0-9]/g, '')
+    
+    if (language === 'ko') {
+      // Korean format: 010-1234-5678
+      if (cleaned.length <= 3) {
+        return cleaned
+      } else if (cleaned.length <= 7) {
+        return `${cleaned.slice(0, 3)}-${cleaned.slice(3)}`
+      } else {
+        return `${cleaned.slice(0, 3)}-${cleaned.slice(3, 7)}-${cleaned.slice(7, 11)}`
+      }
+    } else {
+      // US format: 555-123-4567
+      if (cleaned.length <= 3) {
+        return cleaned
+      } else if (cleaned.length <= 6) {
+        return `${cleaned.slice(0, 3)}-${cleaned.slice(3)}`
+      } else {
+        return `${cleaned.slice(0, 3)}-${cleaned.slice(3, 6)}-${cleaned.slice(6, 10)}`
+      }
+    }
+  }
+  
+  // Pre-fill with default phone if provided (for returning users)
+  const [phoneNumber, setPhoneNumber] = useState(defaultPhoneNumber ? formatPhoneNumber(defaultPhoneNumber) : '')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState('')
 
@@ -50,30 +78,6 @@ export default function PhoneModal({ onPhoneSubmit, onClose, isReturningUser, oc
     } catch (err) {
       setError('Failed to save phone number. Please try again.')
       setIsSubmitting(false)
-    }
-  }
-
-  const formatPhoneNumber = (value: string) => {
-    const cleaned = value.replace(/[^0-9]/g, '')
-    
-    if (language === 'ko') {
-      // Korean format: 010-1234-5678
-      if (cleaned.length <= 3) {
-        return cleaned
-      } else if (cleaned.length <= 7) {
-        return `${cleaned.slice(0, 3)}-${cleaned.slice(3)}`
-      } else {
-        return `${cleaned.slice(0, 3)}-${cleaned.slice(3, 7)}-${cleaned.slice(7, 11)}`
-      }
-    } else {
-      // US format: 555-123-4567
-      if (cleaned.length <= 3) {
-        return cleaned
-      } else if (cleaned.length <= 6) {
-        return `${cleaned.slice(0, 3)}-${cleaned.slice(3)}`
-      } else {
-        return `${cleaned.slice(0, 3)}-${cleaned.slice(3, 6)}-${cleaned.slice(6, 10)}`
-      }
     }
   }
 

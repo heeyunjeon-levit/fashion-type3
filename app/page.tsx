@@ -644,24 +644,17 @@ export default function Home() {
     setPendingBboxes(selectedBboxes)
     
     // Check if we already have a phone number
-    const existingPhone = phoneNumber || sessionManager?.getPhoneNumber()
-    console.log(`📱 Phone check: phoneNumber=${phoneNumber}, sessionManager phone=${sessionManager?.getPhoneNumber()}, existingPhone=${existingPhone}`)
+    // ALWAYS ask for phone number, even for returning users
+    // This ensures:
+    // 1. Users on different devices provide correct phone
+    // 2. Users can update their phone number
+    // 3. Better tracking and SMS delivery reliability
+    console.log(`📱 Asking for phone number...`)
+    setPendingBboxes(selectedBboxes)  // Set state for modal callback
+    setShowPhoneModal(true)
     
-    if (existingPhone) {
-      // Have phone - start processing with progress bar (job needs to be created first!)
-      console.log(`📱 Phone already collected: ${existingPhone}`)
-      setProcessingItems(selectedBboxes.map(bbox => ({ category: bbox.category })))
-      setCurrentStep('processing')
-      await processPendingItems(existingPhone, selectedBboxes)
-    } else {
-      // No phone - ask for it FIRST, then process
-      console.log(`📱 No phone yet - asking user BEFORE processing`)
-      setPendingBboxes(selectedBboxes)  // Set state for modal callback
-      setShowPhoneModal(true)
-      
-      // Also store in window for safety
-      ;(window as any).__pendingBboxesForProcessing = selectedBboxes
-    }
+    // Also store in window for safety
+    ;(window as any).__pendingBboxesForProcessing = selectedBboxes
   }
 
   // Process items after phone number is collected
@@ -1356,26 +1349,57 @@ export default function Home() {
         
         {currentStep === 'searching' && (
           <div className="max-w-2xl mx-auto mt-8 animate-fadeIn">
-            <div className="bg-white rounded-2xl shadow-xl p-12 border border-gray-100">
+            <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12 border border-gray-100">
               <div className="text-center space-y-6">
-                <h2 className="text-2xl font-bold text-black">선택하신 패션템을 찾고 있어요!</h2>
+                {/* Main title with icon */}
+                <div className="flex flex-col items-center gap-3">
+                  <div className="text-4xl animate-bounce">🔍</div>
+                  <h2 className="text-2xl font-bold text-black">선택하신 패션템을 찾고 있어요!</h2>
+                  <p className="text-sm text-gray-600">잠시만 기다려주세요</p>
+                </div>
                 
-                {/* Real-time progress bar for both modes */}
+                {/* Real-time progress bar with percentage */}
                 <div className="space-y-2">
-                  <div className="flex items-center justify-center text-sm text-gray-500">
-                    {Math.floor(overallProgress)}%
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-500">검색 진행률</span>
+                    <span className="font-semibold text-black">{Math.floor(overallProgress)}%</span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
+                  <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
                     <div 
-                      className="bg-black h-full rounded-full transition-all duration-500 ease-out" 
+                      className="bg-gradient-to-r from-blue-500 to-purple-600 h-full rounded-full transition-all duration-500 ease-out shadow-lg" 
                       style={{ width: `${overallProgress}%` }}
                     ></div>
+                  </div>
+                  
+                  {/* Estimated time remaining */}
+                  {overallProgress < 100 && (
+                    <div className="text-xs text-gray-500 text-center">
+                      {overallProgress < 20 ? '예상 소요 시간: 2-3분' :
+                       overallProgress < 50 ? '예상 소요 시간: 1-2분' :
+                       overallProgress < 80 ? '거의 다 됐어요!' :
+                       '곧 완료됩니다!'}
+                    </div>
+                  )}
+                </div>
+
+                {/* What's happening explanation */}
+                <div className="mt-6 p-4 bg-gray-50 rounded-xl border border-gray-200">
+                  <div className="flex items-start gap-3 text-left">
+                    <div className="text-xl mt-0.5">💡</div>
+                    <div className="flex-1 text-sm text-gray-700">
+                      <p className="font-medium text-gray-900 mb-1">지금 무슨 일이 일어나고 있나요?</p>
+                      <ul className="space-y-1 text-xs">
+                        <li>✨ AI가 이미지에서 패션 아이템 분석 중</li>
+                        <li>🌍 전세계 쇼핑몰에서 비슷한 상품 검색 중</li>
+                        <li>🎯 가장 잘 맞는 상품만 선별 중</li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
 
                 {/* SMS notification message - only show if phone number was provided */}
                 {phoneNumber && (
-                  <div className="mt-8 p-4 bg-blue-50 rounded-xl border border-blue-100">
+                  <div className="mt-4 p-4 bg-blue-50 rounded-xl border border-blue-100">
                     <div className="flex items-start gap-3 text-left">
                       <div className="text-2xl mt-0.5">📱</div>
                       <div className="flex-1">
@@ -1466,6 +1490,7 @@ export default function Home() {
         <PhoneModal
           ocrMode={useOCRSearch}  // Pass OCR mode flag for different messaging
           at21Percent={isAt21Percent}  // Pass flag for different button text
+          defaultPhoneNumber={sessionManager?.getPhoneNumber() || ''}  // Pre-fill for returning users
           onPhoneSubmit={async (phone: string) => {
             console.log(`📱 Phone submitted: ${phone}`)
             
