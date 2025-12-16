@@ -225,7 +225,7 @@ export async function POST(request: NextRequest) {
     const getCategoryPrompt = (cat: string) => {
       const isClothing = ['shirt', 'sweater', 'hoodie', 'sweatshirt', 'jacket', 'coat', 'dress', 'pants', 'jeans', 'shorts', 'skirt', 'top', 'bottom'].includes(cat)
       const isShoes = cat === 'shoes' || cat === 'sneakers' || cat === 'boots'
-      const isAccessory = ['sunglasses', 'glasses', 'bag', 'handbag', 'backpack', 'watch', 'hat', 'scarf', 'belt'].includes(cat)
+      const isAccessory = ['sunglasses', 'glasses', 'bag', 'handbag', 'backpack', 'watch', 'hat', 'scarf', 'belt', 'necklace', 'earrings', 'bracelet', 'ring', 'jewelry'].includes(cat)
 
       const unifiedSchemaPrompt = `
 You are a fashion attribute extractor for e-commerce search.
@@ -345,13 +345,18 @@ ADDITIONAL ACCESSORY ANALYSIS (internal only, do NOT output):
 - If bag:
   - bag_style: crossbody, tote, backpack, clutch, shoulder, mini bag, etc.
   - note quilted surfaces, chain straps, top-handle vs long strap.
+- If jewelry (necklace/earrings/bracelet/ring):
+  - Note metal_color: gold, silver, rose gold
+  - Material: metal, pearl, gemstone, beaded, leather cord, etc.
+  - Style: chain, pendant, choker, statement, delicate, layered
+  - Length for necklaces: choker, princess, matinee, opera
 - If belt/hat/scarf/watch:
   - focus on width/shape, metal color, pattern, etc.
 
 For accessories, set:
 - "product_group": "accessory"
-- "accessory_specific.type": e.g. "sunglasses", "bag", "hat", "belt", "scarf".
-- "category": same as that type (e.g. "bag", "sunglasses").
+- "accessory_specific.type": e.g. "sunglasses", "bag", "hat", "belt", "scarf", "necklace", "earrings", "bracelet", "ring".
+- "category": same as that type (e.g. "bag", "sunglasses", "necklace").
 `.trim(),
           user: `Analyze this ${cat} image and return the JSON object with all fields populated. Output only valid JSON.`
         }

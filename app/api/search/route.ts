@@ -2333,6 +2333,10 @@ ${subTypeExclusion ? subTypeExclusion : ''}
 - ${categoryKey === 'bag' && !specificSubType ? '❌ ABSOLUTELY REJECT: clothing items (sweaters, cardigans, jackets, shirts, coats, tops), shoes, accessories (except bags). ONLY BAGS/PURSES/BACKPACKS!' : ''}
 - ${categoryKey === 'accessory' && !specificSubType ? '❌ ABSOLUTELY REJECT: ALL clothing, ALL shoes, ALL bags (purses, backpacks, totes, crossbody, belt bags, fanny packs)' : ''}
 - ${categoryKey === 'accessory' && specificSubType === 'eyewear' ? '🕶️ SUNGLASSES/EYEWEAR ONLY! ❌ REJECT: ALL bags, belts, wallets, clothing, shoes. ONLY glasses/sunglasses!' : ''}
+- ${categoryKey === 'accessory' && (specificSubType === 'necklace' || specificSubType === 'jewelry') ? '📿 JEWELRY/NECKLACE ONLY! ❌ ABSOLUTELY REJECT: ALL clothing (dresses, shirts, jackets, sweaters, tops, bottoms), ALL bags, ALL shoes. ONLY jewelry (necklaces, chains, pendants)!' : ''}
+- ${categoryKey === 'accessory' && specificSubType === 'bracelet' ? '📿 BRACELET ONLY! ❌ ABSOLUTELY REJECT: ALL clothing (dresses, shirts, jackets, sweaters), ALL bags, ALL shoes. ONLY bracelets/bangles!' : ''}
+- ${categoryKey === 'accessory' && specificSubType === 'earrings' ? '📿 EARRINGS ONLY! ❌ ABSOLUTELY REJECT: ALL clothing (dresses, shirts, jackets, sweaters), ALL bags, ALL shoes. ONLY earrings!' : ''}
+- ${categoryKey === 'accessory' && specificSubType === 'ring' ? '📿 RING ONLY! ❌ ABSOLUTELY REJECT: ALL clothing (dresses, shirts, jackets, sweaters), ALL bags, ALL shoes. ONLY rings!' : ''}
 - ${categoryKey === 'dress' ? '❌ ABSOLUTELY REJECT: Any title mentioning "pants", "jeans", "shorts", "shirt", "jacket", "바지", "셔츠", "재킷"' : ''}
 
 CRITICAL SELECTION RULES (in order of priority):

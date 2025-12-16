@@ -51,7 +51,7 @@ class GPT4OFashionAnalyzer:
         2. HEADWEAR: caps, hats, beanies, visors, headbands (ALWAYS detect if visible - worn OR displayed)
         3. FOOTWEAR: shoes, boots, sandals (ALWAYS detect if visible - worn OR displayed)
         4. BAGS: handbags, backpacks, purses (ALWAYS detect if visible - carried OR displayed)
-        5. OBVIOUS ACCESSORIES: large sunglasses, statement jewelry, watches (only if very noticeable)
+        5. JEWELRY & ACCESSORIES: necklaces, bracelets, earrings, rings, watches, sunglasses (ALWAYS detect if visible and identifiable)
 
         🚨 CRITICAL - AVOID FALSE DETECTIONS:
         - **DO NOT confuse clothing straps/harnesses with backpacks!**
@@ -61,11 +61,11 @@ class GPT4OFashionAnalyzer:
         - Always identify the PRIMARY GARMENT first (hoodie, jacket, shirt, etc.)
 
         DETECTION APPROACH:
-        - For WORN items: Focus on what the person is wearing
-        - For PRODUCT DISPLAYS: Detect the main fashion item(s) shown (cap, shoe, bag, clothing, etc.)
-        - ALWAYS detect primary items: clothing, headwear, footwear, bags
-        - Skip small accessories (rings, earrings) unless very bold
+        - For WORN items: Focus on what the person is wearing (including visible jewelry)
+        - For PRODUCT DISPLAYS: Detect the main fashion item(s) shown (cap, shoe, bag, clothing, jewelry, etc.)
+        - ALWAYS detect: clothing, headwear, footwear, bags, visible jewelry (necklaces, bracelets, watches, earrings, rings)
         - When in doubt between clothing and accessory, choose clothing
+        - For jewelry: Include if clearly visible and identifiable (don't require it to be "bold" or "statement")
 
         For each item you identify, provide:
         1. A "groundingdino_prompt" - ULTRA-SIMPLE detection keyword (2-3 words max, just color + item type)

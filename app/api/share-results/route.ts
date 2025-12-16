@@ -69,6 +69,9 @@ export async function POST(request: NextRequest) {
       baseUrl = 'http://localhost:3000'
     }
     
+    // Remove trailing slash to avoid double slashes in URL
+    baseUrl = baseUrl.replace(/\/$/, '')
+    
     const shareUrl = `${baseUrl}/results/${shareId}`
 
     console.log('✅ Shared results saved:', shareId)
