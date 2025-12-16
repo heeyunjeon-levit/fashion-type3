@@ -165,6 +165,15 @@ export default function Home() {
     }
   }, [currentStep])
 
+  // Auto-show SMS waiting message when uploads complete (safe point reached)
+  useEffect(() => {
+    if (isAt21Percent && overallProgress >= 20 && currentStep === 'searching') {
+      console.log(`✅ Safe point reached at ${overallProgress}% - showing SMS message`)
+      setShowSmsWaitingMessage(true)
+      setIsAt21Percent(false) // Reset flag
+    }
+  }, [isAt21Percent, overallProgress, currentStep])
+
   // Very slow fallback progress animation - only as backup if backend updates stall
   // This ensures progress shows some movement even if backend updates are slow
   // NOTE: Only runs for interactive mode, not OCR mode
@@ -913,6 +922,7 @@ export default function Home() {
       
       // Step 1: Upload all data URLs to Supabase in parallel
       console.log(`📤 Step 1: Uploading ${totalItems} images in parallel...`)
+      let uploadedCount = 0
       const uploadedItems = await Promise.all(validItems.map(async (item, idx) => {
         const itemName = item.category
         const key = `${itemName}_${idx + 1}`
@@ -930,14 +940,27 @@ export default function Home() {
             if (uploadData.url) {
               croppedUrl = uploadData.url
               console.log(`   ✅ ${itemName} uploaded`)
+              
+              // Increment progress as each upload completes (natural progress tracking!)
+              uploadedCount++
+              const uploadProgress = 20 + ((uploadedCount / totalItems) * 5) // 20-25% range for uploads
+              setOverallProgress(prev => Math.max(prev, uploadProgress))
             }
           } catch (uploadError) {
             console.error(`   ⚠️ Failed to upload ${itemName}:`, uploadError)
           }
+        } else {
+          // No upload needed (already URL)
+          uploadedCount++
+          const uploadProgress = 20 + ((uploadedCount / totalItems) * 5)
+          setOverallProgress(prev => Math.max(prev, uploadProgress))
         }
         
         return { key, croppedUrl, item }
       }))
+      
+      // All uploads confirmed - progress should now be at ~25%
+      console.log(`   ✅ All ${uploadedCount}/${totalItems} uploads confirmed by network responses`)
       
       // Step 2: Combine all items into ONE job payload
       console.log(`🎯 Step 2: Combining ${totalItems} items into ONE job...`)
@@ -960,6 +983,8 @@ export default function Home() {
         // Don't create job yet - wait for phone number first
         console.log(`✅ All uploads complete (network confirmed) - showing phone modal`)
         console.log(`   User can safely close browser now - data is persisted`)
+        
+        // Trigger safe point flag - SMS message will show when progress naturally reaches threshold
         setIsAt21Percent(true)
         
         // Store job data to create after phone submission
@@ -1293,28 +1318,55 @@ export default function Home() {
                   <p className="text-sm text-gray-600">잠시만 기다려주세요</p>
                 </div>
                 
-                {/* Real-time progress bar with percentage */}
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-500">검색 진행률</span>
-                    <span className="font-semibold text-black">{Math.floor(overallProgress)}%</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-                    <div 
-                      className="bg-gradient-to-r from-blue-500 to-purple-600 h-full rounded-full transition-all duration-500 ease-out shadow-lg" 
-                      style={{ width: `${overallProgress}%` }}
-                    ></div>
+                {/* Circular progress bar - completes when all uploads finish (~25%) */}
+                <div className="flex flex-col items-center gap-4">
+                  <div className="relative w-48 h-48">
+                    {/* Background circle */}
+                    <svg className="w-full h-full transform -rotate-90">
+                      <circle
+                        cx="96"
+                        cy="96"
+                        r="80"
+                        stroke="#e5e7eb"
+                        strokeWidth="12"
+                        fill="none"
+                      />
+                      {/* Progress circle - maps 0-25% progress to 0-100% of circle */}
+                      <circle
+                        cx="96"
+                        cy="96"
+                        r="80"
+                        stroke="url(#gradient)"
+                        strokeWidth="12"
+                        fill="none"
+                        strokeLinecap="round"
+                        strokeDasharray={`${2 * Math.PI * 80}`}
+                        strokeDashoffset={`${2 * Math.PI * 80 * (1 - Math.min(overallProgress / 25, 1))}`}
+                        className="transition-all duration-500 ease-out"
+                      />
+                      {/* Gradient definition */}
+                      <defs>
+                        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="#3b82f6" />
+                          <stop offset="100%" stopColor="#a855f7" />
+                        </linearGradient>
+                      </defs>
+                    </svg>
+                    {/* Center text */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="text-center">
+                        <div className="text-4xl font-bold text-black">
+                          {Math.floor(Math.min((overallProgress / 25) * 100, 100))}%
+                        </div>
+                        <div className="text-xs text-gray-500 mt-1">업로드 중...</div>
+                      </div>
+                    </div>
                   </div>
                   
                   {/* Estimated time remaining */}
-                  {overallProgress < 100 && (
-                    <div className="text-xs text-gray-500 text-center">
-                      {overallProgress < 20 ? '예상 소요 시간: 2-3분' :
-                       overallProgress < 50 ? '예상 소요 시간: 1-2분' :
-                       overallProgress < 80 ? '거의 다 됐어요!' :
-                       '곧 완료됩니다!'}
-                    </div>
-                  )}
+                  <div className="text-xs text-gray-500 text-center">
+                    예상 소요 시간: 1-2분
+                  </div>
                 </div>
 
                 {/* What's happening explanation */}
@@ -1332,21 +1384,7 @@ export default function Home() {
                   </div>
                 </div>
 
-                {/* SMS notification message - only show if phone number was provided */}
-                {phoneNumber && (
-                  <div className="mt-4 p-4 bg-blue-50 rounded-xl border border-blue-100">
-                    <div className="flex items-start gap-3 text-left">
-                      <div className="text-2xl mt-0.5">📱</div>
-                      <div className="flex-1">
-                        <p className="text-sm text-gray-700 leading-relaxed">
-                          <span className="font-semibold text-gray-900">앱을 닫거나 휴대폰을 잠가도 괜찮아요!</span>
-                          <br />
-                          검색이 완료되면 문자 메시지로 알려드릴게요.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                )}
+                {/* Note: SMS notification message removed - will show after circle completes */}
               </div>
             </div>
           </div>
@@ -1472,9 +1510,8 @@ export default function Home() {
                 console.error('❌ Background job error:', error)
               })
               
-              // Show SMS waiting message immediately
-              setShowSmsWaitingMessage(true)
-              setIsAt21Percent(false) // Reset flag
+              // Don't show SMS message immediately - let the progress trigger it when circle completes
+              // The useEffect watching isAt21Percent will show it when progress >= 20
               
               // Clean up
               delete (window as any).__pendingJobData
