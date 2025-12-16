@@ -262,20 +262,35 @@ class GPT4OFashionAnalyzer:
             
             # Create validation prompt
             items_list = [item['groundingdino_prompt'] for item in analysis_result['items']]
-            prompt = f"""Look at this image and verify if these fashion items are actually present:
+            prompt = f"""You are a fashion item detector. Verify if these items are ACTUALLY WEARABLE FASHION ITEMS in this image:
 
 Detected items: {items_list}
 
-For each item, determine if it's actually present in the image. Be EXTREMELY lenient - assume items are present unless you are absolutely certain they are not there. Include small accessories, jewelry, sunglasses, phones, watches, etc.
+🚨 CRITICAL RULES - REJECT THESE FALSE POSITIVES:
+❌ Furniture: pillows, cushions, couches, sofas, chairs, bean bags, mattresses
+❌ Home decor: curtains, drapes, blankets, throws, rugs, carpets, wall art
+❌ Non-wearable: mannequins, statues, dolls, toys, stuffed animals
+❌ Body parts mistaken as clothing: bare skin, arms, legs (unless wearing clothes)
+❌ Background objects: walls, floors, doors, windows
 
-Respond with ONLY a JSON object in this exact format:
+✅ ONLY KEEP if it's clearly:
+- Clothing being WORN by a person OR displayed as a product
+- Accessories being WORN (bags, jewelry, hats, shoes, watches, belts)
+- Must be an actual fashion product, not furniture/decor
+
+For each detected item, ask yourself:
+1. Is this a wearable fashion item or accessory?
+2. Would someone shop for this in a clothing store?
+3. Is it being worn by a person OR displayed as a product?
+
+If NO to any question → mark as false_detection
+
+Respond with ONLY valid JSON:
 {{
-    "valid_items": ["list of items that are actually present"],
-    "false_detections": ["list of items that are NOT present"],
-    "reason": "brief explanation of any false detections"
-}}
-
-Default to including items as valid unless you are 100% certain they are absent."""
+    "valid_items": ["items that are ACTUALLY wearable fashion products"],
+    "false_detections": ["items that are furniture, decor, or non-wearable"],
+    "reason": "brief explanation"
+}}"""
 
             response = client.chat.completions.create(
                 model="gpt-4o",
@@ -337,6 +352,33 @@ Default to including items as valid unless you are 100% certain they are absent.
         except Exception as e:
             print(f"⚠️  Detection validation failed: {e}")
             # If validation fails, return original result
+            return analysis_result
+    
+    def _filter_nested_boxes(self, analysis_result):
+        """
+        Filter out nested/overlapping bounding boxes.
+        If a smaller box is completely inside a larger box, remove the smaller one.
+        This handles cases like "jacket detected inside dress bbox".
+        """
+        try:
+            items = analysis_result.get('items', [])
+            if len(items) <= 1:
+                return analysis_result
+            
+            print(f"\n🔍 Checking for nested bounding boxes...")
+            
+            # We'll filter out items after GroundingDINO creates bboxes
+            # For now, just mark items that are likely to be nested
+            # (will be filtered later in the pipeline)
+            
+            # Add a note for debugging
+            print(f"   Note: Nested bbox filtering will happen after GroundingDINO detection")
+            print(f"   Currently have {len(items)} items to detect")
+            
+            return analysis_result
+            
+        except Exception as e:
+            print(f"⚠️  Nested bbox filtering failed: {e}")
             return analysis_result
     
     def generate_detection_prompts(self, analysis_result):

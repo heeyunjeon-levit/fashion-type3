@@ -373,6 +373,97 @@ class OptimizedFashionCropPipeline:
         
         return filtered_boxes, filtered_logits, filtered_phrases
     
+    def _filter_nested_boxes(self, boxes: torch.Tensor, logits: torch.Tensor, 
+                            phrases: List[str], pil_img: Image.Image) -> Tuple[torch.Tensor, torch.Tensor, List[str]]:
+        """
+        Filter out nested bounding boxes where smaller boxes are completely inside larger ones.
+        E.g., "jacket" detected inside "dress" bbox - remove the jacket.
+        
+        Args:
+            boxes: Tensor of bounding boxes in cxcywh format
+            logits: Tensor of confidence scores
+            phrases: List of detected phrase labels
+            pil_img: PIL Image for coordinate conversion
+            
+        Returns:
+            Tuple of (filtered_boxes, filtered_logits, filtered_phrases)
+        """
+        if len(boxes) <= 1:
+            return boxes, logits, phrases
+        
+        W, H = pil_img.size
+        
+        # Convert boxes from cxcywh to xyxy format
+        boxes_xyxy = box_cxcywh_to_xyxy(boxes) * torch.tensor([W, H, W, H])
+        
+        # Check if box1 is completely inside box2
+        def is_box_inside(box1, box2, threshold=0.9):
+            """Check if box1 is inside box2 (>90% overlap)"""
+            x1_1, y1_1, x2_1, y2_1 = box1
+            x1_2, y1_2, x2_2, y2_2 = box2
+            
+            # Calculate intersection
+            x1_i = max(x1_1, x1_2)
+            y1_i = max(y1_1, y1_2)
+            x2_i = min(x2_1, x2_2)
+            y2_i = min(y2_1, y2_2)
+            
+            if x2_i < x1_i or y2_i < y1_i:
+                return False
+            
+            intersection_area = (x2_i - x1_i) * (y2_i - y1_i)
+            box1_area = (x2_1 - x1_1) * (y2_1 - y1_1)
+            
+            # If >90% of smaller box is inside larger box, it's nested
+            overlap_ratio = intersection_area / box1_area if box1_area > 0 else 0
+            return overlap_ratio > threshold
+        
+        # Create detection list with areas
+        detections = []
+        for i, (box, logit, phrase) in enumerate(zip(boxes_xyxy, logits, phrases)):
+            box_area = (box[2] - box[0]) * (box[3] - box[1])
+            detections.append({
+                'index': i,
+                'box': box.tolist(),
+                'logit': float(logit),
+                'phrase': phrase,
+                'area': float(box_area)
+            })
+        
+        # Sort by area (larger boxes first) - keep larger boxes, remove smaller nested ones
+        detections.sort(key=lambda x: -x['area'])
+        
+        keep_indices = []
+        removed = set()
+        
+        for i, det in enumerate(detections):
+            if i in removed:
+                continue
+            
+            keep_indices.append(det['index'])
+            
+            # Check if any smaller boxes are nested inside this box
+            for j in range(i + 1, len(detections)):
+                if j in removed:
+                    continue
+                
+                other_det = detections[j]
+                
+                # Check if smaller box is inside this larger box
+                if is_box_inside(other_det['box'], det['box']):
+                    removed.add(j)
+                    print(f"   🗑️  Removed nested box: '{other_det['phrase']}' inside '{det['phrase']}'")
+        
+        # Filter to kept detections
+        keep_indices.sort()  # Restore original order
+        filtered_boxes = boxes[keep_indices]
+        filtered_logits = logits[keep_indices]
+        filtered_phrases = [phrases[i] for i in keep_indices]
+        
+        print(f"🔍 After nested box filtering: {len(filtered_phrases)}/{len(phrases)} boxes remain")
+        
+        return filtered_boxes, filtered_logits, filtered_phrases
+    
     def _run_grounding_dino_with_validation(self, 
                                           pil_img: Image.Image, 
                                           groundingdino_prompt: str, 
@@ -423,6 +514,10 @@ class OptimizedFashionCropPipeline:
                 boxes, logits, phrases = self._filter_duplicate_boxes(boxes, logits, phrases, pil_img, self.iou_threshold)
                 print(f"🔍 After IoU filtering: {len(phrases)} detections remain")
                 print(f"🔍 Filtered phrases: {phrases}")
+                
+                # Apply nested box filtering (remove smaller boxes inside larger ones)
+                boxes, logits, phrases = self._filter_nested_boxes(boxes, logits, phrases, pil_img)
+                print(f"🔍 After nested box filtering: {len(phrases)} detections remain")
             
             # Validate detections
             validation_result = self._validate_detections(phrases, remaining_expected_items)
