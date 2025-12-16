@@ -4,12 +4,12 @@ A powerful fashion image search application that uses AI to detect clothing item
 
 ## ✨ Features
 
-- 📸 **Visual Item Detection** - AI-powered detection using GPT-4o Vision and Gemini 2.0 Flash
-- ✂️ **Smart Cropping** - Automatic item isolation with bbox variations for better search coverage
-- 🔍 **Multi-Platform Search** - Searches across major Korean fashion platforms (Musinsa, 29CM, W Concept, etc.)
+- 📸 **Visual Item Detection** - DINO-X API for fast, accurate object detection
+- ✂️ **Smart Cropping** - Client-side Canvas API for instant item isolation
+- 🔍 **Multi-Platform Search** - Searches across major Korean fashion platforms
 - 📱 **SMS Notifications** - NCP Cloud SMS integration for Korean mobile numbers
-- 🎯 **Interactive Selection** - Manual bbox adjustment for precise item selection
-- 💾 **Background Processing** - Jobs persist in database, allowing users to close app while searching
+- 🎯 **Interactive Selection** - User selects items before searching
+- 💾 **Shareable Results** - Persistent links for sharing search results
 - 🌐 **Korean + English** - Bilingual interface support
 
 ## 🏗️ Architecture
@@ -19,21 +19,22 @@ A powerful fashion image search application that uses AI to detect clothing item
 - **TypeScript**
 - **Tailwind CSS**
 - **React Context** for language management
+- **Canvas API** for client-side image cropping
 
-### Backend
-- **Next.js API Routes** (Serverless)
-- **Supabase** (PostgreSQL database)
-- **Job Queue System** for background processing
+### Backend (Serverless)
+- **Next.js API Routes** - All backend logic
+- **Supabase** - PostgreSQL database + image storage
+- **No Python Backend** - Fully serverless architecture
 
-### AI Models
-- **GPT-4o Vision** - Primary item detection and description
-- **Gemini 2.0 Flash** - Secondary verification for accuracy
-- **GroundingDINO** (optional) - Advanced object detection
+### AI Services
+- **DINO-X API** - Object detection (5-7s)
+- **Google Gemini 2.0 Flash** - Item descriptions
+- **OpenAI GPT-4o** - Result filtering and quality control
 
 ### External APIs
-- **Serper API** - Web search for product discovery
+- **Serper API** - Visual + text search via Google Lens
 - **NCP Cloud SMS** - Korean SMS notifications
-- **AWS S3** - Image storage
+- **DeepDataSpace** - DINO-X object detection API
 
 ## 🚀 Getting Started
 
@@ -63,34 +64,33 @@ Visit `http://localhost:3000` to see the app.
 Required API keys and configuration:
 
 ```bash
-# OpenAI (GPT-4o Vision)
+# DINO-X Detection
+DINOX_API_TOKEN=your_dinox_token
+
+# Google Gemini (Descriptions)
+GEMINI_API_KEY=your_gemini_key
+
+# OpenAI (Result Filtering)
 OPENAI_API_KEY=your_openai_key
 
-# Google AI (Gemini)
-GOOGLE_GENERATIVE_AI_API_KEY=your_gemini_key
-
-# Serper (Web Search)
+# Serper (Image Search)
 SERPER_API_KEY=your_serper_key
 
-# Supabase (Database)
+# Supabase (Database + Storage)
+SUPABASE_URL=your_supabase_url
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_key
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
-SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 
-# AWS S3 (Image Storage)
-AWS_ACCESS_KEY_ID=your_aws_key
-AWS_SECRET_ACCESS_KEY=your_aws_secret
-AWS_REGION=your_region
-AWS_BUCKET_NAME=your_bucket
-
-# NCP Cloud SMS (Korean SMS)
+# NCP SMS
+NCP_SERVICE_ID=your_ncp_service_id
 NCP_ACCESS_KEY=your_ncp_access_key
 NCP_SECRET_KEY=your_ncp_secret_key
-NCP_SERVICE_ID=your_service_id
-NCP_CALLING_NUMBER=your_calling_number
+NCP_PHONE_NUMBER=your_sender_number
 
-# App Configuration
-NEXT_PUBLIC_APP_URL=your_production_url
+# App URLs
+NEXT_PUBLIC_BASE_URL=https://fashionsource.vercel.app
+NEXT_PUBLIC_APP_URL=https://fashionsource.vercel.app
 ```
 
 ## 📁 Project Structure
@@ -130,13 +130,15 @@ mvp/
 ## 🔄 How It Works
 
 1. **Upload Image** - User uploads a fashion image
-2. **AI Detection** - GPT-4o detects and describes items
-3. **Verification** - Gemini 2.0 verifies detection accuracy
-4. **Interactive Selection** - User can adjust bounding boxes
-5. **Category Selection** - User confirms item categories
-6. **Search** - System searches across Korean fashion platforms
-7. **SMS Notification** - User receives SMS when search completes
-8. **View Results** - User views ranked results with similarity scores
+2. **DINO-X Detection** - AI detects items and returns bounding boxes (5-7s)
+3. **Interactive Selection** - User selects which items to search for
+4. **Client-Side Cropping** - Browser crops selected items using Canvas API
+5. **Gemini Descriptions** - Generate detailed fashion descriptions (2-3s per item)
+6. **Serper Search** - Visual + text search via Google Lens (1-2s per item)
+7. **GPT Filtering** - Remove irrelevant results (2-3s per item)
+8. **View Results** - Shareable link with top 6 matches per item
+
+**Total Time**: ~15-25 seconds for 3 items
 
 ## 🧪 Testing
 
@@ -192,17 +194,22 @@ Key docs:
 **Frontend**
 - Next.js 14, React 18, TypeScript, Tailwind CSS
 
-**Backend**
-- Next.js API Routes, Supabase (PostgreSQL)
+**Backend (Serverless)**
+- Next.js API Routes, Supabase (PostgreSQL + Storage)
 
-**AI/ML**
-- OpenAI GPT-4o Vision, Google Gemini 2.0 Flash
+**AI Services**
+- DINO-X API (Object Detection)
+- Google Gemini 2.0 Flash (Descriptions)
+- OpenAI GPT-4o (Result Filtering)
 
 **External Services**
-- Serper API, NCP Cloud SMS, AWS S3
+- Serper API (Visual Search)
+- NCP Cloud SMS (Notifications)
 
 **Deployment**
 - Vercel (Frontend/API), Supabase (Database)
+
+📖 **Detailed Tech Stack**: See `docs/TECH_STACK.md`
 
 ## 📄 License
 
